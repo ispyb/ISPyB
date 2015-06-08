@@ -1,0 +1,447 @@
+/******************************
+ *    class used to display   *
+ *    the input field labels  *
+ *****************************/
+P.LABEL {
+	color : #FFFFFF;
+  	font-weight : bold;
+}
+TH.LABEL {
+	text-align:right;
+}
+
+/*******************************
+ *			SUBSCRIPTION 	   *
+ ******************************/
+P.SUBSCRIPTION {
+		  color : #FFFFFF;
+		  font-family: arial;
+		  font-weight : bold;
+		  text-align : center;
+		  font-size : 16px;
+}
+
+TABLE.SUBSCRIPTION {
+		background-color : #000000;
+}
+
+TH.SUBSCRIPTION {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: bold;			
+}
+
+TD.SUBSCRIPTION {
+		color      : #FFFFFF;
+		background-color : #336699;
+}
+
+
+P.SUBS {
+		  color : #FFFFFF;
+		  font-family: arial;
+		  font-weight : bold;
+		  text-align : center;
+		  font-size : 16px;
+}
+
+TABLE.SUBS {		
+		background-color : #274465;
+		border-collapse: collapse;	
+}
+TABLE.subs2 {
+		background-color : #000000;
+}
+
+TH.SUBS {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: bold;			
+		text-align : left;
+		font-size : 16px;
+		font-family: arial;
+}
+
+TR.SUBS {
+		background-color : #3366A3;
+}
+
+
+TD.SUBS {
+		color      : #FFFFFF;
+		background-color : #3366A3;
+}
+
+/***********************************************
+ * 					CALENDAR				   *
+ **********************************************/
+TD.CALENDRIER {
+	background-color: #C2C2C2; 
+	font-weight: bold; 
+	text-align: center; 
+	font-size: 10px;
+}
+
+A.CALENDRIER {
+	text-decoration: none; 
+	color: #000000;
+}
+
+.CALENDARBORDER {
+	background-color: #000000; 
+}
+
+.CALENDARTITLE {
+	background-color: #336699;
+}
+
+.CALENDARWEEK {
+	background-color: #FFFFFF;
+}
+
+.CALENDARWEEKEND {
+	background-color: #FFF4E5;
+}
+
+.CALENDARSELECTED {
+	background-color: #FF8F01;
+}
+
+/***********************************************
+ * 					?				   		   *
+ **********************************************/
+.ongletMain {
+	BORDER-RIGHT: #6888a8 2px solid; 
+	BORDER-TOP: #6888a8 medium none; 
+	BORDER-LEFT: #6888a8 2px solid; 
+	BORDER-BOTTOM: #6888a8 2px solid; 
+	BACKGROUND-COLOR: white;
+}
+
+.clsAction {
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	COLOR: #053c6d; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+
+.ongletTextEna {
+	BORDER-RIGHT: #6888a8 2px solid; 
+	BORDER-TOP: #6888a8 2px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #6888a8 2px solid; 
+	COLOR: #FFFFFF; 
+	BORDER-BOTTOM: medium none; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #6888a8; 
+	TEXT-ALIGN: center;
+
+}
+
+.maintenance {
+	color: #FF6633;
+	font-size: 0.83em;
+}
+
+
+/* unselected headers */
+.ongletTextDis {
+	BORDER-RIGHT: #c5c5c5 1px solid; 
+	BORDER-TOP: #c5c5c5 1px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #c5c5c5 1px solid; 
+	COLOR: #6888a8; 
+	BORDER-BOTTOM: #6888a8 2px solid; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #e6e6e6; 
+	TEXT-ALIGN: center;
+}
+
+.ongletTextErr {
+	BORDER-RIGHT: #c5c5c5 1px solid; 
+	BORDER-TOP: #c5c5c5 1px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #c5c5c5 1px solid; 
+	COLOR: #FFFFFF; 
+	BORDER-BOTTOM: #6888a8 2px solid; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #ED4F50;
+	TEXT-ALIGN: center;
+}
+
+.ongletMiddle {
+	BORDER-RIGHT: #6888a8 2px solid; 
+	BORDER-TOP: medium none; 
+	FONT-SIZE: 1px; 
+	BORDER-LEFT: #6888a8 2px solid; 
+	BORDER-BOTTOM: medium none; 
+	BACKGROUND-COLOR: white	;
+}
+
+.ongletSpace {
+	BORDER-BOTTOM: #6888a8 2px solid;
+}
+
+
+/*******************************
+ * 			ERROR		       *
+ ******************************/
+.error {
+		color: #e91038;
+		font-size: small;
+}
+TD.ERROR {
+		background-color : #ED4F50;
+		color: #ffffff;
+}
+
+/***********************************************
+ * 					PANEL 					   *
+ **********************************************/
+TABLE.PANEL {		
+		background-color : #6888a8;
+}
+
+TH.PANEL {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+
+TD.PANEL {
+		background-color :  #ffffff;;
+		FONT-SIZE: x-small;
+}
+
+/***********************************************
+ * 		PANEL_BREAD_CRUMBS		   			   *
+ **********************************************/
+ .PANEL_BREAD_CRUMBS{
+ 	font-size: x-small;
+ }
+TABLE.PANEL_BREAD_CRUMBS {		
+		background-color :#eeeeee;}
+
+/***********************************************
+ * 						PAGER 				   *
+ **********************************************/
+TD.PAGER {
+	background-color :  #3366A3;
+	text-align: center;
+}
+
+/***********************************************
+ * 						LIST 				   *
+ **********************************************/
+A.LIST {color: #ffffee;}
+A.LIST2 {color: #ffffee;}
+A.HIGHLIGHT.LIST:Hover {color: #ffffee;}
+A.HIGHLIGHT.LIST:Active {color: #ffffee;}
+A.HIGHLIGHT.LIST:Visited {color: #ffffee;}
+
+body {
+  	color      			: #FFFFFF;
+}
+
+pre {
+	color: #000000;
+	font-family: Courier, "Courier New", monospace;
+	font-size: small;
+}
+
+.LIST {
+ 	font-size: x-small;
+ 	
+}
+.LIST_LEFT {
+ 	font-size: x-small;
+ 	
+}
+.list2 {
+ 	font-size: x-small;
+}
+
+TABLE.LIST {		
+		background-color : #274465;
+			text-align: center;
+}
+
+TABLE.LIST2 {		
+		background-color : #274465;
+}
+
+TH.LIST {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: bold;
+}
+
+TD.LIST {
+		background-color :  #336699;
+		color: #ffffff;
+		text-align: center;
+}
+
+TD.LIST_LEFT {
+		background-color :  #336699;
+		color: #ffffff;
+		text-align: left;
+}
+
+TD.LISTRED {
+		background-color :  #336699;
+		color: #ff0000;
+}
+
+TD.LISTGREEN {
+		background-color :  #336699;
+		color: #8FBC8B;
+}
+TD.LIST2 {
+		background-color: #6888a8;
+		color: #ffffff;
+		text-align: center;
+}
+/********************************
+ *			SLAVE LIST       	*
+ *******************************/
+A.SLAVE {color: #ffffee;}
+A.SLAVE {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Hover {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Active {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Visited {color: #ffffee;}
+
+TD.HIGHLIGHT {		
+		background-color: #ffffee;
+		color: #336699;
+}
+
+.SLAVE {
+		font-size: x-small;
+}
+TABLE.SLAVE {		
+		background-color: #3366a3;}
+TH.SLAVE {
+		color      : #336699;
+		background-color: #ffffee;
+		font-weight: bold;}
+TD.SLAVE {
+	background-color: #6888a8;
+	color: #ffffff;
+	}
+
+/********************************
+ * 			SEARCH_GRID     	*
+ *******************************/
+.SEARCH_GRID {
+	text-align:center;
+margin: 0em;}
+
+/*********************************
+ * Fields used to input / output *
+ *********************************/
+.FIELD {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+
+TH.FIELD_DISPLAY {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+
+}
+
+TH.FIELD_DISPLAY_GREEN {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+
+}
+
+TH.FIELD_DISPLAY_RED {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+
+}
+
+TD.FIELD_DISPLAY {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: normal;
+}
+
+TD.FIELD_DISPLAY_GREEN {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #00CC00;
+	font-weight: normal;
+}
+
+TD.FIELD_DISPLAY_RED {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #FF3300;
+	font-weight: normal;
+}
+
+/***********
+ *OPTIONAL *
+ **********/
+.OPTIONAL {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+input.OPTIONAL{	background-color: #eeeeee;
+	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8
+
+}
+
+/*********************************
+ * TextArea to display XML		 *
+ *********************************/
+TEXTAREA.XML{
+width:550px;
+height: 400px;
+font-size: 10px;
+font-family: arial;
+color: #3366a3;
+}
+/**************************************
+ * TextArea to display formatted text *
+ **************************************/
+TEXTAREA.TEXT{
+width:800px;
+height: 500px;
+font-size: x-small;
+font-family: Courier;
+color: #3366a3;
+}

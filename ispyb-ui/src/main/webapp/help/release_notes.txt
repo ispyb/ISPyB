@@ -1,0 +1,1630 @@
+**************
+* 04.06.2015     *
+**************
+
+New VERSION : ISPyB on WildFly, maven modules
+
+**************
+* 11.05.2015     *
+**************
+
+
+New TAG : TAG ISPYB-3.5
+
+**************
+* 11.05.2015     *
+**************
+- Crims webservices
+- Small bugs fixing
+- Compatibility for Wildfly
+- EMBL added proper filter for LDAP
+
+
+**************
+* 24.03.2015     *
+**************
+- Feature #2314 new webservice to retrieve dataCollectionGroup
+- User interface for Mixtures, superpositions and rigid body modeling has been improved
+ - Feature #2258 prevent to remove shipment if datacollections attached
+ - Feature #2241 add number of images in experiment parameters
+ - Bug #2238 Beamline filter not working
+ - Bug #2244 Auto processing "..._aimless_unmerged,mtz.gz" file in wrong tab
+
+**************
+* 10.03.2015     *
+**************
+ - Feature #2272 prevent too long sample names in shipments
+ - SMIS Webservice upgrade (SMIS on WildFly8.2)
+
+
+**************
+* 03.03.2015     *
+**************
+ - Action #2257 improvement of datacollections views
+ - TODO #2191 some source code refactoring has been done
+
+**************
+* 17.02.2015     *
+**************
+ - Skeleton for UI flavours for bioSAXS
+ - Added symmetry and multiplicity to table structure
+ - Bug #2231 http://forge.epn-campus.eu/issues/2231
+ - PDB reader changed the way it reads the pdb. Using pdb standard format.
+ - Added getExperimentListByProposal (code and number)
+ - Added EMBL authentication on LOGON
+
+**************
+* 27.01.2015     *
+**************
+- Fix bug #2220
+- Preliminary user interface for Mixtures, superpositions and rigid body modeling
+- Webservices for apriori information
+- Rigid body modeling
+
+**************
+* 10.11.2014 *
+**************
+Code merged with MaxLab
+
+**************
+* 04.11.2014 *
+**************
+Option of downloading frames from HDF5 files desactivated
+Code cleaning to prepare Wildfly migration : references to .tld in jsps, declaration of persistence context unit
+ATSAS webservices
+CRIMS webservices
+
+**************
+* 13.10.2014 *
+**************
+Possibility to log in as a Person, then retrieve all proposals linked to this person
+New TAG : TAG ISPYB-20141013
+
+**************
+* 02.09.2014 *
+**************
+Code has been merged with Hamburg 
+New TAG : TAG ISPYB-20140901 done just before merge with MAX IV
+
+**************
+* 05.08.2014 *
+**************
+Merge the code with Hamburg 
+New feature to launch manually the data confidentiality process, and to find not protected sessions
+Code cleaning : ehtpx jars removed
+
+New TAG : TAG ISPYB-20140729 done just before merge with Hamburg
+
+**************
+* 17.07.2014 *
+**************
+Merge the code with SOLEIL : compatibility with Oracle, 
+use of a servlet filter to be able to connect directly from the User Office software to the selected proposal.
+
+New TAG : TAG ISPYB-20140717
+
+**************
+* 11.07.2014 *
+**************
+preparing for maven : remove ehtpx-model.jar and mis-utils-ispyb.jar
+replace org.safehaus.uuid.UUIDGenerator by java.util.UUID
+
+New TAG : TAG ISPYB-20140711
+
+**************
+* 10.07.2014 *
+**************
+replace ehtpxParser by ISPyBParser
+remove DNARanking (not used anymore)
+
+New TAG : TAG ISPYB-20140710
+
+
+**************
+* 01.07.2014 *
+**************
+
+Issue 1946: new reports and session summary
+
+**************
+* 23.06.2014 *
+**************
+
+Issue 2020: SMILES field added
+
+**************
+* 15.04.2014 *
+**************
+
+Issue 1941: chi added
+New address for ESRF (parcel labels)
+
+**************
+* 04.04.2014 *
+**************
+
+MXPressO report
+
+**************
+* 31.03.2014     *
+**************
+
+TAG ISPYB-20140331
+----------
+Tag a version before creating branch for WildFly8
+
+**************
+* 20.03.2014 *
+**************
+
+ToDo 1914
+----------
+Space group cleaning
+
+
+**************
+* 18.03.2014 *
+**************
+
+Feature
+----------
+Autoprocessing: Cumulative Intensity Distribution graph added
+
+**************
+* 14.02.2014 *
+**************
+
+Feature
+----------
+Autoprocessing: new ScalePack tab added
+
+**************
+* 10.02.2014 *
+**************
+
+Feature 1851
+----------
+Images cleaning and js cleaning
+
+**************
+* 04.02.2014 *
+**************
+
+Feature
+----------
+Data protection log available from manager account, blom and local contact
+
+**************
+* 10.01.2014 *
+**************
+
+Feature
+----------
+Changes in session for data confidentiality
+
+
+**************
+* 16.12.2013 *
+**************
+
+Feature
+----------
+issue 1736: new autoprocessing display
+
+
+**************
+* 12.12.2013 *
+**************
+
+TAG ISPYB-20131212
+----------
+Tag a version with stable biosaxs part.
+
+
+**************
+* 22.11.2013 *
+**************
+
+Feature
+----------
+Issue 1789: manager accounts: display shipment's content
+
+**************
+* 05.11.2013 *
+**************
+
+Feature
+----------
+Issue 1685: Workflow page
+Data collection group page look and feel changed (javascript)
+Mesh map built on the image motor positions
+Workflow type names changed
+
+**************
+* 01.10.2013 *
+**************
+
+Feature
+----------
+Issue 1758 a): load autoprocessing files, 1 tar per collect
+
+**************
+* 01.10.2013 *
+**************
+
+Feature
+----------
+Issue 1685: Workflow integration
+
+**************
+* 24.09.2013 *
+**************
+
+Feature
+----------
+Issue 1686: Webservice authentication
+
+**************
+* 20.08.2013 *
+**************
+
+Feature
+----------
+Issue 1725: Upload sample through xls: update option 
+
+**************
+* 13.08.2013 *
+**************
+
+Feature
+----------
+Wilson plot added 
+
+**************
+* 09.08.2013 *
+**************
+
+Feature
+----------
+Issue 1735: Tooltip for edna autoprocessing
+
+**************
+* 05.08.2013 *
+**************
+
+Feature
+----------
+Issue 1733: Autoprocessing report: cell angles info added
+
+**************
+* 09.07.2013 *
+**************
+
+Feature
+----------
+Issue 1728: email notification for ID30
+
+**************
+* 08.07.2013 *
+**************
+
+Feature
+----------
+Issue 1727: dewar automatic 'processing' status on ID30
+
+**************
+* 01.07.2013 *
+**************
+
+Feature
+----------
+Issue 1724: Autoprocessing graphs plotted in ispyb
+
+**************
+* 26.06.2013 *
+**************
+
+Feature
+----------
+Issue 1726: Print labels even if the dewar is in processing state
+
+
+**************
+* 25.06.2013 *
+**************
+
+Feature
+----------
+Issue 1711: Puck creation
+
+**************
+* 14.05.2013 *
+**************
+
+Feature
+----------
+Issue 1700: A new "References" tab in the dataCollection page includes references (URLs) to beamlines and softwares (EDNA, ISPyB, MxCuBE...).
+
+**************
+* 06.05.2013 *
+**************
+
+Feature
+----------
+Manager & view last collects: the criteria search have been modified with the hour and multiple beamlines
+Issue 1701: pbd files: add a flag in the proteins & crystal forms table and at the dataCollection level
+
+**************
+* 09.04.2013 *
+**************
+
+Bug
+----------
+display issues in the autoProc report
+automatic refresh on the result/dataCollection page has been removed
+web services for the workflow
+
+**************
+* 14.03.2013 *
+**************
+
+Feature
+----------
+Issue 1672: Manage the proposal number as a string
+
+**************
+* 05.03.2013 *
+**************
+
+Bug
+----------
+XDS.INP files for edna processing are now available in ispyb but below "Output Files" instead below "Input files" 
+kappa and phi null values fixed
+
+
+**************
+* 19.02.2013 *
+**************
+
+Feature
+----------
+Issue 1656: the information regarding the main proposer and the laboratory are updated automatically from SMIS
+Issue 1546&1431:  A .pdb file can be uploaded in ISPyB (stored on pyarch) from the 'View Proteins and Crystal Form' 
+
+
+**************
+* 30.11.2012 *
+**************
+
+Bug
+----------
+several optimizations concerning the requests to the database
+
+
+**************
+* 12.11.2012 *
+**************
+
+Feature
+--------------------------
+1506: DataCollection tab presentation
+1511: webservices dates
+1507: Correction files
+
+
+**************
+* 05.11.2012 *
+**************
+
+Bug
+--------------------------
+1491: Error when selecting the datacollections report directly from DC view
+
+**************
+* 23.10.2012 *
+**************
+
+Feature
+--------------------------
+1320: Local contact change in SMIS changes local contact in ISPyB
+1440: html link ispyb/smis
+
+**************
+* 18.10.2012 *
+**************
+
+Feature
+--------------------------
+1464: additional fields for Diffraction Plan
+
+
+**************
+* 12.10.2012 *
+**************
+
+Feature
+--------------------------
+1356: measured Intensity
+
+**************
+* 10.10.2012 *
+**************
+--------------------------
+Management of null foreign keys when a storeUpdate WS is used : WS returns null.
+
+Add a new WS : findSampleInfoLightForProposal, to retrieve only needed information for MXCube.
+
+
+**************
+* 17.09.2012 *
+**************
+
+Bug
+--------------------------
+1430: Auto proc report
+
+**************
+* 16.08.2012 *
+**************
+
+Feature
+--------------------------
+1277: Ranking for auto-processing results
+
+
+**************
+* 16.08.2012 *
+**************
+
+Feature
+--------------------------
+1363: Manager accounts - local contacts
+
+**************
+* 13.08.2012 *
+**************
+
+Feature
+--------------------------
+1377: Excel upload
+1312: Improvements to the sample upload: unique sample name changed
+
+**************
+* 02.08.2012 *
+**************
+
+Feature
+--------------------------
+1378: Excel upload file: protein pull-down menu in alphabetical order
+
+
+**************
+* 11.07.2012 *
+**************
+
+Feature
+--------------------------
+1363b: Manager account: feedback tab
+
+**************
+* 26.06.2012 *
+**************
+
+Feature
+--------------------------
+1340: Industrial upload from csv
+
+**************
+* 15.06.2012 *
+**************
+
+Feature
+--------------------------
+1083: Autoprocessing status flag
+
+**************
+* 11.06.2012 *
+**************
+
+Feature
+--------------------------
+1314: EDNA - top level displays
+
+
+**************
+* 07.06.2012 *
+**************
+
+Feature
+--------------------------
+1217: new parameters in ISPyB for input to EDNA characterisation
+1237: Addition of field to ScreeningOutput table
+1238: Changes in ScreeningStrategyWedge table
+1239: Add comment column to ScreeningStrategySubWedge
+1261: Add new column "labelitIndexing" (boolean) to ScreeningOutputLattice
+
+
+**************
+* 04.06.2012 *
+**************
+
+Feature
+--------------------------
+1315: change the display of the characterisation results  (split into 2 tabs)
+
+**************
+* 30.05.2012 *
+**************
+
+Bug
+--------------------------
+1313: DataCollection tab: staggered buttons / columns
+
+**************
+* 16.05.2012 *
+**************
+
+Bug
+--------------------------
+1263: Deleting of labcontacts results in problem for shipment
+
+**************
+* 03.05.2012 *
+**************
+
+Feature
+--------------------------
+1235: Flux
+
+**************
+* 03.05.2012 *
+**************
+
+Bug
+--------------------------
+1219: HTML result display in ISPyB
+
+
+**************
+* 26.04.2012 *
+**************
+
+Feature
+--------------------------
+1259: New Detector table
+
+**************
+* 24.04.2012 *
+**************
+
+New version ISPYB3_0
+--------------------
+New version with new configuration :
+	- new JBoss version (6.1.0Final)
+	- only EJB3s 
+	- webservices for Beamline data acquisition software (MXCube on ESRF site)
+
+**************
+* 06.01.2012 *
+**************
+
+Todo
+--------------------------
+1142: Doc & RTF Files reports
+
+**************
+* 19.12.2011 *
+**************
+
+Todo
+--------------------------
+1187: Autoprocessing report
+
+**************
+* 30.11.2011 *
+**************
+
+Todo
+--------------------------
+1169: Speed up the loading of sessions
+
+**************
+* 28.11.2011 *
+**************
+
+Todo
+--------------------------
+1168: DataCollection tab - replace the comments pulldown/area by a simple text area
+
+**************
+* 25.11.2011 *
+**************
+
+Bug
+--------------------------
+1135: bug sending pdf report
+
+**************
+* 24.11.2011 *
+**************
+
+ToDo
+--------------------------
+1133: replace sortAutoProcList by a finder in EJB AutoProcBean
+
+**************
+* 18.11.2011 *
+**************
+
+ToDo
+--------------------------
+1090: pyarch automatic archiving
+
+
+**************
+* 15.11.2011 *
+**************
+
+ToDo
+--------------------------
+1129: Opening the help page in new tab
+
+**************
+* 07.11.2011 *
+**************
+
+Feature
+--------------------------
+1076: Dewar status
+
+
+**************
+* 28.10.2011 *
+**************
+
+Feature
+--------------------------
+1067 b,d,e): Anomalous checkbox in the autoprocessing tab(db updated)
+
+**************
+* 19.10.2011 *
+**************
+
+Feature
+--------------------------
+1067 a): Anomalous field added in AutoProcIntegration and AutoProcScalingStatistics (db updated)
+
+
+**************
+* 18.10.2011 *
+**************
+
+Feature
+--------------------------
+1058: Dewar shipment labels
+
+
+**************
+* 06.10.2011 *
+**************
+
+Feature
+--------------------------
+1049: Session informations (db updated)
+
+**************
+* 05.10.2011 *
+**************
+
+Feature
+--------------------------
+1053: Tooltip for Image Prefix
+670: db login/pwd in conf. files removed 
+
+**************
+* 04.10.2011 *
+**************
+
+Feature
+--------------------------
+1046 : link to the local contact's email adress
+
+
+**************
+* 30.09.2011 *
+**************
+
+Feature
+--------------------------
+1042 : PDF
+1040: New crystal classes for data collection tab
+
+**************
+* 23.09.2011 *
+**************
+
+Feature
+--------------------------
+1042 : in test + todo: PDF
+
+**************
+* 20.09.2011 *
+**************
+
+Bugs
+--------------------------
+914 : a) a message is displayed to indicate that the excel file should be saved as .xls and NOT .xlsx.
+
+1041 : fixed
+
+1043 : fixed
+
+
+**************
+* 06.09.2011 *
+**************
+
+Todos
+--------------------------
+755 : Include licence information into files headers
+
++ some code refactoring
+
+
+**************
+* 28.06.2011 *
+**************
+
+Bugs
+--------------------------
+567 : fixed : no more generating error, but it is not possible to enter an image number which is neither the next nor the previous.
+      
+**************
+* 21.06.2011 *
+**************
+
+Todos
+--------------------------
+915 : With the advent of Pilatus detectors we are no longer generating jpeg images for each image. 
+      In the Display of these jpegs we should only list those images which have a jpeg attached.
+
+**************
+* 11.04.2011 *
+**************
+
+Todos
+--------------------------
+807 : some webservices have been added for MXCube to retrieve proposal with sessions and to store datacollections
+
+
+**************
+* 01.03.2011 *
+**************
+
+Todos
+--------------------------
+807 : some webservices have been added for autoproc
+
+Bugs
+--------------------------
+888 : fix bug on size of autoproc downloaded files
+
+**************
+* 01.02.2011 *
+**************
+
+Sessions displayed correspond to sessions attached to data (datacollection, energyscan, xfe) or future sessions to come
+
+**************
+* 25.01.2011 *
+**************
+
+Improve the download of autoprocessing files .sca or .sac.gz files can be downloaded
+This should free some space in pyarch.
+Todos
+--------------------------
+807 : some webservices have been added for MXcube and EDNA
+
+
+
+**************
+* 18.01.2011 *
+**************
+
+Improve the download of autoprocessing files .mtz or .mtz.gz files can be downloaded
+This should free some space in pyarch.
+
+
+**************
+* 17.11.2010 *
+**************
+
+Improve the display/download of files from XRF display html file
+
+Merge all the displays of dataCollections to viewDataCollectionAllLarge.jsp 
+(including autoproc, toggle all rank and toggle skip all)
+
+**************
+* 09.11.2010 *
+**************
+
+Bugs:
+--------------------------
+778		Sorting samples by container/location 1-10-2-3-4-5
+
+
+**************
+* 02.11.2010 *
+**************
+
+Always use the viewDataCollectionAllLarge to display datacollections (including autoproc)
+
+
+**************
+* 06.10.2010 *
+**************
+
+New field in Session to filter only on sessions linked to either DataCollections or XFE or EnergyScans
+
+
+**************
+* 21.09.2010 *
+**************
+
+Exchange of 2 columns Inflection energy and Exposure time in the Energy scans table. 
+Following a remark coming from ATF.
+
+Features:
+--------------------------
+721		PDF export for samples improvement
+
+**************
+* 13.09.2010 *
+**************
+
+Features:
+--------------------------
+632		Last autoprocessing improvement
+
+Some DLS modifications
+
+**************
+* 20.07.2010 *
+**************
+
+Features:
+--------------------------
+632		Autoprocessing improvement
+
+**************
+* 29.06.2010 *
+**************
+
+Features:
+--------------------------
+632		Autoprocessing improvement
+
+		EDNA html page displayed, links concerning other files (.xml, .log) are fine
+		
+**************
+* 22.06.2010 *
+**************
+
+Features:
+--------------------------
+632		Autoprocessing new tabs and new columns in datacollection
+
+		EDNA html page displayed, links concerning images are ok
+		
+		Only sessions connected to datacollections are displayed in the sessions list
+		
+
+**************
+* 31.05.2010 *
+**************
+
+Bugs fixed: 
+-------------------------
+#642 Screening pdf generation output is failing (linked to EDNA ???)
+	
+Features:
+--------------------------
+668 	Screening strategy new ejbs
+632		Autoprocessing new ejbs
+
+
+**************
+* 21.04.2010 *
+**************
+	
+Action:
+--------------------------
+578 	Beamline parameters 
+
+New column in ScreeningStrategy table: "transmission"
+
+**************
+* 17.03.2010 *
+**************
+	
+Action:
+--------------------------
+578 	Beamline parameters 
+
+SlitGapHor (DataCollection.beamSizeHor renamed to DataCollection.slitGapHor )
+SlitGapVer (DataCollection.beamSizeHor renamed to DataCollection.slitGapVer)
+
+DataCollection.beamShape added
+
+DataCollection.slitSizeHor removed
+DataCollection.slitGapVer removed
+
+>>>>>>   version ISPYB2_3
+--------------------
+
+**************
+* 01.03.2010 *
+**************
+
+Bugs fixed:
+-------------------------
+	
+New features:
+--------------------------
+coming from last ATF & ISPyB meetings
+New Beamline parameters 
+
+SlitGapHor (DataCollection.slitGapHor)
+SlitGapVer (DataCollection.slitGapVer)
+ 
+**************
+* 16.02.2010 *
+**************
+Bugs fixed:
+-------------------------
+	
+New features:
+--------------------------
+coming from last ATF & ISPyB meetings
+  	 Beamline parameters 
+Hidden
+Detector 2 theta (DataCollection.detector 2theta)
+Beam size Hor (DataCollection.beamSizeHorizontal)
+Beam size Vert (DataCollection.beamSizeVertical) 
+
+Undulators gap not displayed if = -1
+
+"ref-" not necessary to display screenings results
+
+"BEST" not necessary to display the predicted resolution
+
+DNA/EDNA results name
+
+************
+* 20.11.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2901011  	 Manage proposal type
+
+************
+* 09.11.09 *
+************
+Bugs fixed:
+-------------------------
+2883892  	 # components and # samples says " 0 (0)": fixed
+2894617  	 CrystalClass inputfield with unwanted blank characters
+
+New features:
+--------------------------
+2894615  	 Icon size (small: 16x16, medium: 24x24)
+2894622  	 DataCollection: new fields for actual crystal position (currently on pytest)
+
+************
+* 12.10.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2877077  	 Data Collection: Energy Scan tab
+2877080  	 Data Collection: XRF Spectra tab
+
+************
+* 15.09.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2870604  	 Dewar Tracking: emails with proposal name
+
+************
+* 07.09.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2853654  	 Improve Shipment and Dewar history gui
+2853650  	 Sample names with '-' and '_' characters for the ESRF
+
+************
+* 21.07.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+
+2824343  	 DataCollections: multicriteria search
+
+************
+* 07.07.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2815153  	 DataCollection: protein acronym column and filter
+2815157  	 DataCollection: optimize search by protein acronym
+2817388  	 Sample linking: by container status instead of dewar status
+
+************
+* 23.06.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2810281  	 Sample linking: select dewars instead of shipment
+2810283  	 Sample Ranking: new Flex/Flash chart
+
+************
+* 16.06.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2794322  	 Sample Ranking: Help Web Page
+2793804  	 Sample Ranking: export ranking result to a file (DNA .pdrp file)
+2806661  	 Sample linking: Prepare Experiment tab improvement
+
+************
+* 12.05.09 *
+************
+Bugs fixed:
+-------------------------
+2787082  	 Error when ranking with no selected datacollections
+
+New features:
+--------------------------
+2779776  	 Get rid of / reduce size of search boxes etc
+2790137  	 Reorganize documentation (svn and packages)
+
+
+************
+* 21.04.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2770859  	 Sample Ranking: attribute weighting
+2770863  	 New SMIS Web Service
+
+************
+* 07.04.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2737705  	 Export report to Csv
+2737683  	 Excel file and crystal creation
+2737716  	 Sample Ranking chart (radar/polar)
+2737722  	 Sample ranking algorithm accuracy
+
+
+************
+* 26.03.09 *
+************
+Bugs fixed:
+-------------------------
+2712092  	 "Protein Acronym - Space Group" doublons
+
+New features:
+--------------------------
+2712099  	 New login page
+2712108  	 Sample Ranking for Users
+2712111  	 Sample Ranking for Industrials
+2712114  	 Sort DataCollections on ImagePrefix and Start Time
+2712106  	 Select DNA Result tab (Sample Ranking)
+
+************
+* 10.03.09 *
+************
+Bugs fixed:
+-------------------------
+2675219  	  undulatorGap number format exception
+2675242  	  Local Contact: view shipments
+
+New features:
+--------------------------
+2675236  	  BM14Uxxxx users mapped to BM14xxxx
+2675228  	  DLS protein acronyms and file upload
+2675071  	  Image List and Image Wall order
+
+
+************
+* 24.02.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2629654  	  Ejb Merge (Esrf/Dls)
+2629651  	  ISPyB Code sharing framework (Esrf/Dls)
+2615607  	  Excel file upload at any time
+2615597  	  EnergyScan icon in DataCollections
+
+************
+* 20.01.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2510295  	  Sample list: view icon when DataCollection exists
+2510298  	  DataCollection for Samples: list improvement
+
+************
+* 13.01.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2490402  	  Create Crystal when uploading (allows to save Unit Cell values)
+2493887  	  Data collection Image wall
+
+************
+* 06.01.09 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2487467  	  DataCollection icons improvements (color, order, help,...)
+2487469  	  DataBase: Scaling.timeStamp renamed to Scaling.timeStampInfo
+2487496  	  Quick Scaling values in DNA result tab
+2487978  	  Container: beamline location (Prepare experiment / Fill sample changer)
+
+************
+* 08.12.08 *
+************
+Bugs fixed:
+-------------------------
+2343680  	  Lab contact for BM14U (login limited to 8 characters)
+
+New features:
+--------------------------
+2351441  	  Crystal snapshot icon (sample list and dataCollection list)
+2392968  	  DNA indexing icon (dataCollectionList)
+2392977  	  DataCollection status icons
+2392985  	  LabContact address lines extended to 5
+
+************
+* 24.11.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2314673  	  Local contact notification (on dewar arrival)
+
+
+************
+* 07.11.08 *
+************
+Bugs fixed:
+-------------------------
+2233510  	  Printing labels for bloms and localcontacts
+
+New features:
+--------------------------
+2234491  	  DOC export of data collection
+2233528  	  Prepare experiment shipment list sorted by creation date
+2233524  	  Uploading non existing proteins gives and error
+2233534  	  List of shipments and dewars for Bloms and LocalContacts
+2233497  	  Number of samples in list of dewars and shipments
+2233494  	  Upload from file help
+2181874  	  Replace ActionErrors by ActionMessage 
+
+************
+* 21.10.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2171994  	  Dont print labels if dewar sent back
+
+************
+* 14.10.08 *
+************
+Bugs fixed:
+-------------------------
+2163886  	  Uploading empty xls file
+
+New features:
+--------------------------
+2163891  	  Update dewar status on prepare exp
+2163881  	  Dewar Tracking event indicator
+
+************
+* 07.10.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2149089  	  Check if labels have been printed
+2149080  	  Running sessions in the list of sessions
+2144240  	  Last page of labels for World Courier
+
+************
+* 30.09.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2135949  	  Label instructions on first page
+2128639  	  Xls template and upload checking
+2124740  	  Lab contact edition workflow
+2124735  	  Improve Lab Contact search
+
+************
+* 23.09.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+2119179  	  Lab Address textbox size
+2118065  	  Dewar Tracking interface improvement (no upload from file,...)
+2118062  	  Upload shipment from excel file (fix and improvement)
+2118059  	  Shipment with no sessions
+2107429  	  DNA Scaling table
+
+************
+* 09.09.08 *
+************
+Bugs fixed:
+-------------------------
+2100360  	  Update Container status
+2009618    	  BEST log file not accessible
+
+New features:
+--------------------------
+2094610  	  Upload "old" xls files in tracked shipments
+2093368       LabContact address: retrieved from SMIS (when empty in ISPyB))
+2091361  	  Shipment: dewar tracking indicator
+2078391  	  Person.familyName size 45->100
+2077875  	  Action icons (depends on shipment status)
+2076070  	  Shipment selected when Create/Upload from file
+2073731  	  WF on Edit Shipping or dewar
+2041686  	  Manager account (Who'se online, messages, charts)
+
+************
+* 09.09.08 *
+************
+Bugs fixed:
+-------------------------
+2100360  	  Update Container status
+2009618    	  BEST log file not accessible
+
+New features:
+--------------------------
+2094610  	  Upload "old" xls files in tracked shipments
+2093368       LabContact address: retrieved from SMIS (when empty in ISPyB))
+2091361  	  Shipment: dewar tracking indicator
+2078391  	  Person.familyName size 45->100
+2077875  	  Action icons (depends on shipment status)
+2076070  	  Shipment selected when Create/Upload from file
+2073731  	  WF on Edit Shipping or dewar
+2041686  	  Manager account (Who'se online, messages, charts)
+
+************
+* 28.08.08 *
+************
+- Fix for Excel upload of shipment: All 12 samples will now be uploaded.
+
+************
+* 14.05.08 *
+************
+Diamond developments:
+- User's name and FedID (from LDAP) displayed in top right of the window
+- Currently selected proposal displayed in top right of the window
+- Menu order modified (Proposal - Data Collection - Samples - Shipment - Prepare Experiment - Feedback - Help)
+- All occurrences of "session" renamed to "visit"
+- Visit number column implemented in the visit list
+- PDF export bug fixed 
+- Excel upload and template download bugs fixed
+- Web services now seem to work
+- SSL implemented
+- JBOSS AS (the application server for ISPyB) is configured to start automatically when the server (sci-serv2) is started
+- An Admin role has been developed. Only dls_dasc and mx_staff members will have the ability to use the Admin role. An Admin can see all info about all proposals. More admin features will be implemented later.
+
+************
+* 10.07.08 *
+************
+Bugs fixed:
+-------------------------
+
+
+New features:
+--------------------------
+Dewar tracking
+
+
+
+************
+* 20.05.08 *
+************
+Bugs fixed:
+-------------------------
+
+
+New features:
+--------------------------
+1908677  	  Create Sample -> Go to bottom of page
+1908675  	  Search samples
+1908664  	  Copy position in basket from the samplechanger list of samples
+
+************
+* 06.05.08 *
+************
+Bugs fixed:
+-------------------------
+
+
+New features:
+--------------------------
+1908663  	  Sample created from samplesheet
+1908672  	  remove [ACRO-crystal card]
+1908671  	  Pop up comments for dewar in sample lists
+1908670  	  DNA logo on results page
+
+************
+* 16.04.08 *
+************
+Bugs fixed:
+-------------------------
+1908888  	  Excel 2007 error when opening file
+1911975  	  Search Shipment shows blank page
+
+New features:
+--------------------------
+1908651  	  Create PDF with Screenings
+1908671  	  Pop up comments for dewar in sample lists
+
+************
+>>>>>>>>>>>>>>>>>>>Tag ISPYB2_21
+* 01.04.08 *
+************
+Servers switch: new pytest and pyserv
+new warning message on welcome page for test server
+-------------------------
+
+287 Export Shipment : Sample order
+************
+* xx.xx.08 *
+************
+Bugs fixed:
+-------------------------
+287 Export Shipment : Sample order
+
+New features:
+--------------------------
+224 Beamline tel number
+	
+************
+* 22.02.08 *
+************
+Bugs fixed:
+-------------------------
+161 PDF report for samples sorted by location in container
+some bug fixed for DNA pages
+
+************
+=======
+* 22.02.08 *
+************
+Bugs fixed:
+-------------------------
+161 PDF report for samples sorted by location in container
+some bug fixed for DNA pages
+
+************
+>>>>>>> 1.44
+* 08.02.08 *
+************
+Bugs fixed:
+-------------------------
+212 Can't create Sample with already used DM code
+283 assign new position in container
+
+New features:
+--------------------------
+
+
+************
+* 08.01.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+282 Export Shipment in XLS file
+
+************
+* 07.01.08 *
+************
+
+New features:
+--------------------------
+New version of SMISServer (tag: ISPYB2_2) installed for update WebService, amd WS improvement
+218 Use of EJBs for the Import feature web service
+
+************
+* 30.11.07 *
+************
+Bugs fixed:
+-------------------------
+synchrotron current overflow makes crash 
+
+New features:
+--------------------------
+275 DNA files 
+276 Update FX main proposer and proposal title : email address for PDF report
+
+************
+* xx.xx.07 *
+************
+New features:
+--------------------------
+241 Counting users
+
+
+************
+* 25.09.07 *
+************
+New features:
+--------------------------
+New version of SMISServer (tag: NEW_AFORM1_1) installed for update WebService
+
+Bugs fixed:
+-------------------------
+226 Location in container already used
+269 Use a different title for sessions if only last sessions displayed
+
+************
+* 18.09.07 *
+************
+Bugs fixed:
+-------------------------
+269 View/update dataCollections too long
+266 Upload from file - uniqueness on acronym + sample name
+260 Upload naming
+256 Upload from file - duplicate proteins with same acronym
+
+New features:
+--------------------------
+    Log XLS file upload usage into Database
+228 Populate excel template from database (with DM codes)
+
+************
+* 17.07.07 *
+************
+Bugs fixed:
+-------------------------
+248 Calculate the correct session start/end time when importing new sessions from SMIS DB
+
+New features:
+--------------------------
+268 Crystal characterisation (DNA)
+238 Image - measured intensity to be displayed
+
+
+************
+* 10.07.07 *
+************
+Bugs fixed:
+-------------------------
+227 Search data collection by protein acronym runs forever
+
+New features:
+--------------------------
+195 Displaying sessions - new option "display last sessions" and code cleaning  to go quicker
+
+
+************
+* 03.07.07 *
+************
+
+Bugs fixed:
+-------------------------
+244 DNA HTML result files - links
+    Edit/Create sample page, list of protein acronyms + space group ordered using the acronym
+
+New features:
+--------------------------
+238 Image - measured intensity to be displayed
+248 Calculate the correct session start/end time when importing new sessions from SMIS DB
+251 Local contact column suppressed from session list
+253 Search protein - list of samples
+
+
+************
+* 11.06.07 *
+************
+
+Bugs fixed:
+-------------------------
+245 Edit sample diffraction plan - refresh sample list table not updated
+244 DNA HTML result files - links
+242 Acronym of 1st sample in container kept instead of last one
+240 JBOSS multiple threads created
+237 Create sample page long to load
+
+New features:
+--------------------------
+246 Maintenance static message added
+228 Populate excel template from database
+222 last shipment at Top would be better than at bottom of page
+221 Upload check for acro-sample unicity
+
+************
+* 28.03.07 *
+************
+
+New version ISPYB2_0
+--------------------
+New version with new configuration :
+	- classLoader from J2EE, 
+	- client/server separation, 
+	- libraries cleaning, 
+	- new JBoss version (4.0.3SP1),
+	- new struts version (1.2.7),
+	- new xdoclet version (1.2.3)
+	
+New feature:
+------------
+Experiment Parameters.
+	
+

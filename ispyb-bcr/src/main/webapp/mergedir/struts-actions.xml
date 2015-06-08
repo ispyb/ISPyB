@@ -1,0 +1,58 @@
+		<!-- =======================================================  -->
+		<!-- Actions not defined with Xdoclet						-->
+		<!-- =======================================================  -->
+			
+		<!-- Welcome pages -->
+		
+		<action 
+			path="/welcomeGuestPage" 
+			forward="bcr.welcome.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<action 
+			path="/welcomeGuestPageBCR" 
+			forward="bcr.welcomeBCR.page" 
+			scope="request" 
+			validate="false"/>
+	
+		<!-- Security -->
+		
+		<action 
+			path="/logonPage" 
+			forward="bcr.logon.page" 
+			scope="request" 
+			validate="false"/>
+		
+		<action 
+			path="/logonUnAuthorizedPage" 
+			forward="bcr.logon.error.page" 
+			scope="request" 
+			validate="false"/>
+
+		<!-- Error pages -->
+		
+		<action 
+			path="/defaultErrorPage" 
+			forward="bcr.default.error.page" 
+			scope="request" 
+			validate="false"/>
+		
+		<action 
+			path="/permissionErrorPage" 
+			forward="bcr.permission.error.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<!-- Tracking pages -->
+		
+		<action 
+			path="/user/chooseappli" 
+			forward="bcr.tracking.chooseappli.page" 
+			scope="request" 
+			validate="false"/>
+
+		
+
+
+

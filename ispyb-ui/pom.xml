@@ -1,0 +1,489 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ispyb</groupId>
+	<artifactId>ispyb-ui</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jboss.home.dev>${jboss.home}</jboss.home.dev> 
+		<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>
+		<common.lib.dir>${basedir}/lib</common.lib.dir>
+		<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
+		<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>ispyb-ejb3</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts</artifactId>
+			<version>1.2.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.1-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>struts-layout</groupId>
+			<artifactId>struts-layout</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.safehaus.jug</groupId>
+			<artifactId>jug</artifactId>
+			<version>2.0.0</version>
+			<classifier>lgpl</classifier>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts-el</artifactId>
+			<version>1.2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.phobos</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.rtftemplate</groupId>
+			<artifactId>rtftemplate</artifactId>
+			<version>1.0.1-b13</version>
+		</dependency>
+		<dependency>
+			<groupId>velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>cas</groupId>
+			<artifactId>casclient</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>xdoclet</groupId>
+			<artifactId>xdoclet-ejb-module</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>tomcat</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.0-5.5.23</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.commons-csv</artifactId>
+			<version>1.0-r706899_1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logmanager</groupId>
+			<artifactId>log4j-jboss-logmanager</artifactId>
+			<version>1.1.0.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-ant</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.picketbox</groupId>
+			<artifactId>picketbox</artifactId>
+			<version>4.0.21.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.1-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.0.0.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-xjc</artifactId>
+			<version>2.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext-rtf</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<!-- JBoss distributes a complete set of Java EE 7 APIs including a Bill 
+			of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
+			of artifacts. We use this here so that we always get the correct versions 
+			of artifacts. Here we use the jboss-javaee-7.0 stack (you can read this as 
+			the JBoss stack of the Java EE 7 APIs). You can actually use this stack with 
+			any version of WildFly that implements Java EE 7, not just WildFly 8! -->
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-7.0</artifactId>
+			<version>1.0.0.Final</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>1.0.2.Final</version>
+				<configuration>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<!-- specify UTF-8, ISO-8859-1 or any other file encoding -->
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<!-- plugin to minimify javascript and css -->
+
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<preProcessAggregates>true</preProcessAggregates>
+					<aggregations>
+						<aggregation>
+							<insertNewLine>true</insertNewLine>
+							<output>${basedir}/src/main/webapp/js/ispyb/min/ispyb-mx.js</output>
+							<inputDir>${basedir}/src/main/webapp/js/ispyb/mx</inputDir>
+							<includes>
+								<include>**/*.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<insertNewLine>true</insertNewLine>
+							<output>${basedir}/src/main/webapp/js/ispyb/min/ispyb-bx.js</output>
+							<inputDir>${basedir}/src/main/webapp/js/ispyb</inputDir>
+							<includes>
+								<include>utils/event.js</include>
+								<include>biosaxs/graph/genericgraph.js</include>
+								<include>biosaxs/widget/dygraphwidget.js</include>
+								<include>biosaxs/grid/queuegrid.js</include>
+								<include>biosaxs/graph/commons/data/itemgraphformatter.js</include>
+								<include>biosaxs/**/*.js</include>
+							</includes>
+						</aggregation>
+					</aggregations>
+					<!-- minimize only the aggregated files -->
+					<includes>
+						<include>js/ispyb/min/**/*.js</include>
+					</includes>
+
+					<excludes>
+						<exclude>**/*-min.js</exclude>
+						<exclude>**/*.min.js</exclude>
+					</excludes>
+
+					<nosuffix>false</nosuffix>
+					<jswarn>false</jswarn>
+				</configuration>
+			</plugin>
+			<!-- plugin to run ant task xdoclet to generate strutsXXX.xml files in 
+				WEB-INF -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<echo message="xdoclet.home = ${xdoclet.home}" />
+
+								<path id="xdoclet.client.path">
+									<fileset dir="${xdoclet.home}">
+										<include name="*.jar" />
+									</fileset>
+									<fileset dir="${common.lib.dir}">
+										<include name="*.jar" />
+									</fileset>
+									<pathelement
+										location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
+								</path>
+
+								<echo message="user.home: ${xdoclet.client.path}" />
+								<echo message="java src:  ${basedir}/src/main/java}" />
+
+								<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask"
+									classpathref="xdoclet.client.path" />
+
+								<webdoclet destdir="${webinf.dir}"
+									mergeDir="${basedir}/src/main/webapp/mergedir" verbose="true"
+									excludedtags="@version,@author">
+									<fileset dir="${basedir}/src/main/java">
+										<include name="**/*.java" />
+										<exclude name="**/uk/ac/ehtpx/**" />
+									</fileset>
+
+									<deploymentdescriptor servletspec="2.3"
+										validatexml="true" destdir="${webinf.dir}" distributable="false" />
+
+									<strutsconfigxml version="1.2" destdir="${webinf.dir}" />
+									<strutsvalidationxml destdir="${webinf.dir}" />
+									<jbosswebxml destdir="${webinf.dir}" />
+
+								</webdoclet>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<!-- profiles to separate dev to prod properties -->
+	<!-- the dev properties have to be set according to your own dev environment -->
+	<profiles>
+		<profile>
+			<id>PROD</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
+				<js.minimized>true</js.minimized>
+				<js.alternative.path.enabled>false</js.alternative.path.enabled>
+			</properties>
+		</profile>
+		<profile>
+			<id>DEV</id>
+			<properties>
+				<js.minimized>false</js.minimized>
+				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
+				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
+				<js.alternative.path.enabled>true</js.alternative.path.enabled>
+				<data.path>/work/ademaria/data/pyarch/</data.path>
+			</properties>
+		</profile>
+
+		<!-- profiles to separate site dependent properties -->
+		<profile>
+			<id>ESRF</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<ispyb.site>ESRF</ispyb.site>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
+				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+				<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
+				<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
+
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.root.folder>/data/pyapdb/</ispyb.root.folder>
+
+				<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>160.103.2.175</mail.smtp.host>
+				<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+				<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+				<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+
+				<dictionary.site>The ESRF</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>
+
+			</properties>
+		</profile>
+		<profile>
+			<id>EMBL</id>
+			<properties>
+				<ispyb.site>EMBL</ispyb.site>
+			</properties>
+		</profile>
+		<profile>
+			<id>SOLEIL</id>
+			<properties>
+				<ispyb.site>SOLEIL</ispyb.site>
+				<ispyb.dbDialect>ORACLE</ispyb.dbDialect>
+				<ispyb.dbJndiName>java:/oracle/ispyb_db</ispyb.dbJndiName>
+				<ispyb.dbJndiName.direct>java:/oracle/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+				<ispyb.email.admin>sunset.dev@synchrotron-soleil.fr</ispyb.email.admin>
+
+			</properties>
+		</profile>
+		<profile>
+			<id>MAXIV</id>
+			<properties>
+				<ispyb.site>MAXIV</ispyb.site>
+			</properties>
+		</profile>
+
+	</profiles>
+
+</project>

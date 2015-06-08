@@ -1,0 +1,1076 @@
+Index: client/etc/conf/tiles-defs_ESRF.xml
+===================================================================
+--- client/etc/conf/tiles-defs_ESRF.xml	(revision 1797)
++++ client/etc/conf/tiles-defs_ESRF.xml	(working copy)
+@@ -274,6 +274,12 @@
+ 		<put name="body" value="/tiles/bodies/common/logon/userProposalTypeChoose.jsp" />
+ 	</definition>
+ 	
++	<!-- page where user with several proposals, can choose which one he/she wants to use -->
++	<definition name="site.proposal.choose.page" extends="site.plain.layout" >
++		<put name="title" value="Which experiment do you want to use?" />
++		<put name="body" value="/tiles/bodies/common/logon/userProposalChoose.jsp" />
++	</definition>
++	
+ 	<!-- =======================================================  -->
+ 	<!-- error pages -->
+ 	<!-- =======================================================  -->
+Index: client/etc/mergedir/struts-actions.xml
+===================================================================
+--- client/etc/mergedir/struts-actions.xml	(revision 1797)
++++ client/etc/mergedir/struts-actions.xml	(working copy)
+@@ -78,6 +78,12 @@
+ 			forward="site.proposalType.choose.page" 
+ 			scope="request" 
+ 			validate="false"/>
++			
++		<action 
++			path="/proposalsSelector" 
++			forward="site.proposal.choose.page" 
++			scope="request" 
++			validate="false"/>
+ 
+ 		<!-- Error pages -->
+ 		<action 
+Index: client/src/ispyb/client/security/LogonAction.java
+===================================================================
+--- client/src/ispyb/client/security/LogonAction.java	(revision 1797)
++++ client/src/ispyb/client/security/LogonAction.java	(working copy)
+@@ -28,13 +28,14 @@
+ import ispyb.server.data.ejb3.services.collections.IspybCrystalClass3Service;
+ import ispyb.server.data.ejb3.services.collections.IspybReference3Service;
+ import ispyb.server.data.ejb3.services.config.MenuGroup3Service;
++import ispyb.server.data.ejb3.services.saxs.core.proposal.SaxsProposal3Service;
+ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+ import ispyb.server.data.ejb3.vos.autoproc.IspybAutoProcAttachment3VO;
+ import ispyb.server.data.ejb3.vos.autoproc.SpaceGroup3VO;
+ import ispyb.server.data.ejb3.vos.collections.IspybCrystalClass3VO;
+ import ispyb.server.data.ejb3.vos.collections.IspybReference3VO;
+ import ispyb.server.data.ejb3.vos.config.MenuGroup3VO;
+-import ispyb.server.security.DatabaseLoginModuleHelper;
++import ispyb.server.data.ejb3.vos.proposals.Proposal3VO;
+ import ispyb.server.security.EmployeeVO;
+ import ispyb.server.security.LdapConnection;
+ 
+@@ -42,6 +43,7 @@
+ import java.util.Iterator;
+ import java.util.List;
+ 
++import javax.naming.NamingException;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ import javax.servlet.http.HttpSession;
+@@ -80,9 +82,10 @@
+ 
+ 	private final Logger LOG = Logger.getLogger(LogonAction.class);
+ 
++	private SaxsProposal3Service saxsProposal3Service;
++
+ 	@Override
+-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+-			HttpServletResponse response) {
++	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+ 
+ 		LOG.info("Logon ");
+ 
+@@ -90,103 +93,80 @@
+ 
+ 		try {
+ 			// --- Log ---
+-			String userName = request.getUserPrincipal().getName();
++			String userName = request.getUserPrincipal().toString();
+ 			Log4StatLogger.Log4Stat("LOGON", userName, "");
+-			
+-			String userGivenName = "";
+-			String userLastName = "";
+-			String userSiteNumber = "";
+-			
+-			if (Constants.SITE_AUTHENTICATION_METHOD.toString().trim().toUpperCase().equals("LDAP") && !Constants.SITE_IS_SOLEIL()){
+-				EmployeeVO employee = LdapConnection.findByUniqueIdentifier(userName);
+-				userGivenName = employee.getGivenName() == null || employee.getGivenName().trim().equals("") ? "no given name"
+-					: employee.getGivenName();
+-				userLastName = employee.getSn() == null || employee.getSn().trim().equals("") ? "no last name"
+-					: employee.getSn();
+-				userSiteNumber = employee.getSiteNumber();
+-			}
+-			
+-			LOG.info(Constants.SITE_AUTHENTICATION_METHOD.toString() + " Logon: user = " + userName + " (" + userGivenName + " " + userLastName + ")  ");
+-			String proposalCode = this.getProposalCode(userName);
+-
+-			String proposalType = LogonUtils.getProposalType(userName);
+-			if (proposalType == null) {
+-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "This proposal is not a valid proposal: " + userName));
+-				saveErrors(request, errors);
+-				request.logout();
+-				return (mapping.findForward("error"));
+-			}
+ 
+-			LOG.debug("ProposalCode: " + proposalCode);
+-			LOG.debug("ProposalType: " + proposalType);
+-
+-			// -----------
+ 			HttpSession session = request.getSession();
+ 			ArrayList<RoleDO> userRoles = getUserRoles(request);
+-			session.setAttribute(Constants.ROLES, userRoles);
+-			session.setAttribute(Constants.LDAP_GivenName, userGivenName);
+-			session.setAttribute(Constants.LDAP_LastName, userLastName);
+-			session.setAttribute(Constants.LDAP_siteNumber, userSiteNumber);
+-
+-			// -------------------------------
+-			// the list of crystal class is stored in session because it is fixed during the session time
+-			this.ispybCrystalClassService = (IspybCrystalClass3Service) ejb3ServiceLocator.getLocalService(IspybCrystalClass3Service.class);
+-			List<IspybCrystalClass3VO> listOfCrystalClass = ispybCrystalClassService.findAll();
+-			session.setAttribute(Constants.ISPYB_CRYSTAL_CLASS_LIST, listOfCrystalClass);
+-
+-			// -------------
+-			// the list of autoproc attachment are loaded and store in session because they are used everywhere in
+-			// results.
+-			this.ispybAutoProcAttachmentService = (IspybAutoProcAttachment3Service) ejb3ServiceLocator.getLocalService(IspybAutoProcAttachment3Service.class);
+-			List<IspybAutoProcAttachment3VO> listOfAutoProcAttachment = ispybAutoProcAttachmentService.findAll();
+-			session.setAttribute(Constants.ISPYB_AUTOPROC_ATTACH_LIST, listOfAutoProcAttachment);
+ 
+-			// load the references list
+-			this.ispybReferenceService = (IspybReference3Service) ejb3ServiceLocator.getLocalService(IspybReference3Service.class);
+-			List<IspybReference3VO> listOfReference = ispybReferenceService.findAll();
+-			session.setAttribute(Constants.ISPYB_REFERENCE_LIST, listOfReference);
+-
+-			// load the allowed space groups
+-			this.spaceGroupService = (SpaceGroup3Service) ejb3ServiceLocator.getLocalService(SpaceGroup3Service.class);
+-			List<SpaceGroup3VO> listOfSpaceGroup = this.spaceGroupService.findAllowedSpaceGroups();
+-			List<String> spaceGroups = new ArrayList<String>();
+-			if (listOfSpaceGroup != null) {
+-				for (Iterator<SpaceGroup3VO> iter = listOfSpaceGroup.iterator(); iter.hasNext();) {
+-					SpaceGroup3VO sp = iter.next();
+-					spaceGroups.add(sp.getSpaceGroupShortName());
+-				}
++			/**************************************
++			 * Authentication using LDAP
++			 **************************************/
++			if (Constants.SITE_AUTHENTICATION_METHOD.toString().trim().toUpperCase().equals("LDAP")) {
++				EmployeeVO employee = LdapConnection.findByUniqueIdentifier(userName);
++				String userGivenName = employee.getGivenName() == null || employee.getGivenName().trim().equals("") ? "no given name" : employee.getGivenName();
++				String userLastName = employee.getSn() == null || employee.getSn().trim().equals("") ? "no last name" : employee.getSn();
++				String userSiteNumber = employee.getSiteNumber();
++				/** All this parameters exist only for LDAP auth **/
++				session.setAttribute(Constants.ROLES, userRoles);
++				session.setAttribute(Constants.LDAP_GivenName, userGivenName);
++				session.setAttribute(Constants.LDAP_LastName, userLastName);
++				session.setAttribute(Constants.LDAP_siteNumber, userSiteNumber);
++				LOG.info(Constants.SITE_AUTHENTICATION_METHOD.toString() + " Logon: user = " + userName + " (" + userGivenName + " " + userLastName + ")  ");
+ 			}
+-			session.setAttribute(Constants.ISPYB_ALLOWED_SPACEGROUPS_LIST, spaceGroups);
+ 
+-			LOG.debug("SessionId: " + session.getId());
++			
++			/**************************************
++			 * TODO: MX initialization to be moved
++			 **************************************/
++			this.initializeMX(session);
+ 
+-			if (Constants.SITE_IS_SOLEIL()) {
+-				session.setAttribute(Constants.FULLNAME, DatabaseLoginModuleHelper.doGetUserFullName());
+-				LOG.info("fullname: " + session.getAttribute(Constants.FULLNAME));
+-			}
++			/*******************************************
++			 * Getting Proposals linked to this userName
++			 * TODO: Temporary using SaxsProposal3Service because it is ejb3-entityManager services but should me moved to Proposal3Service
++			 *******************************************/
++			this.saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator.getLocalService(SaxsProposal3Service.class);
++			List<Proposal3VO> proposals = this.saxsProposal3Service.findProposalByLoginName(userName);
+ 
++			System.out.println("ROLES");
++			System.out.println(userRoles.size());
+ 			if (userRoles.size() > 1) {
+-				// forward to page where user can select which Role he want to use
++				/****************************************************************************
++				 * ROLE SELECTOR forward to page where user can select which Role he want to
++				 ****************************************************************************/
+ 				response.sendRedirect(request.getContextPath() + "/roleChoosePage.do");
+ 
+ 			} else {
+-				// create the menu and
+-				// forward to Welcome page belonging to the unique role
+-
++				/****************************************************************************
++				 * PROPOSAL SELECTOR
++				 ****************************************************************************/
+ 				RoleDO currentRole = userRoles.get(0);
+-				session.setAttribute(Constants.CURRENT_ROLE, userRoles.get(0));
+-
+-				if (proposalType.equals(Constants.PROPOSAL_MX_BX)) {
+-					// forward to page where user can select which experiment he wants to use
+-					response.sendRedirect(request.getContextPath() + "/userProposalTypeChoosePage.do");
+-				} else {
+-					MenuContext menu = new MenuContext(currentRole.getId(), proposalType);
++				session.setAttribute(Constants.CURRENT_ROLE, currentRole);
++				/** setter of the available proposal for this user **/
++				session.setAttribute("Proposals", proposals);
++				if ((proposals.size() == 1)&&((proposals.get(0).getType().equals("MX"))||(proposals.get(0).getType().equals("BX")))){
++					Proposal3VO proposal3vo = proposals.get(0);
++					String proposalType = proposal3vo.getType();
++					/**
++					 * Only one proposal and only one technique: MX or SAXS
++					 */
++					session.setAttribute(Constants.PROPOSAL_ID, proposal3vo.getProposalId());
++					session.setAttribute(Constants.PROPOSAL_NUMBER, proposal3vo.getNumber());
++					session.setAttribute(Constants.PROPOSAL_CODE, proposal3vo.getCode());
++					
++					RoleDO role = (RoleDO) request.getSession().getAttribute(Constants.CURRENT_ROLE);
++					MenuContext menu = new MenuContext(role.getId(), proposalType);
+ 					session.setAttribute(Constants.MENU, menu);
+-
+-					// send redirect to welcome page of the unique role
+-					LOG.info("user role is : " + currentRole.getName());
+-					LOG.debug("server name is : " + request.getServerName());
+-					response.sendRedirect(request.getContextPath() + currentRole.getValue());
++					session.setAttribute(Constants.TECHNIQUE, proposalType);
++					/**
++					 * Sends to the unique role, unique proposal, unique technique
++					 */
++					response.sendRedirect(request.getContextPath() + role.getValue());
++					
++				}
++				else{
++					
++					response.sendRedirect(request.getContextPath() + "/proposalsSelector.do");
+ 				}
+ 			}
+ 
+@@ -201,12 +181,47 @@
+ 		return (mapping.findForward("guestPage"));
+ 	}
+ 
+-	private String getProposalCode(String userName) {
+-		ArrayList<String> authenticationInfo = StringUtils.GetProposalNumberAndCode(userName);
+-		String proposalCode = authenticationInfo.get(0);
+-		return proposalCode;
++	private void initializeMX(HttpSession session) throws Exception {
++		// -------------------------------
++		// the list of crystal class is stored in session because it is
++		// fixed during the session time
++		this.ispybCrystalClassService = (IspybCrystalClass3Service) ejb3ServiceLocator.getLocalService(IspybCrystalClass3Service.class);
++		List<IspybCrystalClass3VO> listOfCrystalClass = ispybCrystalClassService.findAll();
++		session.setAttribute(Constants.ISPYB_CRYSTAL_CLASS_LIST, listOfCrystalClass);
++
++		// -------------
++		// the list of autoproc attachment are loaded and store in session
++		// because they are used everywhere in
++		// results.
++		this.ispybAutoProcAttachmentService = (IspybAutoProcAttachment3Service) ejb3ServiceLocator.getLocalService(IspybAutoProcAttachment3Service.class);
++		List<IspybAutoProcAttachment3VO> listOfAutoProcAttachment = ispybAutoProcAttachmentService.findAll();
++		session.setAttribute(Constants.ISPYB_AUTOPROC_ATTACH_LIST, listOfAutoProcAttachment);
++
++		// load the references list
++		this.ispybReferenceService = (IspybReference3Service) ejb3ServiceLocator.getLocalService(IspybReference3Service.class);
++		List<IspybReference3VO> listOfReference = ispybReferenceService.findAll();
++		session.setAttribute(Constants.ISPYB_REFERENCE_LIST, listOfReference);
++
++		// load the allowed space groups
++		this.spaceGroupService = (SpaceGroup3Service) ejb3ServiceLocator.getLocalService(SpaceGroup3Service.class);
++		List<SpaceGroup3VO> listOfSpaceGroup = this.spaceGroupService.findAllowedSpaceGroups();
++		List<String> spaceGroups = new ArrayList<String>();
++		if (listOfSpaceGroup != null) {
++			for (Iterator<SpaceGroup3VO> iter = listOfSpaceGroup.iterator(); iter.hasNext();) {
++				SpaceGroup3VO sp = iter.next();
++				spaceGroups.add(sp.getSpaceGroupShortName());
++			}
++		}
++		session.setAttribute(Constants.ISPYB_ALLOWED_SPACEGROUPS_LIST, spaceGroups);
++
+ 	}
+ 
++//	private String getProposalCode(String userName) {
++//		ArrayList<String> authenticationInfo = StringUtils.GetProposalNumberAndCode(userName);
++//		String proposalCode = authenticationInfo.get(0);
++//		return proposalCode;
++//	}
++
+ 	/**
+ 	 * Get all Groups from DB
+ 	 * 
+@@ -246,10 +261,8 @@
+ 	 * @return
+ 	 */
+ 	private ArrayList<RoleDO> getUserRoles(HttpServletRequest request) {
+-
+ 		ArrayList<RoleDO> groups = getGroups();
+ 		Iterator<RoleDO> it = groups.iterator();
+-
+ 		ArrayList<RoleDO> userRoles = new ArrayList<RoleDO>();
+ 		while (it.hasNext()) {
+ 			RoleDO role = it.next();
+Index: client/src/ispyb/client/security/UserProposalChooseAction.java
+===================================================================
+--- client/src/ispyb/client/security/UserProposalChooseAction.java	(revision 0)
++++ client/src/ispyb/client/security/UserProposalChooseAction.java	(revision 0)
+@@ -0,0 +1,140 @@
++/*******************************************************************************
++ * This file is part of ISPyB.
++ * 
++ * ISPyB is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ * 
++ * ISPyB is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ * 
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
++ * 
++ * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
++ ******************************************************************************************************************************/
++
++package ispyb.client.security;
++
++import ispyb.client.common.menu.MenuContext;
++import ispyb.client.bx.dataAdapter.BiosaxsDataAdapterCommon;
++import ispyb.client.security.roles.RoleDO;
++import ispyb.client.common.util.Constants;
++import ispyb.server.data.ejb3.vos.proposals.Proposal3VO;
++
++import java.lang.reflect.Modifier;
++import java.util.Calendar;
++import java.util.GregorianCalendar;
++import java.util.List;
++
++import javax.servlet.http.HttpServletRequest;
++import javax.servlet.http.HttpServletResponse;
++import javax.servlet.http.HttpSession;
++
++import org.apache.log4j.Logger;
++import org.apache.struts.action.ActionForm;
++import org.apache.struts.action.ActionForward;
++import org.apache.struts.action.ActionMapping;
++
++import com.google.gson.GsonBuilder;
++
++/**
++ * @struts.action name="UserProposalChooseAction" path="/user/userproposalchooseaction"
++ *                type="ispyb.client.security.UserProposalChooseAction"
++ *                validate="false" parameter="reqCode" scope="request"
++ * 
++ * 
++ */
++public class UserProposalChooseAction extends org.apache.struts.actions.DispatchAction {
++	private final static Logger LOGGER = Logger.getLogger(UserProposalChooseAction.class);
++
++	protected static Calendar NOW = GregorianCalendar.getInstance();
++
++
++	private void initServices() {
++		
++	}
++
++	@Override
++	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
++		this.initServices();
++		return super.execute(mapping, form, request, response);
++	}
++
++	
++	
++	/**
++	 * getProposalList
++	 * 
++	 * @param mapping
++	 * @param actForm
++	 * @param request
++	 * @param in_reponse
++	 * @return
++	 * @throws Exception
++	 */
++	public ActionForward getProposalList(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
++		try {
++			System.out.println("getProposalList");
++			/** Updating from SMIS **/
++			HttpSession session = request.getSession();
++			@SuppressWarnings("unchecked")
++			List<Proposal3VO> proposals = (List<Proposal3VO>) session.getAttribute("Proposals");
++			String json = new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).create().toJson(proposals);
++			BiosaxsDataAdapterCommon.sendResponseToclient(response, json);
++		} catch (Exception exp) {
++			response.getWriter().write(exp.getMessage() + "  " + exp.getCause());
++			response.setStatus(500);
++		}
++		return null;
++
++	}
++	
++	
++	/**
++	 * goToProposal
++	 * 
++	 * @param mapping
++	 * @param actForm
++	 * @param request
++	 * @param in_reponse
++	 * @return
++	 * @throws Exception
++	 */
++	public ActionForward goToProposal(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
++		try {
++			int proposalId = Integer.parseInt(request.getParameter("proposalId"));
++			String proposalType = request.getParameter("userProposalType");
++			HttpSession session = request.getSession();
++			@SuppressWarnings("unchecked")
++			List<Proposal3VO> proposals = (List<Proposal3VO>) session.getAttribute("Proposals");
++
++			for (Proposal3VO proposal3vo : proposals) {
++				if (proposal3vo.getProposalId().equals(proposalId)){
++					session.setAttribute(Constants.PROPOSAL_ID, proposal3vo.getProposalId());
++					session.setAttribute(Constants.PROPOSAL_NUMBER, proposal3vo.getNumber());
++					session.setAttribute(Constants.PROPOSAL_CODE, proposal3vo.getCode());
++					
++					RoleDO role = (RoleDO) request.getSession().getAttribute(Constants.CURRENT_ROLE);
++					MenuContext menu = new MenuContext(role.getId(), proposalType);
++					session.setAttribute(Constants.MENU, menu);
++					session.setAttribute(Constants.TECHNIQUE, proposalType);
++					
++					// send redirect to welcome page of the unique role
++					response.sendRedirect(request.getContextPath() + role.getValue());
++				}
++			}
++			
++			
++			
++		} catch (Exception exp) {
++			exp.printStackTrace();
++		}
++		return null;
++
++	}
++}
++
+Index: client/src/ispyb/client/security/UserProposalTypeChooseAction.java
+===================================================================
+--- client/src/ispyb/client/security/UserProposalTypeChooseAction.java	(revision 1797)
++++ client/src/ispyb/client/security/UserProposalTypeChooseAction.java	(working copy)
+@@ -29,9 +29,14 @@
+  */
+ package ispyb.client.security;
+ 
++import java.lang.reflect.Modifier;
++import java.util.List;
++
+ import ispyb.client.common.menu.MenuContext;
++import ispyb.client.bx.dataAdapter.BiosaxsDataAdapterCommon;
+ import ispyb.client.security.roles.RoleDO;
+ import ispyb.client.common.util.Constants;
++import ispyb.server.data.ejb3.vos.proposals.Proposal3VO;
+ 
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+@@ -46,6 +51,8 @@
+ import org.apache.struts.action.ActionMessages;
+ import org.apache.struts.validator.DynaValidatorForm;
+ 
++import com.google.gson.GsonBuilder;
++
+ /**
+  * UserProposalTypeChooseAction
+  * 
+@@ -62,7 +69,7 @@
+ 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+ 			HttpServletResponse response) {
+ 
+-		LOG.debug("UserProposalTypeChooseAction");
++		LOG.info("UserProposalTypeChooseAction");
+ 
+ 		ActionMessages errors = new ActionMessages();
+ 
+@@ -76,8 +83,9 @@
+ 			session.setAttribute(Constants.TECHNIQUE, userProposalType);
+ 			
+ 			// send redirect to welcome page of the unique role
+-			LOG.debug("user role is : " + role.getName());
+-			LOG.debug("server name is : " + request.getServerName());
++			LOG.info("user role is : " + role.getName());
++			LOG.info("server name is : " + request.getServerName());
++			LOG.info("sendRedirect: " + request.getContextPath() + role.getValue());
+ 			response.sendRedirect(request.getContextPath() + role.getValue());
+ 
+ 		} catch (Exception e) {
+@@ -91,5 +99,8 @@
+ 		return null;
+ 
+ 	}
++	
++	
++	
+ 
+ }
+Index: client/src/ispyb/client/welcome/WelcomeUserAction.java
+===================================================================
+--- client/src/ispyb/client/welcome/WelcomeUserAction.java	(revision 1797)
++++ client/src/ispyb/client/welcome/WelcomeUserAction.java	(working copy)
+@@ -53,7 +53,8 @@
+ 
+ /**
+  * 
+- * @struts.action path="/user/welcomeUser" name="viewProposalForm" validate="false"
++ * @struts.action path="/user/welcomeUser" name="viewProposalForm"
++ *                validate="false"
+  * 
+  * @struts.action-forward name="error" path="site.default.error.page"
+  * 
+@@ -63,8 +64,8 @@
+  * 
+  * @struts.action-forward name="unauthorizedAccess" path="site.logon.error.page"
+  * 
+- * @struts.action-forward name="viewSessionPage"
+- *                        path="/menuSelected.do?topMenuId=16&amp;targetUrl=%2Fuser%2FviewSession.do%3FreqCode%3Ddisplay"
++ * @struts.action-forward name="viewSessionPage" path=
++ *                        "/menuSelected.do?topMenuId=16&amp;targetUrl=%2Fuser%2FviewSession.do%3FreqCode%3Ddisplay"
+  * 
+  */
+ public class WelcomeUserAction extends Action {
+@@ -74,10 +75,9 @@
+ 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+ 
+ 	@Override
+-	public ActionForward execute(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+-			HttpServletResponse response) {
++	public ActionForward execute(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
+ 
+-		LOG.debug("retrieve proposal attached to user");
++		LOG.info("retrieve proposal attached to user");
+ 
+ 		ActionMessages errors = new ActionMessages();
+ 		ActionMessages messages = new ActionMessages();
+@@ -85,14 +85,14 @@
+ 		if (Constants.AUTHORISATION_PROPOSALS_SOURCE.equals("request")) {
+ 			try {
+ 
+-				Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator
+-						.getLocalService(Proposal3Service.class);
++				Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+ 
+ 				List<Proposal3VO> proposalValues = null;
+ 
+ 				Principal userPrincipal = request.getUserPrincipal();
+ 
+-				// ArrayList<ProposalValue> allProposalValues = proposal.findAll();
++				// ArrayList<ProposalValue> allProposalValues =
++				// proposal.findAll();
+ 				proposalValues = new ArrayList<Proposal3VO>();
+ 
+ 				// Generate the list of proposals to which the user has access
+@@ -108,19 +108,23 @@
+ 				}
+ 
+ 				Integer proposalId = new Integer(-1);
+-				// Was the proposal ID sent as a parameter? If so, pick it up ...
++				// Was the proposal ID sent as a parameter? If so, pick it up
++				// ...
+ 				String proposalIdStr = request.getParameter(Constants.PROPOSAL_ID);
+ 
+ 				if (proposalIdStr != null) {
+ 					proposalId = new Integer(proposalIdStr);
+ 				}
+-				// If not, try to pick it up from the session's attribs. (Meaning it's been set already.)
++				// If not, try to pick it up from the session's attribs.
++				// (Meaning it's been set already.)
+ 				else {
+ 					Object pObj = request.getSession().getAttribute(Constants.PROPOSAL_ID);
++
+ 					if (pObj instanceof Integer) {
+ 						proposalId = (Integer) pObj;
+ 					}
+-					// If not set already, try to use the first proposal in the list
++					// If not set already, try to use the first proposal in the
++					// list
+ 					else if (!proposalValues.isEmpty()) {
+ 						Proposal3VO value = proposalValues.get(0);
+ 						if (value == null)
+@@ -152,8 +156,7 @@
+ 					return (mapping.findForward("error"));
+ 				}
+ 
+-				LOG.debug("Setting session attribute proposal_id=" + value.getProposalId() + ", proposal_code="
+-						+ value.getCode() + ", proposal_number=" + value.getNumber());
++				LOG.debug("Setting session attribute proposal_id=" + value.getProposalId() + ", proposal_code=" + value.getCode() + ", proposal_number=" + value.getNumber());
+ 
+ 				request.getSession().setAttribute(Constants.PROPOSAL_ID, value.getProposalId());
+ 				request.getSession().setAttribute(Constants.PROPOSAL_CODE, value.getCode());
+@@ -198,44 +201,48 @@
+ 			Principal userPrincipal = request.getUserPrincipal();
+ 			Integer proposalId = new Integer(0);
+ 
+-			ArrayList authenticationInfo = StringUtils.GetProposalNumberAndCode(userPrincipal.getName());
+-			String proposalCode = (String) authenticationInfo.get(0);
+-			String proposalNumber = (String) authenticationInfo.get(2);
+-
+-			// case of person login : proposalNumber is not null
+-
+-			boolean isUser = proposalNumber != null;
+-			Integer proposalInt;
+-
+-			if (isUser == false) {
+-				// case where someone logs with a new account created for ssl gateway multiple access
+-				// we take off the 2 last letters
+-				proposalNumber = proposalNumber.substring(0, (proposalNumber.length() - 2));
+-				try {
+-					proposalInt = new Integer(proposalNumber);
+-					isUser = true;
+-				} catch (NumberFormatException e) {
+-
+-					isUser = false;
+-				}
+-			}
+-
++			/**
++			 * Not valid anymore
++			 * 
++			 * ArrayList authenticationInfo =
++			 * StringUtils.GetProposalNumberAndCode(userPrincipal.getName());
++			 * String proposalCode = (String) authenticationInfo.get(0); String
++			 * proposalNumber = (String) authenticationInfo.get(2);
++			 **/
++			String proposalCode = (String) request.getSession().getAttribute(Constants.PROPOSAL_CODE);
++			String proposalNumber = (String) request.getSession().getAttribute(Constants.PROPOSAL_NUMBER);
++			boolean isUser = true;
++			/**
++			 * // case of person login : proposalNumber is not null
++			 * 
++			 * boolean isUser = proposalNumber != null; Integer proposalInt;
++			 * 
++			 * 
++			 * if (isUser == false) { // case where someone logs with a new
++			 * account created for ssl gateway multiple access // we take off
++			 * the 2 last letters proposalNumber = proposalNumber.substring(0,
++			 * (proposalNumber.length() - 2)); try { proposalInt = new
++			 * Integer(proposalNumber); isUser = true; } catch
++			 * (NumberFormatException e) {
++			 * 
++			 * isUser = false; } }
++			 **/
+ 			LOG.debug("code = " + proposalCode + " ----- number = " + proposalNumber);
+ 
+ 			if (isUser == true) {
+ 				// Case of User login corresponding to 1 proposal
+ 
+-				request.getSession().setAttribute(Constants.PROPOSAL_CODE, proposalCode);
+-				request.getSession().setAttribute(Constants.PROPOSAL_NUMBER, proposalNumber);
++				// request.getSession().setAttribute(Constants.PROPOSAL_CODE,
++				// proposalCode);
++				// request.getSession().setAttribute(Constants.PROPOSAL_NUMBER,
++				// proposalNumber);
+ 
+ 				LOG.debug("proposal is :" + proposalCode + proposalNumber);
+ 
+ 				try {
+ 					String proposalType = "";
+-					Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator
+-							.getLocalService(Proposal3Service.class);
+-					List<Proposal3VO> proposalValues = proposalService.findByCodeAndNumber(proposalCode,
+-							proposalNumber, false, false, false);
++					Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
++					List<Proposal3VO> proposalValues = proposalService.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+ 					int sizeList = proposalValues.size();
+ 					if (sizeList > 1)
+ 						LOG.debug("there are several proposals ???? attached to user");
+@@ -259,12 +266,11 @@
+ 					} else {
+ 						LOG.debug("proposal exists in ldap but not in ISPyB");
+ 
+-						// Case of proposal existing in ldap but not updated in ISPyB :launch updateProposal, then
++						// Case of proposal existing in ldap but not updated in
++						// ISPyB :launch updateProposal, then
+ 						// retrieve proposalId
+-						ispyb.client.common.proposal.UpdateProposalAndSessionAndProteinFromWS.updateThisProposal(errors,
+-								messages, proposalCode, proposalNumber);
+-						proposalValues = proposalService.findByCodeAndNumber(proposalCode, proposalNumber, false,
+-								false, false);
++						ispyb.client.common.proposal.UpdateProposalAndSessionAndProteinFromWS.updateThisProposal(errors, messages, proposalCode, proposalNumber);
++						proposalValues = proposalService.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+ 						Proposal3VO value = proposalValues.get(0);
+ 
+ 						// Proposal id
+@@ -281,8 +287,7 @@
+ 					}
+ 
+ 					// Log out if not MX, MB, or BX proposal
+-					if (!proposalType.equals(Constants.PROPOSAL_MX) && !proposalType.equals(Constants.PROPOSAL_BIOSAXS)
+-							&& !proposalType.equals(Constants.PROPOSAL_MX_BX)) {
++					if (!proposalType.equals(Constants.PROPOSAL_MX) && !proposalType.equals(Constants.PROPOSAL_BIOSAXS) && !proposalType.equals(Constants.PROPOSAL_MX_BX)) {
+ 						LOG.debug("Access not allowed to proposalType = " + proposalType);
+ 						try {
+ 							// Process this user logoff
+Index: client/web/tiles/bodies/common/logon/userProposalChoose.jsp
+===================================================================
+--- client/web/tiles/bodies/common/logon/userProposalChoose.jsp	(revision 0)
++++ client/web/tiles/bodies/common/logon/userProposalChoose.jsp	(revision 0)
+@@ -0,0 +1,132 @@
++<%--------------------------------------------------------------------------------------------------
++This file is part of ISPyB.
++
++ISPyB is free software: you can redistribute it and/or modify
++it under the terms of the GNU Lesser General Public License as published by
++the Free Software Foundation, either version 3 of the License, or
++(at your option) any later version.
++
++ISPyB is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU Lesser General Public License for more details.
++
++You should have received a copy of the GNU Lesser General Public License
++along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
++
++Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
++--------------------------------------------------------------------------------------------------%>
++<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
++<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
++<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
++<%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles"%>
++<%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout"%>
++<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
++
++<%@ include file="../biosaxs/project/biosaxs_css_include.jsp"%>
++
++
++<link rel="stylesheet" type="text/css"
++	href="<%=request.getContextPath()%>/css/bubble_tooltip.css" />
++<layout:skin includeScript="true" />
++<script
++	src="<%=request.getContextPath()%>/js/external/overlib/overlib.js"></script>
++<div id="overDiv"
++	style="position: absolute; visibility: hidden; z-index: 1000;"></div>
++
++
++<script type="text/javascript">
++	Ext.onReady(function() {
++		function drawGrid(data, targetId) {
++			var parsed = [];
++			for (var i = 0; i < data.length;  i++){
++				if (data[i].type == "MB"){
++					data[i].type = "MX";
++					parsed.push(JSON.parse(JSON.stringify(data[i])));
++					data[i].type = "BX";
++					parsed.push(JSON.parse(JSON.stringify(data[i])));
++				}
++				else{
++					parsed.push(data[i]);
++				}
++			}
++
++			var store = Ext.create('Ext.data.Store', {
++				fields : [ {
++					name : 'code'
++				}, {
++					name : 'number'
++				}, {
++					name : 'title'
++				}, {
++					name : 'type'
++				} ],
++				data : parsed
++			});
++
++			var grid = Ext.create('Ext.grid.Panel', {
++				store : store,
++				columns : [ {
++					text : 'Proposal',
++					flex : 0.2,
++					sortable : false,
++					dataIndex : 'code',
++					renderer : function(a, b, record) {
++						return record.raw.code + record.raw.number;
++					}
++				}, {
++					text : 'title',
++					flex : 0.6,
++					sortable : true,
++					dataIndex : 'title'
++				}, {
++					text : 'type',
++					width : 75,
++					sortable : true,
++					dataIndex : 'type'
++				},
++				{
++					renderer : function(a,b, record){ 
++						var html = "<form action='/ispyb/user/userproposalchooseaction.do'>";
++						html = html + "<input type='hidden' name='reqCode' value='goToProposal'>";
++						html = html + "<input type='hidden' name='userProposalType' value='" + record.raw.type +"'>";
++						html = html + "<input type='hidden' name='proposalId' value='" + record.raw.proposalId +"'>";
++						html = html + "<input type='submit' value='GO'></input></form>";
++						return html;
++					},
++					with : 50
++				} ],
++				height : 350,
++				width : 600,
++				title : 'Proposals',
++				renderTo : targetId,
++				viewConfig : {
++					stripeRows : true
++				}
++			});
++		};
++
++		$.ajax({
++			type : "POST",
++			url : "/ispyb/user/userproposalchooseaction.do?reqCode=getProposalList",
++			datatype : "text/json",
++			success : function(json) {
++				drawGrid(json, "mainPanel");
++			},
++			error : function(xhr) {
++				console.log(xhr.responseText);
++			}
++		});
++
++	});
++</script>
++
++
++<layout:skin includeScript="true" />
++<script
++	src="<%=request.getContextPath()%>/js/external/overlib/overlib.js"></script>
++<div id="overDiv"
++	style="position: absolute; visibility: hidden; z-index: 1000;"></div>
++
++<div id="mainPanel"></div>
++<div id="editor-grid"></div>
+\ No newline at end of file
+Index: server/sql_scripts/mysql/20140811_PROPOSAL_HAS_PERSON.sql
+===================================================================
+--- server/sql_scripts/mysql/20140811_PROPOSAL_HAS_PERSON.sql	(revision 0)
++++ server/sql_scripts/mysql/20140811_PROPOSAL_HAS_PERSON.sql	(revision 0)
+@@ -0,0 +1,24 @@
++CREATE  TABLE `pydb`.`ProposalHasPerson` (
++  `proposalHasPersonId` INT(10) NOT NULL ,
++  `proposalId` INT(10) NOT NULL ,
++  `personId` INT(10) NOT NULL ,
++  PRIMARY KEY (`proposalHasPersonId`) );
++  
++ALTER TABLE `pydb`.`ProposalHasPerson` ENGINE = InnoDB ;
++
++ALTER TABLE `pydb`.`ProposalHasPerson` CHANGE COLUMN `proposalHasPersonId` `proposalHasPersonId` INT(10) UNSIGNED NOT NULL  , CHANGE COLUMN `proposalId` `proposalId` INT(10) UNSIGNED NOT NULL  , CHANGE COLUMN `personId` `personId` INT(10) UNSIGNED NOT NULL  ;
++
++ALTER TABLE `pydb`.`ProposalHasPerson` 
++  ADD CONSTRAINT `fk_ProposalHasPerson_Proposal`
++  FOREIGN KEY (`proposalId` )
++  REFERENCES `pydb`.`Proposal` (`proposalId` )
++  ON DELETE NO ACTION
++  ON UPDATE NO ACTION, 
++  ADD CONSTRAINT `fk_ProposalHasPerson_Personal`
++  FOREIGN KEY (`personId` )
++  REFERENCES `pydb`.`Person` (`personId` )
++  ON DELETE NO ACTION
++  ON UPDATE NO ACTION
++, ADD INDEX `fk_ProposalHasPerson_Proposal` (`proposalId` ASC) 
++, ADD INDEX `fk_ProposalHasPerson_Personal` (`personId` ASC) ;
++
+Index: server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3Service.java
+===================================================================
+--- server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3Service.java	(revision 1797)
++++ server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3Service.java	(working copy)
+@@ -19,6 +19,7 @@
+ 
+ package ispyb.server.data.ejb3.services.saxs.core.proposal;
+ 
++import ispyb.server.data.ejb3.vos.proposals.Proposal3VO;
+ import ispyb.server.data.ejb3.vos.saxs.assembly.Assembly3VO;
+ import ispyb.server.data.ejb3.vos.saxs.assembly.Macromolecule3VO;
+ import ispyb.server.data.ejb3.vos.saxs.dataAcquisition.Buffer3VO;
+@@ -31,6 +32,10 @@
+ 
+ @Remote
+ public interface SaxsProposal3Service {
++	/** Proposal **/
++	public abstract List<Proposal3VO> findProposalByLoginName(String loginName);
++	
++	
+ 	/** MACROMOLECULES **/
+ 	public abstract Macromolecule3VO merge(Macromolecule3VO macromolecule3vo);
+ 
+Index: server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3ServiceBean.java
+===================================================================
+--- server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3ServiceBean.java	(revision 1797)
++++ server/src/ispyb/server/data/ejb3/services/saxs/core/proposal/SaxsProposal3ServiceBean.java	(working copy)
+@@ -19,8 +19,9 @@
+ 
+ package ispyb.server.data.ejb3.services.saxs.core.proposal;
+ 
+-
+ import ispyb.server.data.ejb3.services.saxs.SQLQueryKeeper;
++import ispyb.server.data.ejb3.vos.proposals.Person3VO;
++import ispyb.server.data.ejb3.vos.proposals.Proposal3VO;
+ import ispyb.server.data.ejb3.vos.saxs.assembly.Assembly3VO;
+ import ispyb.server.data.ejb3.vos.saxs.assembly.AssemblyHasMacromolecule3VO;
+ import ispyb.server.data.ejb3.vos.saxs.assembly.Macromolecule3VO;
+@@ -60,13 +61,13 @@
+ 		List<Macromolecule3VO> result = new ArrayList<Macromolecule3VO>();
+ 		List<Macromolecule3VO> macromolecules = this.findMacromoleculesByProposalId(proposalId);
+ 		for (Macromolecule3VO macromolecule3vo : macromolecules) {
+-			if (macromolecule3vo.getAcronym().equals(acronym)){
++			if (macromolecule3vo.getAcronym().equals(acronym)) {
+ 				result.add(macromolecule3vo);
+ 			}
+ 		}
+ 		return result;
+ 	}
+-	
++
+ 	@Override
+ 	public List<Buffer3VO> findBuffersByProposalId(int proposalId) {
+ 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+@@ -79,19 +80,19 @@
+ 
+ 	@Override
+ 	public Macromolecule3VO merge(Macromolecule3VO macromolecule3vo) {
+-			return entityManager.merge(macromolecule3vo);
++		return entityManager.merge(macromolecule3vo);
+ 	}
+ 
+ 	@Override
+ 	public Buffer3VO merge(Buffer3VO buffer3vo) {
+ 		return entityManager.merge(buffer3vo);
+ 	}
+-	
++
+ 	@Override
+ 	public StockSolution3VO merge(StockSolution3VO stockSolution3VO) {
+ 		return this.entityManager.merge(stockSolution3VO);
+ 	}
+-	
++
+ 	@Override
+ 	public List<StockSolution3VO> findStockSolutionsByProposalId(Integer proposalId) {
+ 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+@@ -108,7 +109,7 @@
+ 		assembly.setMacromoleculeId(macromoleculeId);
+ 		assembly.setCreationDate(GregorianCalendar.getInstance().getTime());
+ 		assembly = this.entityManager.merge(assembly);
+-		
++
+ 		for (Integer macromolId : macromolecules) {
+ 			AssemblyHasMacromolecule3VO assemblyHasMacromolecule3VO = new AssemblyHasMacromolecule3VO();
+ 			assemblyHasMacromolecule3VO.setAssemblyId(assembly.getAssemblyId());
+@@ -126,7 +127,7 @@
+ 		TypedQuery<Assembly3VO> query = entityManager.createQuery(ejbQLQuery.toString(), Assembly3VO.class).setParameter("proposalId", proposalId);
+ 		return query.getResultList();
+ 	}
+-	
++
+ 	@Override
+ 	public List<Assembly3VO> test(String queryString) {
+ 		TypedQuery<Assembly3VO> query = entityManager.createQuery(queryString, Assembly3VO.class);
+@@ -136,7 +137,7 @@
+ 	@Override
+ 	public StockSolution3VO findStockSolutionById(int stockSolutionId) {
+ 		return entityManager.find(StockSolution3VO.class, stockSolutionId);
+-		
++
+ 	}
+ 
+ 	@Override
+@@ -149,8 +150,49 @@
+ 	public List<StockSolution3VO> findStockSolutionsByBoxId(String dewarId) {
+ 		String query = SQLQueryKeeper.getStockSolutionsByBoxId(dewarId);
+ 		Query EJBQuery = this.entityManager.createQuery(query);
+-		return (List<StockSolution3VO>) EJBQuery.getResultList();	
+-		
++		return (List<StockSolution3VO>) EJBQuery.getResultList();
++
++	}
++
++	/**
++	 * It looks for proposal based on the login name
++	 * It looks for proposal in:
++	 * 		- Proposal table concatenating proposalCode and proposalNumber
++	 * 		- Person table y the column login
++	 * Then both systems, by proposal and by user are allowed
++	 */
++	@Override
++	public List<Proposal3VO> findProposalByLoginName(String loginName) {
++		/**
++		 * If user is a proposal it is linked by proposalCode and proposalNumber
++		 * in the proposal table
++		 */
++		String query = "SELECT proposal FROM Proposal3VO proposal WHERE concat(proposalCode, proposalNumber)=:loginName";
++		Query EJBQuery = this.entityManager.createQuery(query);
++		EJBQuery.setParameter("loginName", loginName);
++		@SuppressWarnings("unchecked")
++		List<Proposal3VO> proposals = EJBQuery.getResultList();
++		/**
++		 * In case login name is a user we look for it on Persons though
++		 * proposalHasPerson
++		 */
++		String queryPerson = "SELECT person FROM Person3VO person WHERE login=:loginName";
++		Query EJBQueryPerson = this.entityManager.createQuery(queryPerson);
++		EJBQueryPerson.setParameter("loginName", loginName);
++		@SuppressWarnings("unchecked")
++		List<Person3VO> persons = EJBQueryPerson.getResultList();
++		if (persons != null){
++			if (persons.size()> 0){
++				for (Person3VO person3vo : persons) {
++					if (person3vo.getProposalVOs() != null){
++						if (person3vo.getProposalVOs().size() > 0){
++							proposals.addAll(person3vo.getProposalVOs());
++						}
++					}
++				}
++			}
++		}
++		return proposals;
+ 	}
+ 
+ }
+Index: server/src/ispyb/server/data/ejb3/vos/proposals/Person3VO.java
+===================================================================
+--- server/src/ispyb/server/data/ejb3/vos/proposals/Person3VO.java	(revision 1797)
++++ server/src/ispyb/server/data/ejb3/vos/proposals/Person3VO.java	(working copy)
+@@ -20,21 +20,27 @@
+ package ispyb.server.data.ejb3.vos.proposals;
+ 
+ import ispyb.server.common.vos.ISPyBValueObject;
++import ispyb.server.data.ejb3.vos.collections.Session3VO;
+ 
+ import java.util.Set;
+ 
+ import javax.persistence.Column;
+ import javax.persistence.Entity;
+ import javax.persistence.EntityResult;
++import javax.persistence.FetchType;
+ import javax.persistence.GeneratedValue;
+ import javax.persistence.Id;
+ import javax.persistence.JoinColumn;
++import javax.persistence.JoinTable;
++import javax.persistence.ManyToMany;
+ import javax.persistence.ManyToOne;
+ import javax.persistence.OneToMany;
+ import javax.persistence.SqlResultSetMapping;
+ import javax.persistence.Table;
+ 
+ import org.apache.log4j.Logger;
++import org.hibernate.annotations.Fetch;
++import org.hibernate.annotations.FetchMode;
+ 
+ /**
+  * Person3 value object mapping table Person
+@@ -87,10 +93,16 @@
+ 	@Column(name = "faxNumber")
+ 	protected String faxNumber;
+ 
+-	@OneToMany
+-	@JoinColumn(name = "personId")
+-	private Set<Proposal3VO> proposalVOs;
++//	@OneToMany
++//	@JoinColumn(name = "personId")
++//	private Set<Proposal3VO> proposalVOs;
+ 
++	@Fetch(value = FetchMode.SELECT)
++	@ManyToMany(fetch = FetchType.EAGER)
++	@JoinTable(name = "ProposalHasPerson", 
++	joinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") }, 
++	inverseJoinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") })
++	private Set<Proposal3VO> proposalVOs;
+ 	
+ 	public Person3VO() {
+ 		super();

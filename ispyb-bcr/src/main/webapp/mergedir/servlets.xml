@@ -1,0 +1,69 @@
+	<display-name>BCR</display-name>
+	<description>BCR Web Application</description>
+	<servlet>
+		<servlet-name>action</servlet-name>
+
+		<!--servlet-class>org.apache.struts.action.ActionServlet</servlet-class-->
+		<servlet-class>
+			bcr.client.security.SpecificActionServletBcr</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>ApplicationResources</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				  Specify configuration file names. There can be several comma 
+				  separated file names
+				-->
+		<init-param>
+			<param-name>definitions-config</param-name>
+			<param-value>/WEB-INF/tiles-defs.xml</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				  Specify Tiles debug level.
+				  O : no debug information
+				  1 : debug information
+				  2 : more debug information
+				-->
+		<init-param>
+			<param-name>definitions-debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				Specify Digester debug level. This value is passed to Digester
+				  O : no debug information
+				  1 : debug information
+				  2 : more debug information
+				-->
+		<init-param>
+			<param-name>definitions-parser-details</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				Specify if xml parser should validate the Tiles configuration file.
+				true : validate. DTD should be specified in file header.
+				false : no validation
+				-->
+		<init-param>
+			<param-name>definitions-parser-validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- Struts configuration, if Struts is used -->
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jboss-web PUBLIC "-//JBoss//DTD Web Application 2.3V2//EN" "http://www.jboss.org/j2ee/dtd/jboss-web_3_2.dtd">
+
+<jboss-web>
+
+   <!-- Resource Environment References -->
+  <!--
+  This file is part of ISPyB.
+  ISPyB is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  ISPyB is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+  You should have received a copy of the GNU Lesser General Public License
+  along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+  Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin
+-->
+
+	<!-- Configuration to UK 
+	In ${JBOSS_HOME}/server/default/conf/
+	The users.properties file uses a username=password format with each user entry on a separate line 
+	as show here:
+	username1=password1
+	username2=password2
+	...
+	The roles.properties file uses as username=role1,role2,... format with an optional group name value. 
+	For example:
+	username1=role1,role2,...
+	username1.RoleGroup1=role3,role4,...
+	username2=role1,role3,... -->
+	<!-- 	
+	<context-root>other</context-root>
+	<security-domain>java:/jaas/other</security-domain>
+	-->
+
+	<!-- Configuration to ESRF: LDAP Module 	-->
+
+	<security-domain>java:/jaas/ispyb</security-domain>
+	<context-root>ispyb</context-root>
+
+		<!-- Configuration to ESRF: simple Module 
+
+	<security-domain>java:/jaas/ispybSimple</security-domain>
+	<context-root>ispyb</context-root>
+	-->
+
+   <!-- Resource references -->
+   <!--
+     For additional resouce-ref tags add a merge file called jbossweb-resource-ref.xml
+   -->
+
+   <!-- EJB References -->
+   <!--
+     For additional ejb-ref tags add a merge file called jbossweb-ejb-ref.xml
+   -->
+
+  <!-- EJB Local References -->
+
+   <!--
+     For additional ejb-local-ref tags add a merge file called jbossweb-ejb-local-ref.xml
+   -->
+</jboss-web>

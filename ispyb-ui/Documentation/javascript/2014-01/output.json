@@ -1,0 +1,6455 @@
+var doc =
+[
+{
+	line		:	'20',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	parameters	:	['args'],
+
+},
+{
+	comments	:	'      * Just for testing *',
+	type		:	'method',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createMacromolecule ',
+	parameters	:	[' '],
+	line		:	'34',
+	file		:	'./biosaxs/data/dataadapter.js',
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveExperiment ',
+	parameters	:	[' experimentId',' name',' type',' comments'],
+
+},
+{
+	type		:	'method',
+	line		:	'69',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'setMeasurementParameters ',
+	parameters	:	[' measurementIds',' parameter',' value'],
+
+},
+{
+	type		:	'method',
+	line		:	'89',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getZipFileByMacromoleculeId ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'107',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getH5FrameScattering ',
+	parameters	:	[' experimentId',' frames'],
+
+},
+{
+	type		:	'method',
+	line		:	'126',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getH5fileParameters ',
+	parameters	:	[' experimentId',' parameters'],
+
+},
+{
+	type		:	'method',
+	line		:	'145',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'mergeSpecimens ',
+	parameters	:	[' specimenId',' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'164',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getReport ',
+	parameters	:	[' experimentId',' filename',' type',' format'],
+
+},
+{
+	type		:	'method',
+	line		:	'185',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'updateDataBaseFromSMIS ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'203',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'updateSession ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'      * type is FIT or FIR *',
+	type		:	'method',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getModelFile ',
+	parameters	:	[' type',' modelId',' format'],
+	line		:	'212',
+	file		:	'./biosaxs/data/dataadapter.js',
+
+},
+{
+	type		:	'method',
+	line		:	'237',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getImage ',
+	parameters	:	[' substractionId',' type'],
+
+},
+{
+	type		:	'method',
+	line		:	'256',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeExperimentContentById ',
+	parameters	:	[' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'289',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getAbinitioModelsByExperimentId ',
+	parameters	:	[' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'325',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getMergesByIdsList ',
+	parameters	:	[' mergeIdsList'],
+
+},
+{
+	type		:	'method',
+	line		:	'344',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getScatteringCurveByFrameIdsList ',
+	parameters	:	[' frameIdsList'],
+
+},
+{
+	type		:	'method',
+	line		:	'366',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeExperimentById ',
+	parameters	:	[' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'389',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getProposal ',
+	parameters	:	[' sessionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'410',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getExperimentInformationBySessionId ',
+	parameters	:	[' sessionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'431',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'setProposalBySessionId ',
+	parameters	:	[' sessionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'453',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'_getExperimentSync ',
+	parameters	:	[' experimentId',' scope'],
+
+},
+{
+	type		:	'method',
+	line		:	'476',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getExperimentsById ',
+	parameters	:	[' experimentIds',' scope'],
+
+},
+{
+	type		:	'method',
+	line		:	'492',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getExperimentById ',
+	parameters	:	[' experimentId',' scope'],
+
+},
+{
+	type		:	'method',
+	line		:	'518',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'_getInformationByMacromoleculeId ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'535',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getInformationByMacromoleculeId ',
+	parameters	:	[' macromoleculeId',' bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'549',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getPDBContentByModelList ',
+	parameters	:	[' models'],
+
+},
+{
+	type		:	'method',
+	line		:	'567',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getAnalysisCalibrationByProposalId ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'587',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getAnalysisInformationByExperimentId ',
+	parameters	:	[' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'608',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createTemplate ',
+	parameters	:	[' name',' comments',' measurements',' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'633',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'addMeasurements ',
+	parameters	:	[' name',' comments',' measurements',' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'678',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getExperimentInformationByProposalId ',
+	parameters	:	[' sessionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'698',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getAllInformationByExperimentId ',
+	parameters	:	[' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'719',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getAnalysisByProposalId ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'738',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'getExperimentsByProposalId ',
+	parameters	:	[' scope'],
+
+},
+{
+	type		:	'method',
+	line		:	'762',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveMacromoleculeWithNoExperiment ',
+	parameters	:	[' macromolecule'],
+
+},
+{
+	type		:	'method',
+	line		:	'780',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveMacromolecule ',
+	parameters	:	[' macromolecule'],
+
+},
+{
+	type		:	'method',
+	line		:	'797',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveBuffer ',
+	parameters	:	[' buffer'],
+
+},
+{
+	type		:	'method',
+	line		:	'814',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeBuffer ',
+	parameters	:	[' bufferId',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'832',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createBuffer ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'849',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'duplicateBuffer ',
+	parameters	:	[' bufferId',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'869',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createMacromoleculeRegion ',
+	parameters	:	[' macromolecule',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'893',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeMacromoleculeRegion ',
+	parameters	:	[' macromoleculeRegionId',' macromolecule',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'918',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createStructure ',
+	parameters	:	[' macromolecule',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'941',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeStructure ',
+	parameters	:	[' structureId',' macromolecule',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'967',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createAdditive ',
+	parameters	:	[' buffer',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'990',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeAdditive ',
+	parameters	:	[' bufferId',' bufferHasAdditiveId',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'1012',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'createSpecimen ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'1031',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveSpecimen ',
+	parameters	:	[' specimen',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'1052',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveMeasurement ',
+	parameters	:	[' measurement',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'1072',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeMeasurement ',
+	parameters	:	[' measurement'],
+
+},
+{
+	type		:	'method',
+	line		:	'1422',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'savePlates ',
+	parameters	:	[' plates',' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1546',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'emptyPlate ',
+	parameters	:	[' sampleplateId',' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1566',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'autoFillPlate ',
+	parameters	:	[' sampleplateId',' experimentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1664',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeShipment ',
+	parameters	:	[' shippingId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1700',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'addCase ',
+	parameters	:	[' shippingId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1718',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveCase ',
+	parameters	:	[' shippingId',' dewar'],
+
+},
+{
+	type		:	'method',
+	line		:	'1742',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeCase ',
+	parameters	:	[' dewarId',' shippingId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1781',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'removeStockSolution ',
+	parameters	:	[' stockSolutionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'1799',
+	file		:	'./biosaxs/data/dataadapter.js',
+	className	:	'BiosaxsDataAdapter',
+	name		:	'saveStockSolution ',
+	parameters	:	[' stockSolution'],
+
+},
+{
+	comments	:	'  *   *    * This class represents an data Acquisition   *    * @json a json with the serialization of Experiment3VO   *    ',
+	line		:	'1',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	parameters	:	['json'],
+
+},
+{
+	type		:	'method',
+	line		:	'18',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getBuffers ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'      * BUFFER *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getBufferById ',
+	parameters	:	[' bufferId'],
+	line		:	'31',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	comments	:	'      * STOCK SOLUTION *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getStockSolutions ',
+	parameters	:	[' '],
+	line		:	'33',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	type		:	'method',
+	line		:	'37',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getStockSolutionById ',
+	parameters	:	[' stockSolutionId'],
+
+},
+{
+	comments	:	'        * This method gets all the macromolecules of the proposal *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getMacromolecules ',
+	parameters	:	[' '],
+	line		:	'44',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	comments	:	'      * Return an array with all the specimens collected, it means, where run3VO is not null *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getMeasurementsWithSubtractionAssociated ',
+	parameters	:	[' '],
+	line		:	'46',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	type		:	'method',
+	line		:	'60',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSamples ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'    * Deprecated changed to getSpecimenById *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getSampleById ',
+	parameters	:	[' specimenId'],
+	line		:	'62',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	type		:	'method',
+	line		:	'66',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSpecimenById ',
+	parameters	:	[' specimenId'],
+
+},
+{
+	type		:	'method',
+	line		:	'76',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSpecimenByDataCollectionId ',
+	parameters	:	[' dataCollectionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'91',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'setSpecimenById ',
+	parameters	:	[' specimen'],
+
+},
+{
+	type		:	'method',
+	line		:	'101',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'setMeasurement ',
+	parameters	:	[' measurement'],
+
+},
+{
+	type		:	'method',
+	line		:	'112',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getConcentrations ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'130',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getConcentrationsBysample ',
+	parameters	:	[' sample'],
+
+},
+{
+	type		:	'method',
+	line		:	'152',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'setSpecimen ',
+	parameters	:	[' specimen'],
+
+},
+{
+	comments	:	'    * SAMPLE PLATES *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getSamplePlates ',
+	parameters	:	[' '],
+	line		:	'164',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	type		:	'method',
+	line		:	'168',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSamplePlateById ',
+	parameters	:	[' samplePlateId'],
+
+},
+{
+	type		:	'method',
+	line		:	'177',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSamplePlateBySlotPositionColumn ',
+	parameters	:	[' slotPositionColumn'],
+
+},
+{
+	type		:	'method',
+	line		:	'186',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSpecimenByPosition ',
+	parameters	:	[' samplePlateId',' rowNumber',' columnNumber '],
+
+},
+{
+	type		:	'method',
+	line		:	'190',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSpecimensBySamplePlateId ',
+	parameters	:	[' samplePlateId '],
+
+},
+{
+	type		:	'method',
+	line		:	'203',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSampleByPosition ',
+	parameters	:	[' samplePlateId',' rowNumber',' columnNumber '],
+
+},
+{
+	type		:	'method',
+	line		:	'219',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getPlateGroups ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'236',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getPlatesByPlateGroupId ',
+	parameters	:	[' plateGroupId'],
+
+},
+{
+	type		:	'method',
+	line		:	'249',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getMeasurements ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'264',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getMeasurementById ',
+	parameters	:	[' measurementId '],
+
+},
+{
+	type		:	'method',
+	line		:	'274',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getMeasurementByDataCollectionId ',
+	parameters	:	[' dataCollectionId '],
+
+},
+{
+	comments	:	'      * Data Collection *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getDataCollections ',
+	parameters	:	['  '],
+	line		:	'281',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	type		:	'method',
+	line		:	'292',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getDataCollectionsBySpecimenId ',
+	parameters	:	[' specimenId '],
+
+},
+{
+	type		:	'method',
+	line		:	'309',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getMeasurementsBySpecimenId ',
+	parameters	:	[' specimenId '],
+
+},
+{
+	type		:	'method',
+	line		:	'321',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getDataCollectionByMeasurementId ',
+	parameters	:	[' measurementId '],
+
+},
+{
+	type		:	'method',
+	line		:	'337',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getSubtractionById ',
+	parameters	:	[' subtractionId '],
+
+},
+{
+	type		:	'method',
+	line		:	'353',
+	file		:	'./biosaxs/data/experiment.js',
+	className	:	'Experiment',
+	name		:	'getDataCollectionById ',
+	parameters	:	[' dataCollectionId '],
+
+},
+{
+	comments	:	'      * For a specimen calculates the volume to load adding all the volume to load of all the measurements *',
+	type		:	'method',
+	className	:	'Experiment',
+	name		:	'getVolumeToLoadBySampleId ',
+	parameters	:	[' specimenId '],
+	line		:	'360',
+	file		:	'./biosaxs/data/experiment.js',
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	parameters	:	['experiments'],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMeasurements ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'18',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMeasurementByDataCollectionId ',
+	parameters	:	['  dataCollectionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'29',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMergesByMeasurements ',
+	parameters	:	['  measurements'],
+
+},
+{
+	type		:	'method',
+	line		:	'41',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMergesByDataCollectionId ',
+	parameters	:	['  dataCollectionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'45',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMerges ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'49',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getDataCollectionById ',
+	parameters	:	['  dataCollectionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'61',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getDataCollectionByMeasurementId ',
+	parameters	:	['  measurementId'],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMeasurementsNotCollected ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'87',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMeasurementsCollected ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'101',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getMeasurementById ',
+	parameters	:	['  specimenId'],
+
+},
+{
+	type		:	'method',
+	line		:	'111',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getBufferById ',
+	parameters	:	['  bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'141',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getSampleById ',
+	parameters	:	['  sampleId'],
+
+},
+{
+	type		:	'method',
+	line		:	'166',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getSamplesByCondition ',
+	parameters	:	['  macromoleculeId',' bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'205',
+	file		:	'./biosaxs/data/experiments.js',
+	className	:	'ExperimentList',
+	name		:	'getFrames ',
+	parameters	:	['  mergesList'],
+
+},
+{
+	comments	:	'  *   * Static class loaded almost always on entrypoint. It represent all the information about the proposal   *    * @json Serialization of a hashmap containing: macromolecules, buffers, assemblies, stockSolutions,  labcontacts, shippings   ',
+	line		:	'1',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	parameters	:	['json'],
+
+},
+{
+	type		:	'method',
+	line		:	'25',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getAdditiveTypes ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'35',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getBufferById ',
+	parameters	:	[' bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getShipmentByDewarId ',
+	parameters	:	[' dewarId'],
+
+},
+{
+	type		:	'method',
+	line		:	'63',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getAssemblies ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'68',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getStockSolutions ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'72',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getSessions ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'76',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getUnpackedStockSolutions ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'87',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getStockSolutionsByDewarId ',
+	parameters	:	[' dewarId'],
+
+},
+{
+	type		:	'method',
+	line		:	'98',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'sortByName ',
+	parameters	:	[' a',' b'],
+
+},
+{
+	type		:	'method',
+	line		:	'104',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'setMacromolecules ',
+	parameters	:	[' macromolecules'],
+
+},
+{
+	comments	:	'    * Set colors using the funcion rainbow on BUI ',
+	type		:	'method',
+	className	:	'Proposal',
+	name		:	'setColors ',
+	parameters	:	[' '],
+	line		:	'107',
+	file		:	'./biosaxs/data/proposal.js',
+
+},
+{
+	type		:	'method',
+	line		:	'133',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getBuffers ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'137',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getLabcontacts ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'141',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getShipments ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'145',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getShipmentById ',
+	parameters	:	[' shipmentId'],
+
+},
+{
+	type		:	'method',
+	line		:	'154',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getPlateTypes ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'158',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getPlateTypeById ',
+	parameters	:	[' plateTypeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'168',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getSafetyLevels ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'178',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'setItems ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'189',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'init ',
+	parameters	:	[' sessionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'200',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getMacromoleculeById ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'209',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getStockSolutionById ',
+	parameters	:	[' stockSolutionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'218',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getStockSolutionsBySpecimen ',
+	parameters	:	[' macromoleculeId',' bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'231',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getMacromolecules ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'236',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getSafetyLabelName ',
+	parameters	:	[' safetyLevelId'],
+
+},
+{
+	type		:	'method',
+	line		:	'246',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getPlatesByProposal ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'270',
+	file		:	'./biosaxs/data/proposal.js',
+	className	:	'Proposal',
+	name		:	'getLabContactsByProposalId ',
+	parameters	:	[' '],
+
+},
+{
+	line		:	'2',
+	file		:	'./biosaxs/data/shipment.js',
+	className	:	'Shipment',
+	parameters	:	['json'],
+
+},
+{
+	type		:	'method',
+	line		:	'9',
+	file		:	'./biosaxs/data/shipment.js',
+	className	:	'Shipment',
+	name		:	'getDewars ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/data/shipment.js',
+	className	:	'Shipment',
+	name		:	'getDewars ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'17',
+	file		:	'./biosaxs/data/shipment.js',
+	className	:	'Shipment',
+	name		:	'removeCase ',
+	parameters	:	[' dewarId'],
+
+},
+{
+	comments	:	'*   * Edit the information of a buffer   *    * #onSaved   * #onRemoveAdditive   ',
+	line		:	'1',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	name		:	'getBuffer ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'26',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	name		:	'_getTopPanel ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'91',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	name		:	'getPanel ',
+	parameters	:	[' buffer '],
+
+},
+{
+	type		:	'method',
+	line		:	'122',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'128',
+	file		:	'./biosaxs/form/bufferform.js',
+	className	:	'BufferForm',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   * @showTitle   *   * #onSaved   * #onAddPlates   * #onRemovePlates   *',
+	line		:	'1',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'54',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'saveStockSolution ',
+	parameters	:	['  stockSolution '],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'fillStores ',
+	parameters	:	['   '],
+
+},
+{
+	type		:	'method',
+	line		:	'88',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'refresh ',
+	parameters	:	['  dewar '],
+
+},
+{
+	type		:	'method',
+	line		:	'94',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'getDewar ',
+	parameters	:	['   '],
+
+},
+{
+	type		:	'method',
+	line		:	'106',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'setDewar ',
+	parameters	:	['  dewar '],
+
+},
+{
+	type		:	'method',
+	line		:	'121',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'getSessionCombo ',
+	parameters	:	['   '],
+
+},
+{
+	type		:	'method',
+	line		:	'130',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'getInformationPanel ',
+	parameters	:	['  dewar '],
+
+},
+{
+	type		:	'method',
+	line		:	'226',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'getPanel ',
+	parameters	:	['  dewar '],
+
+},
+{
+	type		:	'method',
+	line		:	'254',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'input ',
+	parameters	:	['   '],
+
+},
+{
+	type		:	'method',
+	line		:	'487',
+	file		:	'./biosaxs/form/caseform.js',
+	className	:	'CaseForm',
+	name		:	'test ',
+	parameters	:	['  targetId '],
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/form/experimentform.js',
+	className	:	'ExperimentForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'12',
+	file		:	'./biosaxs/form/experimentform.js',
+	className	:	'ExperimentForm',
+	name		:	'getPanel ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'65',
+	file		:	'./biosaxs/form/experimentform.js',
+	className	:	'ExperimentForm',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'70',
+	file		:	'./biosaxs/form/experimentform.js',
+	className	:	'ExperimentForm',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   * Shows the header for the experiments changing the color and parameters depending on experiment type   *    ',
+	line		:	'1',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getHTMLSource ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getHTMLDownload ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'31',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getTopPanel ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'52',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getButton ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'74',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getBottomPanel ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'86',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getComments ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'100',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'getPanel ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'131',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'137',
+	file		:	'./biosaxs/form/experimentheaderform.js',
+	className	:	'ExperimentHeaderForm',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   *    * @witdh   * @height   *',
+	line		:	'1',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	name		:	'getMacromolecule ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'25',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	name		:	'getPanel ',
+	parameters	:	[' macromolecule '],
+
+},
+{
+	type		:	'method',
+	line		:	'89',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	name		:	'getTabs ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'124',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'130',
+	file		:	'./biosaxs/form/macromoleculeform.js',
+	className	:	'MacromoleculeForm',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+
+},
+{
+	type		:	'method',
+	line		:	'55',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'thresholdsChanged ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'      * Given a frame object (object returned by analyzeFrames()) and depending of the threshold indicates if a datacollection has radiation damage *',
+	type		:	'method',
+	className	:	'ResultSummaryForm',
+	name		:	'hasRadiationDamage ',
+	parameters	:	[' frameObject'],
+	line		:	'70',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+
+},
+{
+	comments	:	'      * Return (frameObject) an object with the information about the frames for a data collection*',
+	type		:	'method',
+	className	:	'ResultSummaryForm',
+	name		:	'analyzeFrames ',
+	parameters	:	[' dataCollectionRow'],
+	line		:	'75',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+
+},
+{
+	type		:	'method',
+	line		:	'84',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'detectDataCollectionWarnings ',
+	parameters	:	[' dataCollectionRow'],
+
+},
+{
+	type		:	'method',
+	line		:	'105',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'getConcentrations ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'176',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'prepareData ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'216',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'getDataForWhisker ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'278',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'getDataForWhiskerQuality ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'299',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'plotQualityWhisker ',
+	parameters	:	[' parsedData'],
+
+},
+{
+	type		:	'method',
+	line		:	'303',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'plotWhisker ',
+	parameters	:	[' parsedData'],
+
+},
+{
+	type		:	'method',
+	line		:	'307',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'plotRange ',
+	parameters	:	[' parsedData'],
+
+},
+{
+	type		:	'method',
+	line		:	'312',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'getPanel ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'436',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'442',
+	file		:	'./biosaxs/form/resultsummaryform.js',
+	className	:	'ResultSummaryForm',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'  *   * Same form as MX part   *    * @creationMode if true a create button appears instead of save   * @showTitle true or false   ',
+	line		:	'1',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'18',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'fillStores ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'33',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'draw ',
+	parameters	:	[' targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'37',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'setShipment ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'52',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'_saveShipment ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'115',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'getPanel ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'297',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'304',
+	file		:	'./biosaxs/form/shipmentform.js',
+	className	:	'ShipmentForm',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   * #onSaved   ',
+	line		:	'1',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'getStockSolution ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'setStockSolution ',
+	parameters	:	[' stockSolution'],
+
+},
+{
+	type		:	'method',
+	line		:	'61',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'getBufferCombo ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'getMacromoleculeCombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'85',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'refresh ',
+	parameters	:	[' stockSolution',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'89',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'_getTopPanel ',
+	parameters	:	[' stockSolution'],
+
+},
+{
+	type		:	'method',
+	line		:	'157',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'getPanel ',
+	parameters	:	[' stockSolution '],
+
+},
+{
+	type		:	'method',
+	line		:	'190',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'197',
+	file		:	'./biosaxs/form/stocksolutionform.js',
+	className	:	'StockSolutionForm',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'cleanArray ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'plotAxes ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'plotRuler ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'9',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'drawSVGVerticalText ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'11',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'getClassColor ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'getDimensions ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'calculate ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'17',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'getMedian ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'19',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'pointToPixel ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'21',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'maxValueWhisker ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'23',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className		:	'BoxWhiskerGraph',
+	name		:	'refresh ',
+	parameters		:	[],
+
+},
+{
+	comments	:	'    *   * Subclass of GenericGraph   *    * @maxBoxWidth   ',
+	line		:	'23',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	parameters	:	['args'],
+
+},
+{
+	comments	:	'        *  There are several different methods for calculating quartiles.[1] This calculator uses a method described by Moore and McCabe to find quartile values.   The same method also used by The TI-83 to calculate quartile values.   With this method, the first quartile is the median of the numbers below the median, the third quartile is the median of the numbers above the median.    http://www.miniwebtool.com/quartile-calculator/  http://www.alcula.com/calculators/statistics/box-plot/  *',
+	type		:	'method',
+	className	:	'BoxWhiskerGraph',
+	name		:	'getQ1 ',
+	parameters	:	[' array'],
+	line		:	'36',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+
+},
+{
+	type		:	'method',
+	line		:	'41',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'getQ3 ',
+	parameters	:	[' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'getQ2 ',
+	parameters	:	[' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'getBelowOutliers ',
+	parameters	:	[' belowLimit',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'61',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'getAboveOutliers ',
+	parameters	:	[' aboveLimit',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'72',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'minValueWhisker ',
+	parameters	:	[' belowLimit',' q1',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'88',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'isNumber ',
+	parameters	:	[' value'],
+
+},
+{
+	type		:	'method',
+	line		:	'96',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'plotBoxWhisker ',
+	parameters	:	[' boxProperties'],
+
+},
+{
+	type		:	'method',
+	line		:	'172',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'plotClusterTitles ',
+	parameters	:	[' properties'],
+
+},
+{
+	type		:	'method',
+	line		:	'202',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'plotWhisters ',
+	parameters	:	[' data',' properties'],
+
+},
+{
+	type		:	'method',
+	line		:	'237',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'draw ',
+	parameters	:	[' targetId',' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'246',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'250',
+	file		:	'./biosaxs/graph/boxwhiskergraph.js',
+	className	:	'BoxWhiskerGraph',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'38',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'calculate ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'67',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'drawSVGVerticalText ',
+	parameters	:	[' x',' y','text',' properties'],
+
+},
+{
+	comments	:	'  * Plot the numbers on the axis *',
+	type		:	'method',
+	className	:	'GenericGraph',
+	name		:	'plotRuler ',
+	parameters	:	[' rulerProperties'],
+	line		:	'71',
+	file		:	'./biosaxs/graph/genericgraph.js',
+
+},
+{
+	type		:	'method',
+	line		:	'105',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'plotAxes ',
+	parameters	:	[' properties'],
+
+},
+{
+	comments	:	'  * Remove nulls and NaN elements in the array *',
+	type		:	'method',
+	className	:	'GenericGraph',
+	name		:	'cleanArray ',
+	parameters	:	[' data'],
+	line		:	'131',
+	file		:	'./biosaxs/graph/genericgraph.js',
+
+},
+{
+	type		:	'method',
+	line		:	'145',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'refresh ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'152',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'getClassColor ',
+	parameters	:	[' className'],
+
+},
+{
+	type		:	'method',
+	line		:	'167',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'getDimensions ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'223',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'draw ',
+	parameters	:	[' targetId',' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'231',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'getMedian ',
+	parameters	:	[' checked'],
+
+},
+{
+	type		:	'method',
+	line		:	'241',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'pointToPixel ',
+	parameters	:	[' value',' boxProperties'],
+
+},
+{
+	type		:	'method',
+	line		:	'247',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'maxValueWhisker ',
+	parameters	:	[' aboveLimit',' q3',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'261',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'265',
+	file		:	'./biosaxs/graph/genericgraph.js',
+	className	:	'GenericGraph',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'55',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'getMenu ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'  * Looks for the maximum value and then divide everything but that value *',
+	type		:	'method',
+	className	:	'HPLCGraph',
+	name		:	'scaledData ',
+	parameters	:	[' data'],
+	line		:	'111',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+
+},
+{
+	comments	:	'    * Given a stat float[] and a max number it will divide each value by max *',
+	type		:	'method',
+	className	:	'HPLCGraph',
+	name		:	'divideValuesByMax ',
+	parameters	:	[' stat',' max'],
+	line		:	'119',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+
+},
+{
+	comments	:	'    * returns max value of a stat *',
+	type		:	'method',
+	className	:	'HPLCGraph',
+	name		:	'getMaxAndMinValue ',
+	parameters	:	[' stat'],
+	line		:	'127',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+
+},
+{
+	type		:	'method',
+	line		:	'144',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'reloadData ',
+	parameters	:	[' hplcData'],
+
+},
+{
+	type		:	'method',
+	line		:	'211',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'_renderDygraph ',
+	parameters	:	[' parsed',' colors',' labels'],
+
+},
+{
+	type		:	'method',
+	line		:	'248',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'loadData ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'257',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'getPanel ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'276',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'280',
+	file		:	'./biosaxs/graph/hplcgraph.js',
+	className	:	'HPLCGraph',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'19',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'draw ',
+	parameters	:	[' dataset',' formatter',' layout'],
+
+},
+{
+	comments	:	'   * SELECT VERTICES BY NAME *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectVertexByName ',
+	parameters	:	[' vertexName'],
+	line		:	'32',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'42',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'selectVerticesByName ',
+	parameters	:	[' verticesName'],
+
+},
+{
+	comments	:	'  * SELECT VERTICES BY ID *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectVertexById ',
+	parameters	:	[' vertexId'],
+	line		:	'46',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'selectVerticesById ',
+	parameters	:	[' verticesId'],
+
+},
+{
+	comments	:	'   * VECINDARIO *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectNeighbourhood ',
+	parameters	:	[' '],
+	line		:	'55',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'   * DESELECT *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'deselectNodes ',
+	parameters	:	[' '],
+	line		:	'58',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'    * SELECT ALL NODES *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectAllNodes ',
+	parameters	:	[' '],
+	line		:	'60',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * SELECT EVERYTHING *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectAll ',
+	parameters	:	[' '],
+	line		:	'62',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * SELECT ALL EDGES *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectAllEdges ',
+	parameters	:	[' '],
+	line		:	'64',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * ZOOM *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'setScale ',
+	parameters	:	[' value'],
+	line		:	'66',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'70',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'getScale ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'  * SELECT ADJACENT VERTICES FROM SELECTED VERTICES *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectAdjacent ',
+	parameters	:	[' '],
+	line		:	'72',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * SELECT EDGES FROM SELECTED VERTICES *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectEdgesFromVertices ',
+	parameters	:	[' '],
+	line		:	'85',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * BLINKING *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'blinkVertexById ',
+	parameters	:	[' vertexId'],
+	line		:	'96',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'   * COMPONENTE CONEXA DE LOS NODOS SELECCIONADOS *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'selectConnectedComponent ',
+	parameters	:	[' '],
+	line		:	'98',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'104',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'getConnectedComponent ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'116',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'visitNode ',
+	parameters	:	[' nodeId',' nodosVisitados',' aristasVisitadas',' arrNodos',' arrAristas'],
+
+},
+{
+	comments	:	'  * COLLAPSE SELECTED VERTICES *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'collapse ',
+	parameters	:	[' '],
+	line		:	'136',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * SETTER FONT SIZE *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'setVerticesFontSize ',
+	parameters	:	[' value'],
+	line		:	'168',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	comments	:	'  * GETTERS *',
+	type		:	'method',
+	className	:	'NetworkWidget',
+	name		:	'getFormatter ',
+	parameters	:	[' '],
+	line		:	'172',
+	file		:	'./biosaxs/graph/networkwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'175',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'getLayout ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'179',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'getDataset ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'183',
+	file		:	'./biosaxs/graph/networkwidget.js',
+	className	:	'NetworkWidget',
+	name		:	'getGraphCanvas ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'cleanArray ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'plotAxes ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'plotRuler ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'9',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'drawSVGVerticalText ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'11',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'getClassColor ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'getDimensions ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'calculate ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'17',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'getMedian ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'19',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'pointToPixel ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'21',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'maxValueWhisker ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'23',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className		:	'RangeWhiskerGraph',
+	name		:	'refresh ',
+	parameters		:	[],
+
+},
+{
+	comments	:	'    *   * Subclass of GenericGraph   *    * @plotHorizontalByCluster   ',
+	line		:	'23',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'39',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'refresh ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'44',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'isNumber ',
+	parameters	:	[' value'],
+
+},
+{
+	comments	:	'    *  There are several different methods for calculating quartiles.[1] This calculator uses a method described by Moore and McCabe to find quartile values.   The same method also used by The TI-83 to calculate quartile values.   With this method, the first quartile is the median of the numbers below the median, the third quartile is the median of the numbers above the median.    http://www.miniwebtool.com/quartile-calculator/  http://www.alcula.com/calculators/statistics/box-plot/    *',
+	type		:	'method',
+	className	:	'RangeWhiskerGraph',
+	name		:	'getQ1 ',
+	parameters	:	[' array'],
+	line		:	'50',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+
+},
+{
+	type		:	'method',
+	line		:	'55',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'getQ3 ',
+	parameters	:	[' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'61',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'getQ2 ',
+	parameters	:	[' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'65',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'getBelowOutliers ',
+	parameters	:	[' belowLimit',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'75',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'getAboveOutliers ',
+	parameters	:	[' aboveLimit',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'86',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'minValueWhisker ',
+	parameters	:	[' belowLimit',' q1',' array'],
+
+},
+{
+	type		:	'method',
+	line		:	'119',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'drawPoints ',
+	parameters	:	[' boxProperties'],
+
+},
+{
+	type		:	'method',
+	line		:	'130',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'plotRangeQ1Q3 ',
+	parameters	:	[' data',' properties'],
+
+},
+{
+	type		:	'method',
+	line		:	'222',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'plotWhisters ',
+	parameters	:	[' data',' properties'],
+
+},
+{
+	type		:	'method',
+	line		:	'265',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'draw ',
+	parameters	:	[' targetId',' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'275',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'279',
+	file		:	'./biosaxs/graph/rangewhiskergraph.js',
+	className	:	'RangeWhiskerGraph',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className		:	'StdDevDyGraph',
+	name		:	'mouseUp ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className		:	'StdDevDyGraph',
+	name		:	'_createHTLMWrapper ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className		:	'StdDevDyGraph',
+	name		:	'draw ',
+	parameters		:	[],
+
+},
+{
+	line		:	'8',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className	:	'StdDevDyGraph',
+	parameters	:	['targetId','  args'],
+
+},
+{
+	type		:	'method',
+	line		:	'56',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className	:	'StdDevDyGraph',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'68',
+	file		:	'./biosaxs/graph/stddevdygraph.js',
+	className	:	'StdDevDyGraph',
+	name		:	'test ',
+	parameters	:	['  targetId'],
+
+},
+{
+	line		:	'2',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'getBuffer ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'10',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'_getActions ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'29',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'refresh ',
+	parameters	:	[' buffer',' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'43',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'getAdditives ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'64',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'_getFields ',
+	parameters	:	[' buffers '],
+
+},
+{
+	type		:	'method',
+	line		:	'122',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'138',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'getPanel ',
+	parameters	:	[' buffer',' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'146',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'getStore ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'169',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'_renderGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'208',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'211',
+	file		:	'./biosaxs/grid/additivegrid.js',
+	className	:	'AdditiveGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'  * AnalysisGrid *',
+	line		:	'1',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'74',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'refresh ',
+	parameters	:	[' data '],
+
+},
+{
+	type		:	'method',
+	line		:	'78',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'561',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  data '],
+
+},
+{
+	type		:	'method',
+	line		:	'577',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'getPanel ',
+	parameters	:	['  data '],
+
+},
+{
+	type		:	'method',
+	line		:	'648',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_openVisualizarBySubstractionId ',
+	parameters	:	[' record '],
+
+},
+{
+	type		:	'method',
+	line		:	'668',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_edit ',
+	parameters	:	[' record '],
+
+},
+{
+	type		:	'method',
+	line		:	'706',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_showCalibration ',
+	parameters	:	[' row '],
+
+},
+{
+	type		:	'method',
+	line		:	'743',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'_openVisualizer ',
+	parameters	:	[' experimentList',' subtraction',' record '],
+
+},
+{
+	type		:	'method',
+	line		:	'829',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'837',
+	file		:	'./biosaxs/grid/analysisgrid.js',
+	className	:	'AnalysisGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   * It shows buffer grid with a top bar with "Add" button   *    * @height   * @searchBar   * @collapsed   * @width   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'28',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'_edit ',
+	parameters	:	[' bufferId'],
+
+},
+{
+	type		:	'method',
+	line		:	'38',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'refresh ',
+	parameters	:	[' buffers'],
+
+},
+{
+	type		:	'method',
+	line		:	'42',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' buffers'],
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'_getTbar ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'66',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'getPanel ',
+	parameters	:	[' buffers'],
+
+},
+{
+	type		:	'method',
+	line		:	'151',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'156',
+	file		:	'./biosaxs/grid/buffergrid.js',
+	className	:	'BufferGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'  *   * A shipment may contains one or more cases where sotck solutions and sample plates are stored   *    * @height   * @btnEditVisible   * @btnRemoveVisible   *    * #onEditButtonClicked   * #onAddButtonClicked   * #onRemoveButtonClicked   * #onDuplicateButtonClicked   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'27',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'243',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_getTopButtons ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'270',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'refresh ',
+	parameters	:	[' dewars '],
+
+},
+{
+	type		:	'method',
+	line		:	'275',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_sort ',
+	parameters	:	[' store '],
+
+},
+{
+	type		:	'method',
+	line		:	'282',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'290',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'getPanel ',
+	parameters	:	[' dewars',' plates '],
+
+},
+{
+	type		:	'method',
+	line		:	'296',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_edit ',
+	parameters	:	[' dewar '],
+
+},
+{
+	type		:	'method',
+	line		:	'312',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_getStoreFields ',
+	parameters	:	[' data '],
+
+},
+{
+	type		:	'method',
+	line		:	'371',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'_renderGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'444',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'452',
+	file		:	'./biosaxs/grid/casegrid.js',
+	className	:	'CaseGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'    *   * Shows a list of experiment (data acquisitions)   *    *	@height   *	@sorters    *	@minHeight   *	@gridType: Ext.ux.LiveSearchGridPanel or Ext.grid.Panel   *	@tbar true or false   *	@grouping true or false   *	@width   *	@title   *   *	#onEditButtonClicked   *',
+	line		:	'1',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'54',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'_getFilterTypes ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'61',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' rows '],
+
+},
+{
+	type		:	'method',
+	line		:	'97',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'getPanel ',
+	parameters	:	[' experiments '],
+
+},
+{
+	type		:	'method',
+	line		:	'103',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'refresh ',
+	parameters	:	[' experiments '],
+
+},
+{
+	type		:	'method',
+	line		:	'117',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'_getTopButtons ',
+	parameters	:	['  '],
+
+},
+{
+	comments	:	'    * Only for templates *',
+	type		:	'method',
+	className	:	'ExperimentGrid',
+	name		:	'_removeExperimentById ',
+	parameters	:	[' experimentId '],
+	line		:	'190',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'202',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'_renderGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'310',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	comments	:	'          * Changes location.href in order to edit the experiment *',
+	type		:	'method',
+	className	:	'ExperimentGrid',
+	name		:	'_editExperiment ',
+	parameters	:	[' experimentId '],
+	line		:	'492',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'502',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'511',
+	file		:	'./biosaxs/grid/experimentgrid.js',
+	className	:	'ExperimentGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'*   * Macromolecule Grid showing macromolecules and adding anb updating buttons   *    * @height   * @maxHeight   * @width   * @cssFontStyle   * @searchBar makes this grid as Ext.ux.LiveSearchGridPanel   * @tbar top bar containing "Add" and "Update From SMIS" button    * @collapsed   * @collapsible   * @btnEditVisible   * @btnRemoveVisible   * @multiselect makes it multiselect using Ext.selection.CheckboxModel   *    * #onSelected   * #onMacromoleculesChanged   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'66',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'edit ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'76',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'getTbar ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'140',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'deselectAll ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'144',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'selectById ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'154',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'refresh ',
+	parameters	:	[' macromolecules'],
+
+},
+{
+	type		:	'method',
+	line		:	'158',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'getColumns ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'223',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' macromolecules'],
+
+},
+{
+	comments	:	'    * Returns the grid *',
+	type		:	'method',
+	className	:	'MacromoleculeGrid',
+	name		:	'getPanel ',
+	parameters	:	[' macromolecules'],
+	line		:	'225',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'298',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'305',
+	file		:	'./biosaxs/grid/macromoleculegrid.js',
+	className	:	'MacromoleculeGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'*    *  Shows measurements with their attributes as specimen, exposure temperature, volume to load, transmission etc...   *     *	@addBtnMultipleEdit: if true add a button for changing measurements parameters by choosing multiple measurements. It opens <span style="color:blue;">MultipleEditMeasurementGridWindow</span>   *	@collapsed: if true it doesnt show buffers measurements   *	@editor: hashmap containing columns to be edited. It is an array of a json like editor of Ext   *	@selModel   *	@collapseBtnEnable   *	@removeBtnEnabled Ext.selection.RowModel    *	@addBtnEnable   *	@updateRowEnabled true/false if update plugin is set to the grid   *	@showTitle   *	@title   *	@isStatusColumnHidden   * 	@isPriorityColumnHidden   *	@isTimeColumnHidden    *	@estimateTime   *	@margin   *	@tbar   *	@height   *	@maxHeight   *	@minHeight   *	@width   *	@maxWidth   *	@resizable   *   *	#onClick   *  #onSelected   *  #onRemoved   *  #onUpdateTime   *  #onMeasurementChanged   *  #onExperimentChanged  *',
+	line		:	'1',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+	className	:	'MeasurementGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'166',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+	className	:	'MeasurementGrid',
+	name		:	'_getMenu ',
+	parameters	:	['   '],
+
+},
+{
+	comments	:	'    * Opens WizardWidget for adding new measurements *',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_openAddMeasurementWindow ',
+	parameters	:	['  measurements',' experiments '],
+	line		:	'217',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'    * Opens WizardWidget for adding new measurements    * @Measurements   * @Experiments experimentList Object   * *',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  measurements',' experiments '],
+	line		:	'236',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'    *   * Refresh data grid with the measurements and the experiments   * @measurements array with measurement3VO objects   * @experiments array with experiments objects   ',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'refresh ',
+	parameters	:	['  measurements',' experiments '],
+	line		:	'277',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'      *   * Set status bar to busy (refreshing icon)   * @msg message to be displayed on the bar   ',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_showStatusBarBusy ',
+	parameters	:	['  msg '],
+	line		:	'281',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'    *   * Set status bar to ready (ok icon)   * @msg message to be displayed on the bar   ',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_showStatusBarReady ',
+	parameters	:	['  msg '],
+	line		:	'288',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'    *   * If updateRowEnabled returns an array with Ext.grid.plugin.RowEditing   ',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_getPlugins ',
+	parameters	:	['   '],
+	line		:	'295',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	comments	:	'    *   * @key name of the columns mathing the this.editor[key]   ',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'_getEditor ',
+	parameters	:	['  key '],
+	line		:	'330',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'337',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+	className	:	'MeasurementGrid',
+	name		:	'getPanel ',
+	parameters	:	['  measurements',' experiments '],
+
+},
+{
+	comments	:	'    * Method for testing *',
+	type		:	'method',
+	className	:	'MeasurementGrid',
+	name		:	'input ',
+	parameters	:	[' '],
+	line		:	'760',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'771',
+	file		:	'./biosaxs/grid/measurementgrid.js',
+	className	:	'MeasurementGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'  *   * Given data analysis parsed with ResultsAssemblyWidget makes a selector grid with buffer/protein   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'22',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	name		:	'refresh ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'27',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	name		:	'getPanel ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'104',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'111',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'SpecimenSelectorResultGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'        *   * Show all buffer conditions for each macromolecules pointing out the measurements quality   *    * @height   * @maxHeight   * @width   * @searchBar   * @tbar   * @btnResultVisible   *    * #onClick   ',
+	line		:	'116',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'157',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'edit ',
+	parameters	:	[' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'167',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getTbar ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'208',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'refresh ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'284',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' data'],
+
+},
+{
+	comments	:	'          * Given an array of conditions it returns distinct(concentrations) order by concentration and hash map with number of ocurrences*',
+	type		:	'method',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'parseConcentrations ',
+	parameters	:	[' val',' conditions',' differentConcentration',' quality'],
+	line		:	'291',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'337',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getConditionWarnings ',
+	parameters	:	[' condition'],
+
+},
+{
+	type		:	'method',
+	line		:	'367',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getFrameHTMLTable ',
+	parameters	:	[' warnings'],
+
+},
+{
+	type		:	'method',
+	line		:	'379',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'createConcentrationRow ',
+	parameters	:	[' numberOcu',' condition',' warnings'],
+
+},
+{
+	type		:	'method',
+	line		:	'394',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getConditionHTMLTable ',
+	parameters	:	[' val',' style',' record	'],
+
+},
+{
+	type		:	'method',
+	line		:	'455',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'_getTbar ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'503',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getLegendPanel ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'  * Returns the grid *',
+	type		:	'method',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'getPanel ',
+	parameters	:	[' macromolecules'],
+	line		:	'507',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+
+},
+{
+	type		:	'method',
+	line		:	'637',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'input ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'644',
+	file		:	'./biosaxs/grid/resultsassemblygrid.js',
+	className	:	'ResultsAssemblyGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'*   * shows shipments   *    * @height   * @width   * @minHeight   * @btnEditVisible   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'24',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'121',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'_getTopButtons ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'153',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'refresh ',
+	parameters	:	[' shippings '],
+
+},
+{
+	type		:	'method',
+	line		:	'158',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'166',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'getPanel ',
+	parameters	:	[' shipments '],
+
+},
+{
+	type		:	'method',
+	line		:	'171',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'edit ',
+	parameters	:	[' shippingId '],
+
+},
+{
+	type		:	'method',
+	line		:	'175',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'_getStoreFields ',
+	parameters	:	[' data '],
+
+},
+{
+	type		:	'method',
+	line		:	'199',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'_renderGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'288',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'295',
+	file		:	'./biosaxs/grid/shipmentgrid.js',
+	className	:	'ShipmentGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'68',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'114',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'getStore ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'118',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'deselectAll ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'122',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'selectById ',
+	parameters	:	[' specimenId'],
+
+},
+{
+	type		:	'method',
+	line		:	'134',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'getPlugins ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'235',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'_getRowCombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'253',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'_getColumnCombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'271',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'_getSlotColumBombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'293',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'getPanelByExperiment ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'299',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'refresh ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'306',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'getPanel ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'566',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'574',
+	file		:	'./biosaxs/grid/specimengrid.js',
+	className	:	'SpecimenGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'*   * Shows a list of stock solutions with macromolecule, buffer, storage temperature, concentration, shipment and comments   *    * @multiselect allows multiple selection   * @height    * @minHeight   * @width   * @tbar   * @showTitle   * @isPackedVisible shows is stock solution is in a box   * @btnEditVisible shows edit button   * @btnAddVisible   * @btnAddExisting   * @btnUnpackVisible allows to unpack a stock solution   * @btnRemoveVisible allow to remove a stock solution   ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'63',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'197',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'_getTopButtons ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'260',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'refresh ',
+	parameters	:	[' stockSolutions '],
+
+},
+{
+	type		:	'method',
+	line		:	'265',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'_prepareData ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'278',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'getPanel ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'282',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'edit ',
+	parameters	:	[' stockSolutionId '],
+
+},
+{
+	type		:	'method',
+	line		:	'292',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'_getStoreFields ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'340',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'_renderGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'471',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'477',
+	file		:	'./biosaxs/grid/stocksolutiongrid.js',
+	className	:	'StockSolutionGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'  *   * See ExperimentGrid   *    ',
+	line		:	'1',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'17',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_getFilterTypes ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'19',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_prettyPrintMacromolecules ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'21',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_getPercentage ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'23',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_getPercentageCollected ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'25',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'getPercentageMerged ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'27',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_prepareData ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'29',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'getPanel ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'31',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_renderGrid ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'33',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_getColumns ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'35',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'_editExperiment ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'37',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className		:	'TemplateGrid',
+	name		:	'removeExperimentById ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'40',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	name		:	'_getTopButtons ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	name		:	'refresh ',
+	parameters	:	[' data '],
+
+},
+{
+	type		:	'method',
+	line		:	'85',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	name		:	'_getColumns ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'160',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'170',
+	file		:	'./biosaxs/grid/templategrid.js',
+	className	:	'TemplateGrid',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'getPanel ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'11',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'getVolumesPanel ',
+	parameters	:	[' data',' title'],
+
+},
+{
+	type		:	'method',
+	line		:	'168',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'_prepareData ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'211',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'refresh ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'216',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'render ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'236',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'input ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'242',
+	file		:	'./biosaxs/grid/volumegrid.js',
+	className	:	'VolumeGrid',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'    *   * Shows an experiments with the specimens, measurements, analysis tabs where results are shown and the frames widget   *    * @targetId   ',
+	line		:	'1',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	parameters	:	['targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'67',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'refresh ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'84',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'error ',
+	parameters	:	[' error '],
+
+},
+{
+	type		:	'method',
+	line		:	'90',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'draw ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'94',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'refreshAnalysisData ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'103',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'getSpecimenContainerHeight ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'117',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'getExperimentTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'124',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'renderDataAcquisition ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'256',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'isTemplate ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'264',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'update ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'286',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'getPanel ',
+	parameters	:	[' panel '],
+
+},
+{
+	type		:	'method',
+	line		:	'314',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'321',
+	file		:	'./biosaxs/tabs/experimenttabs.js',
+	className	:	'ExperimentTabs',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	comments	:	'  *   * Shows an experiments with the specimens, measurements, analysis tabs where results are shown and the frames widget   *    * @targetId   ',
+	line		:	'1',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	parameters	:	['targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'DygraphWidget',
+	name		:	'mouseUp  ',
+	parameters	:	['  event',' g',' context '],
+
+},
+{
+	type		:	'method',
+	line		:	'66',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'error ',
+	parameters	:	[' error '],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'loadDataMainPlot ',
+	parameters	:	[' data '],
+
+},
+{
+	type		:	'method',
+	line		:	'124',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'_renderScatteringCurve ',
+	parameters	:	[' frameNumber '],
+
+},
+{
+	type		:	'method',
+	line		:	'185',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'_postRender ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'201',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'draw ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'208',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'getExperimentTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'213',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'renderDataAcquisition ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'240',
+	file		:	'./biosaxs/tabs/hplctabs.js',
+	className	:	'HPLCTabs',
+	name		:	'getPanel ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'4',
+	file		:	'./biosaxs/tabs/resulttabs.js',
+	className	:	'ResultTabs',
+	name		:	'draw ',
+	parameters	:	[' targetId',' data',' macromoleculeId'],
+
+},
+{
+	type		:	'method',
+	line		:	'16',
+	file		:	'./biosaxs/tabs/resulttabs.js',
+	className	:	'ResultTabs',
+	name		:	'_splitBySpecimen ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'31',
+	file		:	'./biosaxs/tabs/resulttabs.js',
+	className	:	'ResultTabs',
+	name		:	'_getTabTitle ',
+	parameters	:	[' key',' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'38',
+	file		:	'./biosaxs/tabs/resulttabs.js',
+	className	:	'ResultTabs',
+	name		:	'getPanel ',
+	parameters	:	[' targetId',' data',' macromoleculeId'],
+
+},
+{
+	line		:	'2',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	parameters	:	['targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'57',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'refresh ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'70',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'refreshWithPlates ',
+	parameters	:	[' shipment',' plates '],
+
+},
+{
+	type		:	'method',
+	line		:	'77',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'error ',
+	parameters	:	[' error '],
+
+},
+{
+	type		:	'method',
+	line		:	'88',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'draw ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'155',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'render ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'159',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'getShipmentHeader ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'202',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'getTabPanel ',
+	parameters	:	[' shipment '],
+
+},
+{
+	type		:	'method',
+	line		:	'244',
+	file		:	'./biosaxs/tabs/shipmenttabs.js',
+	className	:	'ShipmentTabs',
+	name		:	'getPanel ',
+	parameters	:	[' shipment '],
+
+},
+{
+	comments	:	'*   * Shows an template with the specimens, measurements and the experiments requirement   *    * @targetId   ',
+	line		:	'1',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	parameters	:	['targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'194',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'refreshMeasurement ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'202',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'refreshSpecimen ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'211',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'refresh ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'232',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'error ',
+	parameters	:	[' error '],
+
+},
+{
+	type		:	'method',
+	line		:	'239',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'draw ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'244',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getAssemblyTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'250',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getMacromoleculeTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'255',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getBuffersTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'260',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getPlateGroupsTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'265',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getSampleChangerTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'269',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getSpecimenTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'274',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getPlatesTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'306',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getSpecimenContainerHeight ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'319',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getGeneralContainerHeight ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'339',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getExperimentTitle ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'347',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'render ',
+	parameters	:	[' experiment '],
+
+},
+{
+	type		:	'method',
+	line		:	'464',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'isTemplate ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'471',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'getPanel ',
+	parameters	:	[' panel '],
+
+},
+{
+	type		:	'method',
+	line		:	'500',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'input ',
+	parameters	:	[' targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'505',
+	file		:	'./biosaxs/tabs/templatetabs.js',
+	className	:	'TemplateTabs',
+	name		:	'test ',
+	parameters	:	[' targetId '],
+
+},
+{
+	line		:	'7',
+	file		:	'./utils/event.js',
+	className	:	'Event',
+	parameters	:	['sender '],
+
+},
+{
+	type		:	'method',
+	line		:	'48',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'getButtons ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'75',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'save ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'79',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'_postRender ',
+	parameters	:	[' data',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'84',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'draw ',
+	parameters	:	['  data',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'88',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'refresh ',
+	parameters	:	[' data',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'94',
+	file		:	'./biosaxs/utils/genericwindow.js',
+	className	:	'GenericWindow',
+	name		:	'_render ',
+	parameters	:	[' data',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'13',
+	file		:	'./biosaxs/widget/calendarwidget.js',
+	className	:	'CalendarWidget',
+	name		:	'loadData ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'55',
+	file		:	'./biosaxs/widget/calendarwidget.js',
+	className	:	'CalendarWidget',
+	name		:	'draw ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'*   * It shows a table with the guinier and gnom data as well as passed and discarded measurements   *    * @height   * @showBufferColumns   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/concentrationhtmltablewidget.js',
+	className	:	'ConcentrationHTMLTableWidget',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'16',
+	file		:	'./biosaxs/widget/concentrationhtmltablewidget.js',
+	className	:	'ConcentrationHTMLTableWidget',
+	name		:	'refresh ',
+	parameters	:	[' parsedData'],
+
+},
+{
+	type		:	'method',
+	line		:	'20',
+	file		:	'./biosaxs/widget/concentrationhtmltablewidget.js',
+	className	:	'ConcentrationHTMLTableWidget',
+	name		:	'getPanel ',
+	parameters	:	[' parsedData'],
+
+},
+{
+	type		:	'method',
+	line		:	'76',
+	file		:	'./biosaxs/widget/concentrationhtmltablewidget.js',
+	className	:	'ConcentrationHTMLTableWidget',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'83',
+	file		:	'./biosaxs/widget/concentrationhtmltablewidget.js',
+	className	:	'ConcentrationHTMLTableWidget',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'  *   * Using dygraph it plots a chart. Params: targetId, labelsContainerId, args   *    * @width   * @height   * @labelsWidth   * @targetId   * @customBars   * @ylabel   * @xlabel   * @showRangeSelector Show or hide the range selector widget.   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/dygraphwidget.js',
+	className	:	'DygraphWidget',
+	parameters	:	['targetId','  args'],
+
+},
+{
+	comments	:	'* Draws it on targetId     * data: dygraphs.com/data.html    *     * *',
+	type		:	'method',
+	className	:	'DygraphWidget',
+	name		:	'mouseUp  ',
+	parameters	:	['  event',' g',' context '],
+	line		:	'60',
+	file		:	'./biosaxs/widget/dygraphwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'68',
+	file		:	'./biosaxs/widget/dygraphwidget.js',
+	className	:	'DygraphWidget',
+	name		:	'_createHTLMWrapper ',
+	parameters	:	['  data',' colors',' labels'],
+
+},
+{
+	type		:	'method',
+	line		:	'86',
+	file		:	'./biosaxs/widget/dygraphwidget.js',
+	className	:	'DygraphWidget',
+	name		:	'draw ',
+	parameters	:	['  data',' colors',' labels'],
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/widget/prepareexperimentwidget.js',
+	className	:	'PrepareExperimentWidget',
+	name		:	'draw ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'58',
+	file		:	'./biosaxs/widget/prepareexperimentwidget.js',
+	className	:	'PrepareExperimentWidget',
+	name		:	'renderPanel ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'99',
+	file		:	'./biosaxs/widget/prepareexperimentwidget.js',
+	className	:	'PrepareExperimentWidget',
+	name		:	'getTemplates ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'114',
+	file		:	'./biosaxs/widget/prepareexperimentwidget.js',
+	className	:	'PrepareExperimentWidget',
+	name		:	'getProposal ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'*   * It shows an slider for qualityThreshold and radiationDamageThreshold   *    * @qualityThreshold between 0 and 1   * @radiationDamageThreshold between 0 and 1   *    * #onQualityChanged   * #onRadiationDatamageChanged   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/qualitycontrolresultswidget.js',
+	className	:	'QualityControlResultsWidget',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'21',
+	file		:	'./biosaxs/widget/qualitycontrolresultswidget.js',
+	className	:	'QualityControlResultsWidget',
+	name		:	'getPanel ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'111',
+	file		:	'./biosaxs/widget/qualitycontrolresultswidget.js',
+	className	:	'QualityControlResultsWidget',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'115',
+	file		:	'./biosaxs/widget/qualitycontrolresultswidget.js',
+	className	:	'QualityControlResultsWidget',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'45',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'drawPlate ',
+	parameters	:	[' experiment',' plate',' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'71',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'drawPlates ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'86',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'_sortPlates ',
+	parameters	:	[' a',' b '],
+
+},
+{
+	type		:	'method',
+	line		:	'90',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'getPlates ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'125',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'selectSpecimens ',
+	parameters	:	[' specimens'],
+
+},
+{
+	type		:	'method',
+	line		:	'136',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'selectSpecimen ',
+	parameters	:	[' specimen'],
+
+},
+{
+	type		:	'method',
+	line		:	'149',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'refresh ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'164',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'_getAutoFillButton ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'217',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'_getZoomButton ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'279',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'_getEmptyButton ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'332',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'_getPlateTypes ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'416',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'getBbar ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'435',
+	file		:	'./biosaxs/widget/sampleplategroup_v2.js',
+	className	:	'SamplePlateGroupWidget',
+	name		:	'getPanel ',
+	parameters	:	[' experiment'],
+
+},
+{
+	comments	:	'*   *    * @nodeSize   * @fontSize   * @strokeWidth   * @showTooltip   * @showBorderLabels   * @showFullName   * @showLabels   * @backgroundColor   *    *',
+	line		:	'1',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	parameters	:	['args '],
+
+},
+{
+	type		:	'method',
+	line		:	'67',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'clear ',
+	parameters	:	[' experiment',' samplePlate',' targetId '],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'draw ',
+	parameters	:	[' experiment',' samplePlate',' targetId',' windowContainerId '],
+
+},
+{
+	type		:	'method',
+	line		:	'175',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'drawBorders ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'210',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'addOkIcon ',
+	parameters	:	[' x',' y',' id',' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'235',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'selectSpecimen ',
+	parameters	:	[' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'243',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'clearSelection ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'251',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'getVertexByPosition ',
+	parameters	:	[' row',' column '],
+
+},
+{
+	type		:	'method',
+	line		:	'261',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'getOpacity ',
+	parameters	:	[' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'274',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'showLabel ',
+	parameters	:	[' row',' column',' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'298',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'getNodeIdBySpecimenId ',
+	parameters	:	[' specimenId '],
+
+},
+{
+	type		:	'method',
+	line		:	'302',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'markSpecimenAsOk ',
+	parameters	:	[' specimen',' x',' y',' id '],
+
+},
+{
+	type		:	'method',
+	line		:	'316',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'fillWell ',
+	parameters	:	[' row',' column',' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'417',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'_getToolTipContent ',
+	parameters	:	[' specimen '],
+
+},
+{
+	type		:	'method',
+	line		:	'440',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'fillSimulator ',
+	parameters	:	[' samples '],
+
+},
+{
+	type		:	'method',
+	line		:	'453',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'relayout ',
+	parameters	:	[' network',' rows',' columns '],
+
+},
+{
+	type		:	'method',
+	line		:	'462',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'squareRelayout ',
+	parameters	:	[' network',' rows',' columns '],
+
+},
+{
+	type		:	'method',
+	line		:	'499',
+	file		:	'./biosaxs/widget/sampleplatewidget.js',
+	className	:	'SamplePlateWidget',
+	name		:	'circleRelayout ',
+	parameters	:	[' network',' rows',' columns '],
+
+},
+{
+	type		:	'method',
+	line		:	'41',
+	file		:	'./biosaxs/widget/shippingwidget.js',
+	className	:	'ShippingWidget',
+	name		:	'draw ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/widget/shippingwidget.js',
+	className	:	'ShippingWidget',
+	name		:	'renderPanel ',
+	parameters	:	[' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'105',
+	file		:	'./biosaxs/widget/shippingwidget.js',
+	className	:	'ShippingWidget',
+	name		:	'refresh ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'36',
+	file		:	'./biosaxs/widget/warningwidget.js',
+	className	:	'WarningWidget',
+	name		:	'draw ',
+	parameters	:	[' warning '],
+
+},
+{
+	comments	:	'*   *    * @width   * @height   *    ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'27',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getPDBViewerPanel ',
+	parameters	:	[' model',' width',' height'],
+
+},
+{
+	type		:	'method',
+	line		:	'36',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'get2x2 ',
+	parameters	:	[' models',' colors'],
+
+},
+{
+	type		:	'method',
+	line		:	'73',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getContainers ',
+	parameters	:	[' models'],
+
+},
+{
+	type		:	'method',
+	line		:	'105',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getColors ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'114',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getPDBPanel ',
+	parameters	:	[' items'],
+
+},
+{
+	comments	:	'    * type is fir or fit *',
+	type		:	'method',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'_getFirHTML ',
+	parameters	:	[' modelId',' width',' height',' type',' desc'],
+	line		:	'129',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'138',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getNSDPlot ',
+	parameters	:	[' width','height '],
+
+},
+{
+	type		:	'method',
+	line		:	'152',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getCHI2Plot ',
+	parameters	:	[' width','height '],
+
+},
+{
+	type		:	'method',
+	line		:	'165',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getImagesPanel ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'207',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'draw ',
+	parameters	:	[' data',' targetId'],
+
+},
+{
+	type		:	'method',
+	line		:	'280',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getDamaverModel ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'296',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getDamfiltModel ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'308',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getDammin ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'321',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'refresh ',
+	parameters	:	[' models'],
+
+},
+{
+	type		:	'method',
+	line		:	'331',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getModels ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'375',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'getMenu ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'431',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'437',
+	file		:	'./biosaxs/widget/pdb/datacollectionpdbwidget.js',
+	className	:	'DataCollectionPDBWidget',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'draw ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'26',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_getPrefixes ',
+	parameters	:	['  record'],
+
+},
+{
+	type		:	'method',
+	line		:	'47',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_prepareData ',
+	parameters	:	['  merges',' experimentList',' dataCollectionId',' record'],
+
+},
+{
+	type		:	'method',
+	line		:	'120',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_renderSpecimenBox ',
+	parameters	:	['  merges',' experimentList',' dataCollectionId',' record'],
+
+},
+{
+	type		:	'method',
+	line		:	'167',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_getImageHTML ',
+	parameters	:	['  title',' type',' subtractionId',' height',' width'],
+
+},
+{
+	type		:	'method',
+	line		:	'173',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'refresh ',
+	parameters	:	['  merges',' experimentList',' dataCollectionId',' record'],
+
+},
+{
+	type		:	'method',
+	line		:	'202',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_getSpecimenColor ',
+	parameters	:	['  specimen',' merge',' experimentList',' dataCollectionId',' merged',' type'],
+
+},
+{
+	type		:	'method',
+	line		:	'225',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_getDataStore ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'239',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'getLegendGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'249',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'getFrameGrid ',
+	parameters	:	['  store',' width',' height',' title',' selectionMode'],
+
+},
+{
+	type		:	'method',
+	line		:	'317',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'getGrid ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'331',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_renderPlotFromData ',
+	parameters	:	['  data'],
+
+},
+{
+	type		:	'method',
+	line		:	'389',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'_renderPlot ',
+	parameters	:	['  selected'],
+
+},
+{
+	type		:	'method',
+	line		:	'414',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className	:	'DataCollectionCurveVisualizer',
+	name		:	'getPanel ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'510',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className		:	'DataCollectionCurveVisualizer',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'512',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className		:	'DataCollectionCurveVisualizer',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'514',
+	file		:	'./biosaxs/widget/window/datacollectioncurvevisualizer.js',
+	className		:	'DataCollectionCurveVisualizer',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	comments	:	'  *   *    * DataCollectionFrameTree a list tree with the 1D files sorted by: none, macromolecules, datacollections   *    * @height   * #onSelectionChanged when clicked on an item   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'19',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getPanel ',
+	parameters	:	['  '],
+
+},
+{
+	comments	:	'    * Macromolecule Grid *',
+	type		:	'method',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getListGrid ',
+	parameters	:	['  '],
+	line		:	'60',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+
+},
+{
+	type		:	'method',
+	line		:	'149',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getDataCollectionCode ',
+	parameters	:	['  dataCollection'],
+
+},
+{
+	type		:	'method',
+	line		:	'161',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getCollectionNode ',
+	parameters	:	['  dataCollection',' merges'],
+
+},
+{
+	type		:	'method',
+	line		:	'169',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getData ',
+	parameters	:	['  dataCollections',' merges'],
+
+},
+{
+	type		:	'method',
+	line		:	'178',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getSpecimenByMeasurementId ',
+	parameters	:	['  measurementId'],
+
+},
+{
+	type		:	'method',
+	line		:	'183',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getMacromoleculeByMeasurementId ',
+	parameters	:	['  measurementId'],
+
+},
+{
+	type		:	'method',
+	line		:	'188',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getMeasurements ',
+	parameters	:	['  dataCollection',' merges'],
+
+},
+{
+	type		:	'method',
+	line		:	'226',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getFrames ',
+	parameters	:	['  measurementId',' merges'],
+
+},
+{
+	type		:	'method',
+	line		:	'264',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getFramesNoAverage ',
+	parameters	:	['  measurementId',' merges'],
+
+},
+{
+	type		:	'method',
+	line		:	'291',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getSpecimenById ',
+	parameters	:	['  specimenId'],
+
+},
+{
+	type		:	'method',
+	line		:	'301',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'loadDatacollections ',
+	parameters	:	['  dataCollections',' merges',' experiments'],
+
+},
+{
+	type		:	'method',
+	line		:	'324',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getDataCollectionById ',
+	parameters	:	['  dataCollectionId'],
+
+},
+{
+	type		:	'method',
+	line		:	'334',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'notifySelectionChanged ',
+	parameters	:	['  frameListSelectedIds'],
+
+},
+{
+	type		:	'method',
+	line		:	'345',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'getFramesTree ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'430',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'input ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'434',
+	file		:	'./biosaxs/widget/window/datacollectionframetree.js',
+	className	:	'DataCollectionFrameTree',
+	name		:	'test ',
+	parameters	:	['  targetId'],
+
+},
+{
+	comments	:	'  *   * Using dygraph it plots a chart. Params: targetId, labelsContainerId, args   *    * @width   * @height   * @labelsWidth   * @targetId   * @customBars   * @ylabel   * @xlabel   * @showRangeSelector Show or hide the range selector widget.   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/window/dygraphwidget.js',
+	className	:	'DygraphWidget',
+	parameters	:	['targetId','  args'],
+
+},
+{
+	comments	:	'* Draws it on targetId     * data: dygraphs.com/data.html    *     * *',
+	type		:	'method',
+	className	:	'DygraphWidget',
+	name		:	'mouseUp  ',
+	parameters	:	['  event',' g',' context '],
+	line		:	'47',
+	file		:	'./biosaxs/widget/window/dygraphwidget.js',
+
+},
+{
+	type		:	'method',
+	line		:	'54',
+	file		:	'./biosaxs/widget/window/dygraphwidget.js',
+	className	:	'DygraphWidget',
+	name		:	'draw ',
+	parameters	:	['  data',' colors',' labels'],
+
+},
+{
+	comments	:	'  * Experiment Type Selector   * 		- STATIC   * 		- HPLC   * 		- CALIBRATION?   ',
+	line		:	'1',
+	file		:	'./biosaxs/widget/wizard/experimenttypesetepwizardform.js',
+	className	:	'ExperimentTypeWizardForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'21',
+	file		:	'./biosaxs/widget/wizard/experimenttypesetepwizardform.js',
+	className	:	'ExperimentTypeWizardForm',
+	name		:	'getForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'52',
+	file		:	'./biosaxs/widget/wizard/experimenttypesetepwizardform.js',
+	className	:	'ExperimentTypeWizardForm',
+	name		:	'getNextForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'56',
+	file		:	'./biosaxs/widget/wizard/experimenttypesetepwizardform.js',
+	className	:	'ExperimentTypeWizardForm',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'60',
+	file		:	'./biosaxs/widget/wizard/experimenttypesetepwizardform.js',
+	className	:	'ExperimentTypeWizardForm',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	line		:	'7',
+	file		:	'./biosaxs/widget/wizard/finalstepwizardform.js',
+	className	:	'FinalStepWizardForm',
+	parameters	:	['measurements'],
+
+},
+{
+	type		:	'method',
+	line		:	'36',
+	file		:	'./biosaxs/widget/wizard/finalstepwizardform.js',
+	className	:	'FinalStepWizardForm',
+	name		:	'getForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'71',
+	file		:	'./biosaxs/widget/wizard/finalstepwizardform.js',
+	className	:	'FinalStepWizardForm',
+	name		:	'getNextForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'76',
+	file		:	'./biosaxs/widget/wizard/finalstepwizardform.js',
+	className	:	'FinalStepWizardForm',
+	name		:	'input ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'80',
+	file		:	'./biosaxs/widget/wizard/finalstepwizardform.js',
+	className	:	'FinalStepWizardForm',
+	name		:	'test ',
+	parameters	:	[' targetId'],
+
+},
+{
+	comments	:	'*   * Class for managing wizards   *    * @title   * @description   * @data   * @onNextFn   * @onBackFn   *',
+	line		:	'1',
+	file		:	'./biosaxs/widget/wizard/genericstepwizardform.js',
+	className	:	'GenericStepWizardForm',
+	parameters	:	['title',' description',' data',' onNextFn',' onBackFn'],
+
+},
+{
+	type		:	'method',
+	line		:	'10',
+	file		:	'./biosaxs/widget/wizard/genericstepwizardform.js',
+	className	:	'GenericStepWizardForm',
+	name		:	'getForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'15',
+	file		:	'./biosaxs/widget/wizard/genericstepwizardform.js',
+	className	:	'GenericStepWizardForm',
+	name		:	'getNextForm ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'    * When coming back to the same form *',
+	type		:	'method',
+	className	:	'GenericStepWizardForm',
+	name		:	'reload ',
+	parameters	:	[' '],
+	line		:	'17',
+	file		:	'./biosaxs/widget/wizard/genericstepwizardform.js',
+
+},
+{
+	comments	:	'* MACROMOLECULES SELECTOR *',
+	line		:	'1',
+	file		:	'./biosaxs/widget/wizard/macromoleculeselectorwizardform.js',
+	className	:	'MacromoleculeSelectorWizardForm',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'26',
+	file		:	'./biosaxs/widget/wizard/macromoleculeselectorwizardform.js',
+	className	:	'MacromoleculeSelectorWizardForm',
+	name		:	'reload ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'34',
+	file		:	'./biosaxs/widget/wizard/macromoleculeselectorwizardform.js',
+	className	:	'MacromoleculeSelectorWizardForm',
+	name		:	'getForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'90',
+	file		:	'./biosaxs/widget/wizard/macromoleculeselectorwizardform.js',
+	className	:	'MacromoleculeSelectorWizardForm',
+	name		:	'getNextForm ',
+	parameters	:	[' '],
+
+},
+{
+	comments	:	'  * MEASUREMENTS SELECTOR *',
+	line		:	'1',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	parameters	:	['macromolecules',' args'],
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'setData ',
+	parameters	:	[' data'],
+
+},
+{
+	type		:	'method',
+	line		:	'86',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'getSingleMeasurementForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'248',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'getConcentrationMeasurementForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'419',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'getForm ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'487',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'getBuffers ',
+	parameters	:	[' measurements'],
+
+},
+{
+	type		:	'method',
+	line		:	'523',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'parseMeasurements ',
+	parameters	:	[' measurements'],
+
+},
+{
+	type		:	'method',
+	line		:	'612',
+	file		:	'./biosaxs/widget/wizard/measurementcreatorstepwizardform.js',
+	className	:	'MeasurementCreatorStepWizardForm',
+	name		:	'getNextForm ',
+	parameters	:	[' '],
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/widget/wizard/wizardwidget.js',
+	className	:	'WizardWidget',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'20',
+	file		:	'./biosaxs/widget/wizard/wizardwidget.js',
+	className	:	'WizardWidget',
+	name		:	'draw ',
+	parameters	:	[' targetId',' form'],
+
+},
+{
+	type		:	'method',
+	line		:	'29',
+	file		:	'./biosaxs/widget/wizard/wizardwidget.js',
+	className	:	'WizardWidget',
+	name		:	'getButtons ',
+	parameters	:	[' step',' onNext',' onBack'],
+
+},
+{
+	type		:	'method',
+	line		:	'108',
+	file		:	'./biosaxs/widget/wizard/wizardwidget.js',
+	className	:	'WizardWidget',
+	name		:	'renderMasterContainer ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'2',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className		:	'BufferWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'4',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className		:	'BufferWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className		:	'BufferWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	line		:	'7',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className	:	'BufferWindow',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'26',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className	:	'BufferWindow',
+	name		:	'save ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'53',
+	file		:	'./biosaxs/window/bufferwindow.js',
+	className	:	'BufferWindow',
+	name		:	'draw ',
+	parameters	:	['  buffer'],
+
+},
+{
+	type		:	'method',
+	line		:	'2',
+	file		:	'./biosaxs/window/casewindow.js',
+	className		:	'CaseWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'4',
+	file		:	'./biosaxs/window/casewindow.js',
+	className		:	'CaseWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/window/casewindow.js',
+	className		:	'CaseWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	line		:	'7',
+	file		:	'./biosaxs/window/casewindow.js',
+	className	:	'CaseWindow',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'44',
+	file		:	'./biosaxs/window/casewindow.js',
+	className	:	'CaseWindow',
+	name		:	'save ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'56',
+	file		:	'./biosaxs/window/casewindow.js',
+	className	:	'CaseWindow',
+	name		:	'draw ',
+	parameters	:	['  dewar',' plates'],
+
+},
+{
+	comments	:	'  *   * #onSaved   ',
+	line		:	'1',
+	file		:	'./biosaxs/window/experimentwindow.js',
+	className	:	'ExperimentWindow',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'14',
+	file		:	'./biosaxs/window/experimentwindow.js',
+	className	:	'ExperimentWindow',
+	name		:	'getButtons ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'51',
+	file		:	'./biosaxs/window/experimentwindow.js',
+	className	:	'ExperimentWindow',
+	name		:	'show ',
+	parameters	:	[' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className		:	'MacromoleculeWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className		:	'MacromoleculeWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className		:	'MacromoleculeWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	line		:	'9',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className	:	'MacromoleculeWindow',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'22',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className	:	'MacromoleculeWindow',
+	name		:	'save ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'46',
+	file		:	'./biosaxs/window/macromoleculewindow.js',
+	className	:	'MacromoleculeWindow',
+	name		:	'draw ',
+	parameters	:	['  macromolecule',' experiment'],
+
+},
+{
+	line		:	'1',
+	file		:	'./biosaxs/window/multipleeditmeasurementgridwindow.js',
+	className	:	'MultipleEditMeasurementGridWindow',
+
+},
+{
+	type		:	'method',
+	line		:	'70',
+	file		:	'./biosaxs/window/multipleeditmeasurementgridwindow.js',
+	className	:	'MultipleEditMeasurementGridWindow',
+	name		:	'getMacromoleculeCombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'82',
+	file		:	'./biosaxs/window/multipleeditmeasurementgridwindow.js',
+	className	:	'MultipleEditMeasurementGridWindow',
+	name		:	'getBufferCombo ',
+	parameters	:	[' '],
+
+},
+{
+	type		:	'method',
+	line		:	'93',
+	file		:	'./biosaxs/window/multipleeditmeasurementgridwindow.js',
+	className	:	'MultipleEditMeasurementGridWindow',
+	name		:	'save ',
+	parameters	:	[' parameter',' value'],
+
+},
+{
+	type		:	'method',
+	line		:	'121',
+	file		:	'./biosaxs/window/multipleeditmeasurementgridwindow.js',
+	className	:	'MultipleEditMeasurementGridWindow',
+	name		:	'draw ',
+	parameters	:	[' measurements',' experients'],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/window/specimenswindow.js',
+	className		:	'SpecimensWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/window/specimenswindow.js',
+	className		:	'SpecimensWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/window/specimenswindow.js',
+	className		:	'SpecimensWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'2',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className		:	'StockSolutionWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'4',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className		:	'StockSolutionWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'6',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className		:	'StockSolutionWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	line		:	'7',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className	:	'StockSolutionWindow',
+	parameters	:	['args'],
+
+},
+{
+	type		:	'method',
+	line		:	'31',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className	:	'StockSolutionWindow',
+	name		:	'save ',
+	parameters	:	['  '],
+
+},
+{
+	type		:	'method',
+	line		:	'69',
+	file		:	'./biosaxs/window/stocksolutionwindow.js',
+	className	:	'StockSolutionWindow',
+	name		:	'draw ',
+	parameters	:	['  stockSolution',' experiment'],
+
+},
+{
+	type		:	'method',
+	line		:	'3',
+	file		:	'./biosaxs/window/wizardwindow.js',
+	className		:	'WizardWindow',
+	name		:	'getButtons ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'5',
+	file		:	'./biosaxs/window/wizardwindow.js',
+	className		:	'WizardWindow',
+	name		:	'_render ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'7',
+	file		:	'./biosaxs/window/wizardwindow.js',
+	className		:	'WizardWindow',
+	name		:	'_postRender ',
+	parameters		:	[],
+
+},
+{
+	type		:	'method',
+	line		:	'66',
+	file		:	'./biosaxs/window/wizardwindow.js',
+	className	:	'WizardWindow',
+	name		:	'getButtons ',
+	parameters	:	['  '],
+
+},
+]

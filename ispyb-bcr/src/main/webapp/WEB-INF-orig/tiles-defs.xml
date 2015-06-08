@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd"><tiles-definitions>
+ 
+    <!--
+    
+    All layouts end with: .layout
+    All pages end with: .page
+    Pages with user associated begins with user group name
+    Pages without user associated  begins with: site.
+    
+    -->      
+       
+	<!-- =======================================================  -->
+	<!-- Layout  -->
+	<!-- =======================================================  -->
+
+
+	<definition name="bcr.main.layout" path="/tiles/bcr/layouts/bcrLayout.jsp">
+		<put name="title" value="${title}" />
+		<put name="selectedStyles" value="bcr.css" />
+		<put name="header_top_bar" value="/tiles/bcr/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/bcr/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/bcr/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/bcr/common/header/tab_bar.jsp" />
+		
+		<put name="body" value="${body}" />
+		
+		<put name="footer" value="/tiles/bcr/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Welcome pages -->
+	<!-- =======================================================  -->
+	
+	<!-- Welcome page when for guest user -->
+	<definition name="bcr.welcome.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking" />
+		<put name="body" value="/tiles/bcr/bodies/welcome/guest.jsp" />
+		<put name="links" value="null" />
+	</definition>
+	
+	<definition name="bcr.welcomeBCR.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking" />
+		<put name="body" value="/tiles/bcr/bodies/welcome/guestBCR.jsp" />
+		<put name="links" value="null" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Security pages -->
+	<!-- =======================================================  -->
+	
+	<definition name="bcr.logon.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Identifiez vous" />
+		<put name="body" value="/tiles/bcr/bodies/logon/logon.jsp" />
+	</definition>
+	
+	<definition name="bcr.logon.error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Accès refusé" />
+		<put name="body" value="/tiles/bcr/bodies/logon/logonUnAuthorized.jsp" />
+	</definition>
+	
+	<definition name="bcr.role.error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Accès refusé." />
+		<put name="body" value="/tiles/bcr/bodies/logon/roleUnAuthorized.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Error pages -->
+	<!-- =======================================================  -->
+	
+	<definition name="bcr.default.error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Error!" />
+		<put name="body" value="/tiles/bcr/bodies/error/default.jsp" />
+	</definition>
+	
+	<definition name="bcr.permission.error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Permission denied!" />
+		<put name="body" value="/tiles/bcr/bodies/error/noPermission.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Dewar Tracking pages -->
+	<!-- =======================================================  -->
+	
+	<definition name="bcr.tracking.chooseappli.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Applications" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/chooseappli.jsp" />
+	</definition>
+	
+	
+	
+	<definition name="bcr.tracking.localization.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Localisation" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/localization.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.localizationList.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Localization" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/localizationList.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.localization_ok.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Ok" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/localization_ok.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.localization_error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Erreur" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/localization_error.jsp" />
+	</definition>
+	
+	
+	
+	<definition name="bcr.tracking.courier.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Transporteur" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/courier.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.courierList.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Transporteur" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/courierList.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.courier_ok.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Ok" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/courier_ok.jsp" />
+	</definition>
+	
+	<definition name="bcr.tracking.courier_error.page" extends="bcr.main.layout" >
+		<put name="title" value="Dewar Tracking : Erreur" />
+		<put name="body" value="/tiles/bcr/bodies/tracking/courier_error.jsp" />
+	</definition>
+
+</tiles-definitions>

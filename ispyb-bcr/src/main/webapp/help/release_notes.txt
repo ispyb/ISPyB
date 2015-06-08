@@ -1,0 +1,236 @@
+************
+* 20.05.08 *
+************
+Bugs fixed:
+-------------------------
+
+
+New features:
+--------------------------
+1908677  	  Create Sample -> Go to bottom of page
+1908675  	  Search samples
+1908664  	  Copy position in basket from the samplechanger list of samples
+
+************
+* 06.05.08 *
+************
+Bugs fixed:
+-------------------------
+
+
+New features:
+--------------------------
+1908663  	  Sample created from samplesheet
+1908672  	  remove [ACRO-crystal card]
+1908671  	  Pop up comments for dewar in sample lists
+1908670  	  DNA logo on results page
+
+************
+* 16.04.08 *
+************
+Bugs fixed:
+-------------------------
+1908888  	  Excel 2007 error when opening file
+1911975  	  Search Shipment shows blank page
+
+New features:
+--------------------------
+1908651  	  Create PDF with Screenings
+1908671  	  Pop up comments for dewar in sample lists
+
+************
+>>>>>>>>>>>>>>>>>>>Tag ISPYB2_21
+* 01.04.08 *
+************
+Servers switch: new pytest and pyserv
+new warning message on welcome page for test server
+-------------------------
+
+287 Export Shipment : Sample order
+************
+* xx.xx.08 *
+************
+Bugs fixed:
+-------------------------
+287 Export Shipment : Sample order
+
+New features:
+--------------------------
+224 Beamline tel number
+	
+************
+* 22.02.08 *
+************
+Bugs fixed:
+-------------------------
+161 PDF report for samples sorted by location in container
+some bug fixed for DNA pages
+
+************
+=======
+* 22.02.08 *
+************
+Bugs fixed:
+-------------------------
+161 PDF report for samples sorted by location in container
+some bug fixed for DNA pages
+
+************
+>>>>>>> 1.44
+* 08.02.08 *
+************
+Bugs fixed:
+-------------------------
+212 Can't create Sample with already used DM code
+283 assign new position in container
+
+New features:
+--------------------------
+
+
+************
+* 08.01.08 *
+************
+Bugs fixed:
+-------------------------
+
+New features:
+--------------------------
+282 Export Shipment in XLS file
+
+************
+* 07.01.08 *
+************
+
+New features:
+--------------------------
+New version of SMISServer (tag: ISPYB2_2) installed for update WebService, amd WS improvement
+218 Use of EJBs for the Import feature web service
+
+************
+* 30.11.07 *
+************
+Bugs fixed:
+-------------------------
+synchrotron current overflow makes crash 
+
+New features:
+--------------------------
+275 DNA files 
+276 Update FX main proposer and proposal title : email address for PDF report
+
+************
+* xx.xx.07 *
+************
+New features:
+--------------------------
+241 Counting users
+
+
+************
+* 25.09.07 *
+************
+New features:
+--------------------------
+New version of SMISServer (tag: NEW_AFORM1_1) installed for update WebService
+
+Bugs fixed:
+-------------------------
+226 Location in container already used
+269 Use a different title for sessions if only last sessions displayed
+
+************
+* 18.09.07 *
+************
+Bugs fixed:
+-------------------------
+269 View/update dataCollections too long
+266 Upload from file - uniqueness on acronym + sample name
+260 Upload naming
+256 Upload from file - duplicate proteins with same acronym
+
+New features:
+--------------------------
+    Log XLS file upload usage into Database
+228 Populate excel template from database (with DM codes)
+
+************
+* 17.07.07 *
+************
+Bugs fixed:
+-------------------------
+248 Calculate the correct session start/end time when importing new sessions from SMIS DB
+
+New features:
+--------------------------
+268 Crystal characterisation (DNA)
+238 Image - measured intensity to be displayed
+
+
+************
+* 10.07.07 *
+************
+Bugs fixed:
+-------------------------
+227 Search data collection by protein acronym runs forever
+
+New features:
+--------------------------
+195 Displaying sessions - new option "display last sessions" and code cleaning  to go quicker
+
+
+************
+* 03.07.07 *
+************
+
+Bugs fixed:
+-------------------------
+244 DNA HTML result files - links
+    Edit/Create sample page, list of protein acronyms + space group ordered using the acronym
+
+New features:
+--------------------------
+238 Image - measured intensity to be displayed
+248 Calculate the correct session start/end time when importing new sessions from SMIS DB
+251 Local contact column suppressed from session list
+253 Search protein - list of samples
+
+
+************
+* 11.06.07 *
+************
+
+Bugs fixed:
+-------------------------
+245 Edit sample diffraction plan - refresh sample list table not updated
+244 DNA HTML result files - links
+242 Acronym of 1st sample in container kept instead of last one
+240 JBOSS multiple threads created
+237 Create sample page long to load
+
+New features:
+--------------------------
+246 Maintenance static message added
+228 Populate excel template from database
+222 last shipment at Top would be better than at bottom of page
+221 Upload check for acro-sample unicity
+
+************
+* 28.03.07 *
+************
+
+New version ISPYB2_0
+--------------------
+New version with new configuration :
+	- classLoader from J2EE, 
+	- client/server separation, 
+	- libraries cleaning, 
+	- new JBoss version (4.0.3SP1),
+	- new struts version (1.2.7),
+	- new xdoclet version (1.2.3)
+	
+New feature:
+------------
+Experiment Parameters.
+	
+

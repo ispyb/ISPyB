@@ -1,0 +1,6 @@
+	<global-forwards>
+		<!-- Default forward "Welcome" action to Logon -->
+		<forward name="welcome"  path="/welcomeGuestPage.do" /> 
+		<forward name="welcomeBCR" redirect="true" path="/welcomeGuestPageBCR.do" /> 
+	</global-forwards>
+	

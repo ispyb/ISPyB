@@ -1,0 +1,925 @@
+#-------------------------------------------------------------------------------
+# This file is part of ISPyB.
+# 
+# ISPyB is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# ISPyB is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public License
+# along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+# 
+# Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin
+#-------------------------------------------------------------------------------
+
+/* tip to avoid bug : 1st line not taken into account */
+nothing {
+	
+}
+
+/******************************
+ *    class used to display   *
+ *    the input field labels  *
+ *****************************/
+P.LABEL {
+	color : #FFFFFF;
+  	font-weight : bold;
+}
+TH.LABEL {
+	text-align:right;
+}
+
+/*******************************
+ *			SUBSCRIPTION 	   *
+ ******************************/
+P.SUBSCRIPTION {
+		  color : #FFFFFF;
+		  font-family: arial;
+		  font-weight : bold;
+		  text-align : center;
+		  font-size : 16px;
+}
+
+TABLE.SUBSCRIPTION {
+		background-color : #000000;
+}
+
+TH.SUBSCRIPTION {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: bold;			
+}
+
+TD.SUBSCRIPTION {
+		color      : #FFFFFF;
+		background-color : #336699;
+}
+
+
+P.SUBS {
+		  color : #FFFFFF;
+		  font-family: arial;
+		  font-weight : bold;
+		  text-align : center;
+		  font-size : 16px;
+}
+
+TABLE.SUBS {		
+		background-color : #274465;
+		border-collapse: collapse;	
+}
+TABLE.subs2 {
+		background-color : #000000;
+}
+
+TH.SUBS {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: bold;			
+		text-align : left;
+		font-size : 16px;
+		font-family: arial;
+}
+
+TR.SUBS {
+		background-color : #3366A3;
+}
+
+
+TD.SUBS {
+		color      : #FFFFFF;
+		background-color : #3366A3;
+}
+
+/***********************************************
+ * 					CALENDAR				   *
+ **********************************************/
+TD.CALENDRIER {
+	background-color: #C2C2C2; 
+	font-weight: bold; 
+	text-align: center; 
+	font-size: 10px;
+}
+
+A.CALENDRIER {
+	text-decoration: none; 
+	color: #000000;
+}
+
+.CALENDARBORDER {
+	background-color: #000000; 
+}
+
+.CALENDARTITLE {
+	background-color: #336699;
+}
+
+.CALENDARWEEK {
+	background-color: #FFFFFF;
+}
+
+.CALENDARWEEKEND {
+	background-color: #FFF4E5;
+}
+
+.CALENDARSELECTED {
+	background-color: #FF8F01;
+}
+
+/***********************************************
+ * 					?				   		   *
+ **********************************************/
+.ongletMain {
+	BORDER-RIGHT: #6888a8 1px solid; 
+	BORDER-TOP: #6888a8 medium none; 
+	BORDER-LEFT: #6888a8 1px solid; 
+	PADDING-LEFT:  5px;
+	PADDING-RIGHT:  5px;
+	BORDER-BOTTOM: #6888a8 1px solid; 
+	BACKGROUND-COLOR: white;
+}
+
+.clsAction {
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	COLOR: #053c6d; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+
+.ongletTextEna { 
+	
+	BORDER-RIGHT: #6888a8 1px solid; 
+	BORDER-TOP: #6888a8 1px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #6888a8 1px solid; 
+	COLOR: #FFFFFF; 
+	BORDER-BOTTOM: medium none; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #6888a8; 
+	TEXT-ALIGN: center;
+
+}
+
+.maintenance {
+	color: #FF6633;
+	font-size: 0.83em;
+}
+
+.info {
+	color: #000000;
+	font-size: 0.83em;
+}
+
+
+/* unselected headers */
+.ongletTextDis {
+	BORDER-RIGHT: #c5c5c5 1px solid; 
+	BORDER-TOP: #c5c5c5 1px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #c5c5c5 1px solid; 
+	COLOR: #6888a8; 
+	BORDER-BOTTOM: #6888a8 1px solid; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #e6e6e6; 
+	TEXT-ALIGN: center;
+}
+
+.ongletTextErr {
+	BORDER-RIGHT: #c5c5c5 1px solid; 
+	BORDER-TOP: #c5c5c5 1px solid; 
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 10px; 
+	BORDER-LEFT: #c5c5c5 1px solid; 
+	COLOR: #FFFFFF; 
+	BORDER-BOTTOM: #6888a8 1px solid; 
+	FONT-FAMILY: verdana; 
+	BACKGROUND-COLOR: #ED4F50;
+	TEXT-ALIGN: center;
+}
+
+.ongletMiddle {
+	BORDER-RIGHT: #6888a8 1px solid; 
+	BORDER-TOP: medium none; 
+	FONT-SIZE: 1px; 
+	BORDER-LEFT: #6888a8 1px solid; 
+	BORDER-BOTTOM: medium none; 
+	BACKGROUND-COLOR: white	;
+}
+
+.ongletSpace {
+	BORDER-BOTTOM: #6888a8 1px solid;
+}
+
+/*******************************
+ * 			ERROR		       *
+ ******************************/
+.error {
+		color: #e91038;
+		font-size: small;
+}
+TD.ERROR {
+		background-color : #ED4F50;
+		color: #ffffff;
+}
+
+/***********************************************
+ * 					PANEL 					   *
+ **********************************************/
+TABLE.PANEL {		
+		background-color : #6888a8;
+}
+TH.PANEL {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+TD.PANEL {
+		background-color :  #ffffff;;
+		FONT-SIZE: x-small;
+}
+
+TABLE.PANEL_200 {		
+		background-color : #6888a8;
+}
+TH.PANEL_200 {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+TD.PANEL_200 {
+		background-color :  #ffffff;
+		FONT-SIZE: x-small;
+		height: 200px;
+}
+
+TABLE.PANEL_100 {		
+		background-color : #6888a8;
+}
+TH.PANEL_100 {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+
+TD.PANEL_100 {
+		background-color :  #ffffff;
+		FONT-SIZE: x-small;
+		height: 100px;
+}
+
+TABLE.PANEL_75 {	
+		background-color : #6888a8;
+}
+TH.PANEL_75 {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+
+TD.PANEL_75 {
+		background-color :  #ffffff;
+		FONT-SIZE: x-small;
+		height: 80px;
+}
+
+TABLE.PANEL_LINK {		
+		background-color : #6888a8;
+}
+TH.PANEL_LINK {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+
+TD.PANEL_LINK {
+		background-color :  #ffffff;
+		FONT-SIZE: 12px;
+		height: 100px;
+		white-space: nowrap;
+}
+
+
+/***********************************************
+ * 					LOGON PANEL_LOGON 					   *
+ **********************************************/
+TABLE.PANEL_LOGON {		
+		background-color : #6888a8;
+}
+
+TH.PANEL_LOGON {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+}
+
+TD.PANEL_LOGON {
+		background-color :  #ffffff;;
+		FONT-SIZE: x-small;
+		height : 280px;
+		vertical-align: top; 
+}
+
+/***********************************************
+ * 		PANEL_BREAD_CRUMBS		   			   *
+ **********************************************/
+.PANEL_BREAD_CRUMBS{
+ 		font-size: x-small;
+ }
+TABLE.PANEL_BREAD_CRUMBS {		
+		background-color :#eeeeee;
+}
+TH.PANEL_BREAD_CRUMBS {		
+		vertical-align: top; 
+}
+TD.PANEL_BREAD_CRUMBS {		
+		vertical-align: top; 
+}
+.PANEL_BREAD_CRUMBS_FIELD {		
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+	border:0;
+}
+a.PANEL_BREAD_CRUMBS_FIELD {		
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+	border:0;
+}
+.PANEL_BREAD_CRUMBS_ITEM {		
+		border:0;
+		padding:0;
+		cell-padding:0;
+		border-width: 0;
+}
+TABLE.PANEL_BREAD_CRUMBS_ITEM {		
+		background-color : #6888a8;
+}
+TH.PANEL_BREAD_CRUMBS_ITEM {
+		color: #FFFFFF;
+		background-color: #6888a8;
+		font-weight: bold;
+		FONT-SIZE: x-small;
+		vertical-align: top; 
+}
+TD.PANEL_BREAD_CRUMBS_ITEM {
+		background-color :  #ffffff;;
+		FONT-SIZE: x-small;
+		color: #6888a8;
+		height : 72px;
+		vertical-align: top; 
+}
+
+/***********************************************
+ * 						PAGER 				   *
+ **********************************************/
+TD.PAGER {
+	background-color :  #3366A3;
+	text-align: center;
+}
+
+/***********************************************
+ * 						LIST 				   *
+ **********************************************/
+A.LIST {color: #ffffee;}
+A.LIST2 {color: #ffffee;}
+A.LISTORANGE {color: #ffffee;}
+A.HIGHLIGHT.LIST:Hover {color: #ffffee;}
+A.HIGHLIGHT.LIST:Active {color: #ffffee;}
+A.HIGHLIGHT.LIST:Visited {color: #ffffee;}
+
+pre {
+	color: #000000;
+	font-family: Courier, "Courier New", monospace;
+	font-size: small;
+}
+
+.LIST {
+ 	font-size: x-small;
+}
+/* Title correction for sorted columns */
+.LIST table tbody tr td {
+ 	font-size: x-small;
+}
+
+.LIST_LEFT {
+ 	font-size: x-small;
+}
+.list2 {
+ 	font-size: x-small;
+}
+
+TABLE.LIST {		
+		background-color : #274465;
+			text-align: center;
+}
+
+TABLE.LIST2 {		
+		background-color : #274465;
+}
+
+TH.LIST {
+		color      : #FFFFFF;
+		background-color : #274465;
+		font-weight: normal;
+}
+
+TR.LIST {
+		background-color :  #336699;
+		color: #ffffff;
+		text-align: center;
+}
+
+TR.LIST_OVER {
+		background-color :  #274465;
+		background-color :  #607b8b;
+		background-color :  #566D7E;
+		background-color :  #084B8A;
+		color: #ffffff;
+		text-align: center;
+}
+
+TD.LIST {
+		background-color :  #336699;
+		color: #ffffff;
+		text-align: center;
+		height: 18px;
+}
+
+TD.LIST2 {
+		background-color: #6888a8;
+		color: #ffffff;
+		text-align: center;
+}
+
+TD.LIST_OVER {
+		background-color :  #084B8A;
+		color: #ffffff;
+		text-align: center;
+		height: 18px;
+}
+
+TD.LIST_LEFT {
+		background-color :  #336699;
+		color: #ffffff;
+		text-align: left;
+}
+
+
+TD.LEFT {
+		text-align: left;
+}
+
+TD.LISTRED {
+		background-color :  #336699;
+		color: #ff0000;
+}
+
+TD.LISTGREEN {
+		background-color :  #336699;
+		color: #8FBC8B;
+}
+
+TD.LISTORANGE {
+		background-color: #339900;
+		background-color: #FF9900;
+		color: #ffffff;
+		text-align: center;
+}
+
+TD.RED {
+		background-color :  #FF0000;
+		color: #000000;
+		text-align: center;
+		width: 90px;
+}
+
+TD.GREEN {
+		background-color :  #8FBC8B;
+		color: #000000;
+		text-align: center;
+		width: 90px;
+}
+
+TD.TOP_RANK {
+		background-color :  #008B8B;
+		color: #000000;
+		text-align: center;
+		width: 90px;
+}
+
+TD.NULL_RANK {
+		background-color :  #6888a8;
+		color: #000000;
+		text-align: center;
+		width: 90px;
+}
+
+/********************************
+ *			SLAVE LIST       	*
+ *******************************/
+A.SLAVE {color: #ffffee;}
+A.SLAVE {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Hover {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Active {color: #ffffee;}
+A.HIGHLIGHT.SLAVE:Visited {color: #ffffee;}
+
+TD.HIGHLIGHT {		
+		background-color: #ffffee;
+		color: #336699;
+		text-align: center;
+}
+
+.SLAVE {
+		font-size: x-small;
+}
+TABLE.SLAVE {		
+		background-color: #3366a3;}
+TH.SLAVE {
+		color      : #336699;
+		background-color: #ffffee;
+		font-weight: bold;
+		text-align: center;
+		}
+TD.SLAVE {
+	background-color: #6888a8;
+	color: #ffffff;
+	text-align: center;
+	}
+
+/********************************
+ * 			SEARCH_GRID     	*
+ *******************************/
+.SEARCH_GRID {
+	text-align:center;
+margin: 0em;}
+
+/********************************
+ * 			LINK_GRID     	*
+ *******************************/
+.LINK_GRID {
+	text-align:left;
+	margin: 0em;
+}
+
+/*********************************
+ * Fields used to input / output *
+ *********************************/
+ 
+.COMBO {
+ 	font-size: x-small;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.SELECT {
+ 	font-size: small;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;	
+	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+.FIELD {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.FIELD_BOLD{
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	font-weight: bold;
+	color: #6888a8;
+}
+
+p.FIELD_BIG {
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+a.FIELD {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.FIELD_COMBO {
+ 	font-size: 12px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.FIELD_BUTTON {
+ 	font-size: 12px;
+	text-align: center;
+	vertical-align: baseline;
+	color: #000000;
+}
+
+.FIELD_INFO {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.FIELD_WARNING {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #113355;font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.FIELD_LABEL {
+ 	font-size: x-small;
+	padding-right: 5px;
+	padding-left: 15px;
+	text-align: right;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+
+.FIELD_TITLE {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+	text-align: left;
+}
+
+.FIELD_TITLE_GREY {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #6888a8;
+	text-align: left;
+}
+
+
+TH.FIELD_DISPLAY {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+	text-align: right;
+}
+
+TH.FIELD_DISPLAY_GREEN {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+	text-align: right;
+}
+
+TH.FIELD_DISPLAY_RED {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: bold;
+	text-align: right;
+}
+
+TD.FIELD_DISPLAY {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #113355;
+	font-weight: normal;
+}
+
+TD.FIELD_DISPLAY_GREEN {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #00CC00;
+	font-weight: normal;
+}
+
+TD.FIELD_DISPLAY_RED {
+ 	font-size: x-small;
+	padding: 5px 5px 5px 5px;
+	vertical-align: baseline;
+	color: #FF3300;
+	font-weight: normal;
+}
+
+/***********
+ *OPTIONAL *
+ **********/
+.OPTIONAL {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+input.OPTIONAL{
+	background-color: #eeeeee;
+	font-size: x-small;
+	padding-right: 5px;
+	text-align: left;
+	vertical-align: baseline;
+	color: #6888a8
+
+}
+
+/*********************************
+ * TextArea to display XML		 *
+ *********************************/
+TEXTAREA.XML{
+width:550px;
+height: 400px;
+font-size: 10px;
+font-family: arial;
+color: #3366a3;
+}
+/**************************************
+ * TextArea to display formatted text *
+ **************************************/
+TEXTAREA.TEXT{
+width:800px;
+height: 500px;
+font-size: x-small;
+font-family: Courier;
+color: #3366a3;
+}
+
+/* Force textarea font for Firefox */
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Dewar tracking indicator */
+A.NO_UNDERLINE {
+	color: #ffffee;
+	text-decoration: none
+}
+
+/* Align buttons */
+.rowAlignCenter  {
+    margin-left: auto;
+    margin-right: auto;
+ }
+
+/* Text info and warning */
+
+.TEXT_INFO {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.TEXT_IMPORTANT {
+ 	font-size: small;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #000000;
+}
+
+.TEXT_WARNING {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #FF0000;
+}
+
+.TEXT_MAINTENANCE {
+ 	font-size: x-small;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #FF6633;
+}
+
+.normalText_black {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size : 12px;
+  color: #000000;
+}
+
+.smallText_black {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: x-small;
+  color: #000000;
+}
+
+.normalText_white {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size : 12px;
+  color: #FFFFFF;
+}
+
+.top {
+	vertical-align: top;
+}
+
+.bottom {
+	vertical-align: bottom;
+}
+
+.left {
+	text-align : left;
+}
+
+.right {
+	text-align : right;
+}
+
+TD.SPLIT {
+ 	width: 50%;
+	text-align: right;
+}
+
+.footer {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.85em;
+}
+
+.MESSAGE_BLACK {
+ 	font-size: 11px;;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #000000;
+}
+.MESSAGE_GREY {
+ 	font-size: 11px;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #6888a8;
+}
+
+.MESSAGE_ORANGE {
+ 	font-size: 11px;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #FF6633;
+}
+
+.MESSAGE_RED {
+ 	font-size: 11px;
+	padding-right: 5px;
+	text-align: justify;
+	vertical-align: baseline;
+	color: #FF0000;
+}
+
+.toggleText {
+	color: #6888a8;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+	font-weight: bold;	
+	margin: 5px 0px 0px 0px;
+}

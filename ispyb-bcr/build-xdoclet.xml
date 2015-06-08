@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="ispyb-bcr" default="run-xdoclet" basedir=".">
+	   	
+	<property file="${basedir}/build.properties" />	
+	<property name="name" value="bcr" />
+	<property name="unique.name" value="${name}" />
+
+	<property name="client.src.dir" value="${basedir}/src/main/java"/>
+	<property name="client.web.dir" value="${basedir}/src/main/webapp"/>
+	<property name="client.generate.dir" value="${client.src.dir}/generate" />
+	<property name="client.generate.src.dir" value="${client.generate.dir}/src" />
+	<property name="client.generate.meta.dir" value="${client.generate.dir}/meta" />
+	
+	<property name="xdoclet.home" value="C:/Java/xdoclet-1.2.3"/>
+	<property name="axis.home" value="C:/Java/axis-1_4"/>
+
+
+	<!-- =================================================================== -->
+	<!-- ClassPath                                                           -->
+	<!-- =================================================================== -->
+	
+	<!-- Defines class path for following targets -->
+
+	<path id="xdoclet.client.path">
+		<fileset dir="${xdoclet.home}/lib">
+			<include name="*.jar" />
+		</fileset>
+				
+		<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar"/>
+		
+		<pathelement location="${jboss.modules.base}/javax/servlet/jstl/api/main/jboss-jstl-api_1.2_spec-1.1.0.Final.jar"/>
+
+		
+	</path>
+	
+	<!-- ################################################################## -->
+
+	<!-- =================================================================== -->
+	<!-- Run Webdoclet                                                       -->
+	<!-- =================================================================== -->
+
+	<target name="run-xdoclet"  description="webdoclet">
+		<mkdir dir="${client.generate.meta.dir}" />
+		<mkdir dir="${client.generate.src.dir}" />
+		<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask" classpathref="xdoclet.client.path"/>
+		<webdoclet destdir="${client.generate.src.dir}" mergeDir="${client.etc.merge.dir}"  verbose="true" excludedtags="@version,@author">
+			<fileset dir="${client.src.dir}">
+				<include name="**/*.java" />
+				<exclude name="**/uk/ac/ehtpx/**" />
+			</fileset>
+			<deploymentdescriptor servletspec="2.3" validatexml="true" destdir="${client.generate.meta.dir}/WEB-INF" distributable="false" />
+			<strutsconfigxml version="1.2" destDir="${client.generate.meta.dir}/WEB-INF" />
+			<strutsvalidationxml destDir="${client.generate.meta.dir}/WEB-INF" />
+			<jbosswebxml destDir="${client.generate.meta.dir}/WEB-INF" />
+		</webdoclet>
+	</target>	
+
+</project>

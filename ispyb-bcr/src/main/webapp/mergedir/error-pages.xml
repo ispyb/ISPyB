@@ -1,0 +1,18 @@
+		<!-- The Usual Welcome File List -->
+		<welcome-file-list>
+			<welcome-file>index.jsp</welcome-file>
+			<!--welcome-file>welcomeUserPage.do</welcome-file>
+			<welcome-file>welcomeGuestPage.do</welcome-file-->
+		</welcome-file-list>
+		
+		<error-page> 
+			<error-code>403</error-code> 
+			<location>/permissionErrorPage.do</location> 
+		</error-page>
+		
+		<!-- redirects session expired to index.jsp-->
+		<error-page>
+   			<exception-type>java.lang.IllegalStateException</exception-type>
+   			<location>/index.jsp</location>
+		</error-page>
+		

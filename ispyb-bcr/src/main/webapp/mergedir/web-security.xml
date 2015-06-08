@@ -1,0 +1,42 @@
+		
+		<!-- to disallow access to jsp tiles -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>Restrict access to JSP pages</web-resource-name>
+				<url-pattern>/tiles/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+		        <description>With no roles defined, no access granted</description>
+		    </auth-constraint>
+		</security-constraint>
+		
+		<!-- Pages for Store  -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>store</web-resource-name>
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Store</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+
+		<!-- Login definition -->
+		<login-config>
+			<auth-method>FORM</auth-method>
+			<form-login-config>
+				<form-login-page>/logonPage.do</form-login-page> 
+				<form-error-page>/logonUnAuthorizedPage.do</form-error-page>
+			</form-login-config>
+		</login-config>
+		
+		<!--Roles definition here!-->
+		<security-role>
+			<role-name>Store</role-name>
+		</security-role>
+		
+		

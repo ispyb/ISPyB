@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+
+  <!-- ========== Data Sources Definitions =================================== -->
+  <!--
+    Define your Struts data sources in a file called struts-data-sources.xml and place
+    it in your merge directory.
+  -->
+
+  <!-- ========== Form Bean Definitions =================================== -->
+  <form-beans>
+
+    <form-bean
+      name="localizationForm"
+      type="bcr.client.tracking.LocalizationForm"
+    />
+    <form-bean
+      name="courierForm"
+      type="bcr.client.tracking.CourierForm"
+    />
+
+      <!-- Roles Form -->
+        <form-bean name="rolesChooseForm" 
+            type="org.apache.struts.validator.DynaValidatorForm"
+            dynamic="true">
+            <form-property name="value" type="java.lang.Integer" />
+        </form-bean>
+
+  </form-beans>
+
+  <!-- ========== Global Exceptions Definitions =================================== -->
+  <!--
+    Define your exceptions in a file called global-exceptions.xml and place
+    it in your merge directory.
+  -->
+
+  <!-- ========== Global Forward Definitions =================================== -->
+  	<global-forwards>
+		<!-- Default forward "Welcome" action to Logon -->
+		<forward name="welcome"  path="/welcomeGuestPage.do" /> 
+		<forward name="welcomeBCR" redirect="true" path="/welcomeGuestPageBCR.do" /> 
+	</global-forwards>
+
+  <!-- ========== Action Mapping Definitions =================================== -->
+   <action-mappings>
+    <action
+      path="/user/localization"
+      type="bcr.client.tracking.LocalizationAction"
+      name="localizationForm"
+      scope="request"
+      input="site.tracking.localization.page"
+      parameter="reqCode"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="localizationPage"
+        path="bcr.tracking.localization.page"
+        redirect="false"
+      />
+      <forward
+        name="success"
+        path="bcr.tracking.localizationList.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="bcr.tracking.error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/user/courierList"
+      type="bcr.client.tracking.CourierListAction"
+      name="courierForm"
+      scope="request"
+      input="site.tracking.courierList.page"
+      parameter="reqCode"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="courierListPage"
+        path="bcr.tracking.courierList.page"
+        redirect="false"
+      />
+      <forward
+        name="logoffPage"
+        path="/logoff"
+        redirect="false"
+      />
+      <forward
+        name="success"
+        path="bcr.tracking.courier_ok.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="bcr.tracking.courier_error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/user/courier"
+      type="bcr.client.tracking.CourierAction"
+      name="courierForm"
+      scope="request"
+      input="site.tracking.courier.page"
+      parameter="reqCode"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="courierPage"
+        path="bcr.tracking.courier.page"
+        redirect="false"
+      />
+      <forward
+        name="success"
+        path="bcr.tracking.courierList.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="bcr.tracking.error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/user/localizationList"
+      type="bcr.client.tracking.LocalizationListAction"
+      name="localizationForm"
+      scope="request"
+      input="site.tracking.localizationList.page"
+      parameter="reqCode"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="localizationListPage"
+        path="bcr.tracking.localizationList.page"
+        redirect="false"
+      />
+      <forward
+        name="logoffPage"
+        path="/logoff"
+        redirect="false"
+      />
+      <forward
+        name="success"
+        path="bcr.tracking.localization_ok.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="bcr.tracking.localization_error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/logoff"
+      type="bcr.client.security.LogoffAction"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="success"
+        path="/welcomeGuestPage"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="bcr.default.error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/security/logon"
+      type="bcr.client.security.LogonAction"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="error"
+        path="bcr.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="logonError"
+        path="bcr.logon.error.page"
+        redirect="false"
+      />
+      <forward
+        name="roleError"
+        path="bcr.role.error.page"
+        redirect="false"
+      />
+      <forward
+        name="logoffPage"
+        path="/logoff"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/user/welcomeUser"
+      type="bcr.client.welcome.WelcomeUserAction"
+      unknown="false"
+      validate="true"
+    >
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="success"
+        path="user.welcome.page"
+        redirect="false"
+      />
+    </action>
+
+   		<!-- =======================================================  -->
+		<!-- Actions not defined with Xdoclet						-->
+		<!-- =======================================================  -->
+		<!-- Welcome pages -->
+		<action 
+			path="/welcomeGuestPage" 
+			forward="bcr.welcome.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/welcomeGuestPageBCR" 
+			forward="bcr.welcomeBCR.page" 
+			scope="request" 
+			validate="false"/>
+		<!-- Security -->
+		<action 
+			path="/logonPage" 
+			forward="bcr.logon.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/logonUnAuthorizedPage" 
+			forward="bcr.logon.error.page" 
+			scope="request" 
+			validate="false"/>
+
+		<!-- Error pages -->
+		<action 
+			path="/defaultErrorPage" 
+			forward="bcr.default.error.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/permissionErrorPage" 
+			forward="bcr.permission.error.page" 
+			scope="request" 
+			validate="false"/>
+		<!-- Tracking pages -->
+		<action 
+			path="/user/chooseappli" 
+			forward="bcr.tracking.chooseappli.page" 
+			scope="request" 
+			validate="false"/>
+
+  </action-mappings>
+
+    <!-- Struts Layout:
+        if forward to Tiles definition will be used with sorting or paging on the server, 
+        the struts-layout request processor must be used and declared in struts-config.xml : 
+         -->
+    <controller processorClass = "fr.improve.struts.taglib.layout.workflow.LayoutRequestProcessor"/>
+
+  	<!-- ========== Associated Messages Ressource settings =================== -->
+	<!-- Not used by tiles or this website, but needed due to a bug in actual Struts version -->
+	<!--message-resources 
+		parameter="org.apache.struts.webapp.tiles.dev1-1.ApplicationResources" 
+		null="false" /-->
+
+	<message-resources parameter="ApplicationResources"/>
+
+  	<!-- ======================================= Plug Ins Configuration -->
+	<!-- ========== Tiles plugin ===================  -->
+	<!--												-->
+	<!--
+		 This plugin initialize Tiles definition factory. This later can takes some
+		 parameters explained here after. The plugin first read parameters from web.xml, then
+		 overload them with parameters defined here. All parameters are optional.
+		 The plugin should be declared in each struts-config file.
+		   - definitions-config: (optional) 
+				Specify configuration file names. There can be several comma 
+				separated file names (default: ?? )
+		   - moduleAware: (optional - struts1.1) 
+				Specify if the Tiles definition factory is module aware. If true (default), 
+				there will be one factory for each Struts module. 
+				If false, there will be one common factory for all module. In this later case, 
+				it is still needed to declare one plugin per module. The factory will be 
+				initialized with parameters found in the first initialized plugin (generally the
+				one associated with the default module).
+				  true : One factory per module. (default)
+				  false : one single shared factory for all modules
+		   - definitions-parser-validate: (optional)
+				Specify if xml parser should validate the Tiles configuration file.
+				  true : validate. DTD should be specified in file header. (default)
+				  false : no validation
+		  Paths found in Tiles definitions are relative to the main context.
+	  -->
+	<!-- comment following if struts1.0.x -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" 
+			/>
+		<set-property property="moduleAware" value="true" />
+		<set-property property="definitions-parser-validate" value="true" />
+	</plug-in>
+	<!-- end comment if struts1.0.x -->
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" 
+			value="/WEB-INF/validator-rules.xml"/>
+		<!--set-property property="moduleAware" value="true" />
+		<set-property property="definitions-parser-validate" value="true" /-->
+	</plug-in>
+
+</struts-config>

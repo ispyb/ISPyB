@@ -1,0 +1,218 @@
+<!--
+  This file is part of ISPyB.
+  
+  ISPyB is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  ISPyB is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public License
+  along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin
+-->
+
+
+		<!-- =======================================================  -->
+		<!-- Actions not defined with Xdoclet						-->
+		<!-- =======================================================  -->
+        
+        <!-- Struts Layout: begin -->
+        <action path="/sort"
+            type="fr.improve.struts.taglib.layout.sort.SortAction"
+            scope="request"
+            validate="false">
+        </action>
+        <action path="/treeview"
+            type="fr.improve.struts.taglib.layout.treeview.TreeviewAction"
+            scope="request"
+            validate="false">
+        </action>
+        <!-- Struts Layout: end -->
+			
+		<!-- Welcome pages -->
+		<action 
+			path="/welcomeGuestPage" 
+			forward="guest.welcome.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<action 
+			path="/welcomeUnauthorizedPage" 
+			forward="guest.unauthorized.page" 
+			scope="request" 
+			validate="false"/>
+	
+		<!-- security -->
+		<action 
+			path="/logonPage" 
+			forward="site.logon.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<action 
+			path="/AutomaticLogonPage" 
+			forward="site.automatic.logon.page" 
+			scope="request" 
+			validate="false"/>
+		
+		<action 
+			path="/logonUnAuthorizedPage" 
+			forward="site.logon.error.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<action 
+			path="/roleChoosePage" 
+			forward="site.role.choose.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<action 
+			path="/userProposalTypeChoosePage" 
+			forward="site.proposalType.choose.page" 
+			scope="request" 
+			validate="false"/>
+
+		<!-- Error pages -->
+		<action 
+			path="/defaultErrorPage" 
+			forward="site.default.error.page" 
+			scope="request" 
+			validate="false"/>
+		
+		<action 
+			path="/permissionErrorPage" 
+			forward="site.permission.error.page" 
+			scope="request" 
+			validate="false"/>
+		
+		<!-- Help for guest -->
+		<action 
+			path="/helpMainGuestPage" 
+			forward="guest.help.main.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpWhatGuestPage" 
+			forward="guest.help.what.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpUserGuestPage" 
+			forward="guest.help.user.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpIndustrialGuestPage" 
+			forward="guest.help.industrial.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpShippingGuestPage" 
+			forward="guest.help.shipping.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpPrepareGuestPage" 
+			forward="guest.help.prepare.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpMxcubeGuestPage" 
+			forward="guest.help.mxcube.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/helpUploadGuestPage" 
+			forward="guest.help.upload.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/overviewPage" 
+			forward="guest.help.overview.page" 
+			scope="request" 
+			validate="false"/>
+			
+		<!-- Help for user and industrial -->
+		<action 
+			path="/user/help" 
+			forward="user.help.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/industrial/help" 
+			forward="user.help.page" 
+			scope="request" 
+			validate="false"/>
+
+<!-- Shipping -->
+<action 
+	path="/user/shipping" 
+	forward="user.shipping.page" 
+	scope="request" 
+	validate="false"/>
+<action 
+	path="/user/dewar" 
+	forward="user.shipping.dewar.page" 
+	scope="request" 
+	validate="false"/>
+	
+	<action path="/user/getShipmentCourrierSuggestAction"
+			type="ispyb.client.common.ajax.ShipmentCourrierSuggestAction">
+	</action>
+	
+<!-- DiffractionPlan -->
+<action 
+	path="/user/diffractionPlan" 
+	forward="user.sample.diffractionPlan.page" 
+	scope="request" 
+	validate="false"/>
+	
+<!-- Sample -->
+<action 
+	path="/sample" 
+	forward="user.sample.page" 
+	scope="request" 
+	validate="false"/>
+
+<action 
+			path="/user/viewSampleHome" 
+			forward="user.sample.viewSampleHome.page" 
+			scope="request" 
+			validate="false"/>			
+<action 
+			path="/user/searchProtein" 
+			forward="user.sample.search.protein.page" 
+			scope="request" 
+			validate="false"/>			
+<action 
+			path="/user/searchSample" 
+			forward="user.sample.search.sample.page" 
+			scope="request" 
+			validate="false"/>			
+
+	<!-- Data collection -->
+		<action 
+			path="/user/searchDataCollection" 
+			forward="user.collection.searchDataCollection.page" 
+			scope="request" 
+			validate="false"/>	
+
+<!-- Results pages -->
+		<action 
+			path="/user/results" 
+			forward="user.results.page" 
+			scope="request" 
+			validate="false"/>
+		<action 
+			path="/user/screeningStrategy" 
+			forward="user.screeningStrategy.page" 
+			scope="request" 
+			validate="false"/>
+

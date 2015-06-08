@@ -1,0 +1,234 @@
+<!--
+  This file is part of ISPyB.
+  
+  ISPyB is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  ISPyB is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public License
+  along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin
+-->
+
+		<!-- to disallow access to jsp tiles -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>Restrict access to JSP pages</web-resource-name>
+				<url-pattern>/tiles/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+		        <description>With no roles defined, no access granted</description>
+		    </auth-constraint>
+		</security-constraint>
+
+		<!-- Pages for User which can be seen by industrial -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>user</web-resource-name>
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>User</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+
+		<!-- Pages for User which can NOT be seen by industrial -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>userOnly</web-resource-name>
+				<url-pattern>/userOnly/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>User</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for industrial -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>industrial</web-resource-name>
+				<url-pattern>/industrial/*</url-pattern>
+				<!-- the pages belonging to user can be used by industrial -->
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Industrial</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for Manager -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>manager</web-resource-name>
+				<url-pattern>/manager/*</url-pattern>
+			<!-- the pages belonging to user can be used by manager -->
+				<url-pattern>/user/*</url-pattern>
+			<!-- the pages belonging to FedexManager can be used by manager -->
+				<url-pattern>/fedexmanager/*</url-pattern>
+				<url-pattern>/userOnly/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Manager</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint>
+		 
+		<!-- Pages for Fedexmanager -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>fedexmanager</web-resource-name>
+				<url-pattern>/fedexmanager/*</url-pattern>
+				<!-- the pages belonging to user can be used by fedexmanager -->
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/userOnly/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Fedexmanager</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for Localcontact -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>localcontact</web-resource-name>
+				<url-pattern>/localcontact/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/manager/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Localcontact</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for Blom -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>blom</web-resource-name>
+				<url-pattern>/blom/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+				<url-pattern>/manager/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Blom</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for Store -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>store</web-resource-name>
+				<url-pattern>/store/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Store</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Pages for WebService -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>webservice</web-resource-name>
+				<url-pattern>/webservice/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>WebService</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+	
+		
+		<!-- Pages that can only be read -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>reader</web-resource-name>
+				<url-pattern>/reader/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Store</role-name>
+				<role-name>User</role-name>
+				<role-name>Industrial</role-name>
+				<role-name>Localcontact</role-name>
+				<role-name>Blom</role-name>
+				<role-name>Fedexmanager</role-name>
+				<role-name>WebService</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+		
+		<!-- Login definition -->
+		<login-config>
+			<auth-method>FORM</auth-method>
+			<form-login-config>
+				<form-login-page>/logonPage.do</form-login-page> 
+				<form-error-page>/logonUnAuthorizedPage.do</form-error-page>
+			</form-login-config>
+		</login-config>
+		
+		<!--Roles definition here!-->
+		<security-role>
+			<role-name>Industrial</role-name>
+		</security-role>
+		<security-role>
+			<role-name>Manager</role-name>
+		</security-role>
+		<security-role>
+			<role-name>Fedexmanager</role-name>
+		</security-role>
+		<security-role>
+			<role-name>Localcontact</role-name>
+		</security-role>
+		<security-role>
+			<role-name>Blom</role-name>
+		</security-role>
+		<security-role>
+			<role-name>Store</role-name>
+		</security-role>
+		<security-role>
+			<role-name>User</role-name>
+		</security-role>
+				<security-role>
+			<role-name>WebService</role-name>
+		</security-role>
+		

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app >
+
+    <!--
+    To use non XDoclet filters, create a filters.xml file that
+    contains the additional filters (eg Sitemesh) and place it in your
+    project's merge dir.  Don't include filter-mappings in this file,
+    include them in a file called filter-mappings.xml and put that in
+    the same directory.
+    -->
+
+    <!--
+    To use non XDoclet filter-mappings, create a filter-mappings.xml file that
+    contains the additional filter-mappings and place it in your
+    project's merge dir.
+    -->
+
+    <!--
+    To use non XDoclet listeners, create a listeners.xml file that
+    contains the additional listeners and place it in your
+    project's merge dir.
+    -->
+
+ 	<display-name>BCR</display-name>
+	<description>BCR Web Application</description>
+	<servlet>
+		<servlet-name>action</servlet-name>
+
+		<!--servlet-class>org.apache.struts.action.ActionServlet</servlet-class-->
+		<servlet-class>
+			bcr.client.security.SpecificActionServletBcr</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>ApplicationResources</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				  Specify configuration file names. There can be several comma 
+				  separated file names
+				-->
+		<init-param>
+			<param-name>definitions-config</param-name>
+			<param-value>/WEB-INF/tiles-defs.xml</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				  Specify Tiles debug level.
+				  O : no debug information
+				  1 : debug information
+				  2 : more debug information
+				-->
+		<init-param>
+			<param-name>definitions-debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				Specify Digester debug level. This value is passed to Digester
+				  O : no debug information
+				  1 : debug information
+				  2 : more debug information
+				-->
+		<init-param>
+			<param-name>definitions-parser-details</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<!-- Tiles Servlet parameter 
+				Specify if xml parser should validate the Tiles configuration file.
+				true : validate. DTD should be specified in file header.
+				false : no validation
+				-->
+		<init-param>
+			<param-name>definitions-parser-validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- Struts configuration, if Struts is used -->
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+
+  	<servlet-mapping>
+	  <servlet-name>action</servlet-name>
+	  <url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>300</session-timeout>
+	</session-config>
+
+   <!--
+   To specify mime mappings, create a file named mime-mappings.xml, put it in your project's mergedir.
+   Organize mime-mappings.xml following this DTD slice:
+
+   <!ELEMENT mime-mapping (extension, mime-type)>
+   -->
+
+  		<!-- The Usual Welcome File List -->
+		<welcome-file-list>
+			<welcome-file>index.jsp</welcome-file>
+			<!--welcome-file>welcomeUserPage.do</welcome-file>
+			<welcome-file>welcomeGuestPage.do</welcome-file-->
+		</welcome-file-list>
+		<error-page> 
+			<error-code>403</error-code> 
+			<location>/permissionErrorPage.do</location> 
+		</error-page>
+		<!-- redirects session expired to index.jsp-->
+		<error-page>
+   			<exception-type>java.lang.IllegalStateException</exception-type>
+   			<location>/index.jsp</location>
+		</error-page>
+
+  	<!-- Tag Library Descriptors -->
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-nested.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-nested.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-tiles.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-tiles.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/WEB-INF/struts-template.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-template.tld</taglib-location>
+	</taglib>
+    <taglib>
+		<taglib-uri>/WEB-INF/struts-layout.tld</taglib-uri>
+		<taglib-location>/WEB-INF/struts-layout.tld</taglib-location>
+	</taglib>
+
+		<!-- to disallow access to jsp tiles -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>Restrict access to JSP pages</web-resource-name>
+				<url-pattern>/tiles/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+		        <description>With no roles defined, no access granted</description>
+		    </auth-constraint>
+		</security-constraint>
+		<!-- Pages for Store  -->
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>store</web-resource-name>
+				<url-pattern>/user/*</url-pattern>
+				<url-pattern>/security/*</url-pattern>
+			</web-resource-collection>
+			<auth-constraint>
+				<role-name>Store</role-name>
+			</auth-constraint>
+			<user-data-constraint>
+				<transport-guarantee>NONE</transport-guarantee>
+			</user-data-constraint>
+		</security-constraint> 
+
+		<!-- Login definition -->
+		<login-config>
+			<auth-method>FORM</auth-method>
+			<form-login-config>
+				<form-login-page>/logonPage.do</form-login-page> 
+				<form-error-page>/logonUnAuthorizedPage.do</form-error-page>
+			</form-login-config>
+		</login-config>
+		<!--Roles definition here!-->
+		<security-role>
+			<role-name>Store</role-name>
+		</security-role>
+
+</web-app>

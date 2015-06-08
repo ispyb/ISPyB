@@ -1,0 +1,1651 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<!--
+  This file is part of ISPyB.
+  
+  ISPyB is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  ISPyB is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public License
+  along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
+-->
+
+    <!-- =======================================================  -->
+	<!-- Layout  -->
+	<!-- =======================================================  -->
+	
+    <!--
+    
+    All layouts end with: .layout
+    All pages end with: .page
+    Pages with user associated begins with user group name
+    Pages without user associated  begins with: site.
+        -->
+        
+<tiles-definitions>
+	<definition name="site.main.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />
+		
+		<put name="selectedStyles" value="user.css" />
+				
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />
+		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />
+		
+		<put name="body" value="${body}" />
+		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	
+	<definition name="site.main.empty" path="/tiles/layouts/emptyLayout.jsp">
+		<put name="title" value="${title}" />
+		
+		<put name="selectedStyles" value="user.css" />
+				
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />
+		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />
+		
+		<put name="body" value="${body}" />
+		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+
+	<!-- for Fedexmanager layout, a new css is added to change some colors -->
+		
+	<definition name="site.fxmanager.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />		
+		<put name="selectedStyles" value="fxmanage.css" />		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />					
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- for manager layout, a new css is added to change some colors -->
+		
+	<definition name="site.manager.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />		
+		<put name="selectedStyles" value="manage.css" />		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />					
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- for store layout, a new css is added to change some colors -->
+		
+	<definition name="site.store.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />		
+		<put name="selectedStyles" value="store.css" />		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />				
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- for localcontact layout, a new css is added to change some colors -->
+		
+	<definition name="site.localcontact.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />		
+		<put name="selectedStyles" value="localcontact.css" />		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />				
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+		<!-- for person layout, a very short menu is available at first only to display proposals -->
+		
+	<definition name="site.person.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />	
+		<put name="selectedStyles" value="user.css" />
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />	
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar_empty.jsp" />	
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />		
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- for blom layout, a new css is added to change some colors -->
+		
+	<definition name="site.blom.layout" path="/tiles/layouts/mainLayout.jsp">
+		<put name="title" value="${title}" />		
+		<put name="selectedStyles" value="blom.css" />		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />		
+		<put name="left_menu" value="/tiles/common/left/menu.jsp" />					
+		<put name="body" value="${body}" />		
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<definition name="site.plain.layout" path="/tiles/layouts/unloggedLayout.jsp">
+		<put name="title" value="${title}" />
+		
+		<put name="header_top_bar" value="/tiles/common/header/top_bar.jsp" />
+		<put name="header_logo_bar" value="/tiles/common/header/logo_bar.jsp" />
+		<put name="header_context_bar" value="/tiles/common/header/context_bar.jsp" />
+		<put name="header_tab_bar" value="/tiles/common/header/tab_bar.jsp" />
+		<put name="left_menu" value="/tiles/common/left/loginmenu.jsp" />
+		<put name="body" value="${body}" />
+		<put name="footer" value="/tiles/common/footer/footer.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Feedback Page -->
+	<!-- =======================================================  -->
+	<!--Feedback page -->
+	<definition name="guest.help.feedback.page" extends="site.main.layout" >
+		<put name="title" value="Submit your feedback" />
+		<put name="body" value="/tiles/bodies/common/help/guest/feedback.jsp" />
+		 
+	</definition>
+	<definition name="guest.help.feedback.report.page" extends="site.main.layout" >
+		<put name="title" value="Submit your Report" />
+		<put name="body" value="/tiles/bodies/common/help/guest/report.jsp" />
+	</definition>
+	
+
+	<definition name="manager.help.feedback.page" extends="site.manager.layout">
+		<put name="title" value="Submit your feedback" />
+		<put name="body" value="/tiles/bodies/common/help/guest/feedback.jsp" />
+	</definition>
+	
+	<definition name="localcontact.help.feedback.page" extends="site.localcontact.layout">
+		<put name="title" value="Submit your feedback" />
+		<put name="body" value="/tiles/bodies/common/help/guest/feedback.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- Welcome pages -->
+	<!-- =======================================================  -->
+	
+	
+	<!-- Welcome page when for guest user -->
+	<definition name="guest.welcome.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/guest.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the user logs in -->	
+	<definition name="user.welcome.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/user.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the Industrial logs in -->	
+	<definition name="industrial.welcome.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/industrial.jsp" />
+	</definition>
+	
+		<!-- Welcome page when the FedexManager logs in -->	
+	<definition name="fedexmanager.welcome.page" extends="site.fxmanager.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/fedexmanager.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the Manager logs in -->	
+	<definition name="manager.welcome.page" extends="site.manager.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/manager.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the Store logs in -->	
+	<definition name="store.welcome.page" extends="site.store.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/store.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the Blom logs in -->	
+	<definition name="blom.welcome.page" extends="site.blom.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/blom.jsp" />
+	</definition>
+	
+	<!-- Welcome page when the LocalContact logs in -->	
+	<definition name="localcontact.welcome.page" extends="site.localcontact.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/localcontact.jsp" />
+	</definition>
+	
+		<!-- Welcome page when a person logs in -->	
+	<definition name="person.welcome.page" extends="site.person.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/person.jsp" />
+	</definition>
+	
+	<!-- Welcome page when for unauthorized guest user -->
+	<definition name="guest.unauthorized.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/guestUnAuthorized.jsp" />
+	</definition>
+	
+	<!-- Welcome page when a Web service logs in -->	
+	<definition name="webservice.welcome.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/welcome/webservice.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- security pages -->
+	<!-- =======================================================  -->
+	
+	
+	<definition name="site.logon.page" extends="site.plain.layout" >
+		<put name="title" value="Logon to enter the site." />
+		<put name="body" value="/tiles/bodies/common/logon/logon.jsp" />
+		 
+	</definition>
+	
+	<definition name="site.automatic.logon.page" extends="site.plain.layout" >
+		<put name="title" value="Automatic Logon to the site." />
+		<put name="body" value="/tiles/bodies/common/logon/automaticLogon.jsp" />
+	</definition>
+	
+	<definition name="site.logon.error.page" extends="site.plain.layout" >
+		<put name="title" value="You are not authorized to access this resource." />
+		<put name="body" value="/tiles/bodies/common/logon/logonUnAuthorized.jsp" />
+	</definition>
+	
+	<!-- page where user with several roles, can choose which one he/she wants to use -->
+	<definition name="site.role.choose.page" extends="site.plain.layout" >
+		<put name="title" value="Which role do you want to use?" />
+		<put name="body" value="/tiles/bodies/common/logon/roleChoose.jsp" />
+	</definition>
+	
+	<!-- page where user with several proposal types, can choose which one he/she wants to use -->
+	<definition name="site.proposalType.choose.page" extends="site.plain.layout" >
+		<put name="title" value="Which experiment do you want to use?" />
+		<put name="body" value="/tiles/bodies/common/logon/userProposalTypeChoose.jsp" />
+	</definition>
+	
+	<!-- page where user with several proposals, can choose which one he/she wants to use -->
+	<definition name="site.proposal.choose.page" extends="site.plain.layout" >
+		<put name="title" value="Which experiment do you want to use?" />
+		<put name="body" value="/tiles/bodies/common/logon/userProposalChoose.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!-- error pages -->
+	<!-- =======================================================  -->
+	
+	
+	<definition name="site.default.error.page" extends="site.plain.layout" >
+		<put name="title" value="Error!" />
+		<put name="body" value="/tiles/bodies/common/error/default.jsp" />
+	</definition>
+	
+	<definition name="site.permission.error.page" extends="site.plain.layout" >
+		<put name="title" value="Permission denied!" />
+		<put name="body" value="/tiles/bodies/common/error/noPermission.jsp" />
+	</definition>
+
+	<!-- =======================================================  -->
+	<!-- Help pages  -->
+	<!-- =======================================================  -->
+	<definition name="guest.help.main.page" extends="site.main.layout" >
+		<put name="title" value="What you can do with ISPyB now" />
+		<put name="body" value="/tiles/bodies/common/help/guest/about.jsp" />
+	</definition>
+	<definition name="guest.help.what.page" extends="site.main.layout" >
+		<put name="title" value="About ISPyB" />
+		<put name="body" value="/tiles/bodies/common/help/guest/what.jsp" />
+	</definition>
+	<definition name="guest.help.user.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB for Users" />
+		<put name="body" value="/tiles/bodies/common/help/guest/user.jsp" />
+	</definition>
+	<definition name="guest.help.industrial.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB for industrials or laboratory outside MAX IV" />
+		<put name="body" value="/tiles/bodies/common/help/guest/industrial.jsp" />
+	</definition>
+	<definition name="guest.help.manager.page" extends="site.manager.layout" >
+		<put name="title" value="What you can do with ISPyB now" />
+ 		<put name="body" value="/tiles/bodies/common/help/guest/about.jsp" />
+	</definition>
+	<definition name="guest.help.localcontact.page" extends="site.localcontact.layout" >
+		<put name="title" value="What you can do with ISPyB now" />
+ 		<put name="body" value="/tiles/bodies/common/help/guest/about.jsp" />
+	</definition>
+	<definition name="user.help.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB help for Users" />
+		<put name="body" value="/tiles/bodies/common/help/userHelp.jsp" />
+	</definition>
+		
+	<!-- Shipping -->
+	<definition name="guest.help.shipping.page" extends="site.main.layout" >
+		<put name="title" value="Creating a Shipping" />
+		<put name="body" value="/tiles/bodies/common/help/shippingHelp.jsp" />
+	</definition>
+	
+	<!-- Prepare -->
+	<definition name="guest.help.prepare.page" extends="site.main.layout" >
+		<put name="title" value="Prepare your experiment" />
+		<put name="body" value="/tiles/bodies/common/help/prepareHelp.jsp" />
+	</definition>
+	
+	<!-- mxCube -->
+	<definition name="guest.help.mxcube.page" extends="site.main.layout" >
+		<put name="title" value="Prepare your experiment" />
+		<put name="body" value="/tiles/bodies/common/help/mxcubeHelp.jsp" />
+	</definition>
+	
+	<!-- Upload -->
+	<definition name="guest.help.upload.page" extends="site.main.layout" >
+		<put name="title" value="Uploading a file" />
+		<put name="body" value="/tiles/bodies/common/help/uploadHelp.jsp" />
+	</definition>
+	
+	<!-- Overview -->
+	<definition name="guest.help.upload.page" extends="site.main.layout" >
+		<put name="title" value="Uploading a file" />
+		<put name="body" value="/tiles/bodies/common/help/uploadHelp.jsp" />
+	</definition>
+	
+	
+	<definition name="guest.help.overview.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB overview" />
+		<put name="body" value="/tiles/bodies/common/help/overview.jsp" />
+	</definition>
+	
+	<!-- Puck creation -->
+	<definition name="user.shipping.createPuck.page" extends="site.main.layout" >
+		<put name="title" value="Creating a Puck" />
+		<put name="body" value="/tiles/bodies/common/shipping/createPuck.jsp" />
+	</definition>
+	
+	<!-- Fill Shipment -->
+	<definition name="user.shipping.fillShipment.page" extends="site.main.layout" >
+		<put name="title" value="Fill a Shipment" />
+		<put name="body" value="/tiles/bodies/common/shipping/fillShipment.jsp" />
+	</definition>
+	
+	
+	<!-- =======================================================  -->
+	<!-- SMIS Web service pages                                   -->
+	<!-- =======================================================  -->
+	
+	
+	<!-- succes page when using SMIS webservice -->
+	
+	<definition name="updateISPYBdb.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/proposal/updateISPYBdb.jsp" />
+	</definition>
+	<definition name="fedexmanager.updateISPYBdb.page" extends="site.fxmanager.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/proposal/updateISPYBdb.jsp" />
+	</definition>
+	<definition name="manager.updateISPYBdb.page" extends="site.manager.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/common/proposal/updateISPYBdb.jsp" />
+	</definition>
+    <definition name="localcontact.updateISPYBdb.page" extends="site.localcontact.layout" >
+        <put name="title" value="ISPyB" />
+        <put name="body" value="/tiles/bodies/common/proposal/updateISPYBdb.jsp" />
+    </definition>
+
+	<definition name="user.updateISPYBdb.page" extends="site.main.layout" >
+		<put name="title" value="ISPyB" />
+		<put name="body" value="/tiles/bodies/mx/sample/updateDBFromSMIS.jsp" />
+	</definition>
+
+	<!-- =======================================================  -->
+	<!--   New Pages should be written as [user].[page name].page -->
+	<!-- =======================================================  -->
+	
+    <!-- =======================================================  -->
+	<!--  Admin 								   ludovic.launer -->
+	<!-- =======================================================  -->
+	<!-- Admin -->
+	<definition name="user.admin.proposal.manage.page" extends="site.main.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/admin/manageProposal.jsp" />
+	</definition>
+	<definition name="user.admin.tunning.page" extends="site.main.layout" >
+		<put name="title" value="Tunning page" />
+		<put name="body" value="/tiles/bodies/common/admin/tunning.jsp" />
+	</definition>
+	<!-- =======================================================  -->
+	<!--  Test 								   		ludovic.launer -->
+	<!-- =======================================================  -->
+	<!-- Test -->
+	<definition name="user.test.view.page" extends="site.main.layout" >
+		<put name="title" value="Upload Shipping information" />
+		<put name="body" value="/tiles/bodies/test.jsp" />
+	</definition>
+    <!-- =======================================================  -->
+	<!--  Shipping 								                  -->
+	<!-- =======================================================  -->
+	<!-- Shipping -->
+	<definition name="user.shipping.upload.page" extends="site.main.layout" >
+		<put name="title" value="Upload Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformationAction.jsp" />
+	</definition>
+	
+    <definition name="user.shipping.page" extends="site.main.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.page" extends="site.store.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.page" extends="site.blom.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.page" extends="site.localcontact.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.page" extends="site.manager.layout" >
+		<put name="title" value="Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/shipping.jsp" />
+		 
+	</definition>
+	
+
+	<definition name="fedexmanager.shipping.dewar.edit.page" extends="site.manager.layout" >
+		<put name="title" value="Edit dewar for fxmanager" />
+		<put name="body" value="/tiles/bodies/common/shipping/editDewarFX.jsp" />
+		 
+	</definition>	
+	
+	
+	<definition name="user.shipping.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createShipping.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.submit.page" extends="site.main.layout" >
+		<put name="title" value="Submit Shipping" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitShipping.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.storageShipping.view.page" extends="site.main.layout" >
+		<put name="title" value="View Storage Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewStorageShipping.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.storageDewar.view.page" extends="site.main.layout" >
+		<put name="title" value="View Storage Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewStorageDewar.jsp" />
+	</definition>
+	
+	
+	<definition name="user.shipping.file.page" extends="site.main.layout" >
+		<put name="title" value="Create Shipping information from a file" />
+		<put name="body" value="/tiles/bodies/common/shipping/createShippingFile.jsp" />
+		 
+	</definition>
+	
+	<!-- Shipments view -->
+	<definition name="user.shipping.view.old.page" extends="site.main.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShipping.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.view.page" extends="site.main.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.view.page" extends="site.store.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.view.page" extends="site.blom.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.view.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.view.page" extends="site.manager.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewShipping.jsp" />
+		 
+	</definition>
+
+	<!-- Dewars view -->
+	<definition name="user.dewar.view.old.page" extends="site.main.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShipping.jsp" />
+		 
+	</definition>
+	<definition name="user.dewar.view.page" extends="site.main.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+	<definition name="store.dewar.view.page" extends="site.store.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+	<definition name="blom.dewar.view.page" extends="site.blom.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.dewar.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.dewar.view.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+	<definition name="manager.dewar.view.page" extends="site.manager.layout" >
+		<put name="title" value="View Shipping information" />
+		<put name="body" value="/tiles/bodies/common/shipping/genericViewDewar.jsp" />
+		 
+	</definition>
+		
+	<!-- Dewar -->
+	<definition name="user.shipping.dewar.page" extends="site.main.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.dewar.page" extends="site.store.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.dewar.page" extends="site.blom.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.dewar.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.dewar.page" extends="site.localcontact.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.dewar.page" extends="site.manager.layout" >
+		<put name="title" value="Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/dewar.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.dewar.view.page" extends="site.main.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.dewar.labels.page" extends="site.main.layout" >
+		<put name="title" value="View Dewar labels" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarLabels.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.dewar.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.dewar.create.page" extends="site.blom.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.dewar.create.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.dewar.create.page" extends="site.store.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.dewar.create.page" extends="site.localcontact.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.dewar.create.page" extends="site.manager.layout" >
+		<put name="title" value="Create Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createDewar.jsp" />
+		 
+	</definition>
+	<!-- Container -->
+	<definition name="user.shipping.container.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Container information" />
+		<put name="body" value="/tiles/bodies/common/shipping/createContainer.jsp" />
+		 
+	</definition>
+	<!-- SubmitPocketSampleInformationAction -->
+	<definition name="user.shipping.submitPocketSampleInformation.page" extends="site.main.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.submitPocketSampleInformation.page" extends="site.store.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.submitPocketSampleInformation.page" extends="site.blom.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.submitPocketSampleInformation.page" extends="site.localcontact.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.submitPocketSampleInformation.page" extends="site.manager.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="user.fedexmanager.submitPocketSampleInformation.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	<definition name="user.shipping.submitPocketSampleInformation.page" extends="site.main.layout" >
+		<put name="title" value="Submit Pocket Sample Information" />
+		<put name="body" value="/tiles/bodies/common/shipping/submitPocketSampleInformation.jsp" />
+		 
+	</definition>
+	
+	
+	<definition name="blom.shipping.dewar.view.page" extends="site.blom.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.dewar.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.dewar.view.page" extends="site.store.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.dewar.view.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.dewar.view.page" extends="site.manager.layout" >
+		<put name="title" value="View Dewar information" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewar.jsp" />
+		 
+	</definition>
+	
+	<!-- Shipping History pages -->
+	<definition name="user.shipping.history.page" extends="site.main.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.history.page" extends="site.blom.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.history.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.history.page" extends="site.store.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.history.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.history.page" extends="site.manager.layout" >
+		<put name="title" value="View Shipping history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewShippingHistory.jsp" />
+		 
+	</definition>
+	
+	<!-- Dewar History pages -->
+	<definition name="user.shipping.dewar.history.page" extends="site.main.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	<definition name="blom.shipping.dewar.history.page" extends="site.blom.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.shipping.dewar.history.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	<definition name="store.shipping.dewar.history.page" extends="site.store.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.shipping.dewar.history.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	<definition name="manager.shipping.dewar.history.page" extends="site.manager.layout" >
+		<put name="title" value="View Dewar history" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewDewarHistory.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Container						                  -->
+	<!-- =======================================================  -->	
+	<definition name="user.sample.container.viewFree.page" extends="site.main.layout" >
+		<put name="title" value="View free Containers information" />
+		<put name="body" value="/tiles/bodies/container/viewFreeContainer.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  DiffractionPlan						                  -->
+	<!-- =======================================================  -->
+	
+	 <definition name="user.sample.diffractionPlan.view.page" extends="site.main.layout" >
+		<put name="title" value="View Diffraction Plan information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewDiffractionPlan.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.sample.viewCrystalAndDiffractionPlan.page" extends="site.main.layout" >
+		<put name="title" value="Samples information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewCrystalAndDiffractionPlan.jsp" />
+		 
+	</definition>
+	
+	
+	<!-- =======================================================  -->
+	<!--  Session                                                 -->
+	<!-- =======================================================  -->
+	
+	 <definition name="manager.collection.viewSession.page" extends="site.manager.layout" >
+		<put name="title" value="Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSession.jsp" />
+		 
+	</definition>
+	
+	<definition name="fedexmanager.collection.viewSession.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSession.jsp" />
+		 
+	</definition>	
+	
+	<definition name="localContact.collection.viewSession.page" extends="site.localcontact.layout" >
+		<put name="title" value="Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSession.jsp" />
+		 
+	</definition>		
+	
+    <definition name="user.collection.viewSession.page" extends="site.main.layout" >
+		<put name="title" value="Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSession.jsp" />
+		 
+	</definition>
+	
+	 <definition name="user.collection.viewSessionJs.page" extends="site.main.layout" >
+		<put name="title" value="Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSession-js.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.collection.editSession.page" extends="site.main.layout" >
+		<put name="title" value="Edit session" />
+		<put name="body" value="/tiles/bodies/mx/collection/editSession.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.collection.editSession.page" extends="site.manager.layout" >
+		<put name="title" value="Edit session" />
+		<put name="body" value="/tiles/bodies/mx/collection/editSession.jsp" />
+		 
+	</definition>
+	
+	<definition name="localContact.collection.editSession.page" extends="site.localcontact.layout" >
+		<put name="title" value="Edit session" />
+		<put name="body" value="/tiles/bodies/mx/collection/editSession.jsp" />
+		 
+	</definition>
+	
+	<definition name="fedexmanager.collection.editSession.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Edit session" />
+		<put name="body" value="/tiles/bodies/mx/collection/editSession.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.collection.viewExportSession.page" extends="site.main.layout" >
+		<put name="title" value="Export Sessions information" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewExportSession.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Data collection group                                   -->
+	<!-- =======================================================  -->
+	<definition name="user.collection.viewDataCollectionGroupAll.page" extends="site.main.layout" >
+		<put name="title" value="Data collection Groups" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionGroupAll.jsp" />
+	</definition>
+	
+	<definition name="manager.collection.viewDataCollectionGroupAll.page" extends="site.manager.layout" >
+		<put name="title" value="Data collection Groups" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionGroupAll.jsp" />
+	</definition>
+	
+	<definition name="fedexmanager.collection.viewDataCollectionGroupAll.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Data collection Groups" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionGroupAll.jsp" />
+	</definition>
+	
+	<definition name="localcontact.collection.viewDataCollectionGroupAll.page" extends="site.localcontact.layout" >
+		<put name="title" value="Data collection Groups" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionGroupAll.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Session Summary                                  -->
+	<!-- =======================================================  -->
+	<definition name="user.collection.viewSessionSummary.page" extends="site.main.layout" >
+		<put name="title" value="Session summary" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSessionSummary.jsp" />
+	</definition>
+	
+	<definition name="manager.collection.viewSessionSummary.page" extends="site.manager.layout" >
+		<put name="title" value="Session summary" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSessionSummary.jsp" />
+	</definition>
+	
+	<definition name="fedexmanager.collection.viewSessionSummary.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Session summary" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSessionSummary.jsp" />
+	</definition>
+	
+	<definition name="localcontact.collection.viewSessionSummary.page" extends="site.localcontact.layout" >
+		<put name="title" value="Session summary" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewSessionSummary.jsp" />
+	</definition>
+	
+	
+	<!-- =======================================================  -->
+	<!--  Workflow                                   -->
+	<!-- =======================================================  -->
+	<definition name="user.collection.viewWorkflow.page" extends="site.main.layout" >
+		<put name="title" value="Workflow" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewWorkflow.jsp" />
+	</definition>
+	
+	<definition name="manager.collection.viewWorkflow.page" extends="site.manager.layout" >
+		<put name="title" value="Workflows" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewWorkflow.jsp" />
+	</definition>
+	
+	<definition name="fedexmanager.collection.viewWorkflow.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Workflows" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewWorkflow.jsp" />
+	</definition>
+	
+	<definition name="localcontact.collection.viewWorkflow.page" extends="site.localcontact.layout" >
+		<put name="title" value="Workflows" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewWorkflow.jsp" />
+	</definition>
+	
+	
+	<!-- =======================================================  -->
+	<!--  Data collection                                         -->
+	<!-- =======================================================  -->
+		
+	<definition name="user.collection.viewDataCollectionAll_large.page" extends="site.main.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionAllLarge.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.collection.viewDataCollectionJs.page" extends="site.main.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionAllLarge-js.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.collection.viewDataCollectionAll_large.page" extends="site.manager.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionAllLarge.jsp" />
+		 
+	</definition>
+	
+	<definition name="fedexmanager.collection.viewDataCollectionAll_large.page" extends="site.fxmanager.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionAllLarge.jsp" />
+		 
+	</definition>
+	
+	<definition name="localContact.collection.viewDataCollectionAll_large.page" extends="site.localcontact.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewDataCollectionAllLarge.jsp" />
+	</definition>
+
+	<definition name="user.collection.searchDataCollection.page" extends="site.main.layout" >
+		<put name="title" value="Search data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/dataCollection.jsp" />
+		 
+	</definition>
+	
+	 <definition name="user.collection.searchProposal.page" extends="site.main.layout" >
+		<put name="title" value="View collection information" />
+		<put name="body" value="/tiles/bodies/mx/collection/searchProposal.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.collection.editDataCollection.page" extends="site.main.layout">
+		<put name="title" value="Edit Data Collection" />
+		<put name="body" value="/tiles/bodies/mx/collection/editDataCollection.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.collection.html.page" extends="site.main.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewHtmlPage.jsp" />
+		 
+	</definition>
+	
+	
+	<definition name="manager.collection.lastCollect.page" extends="site.manager.layout" >
+		<put name="title" value="Data collections" />
+		<put name="body" value="/tiles/bodies/mx/collection/viewLastCollect.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Data collection / Sample Ranking                             -->
+	<!-- =======================================================  -->
+	
+	<definition name="user.ranking.sampleRanking.page" extends="site.main.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRanking.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.ranking.sampleRankingChart.page" extends="site.main.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRankingChart.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.ranking.sampleRankingFlexChart_save.page" path="/tiles/bodies/mx/ranking/sampleRankingFlexChart.jsp">
+		<put name="title" value="Sample Ranking" />
+	</definition>
+	
+	<definition name="user.ranking.sampleRankingFlexChart.page" extends="site.main.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRankingFlexChart.jsp" />
+		 
+	</definition>	
+	
+	<definition name="localcontact.ranking.sampleRanking.page" extends="site.localcontact.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRanking.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.ranking.sampleRankingChart.page" extends="site.localcontact.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRankingChart.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.ranking.sampleRankingFlexChart_save.page" path="/tiles/bodies/mx/ranking/sampleRankingFlexChart.jsp">
+		<put name="title" value="Sample Ranking" />
+	</definition>
+	
+	<definition name="localcontact.ranking.sampleRankingFlexChart.page" extends="site.localcontact.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/sampleRankingFlexChart.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Data collection / AutoProc Ranking                             -->
+	<!-- =======================================================  -->
+	
+	<definition name="user.ranking.autoProcRanking.page" extends="site.main.layout" >
+		<put name="title" value="AutoProc Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/autoProcRanking.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.ranking.autoProcRanking.page" extends="site.localcontact.layout" >
+		<put name="title" value="AutoProc Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/autoProcRanking.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.ranking.autoProcRankingChart.page" extends="site.main.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/autoProcRankingChart.jsp" />
+		 
+	</definition>	
+	
+	<definition name="localcontact.ranking.autoProcRankingChart.page" extends="site.localcontact.layout" >
+		<put name="title" value="Sample Ranking" />
+		<put name="body" value="/tiles/bodies/mx/ranking/autoProcRankingChart.jsp" />
+		 
+	</definition>
+	
+    <!-- =======================================================  -->
+	<!--  Sample, Protein, Crystal                                -->
+	<!-- =======================================================  -->
+	
+	<!-- Home pages  -->
+    <definition name="user.sample.viewSampleHome.page" extends="site.main.layout" >
+		<put name="title" value="Samples home page" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSampleHome.jsp" />
+		 
+	</definition>
+	
+	<!-- Search pages  -->
+	<definition name="user.sample.search.sample.page" extends="site.main.layout" >
+		<put name="title" value="Search sample page" />
+		<put name="body" value="/tiles/bodies/mx/sample/sample.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.sample.search.protein.page" extends="site.main.layout" >
+		<put name="title" value="Search protein page" />
+		<put name="body" value="/tiles/bodies/mx/sample/protein.jsp" />
+		 
+	</definition>
+	
+	<!-- View pages  -->
+	<definition name="user.sample.viewSample.page" extends="site.main.layout" >
+		<put name="title" value="Samples information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSample.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.sample.viewSample.page" extends="site.manager.layout" >
+		<put name="title" value="Samples information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSample.jsp" />
+		 
+	</definition>
+		
+	<definition name="user.sample.viewProteinAndCrystal.page" extends="site.main.layout" >
+		<put name="title" value="Proteins, crystaltype, diffraction plan information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewProteinAndCrystal.jsp" />
+		 
+	</definition>
+
+	<definition name="user.sample.viewSampleAllDetails.page" extends="site.main.layout" >
+		<put name="title" value="Samples detailed information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSampleAllDetails.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.sample.viewSampleAllDetails.page" extends="site.localcontact.layout" >
+		<put name="title" value="Samples detailed information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSampleAllDetails.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.sample.viewSampleAllDetails.page" extends="site.manager.layout" >
+		<put name="title" value="Samples detailed information" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewSampleAllDetails.jsp" />
+		 
+	</definition>
+	
+
+	<!-- no more used? viewProteinFromSS action doesn't exist anymore!!
+	<definition name="user.sample.viewProteinFromSS.page" extends="site.main.layout" >
+		<put name="title" value="Proteins from samplesheets" />
+		<put name="body" value="/tiles/bodies/mx/sample/viewProteinFromSS.jsp" />
+		 
+	</definition>	
+	-->
+
+	<!-- Edit & Create pages  -->	
+	 <definition name="user.sample.editDiffractionPlanForCrystaltype.page" extends="site.main.layout" >
+		<put name="title" value="View collection information" />
+		<put name="body" value="/tiles/bodies/mx/sample/editDiffractionPlanForCrystaltype.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.sample.page" extends="site.main.layout" >
+		<put name="title" value="Sample information" />
+		<put name="body" value="/tiles/bodies/mx/sample/sample.jsp" />
+		 
+	</definition>
+	<definition name="user.protein.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Shipping information" />
+		<put name="body" value="/tiles/bodies/mx/sample/createProtein.jsp" />
+		 
+	</definition>
+	<definition name="user.crystal.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Crystal information" />
+		<put name="body" value="/tiles/bodies/mx/sample/createCrystal.jsp" />
+		 
+	</definition>
+	<definition name="user.crystal.edit.page" extends="site.main.layout" >
+		<put name="title" value="Create Crystal information" />
+		<put name="body" value="/tiles/bodies/mx/sample/editCrystal.jsp" />
+		 
+	</definition>
+	<definition name="user.sample.create.page" extends="site.main.layout" >
+		<put name="title" value="Create sample" />
+		<put name="body" value="/tiles/bodies/mx/sample/createSampleHeader.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.sample.create.page" extends="site.manager.layout" >
+		<put name="title" value="Create sample" />
+		<put name="body" value="/tiles/bodies/mx/sample/createSampleHeader.jsp" />
+	</definition>
+	
+		<definition name="user.sample.edit.page" extends="site.main.layout" >
+		<put name="title" value="Edit Sample parameters" />
+		<put name="body" value="/tiles/bodies/mx/sample/editSample.jsp" />
+		 
+	</definition>
+	<definition name="user.proteinAndCrystal.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Protein and Crystal information" />
+		<put name="body" value="/tiles/bodies/mx/sample/createProteinAndCrystal.jsp" />
+		 
+	</definition>
+	
+	<!-- Select pages  -->	
+	 <definition name="user.sample.protein.select.page" extends="site.main.layout" >
+		<put name="title" value="Select Protein List to export" />
+		<put name="body" value="/tiles/bodies/mx/sample/selectProtein.jsp" />
+		 
+	</definition>
+	
+	<!-- pdb file upload  -->	
+	<definition name="user.sample.viewUploadPdbFile.page" extends="site.main.layout" >
+		<put name="title" value="Pdb File Upload" />
+		<put name="body" value="/tiles/bodies/mx/sample/uploadPdbFile.jsp" />
+	</definition>
+	
+	
+	<definition name="user.sample.viewDisplayPdbFile.page" extends="site.main.layout" >
+		<put name="title" value="Pdb File Display" />
+		<put name="body" value="/tiles/bodies/mx/sample/displayPdbFile.jsp" />
+	</definition>
+	
+	<definition name="user.sample.viewUploadPdbFileSAXS.page" extends="site.main.empty" >
+		<put name="title" value="SAXS Pdb File Upload" />
+		<put name="body" value="/tiles/bodies/biosaxs/uploadPdbFileSAXS.jsp" />
+	</definition>
+	
+    
+	<!-- =======================================================  -->
+	<!--   Results pages                                          -->
+	<!-- =======================================================  -->
+	 <definition name="user.results.page" extends="site.main.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/user.jsp" />
+		 
+	</definition>
+	
+	 <definition name="user.results.sample.analyse.page" extends="site.main.layout" >
+		<put name="title" value="analyse samples" />
+		<put name="body" value="/tiles/bodies/mx/results/analyseSample.jsp" />
+		 
+	</definition>
+	
+	 <definition name="user.results.sample.edit.page" extends="site.main.layout" >
+		<put name="title" value="edit samples after analysis" />
+		<put name="body" value="/tiles/bodies/mx/results/editSample.jsp" />
+		 
+	</definition>				
+	
+   <definition name="user.results.view.page" extends="site.main.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewResults.jsp" />
+		 
+	</definition>
+	
+    <definition name="fedexmanager.results.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewResults.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.results.view.page" extends="site.manager.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewResults.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.results.view.page" extends="site.localcontact.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewResults.jsp" />
+		 
+	</definition>
+	
+	<!-- ScreeningStrategy -->
+	<definition name="user.screeningStrategy.view.page" extends="site.main.layout" >
+		<put name="title" value="View screening strategy" />
+		<put name="body" value="/tiles/bodies/mx/results/viewScreeningStrategy.jsp" />
+		 
+	</definition>
+
+	
+	<definition name="user.results.viewImageWall.page" extends="site.main.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewImageWall.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.results.viewImageWall.page" extends="site.localcontact.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewImageWall.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.results.viewImageWall.page" extends="site.manager.layout" >
+		<put name="title" value="View results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewImageWall.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.viewScreening.page" extends="site.main.layout" >
+		<put name="title" value="View screening results" />
+		<put name="body" value="/tiles/bodies/mx/results/viewScreening.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.AutoProcAttachments.page" extends="site.main.layout">
+		<put name="title" value="View Autoprocessing Attachments" />
+		<put name="body" value="/tiles/bodies/mx/results/viewAutoProcAttachments.jsp" />
+		 		
+	</definition>
+	
+	<definition name="user.results.DNAImages.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Images" />
+		<put name="body" value="/tiles/bodies/mx/results/viewDNAImages.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.DNAFiles.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Files" />
+		<put name="body" value="/tiles/bodies/mx/results/viewDNAFiles.jsp" />
+		 
+	</definition>
+
+	<definition name="user.results.otherDNAFiles.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Files" />
+		<put name="body" value="/tiles/bodies/mx/results/viewOtherDNAFiles.jsp" />
+		 
+	</definition>
+
+	<definition name="user.results.DNATextFiles.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Text Files" />
+		<put name="body" value="/tiles/bodies/mx/results/viewDNATextFiles.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.DenzoImages.page" extends="site.main.layout" >
+		<put name="title" value="View Denzo Images" />
+		<put name="body" value="/tiles/bodies/mx/results/viewDenzoImages.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.viewImageApplet.page" extends="site.main.layout" >
+		<put name="title" value="View image Applet" />
+		<put name="body" value="/tiles/bodies/mx/results/viewImageApplet.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.viewJpegImage.page" extends="site.main.layout" >
+		<put name="title" value="View Jpeg image" />
+		<put name="body" value="/tiles/bodies/mx/results/viewJpegImage.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.results.viewJpegImage.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Jpeg image" />
+		<put name="body" value="/tiles/bodies/mx/results/viewJpegImage.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.results.viewJpegImage.page" extends="site.manager.layout" >
+		<put name="title" value="View Jpeg image" />
+		<put name="body" value="/tiles/bodies/mx/results/viewJpegImage.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.viewImageThumbnails.page" extends="site.main.layout" >
+		<put name="title" value="View image thumbnails" />
+		<put name="body" value="/tiles/bodies/mx/results/viewImageThumbnails.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.EDNAPages.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Images" />
+		<put name="body" value="/tiles/bodies/mx/results/viewEDNAPages.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.EDNAImage.page" extends="site.main.layout" >
+		<put name="title" value="View DNA Images" />
+		<put name="body" value="/tiles/bodies/mx/results/viewEDNAImage.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.textFile.page" extends="site.main.layout" >
+		<put name="title" value="View text file" />
+		<put name="body" value="/tiles/bodies/mx/results/viewTextFile.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.results.HTMLFile.page" extends="site.main.layout" >
+        <put name="title" value="View Html file" />
+        <put name="body" value="/tiles/bodies/mx/results/viewHTMLFiles.jsp" />
+         
+    </definition>
+	
+	<!-- =======================================================  -->
+	<!--  Prepare experiment pages -->
+	<!-- =======================================================  -->
+
+    <definition name="user.prepare.fillSC.page" extends="site.main.layout" >
+		<put name="title" value="Fill Sample Changer" />
+		<put name="body" value="/tiles/bodies/mx/prepare/fillSampleChanger.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.prepare.view.page" extends="site.main.layout" >
+		<put name="title" value="Fill Sample Changer" />
+		<put name="body" value="/tiles/bodies/mx/prepare/prepareExp.jsp" />
+		 
+	</definition>
+	
+	<definition name="user.prepare.sample.page" extends="site.main.layout" >
+		<put name="title" value="select samples for experiment" />
+		<put name="body" value="/tiles/bodies/mx/prepare/selectSampleForExp.jsp" />
+		 
+	</definition>	
+	
+	
+	
+	<definition name="user.prepare.selectShipment.page" extends="site.main.layout" >
+		<put name="title" value="Select shipment" />
+		<put name="body" value="/tiles/bodies/mx/prepare/selectShipment.jsp" />
+		 
+	</definition>	
+	
+	<definition name="user.prepare.selectDewar.page" extends="site.main.layout" >
+		<put name="title" value="Select dewar" />
+		<put name="body" value="/tiles/bodies/mx/prepare/selectDewar.jsp" />
+		 
+	</definition>
+		
+	
+	<!-- =======================================================  -->
+	<!--  Manager and Proposal pages                                          -->
+	<!-- =======================================================  -->
+
+	<definition name="fedexmanager.proposal.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View proposals" />
+		<put name="body" value="/tiles/bodies/common/proposal/viewProposal.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.proposal.view.page" extends="site.manager.layout" >
+		<put name="title" value="View proposals" />
+		<put name="body" value="/tiles/bodies/common/proposal/viewProposal.jsp" />
+		 
+	</definition>	
+	
+	<definition name="fedexmanager.fxshipping.view.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View all shipments" />
+		<put name="body" value="/tiles/bodies/common/shipping/viewFXShipping.jsp" />
+		 
+	</definition>
+		
+	<definition name="manager.admin.updateProposalId.page" extends="site.manager.layout" >
+		<put name="title" value="Update proposalId" />
+		<put name="body" value="/tiles/bodies/common/admin/updateProposalId.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.admin.launchDataConfidentiality.page" extends="site.manager.layout" >
+		<put name="title" value="Launch data confidentiality" />
+		<put name="body" value="/tiles/bodies/common/admin/launchDataConfidentiality.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Admin site (PBU)						                  -->
+	<!-- =======================================================  -->	
+	
+	<definition name="manager.admin.site.page" extends="site.manager.layout" >
+		<put name="title" value="Site administration" />
+		<put name="body" value="/tiles/bodies/common/admin/adminSite.jsp" />
+		 
+	</definition>
+	
+	<definition name="blom.admin.site.page" extends="site.blom.layout" >
+		<put name="title" value="Site administration" />
+		<put name="body" value="/tiles/bodies/common/admin/adminSite.jsp" />
+		 
+	</definition>
+	
+	<definition name="localcontact.admin.site.page" extends="site.localcontact.layout" >
+		<put name="title" value="Site administration" />
+		<put name="body" value="/tiles/bodies/common/admin/adminSite.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.admin.message.page" extends="site.manager.layout" >
+		<put name="title" value="Site messages" />
+		<put name="body" value="/tiles/bodies/common/admin/adminMessage.jsp" />
+		 
+	</definition>	
+	
+	<definition name="manager.admin.user.page" extends="site.manager.layout" >
+		<put name="title" value="Active users" />
+		<put name="body" value="/tiles/bodies/common/admin/adminUser.jsp" />
+		 
+	</definition>
+	
+	<definition name="blom.admin.user.page" extends="site.blom.layout" >
+		<put name="title" value="Active users" />
+		<put name="body" value="/tiles/bodies/common/admin/adminUser.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.admin.chart.page" extends="site.manager.layout" >
+		<put name="title" value="Chart report" />
+		<put name="body" value="/tiles/bodies/common/admin/adminChart.jsp" />
+		 
+	</definition>
+	
+	<definition name="blom.admin.chart.page" extends="site.blom.layout" >
+		<put name="title" value="Chart report" />
+		<put name="body" value="/tiles/bodies/common/admin/adminChart.jsp" />
+		 
+	</definition>
+	
+	<definition name="manager.admin.testEjb.page" extends="site.manager.layout" >
+		<put name="title" value="Test Ejb" />
+		<put name="body" value="/tiles/bodies/common/admin/testEjb.jsp" />
+		 
+	</definition>
+		
+	<definition name="manager.admin.dataConfidentiality.page" extends="site.manager.layout" >
+		<put name="title" value="Data confidentiality" />
+		<put name="body" value="/tiles/bodies/common/admin/viewDataConfidentialityLog.jsp" />
+	</definition>
+	
+	<definition name="localcontact.admin.dataConfidentiality.page" extends="site.localcontact.layout" >
+		<put name="title" value="Data confidentiality" />
+		<put name="body" value="/tiles/bodies/common/admin/viewDataConfidentialityLog.jsp" />
+	</definition>
+	
+	<definition name="blom.admin.dataConfidentiality.page" extends="site.blom.layout" >
+		<put name="title" value="Data confidentiality" />
+		<put name="body" value="/tiles/bodies/common/admin/viewDataConfidentialityLog.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  LabContacts								                  -->
+	<!-- =======================================================  -->
+	<!-- LabContact -->
+	<definition name="user.labcontact.login.page" extends="site.main.layout" >
+		<put name="title" value="Create Lab-contact info" />
+		<put name="body" value="/tiles/bodies/common/labcontact/loginLabContact.jsp" />
+		 
+	</definition>
+	<definition name="user.labcontact.create.page" extends="site.main.layout" >
+		<put name="title" value="Create/Edit Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	<definition name="user.labcontact.view.page" extends="site.main.layout" >
+		<put name="title" value="View Lab-contact information" />
+		<put name="body" value="/tiles/bodies/common/labcontact/viewLabContact.jsp" />
+		 
+	</definition>
+	
+	<definition name="blom.labcontact.create.page" extends="site.blom.layout" >
+		<put name="title" value="View Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	<definition name="manager.labcontact.create.page" extends="site.manager.layout" >
+		<put name="title" value="View Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	<definition name="fedexmanager.labcontact.create.page" extends="site.fxmanager.layout" >
+		<put name="title" value="View Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	<definition name="localcontact.labcontact.create.page" extends="site.localcontact.layout" >
+		<put name="title" value="View Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	<definition name="store.labcontact.create.page" extends="site.store.layout" >
+		<put name="title" value="View Lab-contact card" />
+		<put name="body" value="/tiles/bodies/common/labcontact/createLabContact.jsp" />
+		 
+	</definition>
+	
+	<definition name="store.labcontact.view.page" extends="site.store.layout" >
+		<put name="title" value="View all Lab-contacts" />
+		<put name="body" value="/tiles/bodies/common/labcontact/viewAllLabContacts.jsp" />
+		
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Complex						                  -->
+	<!-- =======================================================  -->	
+	<definition name="user.complex.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Complex" />
+		<put name="body" value="/tiles/bodies/mx/sample/bx/createComplex.jsp" />
+	</definition>
+	
+	<definition name="user.complex.list.page" extends="site.main.layout" >
+		<put name="title" value="List of Complexes" />
+		<put name="body" value="/tiles/bodies/mx/sample/bx/viewComplex.jsp" />
+		 
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--  Project					                  -->
+	<!-- =======================================================  -->	
+	<definition name="user.project.create.page" extends="site.main.layout" >
+		<put name="title" value="Create Project information" />
+		<put name="body" value="/tiles/bodies/biosaxs/project/viewProjectList.jsp" />
+	</definition>
+	
+		
+	<!-- =======================================================  -->
+	<!-- Reference -->
+	<!-- =======================================================  -->
+		
+    <definition name="guest.reference.viewReference.page" extends="site.main.layout" >
+		<put name="title" value="Reference" />
+		<put name="body" value="/tiles/bodies/common/reference/viewReference.jsp" />
+	</definition>
+	
+	<!-- =======================================================  -->
+	<!--   -->
+	<!-- =======================================================  -->
+</tiles-definitions>

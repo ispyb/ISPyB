@@ -1,0 +1,722 @@
+/** This file is part of ISPyB.
+ * 
+ * ISPyB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * ISPyB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
+ ****************************************************************************************************/
+
+package ispyb.ws.soap.saxs;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.BiosaxsServices;
+import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+@WebService(name = "ToolsForBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
+@SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
+@Stateless
+@RolesAllowed({ "WebService", "User", "Industrial" })
+// allow special access roles
+@SecurityDomain("ispyb")
+@WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
+public class ToolsForAssemblyWebService {
+
+	private final static Logger LOGGER = Logger.getLogger(ToolsForAssemblyWebService.class);
+
+	protected final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+
+	private long now;
+
+	@WebMethod(operationName = "echo")
+	@WebResult(name = "echo")
+	public String echo() {
+		return "echo from server...";
+	}
+
+	/***********************************************
+	 * HPLC
+	 ***********************************************/
+	@WebMethod(operationName = "createHPLC")
+	@WebResult(name = "experimentId")
+	public Integer createHPLC(@WebParam(name = "proposalCode") String proposalCode,
+			@WebParam(name = "proposalNumber") String proposalNumber, @WebParam(name = "name") String name) {
+		/** Logging params **/
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("proposalCode", String.valueOf(proposalCode));
+		params.put("proposalNumber", String.valueOf(proposalNumber));
+		params.put("name", String.valueOf(name));
+		long start = this.logInit("createHPLC", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			int experimentId = biosaxsWebServiceActions.createHPLC(proposalCode, proposalNumber, name);
+			this.logFinish("createHPLC", start);
+			return experimentId;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "createHPLC", start, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@WebMethod(operationName = "storeHPLC")
+	@WebResult(name = "experimentId")
+	public Integer storeHPLC(@WebParam(name = "experimentId") String experimentId,
+			@WebParam(name = "sourceFilePath") String h5FilePath, @WebParam(name = "json") String jsonFilePath) {
+
+		/** Logging params **/
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("experimentId", String.valueOf(experimentId));
+		params.put("sourceFilePath", String.valueOf(h5FilePath));
+		params.put("json", String.valueOf(jsonFilePath));
+		long start = this.logInit("storeHPLC", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			Integer id = biosaxsWebServiceActions.storeHPLC(experimentId, h5FilePath, jsonFilePath);
+			this.logFinish("storeHPLC", start);
+			return id;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeHPLC", start, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * It add all the models, damaver, damfilt and dammin to a measurementId which should already have got a subtraction
+	 * 
+	 * @param measurementId
+	 * @param models
+	 * @param dammaver
+	 * @param dammif
+	 * @param damming
+	 * @param nsdPlot
+	 * @param chi2plot
+	 */
+	@WebMethod(operationName = "storeHPLCAbInitioModelsByPeakNumber")
+	@WebResult(name = "storeHPLCAbInitioModelsByPeakNumber")
+	@Deprecated
+	public void storeHPLCAbInitioModelsByPeakNumber(@WebParam(name = "id") String experimentId,
+			@WebParam(name = "peakNumber") String peakNumber, @WebParam(name = "models") String models,
+			@WebParam(name = "dammaver") String dammaver, @WebParam(name = "dammif") String dammif,
+			@WebParam(name = "damming") String damming, @WebParam(name = "nsdPlot") String nsdPlot,
+			@WebParam(name = "chi2plot") String chi2plot) {
+		long start = this.logInit("storeAbInitioModels");
+		LOGGER.info("-----------------------");
+		LOGGER.info(" storeAbInitioModels");
+		LOGGER.info(" experimentId:\t" + experimentId);
+		LOGGER.info(" peakNumber:\t" + peakNumber);
+		LOGGER.info(" models:\t" + models);
+		LOGGER.info(" dammaver:\t" + dammaver);
+		LOGGER.info(" dammif:\t" + dammif);
+		LOGGER.info(" damming:\t" + damming);
+		LOGGER.info(" nsdPlot:\t" + nsdPlot);
+		LOGGER.info(" chi2plot:\t" + chi2plot);
+		this.logFinish("storeAbInitioModels", start);
+	}
+
+	/** STORE RESULTS FROM EDNA PIPELINE **/
+	@WebMethod(operationName = "storeHPLCDataAnalysisResult")
+	@WebResult(name = "measurementId")
+	public Integer storeHPLCDataAnalysisResult(
+			@WebParam(name = "experimentId") String experimentId,
+			/** XSDataAutoRg **/
+			@WebParam(name = "filename") String filename, // Deprecated
+			@WebParam(name = "rg") String rg, @WebParam(name = "rgStdev") String rgStdev, @WebParam(name = "i0") String i0,
+			@WebParam(name = "i0Stdev") String i0Stdev, @WebParam(name = "firstPointUsed") String firstPointUsed,
+			@WebParam(name = "lastPointUsed") String lastPointUsed, @WebParam(name = "quality") String quality,
+			@WebParam(name = "isagregated") String isagregated,
+			/** XSDataBiosaxsSample **/
+			@WebParam(name = "code") String code, @WebParam(name = "concentration") String concentration,
+			/** XSDataGnom **/
+			@WebParam(name = "gnomFile") String gnomFile, @WebParam(name = "rgGuinier") String rgGuinier,
+			@WebParam(name = "rgGnom") String rgGnom, @WebParam(name = "dmax") String dmax, @WebParam(name = "total") String total,
+			/** Volume **/
+			@WebParam(name = "volume") String volume,
+			/** Frames **/
+			@WebParam(name = "frameStart") String frameStart, @WebParam(name = "frameEnd") String frameEnd,
+			/** Curves array **/
+			@WebParam(name = "curvesFilePathArray") String curveParam,
+			/** Some extra params **/
+			@WebParam(name = "bestBufferFilePath") String bestBufferFilePath,
+			@WebParam(name = "scatterFilePath") String scatteringFilePath, @WebParam(name = "guinierFilePath") String guinierFilePath,
+			@WebParam(name = "kratkyFilePath") String kratkyFilePath, @WebParam(name = "densityPlot") String densityPlot) {
+
+		/** Logging params **/
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("experimentId", String.valueOf(experimentId));
+		params.put("filename", String.valueOf(filename));
+		params.put("rg", String.valueOf(rg));
+		params.put("rgStdev", String.valueOf(rgStdev));
+		params.put("i0", String.valueOf(i0));
+		params.put("i0Stdev", String.valueOf(i0Stdev));
+		params.put("firstPointUsed", String.valueOf(firstPointUsed));
+		params.put("lastPointUsed", String.valueOf(lastPointUsed));
+		params.put("quality", String.valueOf(quality));
+		params.put("isagregated", String.valueOf(isagregated));
+		params.put("code", String.valueOf(code));
+		params.put("concentration", String.valueOf(concentration));
+		params.put("gnomFile", String.valueOf(gnomFile));
+		params.put("rgGuinier", String.valueOf(rgGuinier));
+		params.put("rgGnom", String.valueOf(rgGnom));
+		params.put("dmax", String.valueOf(dmax));
+		params.put("total", String.valueOf(total));
+		params.put("volume", String.valueOf(volume));
+		params.put("frameStart", String.valueOf(frameStart));
+		params.put("frameEnd", String.valueOf(frameEnd));
+		params.put("curveParam", String.valueOf(curveParam));
+		params.put("bestBufferFilePath", String.valueOf(bestBufferFilePath));
+		params.put("scatteringFilePath", String.valueOf(scatteringFilePath));
+		params.put("guinierFilePath", String.valueOf(guinierFilePath));
+		params.put("kratkyFilePath", String.valueOf(kratkyFilePath));
+		params.put("densityPlot", String.valueOf(densityPlot));
+		long start = this.logInit("storeHPLCDataAnalysisResult", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			Integer measurementId = biosaxsWebServiceActions.saveHPLCCurveAnalysis(Integer.parseInt(experimentId),
+					Integer.parseInt(frameStart), Integer.parseInt(frameEnd), curveParam, rg, rgStdev, i0, i0Stdev, firstPointUsed,
+					lastPointUsed, quality, isagregated, code, concentration, gnomFile, rgGuinier, rgGnom, dmax, total, volume,
+					scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot);
+
+			this.logFinish("storeHPLCDataAnalysisResult", start);
+			return measurementId;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeHPLCDataAnalysisResult", start,
+					System.currentTimeMillis(), e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * It add all the models, damaver, damfilt and dammin to a measurementId which should already have got a subtraction
+	 * 
+	 * @param measurementId
+	 * @param models
+	 * @param dammaver
+	 * @param dammif
+	 * @param dammin
+	 * @param nsdPlot
+	 * @param chi2plot
+	 */
+	@WebMethod(operationName = "storeAbInitioModels")
+	@WebResult(name = "storeAbInitioModels")
+	public void storeAbInitioModels(@WebParam(name = "measurementId") String measurementId, @WebParam(name = "models") String models,
+			@WebParam(name = "dammaver") String dammaver, @WebParam(name = "dammif") String dammif,
+			@WebParam(name = "dammin") String dammin, @WebParam(name = "nsdPlot") String nsdPlot,
+			@WebParam(name = "chi2plot") String chi2plot) {
+
+		/** Logging params **/
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("measurementId", String.valueOf(measurementId));
+		params.put("models", String.valueOf(models));
+		params.put("dammaver", String.valueOf(dammaver));
+		params.put("dammif", String.valueOf(dammif));
+		params.put("dammin", String.valueOf(dammin));
+		params.put("nsdPlot", String.valueOf(nsdPlot));
+		params.put("chi2plot", String.valueOf(chi2plot));
+
+		long start = this.logInit("storeAbInitioModels", new Gson().toJson(params));
+		try {
+			Type measurementIdType = new TypeToken<ArrayList<Integer>>() {}.getType();
+			ArrayList<Integer> measurementIds = new Gson().fromJson(measurementId, measurementIdType);
+
+			Type mapType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
+			ArrayList<HashMap<String, String>> modelList = new Gson().fromJson(models, mapType);
+			Type mapTypeModel = new TypeToken<HashMap<String, String>>() {}.getType();
+			
+			HashMap<String, String> dammaverModelHash = new Gson().fromJson(dammaver, mapTypeModel);
+			HashMap<String, String> dammifModelHash = new Gson().fromJson(dammif, mapTypeModel);
+			HashMap<String, String> dammingModelHash = new Gson().fromJson(dammin, mapTypeModel);
+
+			ArrayList<Model3VO> models3VO = new ArrayList<Model3VO>();
+			for (HashMap<String, String> model : modelList) {
+				models3VO.add(Model3VO.deserialize(model));
+			}
+
+			Model3VO dammaverModel = Model3VO.deserialize(dammaverModelHash);
+			Model3VO dammifModel = Model3VO.deserialize(dammifModelHash);
+			Model3VO damminModel = Model3VO.deserialize(dammingModelHash);
+
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			biosaxsWebServiceActions.addAbinitioModeling(measurementIds, models3VO, dammaverModel, dammifModel, damminModel, nsdPlot, chi2plot);
+			this.logFinish("storeAbInitioModels", start);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeAbInitioModels", start,
+					System.currentTimeMillis(), e.getMessage(), e);
+		}
+	}
+
+	@WebResult(name = "addAveraged")
+	public void addAveraged(@WebParam(name = "measurementId") String measurementId,
+			@WebParam(name = "dataCollectionOrder") String dataCollectionOrder, @WebParam(name = "averaged") String averaged,
+			@WebParam(name = "discarded") String discarded, @WebParam(name = "averageFile") String averageFile) throws Exception {
+
+		/** Logging **/
+		long id = 0;
+		try {
+			/** Logging params **/
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("measurementId", String.valueOf(measurementId));
+			params.put("dataCollectionOrder", String.valueOf(dataCollectionOrder));
+			params.put("averaged", String.valueOf(averaged));
+			params.put("discarded", String.valueOf(discarded));
+			params.put("averageFile", String.valueOf(averageFile));
+			id = this.logInit("addAveraged", new Gson().toJson(params));
+		} catch (Exception exp) {
+			id = this.logInit("addAveraged");
+			exp.printStackTrace();
+		}
+
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			biosaxsWebServiceActions.addAveraged(measurementId, dataCollectionOrder, averaged, discarded, averageFile);
+
+			logFinish("addAveraged", id);
+		} catch (Exception e) {
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addAveraged", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@WebMethod(operationName = "addSubtraction")
+	public void addSubtraction(@WebParam(name = "measurementId") String measurementId,
+			/** XSDataAutoRg **/
+			@WebParam(name = "rgGuinier") String rgGuinier, @WebParam(name = "rgStdev") String rgStdev, @WebParam(name = "i0") String i0,
+			@WebParam(name = "i0Stdev") String i0Stdev,
+			@WebParam(name = "firstPointUsed") String firstPointUsed, @WebParam(name = "lastPointUsed") String lastPointUsed,
+			@WebParam(name = "quality") String quality, @WebParam(name = "isagregated") String isagregated,
+			/** XSDataGnom **/
+			@WebParam(name = "rgGnom") String rgGnom, @WebParam(name = "dmax") String dmax, @WebParam(name = "total") String total,
+			/** Volume **/
+			@WebParam(name = "volume") String volume,
+			/** Some extra params **/
+			@WebParam(name = "sampleOneDimensionalFiles") String sampleOneDimensionalFiles,
+			@WebParam(name = "bufferOneDimensionalFiles") String bufferOneDimensionalFiles,
+			@WebParam(name = "sampleAverageFilePath") String sampleAverageFilePath,
+			@WebParam(name = "bestBufferFilePath") String bestBufferFilePath,
+			@WebParam(name = "subtractedFilePath") String subtractedFilePath,
+			@WebParam(name = "experimentalDataPlotFilePath") String experimentalDataPlotFilePath,
+			@WebParam(name = "densityPlotFilePath") String densityPlotFilePath,
+			@WebParam(name = "guinierPlotFilePath") String guinierPlotFilePath,
+			@WebParam(name = "kratkyPlotFilePath") String kratkyPlotFilePath,
+			@WebParam(name = "gnomOutputFilePath") String gnomOutputFilePath)
+	throws Exception {
+
+		/** Logging **/
+		long id = 0;
+		try {
+			/** Logging params **/
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("measurementId", String.valueOf(measurementId));
+			params.put("rgGuinier", String.valueOf(rgGuinier));
+			params.put("rgStdev", String.valueOf(rgStdev));
+			params.put("i0", String.valueOf(i0));
+			params.put("i0Stdev", String.valueOf(i0Stdev));
+			params.put("firstPointUsed", String.valueOf(firstPointUsed));
+			params.put("lastPointUsed", String.valueOf(lastPointUsed));
+			params.put("quality", String.valueOf(quality));
+			params.put("isagregated", String.valueOf(isagregated));
+			params.put("rgGnom", String.valueOf(rgGnom));
+			params.put("dmax", String.valueOf(dmax));
+			params.put("total", String.valueOf(total));
+			params.put("volume", String.valueOf(volume));
+			params.put("sampleOneDimensionalFiles", String.valueOf(sampleOneDimensionalFiles));
+			params.put("bufferOneDimensionalFiles", String.valueOf(bufferOneDimensionalFiles));
+			params.put("sampleAverageFilePath", String.valueOf(sampleAverageFilePath));
+			params.put("bestBufferFilePath", String.valueOf(bestBufferFilePath));
+			params.put("subtractedFilePath", String.valueOf(subtractedFilePath));
+			params.put("experimentalDataPlotFilePath", String.valueOf(experimentalDataPlotFilePath));
+			params.put("densityPlotFilePath", String.valueOf(densityPlotFilePath));
+			params.put("guinierPlotFilePath", String.valueOf(guinierPlotFilePath));
+			params.put("kratkyPlotFilePath", String.valueOf(kratkyPlotFilePath));
+			params.put("gnomOutputFilePath", String.valueOf(gnomOutputFilePath));
+			id = this.logInit("addSubtraction", new Gson().toJson(params));
+		} catch (Exception exp) {
+			id = this.logInit("addSubtraction");
+			exp.printStackTrace();
+		}
+
+		try {
+			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator
+					.getLocalService(ATSASPipeline3Service.class);
+			atsasPipeline3Service.addSubtraction(measurementId, rgStdev, i0, i0Stdev, firstPointUsed, lastPointUsed, quality,
+					isagregated, rgGuinier, rgGnom, dmax, total, volume, sampleOneDimensionalFiles, bufferOneDimensionalFiles,
+					sampleAverageFilePath, bestBufferFilePath, subtractedFilePath, experimentalDataPlotFilePath, densityPlotFilePath,
+					guinierPlotFilePath, kratkyPlotFilePath, gnomOutputFilePath);
+
+			this.logFinish("addSubtraction", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addSubtraction", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	/** STORE RESULTS FROM EDNA PIPELINE **/
+	@Deprecated
+	@WebMethod(operationName = "storeDataAnalysisResultByMeasurementId")
+	@WebResult(name = "storeDataAnalysisResultByMeasurementId")
+	public void storeDataAnalysisResultByMeasurementId(
+			@WebParam(name = "measurementId") String measurementId,
+			/** XSDataAutoRg **/
+			@WebParam(name = "filename") String filename, // /Deprecated
+			@WebParam(name = "rg") String rg, @WebParam(name = "rgStdev") String rgStdev, @WebParam(name = "i0") String i0,
+			@WebParam(name = "i0Stdev") String i0Stdev, @WebParam(name = "firstPointUsed") String firstPointUsed,
+			@WebParam(name = "lastPointUsed") String lastPointUsed, @WebParam(name = "quality") String quality,
+			@WebParam(name = "isagregated") String isagregated,
+			/** XSDataBiosaxsSample **/
+			@WebParam(name = "code") String code, @WebParam(name = "concentration") String concentration,
+			/** XSDataGnom **/
+			@WebParam(name = "gnomFile") String gnomFile, @WebParam(name = "rgGuinier") String rgGuinier,
+			@WebParam(name = "rgGnom") String rgGnom, @WebParam(name = "dmax") String dmax, @WebParam(name = "total") String total,
+			/** Volume **/
+			@WebParam(name = "volume") String volume,
+			@WebParam(name = "framesMerged") String framesCount, @WebParam(name = "framesAverage") String framesAverage,
+			/**
+			 * Curves array Ex: "/data/pyarch/bm29/opd29/600/1d/" + str(measurementId) +
+			 * "_00001.dat, /data/pyarch/bm29/opd29/600/1d/A_001_001.dat, /data/pyarch/bm29/opd29/600/1d/A_001_002.dat, /data/pyarch/bm29/opd29/600/1d/A_001_ave.dat"
+			 * Files containing _ave.dat will be treated as results of the averaging.
+			 * 
+			 * **/
+			@WebParam(name = "curvesFilePathArray") String curveParam,
+			/**
+			 * Data Collection order is the measurement index of the datacollection equivalent to the data collection order in the data
+			 * base
+			 **/
+			@WebParam(name = "dataCollectionOrder") String dataCollectionOrderParam,
+			/** Some extra params **/
+			@WebParam(name = "bestBufferFilePath") String bestBufferFilePath,
+			@WebParam(name = "scatterFilePath") String scatteringFilePath, @WebParam(name = "guinierFilePath") String guinierFilePath,
+			@WebParam(name = "kratkyFilePath") String kratkyFilePath, @WebParam(name = "densityPlot") String densityPlot)
+			throws Exception {
+
+		long id = this.logInit("storeDataAnalysisResultByMeasurementId");
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			biosaxsWebServiceActions.saveCurveAnalysis(Integer.parseInt(measurementId), Integer.valueOf(dataCollectionOrderParam),
+					Integer.parseInt(framesAverage), Integer.parseInt(framesCount), curveParam, rg, rgStdev, i0, i0Stdev,
+					firstPointUsed, lastPointUsed, quality, isagregated, code, concentration, gnomFile, rgGuinier, rgGnom, dmax,
+					total, volume, scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot);
+
+			this.logFinish("storeDataAnalysisResultByMeasurementId", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeDataAnalysisResultByMeasurementId", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+
+		}
+	}
+
+	/** FIND ALL THE EXPERIMENT BY PROPOSAL CODE AND NUMBER for example: MX 1453 **/
+	@WebMethod(operationName = "findExperimentByProposalCode")
+	@WebResult(name = "Experiment")
+	public String findExperimentByProposalCode(@WebParam(name = "code") String code, @WebParam(name = "number") String number)
+			throws Exception {
+
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("code", String.valueOf(code));
+		params.put("number", String.valueOf(number));
+		long id = this.logInit("findExperimentByProposalCode", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			List<Map<String, Object>> result = biosaxsWebServiceActions.findExperimentInformationByProposal(StringUtils.getProposalCode(code), number, "TEMPLATE");
+			this.logFinish("findExperimentByProposalCode", id);
+			return new Gson().toJson(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "findExperimentByProposalCode", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@WebMethod(operationName = "getRobotByExperimentId")
+	@WebResult(name = "Experiment")
+	public String getRobotByExperimentId(@WebParam(name = "experimentId") Integer experimentId) throws Exception {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("experimentId", String.valueOf(experimentId));
+		long id = this.logInit("getRobotByExperimentId", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			String robotXML = biosaxsWebServiceActions.toRobotXML(experimentId);
+			this.logFinish("getRobotByExperimentId", id);
+			return robotXML;
+		} catch (Exception e) {
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getRobotByExperimentId", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@WebMethod(operationName = "saveFrame")
+	@WebResult(name = "Experiment")
+	public void saveFrame(@WebParam(name = "mode") String mode, @WebParam(name = "experimentId") int experimentId,
+			@WebParam(name = "measurementId") String measurementId, @WebParam(name = "runNumber") String runNumber,
+			@WebParam(name = "exposureTemperature") String exposureTemperature,
+			@WebParam(name = "storageTemperature") String storageTemperature, @WebParam(name = "timePerFrame") String timePerFrame,
+			@WebParam(name = "timeStart") String timeStart, @WebParam(name = "timeEnd") String timeEnd,
+			@WebParam(name = "energy") String energy, @WebParam(name = "detectorDistance") String detectorDistance,
+			@WebParam(name = "edfFileArray") String edfFileArray, @WebParam(name = "snapshotCapillary") String snapshotCapillary,
+			@WebParam(name = "currentMachine") String currentMachine, @WebParam(name = "tocollect") String tocollect,
+			@WebParam(name = "pars") String pars, @WebParam(name = "beamCenterX") String beamCenterX,
+			@WebParam(name = "beamCenterY") String beamCenterY, @WebParam(name = "radiationRelative") String radiationRelative,
+			@WebParam(name = "radiationAbsolute") String radiationAbsolute, @WebParam(name = "pixelSizeX") String pixelSizeX,
+			@WebParam(name = "pixelSizeY") String pixelSizeY, @WebParam(name = "normalization") String normalization,
+			@WebParam(name = "transmission") String transmission) throws Exception {
+
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("mode", String.valueOf(mode));
+		params.put("experimentId", String.valueOf(experimentId));
+		params.put("measurementId", String.valueOf(measurementId));
+		params.put("runNumber", String.valueOf(runNumber));
+		params.put("exposureTemperature", String.valueOf(exposureTemperature));
+		params.put("storageTemperature", String.valueOf(storageTemperature));
+		params.put("timePerFrame", String.valueOf(timePerFrame));
+		params.put("timeStart", String.valueOf(timeStart));
+		params.put("timeEnd", String.valueOf(timeEnd));
+		params.put("energy", String.valueOf(energy));
+		params.put("detectorDistance", String.valueOf(detectorDistance));
+		params.put("edfFileArray", String.valueOf(edfFileArray));
+		params.put("snapshotCapillary", String.valueOf(snapshotCapillary));
+		params.put("currentMachine", String.valueOf(currentMachine));
+		params.put("tocollect", String.valueOf(tocollect));
+		params.put("pars", String.valueOf(pars));
+		params.put("beamCenterX", String.valueOf(beamCenterX));
+		params.put("beamCenterY", String.valueOf(beamCenterY));
+		params.put("radiationRelative", String.valueOf(radiationRelative));
+		params.put("radiationAbsolute", String.valueOf(radiationAbsolute));
+		params.put("pixelSizeX", String.valueOf(pixelSizeX));
+		params.put("pixelSizeY", String.valueOf(pixelSizeY));
+		params.put("normalization", String.valueOf(normalization));
+		params.put("transmission", String.valueOf(transmission));
+
+		long id = this.logInit("saveFrame", new Gson().toJson(params));
+
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			biosaxsWebServiceActions.saveFrame(mode, experimentId, measurementId, runNumber, exposureTemperature, storageTemperature,
+					timePerFrame, timeStart, timeEnd, energy, detectorDistance, edfFileArray, snapshotCapillary, currentMachine,
+					tocollect, pars, beamCenterX, beamCenterY, radiationRelative, radiationAbsolute, pixelSizeX, pixelSizeY,
+					normalization, transmission);
+
+			this.logFinish("saveFrame", id);
+		} catch (Exception e) {
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveFrame", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * CREATES A NEW EXPERIMENT FROM BSXCUBE WHERE code: mx number: 1438 samples: [{'plate': '2', 'enable': True, 'title': 'P2-1:9',
+	 * 'transmission': 20.0, 'well': '9', 'recuperate': False, 'SEUtemperature': 4.0, 'viscosity': 'Low', 'flow': False, 'comments':
+	 * 'test', 'volume': 20, 'buffername': 'BSA', 'code': 'bsa', 'typen': 0, 'waittime': 0.0, 'concentration': 0.0, 'type': 'Buffer',
+	 * 'row': 1}, {'plate': '2', 'enable': True, 'buffer': '', 'flow': True, 'recuperate': False, 'viscosity': 'Low', 'typen': 1,
+	 * 'volume': 20, 'buffername': 'BSA', 'code': 's1', 'concentration': 1.0, 'row': 1, 'waittime': 0.0, 'title': 'P2-1:1',
+	 * 'transmission': 20.0, 'SEUtemperature': 20.0, 'well': '1', 'comments': 'hello', 'type': 'Sample'}, {'plate': '2', 'enable':
+	 * True, 'buffer': '', 'flow': True, 'recuperate': False, 'viscosity': 'Low', 'typen': 1, 'volume': 21, 'buffername': 'BSA',
+	 * 'code': 's2', 'concentration': 1.5, 'row': 1, 'waittime': 0.0, 'title': 'P2-1:2', 'transmission': 20.0, 'SEUtemperature': 20.0,
+	 * 'well': '2', 'comments': 'hi', 'type': 'Sample'}] storageTemperature: 23 mode: BeforeAndAfter extraFlowTime: 10 Other example of
+	 * sample[{'plate': '2', 'enable': true, 'title': 'P2-1:9', 'transmission': 20.0, 'well': '9', 'recuperate': false,
+	 * 'SEUtemperature': 4.0, 'viscosity': 'Low', 'flow': false, 'comments': 'test', 'volume': 20, 'buffername': 'BSA', 'code': 'bsa',
+	 * 'typen': 0, 'waittime': 0.0, 'concentration': 0.0, 'type': 'Buffer', 'row': 1}, {'plate': '2', 'enable': true, 'buffer': '',
+	 * 'flow': true, 'recuperate': false, 'viscosity': 'Low', 'typen': 1, 'volume': 20, 'buffername': 'BSA', 'code': 's1',
+	 * 'concentration': 1.0, 'row': 1, 'waittime': 0.0, 'title': 'P2-1:1', 'transmission': 20.0, 'SEUtemperature': 20.0, 'well': '1',
+	 * 'comments': 'hello', 'type': 'Sample'}, {'plate': '2', 'enable': true, 'buffer': '', 'flow': true, 'recuperate': false,
+	 * 'viscosity': 'Low', 'typen': 1, 'volume': 21, 'buffername': 'BSA', 'code': 's2', 'concentration': 1.5, 'row': 1, 'waittime':
+	 * 0.0, 'title': 'P2-1:2', 'transmission': 20.0, 'SEUtemperature': 20.0, 'well': '2', 'comments': 'hi', 'type': 'Sample'}]
+	 * 
+	 * TODO add also the sessionID
+	 * **/
+	@WebMethod(operationName = "createExperiment")
+	@WebResult(name = "experiment")
+	public Experiment3VO createExperiment(@WebParam(name = "code") String code, @WebParam(name = "number") String number,
+			@WebParam(name = "samples") String samples, @WebParam(name = "storageTemperature") String storageTemperature,
+			@WebParam(name = "mode") String mode, @WebParam(name = "extraFlowTime") String extraFlowTime,
+			@WebParam(name = "type") String type, @WebParam(name = "sourceFilePath") String sourceFilePath,
+			@WebParam(name = "name") String name) {
+
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("code", String.valueOf(code));
+		params.put("number", String.valueOf(number));
+		params.put("samples", String.valueOf(samples));
+		params.put("storageTemperature", String.valueOf(storageTemperature));
+		params.put("mode", String.valueOf(mode));
+		params.put("extraFlowTime", String.valueOf(extraFlowTime));
+		params.put("type", String.valueOf(type));
+		params.put("sourceFilePath", String.valueOf(sourceFilePath));
+		params.put("name", String.valueOf(name));
+
+		long id = this.logInit("createExperiment", new Gson().toJson(params));
+		try {
+			/**
+			 * Parsing samples in json format to ArrayList<HashMap<String, String>>
+			 **/
+			Gson gson = new Gson();
+			Type mapType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
+			ArrayList<HashMap<String, String>> json = gson.fromJson(samples, mapType);
+
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			Experiment3VO experiment = biosaxsWebServiceActions.createExperiment(StringUtils.getProposalCode(code), number, json,
+					mode, storageTemperature, extraFlowTime, type, sourceFilePath, name);
+			logFinish("createExperiment", id);
+			return experiment;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "createExperiment", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@WebMethod(operationName = "getExperimentById")
+	@WebResult(name = "experiment")
+	public Experiment3VO getExperimentById(@WebParam(name = "experimentId") int experimentId) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("experimentId", String.valueOf(experimentId));
+		long id = this.logInit("getExperimentById", new Gson().toJson(params));
+		try {
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			Experiment3Service experiment3Service = (Experiment3Service) ejb3ServiceLocator.getLocalService(Experiment3Service.class);
+			Experiment3VO experiment = experiment3Service.findById(experimentId, ExperimentScope.MEDIUM);
+			logFinish("getExperimentById", id);
+			return experiment;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getExperimentById", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * It is needed to register when users click on Abort in the middle of a data collection, so expeirment will be registered as
+	 * aborted
+	 * 
+	 * @param experimentId
+	 * @throws Exception
+	 * 
+	 *             USE UPDATE STATUS INSTEAD
+	 */
+	@Deprecated
+	@WebMethod(operationName = "setExperimentAborted")
+	public void setExperimentAborted(@WebParam(name = "experimentId") Integer experimentId) throws Exception {
+		long id = this.logInit("setExperimentAborted");
+		this.updateStatus(experimentId, "ABORTED");
+		this.logFinish("setExperimentAborted", id);
+	}
+
+	@WebMethod(operationName = "updateStatus")
+	public void updateStatus(@WebParam(name = "experimentId") Integer experimentId, @WebParam(name = "status") String status)
+			throws Exception {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("experimentId", String.valueOf(experimentId));
+		params.put("status", String.valueOf(status));
+		long id = this.logInit("updateStatus", new Gson().toJson(params));
+		try {
+			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
+			biosaxsWebServiceActions.updateStatus(experimentId, status);
+			this.logFinish("updateStatus", id);
+		} catch (Exception e) {
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "updateStatus", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * It was used for pointing to a zip file with all the frames but now ISPyB is generating it automatically It can be used for
+	 * pointing to a nexus file
+	 * 
+	 * @param experimentId
+	 * @param dataAcquisitionFilePath
+	 * @throws Exception
+	 */
+	@Deprecated
+	@WebMethod(operationName = "setDataAcquisitionFilePath")
+	public void setDataAcquisitionFilePath(@WebParam(name = "experimentId") Integer experimentId,
+			@WebParam(name = "dataAcquisitionFilePath") String dataAcquisitionFilePath) throws Exception {
+		long id = this.logInit("setDataAcquisitionFilePath");
+		try {
+			LOGGER.info("\texperimentId:" + experimentId);
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			Experiment3Service experiment3Service = (Experiment3Service) ejb3ServiceLocator.getLocalService(Experiment3Service.class);
+			Experiment3VO experiment = experiment3Service.findById(experimentId, ExperimentScope.MINIMAL);
+			experiment.setDataAcquisitionFilePath(dataAcquisitionFilePath);
+			experiment3Service.merge(experiment);
+			this.logFinish("setDataAcquisitionFilePath", id);
+		} catch (Exception e) {
+			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "setDataAcquisitionFilePath", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+		}
+	}
+
+	/** Loggers **/
+	private long logInit(String methodName) {
+		LOGGER.info("-----------------------");
+		this.now = System.currentTimeMillis();
+		LOGGER.info(methodName.toUpperCase());
+		LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS, methodName, System.currentTimeMillis(),
+				System.currentTimeMillis(), "");
+		return this.now;
+	}
+
+	private void logFinish(String methodName, long id) {
+		LOGGER.debug("### [" + methodName.toUpperCase() + "] Execution time was " + (System.currentTimeMillis() - this.now) + " ms.");
+		LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS, methodName, id, System.currentTimeMillis(),
+				System.currentTimeMillis() - this.now);
+
+	}
+
+	protected long logInit(String methodName, String params) {
+		LOGGER.info("-----------------------");
+		this.now = System.currentTimeMillis();
+		LOGGER.info(methodName.toUpperCase());
+		LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS, methodName, System.currentTimeMillis(),
+				System.currentTimeMillis(), params);
+		return this.now;
+	}
+}

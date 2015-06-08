@@ -1,0 +1,39 @@
+/*-------------------------------------------------------------------------------*
+* This file is part of ISPyB.
+* 
+* ISPyB is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* ISPyB is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, M. Bodin
+*-------------------------------------------------------------------------------*/
+ #sliderContent {  
+  width:800px; margin:auto; padding:30px 30px 30px; background-color:#ebebeb;  
+  border:1px solid #898989;  
+}  
+.viewer {  
+  width:800px; height:400px; margin:0 auto 40px; padding:1px; overflow:hidden;  
+  position:relative; border:1px solid #898989 ; background-color:#113355;  
+}  
+.content-conveyor { width:800px; height:400px; position:relative; }  
+.item {  
+  width:400px; float:left; font-family:Tahoma; text-align:center;  
+  background-color:#113355;  
+}  
+.item h2 { font-size:100%; margin:10px 0; }  
+.item dl { margin:10px 0; }  
+.item dt, .item dd {  
+  float:left; width:149px; text-align:rightright; margin:0; font-size:70%;  
+}  
+.item dt { font-weight:bold; margin-right:5px; }  
+.item dd { text-align:left; }  
+.item img { border:1px solid #898989; background-color:#ffffff; padding:1px; }   

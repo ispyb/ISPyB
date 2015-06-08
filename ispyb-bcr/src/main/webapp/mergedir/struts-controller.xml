@@ -1,0 +1,6 @@
+
+    <!-- Struts Layout:
+        if forward to Tiles definition will be used with sorting or paging on the server, 
+        the struts-layout request processor must be used and declared in struts-config.xml : 
+         -->
+    <controller processorClass = "fr.improve.struts.taglib.layout.workflow.LayoutRequestProcessor"/>

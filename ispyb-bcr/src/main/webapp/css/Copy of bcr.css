@@ -1,0 +1,207 @@
+body {
+	background-color: #6888a8 ;
+	MARGIN-TOP: 0px;
+	MARGIN-LEFT: 0px;
+	MARGIN-RIGHT: 0px;
+} 
+
+.normText1 {
+	FONT-SIZE: 12px;
+	FONT-FAMILY: verdana,arial,helvetica;  
+	COLOR: #113355; 
+	LINE-HEIGHT: 16px; 
+}
+
+.normText1_RED {
+   FONT-SIZE: 12px;
+   FONT-FAMILY: verdana,arial,helvetica;     
+   COLOR: #A00404;
+   LINE-HEIGHT: 16px;
+   font-weight:    bold;
+}
+
+.normText1_GREEN {
+	FONT-SIZE: 12px;
+   	FONT-FAMILY: verdana,arial,helvetica;     
+   	COLOR: #0E480E;
+   	LINE-HEIGHT: 16px;
+   	font-weight:    bold;
+}
+
+
+.smallText1 {
+	FONT-SIZE: 10px;
+	FONT-FAMILY: verdana,arial,helvetica;  
+	COLOR: #113355; 
+	LINE-HEIGHT: 10px; 
+	font-weight:	bold;
+}
+
+.smallText1_WHITE {
+	FONT-SIZE: 10px;
+	FONT-FAMILY: verdana,arial,helvetica;  
+	COLOR: #FFFFFF; 
+	LINE-HEIGHT: 10px; 
+	font-weight:	bold;
+}
+
+.fieldName1 {
+	FONT-SIZE: 12px;
+	FONT-FAMILY: verdana,arial,helvetica;  
+	COLOR: #113355; 
+	LINE-HEIGHT: 16px; 
+	font-weight:	bold;
+}
+
+.tableHeader1 {
+	WIDTH:100%;
+	HEIGHT:15px;
+	ALIGN:center;
+	MARGIN: 0px;
+	BORDER-SPACING:0px; 
+	BORDER: 2px solid #113355;
+	COLOR: black; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: verdana,arial,helvetica; 
+	BACKGROUND-COLOR: #113355 ;
+}
+
+.tableForm1 {
+	WIDTH:215px;
+	ALIGN:center;
+	MARGIN: 0px;
+	BORDER-SPACING:8px; 
+	BORDER: 0px solid #000000 ;
+	COLOR: black; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: verdana,arial,helvetica; 
+}
+
+.inputType0 {
+   	width: 90px;
+   	border:2px solid;
+    border-top-color: #AAAAAA ;
+    border-left-color: #AAAAAA ;
+    border-right-color: #113355 ;
+    border-bottom-color: #113355 ;
+    FONT-FAMILY: arial,helvetica; 
+    font-size: 12px;
+    font-weight:normal;
+}
+
+.inputType1 {
+   	width: 200px;
+   	border:2px solid;
+    border-top-color: #AAAAAA ;
+    border-left-color: #AAAAAA ;
+    border-right-color: #113355 ;
+    border-bottom-color: #113355 ;
+    FONT-FAMILY: arial,helvetica; 
+    font-size: 12px;
+    font-weight:normal;
+}
+
+.inputType3 {
+   	width: 150px;
+   	border:2px solid;
+    border-top-color: #AAAAAA ;
+    border-left-color: #AAAAAA ;
+    border-right-color: #113355 ;
+    border-bottom-color: #113355 ;
+    FONT-FAMILY: arial,helvetica; 
+    font-size: 12px;
+    font-weight:normal;
+}
+
+.fieldList1 {
+   	width: 195px;
+   	height:50px;
+   	border:2px solid;
+    border-top-color: #AAAAAA ;
+    border-left-color: #AAAAAA ;
+    border-right-color: #113355 ;
+    border-bottom-color: #113355 ;
+    FONT-FAMILY: arial,helvetica ;
+    font-size: 10px;
+    font-weight:normal;
+} 
+
+.buttonType1 {
+   color: #000000 ;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#fed;
+   border:2px solid;
+   border-top-color: #AAAAAA ;
+   border-left-color: #AAAAAA ;
+   border-right-color: #113355 ;
+   border-bottom-color: #113355 ;
+
+   WIDTH: 60px; 
+   HEIGHT: 30px; 
+   CURSOR: pointer;
+}
+
+.buttonType1_large {
+   color: #000000 ;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#fed;
+   border:2px solid;
+   border-top-color: #AAAAAA ;
+   border-left-color: #AAAAAA ;
+   border-right-color: #113355 ;
+   border-bottom-color: #113355 ;
+
+   WIDTH: 180px; 
+   HEIGHT: 30px; 
+   CURSOR: pointer;
+}
+
+.buttonType1-old03 {
+   color:#050;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#fed;
+   border:2px solid;
+   border-top-color:#696;
+   border-left-color:#696;
+   border-right-color:#363;
+   border-bottom-color:#363;
+
+   WIDTH: 60px; 
+   HEIGHT: 30px; 
+   CURSOR: pointer;
+}
+
+.buttonType1_old02 {
+   color:	#050;
+   font-family:	'trebuchet ms',helvetica,sans-serif;
+   font-size:	84%;
+   font-weight:	bold;
+
+   WIDTH: 60px; 
+   HEIGHT: 30px; 
+   CURSOR: pointer; 
+
+}
+
+.buttonType1_old01 {
+	FONT-WEIGHT: normal; 
+	FONT-SIZE: 13px; 
+	WIDTH: 50px; 
+	CURSOR: pointer; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: tahoma,sans-serif; 
+	HEIGHT: 30px; 
+	TEXT-DECORATION: none;
+
+	COLOR: red; 
+	BACKGROUND-COLOR: green;
+}
+
+
+ 

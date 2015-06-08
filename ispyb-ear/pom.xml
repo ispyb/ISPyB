@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ispyb</groupId>
+		<artifactId>ispyb-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>ispyb-ear</artifactId>
+	<packaging>ear</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>ispyb-ejb3</artifactId>
+			<type>ejb</type>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>ispyb-ui</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+  		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>ispyb-ws</artifactId>
+			<type>war</type>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	
+	</dependencies>
+	<build>
+		<finalName>ispyb</finalName>
+		<plugins>
+			<!-- Ear plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>${version.ear.plugin}</version>
+				<!-- configuring the ear plugin -->
+				<configuration>
+					<!-- Tell Maven we are using Java EE 7 -->
+					<version>6</version>
+					<initializeInOrder>true</initializeInOrder>
+					<!-- Use Java EE ear libraries as needed. Java EE ear libraries are 
+						in easy way to package any libraries needed in the ear, and automatically 
+						have any modules (EJB-JARs and WARs) use them -->
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<!-- <modules-path> -->
+					<!-- <paths> -->
+					<!-- <path>/opt/WildFly/modules</path> -->
+					<!-- <path>/opt/my-modules</path> -->
+					<!-- </paths> -->
+					<!-- </modules-path> -->
+					<modules>
+						<ejbModule>
+							<groupId>ispyb</groupId>
+							<artifactId>ispyb-ejb3</artifactId>
+							<bundleDir>/</bundleDir>
+						</ejbModule>
+				 		<webModule>
+							<groupId>ispyb</groupId>
+							<artifactId>ispyb-ws</artifactId>
+							<contextRoot>/ispyb-ws</contextRoot>
+						</webModule>
+						 
+						<webModule>
+							<groupId>ispyb</groupId>
+							<artifactId>ispyb-ui</artifactId>
+							<contextRoot>/ispyb</contextRoot>
+						</webModule>
+
+					</modules>
+					<fileNameMapping>no-version</fileNameMapping>
+				</configuration>
+			</plugin>
+			<!-- WildFly plugin to deploy ear -->
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>${version.wildfly.maven.plugin}</version>
+				<configuration>
+					<filename>ispyb.ear</filename>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

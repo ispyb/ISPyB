@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<jaxb:bindings version="2.0" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    wsdlLocation="http://ovm-smis:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl">
+    
+    <jaxb:globalBindings> 
+            
+        <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+                parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+                printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+
+    </jaxb:globalBindings>
+    
+ </jaxb:bindings>  
