@@ -24,6 +24,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="ispyb.common.util.Constants"%>
 
+<%@ page isELIgnored="false" %>
+
 <%@page import="java.util.Calendar,java.util.GregorianCalendar"%>
 
 <%  
