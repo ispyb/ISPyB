@@ -282,7 +282,7 @@ public class CreateSampleAction extends AbstractSampleAction
 					Crystal3VO clv = crystalService.findByPk(crystalId, false);
 					info.setCrystalVO(clv);
 
-					sampleService.create(info);
+					info = sampleService.create(info);
 					LOG.debug("create sample : create new sample done ...");
 
 					// Retrieve diffractionPlan linked to crystalType to create and
