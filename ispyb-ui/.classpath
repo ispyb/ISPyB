@@ -29,5 +29,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/ispyb-WSclient-gen-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ispyb-ejb3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ispyb-ws"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
