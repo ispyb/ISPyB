@@ -388,6 +388,20 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 			Shipping3VO updatedShipping = form.getInfo();
 			if (updatedShipping.getCreationDate() == null)
 				updatedShipping.setCreationDate(new Date());
+			
+			// retrieve sending labcontact
+			LabContact3VO sendingLabContact = labCService.findByPk(form.getSendingLabContactId());
+			updatedShipping.setSendingLabContactVO(sendingLabContact);
+
+			// Return Lab Contact
+			LabContact3VO returnLabContact = sendingLabContact;
+			if (!form.getIsIdenticalReturnAddress()) {
+				LOG.debug("LabContact for return is different." + " Return LabContact Id will be : " + form.getReturnLabContactId());
+				returnLabContact = labCService.findByPk(form.getReturnLabContactId());
+				updatedShipping.setReturnLabContactVO(returnLabContact);
+			} else {
+				updatedShipping.setReturnLabContactVO(sendingLabContact);
+			}
 			Shipping3VO dbShipping = shippingService.findByPk(shippingId, true);
 
 			// Retrieve information from DB ---------------------------------------------------------------
