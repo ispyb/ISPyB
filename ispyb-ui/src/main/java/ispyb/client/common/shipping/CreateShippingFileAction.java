@@ -549,6 +549,7 @@ public class CreateShippingFileAction extends DispatchAction {
 						shippingVO.setReturnLabContactVO(shippingLabContactVO);
 						Shipping3VO shipment = getShipment(listShippingCreated, shippingVO);
 						if (shipment == null) {
+							shippingVO = shippingService.create(shippingVO);
 							listShippingCreated.add(shippingVO);
 						} else {
 							shippingVO = shipment;
@@ -564,6 +565,7 @@ public class CreateShippingFileAction extends DispatchAction {
 						dewarVO.setTransportValue(shippingLabContactVO.getDewarAvgTransportValue());
 						Dewar3VO dewar = getDewar(listDewarCreated, dewarVO);
 						if (dewar == null) {
+							dewarVO = dewarService.create(dewarVO);
 							listDewarCreated.add(dewarVO);
 						} else {
 							dewarVO = dewar;
@@ -577,6 +579,7 @@ public class CreateShippingFileAction extends DispatchAction {
 						containerVO.setDewarVO(dewarVO);
 						Container3VO container = getContainer(listContainerCreated, containerVO);
 						if (container == null) {
+							containerVO = containerService.create(containerVO);
 							listContainerCreated.add(containerVO);
 						} else {
 							containerVO = container;
@@ -594,6 +597,7 @@ public class CreateShippingFileAction extends DispatchAction {
 						difPlan.setExposureTime((double) 0);
 						difPlan.setOscillationRange(oscillationRange);
 						difPlan.setExperimentKind(DEFAULT_EXPERIMENT_TYPE);
+						difPlan = difPlanService.create(difPlan);
 						listDifPlanCreated.add(difPlan);
 						// Crystal
 						Crystal3VO crystalVO = new Crystal3VO();
@@ -614,6 +618,7 @@ public class CreateShippingFileAction extends DispatchAction {
 						}
 						Crystal3VO crystal = getCrystal(listCrystalCreated, crystalVO);
 						if (crystal == null) {
+							crystalVO = crystalService.create(crystalVO);
 							listCrystalCreated.add(crystalVO);
 
 						} else {
@@ -644,38 +649,19 @@ public class CreateShippingFileAction extends DispatchAction {
 							isError = true;
 							break;
 						}
+						sample = sampleService.create(sample);
 						listSampleCreated.add(sample);
 					}
-					if (!isError) {
-						// creation in db
-						for (Iterator<Shipping3VO> s = listShippingCreated.iterator(); s.hasNext();) {
-							Shipping3VO shippingVO = s.next();
-							shippingVO = shippingService.create(shippingVO);
+					if (isError) {
+						// remove created in db
+						for (Iterator<Shipping3VO> ship = listShippingCreated.iterator(); ship.hasNext();) {
+							Shipping3VO shipVO = ship.next();
+							shippingService.delete(shipVO);
 						}
-						for (Iterator<Dewar3VO> d = listDewarCreated.iterator(); d.hasNext();) {
-							Dewar3VO dewarVO = d.next();
-							dewarVO = dewarService.create(dewarVO);
-						}
-						for (Iterator<Container3VO> c = listContainerCreated.iterator(); c.hasNext();) {
-							Container3VO containerVO = c.next();
-							containerVO = containerService.create(containerVO);
-						}
-						for (Iterator<DiffractionPlan3VO> d = listDifPlanCreated.iterator(); d.hasNext();) {
-							DiffractionPlan3VO diffractionPlanVO = d.next();
-							diffractionPlanVO = difPlanService.create(diffractionPlanVO);
-						}
-						for (Iterator<Crystal3VO> c = listCrystalCreated.iterator(); c.hasNext();) {
-							Crystal3VO crystalVO = c.next();
-							if (crystalVO.getCrystalId() == null)
-								crystalVO = crystalService.create(crystalVO);
-						}
-						for (Iterator<BLSample3VO> s = listSampleCreated.iterator(); s.hasNext();) {
-							BLSample3VO sampleVO = s.next();
-							sampleVO = sampleService.create(sampleVO);
-						}
-						messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.upload.shipping"));
 					}
-
+					else{
+					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.upload.shipping"));
+					}
 				}
 			}
 		} catch (Exception e) {
