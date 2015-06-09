@@ -281,7 +281,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			if (proteinId != null)
 				subCritProtein.add(Restrictions.eq("proteinId", proteinId));
 			if (acronym != null) {
-				subCritProtein.add(Restrictions.eq("acronym", acronym));
+				subCritProtein.add(Restrictions.ilike("acronym", acronym));
 			}
 
 		}
