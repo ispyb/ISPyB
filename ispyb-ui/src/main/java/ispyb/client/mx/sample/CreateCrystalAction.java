@@ -261,7 +261,7 @@ public class CreateCrystalAction extends org.apache.struts.actions.DispatchActio
 
 			DiffractionPlan3VO newDifPlan = new DiffractionPlan3VO();
 			newDifPlan.setExperimentKind(Constants.LIST_EXPERIMENT_KIND[0]);
-			difPlanService.create(newDifPlan);
+			newDifPlan = difPlanService.create(newDifPlan);
 
 			info.setDiffractionPlanVO(newDifPlan);
 
