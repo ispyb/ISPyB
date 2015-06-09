@@ -904,6 +904,7 @@ public class ViewSampleAction extends DispatchAction {
 			if (proteinList.size() == 1) {
 				Protein3VO selectedProtein = proteinList.get(0);
 				BreadCrumbsForm.getIt(request).setSelectedProtein(selectedProtein);
+				return this.displayForProtein(mapping, actForm, request, response);
 			}
 
 			// Look for DataCollection and Snapshot files
