@@ -24,11 +24,12 @@ package ispyb.client.mx.results;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.DataAdapterCommon;
 import ispyb.client.common.util.Confidentiality;
 import ispyb.client.common.util.FileUtil;
+import ispyb.client.common.util.FileUtil.FileCleaner;
 import ispyb.client.common.util.GSonUtils;
 import ispyb.client.common.util.UrlUtils;
-import ispyb.client.common.util.FileUtil.FileCleaner;
 import ispyb.client.mx.collection.AutoProcShellWrapper;
 import ispyb.client.mx.collection.DataCollectionBean;
 import ispyb.client.mx.collection.ViewDataCollectionAction;
@@ -1067,6 +1068,28 @@ public class ViewResultsAction extends DispatchAction {
 				return mapping.findForward("viewJpegImage");
 		}
 	}
+	
+	/**
+	 * View a simple jpeg image
+	 * 
+	 * @param mapping
+	 * @param actForm
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ActionForward getJpegImageFromFile(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			String imageFileName = FileUtil.getRequestParameter(request, Constants.IMG_SNAPSHOT_URL_PARAM);
+			DataAdapterCommon.sendImageToClient(imageFileName, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 
 	/**
 	 * getDataFromFile
