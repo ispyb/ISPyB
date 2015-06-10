@@ -440,10 +440,14 @@ public class BiosaxsServices {
 	public Integer storeHPLC(String experimentId, String h5FilePath, String jsonFilePath) throws Exception {
 		Experiment3VO experiment = this.experiment3Service.findById(Integer.parseInt(experimentId),
 				ExperimentScope.MINIMAL);
+		LOG.info("storeHPLC: Experiment: " + experiment.toString());
 		if (experiment != null) {
 			experiment.setDataAcquisitionFilePath(h5FilePath);
 			experiment.setSourceFilePath(jsonFilePath);
 			experiment.setCreationDate(getNow());
+			/** Saving experiment ?!??! **/
+			LOG.info("Merging Experiment ");
+			experiment = this.experiment3Service.merge(experiment);
 			return experiment.getExperimentId();
 		}
 		return null;
