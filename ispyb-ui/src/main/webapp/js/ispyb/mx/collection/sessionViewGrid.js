@@ -558,14 +558,8 @@ SessionViewGrid.prototype._getColumns = function () {
 			if (record.data.imageThumbnailPath.search("noDiffractionThumbnail.jpg") != -1) {
 				return "";
 			}
-			return "<div style='white-space:normal !important;word-wrap: break-word;'>" + 
-					"<a  href='viewResults.do?reqCode=viewJpegImage&imageId=" + 
-					record.data.imageId + 
-					"'  styleClass='LIST'>" + 
-					"<img width='110' height='110' src='imageDownload.do?reqCode=getImageJpgFromFile&file=" + 
-					record.data.imageThumbnailPath + 
-					"' border='0' alt='Click to zoom the image' >" + 
-					"</a></div>";
+			return MXUI.getJpegByImageIdandPath(record.data.imageId,record.data.imageThumbnailPath );
+			
 		}
 	}
 	
@@ -582,14 +576,7 @@ SessionViewGrid.prototype._getColumns = function () {
 			if (record.data.crystalSnapshotPath.search("noXtalThumbnail.jpg") != -1) {
 				return "";
 			}
-			return "<div style='white-space:normal !important;word-wrap: break-word;'>" + 
-					"<a  href='viewResults.do?reqCode=viewJpegImageFromFile&file=" + 
-					record.data.crystalSnapshotPath + 
-					"'  styleClass='LIST'>" + 
-					"<img width='110' height='83' src='imageDownload.do?reqCode=getImageJpgFromFile&file=" + 
-					record.data.crystalSnapshotPath + 
-					"' border='0' alt='Click to zoom the image' >" + 
-					"</a></div>";
+			return MXUI.getSnapshotByPath(record.data.crystalSnapshotPath);
 		}
 	}
 	
@@ -695,14 +682,8 @@ SessionViewGrid.prototype._getColumns = function () {
 				return "";
 			}
 		} else { // graph image
-			return "<div style='white-space:normal !important;word-wrap: break-word;'>" + 
-					"<a  href='viewResults.do?reqCode=viewJpegImageFromFile&file=" + 
-					record.data.graphPath + 
-					"'  styleClass='LIST'>" + 
-					"<img width='120' height='100' src='imageDownload.do?reqCode=getImageJpgFromFile&file=" + 
-					record.data.graphPath + 
-					"' border='0' alt='Click to zoom the image' >" + 
-					"</a></div>";
+			return MXUI.getGraphByPath(record.data.graphPath);
+			
 		}
 	}
 	
@@ -715,14 +696,7 @@ SessionViewGrid.prototype._getColumns = function () {
 				return "";
 			}
 		} else {
-			return "<div style='white-space:normal !important;word-wrap: break-word;'>" + 
-					"<a  href='viewResults.do?reqCode=viewJpegImageFromFile&file=" + 
-					record.data.graph2Path + 
-					"'  styleClass='LIST'>" + 
-					"<img width='120' height='100' src='imageDownload.do?reqCode=getImageJpgFromFile&file=" + 
-					record.data.graph2Path + 
-					"' border='0' alt='Click to zoom the image' >" + 
-					"</a></div>";
+			return MXUI.getGraphByPath(record.data.graph2Path);
 		}
 	}
 	
