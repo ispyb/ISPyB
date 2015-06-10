@@ -29,7 +29,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		String jsWebserverURL = request.getContextPath() + "/js/";
 		String jsWebserverURLUtils = jsWebserverURL + "ispyb/utils/";
 		String jsWebserverURLMx = jsWebserverURL + "ispyb/mx/";
-		
+		String jsWebserverURLMxUtils = jsWebserverURL + "ispyb/mx/utils/";
 		String jsWebserverURLSession = jsWebserverURLMx + "session/";	
 		String jsWebserverURLCollection = jsWebserverURLMx + "collection/";	
 		String jsWebserverURLMesh = jsWebserverURLMx + "collection/mesh/";	
@@ -70,6 +70,9 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<script type="text/javascript" src="<%=jsWebserverURL%>ispyb/min/ispyb-mx-min.js"></script>
 </c:when> 
 	<c:otherwise>
+	
+	<script type="text/javascript" src="<%=jsWebserverURLMxUtils%>mxsinterfaceutils.js"></script>
+	
 	<script type="text/javascript" src="<%=jsWebserverURLSession%>mainSession.js"></script>
 	<script type="text/javascript" src="<%=jsWebserverURLSession%>session.js"></script>
 	<script type="text/javascript" src="<%=jsWebserverURLSession%>sessionGrid.js"></script>
