@@ -1888,12 +1888,12 @@ public class ViewDataCollectionAction extends DispatchAction {
 				nfe.printStackTrace();
 			}
 
+			// Set DataCollection list (for export)
+			request.getSession().setAttribute(Constants.DATACOLLECTION_LIST, dataCollectionList);
+
 			// Issue 1763: set the group comments to dc
 			dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
 			List<DataCollectionBean> collectionList = getDataCollectionBeanList(dataCollectionList, rSymmCutoff, iSigmaCutoff);
-
-			// Set DataCollection list (for export)
-			request.getSession().setAttribute(Constants.DATACOLLECTION_LIST, dataCollectionList);
 
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			// context path

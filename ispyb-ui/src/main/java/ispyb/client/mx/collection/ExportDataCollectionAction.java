@@ -433,9 +433,12 @@ public class ExportDataCollectionAction extends DispatchAction {
 
 		// Filename
 		String filename = getFileName(bar, proposalCode, proposalNumber, sessionId, slv, name, false, false, false);
-		// Get DataCollection list and remove non printable DataCollections
+		
+		// Get DataCollection list, remove non printable DataCollections and format comments
 		dataCollectionList = (ArrayList) request.getSession().getAttribute(Constants.DATACOLLECTION_LIST);
 		dataCollectionList = findByPrintable(dataCollectionList);
+		dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+		
 		// Get EnergyScan list
 		List<EnergyScan3VO> energyScanList = (ArrayList) request.getSession().getAttribute(Constants.ENERGYSCAN_LIST);
 		// Get XFE list
@@ -764,6 +767,8 @@ public class ExportDataCollectionAction extends DispatchAction {
 		// Get DataCollection list and remove non printable DataCollections
 		dataCollectionList = (ArrayList) request.getSession().getAttribute(Constants.DATACOLLECTION_LIST);
 		dataCollectionList = findByPrintable(dataCollectionList);
+		dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+		
 		// Get EnergyScan list
 		List<EnergyScan3VO> energyScanList = (ArrayList) request.getSession().getAttribute(Constants.ENERGYSCAN_LIST);
 		// Get XFE list
@@ -973,6 +978,8 @@ public class ExportDataCollectionAction extends DispatchAction {
 		// Get DataCollection list and remove non printable DataCollections
 		dataCollectionList = (ArrayList<DataCollection3VO>) request.getSession().getAttribute(Constants.DATACOLLECTION_LIST);
 		dataCollectionList = findByPrintable(dataCollectionList);
+		dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+		
 		// auto proc wrapper
 		AutoProcShellWrapper wrapper = getAutoProcWrapper(actForm, dataCollectionList);
 		// dataCollectionGroupList
@@ -1166,6 +1173,8 @@ public class ExportDataCollectionAction extends DispatchAction {
 		// Get DataCollection list and remove non printable DataCollections
 		dataCollectionList = (ArrayList) request.getSession().getAttribute(Constants.DATACOLLECTION_LIST);
 		dataCollectionList = findByPrintable(dataCollectionList);
+		dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+		
 		// Get EnergyScan list
 		List<EnergyScan3VO> energyScanList = (ArrayList) request.getSession().getAttribute(Constants.ENERGYSCAN_LIST);
 		// Get XFE list
@@ -1326,9 +1335,11 @@ public class ExportDataCollectionAction extends DispatchAction {
 
 		// Filename
 		String filename = getFileName(bar, proposalCode, proposalNumber, sessionId, slv, name, false, false, false);
-		// Get DataCollection list and remove non printable DataCollections
+		// Get DataCollection list and remove non printable DataCollections and format comments
 		dataCollectionList = (ArrayList) request.getSession().getAttribute(Constants.DATACOLLECTION_LIST);
 		dataCollectionList = findByPrintable(dataCollectionList);
+		dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+		
 		// Get EnergyScan list
 		List<EnergyScan3VO> energyScanList = (ArrayList) request.getSession().getAttribute(Constants.ENERGYSCAN_LIST);
 		// Get XFE list
