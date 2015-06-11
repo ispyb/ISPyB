@@ -121,6 +121,11 @@ public class Session3DAOBean implements Session3DAO {
 	private final static String NB_OF_TESTS = "SELECT count(*) FROM DataCollection, DataCollectionGroup "
 			+ " WHERE DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId"
 			+ " and DataCollection.numberOfImages <=4 and DataCollectionGroup.sessionId  = :sessionId ";
+	
+	private final String[] beamlinesToProtect = { "ID29", "ID23-1", "ID23-2", "ID30A-1", "ID30A-2","ID30A-3" };
+	
+	private final String[] account_not_to_protect = { "OPID", "OPD", "MXIHR" };
+	
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -314,12 +319,11 @@ public class Session3DAOBean implements Session3DAO {
 		if (date2 != null)
 			crit.add(Restrictions.le("lastUpdate", date2));
 
-		String[] beamlines = { "ID29", "ID23-1", "ID23-2" };
-		crit.add(Restrictions.in("beamlineName", beamlines));
+		crit.add(Restrictions.in("beamlineName", beamlinesToProtect));
 
 		// account not to protect: opid*, opd*, mxihr*
 		Criteria subCrit = crit.createCriteria("proposalVO");
-		String[] account_not_to_protect = { "OPID", "OPD", "MXIHR" };
+
 		subCrit.add(Restrictions.not(Restrictions.in("code", account_not_to_protect)));
 
 		crit.addOrder(Order.asc("lastUpdate"));
@@ -355,14 +359,13 @@ public class Session3DAOBean implements Session3DAO {
 		if (date2 != null)
 			crit.add(Restrictions.le("lastUpdate", date2));
 
-		String[] beamlines = { "ID29", "ID23-1", "ID23-2" };
-		crit.add(Restrictions.in("beamlineName", beamlines));
+		crit.add(Restrictions.in("beamlineName", beamlinesToProtect));
 
 		crit.add(Restrictions.isNull("protectedData"));
 
 		// account not to protect: opid*, opd*, mxihr*
 		Criteria subCrit = crit.createCriteria("proposalVO");
-		String[] account_not_to_protect = { "OPID", "OPD", "MXIHR" };
+
 		subCrit.add(Restrictions.not(Restrictions.in("code", account_not_to_protect)));
 
 		crit.addOrder(Order.asc("lastUpdate"));
