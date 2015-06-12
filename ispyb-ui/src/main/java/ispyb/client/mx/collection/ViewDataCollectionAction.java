@@ -2381,16 +2381,13 @@ public class ViewDataCollectionAction extends DispatchAction {
 				proteinAcronym = "%";
 
 			proteinAcronym = proteinAcronym.replace('*', '%');
-			Protein3VO plv = new Protein3VO();
-			plv.setAcronym(proteinAcronym);
 
 			Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
 
 			// Get Proteins
 			List<Protein3VO> plvList = proteinService.findByAcronymAndProposalId(proposalId, proteinAcronym);
-			if (plvList != null && plvList.size() == 1)
-				plv = (Protein3VO) plvList.toArray()[0];
-			else if (plvList == null || plvList.size() == 0) {
+			
+			if (plvList == null || plvList.size() == 0) {
 				errors.add("Unknown Protein " + proteinAcronym);
 				HashMap<String, Object> data = new HashMap<String, Object>();
 				data.put("errors", errors);
@@ -2400,14 +2397,19 @@ public class ViewDataCollectionAction extends DispatchAction {
 			}
 
 			// Confidentiality (check if object proposalId matches)
-			if (!Confidentiality.isAccessAllowedToProtein(request, plv.getProteinId())) {
-				errors.add("Access denied");
-				HashMap<String, Object> data = new HashMap<String, Object>();
-				data.put("errors", errors);
-				// data => Gson
-				GSonUtils.sendToJs(response, data, "dd-MM-yyyy HH:mm:ss");
-				return;
+			for (Iterator iterator = plvList.iterator(); iterator.hasNext();) {
+				Protein3VO plv = (Protein3VO) iterator.next();
+				
+				if (!Confidentiality.isAccessAllowedToProtein(request, plv.getProteinId())) {
+					errors.add("Access denied");
+					HashMap<String, Object> data = new HashMap<String, Object>();
+					data.put("errors", errors);
+					// data => Gson
+					GSonUtils.sendToJs(response, data, "dd-MM-yyyy HH:mm:ss");
+					return;
+				}
 			}
+			
 
 			// Get DataCollections
 			long startTime = System.currentTimeMillis();
@@ -2432,8 +2434,8 @@ public class ViewDataCollectionAction extends DispatchAction {
 			if (proposalId != null)
 				proposalService.findByPk(proposalId);
 
-			// Fill the information bar
-			BreadCrumbsForm.getItClean(request).setSelectedProtein(plv);
+			// Fill the information bar with the first entry
+			BreadCrumbsForm.getItClean(request).setSelectedProtein(plvList.get(0));
 
 			int displayImage = 0;
 			int displayWorkflow = 0;
