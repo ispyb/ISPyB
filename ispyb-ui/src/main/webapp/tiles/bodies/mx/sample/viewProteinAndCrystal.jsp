@@ -84,15 +84,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<logic:notEqual name="minimalDisplay" value="true">
 		<h4>Click on the acronym, or on the space group to see the samples attached to corresponding acronym, space group. </h4>
 		
-		
-<%-- no more used? viewProteinFromSS action doesn't exist anymore!! --%>
-<%--
-<c:if test="${SITE_ATTRIBUTE eq 'ESRF'}">
-		<h4>If you have submitted new samplesheets for Safety, you can <a href="<%=request.getContextPath()%>/user/viewProteinFromSS.do?reqCode=display" 
-			title="view samplesheets"><b>select</b></a> them to retrieve their information for ISPyB. </h4>
-			
-</c:if>
---%>
 	</logic:notEqual>
 		
 	<layout:grid cols="1"  borderSpacing="10">
