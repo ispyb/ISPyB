@@ -20,6 +20,7 @@ package ispyb.ws.soap.crims;
 
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
+import ispyb.server.biosaxs.services.BiosaxsServices;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
@@ -37,6 +38,7 @@ import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,6 +63,7 @@ import org.jboss.ws.api.annotation.WebContext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Web services for BLSample
@@ -240,8 +243,6 @@ public class CrimsWebService {
 			External3Service external3Service = (External3Service) ejb3ServiceLocator.getLocalService(External3Service.class);
 			String result = getGson().toJson(external3Service.getDataCollectionFromShippingId(Integer.parseInt(shippingId)));
 			this.logFinish("getDataCollectionFromShippingId", id);
-//			System.out.println("\n\n\tUserName: '" + sessionContext.getCallerPrincipal().getName()
-//					+ "' is able to access testMethod()");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -409,6 +410,32 @@ public class CrimsWebService {
 			throw e;
 		}
 	}
+	
+	@WebMethod
+	public String getAutoprocResultByDataCollectionIdList(@WebParam(name = "dataCollectionIdList" ) String dataCollectionIdList) throws Exception {
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("dataCollectionIdList", String.valueOf(dataCollectionIdList));
+		long id = this.logInit("getAutoprocResultByDataCollectionIdList", new Gson().toJson(params));
+		try {
+			checkUserIsCrims();
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			External3Service external3Service = (External3Service) ejb3ServiceLocator.getLocalService(External3Service.class);
+			
+			Type type = new TypeToken<ArrayList<Integer>>(){}.getType();
+		    ArrayList<Integer> inList = getGson().fromJson(dataCollectionIdList, type);
+
+			String result = getGson().toJson(external3Service.getAutoprocResultByDataCollectionIdList(inList));
+			this.logFinish("getAutoprocResultByDataCollectionIdList", id);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOG, LoggerFormatter.Package.CRIMS_WS_ERROR, "getAutoprocResultByDataCollectionIdList", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+			throw e;
+		}
+	}
+	
 
 	/** Loggers **/
 	protected long logInit(String methodName, String params) {
