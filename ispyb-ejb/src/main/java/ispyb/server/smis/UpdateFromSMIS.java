@@ -179,9 +179,9 @@ public class UpdateFromSMIS {
 		 labContacts = labContacts_.toArray(labContacts);
 		 
 			
-		System.out.println(mainProposers.length);
-		System.out.println(smisSessions.length);
-		System.out.println(smisSamples.length);
+		 LOG.info("Nb of proposers found : " + mainProposers.length);
+		 LOG.info("Nb of sessions found : " + smisSessions.length);
+		 LOG.info("Nb of samplesheets found : " + smisSamples.length);
 
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
@@ -209,7 +209,7 @@ public class UpdateFromSMIS {
 			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
 
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-//			LOG.debug("Bllogin : " + mainProp.getBllogin());
+			LOG.debug("Bllogin : " + mainProp.getBllogin());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, Integer.toString(proposalNumber), false,
 					false, false);
@@ -676,15 +676,19 @@ public class UpdateFromSMIS {
 						&& mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_BIOSAXS_EXPGROUP) {
 					LOG.debug("proposal is BioSaxs");
 					propv.setType(Constants.PROPOSAL_BIOSAXS);
+				} else if (mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_INDUSTRIAL_EXPGROUP) {
+					// industrial can be MX or BX
+					LOG.debug("proposal is MB because it is indutrial ");
+					propv.setType(Constants.PROPOSAL_MX_BX);
 				} else {
 					// Default is MX
 					LOG.debug("proposal is MX (by default)");
 					propv.setType(Constants.PROPOSAL_MX);
 				}
 			} else {
-				// Default is MX
-				LOG.debug("proposal is MX (because of null values)");
-				propv.setType(Constants.PROPOSAL_MX);
+				// Default is MX BX
+				LOG.debug("proposal can be MX or BX (because of null values)");
+				propv.setType(Constants.PROPOSAL_MX_BX);
 			}
 			break;
 		}
