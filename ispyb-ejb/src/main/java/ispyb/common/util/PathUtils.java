@@ -34,10 +34,6 @@ public class PathUtils {
 
 	public static String getImageDirPath(DataCollection3VO dcValue) throws Exception {
 
-		// Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		// DataCollection3Service dataCollectionService =
-		// (DataCollection3Service)ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-		// DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, false, false, false, false);
 		String imgPrefix = dcValue.getImagePrefix();
 
 		// several cases ref-bla, bla, or postref-bla
@@ -104,10 +100,6 @@ public class PathUtils {
 		if (!Constants.SITE_IS_DLS()) {
 			fullEDNAPath = getFullDNAPath(dataCollectionVO) + Constants.EDNA_FILES_SUFIX;
 		} else {
-			// Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-			// DataCollection3Service dataCollectionService =
-			// (DataCollection3Service)ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-			// DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, false, false, false, false);
 			String imgPrefix = dataCollectionVO.getImagePrefix();
 			Integer dataCollectionNumber = dataCollectionVO.getDataCollectionNumber();
 			String imgDir = dataCollectionVO.getImageDirectory();
@@ -220,6 +212,8 @@ public class PathUtils {
 		}
 		// ESRF ####
 		else if (Constants.PATH_MAPPING_STYLE.equals("ESRF")) {
+			// on some beamlines data are stored on /data/gz
+			filePathOut = filePathOut.replace("/gz/", "/");
 			if (filePathOut.startsWith("/data/visitor")) {
 				// Visitor: "/data/visitor/mx415/id14he2/..." mapped to "/data/pyarch/id14eh2/mx415/..."
 				String[] filePathDir = filePathOut.split("/");
@@ -232,6 +226,7 @@ public class PathUtils {
 					filePathOut = filePathOut.replaceAll("_accountName_", beamlineName);
 					filePathOut = filePathOut.replaceAll("_beamlineName_", accountName);
 				}
+				
 				filePathOut = filePathOut.replaceAll("/data", "/data/pyarch").replaceAll("/visitor", "");
 			} else {
 				// Inhouse and External: "/data/id14eh2/inhouse/mx415" mapped to "/data/pyarch/id14eh2/mx415/..."
