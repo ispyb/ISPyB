@@ -162,6 +162,8 @@ public final class Constants {
 	public static final String PROPOSAL_MX_BX = "MB";
 
 	public static final int PROPOSAL_BIOSAXS_EXPGROUP = 101;
+	
+	public static final int PROPOSAL_INDUSTRIAL_EXPGROUP = 106;
 
 	public static final int PROPOSAL_BIOSAXS_TYPE = 3;
 
