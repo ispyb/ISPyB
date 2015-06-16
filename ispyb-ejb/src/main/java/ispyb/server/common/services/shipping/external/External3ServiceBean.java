@@ -31,6 +31,7 @@ import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
@@ -165,7 +166,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 
 	@Override
 	public List<Map<String, Object>> getDataCollectionByProposal(String proposalCode, String proposalNumber) {
-		String mySQLQuery = SQLQueryKeeper.getDataCollection();
+		String mySQLQuery = SQLQueryKeeper.getDataCollectionByProposal();
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalCode", proposalCode);
@@ -202,7 +203,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 	
 	@Override
 	public List<Map<String, Object>> getDataCollectionFromShippingId(int shippingId){
-		String mySQLQuery = SQLQueryKeeper.getDataCollectionFromShippingId();
+		String mySQLQuery = this.getDataCollectionFromShippingId();
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("shippingId", shippingId);
@@ -213,7 +214,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 	
 	@Override
 	public List<Map<String, Object>> getAllDataCollectionFromShippingId(int shippingId){
-		String mySQLQuery = SQLQueryKeeper.getAllDataCollectionFromShippingId();
+		String mySQLQuery = this.getAllDataCollectionFromShippingId();
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("shippingId", shippingId);
@@ -222,4 +223,117 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 		
 	}
 	
+	
+	
+	
+	public String getDataCollectionFromShippingId() {
+		return "select " + 
+				SQLQueryKeeper.getShippingTable() + " ," + 
+				SQLQueryKeeper.getDewarTable() + " ," + 
+				SQLQueryKeeper.getContainerTable() + " ," + 
+				SQLQueryKeeper.getBLSampleTable() + ", " + 
+				SQLQueryKeeper.getDataCollectionGroupTable()  +
+				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n" + 
+				"				left join Container on Container.dewarId = Dewar.dewarId\r\n" + 
+				"				left join BLSample on BLSample.containerId = Container.containerId \r\n" + 
+				"				left join DataCollectionGroup on DataCollectionGroup.blSampleId = BLSample.blSampleId \r\n" + 
+				" where Shipping.shippingId = :shippingId";
+	}
+
+	public String getAllDataCollectionFromShippingId() {
+		return "select  " +
+				SQLQueryKeeper.getShippingTable() + " ," + 
+				SQLQueryKeeper.getDewarTable() + " ," +
+				SQLQueryKeeper.getContainerTable() + " ," +
+				SQLQueryKeeper.getBLSampleTable() + " ," +
+				SQLQueryKeeper.getDataCollectionGroupTable() + " ," +
+				SQLQueryKeeper.getDataCollectionTable() + " ," +
+				SQLQueryKeeper.getImageTable() + " ," +
+				SQLQueryKeeper.getWorkflowTable() + " ," +
+				SQLQueryKeeper.getWorkflowMeshTable() +
+				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n"
+				+ " left join Container on Container.dewarId = Dewar.dewarId \r\n"
+				+ " left join BLSample on BLSample.containerId = Container.containerId \r\n"
+				+ " left join DataCollectionGroup on DataCollectionGroup.blSampleId = BLSample.blSampleId\r\n"
+				+ " left join DataCollection on DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId\r\n"
+				+ " left join Image on Image.dataCollectionId = DataCollection.dataCollectionId\r\n"
+				+ " left join Workflow on DataCollectionGroup.workflowId = Workflow.workflowId\r\n"
+				+ " left join WorkflowMesh on WorkflowMesh.workflowId = Workflow.workflowId\r\n"
+				+ " where Shipping.shippingId = :shippingId";
+	}
+
+
+	public String getAutoprocResultByDataCollectionIdListQuery() {
+		return "select " + 
+				 SQLQueryKeeper.getDataCollectionTable() + " ," +
+				"AutoProcIntegration.autoProcIntegrationId as AutoProcIntegration_autoProcIntegrationId,\r\n" + 
+				"AutoProcIntegration.dataCollectionId as AutoProcIntegration_dataCollectionId,\r\n" + 
+				"AutoProcIntegration.autoProcProgramId as AutoProcIntegration_autoProcProgramId,\r\n" + 
+				"AutoProcIntegration.startImageNumber as AutoProcIntegration_startImageNumber,\r\n" + 
+				"AutoProcIntegration.endImageNumber as AutoProcIntegration_endImageNumber,\r\n" + 
+				"AutoProcIntegration.refinedDetectorDistance as AutoProcIntegration_refinedDetectorDistance,\r\n" + 
+				"AutoProcIntegration.refinedXBeam as AutoProcIntegration_refinedXBeam,\r\n" + 
+				"AutoProcIntegration.refinedYBeam as AutoProcIntegration_refinedYBeam,\r\n" + 
+				"AutoProcIntegration.rotationAxisX as AutoProcIntegration_rotationAxisX,\r\n" + 
+				"AutoProcIntegration.rotationAxisY as AutoProcIntegration_rotationAxisY,\r\n" + 
+				"AutoProcIntegration.rotationAxisZ as AutoProcIntegration_rotationAxisZ,\r\n" + 
+				"AutoProcIntegration.beamVectorX as AutoProcIntegration_beamVectorX,\r\n" + 
+				"AutoProcIntegration.beamVectorY as AutoProcIntegration_beamVectorY,\r\n" + 
+				"AutoProcIntegration.beamVectorZ as AutoProcIntegration_beamVectorZ,\r\n" + 
+				"AutoProcIntegration.cell_a as AutoProcIntegration_cell_a,\r\n" + 
+				"AutoProcIntegration.cell_b as AutoProcIntegration_cell_b,\r\n" + 
+				"AutoProcIntegration.cell_c as AutoProcIntegration_cell_c,\r\n" + 
+				"AutoProcIntegration.cell_alpha as AutoProcIntegration_cell_alpha,\r\n" + 
+				"AutoProcIntegration.cell_beta as AutoProcIntegration_cell_beta,\r\n" + 
+				"AutoProcIntegration.cell_gamma as AutoProcIntegration_cell_gamma,\r\n" + 
+				"AutoProcIntegration.recordTimeStamp as AutoProcIntegration_recordTimeStamp,\r\n" + 
+				"AutoProcIntegration.anomalous as AutoProcIntegration_anomalous,\r\n" + 
+				"AutoProcScaling_has_Int.autoProcScaling_has_IntId as AutoProcScaling_has_Int_autoProcScaling_has_IntId,\r\n" + 
+				"AutoProcScaling_has_Int.autoProcScalingId as AutoProcScaling_has_Int_autoProcScalingId,\r\n" + 
+				"AutoProcScaling_has_Int.autoProcIntegrationId as AutoProcScaling_has_Int_autoProcIntegrationId,\r\n" + 
+				"AutoProcScaling_has_Int.recordTimeStamp as AutoProcScaling_has_Int_recordTimeStamp,\r\n" + 
+				"AutoProcScaling.autoProcScalingId as AutoProcScaling_autoProcScalingId,\r\n" + 
+				"AutoProcScaling.autoProcId as AutoProcScaling_autoProcId,\r\n" + 
+				"AutoProcScaling.recordTimeStamp as AutoProcScaling_recordTimeStamp,\r\n" + 
+				"AutoProcScalingStatistics.autoProcScalingStatisticsId as AutoProcScalingStatistics_autoProcScalingStatisticsId,\r\n" + 
+				"AutoProcScalingStatistics.autoProcScalingId as AutoProcScalingStatistics_autoProcScalingId,\r\n" + 
+				"AutoProcScalingStatistics.scalingStatisticsType as AutoProcScalingStatistics_scalingStatisticsType,\r\n" + 
+				"AutoProcScalingStatistics.comments as AutoProcScalingStatistics_comments,\r\n" + 
+				"AutoProcScalingStatistics.resolutionLimitLow as AutoProcScalingStatistics_resolutionLimitLow,\r\n" + 
+				"AutoProcScalingStatistics.resolutionLimitHigh as AutoProcScalingStatistics_resolutionLimitHigh,\r\n" + 
+				"AutoProcScalingStatistics.rMerge as AutoProcScalingStatistics_rMerge,\r\n" + 
+				"AutoProcScalingStatistics.rMeasWithinIPlusIMinus as AutoProcScalingStatistics_rMeasWithinIPlusIMinus,\r\n" + 
+				"AutoProcScalingStatistics.rMeasAllIPlusIMinus as AutoProcScalingStatistics_rMeasAllIPlusIMinus,\r\n" + 
+				"AutoProcScalingStatistics.rPimWithinIPlusIMinus as AutoProcScalingStatistics_rPimWithinIPlusIMinus,\r\n" + 
+				"AutoProcScalingStatistics.rPimAllIPlusIMinus as AutoProcScalingStatistics_rPimAllIPlusIMinus,\r\n" + 
+				"AutoProcScalingStatistics.fractionalPartialBias as AutoProcScalingStatistics_fractionalPartialBias,\r\n" + 
+				"AutoProcScalingStatistics.nTotalObservations as AutoProcScalingStatistics_nTotalObservations,\r\n" + 
+				"AutoProcScalingStatistics.nTotalUniqueObservations as AutoProcScalingStatistics_nTotalUniqueObservations,\r\n" + 
+				"AutoProcScalingStatistics.meanIOverSigI as AutoProcScalingStatistics_meanIOverSigI,\r\n" + 
+				"AutoProcScalingStatistics.completeness as AutoProcScalingStatistics_completeness,\r\n" + 
+				"AutoProcScalingStatistics.multiplicity as AutoProcScalingStatistics_multiplicity,\r\n" + 
+				"AutoProcScalingStatistics.anomalousCompleteness as AutoProcScalingStatistics_anomalousCompleteness,\r\n" + 
+				"AutoProcScalingStatistics.anomalousMultiplicity as AutoProcScalingStatistics_anomalousMultiplicity,\r\n" + 
+				"AutoProcScalingStatistics.recordTimeStamp as AutoProcScalingStatistics_recordTimeStamp,\r\n" + 
+				"AutoProcScalingStatistics.anomalous as AutoProcScalingStatistics_anomalous,\r\n" + 
+				"AutoProcScalingStatistics.ccHalf as AutoProcScalingStatistics_ccHalf\r\n" + 
+				"from DataCollection\r\n" + 
+				"left join AutoProcIntegration on AutoProcIntegration.dataCollectionId = DataCollection.dataCollectionId\r\n" + 
+				"left join AutoProcScaling_has_Int on AutoProcScaling_has_Int.autoProcIntegrationId = AutoProcIntegration.autoProcIntegrationId\r\n" + 
+				"left join AutoProcScaling on AutoProcScaling.autoProcScalingId = AutoProcScaling_has_Int.autoProcScalingId\r\n" + 
+				"left join AutoProcScalingStatistics on AutoProcScalingStatistics.autoProcScalingId = AutoProcScaling.autoProcScalingId" +
+				" where DataCollection.dataCollectionId IN :dataCollectionIdList";
+	}
+	
+	@Override
+	public List<Map<String, Object>> getAutoprocResultByDataCollectionIdList(
+			ArrayList<Integer> dataCollectionIdList) {
+		
+		String mySQLQuery = this.getAutoprocResultByDataCollectionIdListQuery();
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameterList("dataCollectionIdList", dataCollectionIdList);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
+	}
 }

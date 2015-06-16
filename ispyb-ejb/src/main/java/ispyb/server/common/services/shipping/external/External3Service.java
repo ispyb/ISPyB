@@ -19,6 +19,7 @@
 
 package ispyb.server.common.services.shipping.external;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +40,8 @@ public interface External3Service {
 	public List<Map<String, Object>> getDataCollectionFromShippingId(int shippingId);
 
 	public List<Map<String, Object>> getAllDataCollectionFromShippingId(int shippingId);
+
+	public List<Map<String, Object>> getAutoprocResultByDataCollectionIdList(
+			ArrayList<Integer> inList);
 
 }
