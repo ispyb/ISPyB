@@ -44,6 +44,10 @@ import javax.jws.WebMethod;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
@@ -365,8 +369,9 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 */
 	public SessionWS3VO[] findForWSNotProtectedToBeProtected(final Date date1, final Date date2) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		LOG.info("findForWSNotProtectedToBeProtected");
+		
 		EJBAccessCallback callBack = new EJBAccessCallback() {
-
 			public SessionWS3VO[] doInEJBAccess(Object parent) throws Exception {
 				List<Session3VO> foundEntities = dao.findSessionNotProtectedToBeProtected(date1, date2);
 				if (foundEntities == null)
@@ -377,7 +382,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 			};
 		};
 		SessionWS3VO[] ret = (SessionWS3VO[]) template.execute(callBack);
-		LOG.info("findForWSNotProtectedToBeProtected");
 		return ret;
 	}
 
@@ -532,31 +536,36 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 							directory = dt.format(folderDate);
 						// call data protection tool
 						//TODO put back when runtime error found
-//						HttpClient client = new DefaultHttpClient();
-//						List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-//						qparams.add(new BasicNameValuePair("user", proposalAccount));
-//						qparams.add(new BasicNameValuePair("bl", beamline));
-//						qparams.add(new BasicNameValuePair("dir", directory));
-//						qparams.add(new BasicNameValuePair("mx", isMx));
-//						LOG.debug("post user = " + proposalAccount + ", beamline = " + beamline + ", directory = " + directory);
-//						URI uri = URIUtils.createURI("http", "dch.esrf.fr", -1, "/protect.php",
-//								URLEncodedUtils.format(qparams, "UTF-8"), null);
-//						HttpPost post = new HttpPost(uri);
-//						HttpResponse response = client.execute(post);
-//						BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+						HttpClient client = new DefaultHttpClient();
+						List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+						qparams.add(new BasicNameValuePair("user", proposalAccount));
+						qparams.add(new BasicNameValuePair("bl", beamline));
+						qparams.add(new BasicNameValuePair("dir", directory));
+						qparams.add(new BasicNameValuePair("mx", isMx));
+						LOG.debug("post user = " + proposalAccount + ", beamline = " + beamline + ", directory = " + directory);
+						URI uri = URIUtils.createURI("http", "dch.esrf.fr", -1, "/protect.php",
+								URLEncodedUtils.format(qparams, "UTF-8"), null);
+						HttpPost post = new HttpPost(uri);
+						HttpResponse response = client.execute(post);
+						BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 						String line = "";
 						String protectedData = "";
-//						while ((line = rd.readLine()) != null) {
-//							System.out.println(line);
-//							protectedData += line;
-//						}
+						while ((line = rd.readLine()) != null) {
+							System.out.println(line);
+							protectedData += line;
+						}
 
 						// result to log into ispyb
 						if (protectedData.length() > 1024)
 							protectedData = protectedData.substring(0, 1024);
 						sessionVO.setProtectedData(protectedData);
 						this.update(sessionVO);
+						
 						LOG.debug("end of session protection");
+						
+						if (client != null && client.getConnectionManager() != null)
+					        client.getConnectionManager().closeExpiredConnections();
+						
 					} catch (IOException e) {
 						//
 						LOG.error("WS ERROR IOException: getDataToBeProtected " + sessionVO.getSessionId());
@@ -565,7 +574,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 						//
 						LOG.error("WS ERROR: getDataToBeProtected " + sessionVO.getSessionId());
 						e.printStackTrace();
-					}
+					} 
 
 				} else {
 					LOG.info("session not protected because too recent");
