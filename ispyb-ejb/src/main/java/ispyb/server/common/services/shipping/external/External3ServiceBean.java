@@ -232,11 +232,15 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 				SQLQueryKeeper.getDewarTable() + " ," + 
 				SQLQueryKeeper.getContainerTable() + " ," + 
 				SQLQueryKeeper.getBLSampleTable() + ", " + 
-				SQLQueryKeeper.getDataCollectionGroupTable()  +
+				SQLQueryKeeper.getDataCollectionGroupTable() + ", " + 
+				SQLQueryKeeper.getDataCollectionTable() + " ," +
+				SQLQueryKeeper.getCrystalTable()  +
 				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n" + 
 				"				left join Container on Container.dewarId = Dewar.dewarId\r\n" + 
 				"				left join BLSample on BLSample.containerId = Container.containerId \r\n" + 
+				"				left join Crystal on Crystal.crystalId = BLSample.crystalId \r\n" + 
 				"				left join DataCollectionGroup on DataCollectionGroup.blSampleId = BLSample.blSampleId \r\n" + 
+				" 				left join DataCollection on DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId\r\n" +
 				" where Shipping.shippingId = :shippingId";
 	}
 
@@ -250,12 +254,14 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 				SQLQueryKeeper.getDataCollectionTable() + " ," +
 				SQLQueryKeeper.getImageTable() + " ," +
 				SQLQueryKeeper.getWorkflowTable() + " ," +
-				SQLQueryKeeper.getWorkflowMeshTable() +
+				SQLQueryKeeper.getWorkflowMeshTable() + " ," +
+				SQLQueryKeeper.getCrystalTable()  +
 				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n"
 				+ " left join Container on Container.dewarId = Dewar.dewarId \r\n"
-				+ " left join BLSample on BLSample.containerId = Container.containerId \r\n"
-				+ " left join DataCollectionGroup on DataCollectionGroup.blSampleId = BLSample.blSampleId\r\n"
-				+ " left join DataCollection on DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId\r\n"
+				+ " left join BLSample  on BLSample.containerId = Container.containerId \r\n"
+				+ "	left join Crystal on Crystal.crystalId = BLSample.crystalId \r\n" 
+				+ " left join DataCollectionGroup on DataCollectionGroup.blSampleId = BLSample.blSampleId \r\n" 
+				+ " left join DataCollection on DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId\r\n" 
 				+ " left join Image on Image.dataCollectionId = DataCollection.dataCollectionId\r\n"
 				+ " left join Workflow on DataCollectionGroup.workflowId = Workflow.workflowId\r\n"
 				+ " left join WorkflowMesh on WorkflowMesh.workflowId = Workflow.workflowId\r\n"
@@ -265,7 +271,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 
 	public String getAutoprocResultByDataCollectionIdListQuery() {
 		return "select " + 
-				 SQLQueryKeeper.getDataCollectionTable() + " ," +
+//				 SQLQueryKeeper.getDataCollectionTable() + " ," +
 				"AutoProcIntegration.autoProcIntegrationId as AutoProcIntegration_autoProcIntegrationId,\r\n" + 
 				"AutoProcIntegration.dataCollectionId as AutoProcIntegration_dataCollectionId,\r\n" + 
 				"AutoProcIntegration.autoProcProgramId as AutoProcIntegration_autoProcProgramId,\r\n" + 
