@@ -10915,14 +10915,14 @@ ReportSessionPanel.prototype.getPanel = function (data) {
 	
 	// MXPress reports
 	var items = [];
-	
-	var buttonDOC = new Ext.Button({
-		icon : '../images/Word.png',
-		href : _this.contextPath + "/user/exportDataCollection.do?reqCode=exportMXPressOWorkflowAsRtf&sessionId=" + _this.sessionId,
-		hrefTarget : '_self',
-		scale: 'large',
-		tooltip : 'Export the MXPressO/MXPressE pipeline report into DOC'
-	});
+//TODO fix pb of export in doc with images inside	
+//	var buttonDOC = new Ext.Button({
+//		icon : '../images/Word.png',
+//		href : _this.contextPath + "/user/exportDataCollection.do?reqCode=exportMXPressOWorkflowAsRtf&sessionId=" + _this.sessionId,
+//		hrefTarget : '_self',
+//		scale: 'large',
+//		tooltip : 'Export the MXPressO/MXPressE pipeline report into DOC'
+//	});
 	var buttonPDF = new Ext.Button({
 		icon : '../images/pdf.png',
 		href : _this.contextPath + "/user/exportDataCollection.do?reqCode=exportMXPressOWorkflowAsPdf&sessionId=" + _this.sessionId,
@@ -10933,7 +10933,8 @@ ReportSessionPanel.prototype.getPanel = function (data) {
 		},
 		tooltip : 'Export the MXPressO/MXPressE pipeline report into PDF'
 	});
-	items.push(buttonDOC, buttonPDF);
+	//items.push(buttonDOC, buttonPDF);
+	items.push(buttonPDF);
 	// mxPress panel reports
 	_this.panelReport = Ext.create('Ext.Panel', {
 		layout : {
