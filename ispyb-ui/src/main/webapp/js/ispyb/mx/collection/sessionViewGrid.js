@@ -450,7 +450,8 @@ SessionViewGrid.prototype.renderGrid = function () {
 		store : this.store,
 		width : '100%', 
 		resizable : true,
-		height : 1000,
+		//height : 1000,
+		autoHeight : true,
 		title : 'Session',
 		columns : columns,
 		viewConfig : {
@@ -506,7 +507,7 @@ SessionViewGrid.prototype._getColumns = function () {
 			if (hasToolTipText) {
 				p.tdAttr = 'data-qtip="' + myToolTipText + '"';
 			}
-			return "<div style='white-space:normal !important;word-wrap: break-word'>" + "<a href=' " + _this.contextPath +
+			return "<div style='white-space:normal !important;word-wrap: break-word'>" + "<a target='_blank' href=' " + _this.contextPath +
 			"/user/viewResults.do?reqCode=display&dataCollectionId=" + 
 			record.data.dataCollectionId + " '>" + record.data.imagePrefix + "</a></div>";
 		} else {

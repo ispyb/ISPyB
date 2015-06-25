@@ -40,13 +40,10 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	
 	<layout:column styleClass="PANEL_BREAD_CRUMBS">
 		<layout:panel key="<%=Constants.SELECTED_SESSION_VISIT%>" align="left" styleClass="PANEL_BREAD_CRUMBS_ITEM">
+			<layout:text key="Proposal" 	name="selectedSession" 	property="proposalVO.proposalAccount" styleClass="PANEL_BREAD_CRUMBS_FIELD" mode="I,I,I" />
+		
 			<layout:text key="Start Date" 	name="selectedSession" 	property="startDate" styleClass="PANEL_BREAD_CRUMBS_FIELD" mode="I,I,I" type="date" />
-			
-			
-			
-			
-			
-			
+						
 			<layout:text key="BeamLine" 	name="selectedSession" 	property="beamlineName" styleClass="PANEL_BREAD_CRUMBS_FIELD" mode="I,I,I">
 			<c:if test="${SITE_ATTRIBUTE eq 'ESRF'}">
 				<%=ESRFBeamlineEnum.retrievePhoneNumberWithName(selectedSession.getBeamlineName())%>

@@ -25,6 +25,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="ispyb.common.util.Constants"%>
 
+<%@ page isELIgnored="false" %>
+
 <%@ page import="ispyb.client.mx.sample.ViewSampleAction"%>
 
 <%
@@ -189,7 +191,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				<logic:notPresent 	name="breadCrumbsForm" 	property="selectedContainer" scope="session">
 					<layout:collectionItem title="Container" property="containerVO.code" sortable="true" href="<%=targetViewContainer%>" paramId="containerId" paramProperty="containerVO.containerId"/>
 				</logic:notPresent>
-
+				
 				<layout:collectionItem title="Loc.<br>in<br>cont." property="location" 	sortable="true"/>
 				<layout:collectionItem title="Cell a" 				property="crystalVO.cellA" 					sortable="false"/>																																					
 				<layout:collectionItem title="Cell b" 				property="crystalVO.cellB" 					sortable="false"/>																																					
@@ -199,10 +201,12 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				<layout:collectionItem title="Cell gamma"			property="crystalVO.cellGamma" 					sortable="false"/>																																					
 				<layout:collectionItem title="Crystal<br>comments" 		property="crystalVO.comments" 				sortable="false"/>
 				<logic:present name="currInfo"  property="diffractionPlanVO" >
+					<layout:collectionItem title="Exp. Type" 			property="diffractionPlanVO.experimentKind" 					sortable="false"/>	
 					<layout:collectionItem title="Already<br>observed<br>resol." 	property="diffractionPlanVO.observedResolution" mathPattern="#.##" 	sortable="false"/>
 					<layout:collectionItem title="Required<br>resol." 		property="diffractionPlanVO.requiredResolution" mathPattern="#.##" 	sortable="false"/>
 				</logic:present>
 				<logic:notPresent name="currInfo"  property="diffractionPlanVO" >
+					<layout:collectionItem title="Exp. Type" 			property="crystalVO.diffractionPlanVO.experimentKind" 					sortable="false"/>	
 					<layout:collectionItem title="Already<br>observed<br>resol." 	property="crystalVO.diffractionPlanVO.observedResolution" mathPattern="#.##" 	sortable="false"/>
 					<layout:collectionItem title="Required<br>resol." 		property="crystalVO.diffractionPlanVO.requiredResolution" mathPattern="#.##" 	sortable="false"/>
 				</logic:notPresent>
