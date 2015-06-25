@@ -410,6 +410,22 @@
 				<data.path>/work/ademaria/data/pyarch/</data.path>
 			</properties>
 		</profile>
+		
+		<profile>
+			<id>SD</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			
+			<properties>
+				<js.minimized>false</js.minimized>
+				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
+				<js.alternative.path> </js.alternative.path>
+				<js.alternative.path.enabled>false</js.alternative.path.enabled>
+				<data.path>/data/pyarch/</data.path>
+			</properties>
+		</profile>
+		
 
 		<!-- profiles to separate site dependent properties -->
 		<profile>
