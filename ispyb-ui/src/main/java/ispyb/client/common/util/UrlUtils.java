@@ -147,7 +147,7 @@ public class UrlUtils {
 		Pattern pattern2 = Pattern.compile(image_pattern_edna2, Pattern.CASE_INSENSITIVE);
 		String image_pattern_subs2 = "src='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath + "$1"
 				+ "jpg' title";
-
+		
 		Matcher matches = pattern2.matcher(tmp3);
 
 		boolean find = matches.find();
@@ -187,10 +187,13 @@ public class UrlUtils {
 		// <img
 		// src='imageDownload.do?reqCode=getEDNAImage&EDNAImagePath=/data/pyarch/id29/mx415/20100517/.../abb_27_Jan_2014_01.png'
 		String tmp7 = tmp6;
-		String image_pattern_edna3 = "<IMG SRC=([^\\s]+).png";
+		//String image_pattern_edna3 = "SRC=([^\\s]+).png";
+		String image_pattern_edna3 = "SRC=\"(.*)png\" title";
 		Pattern pattern7 = Pattern.compile(image_pattern_edna3, Pattern.CASE_INSENSITIVE);
-		String image_pattern_subs7 = "<IMG src=\"" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath
-				+ "$1" + ".png\"";
+		String image_pattern_subs7 = "src='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath + "$1" + "png' title";
+		
+		//String image_pattern_subs7 = "src='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath + "$1" + ".png' ";
+		
 
 		Matcher matches7 = pattern7.matcher(tmp6);
 
