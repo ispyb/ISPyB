@@ -156,7 +156,7 @@ var IspybWorkflow = {
 						workflowPanel = new WorkflowPanel();
 						items.push({
 									tabConfig : {
-										title : "Workflow"
+										title : "Workflow Log"
 									},
 									items : [workflowPanel.getPanel(data)]
 								});
