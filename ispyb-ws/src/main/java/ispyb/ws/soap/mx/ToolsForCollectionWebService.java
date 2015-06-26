@@ -307,31 +307,46 @@ public class ToolsForCollectionWebService {
 
 			if (sessionId == null || sessionId == 0) {
 				session.setSessionId(null);
-				// force startDate, endDate and nbShifts=3
-				Calendar startDateCal = Calendar.getInstance();
-				Timestamp startDate = new Timestamp(startDateCal.getTimeInMillis());
-				if (Constants.SITE_IS_MAXIV()) {
-					startDateCal.set(Calendar.HOUR_OF_DAY, 8);
-					startDateCal.set(Calendar.MINUTE, 0);
-					startDateCal.set(Calendar.SECOND, 0);
-					startDate = new Timestamp(startDateCal.getTimeInMillis());
-				}
-				session.setStartDate(startDate);
 				Integer nbShifts = 3;
-				session.setNbShifts(nbShifts);
-				// Integer daysToAdd = nbShifts / 3 + 1;
-				Integer daysToAdd = 1;
-				Calendar endDateCal = Calendar.getInstance();
-				endDateCal.setTime(startDate);
-				endDateCal.add(Calendar.DATE, daysToAdd);
-				Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
-				if (Constants.SITE_IS_MAXIV()) {
-					endDateCal.set(Calendar.HOUR_OF_DAY, 7);
-					endDateCal.set(Calendar.MINUTE, 59);
-					endDateCal.set(Calendar.SECOND, 59);
-					endDate = new Timestamp(endDateCal.getTimeInMillis());
+				
+				// if dates sent by BCM then take them
+				if (vo.getStartDate() != null  && vo.getEndDate() != null) {
+					session.setStartDate(vo.getStartDate());
+					session.setEndDate(vo.getEndDate());
+					if (vo.getNbShifts() != null) 
+						session.setNbShifts(nbShifts);
+					else {
+						nbShifts = (int) (vo.getEndDate().getTime() - vo.getStartDate().getTime())/(1000*60*60*8 );
+						session.setNbShifts(nbShifts);
+					}
 				}
-				session.setEndDate(endDate);
+				else {
+					// force startDate, endDate and nbShifts=3
+					Calendar startDateCal = Calendar.getInstance();
+					Timestamp startDate = new Timestamp(startDateCal.getTimeInMillis());
+					if (Constants.SITE_IS_MAXIV()) {
+						startDateCal.set(Calendar.HOUR_OF_DAY, 8);
+						startDateCal.set(Calendar.MINUTE, 0);
+						startDateCal.set(Calendar.SECOND, 0);
+						startDate = new Timestamp(startDateCal.getTimeInMillis());
+					}
+					session.setStartDate(startDate);
+					nbShifts = 3;
+					session.setNbShifts(nbShifts);
+					// Integer daysToAdd = nbShifts / 3 + 1;
+					Integer daysToAdd = 1;
+					Calendar endDateCal = Calendar.getInstance();
+					endDateCal.setTime(startDate);
+					endDateCal.add(Calendar.DATE, daysToAdd);
+					Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
+					if (Constants.SITE_IS_MAXIV()) {
+						endDateCal.set(Calendar.HOUR_OF_DAY, 7);
+						endDateCal.set(Calendar.MINUTE, 59);
+						endDateCal.set(Calendar.SECOND, 59);
+						endDate = new Timestamp(endDateCal.getTimeInMillis());
+					}
+					session.setEndDate(endDate);	
+				}
 
 				session.setLastUpdate(session.getEndDate());
 				sessionValue = sessionService.create(session);
