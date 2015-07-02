@@ -83,7 +83,7 @@
     </management>
 
     <profile>
-        <subsystem xmlns="urn:jboss:domain:logging:2.0">
+         <subsystem xmlns="urn:jboss:domain:logging:2.0">
             <console-handler name="CONSOLE">
                 <level name="INFO"/>
                 <formatter>
@@ -106,6 +106,26 @@
                 <suffix value=".yyyy-MM-dd"/>
                 <append value="true"/>
             </periodic-rotating-file-handler>
+            <periodic-rotating-file-handler name="BCR" autoflush="true">
+                <formatter>
+                    <named-formatter name="PATTERN"/>
+                </formatter>
+                <file relative-to="jboss.server.log.dir" path="bcr.log"/>
+                <suffix value=".yyyy-MM-dd"/>
+                <append value="true"/>
+            </periodic-rotating-file-handler>
+            <logger category="ispyb">
+                <level name="DEBUG"/>
+                <handlers>
+                    <handler name="ISPYB"/>
+                </handlers>
+            </logger>
+            <logger category="bcr">
+                <level name="DEBUG"/>
+                <handlers>
+                    <handler name="BCR"/>
+                </handlers>
+            </logger>
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
