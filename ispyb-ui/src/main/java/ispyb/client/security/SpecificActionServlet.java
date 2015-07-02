@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.apache.struts.action.ActionServlet;
 
 /**
@@ -57,6 +58,8 @@ public class SpecificActionServlet extends ActionServlet {
 	public static String contextPath = null;
 
 	private final static Logger LOG = Logger.getLogger(SpecificActionServlet.class);
+	
+	private static final String LOG_USER_ID = "userId";
 
 	/**
 	 * Process a servlet request.
@@ -112,6 +115,7 @@ public class SpecificActionServlet extends ActionServlet {
 				}
 				session.setAttribute(Constants.CURRENT_ROLE, role);
 
+
 				if (request.getRequestURI().equals("/ispyb/ispyb/welcomeUnauthorizedPage.do"))
 					// Unauthorized page
 					response.sendRedirect(request.getRequestURI());
@@ -119,7 +123,7 @@ public class SpecificActionServlet extends ActionServlet {
 					// Welcome page
 					response.sendRedirect(request.getContextPath() + role.getValue());
 			}
-
+			MDC.put(LOG_USER_ID, username);
 			super.process(request, response);
 
 		} catch (Exception e) {
