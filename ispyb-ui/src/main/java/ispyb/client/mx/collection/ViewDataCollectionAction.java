@@ -2686,6 +2686,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 	public ActionForward download(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
 		ActionMessages errors = new ActionMessages();
 		String dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
+		Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
 		Integer dataCollectionId = null;
 		if (dataCollectionIdst != null) {
 			try {
@@ -2771,10 +2772,11 @@ public class ViewDataCollectionAction extends DispatchAction {
 				// create tar
 				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
 				String s = "";
-				if (dc != null) {
-					s += dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber();
-				}
-				String outFilename = s + "_autoProcessingFiles.tar";
+				//TODO write temp files in /temp NOT in /bin
+				// the name is the same one to avoid too many files on server
+				if (proposalId != null) 
+					s += proposalId.toString();
+				String outFilename = s + "_autoProcessingFilesFromDC.tar";
 				outFilename = outFilename.replaceAll(" ", "_");
 				String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
 				File out = new File(realXLSPath);
@@ -2798,8 +2800,11 @@ public class ViewDataCollectionAction extends DispatchAction {
 				}
 
 				String info = "";
-
+				if (dc != null) {
+					info += dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber();
+				}
 				String newfilename = info + outFilename;
+				newfilename = newfilename.replaceAll(" ", "_");
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
 
