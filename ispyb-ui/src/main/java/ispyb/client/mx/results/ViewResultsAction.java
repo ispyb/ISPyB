@@ -1774,6 +1774,7 @@ public class ViewResultsAction extends DispatchAction {
 		ActionMessages errors = new ActionMessages();
 		Integer autoProcProgramId = null;
 		List<File> listFilesToDownload = new ArrayList<File>();
+		Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
 
 		try {
 			// auto proc attachment
@@ -1857,8 +1858,10 @@ public class ViewResultsAction extends DispatchAction {
 
 		// create tar
 		if (autoProcProgramId != null) {
-			String outFilename = "autoProcessingFiles.tar";
-			outFilename = outFilename.replaceAll(" ", "_");
+			String genericFilename = "autoProcessingFiles.tar";
+			String outFilename = genericFilename;
+			if (proposalId != null) 
+				outFilename = proposalId.toString() + outFilename;
 			String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
 			File out = new File(realXLSPath);
 			if (out.exists())
@@ -1895,7 +1898,7 @@ public class ViewResultsAction extends DispatchAction {
 					return this.display(mapping, actForm, request, response);
 				}
 			}
-			String newfilename = info + outFilename;
+			String newfilename = info + genericFilename;
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
 
