@@ -82,7 +82,7 @@ function uploadFile(){
 	var msgConfirm = "Are you sure you want to continue?";
 	var rbDeleteAll = document.getElementsByName("deleteAllShipment")[0];
 	if (rbDeleteAll.checked == true){
-		msgConfirm = '"Overwrite current shipment" will delete the previously existing samples and pucks for that shipment. Are you sure you want to continue?';
+		msgConfirm = '"Overwrite current shipment" will delete the previously existing samples and pucks, as well as the data collections in ISPyB, if any. We strongly recommend you to create a new shipment. Are you sure you want to continue?';
 	}else{
 		msgConfirm = '"Add to current shipment" will add new pucks and samples to that shipment. Be aware that if a puck already exists with the same name or barcode it will be overwritten. Are you sure you want to continue?';
 	}
@@ -179,7 +179,7 @@ function switchView(){
 				<layout:submit onclick="return uploadFile();"><layout:message key="Upload"/></layout:submit>
 			</layout:form>
 			<layout:message key="Warning : "  styleClass="FIELD_WARNING"/>
-			<layout:message key='"Overwrite current shipment" will delete the previously existing samples and pucks for that shipment.'  styleClass="FIELD_WARNING"/>
+			<layout:message key='"Overwrite current shipment" will delete the previously existing samples and pucks, as well as the data collections in ISPyB, if any. We strongly recommend you to create a new shipment.'  styleClass="FIELD_WARNING"/>
 			<layout:message key='"Add to current shipment" will add new pucks and samples to that shipment. Be aware that if a puck already exists with the same name or barcode it will be overwritten.'  styleClass="FIELD_WARNING"/>
 		</layout:panel>
 	</layout:grid>
