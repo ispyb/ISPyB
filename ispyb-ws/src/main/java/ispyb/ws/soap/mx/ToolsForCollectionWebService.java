@@ -618,7 +618,7 @@ public class ToolsForCollectionWebService {
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sessionVO = null;
 			if (vo.getSessionId() != null && vo.getSessionId() > 0)
-				sessionVO = sessionService.findByPk(vo.getSessionId(), false, false, false);
+				sessionVO = sessionService.findByPk(vo.getSessionId(), true, false, false);
 
 			Workflow3Service workflowService = (Workflow3Service) ejb3ServiceLocator.getLocalService(Workflow3Service.class);
 			Workflow3VO workflowVO = null;
