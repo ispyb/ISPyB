@@ -27,8 +27,10 @@ import ispyb.common.util.Constants;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.naming.InitialContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
@@ -240,9 +243,13 @@ public class AdminChart {
 		String sv = "000" + Integer.toString(v);
 		sv = sv.substring(sv.length() - 3);
 		String fileName = "Chart_" + System.currentTimeMillis() + "_" + sv + ".xml";
+		
+		ServletContext context = request.getSession().getServletContext();
 		String relativeFilePath = "/" + tmpDir + "/" + fileName;
-		String filePath = request.getRealPath(relativeFilePath);
-
+		
+		String tmpFilePath = "\\" + tmpDir +  "\\";
+		String filePath = request.getRealPath(tmpFilePath) + "\\" + fileName;
+		
 		try {
 			File tempFile = new File(filePath);
 			Writer output = new BufferedWriter(new FileWriter(tempFile));
@@ -255,6 +262,7 @@ public class AdminChart {
 		}
 
 		String fileUrl = request.getContextPath() + relativeFilePath;
+		
 		LOG.debug("Created temporary file '" + filePath + "' for url: '" + fileUrl + "'");
 
 		return fileUrl;
