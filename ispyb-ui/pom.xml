@@ -437,8 +437,7 @@
 			<properties>
 				<ispyb.site>ESRF</ispyb.site>
 				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
-				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
 				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
 				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
 
