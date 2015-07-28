@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,7 +35,6 @@ public class OneDimensionalFileReader{
 		}
 		else{
 			/** FilePath is null**/
-			
 			result.put("fileName", null);
 			result.put("size", null);
 			result.put("dataPoints", null);
@@ -63,7 +63,14 @@ public class OneDimensionalFileReader{
 									}
 								}
 								if (isValidColumn){
-									data.add(row);
+									/** Truncating **/
+									List<Float> truncate = new ArrayList<Float>();
+									for (Float float1 : row) {
+//										DecimalFormat df = new DecimalFormat("###.###");
+//										truncate.add(Float.parseFloat(df.format(float1)));
+										truncate.add(float1);
+									}
+									data.add(truncate);
 								}
 					}
 				}
