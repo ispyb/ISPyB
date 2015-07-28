@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+xmlns="http://java.sun.com/xml/ns/persistence"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+					http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+                
+    <persistence-unit name="ispyb_config" transaction-type="JTA"> 
+
+	<jta-data-source>java:jboss/ispybconfigDS</jta-data-source>    	
+    
+    	<properties>
+      		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/> 
+      		<!--   for Oracle DB <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle9Dialect"/> -->
+ 	    </properties>
+ 	    
+   </persistence-unit>  
+
+    <persistence-unit name="ispyb_db" transaction-type="JTA"> 
+
+	<jta-data-source>java:jboss/ispybDS</jta-data-source>    	
+    
+    	<properties>
+      		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/> 
+      		<property name="hibernate.id.new_generator_mappings" value="false"/>
+      		<!--   for Oracle DB <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle9Dialect"/> -->
+ 	    </properties>
+ 	    
+   </persistence-unit>       
+
+</persistence>
