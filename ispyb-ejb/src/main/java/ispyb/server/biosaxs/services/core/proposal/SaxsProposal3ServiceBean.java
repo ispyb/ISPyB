@@ -170,6 +170,11 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 	}
 
 	@Override
+	public Proposal3VO findProposalById(int proposalId) {
+		return entityManager.find(Proposal3VO.class, proposalId);
+	}
+	
+	@Override
 	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) {
 
 		String userName = loginName;

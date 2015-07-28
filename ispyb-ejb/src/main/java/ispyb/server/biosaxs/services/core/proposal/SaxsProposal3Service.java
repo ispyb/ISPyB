@@ -36,6 +36,8 @@ public interface SaxsProposal3Service {
 	public List<Proposal3VO> findProposalByLoginName(String loginName, String site);
 
 	public List<Proposal3VO> findProposalByLoginName(String loginName);
+	
+	public Proposal3VO findProposalById(int proposalId);
 
 	/** MACROMOLECULES **/
 	public abstract Macromolecule3VO merge(Macromolecule3VO macromolecule3vo);
@@ -68,5 +70,7 @@ public interface SaxsProposal3Service {
 	public abstract List<StockSolution3VO> findStockSolutionsByProposalId(Integer proposalId);
 
 	public Macromolecule3VO findMacromoleculesById(Integer macromoleculeId);
+
+	
 
 }
