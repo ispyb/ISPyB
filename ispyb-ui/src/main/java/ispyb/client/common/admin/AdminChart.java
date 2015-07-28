@@ -245,13 +245,16 @@ public class AdminChart {
 		String fileName = "Chart_" + System.currentTimeMillis() + "_" + sv + ".xml";
 		
 		ServletContext context = request.getSession().getServletContext();
-		String relativeFilePath = "/" + tmpDir + "/" + fileName;
+		String relativeFilePath = "/" + tmpDir + "/" + fileName;		
+		String tmpFilePath = "\\" + tmpDir +  "\\";		
 		
-		String tmpFilePath = "\\" + tmpDir +  "\\";
 		String filePath = request.getRealPath(tmpFilePath) + "\\" + fileName;
 		
 		try {
 			File tempFile = new File(filePath);
+			//TODO use fileInputStream because on prod and valid the request.getRealPath(tmpFilePath) returns null.
+			//InputStream fileInputStream = context.getResourceAsStream(relativeFilePath);
+			//File tempFile2 = File.createTempFile(prefix, suffix, directory)			
 			Writer output = new BufferedWriter(new FileWriter(tempFile));
 			output.write(xmlData);
 			output.close();
