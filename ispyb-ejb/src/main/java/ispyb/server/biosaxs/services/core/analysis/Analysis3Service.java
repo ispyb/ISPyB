@@ -19,6 +19,8 @@
 
 package ispyb.server.biosaxs.services.core.analysis;
 
+import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
+
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,17 @@ public interface Analysis3Service {
 	public BigInteger getCountCompactAnalysisByExperimentId(Integer proposalId);
 
 	public List<Map<String, Object>> getCompactAnalysisByMacromoleculeId(Integer proposalId, Integer macromoleculeId);
+
+	public List<Map<String, Object>> getExperimentListByExperimentId(
+			Integer proposalId, Integer experimentId);
+
+	public List<Map<String, Object>> getExperimentListBySessionId(Integer proposalId,
+			Integer sessionId);
+
+	public List<SaxsDataCollection3VO> getDataCollections(
+			List<Integer> dataCollectionIdList);
+
+	SaxsDataCollection3VO getDataCollection(int dataCollectionId);
 
 
 

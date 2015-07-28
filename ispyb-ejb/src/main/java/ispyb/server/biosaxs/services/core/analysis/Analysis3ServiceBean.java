@@ -21,13 +21,16 @@ package ispyb.server.biosaxs.services.core.analysis;
 
 
 import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -80,6 +83,35 @@ public class Analysis3ServiceBean implements Analysis3Service, Analysis3ServiceL
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);
 		query.setParameter("experimentType", experimentType);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")   
+		List<Map<String,Object>> aliasToValueMapList= query.list();
+		return 	aliasToValueMapList;
+	}
+	
+
+	@Override
+	public List<Map<String, Object>> getExperimentListBySessionId(
+			Integer proposalId, Integer sessionId) {
+		String mySQLQuery = SQLQueryKeeper.getExperimentListBySessionId(proposalId, sessionId);
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("sessionId", sessionId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")   
+		List<Map<String,Object>> aliasToValueMapList= query.list();
+		return 	aliasToValueMapList;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getExperimentListByExperimentId(
+			Integer proposalId, Integer experimentId) {
+		String mySQLQuery = SQLQueryKeeper.getExperimentListByExperimentId(proposalId, experimentId);
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("experimentId", experimentId);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		@SuppressWarnings("unchecked")   
 		List<Map<String,Object>> aliasToValueMapList= query.list();
@@ -165,4 +197,27 @@ public class Analysis3ServiceBean implements Analysis3Service, Analysis3ServiceL
 		return 	aliasToValueMapList;
 	}
 	
+	@Override
+	public SaxsDataCollection3VO getDataCollection(int dataCollectionId) {
+		StringBuilder ejbQLQuery = new StringBuilder();
+		ejbQLQuery.append("SELECT DISTINCT(datacollection) FROM SaxsDataCollection3VO  datacollection ");
+		ejbQLQuery.append(" LEFT JOIN FETCH datacollection.measurementtodatacollection3VOs measurementtodatacollection3VOs ");
+		ejbQLQuery.append(" LEFT JOIN FETCH datacollection.substraction3VOs substraction3VOs ");
+		ejbQLQuery.append(" LEFT JOIN FETCH substraction3VOs.sampleOneDimensionalFiles sampleOneDimensionalFiles ");
+		ejbQLQuery.append(" LEFT JOIN FETCH sampleOneDimensionalFiles.frametolist3VOs sampleFrametolist3VOs ");
+		ejbQLQuery.append(" LEFT JOIN FETCH substraction3VOs.bufferOneDimensionalFiles bufferOneDimensionalFiles ");
+		ejbQLQuery.append(" LEFT JOIN FETCH bufferOneDimensionalFiles.frametolist3VOs bufferFrametolist3VOs ");
+		ejbQLQuery.append(" WHERE datacollection.dataCollectionId = :dataCollectionId");
+		TypedQuery<SaxsDataCollection3VO> query = entityManager.createQuery(ejbQLQuery.toString(), SaxsDataCollection3VO.class).setParameter("dataCollectionId", dataCollectionId);
+		return query.getSingleResult();
+	}
+	
+	@Override
+	public List<SaxsDataCollection3VO> getDataCollections(List<Integer> dataCollectionIdList) {
+		 List<SaxsDataCollection3VO> result = new ArrayList<SaxsDataCollection3VO>();
+		 for (Integer id : dataCollectionIdList) {
+			result.add(this.getDataCollection(id));
+		}
+		 return result;
+	}
 }

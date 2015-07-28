@@ -44,6 +44,16 @@ public class SQLQueryKeeper {
 				"Crystal.recordTimeStamp as Crystal_recordTimeStamp\r\n";
 	}
 	
+	
+	public static String getExperimentListByExperimentId(Integer proposalId,
+			Integer experimentId) {
+		StringBuilder sb = new StringBuilder(SQLQueryKeeper.getExperimentListByProposalId(proposalId));
+		sb.append(" and e.experimentId = :experimentId ");
+		return sb.toString();
+	}
+	
+
+	
 	public static String getProteinTable() {
 		return  " Protein.proteinId as Protein_proteinId,\r\n" + 
 				" Protein.proposalId as Protein_proposalId,\r\n" + 
