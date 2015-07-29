@@ -36,8 +36,7 @@ import org.apache.log4j.Logger;
 
 @Path("/")
 public class FrameRestWebService extends RestWebService {
-	private final static Logger log = Logger
-			.getLogger(FrameRestWebService.class);
+	private final static Logger logger = Logger.getLogger(FrameRestWebService.class);
 
 	public class FrameComparator implements Comparator<Frame3VO> {
 		@Override
@@ -46,8 +45,7 @@ public class FrameRestWebService extends RestWebService {
 		}
 	}
 
-	private HashMap<String, Object> getFramesByMerge(Merge3VO merge3vo)
-			throws Exception {
+	private HashMap<String, Object> getFramesByMerge(Merge3VO merge3vo) throws Exception {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		List<Frame3VO> frames = new ArrayList<Frame3VO>();
 		Framelist3VO frameList = merge3vo.getFramelist3VO();
@@ -66,19 +64,16 @@ public class FrameRestWebService extends RestWebService {
 		return result;
 	}
 
-	private HashMap<String, Object> getFramesBySubtraction(
-			Subtraction3VO subtraction) throws Exception {
+	private HashMap<String, Object> getFramesBySubtraction(Subtraction3VO subtraction) throws Exception {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 
 		List<Frame3VO> buffers = new ArrayList<Frame3VO>();
-		for (Frametolist3VO frametolist3vo : subtraction
-				.getBufferOneDimensionalFiles().getFrametolist3VOs()) {
+		for (Frametolist3VO frametolist3vo : subtraction.getBufferOneDimensionalFiles().getFrametolist3VOs()) {
 			buffers.add(frametolist3vo.getFrame3VO());
 		}
 
 		List<Frame3VO> samples = new ArrayList<Frame3VO>();
-		for (Frametolist3VO frametolist3vo : subtraction
-				.getSampleOneDimensionalFiles().getFrametolist3VOs()) {
+		for (Frametolist3VO frametolist3vo : subtraction.getSampleOneDimensionalFiles().getFrametolist3VOs()) {
 			samples.add(frametolist3vo.getFrame3VO());
 		}
 
@@ -92,14 +87,11 @@ public class FrameRestWebService extends RestWebService {
 		return result;
 	}
 
-	private List<HashMap<String, Object>> getFramesByMergeId(
-			List<Integer> mergeIdList) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
-				.getInstance();
+	private List<HashMap<String, Object>> getFramesByMergeId(List<Integer> mergeIdList) throws Exception {
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
 				.getLocalService(PrimaryDataProcessing3Service.class);
-		List<Merge3VO> merges = primaryDataProcessing3Service
-				.getMergesByIdsList(mergeIdList);
+		List<Merge3VO> merges = primaryDataProcessing3Service.getMergesByIdsList(mergeIdList);
 
 		List<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
 		for (Merge3VO merge3vo : merges) {
@@ -108,48 +100,43 @@ public class FrameRestWebService extends RestWebService {
 		return result;
 	}
 
-	private List<HashMap<String, Object>> getFramesByMeasurementId(
-			List<Integer> measurementIdList) throws Exception {
-		
+	private List<HashMap<String, Object>> getFramesByMeasurementId(List<Integer> measurementIdList) throws Exception {
+
 		List<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
-		
-		
+
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator.getLocalService(PrimaryDataProcessing3Service.class);
-		Measurement3Service measurement3service = (Measurement3Service) ejb3ServiceLocator.getLocalService(Measurement3Service.class);
-		
+		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
+				.getLocalService(PrimaryDataProcessing3Service.class);
+		Measurement3Service measurement3service = (Measurement3Service) ejb3ServiceLocator
+				.getLocalService(Measurement3Service.class);
+
 		List<Integer> mergeIdList = new ArrayList<Integer>();
 		for (Integer measurementId : measurementIdList) {
 			List<Merge3VO> mergesByMeasurement = primaryDataProcessing3Service.findByMeasurementId(measurementId);
-			if (mergesByMeasurement != null){
-				if (mergesByMeasurement.size() > 0){
-					mergeIdList.add(mergesByMeasurement.get(mergesByMeasurement.size()-1).getMergeId());
+			if (mergesByMeasurement != null) {
+				if (mergesByMeasurement.size() > 0) {
+					mergeIdList.add(mergesByMeasurement.get(mergesByMeasurement.size() - 1).getMergeId());
 				}
 			}
 		}
-		
+
 		List<Merge3VO> merges = primaryDataProcessing3Service.getMergesByIdsList(mergeIdList);
 		for (Merge3VO merge3vo : merges) {
 			result.add(this.getFramesByMerge(merge3vo));
 		}
-		
+
 		return result;
 	}
-	
-	
-	private List<HashMap<String, Object>> getSubtractionById(
-			List<Integer> idList) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
-				.getInstance();
+
+	private List<HashMap<String, Object>> getSubtractionById(List<Integer> idList) throws Exception {
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
 				.getLocalService(PrimaryDataProcessing3Service.class);
 
 		List<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
 		for (Integer id : idList) {
 			try {
-				result.add(this
-						.getFramesBySubtraction(primaryDataProcessing3Service
-								.getSubstractionById(id)));
+				result.add(this.getFramesBySubtraction(primaryDataProcessing3Service.getSubstractionById(id)));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -161,307 +148,354 @@ public class FrameRestWebService extends RestWebService {
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/average/{mergeIdList}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@PathParam("mergeIdList") String mergeIdList) throws Exception {
-		List<Integer> idList = this.parseToInteger(mergeIdList);
-		return sendResponse(getFramesByMergeId(idList));
+	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("mergeIdList") String mergeIdList) {
+
+		String methodName = "getFrame";
+		long start = this.logInit(methodName, logger, cookie, proposal, mergeIdList);
+		try {
+			List<Integer> idList = this.parseToInteger(mergeIdList);
+			List<HashMap<String, Object>> result = getFramesByMergeId(idList);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+
 	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/measurement/{measurementIdList}/list")
 	@Produces({ "application/json" })
-	public Response listByMeasurement(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@PathParam("measurementIdList") String measurementIdList)
-			throws Exception {
-		List<Integer> idList = this.parseToInteger(measurementIdList);
-		return sendResponse(getFramesByMeasurementId(idList));
+	public Response listByMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("measurementIdList") String measurementIdList) throws Exception {
+
+		String methodName = "listByMeasurement";
+		long start = this.logInit(methodName, logger, cookie, proposal, measurementIdList);
+		try {
+			List<Integer> idList = this.parseToInteger(measurementIdList);
+			List<HashMap<String, Object>> result = getFramesByMeasurementId(idList);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+
 	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/subtraction/{subtractionIdList}/list")
 	@Produces({ "application/json" })
-	public Response get(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@PathParam("subtractionIdList") String subtractionIdList)
-			throws Exception {
-		List<Integer> idList = this.parseToInteger(subtractionIdList);
-		return sendResponse(getSubtractionById(idList));
+	public Response get(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("subtractionIdList") String subtractionIdList) throws Exception {
+
+		String methodName = "get";
+		long start = this.logInit(methodName, logger, cookie, proposal, subtractionIdList);
+		try {
+			List<Integer> idList = this.parseToInteger(subtractionIdList);
+			List<HashMap<String, Object>> result = getSubtractionById(idList);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+
 	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/get")
 	@Produces({ "application/json" })
-	public Response get(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame,
-			@QueryParam("average") String average,
-			@QueryParam("subtraction") String subtraction,
-			@QueryParam("sampleaverage") String sampleaverage,
-			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
+	public Response get(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@QueryParam("frame") String frame, @QueryParam("average") String average,
+			@QueryParam("subtraction") String subtraction, @QueryParam("sampleaverage") String sampleaverage,
+			@QueryParam("bufferaverage") String bufferaverage) {
 
-		HashMap<String, String> result = new HashMap<String, String>();
+		String methodName = "get";
+		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtraction, sampleaverage,
+				bufferaverage);
+		try {
 
-		List<Integer> frames = new ArrayList<Integer>();
-		List<Integer> averages = new ArrayList<Integer>();
-		List<Integer> subtractions = new ArrayList<Integer>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Integer> fits = new ArrayList<Integer>();
-		List<Integer> rigids = new ArrayList<Integer>();
+			HashMap<String, String> result = new HashMap<String, String>();
 
-		if (frame != null) {
-			result.put("frame", parseToInteger(frame).toString());
-			frames = parseToInteger(frame);
-		}
-		if (average != null) {
-			result.put("average", parseToInteger(average).toString());
-			averages = parseToInteger(average);
-		}
-		if (subtraction != null) {
-			result.put("subtraction", parseToInteger(subtraction).toString());
-			subtractions = parseToInteger(subtraction);
-		}
-		if (sampleaverage != null) {
-			result.put("sampleaverage", parseToInteger(sampleaverage)
-					.toString());
-			List<Integer> sampleaverages = parseToInteger(sampleaverage);
+			List<Integer> frames = new ArrayList<Integer>();
+			List<Integer> averages = new ArrayList<Integer>();
+			List<Integer> subtractions = new ArrayList<Integer>();
+			List<Integer> models = new ArrayList<Integer>();
+			List<Integer> fits = new ArrayList<Integer>();
+			List<Integer> rigids = new ArrayList<Integer>();
+
+			if (frame != null) {
+				result.put("frame", parseToInteger(frame).toString());
+				frames = parseToInteger(frame);
+			}
+			if (average != null) {
+				result.put("average", parseToInteger(average).toString());
+				averages = parseToInteger(average);
+			}
+			if (subtraction != null) {
+				result.put("subtraction", parseToInteger(subtraction).toString());
+				subtractions = parseToInteger(subtraction);
+			}
+			if (sampleaverage != null) {
+				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
+				List<Integer> sampleaverages = parseToInteger(sampleaverage);
+			}
+
+			if (bufferaverage != null) {
+				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
+				List<Integer> bufferaverages = parseToInteger(bufferaverage);
+			}
+			String json = FactoryProducer.getJSON(frames, averages, subtractions, models, fits, rigids);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(json);
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
 		}
 
-		if (bufferaverage != null) {
-			result.put("bufferaverage", parseToInteger(bufferaverage)
-					.toString());
-			List<Integer> bufferaverages = parseToInteger(bufferaverage);
-		}
-
-		log.info(frames.toString());
-		log.info(averages.toString());
-		log.info(subtractions.toString());
-		log.info(models.toString());
-		return sendResponse(FactoryProducer.getJSON(frames, averages,
-				subtractions, models, fits, rigids));
 	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/plot")
 	@Produces({ "application/json" })
-	public Response plot(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame,
-			@QueryParam("average") String average,
-			@QueryParam("subtracted") String subtracted,
-			@QueryParam("sampleaverage") String sampleaverage,
-			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
+	public Response plot(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@QueryParam("frame") String frame, @QueryParam("average") String average,
+			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
+			@QueryParam("bufferaverage") String bufferaverage) {
 
-		HashMap<String, String> result = new HashMap<String, String>();
-		List<Integer> frames = new ArrayList<Integer>();
-		List<Integer> averages = new ArrayList<Integer>();
-		List<Integer> subtracteds = new ArrayList<Integer>();
-		List<Integer> sampleaverages = new ArrayList<Integer>();
-		List<Integer> bufferaverages = new ArrayList<Integer>();
+		String methodName = "plot";
+		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtracted, sampleaverage,
+				bufferaverage);
+		try {
+			HashMap<String, String> result = new HashMap<String, String>();
+			List<Integer> frames = new ArrayList<Integer>();
+			List<Integer> averages = new ArrayList<Integer>();
+			List<Integer> subtracteds = new ArrayList<Integer>();
+			List<Integer> sampleaverages = new ArrayList<Integer>();
+			List<Integer> bufferaverages = new ArrayList<Integer>();
 
-		if (frame != null) {
-			result.put("frame", parseToInteger(frame).toString());
-			frames = parseToInteger(frame);
-		}
-		if (average != null) {
-			result.put("average", parseToInteger(average).toString());
-			averages = parseToInteger(average);
-		}
-		if (subtracted != null) {
-			result.put("subtracted", parseToInteger(subtracted).toString());
-			subtracteds = parseToInteger(subtracted);
-		}
-		if (sampleaverage != null) {
-			result.put("sampleaverage", parseToInteger(sampleaverage)
-					.toString());
-			sampleaverages = parseToInteger(sampleaverage);
+			if (frame != null) {
+				result.put("frame", parseToInteger(frame).toString());
+				frames = parseToInteger(frame);
+			}
+			if (average != null) {
+				result.put("average", parseToInteger(average).toString());
+				averages = parseToInteger(average);
+			}
+			if (subtracted != null) {
+				result.put("subtracted", parseToInteger(subtracted).toString());
+				subtracteds = parseToInteger(subtracted);
+			}
+			if (sampleaverage != null) {
+				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
+				sampleaverages = parseToInteger(sampleaverage);
+			}
+
+			if (bufferaverage != null) {
+				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
+				bufferaverages = parseToInteger(bufferaverage);
+			}
+
+			List<Integer> subtractions = new ArrayList<Integer>();
+			List<Integer> models = new ArrayList<Integer>();
+			List<Integer> fits = new ArrayList<Integer>();
+			List<Integer> rigids = new ArrayList<Integer>();
+
+			String json = FactoryProducer.getPlot(frames, averages, subtractions, models, fits, rigids, subtracteds,
+					sampleaverages, bufferaverages);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(json);
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
 		}
 
-		if (bufferaverage != null) {
-			result.put("bufferaverage", parseToInteger(bufferaverage)
-					.toString());
-			bufferaverages = parseToInteger(bufferaverage);
-		}
-
-		List<Integer> subtractions = new ArrayList<Integer>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Integer> fits = new ArrayList<Integer>();
-		List<Integer> rigids = new ArrayList<Integer>();
-
-		return sendResponse(FactoryProducer.getPlot(frames, averages,
-				subtractions, models, fits, rigids, subtracteds,
-				sampleaverages, bufferaverages));
 	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/datplot")
 	@Produces("text/plain")
-	public Response datplot(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame,
-			@QueryParam("average") String average,
-			@QueryParam("subtracted") String subtracted,
-			@QueryParam("sampleaverage") String sampleaverage,
+	public Response datplot(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@QueryParam("frame") String frame, @QueryParam("average") String average,
+			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
 			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
 
-		List<Integer> frames = new ArrayList<Integer>();
-		List<Integer> averages = new ArrayList<Integer>();
-		List<Integer> subtracteds = new ArrayList<Integer>();
-		List<Integer> sampleaverages = new ArrayList<Integer>();
-		List<Integer> bufferaverages = new ArrayList<Integer>();
-
-		if (frame != null) {
-			frames = parseToInteger(frame);
-		}
-		if (average != null) {
-			averages = parseToInteger(average);
-		}
-		if (subtracted != null) {
-			subtracteds = parseToInteger(subtracted);
-		}
-		if (sampleaverage != null) {
-			sampleaverages = parseToInteger(sampleaverage);
-		}
-
-		if (bufferaverage != null) {
-			bufferaverages = parseToInteger(bufferaverage);
-		}
-
-		List<Integer> subtractions = new ArrayList<Integer>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Integer> fits = new ArrayList<Integer>();
-		List<Integer> rigids = new ArrayList<Integer>();
-
-		List<DatFile> files = FactoryProducer.getDatPlot(frames, averages,
-				subtractions, models, fits, rigids, subtracteds,
-				sampleaverages, bufferaverages);
-		DatFilePlotter datFilePlotter = new DatFilePlotter(files);
-		return sendResponse(datFilePlotter.getCSV());
-	}
+		String methodName = "datplot";
+		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtracted, sampleaverage,
+				bufferaverage);
+		try {
+			List<Integer> frames = new ArrayList<Integer>();
+			List<Integer> averages = new ArrayList<Integer>();
+			List<Integer> subtracteds = new ArrayList<Integer>();
+			List<Integer> sampleaverages = new ArrayList<Integer>();
+			List<Integer> bufferaverages = new ArrayList<Integer>();
 	
-	private List<Float> parseQueryParam(String queryParam){
+			if (frame != null) {
+				frames = parseToInteger(frame);
+			}
+			if (average != null) {
+				averages = parseToInteger(average);
+			}
+			if (subtracted != null) {
+				subtracteds = parseToInteger(subtracted);
+			}
+			if (sampleaverage != null) {
+				sampleaverages = parseToInteger(sampleaverage);
+			}
+	
+			if (bufferaverage != null) {
+				bufferaverages = parseToInteger(bufferaverage);
+			}
+	
+			List<Integer> subtractions = new ArrayList<Integer>();
+			List<Integer> models = new ArrayList<Integer>();
+			List<Integer> fits = new ArrayList<Integer>();
+			List<Integer> rigids = new ArrayList<Integer>();
+	
+			List<DatFile> files = FactoryProducer.getDatPlot(frames, averages, subtractions, models, fits, rigids,
+					subtracteds, sampleaverages, bufferaverages);
+			DatFilePlotter datFilePlotter = new DatFilePlotter(files);
+			
+			String result = datFilePlotter.getCSV();
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+			
+		}catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
+	private List<Float> parseQueryParam(String queryParam) {
 		List<String> params = Arrays.asList(queryParam.split(",", -1));
 		List<Float> result = new ArrayList<Float>();
 		for (String string : params) {
-			if (!(string.isEmpty()) && (string.matches("^([+-]?\\d*\\.?\\d*)$"))){
+			if (!(string.isEmpty()) && (string.matches("^([+-]?\\d*\\.?\\d*)$"))) {
 				result.add(Float.valueOf(string));
-			}
-			else{
+			} else {
 				result.add(null);
 			}
 		}
 		return result;
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/subtractionId/{subtracted}/datplotmerge")
 	@Produces("text/plain")
-	public Response datplotmerge(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@PathParam("subtracted") String subtracted,
-			@QueryParam("from") String from,
-			@QueryParam("to") String to,
-			@QueryParam("scale") String scale
-			) throws Exception {
+	public Response datplotmerge(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("subtracted") String subtracted, @QueryParam("from") String from, @QueryParam("to") String to,
+			@QueryParam("scale") String scale) throws Exception {
 
-		List<Integer> subtracteds = new ArrayList<Integer>();
-
-		if (subtracted != null) {
-			subtracteds = parseToInteger(subtracted);
-		}
-		List<Float> fromList = new ArrayList<Float>(subtracteds.size());
-		List<Float> toList = new ArrayList<Float>(subtracteds.size());
-		List<Float> scaleList = new ArrayList<Float>(subtracteds.size());
-		if (from != null){
-			fromList = parseQueryParam(from);
-		}
-		
-		if (to != null){
-			toList = parseQueryParam(to);
-		}
-		
-		if (scale != null){
-			scaleList = parseQueryParam(scale);
-		}
-
-		List<DatFile> files = FactoryProducer.getDatPlot(subtracteds);
-		MergeDatFilePlotter datFilePlotter = new MergeDatFilePlotter(files,fromList,toList,scaleList);
-		return sendResponse(datFilePlotter.getCSV());
-	}
+		String methodName = "datplotmerge";
+		long start = this.logInit(methodName, logger, cookie, proposal, subtracted, from, to, scale);
+		try {
+			List<Integer> subtracteds = new ArrayList<Integer>();
 	
+			if (subtracted != null) {
+				subtracteds = parseToInteger(subtracted);
+			}
+			List<Float> fromList = new ArrayList<Float>(subtracteds.size());
+			List<Float> toList = new ArrayList<Float>(subtracteds.size());
+			List<Float> scaleList = new ArrayList<Float>(subtracteds.size());
+			if (from != null) {
+				fromList = parseQueryParam(from);
+			}
+	
+			if (to != null) {
+				toList = parseQueryParam(to);
+			}
+	
+			if (scale != null) {
+				scaleList = parseQueryParam(scale);
+			}
+	
+			List<DatFile> files = FactoryProducer.getDatPlot(subtracteds);
+			MergeDatFilePlotter datFilePlotter = new MergeDatFilePlotter(files, fromList, toList, scaleList);
+			String result = datFilePlotter.getCSV();
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		}catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/subtractionId/{subtracted}/merge")
 	@Produces("text/plain")
-	public Response merge(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
-			@PathParam("subtracted") String subtracted,
-			@QueryParam("from") String from,
-			@QueryParam("to") String to,
-			@QueryParam("scale") String scale
-			) throws Exception {
+	public Response merge(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("subtracted") String subtracted, @QueryParam("from") String from, @QueryParam("to") String to,
+			@QueryParam("scale") String scale) throws Exception {
 
-		List<Integer> subtracteds = new ArrayList<Integer>();
-
-		if (subtracted != null) {
-			subtracteds = parseToInteger(subtracted);
-		}
-		List<Float> fromList = new ArrayList<Float>(subtracteds.size());
-		List<Float> toList = new ArrayList<Float>(subtracteds.size());
-		List<Float> scaleList = new ArrayList<Float>(subtracteds.size());
-		if (from != null){
-			fromList = parseQueryParam(from);
-		}
-		
-		if (to != null){
-			toList = parseQueryParam(to);
-		}
-		
-		if (scale != null){
-			scaleList = parseQueryParam(scale);
-		}
-
-		List<DatFile> files = FactoryProducer.getDatPlot(subtracteds);
-		MergeDatFilePlotter datFilePlotter = new MergeDatFilePlotter(files,fromList,toList,scaleList);
-		return sendResponse(datFilePlotter.merge());
-	}
+		String methodName = "datplotmerge";
+		long start = this.logInit(methodName, logger, cookie, proposal, subtracted, from, to, scale);
+		try {
+			List<Integer> subtracteds = new ArrayList<Integer>();
 	
+			if (subtracted != null) {
+				subtracteds = parseToInteger(subtracted);
+			}
+			List<Float> fromList = new ArrayList<Float>(subtracteds.size());
+			List<Float> toList = new ArrayList<Float>(subtracteds.size());
+			List<Float> scaleList = new ArrayList<Float>(subtracteds.size());
+			if (from != null) {
+				fromList = parseQueryParam(from);
+			}
+	
+			if (to != null) {
+				toList = parseQueryParam(to);
+			}
+	
+			if (scale != null) {
+				scaleList = parseQueryParam(scale);
+			}
+	
+			List<DatFile> files = FactoryProducer.getDatPlot(subtracteds);
+			MergeDatFilePlotter datFilePlotter = new MergeDatFilePlotter(files, fromList, toList, scaleList);
+			String result = datFilePlotter.merge();
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		}catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 
 	@PermitAll
 	@GET
 	@Path("{cookie}/saxs/{proposal}/frame/{frameId}/download")
 	@Produces("text/plain")
-	public Response download(@PathParam("cookie") String cookie,
-			@PathParam("proposal") String proposal,
+	public Response downloadFrame(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("frameId") String frameId) throws Exception {
 
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
-				.getInstance();
-		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
-				.getLocalService(PrimaryDataProcessing3Service.class);
-
-		List<Frame3VO> frames = primaryDataProcessing3Service.getFramesByIdList(parseToInteger(frameId));
-		if (frames != null) {
-			if (frames.size() > 0) {
-				String filePath = frames.get(0).getFilePath();
-				File file = new File(filePath);
-				if (file.exists()) {
-					ResponseBuilder response = Response.ok((Object) file);
-					response.header("Content-Disposition",
-							"attachment; filename=" + file.getName());
-					return response.build();
+		String methodName = "downloadFrame";
+		long start = this.logInit(methodName, logger, cookie, frameId);
+		try {
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
+					.getLocalService(PrimaryDataProcessing3Service.class);
+	
+			List<Frame3VO> frames = primaryDataProcessing3Service.getFramesByIdList(parseToInteger(frameId));
+			if (frames != null) {
+				if (frames.size() > 0) {
+					String filePath = frames.get(0).getFilePath();
+					File file = new File(filePath);
+					if (file.exists()) {
+						ResponseBuilder response = Response.ok((Object) file);
+						response.header("Content-Disposition", "attachment; filename=" + file.getName());
+						this.logFinish(methodName, start, logger);
+						return response.build();
+					}
 				}
 			}
+			return Response.noContent().build();
+		}catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
 		}
-		return Response.noContent().build();
 	}
-	
-	
+
 }

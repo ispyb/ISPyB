@@ -22,6 +22,7 @@ import ispyb.server.mx.services.collections.Session3Service;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,110 +38,106 @@ import com.google.gson.GsonBuilder;
 
 public class RestWebService {
 	private long now;
-	
+
 	private final static Logger log = Logger.getLogger(RestWebService.class);
+
 	protected Gson getGson() {
-		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE)
-				.serializeSpecialFloatingPointValues()
+		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
 				.create();
 	}
-	
+
 	protected Gson getWithoutExposeAnnotationGson() {
-		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE)
-				.serializeSpecialFloatingPointValues()
-				.excludeFieldsWithoutExposeAnnotation()
-				.create();
+		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
+				.excludeFieldsWithoutExposeAnnotation().create();
 	}
-	
 
 	protected Response sendResponse(String response) {
-		return Response.ok(response).header("Access-Control-Allow-Origin", "*")
-				.build();
+		return Response.ok(response).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	protected Response sendResponse(Object response) {
-		return Response.ok(getGson().toJson(response))
-				.header("Access-Control-Allow-Origin", "*").build();
+		return Response.ok(getGson().toJson(response)).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	protected Response unauthorizedResponse() {
 		return Response.status(401).build();
 	}
 
-	protected PlateType3Service getPlateType3Service() throws NamingException{
+	protected PlateType3Service getPlateType3Service() throws NamingException {
 		return (PlateType3Service) Ejb3ServiceLocator.getInstance().getLocalService(PlateType3Service.class);
 	}
-	
-	protected MenuGroup3Service getMenuGroup3Service() throws NamingException{
+
+	protected MenuGroup3Service getMenuGroup3Service() throws NamingException {
 		return (MenuGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(MenuGroup3Service.class);
 	}
-	
-	protected Analysis3Service getAnalysis3Service() throws NamingException{
+
+	protected Analysis3Service getAnalysis3Service() throws NamingException {
 		return (Analysis3Service) Ejb3ServiceLocator.getInstance().getLocalService(Analysis3Service.class);
 	}
-	
-	protected Experiment3Service getExperiment3Service() throws NamingException{
+
+	protected Experiment3Service getExperiment3Service() throws NamingException {
 		return (Experiment3Service) Ejb3ServiceLocator.getInstance().getLocalService(Experiment3Service.class);
 	}
-	
+
 	protected Proposal3Service getProposal3Service() throws NamingException {
-	    return (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Proposal3Service.class);
-	}
-	
-	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException{
-		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
-	}
-	
-	protected MeasurementToDataCollection3Service getMeasurementToDataCollectionService() throws NamingException {
-	    return (MeasurementToDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(MeasurementToDataCollection3Service.class);
+		return (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Proposal3Service.class);
 	}
 
-	protected Session3Service getSession3Service() throws NamingException{
+	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
+		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
+	}
+
+	protected MeasurementToDataCollection3Service getMeasurementToDataCollectionService() throws NamingException {
+		return (MeasurementToDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+				MeasurementToDataCollection3Service.class);
+	}
+
+	protected Session3Service getSession3Service() throws NamingException {
 		return (Session3Service) Ejb3ServiceLocator.getInstance().getLocalService(Session3Service.class);
 	}
 
-	protected Sampleplate3Service getSamplePlate3Service() throws NamingException{
+	protected Sampleplate3Service getSamplePlate3Service() throws NamingException {
 		return (Sampleplate3Service) Ejb3ServiceLocator.getInstance().getLocalService(Sampleplate3Service.class);
 	}
-	
-	protected PrimaryDataProcessing3Service getPrimaryDataProcessing3Service() throws NamingException{
-		return (PrimaryDataProcessing3Service) Ejb3ServiceLocator.getInstance().getLocalService(PrimaryDataProcessing3Service.class);
+
+	protected PrimaryDataProcessing3Service getPrimaryDataProcessing3Service() throws NamingException {
+		return (PrimaryDataProcessing3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+				PrimaryDataProcessing3Service.class);
 	}
-	
-	protected LabContact3Service getLabContact3Service() throws NamingException{
+
+	protected LabContact3Service getLabContact3Service() throws NamingException {
 		return (LabContact3Service) Ejb3ServiceLocator.getInstance().getLocalService(LabContact3Service.class);
 	}
-	
-	protected Shipping3Service getShipping3Service() throws NamingException{
+
+	protected Shipping3Service getShipping3Service() throws NamingException {
 		return (Shipping3Service) Ejb3ServiceLocator.getInstance().getLocalService(Shipping3Service.class);
 	}
-	
-	protected Robot3Service getRobot3Service() throws NamingException{
+
+	protected Robot3Service getRobot3Service() throws NamingException {
 		return (Robot3Service) Ejb3ServiceLocator.getInstance().getLocalService(Robot3Service.class);
 	}
-	
-	protected Dewar3Service getDewar3Service() throws NamingException{
+
+	protected Dewar3Service getDewar3Service() throws NamingException {
 		return (Dewar3Service) Ejb3ServiceLocator.getInstance().getLocalService(Dewar3Service.class);
 	}
-	
-	protected WebUserInterfaceService getWebUserInterfaceService() throws NamingException{
-		return (WebUserInterfaceService) Ejb3ServiceLocator.getInstance().getLocalService(WebUserInterfaceService.class);
+
+	protected WebUserInterfaceService getWebUserInterfaceService() throws NamingException {
+		return (WebUserInterfaceService) Ejb3ServiceLocator.getInstance()
+				.getLocalService(WebUserInterfaceService.class);
 	}
-	
-	
+
 	/**
 	 * Gets proposal Id by login name
+	 * 
 	 * @param proposal
 	 * @return
 	 * @throws Exception
 	 */
 	protected int getProposalId(String proposal) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
-				.getInstance();
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		SaxsProposal3Service saxsProposalService = (SaxsProposal3Service) ejb3ServiceLocator
 				.getLocalService(SaxsProposal3Service.class);
-		List<Proposal3VO> proposals = saxsProposalService
-				.findProposalByLoginName(proposal);
+		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
 		if (proposals != null) {
 			if (proposals.size() > 0) {
 				return proposals.get(0).getProposalId();
@@ -149,8 +146,7 @@ public class RestWebService {
 		throw new Exception("No proposal found.");
 	}
 
-	protected List<Map<String, Object>> filter(
-			List<Map<String, Object>> elements, String key, String value)
+	protected List<Map<String, Object>> filter(List<Map<String, Object>> elements, String key, String value)
 			throws Exception {
 		List<Map<String, Object>> filtered = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> element : elements) {
@@ -165,11 +161,10 @@ public class RestWebService {
 		return filtered;
 	}
 
-	protected List<Map<String, Object>> filter(
-			List<Map<String, Object>> elements, String key, List<String> values)
+	protected List<Map<String, Object>> filter(List<Map<String, Object>> elements, String key, List<String> values)
 			throws Exception {
 		log.info("values: " + values.toString());
-		
+
 		Set<String> hash = new HashSet<String>();
 		for (String value : values) {
 			log.info("value: " + value);
@@ -179,7 +174,7 @@ public class RestWebService {
 		for (Map<String, Object> element : elements) {
 			if (element.containsKey(key)) {
 				if (element.get(key) != null) {
-					
+
 					if (hash.contains(element.get(key).toString().trim())) {
 						filtered.add(element);
 					}
@@ -189,7 +184,6 @@ public class RestWebService {
 		return filtered;
 	}
 
-	
 	/**
 	 * Form a comma separated string returns a list of integers
 	 * 
@@ -205,8 +199,8 @@ public class RestWebService {
 				for (String string : myList) {
 					try {
 						/** We remove repeated ids **/
-						if (!keys.contains(string)){
-							if (string.matches("\\d+")){
+						if (!keys.contains(string)) {
+							if (string.matches("\\d+")) {
 								intList.add(Integer.valueOf(string));
 								keys.add(string);
 							}
@@ -229,20 +223,41 @@ public class RestWebService {
 		return null;
 	}
 
+	protected long logInit(String methodName, Logger logger, Object... args) {
+		logger.info("-----------------------");
+		this.now = System.currentTimeMillis();
+		ArrayList<String> params = new ArrayList<String>();
+		for (Object object : args) {
+			params.add(object.toString());
+		}
+		logger.info(methodName.toUpperCase());
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, System.currentTimeMillis(),
+				System.currentTimeMillis(), this.getGson().toJson(params));
+		return this.now;
+	}
+
 	protected long logInit(String methodName, String params, Logger logger) {
 		logger.info("-----------------------");
 		this.now = System.currentTimeMillis();
 		logger.info(methodName.toUpperCase());
-		LoggerFormatter.log(logger, LoggerFormatter.Package.BIOSAXS_WS, methodName, System.currentTimeMillis(),
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, System.currentTimeMillis(),
 				System.currentTimeMillis(), params);
 		return this.now;
 	}
-	
-	protected void logFinish(String methodName, long id, Logger logger) {
-		logger.debug("### [" + methodName.toUpperCase() + "] Execution time was " + (System.currentTimeMillis() - this.now) + " ms.");
-		LoggerFormatter.log(logger, LoggerFormatter.Package.BIOSAXS_WS, methodName, id, System.currentTimeMillis(),
+
+	protected void logFinish(String methodName, long start, Logger logger) {
+		logger.debug("### [" + methodName.toUpperCase() + "] Execution time was "
+				+ (System.currentTimeMillis() - this.now) + " ms.");
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, id, System.currentTimeMillis(),
 				System.currentTimeMillis() - this.now);
 
 	}
-	
+
+	protected Response logError(String methodName, Exception e, long start, Logger logger) {
+		e.printStackTrace();
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API_ERROR, methodName, start,
+				System.currentTimeMillis(), e.getMessage(), e);
+		return this.sendResponse(e.getMessage());
+	}
+
 }

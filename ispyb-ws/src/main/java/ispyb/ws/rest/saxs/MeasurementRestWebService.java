@@ -29,101 +29,72 @@ import com.google.gson.Gson;
 
 @Path("/")
 public class MeasurementRestWebService extends RestWebService {
-    	private final static Logger LOGGER = Logger.getLogger(MeasurementRestWebService.class);
-	
-	
-    	@PermitAll
+	private final static Logger logger = Logger.getLogger(MeasurementRestWebService.class);
+
+	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/measurement/{measurementId}/remove")
 	@Produces()
-	public Response removeMeasurement(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
-			@PathParam("measurementId") int measurementId) throws Exception {
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("measurementId", String.valueOf(measurementId));
-		
-		long start = this.logInit("removeMeasurement", new Gson().toJson(params), LOGGER);
+	public Response removeMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@PathParam("measurementId") int measurementId) {
+
+		String methodName = "removeMeasurement";
+		long id = this.logInit(methodName, logger, cookie, proposal, measurementId);
 		try {
-		    	Experiment3VO experiment = getExperiment3Service().findByMeasurementId(measurementId);
-		    	Measurement3VO measurement3VO = experiment.getMeasurementById(measurementId);
-//		    	Measurement3VO measurement3VO = getGson().fromJson(measurement, Measurement3VO.class);
-			List<MeasurementTodataCollection3VO> measurementsDC = getMeasurementToDataCollectionService().findByMeasurementId(measurement3VO.getMeasurementId());
-			
+			Experiment3VO experiment = getExperiment3Service().findByMeasurementId(measurementId);
+			Measurement3VO measurement3VO = experiment.getMeasurementById(measurementId);
+			List<MeasurementTodataCollection3VO> measurementsDC = getMeasurementToDataCollectionService()
+					.findByMeasurementId(measurement3VO.getMeasurementId());
+
 			/** Getting specimens involved in this datacollection **/
 			List<Specimen3VO> specimens = new ArrayList<Specimen3VO>();
 			for (MeasurementTodataCollection3VO measurementTodataCollection3VO : measurementsDC) {
-				specimens = getWebUserInterfaceService().getSpecimenByDataCollectionId(measurementTodataCollection3VO.getDataCollectionId());
+				specimens = getWebUserInterfaceService().getSpecimenByDataCollectionId(
+						measurementTodataCollection3VO.getDataCollectionId());
 			}
 			/** Removing data collection, MeasurementtoDc and Measurement **/
 			getWebUserInterfaceService().removeDataCollectionByMeasurement(measurement3VO);
 
 			/** Removing specimen if possible measurementCount == 0 **/
 			for (Specimen3VO specimen3vo : specimens) {
-			    getWebUserInterfaceService().remove(specimen3vo);
+				getWebUserInterfaceService().remove(specimen3vo);
 			}
+			this.logFinish("removeMeasurement", id, logger);
+			return this.sendResponse("Ok");
 			
-			this.logFinish("removeMeasurement", start, LOGGER);
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "removeMeasurement", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, id, logger);
 		}
-		return this.sendResponse("Ok");
 	}
-    	
-    	
+
 	@PermitAll
 	@POST
 	@Path("{cookie}/proposal/{proposal}/saxs/measurement/save")
 	@Produces({ "application/json" })
-	public Response saveMeasurement(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
-			@FormParam("measurement") String measurement) throws Exception {
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("measurement", String.valueOf(measurement));
-		
-		long start = this.logInit("saveMeasurement", new Gson().toJson(params), LOGGER);
+	public Response saveMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@FormParam("measurement") String measurement)  {
+
+		String methodName = "saveMeasurement";
+		long start = this.logInit(methodName, logger, cookie, proposal, measurement);
 		try {
 			Measurement3VO measurement3VO = getGson().fromJson(measurement, Measurement3VO.class);
 			measurement3VO = getWebUserInterfaceService().merge(measurement3VO);
-			this.logFinish("saveMeasurement", start, LOGGER);
+			this.logFinish("saveMeasurement", start, logger);
 			return this.sendResponse(measurement3VO);
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveMeasurement", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
-	
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposalId}/saxs/measurement/experiment/{experimentId}/type/{type}/sort")
 	@Produces({ "application/json" })
-	public Response sortMeasurements(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposalId") String proposal,
-			@PathParam("experimentId") String experimentId,
-			@PathParam("type") String type) throws Exception {
-	    
-	    
+	public Response sortMeasurements(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposal,
+			@PathParam("experimentId") String experimentId, @PathParam("type") String type) throws Exception {
 
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("experimentId", String.valueOf(experimentId));
-		params.put("type", String.valueOf(type));
-		
-		long start = this.logInit("sortMeasurements", new Gson().toJson(params), LOGGER);
+		String methodName = "sortMeasurements";
+		long start = this.logInit(methodName, logger, cookie, proposal, experimentId, type);
 		try {
 			Integer proposalId = this.getProposalId(proposal);
 
@@ -135,22 +106,15 @@ public class MeasurementRestWebService extends RestWebService {
 				SaxsDataCollectionComparator[] options = SaxsDataCollectionComparator.defaultComparator;
 				experiment = getExperiment3Service().setPriorities(Integer.parseInt(experimentId), proposalId, options);
 			}
-			
-			String json = ExperimentSerializer.serializeExperiment(experiment, ExperimentScope.MEDIUM);
-			this.logFinish("sortMeasurements", start, LOGGER);
-			return this.sendResponse(json);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "sortMeasurements", start, System.currentTimeMillis(),
-					e.getMessage(), e);
-		}
-		return null;
-	    
-	}
-	
-	
-	
 
-	
+			String json = ExperimentSerializer.serializeExperiment(experiment, ExperimentScope.MEDIUM);
+			this.logFinish("sortMeasurements", start, logger);
+			return this.sendResponse(json);
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+
+	}
+
 }

@@ -53,9 +53,13 @@ public class LoggerFormatter {
 	    BIOSAXS_MOBILE, 
 	    
 	    CRIMS_WS_ERROR, 
-	    CRIMS_WS, 
+	    CRIMS_WS,
+	    
 	    BIOSAXS_WORKFLOW_ERROR, 
-	    BIOSAXS_WORKFLOW
+	    BIOSAXS_WORKFLOW, 
+	    
+	    ISPyB_API_ERROR,
+	    ISPyB_API
 	}
 
 	

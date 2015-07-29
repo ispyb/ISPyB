@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 @Path("/")
 public class StockSolutionRestWebService extends RestWebService {
 	
-	private final static Logger LOGGER = Logger.getLogger(StockSolutionRestWebService.class);
+	private final static Logger logger = Logger.getLogger(StockSolutionRestWebService.class);
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposalId}/saxs/stocksolution/list")
@@ -35,10 +35,8 @@ public class StockSolutionRestWebService extends RestWebService {
 			@PathParam("cookie") String cookie, 
 			@PathParam("proposalId") String login) throws Exception {
 	    
-	    	HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("login", String.valueOf(login));
-		long start = this.logInit("getStockSolutions", new Gson().toJson(params), LOGGER);
+		String methodName = "getStockSolutions";
+		long start = this.logInit(methodName, logger, cookie, login);
 		try {
         		SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
         			List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(login);
@@ -46,14 +44,11 @@ public class StockSolutionRestWebService extends RestWebService {
         		for (Proposal3VO proposal3vo : proposals) {
         		    stockSolution3VO.addAll(saxsProposalService.findStockSolutionsByProposalId(proposal3vo.getProposalId()));
         		}
-        		this.logFinish("getStockSolutions", start, LOGGER);
+        		this.logFinish(methodName, start, logger);
         		return this.sendResponse(stockSolution3VO);
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getStockSolutions", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
 	
 
@@ -66,23 +61,17 @@ public class StockSolutionRestWebService extends RestWebService {
 			@PathParam("proposalId") String proposalId,
 			@FormParam("stocksolution") String stocksolution) throws Exception {
 		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposalId", String.valueOf(proposalId));
-		params.put("stocksolution", String.valueOf(stocksolution));
 		
-		long start = this.logInit("saveStockSolution", new Gson().toJson(params), LOGGER);
+		String methodName = "saveStockSolution";
+		long start = this.logInit(methodName, logger, cookie, stocksolution);
 		try {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			StockSolution3VO stockSolution3VO = this.getGson().fromJson(stocksolution, StockSolution3VO.class);
-			this.logFinish("saveStockSolution", start, LOGGER);
+			this.logFinish(methodName, start, logger);
 			return this.sendResponse(saxsProposalService.merge(stockSolution3VO));
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveStockSolution", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
 	
 	

@@ -23,71 +23,49 @@ import com.google.gson.Gson;
 
 @Path("/")
 public class SpecimenRestWebService extends RestWebService {
-    	private final static Logger LOGGER = Logger.getLogger(SpecimenRestWebService.class);
-	
-    	
+	private final static Logger logger = Logger.getLogger(SpecimenRestWebService.class);
+
 	@PermitAll
 	@POST
 	@Path("{cookie}/proposal/{proposal}/saxs/specimen/save")
 	@Produces({ "application/json" })
-	public Response saveSpecimen(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response saveSpecimen(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@FormParam("specimen") String specimen) throws Exception {
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("specimen", String.valueOf(specimen));
-		
-		long start = this.logInit("saveSpecimen", new Gson().toJson(params), LOGGER);
+
+		String methodName = "sortMeasurements";
+		long start = this.logInit(methodName, logger, cookie, proposal, specimen);
 		try {
 			Specimen3VO specimen3VO = getGson().fromJson(specimen, Specimen3VO.class);
 			specimen3VO = getWebUserInterfaceService().merge(specimen3VO);
-			this.logFinish("saveSpecimen", start, LOGGER);
-			return Response.ok(getWithoutExposeAnnotationGson()
-				.toJson(specimen3VO))
-				.header("Access-Control-Allow-Origin", "*")
-				.build();
+			this.logFinish("saveSpecimen", start, logger);
+			return Response.ok(getWithoutExposeAnnotationGson().toJson(specimen3VO))
+					.header("Access-Control-Allow-Origin", "*").build();
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveSpecimen", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
-	
-	
+
 	@PermitAll
 	@POST
 	@Path("{cookie}/proposal/{proposal}/saxs/specimen/merge")
 	@Produces({ "application/json" })
-	public Response mergeSpecimens(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
-			@FormParam("experimentId") String experimentId,
-			@FormParam("sourceSpecimenId") int sourceSpecimenId,
+	public Response mergeSpecimens(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+			@FormParam("experimentId") String experimentId, @FormParam("sourceSpecimenId") int sourceSpecimenId,
 			@FormParam("targetSpecimenId") int targetSpecimenId) throws Exception {
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("sourceSpecimenId", String.valueOf(sourceSpecimenId));
-		params.put("targetSpecimenId", String.valueOf(targetSpecimenId));
-		
-		long start = this.logInit("mergeSpecimens", new Gson().toJson(params), LOGGER);
+
+		String methodName = "sortMeasurements";
+		long start = this.logInit(methodName, logger, cookie, proposal, experimentId, sourceSpecimenId,
+				targetSpecimenId);
 		try {
-			
+
 			Specimen3VO specimen = getWebUserInterfaceService().mergeSpecimens(targetSpecimenId, sourceSpecimenId);
-			Experiment3VO experiment = getExperiment3Service().findById(specimen.getExperimentId(), ExperimentScope.MEDIUM);
+			Experiment3VO experiment = getExperiment3Service().findById(specimen.getExperimentId(),
+					ExperimentScope.MEDIUM);
 			String json = ExperimentSerializer.serializeExperiment(experiment, ExperimentScope.MEDIUM);
-			this.logFinish("mergeSpecimens", start, LOGGER);
+			this.logFinish("mergeSpecimens", start, logger);
 			return this.sendResponse(json);
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "mergeSpecimens", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
 }

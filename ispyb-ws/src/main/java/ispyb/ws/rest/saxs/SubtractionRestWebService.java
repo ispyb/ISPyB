@@ -19,21 +19,29 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.log4j.Logger;
+
 @Path("/")
 public class SubtractionRestWebService extends RestWebService {
-	private Subtraction3VO getSubtraction(String subtractionId) throws Exception{
+	
+	private final static Logger logger = Logger.getLogger(SubtractionRestWebService.class);
+	
+	private Subtraction3VO getSubtraction(String subtractionId) throws Exception {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator.getLocalService(PrimaryDataProcessing3Service.class);
+		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
+				.getLocalService(PrimaryDataProcessing3Service.class);
 		return primaryDataProcessing3Service.getSubstractionById(Integer.parseInt(subtractionId));
 	}
-	
-	private List<Subtraction3VO> getAbinitioModelsBySubtractionId(String proposal, String subtractionIdList) throws NamingException {
+
+	private List<Subtraction3VO> getAbinitioModelsBySubtractionId(String proposal, String subtractionIdList)
+			throws NamingException {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		AbInitioModelling3Service abInitioModelling3Service = (AbInitioModelling3Service) ejb3ServiceLocator.getLocalService(AbInitioModelling3Service.class);
-		
+		AbInitioModelling3Service abInitioModelling3Service = (AbInitioModelling3Service) ejb3ServiceLocator
+				.getLocalService(AbInitioModelling3Service.class);
+
 		List<Integer> list = parseToInteger(subtractionIdList);
 		List<Subtraction3VO> result = new ArrayList<Subtraction3VO>();
-		if (subtractionIdList != null){
+		if (subtractionIdList != null) {
 			for (Integer subtractionId : list) {
 				result.addAll(abInitioModelling3Service.getAbinitioModelsBySubtractionId(subtractionId));
 			}
@@ -45,102 +53,104 @@ public class SubtractionRestWebService extends RestWebService {
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionId}/download")
 	@Produces("text/plain")
-	public Response downloadSubtraction(@PathParam("cookie") String cookie,
-			@PathParam("proposal") int proposal,
+	public Response downloadSubtraction(@PathParam("cookie") String cookie, @PathParam("proposal") int proposal,
 			@PathParam("subtractionId") int subtractionId) throws Exception {
 
-		Subtraction3VO subtraction = getPrimaryDataProcessing3Service().getSubstractionById(subtractionId);
-		if (subtraction != null) {
+		String methodName = "downloadSubtraction";
+		long start = this.logInit(methodName, logger, cookie, subtractionId);
+		try {
+			Subtraction3VO subtraction = getPrimaryDataProcessing3Service().getSubstractionById(subtractionId);
+			if (subtraction != null) {
 				String filePath = subtraction.getSubstractedFilePath();
 				File file = new File(filePath);
 				if (file.exists()) {
 					ResponseBuilder response = Response.ok((Object) file);
-					response.header("Content-Disposition",
-							"attachment; filename=" + file.getName());
+					response.header("Content-Disposition", "attachment; filename=" + file.getName());
 					return response.build();
 				}
+			}
+			this.logFinish(methodName, start, logger);
+			return Response.noContent().build();
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
 		}
-		return Response.noContent().build();
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionIdList}/list")
 	@Produces({ "application/json" })
-	public Response list(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("subtractionIdList") String subtractionIdList) throws Exception {
-		return sendResponse(getAbinitioModelsBySubtractionId(proposal, subtractionIdList));
+		String methodName = "downloadSubtraction";
+		long start = this.logInit(methodName, logger, cookie, subtractionIdList);
+		try {
+			List<Subtraction3VO> result = getAbinitioModelsBySubtractionId(proposal, subtractionIdList);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/scattering")
 	@Produces("image/png")
-	public Response getScattering(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response getScattering(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("subtractionId") String subtractionId) throws Exception {
 
 		Subtraction3VO subtraction = this.getSubtraction(subtractionId);
-		if (subtraction != null){
-				return sendImage(subtraction.getScatteringFilePath());
+		if (subtraction != null) {
+			return sendImage(subtraction.getScatteringFilePath());
 		}
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/kratky")
 	@Produces("image/png")
-	public Response getKratky(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response getKratky(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("subtractionId") String subtractionId) throws Exception {
 		Subtraction3VO subtraction = this.getSubtraction(subtractionId);
-		if (subtraction != null){
-				return sendImage(subtraction.getKratkyFilePath());
+		if (subtraction != null) {
+			return sendImage(subtraction.getKratkyFilePath());
 		}
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/density")
 	@Produces("image/png")
-	public Response getDensity(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response getDensity(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("subtractionId") String subtractionId) throws Exception {
 
 		Subtraction3VO subtraction = this.getSubtraction(subtractionId);
-		if (subtraction != null){
-				return sendImage(subtraction.getGnomFilePath());
+		if (subtraction != null) {
+			return sendImage(subtraction.getGnomFilePath());
 		}
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
-	
+
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/guinier")
 	@Produces("image/png")
-	public Response getGuinier(
-			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal,
+	public Response getGuinier(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
 			@PathParam("subtractionId") String subtractionId) throws Exception {
 
 		Subtraction3VO subtraction = this.getSubtraction(subtractionId);
-		if (subtraction != null){
-				return sendImage(subtraction.getGuinierFilePath());
+		if (subtraction != null) {
+			return sendImage(subtraction.getGuinierFilePath());
 		}
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
-	
-	
-	private Response sendImage(String filePath){
-		if (filePath!= null){
-			if (new File(filePath).exists()){
+
+	private Response sendImage(String filePath) {
+		if (filePath != null) {
+			if (new File(filePath).exists()) {
 				File file = new File(filePath);
 				ResponseBuilder response = Response.ok((Object) file);
 				response.header("Content-Disposition", "attachment; filename=image_from_server.png");

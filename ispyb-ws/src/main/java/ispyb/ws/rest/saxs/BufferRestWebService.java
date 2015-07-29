@@ -26,21 +26,30 @@ import com.google.gson.Gson;
 @Path("/")
 public class BufferRestWebService extends RestWebService {
 	
-	private final static Logger LOGGER = Logger.getLogger(BufferRestWebService.class);
+	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 	@PermitAll
 	@GET
 	@Path("{cookie}/proposal/{proposal}/saxs/buffer/list")
 	@Produces({ "application/json" })
 	public Response getBuffers(
 			@PathParam("cookie") String cookie, 
-			@PathParam("proposal") String proposal) throws Exception {
-		SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
-		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
-		List<Buffer3VO> buffers = new ArrayList<Buffer3VO>();
-		for (Proposal3VO proposal3vo : proposals) {
-			buffers.addAll(saxsProposalService.findBuffersByProposalId(proposal3vo.getProposalId()));
+			@PathParam("proposal") String proposal) {
+		
+		String methodName = "getBuffers";
+		long start = this.logInit(methodName, logger, cookie, proposal);
+		try{
+			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
+			List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
+			List<Buffer3VO> buffers = new ArrayList<Buffer3VO>();
+			for (Proposal3VO proposal3vo : proposals) {
+				buffers.addAll(saxsProposalService.findBuffersByProposalId(proposal3vo.getProposalId()));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(buffers);
 		}
-		return this.sendResponse(buffers);
+		catch(Exception e){
+			return this.logError(methodName, e, start, logger);
+		}
 	}
 	
 	@PermitAll
@@ -52,23 +61,16 @@ public class BufferRestWebService extends RestWebService {
 			@PathParam("proposal") String proposal,
 			@FormParam("buffer") String buffer) throws Exception {
 		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cookie", String.valueOf(cookie));
-		params.put("proposal", String.valueOf(proposal));
-		params.put("buffer", String.valueOf(buffer));
-		
-		long start = this.logInit("saveBuffer", new Gson().toJson(params), LOGGER);
+		String methodName = "saveBuffer";
+		long start = this.logInit(methodName, logger, cookie, proposal, buffer);
 		try {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			Buffer3VO buffer3VO = this.getGson().fromJson(buffer, Buffer3VO.class);
-			this.logFinish("saveBuffer", start, LOGGER);
+			this.logFinish(methodName, start, logger);
 			return this.sendResponse(saxsProposalService.merge(buffer3VO));
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveBuffer", start, System.currentTimeMillis(),
-					e.getMessage(), e);
+			return this.logError(methodName, e, start, logger);
 		}
-		return null;
 	}
 	
 	
