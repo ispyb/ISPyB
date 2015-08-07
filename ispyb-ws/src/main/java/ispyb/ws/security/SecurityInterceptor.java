@@ -1,7 +1,13 @@
 package ispyb.ws.security;
 
+import ispyb.server.common.services.login.Login3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.SecureCacheResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -11,14 +17,20 @@ import java.util.StringTokenizer;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
+import org.hibernate.mapping.Array;
 //
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.util.Base64;
+
+import com.google.gson.Gson;
 
 /**
  * This interceptor verify the access permissions for a user based on username
@@ -27,96 +39,84 @@ import org.jboss.resteasy.util.Base64;
 @Provider
 public class SecurityInterceptor implements javax.ws.rs.container.ContainerRequestFilter {
 
-    private static final String AUTHORIZATION_PROPERTY = "Authorization";
-    private static final String AUTHENTICATION_SCHEME = "Basic";
-    private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401,
-	    new Headers<Object>());;
-    private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403,
-	    new Headers<Object>());;
-    private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500,
-	    new Headers<Object>());;
+//	private static final ServerResponse SESSION_EXPIRED = new ServerResponse("Session has expired", 401,new Headers<Object>());
+	private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401,
+			new Headers<Object>());
+	private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403,
+			new Headers<Object>());
+	private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<Object>());
 
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
-	ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) requestContext
-		.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
-	Method method = methodInvoker.getMethod();
 	
-	 System.out.println("asdasdad");
-	 
-	 
-	// Access allowed for all
-	if (!method.isAnnotationPresent(PermitAll.class)) {
-	    // Access denied for all
-	    if (method.isAnnotationPresent(DenyAll.class)) {
-		requestContext.abortWith(ACCESS_FORBIDDEN);
-		return;
-	    }
-
-	    // Get request headers
-	    final MultivaluedMap<String, String> headers = requestContext.getHeaders();
-
-	    // Fetch authorization header
-	    final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
-
-	    // If no authorization information present; block access
-//	    if (authorization == null || authorization.isEmpty()) {
-//		requestContext.abortWith(ACCESS_DENIED);
-//		return;
-//	    }
-
-	   
-	    // Get encoded username and password
-//	    final String encodedUserPassword = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
-//
-//	    // Decode username and password
-//	    String usernameAndPassword = null;
-//	    try {
-//		usernameAndPassword = new String(Base64.decode(encodedUserPassword));
-//	    } catch (IOException e) {
-//		requestContext.abortWith(SERVER_ERROR);
-//		return;
-//	    }
-//
-//	    // Split username and password tokens
-//	    final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-//	    final String username = tokenizer.nextToken();
-//	    final String password = tokenizer.nextToken();
-//
-//	    // Verifying Username and password
-//	    System.out.println(username);
-//	    System.out.println(password);
-
-	    // Verify user access
-	    if (method.isAnnotationPresent(RolesAllowed.class)) {
-		RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-		Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-
-		// Is user valid?
-//		if (!isUserAllowed(username, password, rolesSet)) {
-//		    requestContext.abortWith(ACCESS_DENIED);
-//		    return;
-//		}
-	    }
+	private Response getUnauthorizedResponse(){
+		return Response.status(401) 
+				.header("Access-Control-Allow-Origin", "*")
+				.allow("OPTIONS").build();
 	}
-    }
+	
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+		ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) requestContext.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
+		Method method = methodInvoker.getMethod();
 
-    private boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
-	boolean isAllowed = false;
+		/** Allowing cross-domain **/
+		ArrayList<String> header = new ArrayList<String>();
+		header.add("*");
+		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
+		
+//		cres.getHttpHeaders().add("Access-Control-Allow-Origin", "*");
+//        cres.getHttpHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+//        cres.getHttpHeaders().add("Access-Control-Allow-Credentials", "true");
+//        cres.getHttpHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+//        cres.getHttpHeaders().add("Access-Control-Max-Age", "1209600");
+        
+		
+		System.out.println("-------SecurityInterceptor----");
+		if (method.isAnnotationPresent(PermitAll.class)) {
+			System.out.println("PermitAll");
+			return;
+		}
 
-	// Step 1. Fetch password from database and match with password in
-	// argument
-	// If both match then get the defined role for user from database and
-	// continue; else return isAllowed [false]
-	// Access the database and do this part yourself
-	// String userRole = userMgr.getUserRole(username);
-	String userRole = "ADMIN";
+		// Access denied for all
+		if (method.isAnnotationPresent(DenyAll.class)) {
+			System.out.println("DenyAll");
+			requestContext.abortWith(ACCESS_FORBIDDEN);
+			return;
+		}
 
-	// Step 2. Verify user role
-	if (rolesSet.contains(userRole)) {
-	    isAllowed = true;
+		if (method.isAnnotationPresent(RolesAllowed.class)) {
+			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+			Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+			System.out.println("---- ROLES -----");
+			String token = requestContext.getUriInfo().getPathParameters().get("token").get(0);
+			System.out.println(token);
+			System.out.println(rolesSet);
+
+			Login3VO login = this.getLogin(token, rolesSet);
+			if (login != null) {
+				System.out.println("Valid: " + login.isValid());
+				if (login.isValid()) {
+					return;
+				} else {
+					System.out.println("Expired");
+					requestContext.abortWith(this.getUnauthorizedResponse());
+				}
+			} else {
+				requestContext.abortWith(this.getUnauthorizedResponse());
+			}
+		}
+
 	}
-	return isAllowed;
-    }
+
+	private Login3VO getLogin(String token, Set<String> rolesSet) {
+		try {
+			System.out.println("authenticateToken " + token);
+			Login3Service service = (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+					Login3Service.class);
+			return service.findByToken(token);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
