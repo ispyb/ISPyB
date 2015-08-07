@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatFilePlotter {
-
+	enum Operation {
+		LOG,
+		LINEAL
+	}
 	protected List<DatFile> files;
-
+	protected Operation operation;
+	
 	public DatFilePlotter(List<DatFile> files) {
 		this.files = files;
+		this.operation = Operation.LOG;
 	}
 
 	protected float getMin(List<DatPoint> points) {
@@ -42,6 +47,16 @@ public class DatFilePlotter {
 		}
 		return xList;
 	}
+	
+	protected Float doOperation(Float x) {
+		switch (this.operation) {
+		case LINEAL:
+			return x;
+		case LOG:
+			return (float) Math.log(x);
+		}
+		return x;
+	}
 
 	protected String parseCurrent(float min) {
 		StringBuilder sb = new StringBuilder();
@@ -50,7 +65,7 @@ public class DatFilePlotter {
 			if (!file.getStack().isEmpty()){
 				if (file.getStack().peek().getX().equals(min)){
 					DatPoint point = file.getStack().pop();
-					sb.append("," + point.getY() + "," + point.getError());
+					sb.append("," + doOperation(point.getY()) + "," + (doOperation(Math.abs(point.getY() - point.getError())) - doOperation(point.getY())));
 				}
 				else{
 					sb.append(",,");

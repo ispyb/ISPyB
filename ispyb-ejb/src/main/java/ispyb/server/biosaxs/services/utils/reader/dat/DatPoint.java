@@ -11,13 +11,13 @@ public class DatPoint {
 		this.error = error;
 	}
 	
-	public String getCSV(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.x);
-		sb.append(this.y);
-		sb.append(this.error);
-		return sb.toString();
-	}
+//	public String getCSV(){
+//		StringBuilder sb = new StringBuilder();
+//		sb.append(this.x);
+//		sb.append(Math.log(this.y)*this.y);
+//		sb.append((this.error)+100);
+//		return sb.toString();
+//	}
 	
 	public Float getX(){
 		return this.x;
@@ -31,9 +31,9 @@ public class DatPoint {
 		return this.error;
 	}
 	
-	public String toString(){
-		return this.getCSV();
-	}
+//	public String toString(){
+//		return this.getCSV();
+//	}
 
 	public void setScale(Float scale) {
 		this.y = this.y * scale;
