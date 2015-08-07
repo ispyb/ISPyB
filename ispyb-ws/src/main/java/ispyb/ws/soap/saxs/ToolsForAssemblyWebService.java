@@ -600,9 +600,11 @@ public class ToolsForAssemblyWebService {
 			Type mapType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
 			ArrayList<HashMap<String, String>> json = gson.fromJson(samples, mapType);
 
+			String comments = "";
+			
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Experiment3VO experiment = biosaxsWebServiceActions.createExperiment(StringUtils.getProposalCode(code), number, json,
-					mode, storageTemperature, extraFlowTime, type, sourceFilePath, name);
+					mode, storageTemperature, extraFlowTime, type, sourceFilePath, name, comments);
 			logFinish("createExperiment", id);
 			return experiment;
 		} catch (Exception e) {
