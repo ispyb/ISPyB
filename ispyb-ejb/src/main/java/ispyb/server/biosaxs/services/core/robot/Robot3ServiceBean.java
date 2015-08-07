@@ -765,15 +765,15 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 	@Override
 	public Experiment3VO createExperimentFromRobotParams(ArrayList<HashMap<String, String>> samples, Integer sessionId,
 			int proposalId, String mode, String storageTemperature, String extraFlowTime, String type,
-			String sourceFilePath, String name) throws Exception {
+			String sourceFilePath, String name, String comments) throws Exception {
 		return this.createExperimentFromRobotParams(samples, sessionId, proposalId, mode, storageTemperature,
-				extraFlowTime, type, sourceFilePath, name, true);
+				extraFlowTime, type, sourceFilePath, name, true, comments);
 	}
 
 	@Override
 	public Experiment3VO createExperimentFromRobotParams(ArrayList<HashMap<String, String>> samples, Integer sessionId,
 			int proposalId, String mode, String storageTemperature, String extraFlowTime, String type,
-			String sourceFilePath, String name, Boolean optimize) throws Exception {
+			String sourceFilePath, String name, Boolean optimize, String comments) throws Exception {
 
 		Experiment3VO experiment = new Experiment3VO();
 		experiment.setType(type);
@@ -783,7 +783,7 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 		experiment.setName(name);
 		experiment.setProposalId(proposalId);
 		experiment.setSessionId(sessionId);
-		experiment.setComments("[BsxCube] Generated from BsxCube");
+		experiment.setComments(comments);
 		experiment = this.experiment3ServiceLocal.merge(experiment);
 
 		if (sourceFilePath != null) {

@@ -117,7 +117,7 @@ public class BiosaxsServices {
 	 */
 	public Experiment3VO createExperiment(String proposalCode, String proposalNumber,
 			ArrayList<HashMap<String, String>> samples, String mode, String storageTemperature, String extraFlowTime,
-			String type, String sourceFilePath, String name) throws Exception {
+			String type, String sourceFilePath, String name, String comments) throws Exception {
 
 		ProposalWS3VO proposal = proposalService.findForWSByCodeAndNumber(proposalCode, proposalNumber);
 		Integer sessionId = null;
@@ -145,7 +145,7 @@ public class BiosaxsServices {
 			int proposalId = proposal.getProposalId();
 			Robot3Service robot3Service = (Robot3Service) ejb3ServiceLocator.getLocalService(Robot3Service.class);
 			return robot3Service.createExperimentFromRobotParams(samples, sessionId, proposalId, mode,
-					storageTemperature, extraFlowTime, type, sourceFilePath, name);
+					storageTemperature, extraFlowTime, type, sourceFilePath, name, comments);
 		}
 		return null;
 	}

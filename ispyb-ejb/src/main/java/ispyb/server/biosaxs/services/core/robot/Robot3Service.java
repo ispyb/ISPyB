@@ -40,7 +40,8 @@ public interface Robot3Service {
 			String extraFlowTime,
 			String type, 
 			String sourceFilePath, 
-			String name) throws Exception;
+			String name,
+			String comments) throws Exception;
 
 
 	/**
@@ -67,7 +68,8 @@ public interface Robot3Service {
 			String type,
 			String sourceFilePath, 
 			String name, 
-			Boolean optimize) throws Exception;
+			Boolean optimize,
+			String comments) throws Exception;
 
 	public Experiment3VO addMeasurementsToExperiment(int experimentId, int proposalId, ArrayList<HashMap<String, String>> samples) throws Exception;
 	
