@@ -2,12 +2,10 @@ package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -21,22 +19,20 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-
 @Path("/")
 public class BufferRestWebService extends RestWebService {
 	
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/buffer/list")
+	@Path("{token}/proposal/{proposal}/saxs/buffer/list")
 	@Produces({ "application/json" })
 	public Response getBuffers(
-			@PathParam("cookie") String cookie, 
+			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal) {
 		
 		String methodName = "getBuffers";
-		long start = this.logInit(methodName, logger, cookie, proposal);
+		long start = this.logInit(methodName, logger, token, proposal);
 		try{
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
@@ -54,15 +50,15 @@ public class BufferRestWebService extends RestWebService {
 	
 	@PermitAll
 	@POST
-	@Path("{cookie}/proposal/{proposal}/saxs/buffer/save")
+	@Path("{token}/proposal/{proposal}/saxs/buffer/save")
 	@Produces({ "application/json" })
 	public Response saveBuffer(
-			@PathParam("cookie") String cookie, 
+			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal,
 			@FormParam("buffer") String buffer) throws Exception {
 		
 		String methodName = "saveBuffer";
-		long start = this.logInit(methodName, logger, cookie, proposal, buffer);
+		long start = this.logInit(methodName, logger, token, proposal, buffer);
 		try {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			Buffer3VO buffer3VO = this.getGson().fromJson(buffer, Buffer3VO.class);

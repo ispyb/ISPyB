@@ -146,13 +146,15 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/average/{mergeIdList}/list")
+	@Path("{token}/proposal/{proposal}/saxs/frame/average/{mergeIdList}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response list(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
 			@PathParam("mergeIdList") String mergeIdList) {
 
-		String methodName = "getFrame";
-		long start = this.logInit(methodName, logger, cookie, proposal, mergeIdList);
+		String methodName = "list";
+		long start = this.logInit(methodName, logger, token, proposal, mergeIdList);
 		try {
 			List<Integer> idList = this.parseToInteger(mergeIdList);
 			List<HashMap<String, Object>> result = getFramesByMergeId(idList);
@@ -166,13 +168,13 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/measurement/{measurementIdList}/list")
+	@Path("{token}/proposal/{proposal}/saxs/frame/measurement/{measurementIdList}/list")
 	@Produces({ "application/json" })
-	public Response listByMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response listByMeasurement(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("measurementIdList") String measurementIdList) throws Exception {
 
 		String methodName = "listByMeasurement";
-		long start = this.logInit(methodName, logger, cookie, proposal, measurementIdList);
+		long start = this.logInit(methodName, logger, token, proposal, measurementIdList);
 		try {
 			List<Integer> idList = this.parseToInteger(measurementIdList);
 			List<HashMap<String, Object>> result = getFramesByMeasurementId(idList);
@@ -186,13 +188,13 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/subtraction/{subtractionIdList}/list")
+	@Path("{token}/proposal/{proposal}/saxs/frame/subtraction/{subtractionIdList}/list")
 	@Produces({ "application/json" })
-	public Response get(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response get(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("subtractionIdList") String subtractionIdList) throws Exception {
 
 		String methodName = "get";
-		long start = this.logInit(methodName, logger, cookie, proposal, subtractionIdList);
+		long start = this.logInit(methodName, logger, token, proposal, subtractionIdList);
 		try {
 			List<Integer> idList = this.parseToInteger(subtractionIdList);
 			List<HashMap<String, Object>> result = getSubtractionById(idList);
@@ -204,129 +206,133 @@ public class FrameRestWebService extends RestWebService {
 
 	}
 
+//	@PermitAll
+//	@GET
+//	@Path("{token}/proposal/{proposal}/saxs/frame/get")
+//	@Produces({ "application/json" })
+//	public Response get(@PathParam("token") String token, @PathParam("proposal") String proposal,
+//			@QueryParam("frame") String frame, 
+//			@QueryParam("average") String average,
+//			@QueryParam("subtraction") String subtraction, 
+//			@QueryParam("sampleaverage") String sampleaverage,
+//			@QueryParam("bufferaverage") String bufferaverage) {
+//
+//		String methodName = "get";
+//		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtraction, sampleaverage,
+//				bufferaverage);
+//		try {
+//
+//			HashMap<String, String> result = new HashMap<String, String>();
+//
+//			List<Integer> frames = new ArrayList<Integer>();
+//			List<Integer> averages = new ArrayList<Integer>();
+//			List<Integer> subtractions = new ArrayList<Integer>();
+//			List<Integer> models = new ArrayList<Integer>();
+//			List<Integer> fits = new ArrayList<Integer>();
+//			List<Integer> rigids = new ArrayList<Integer>();
+//
+//			if (frame != null) {
+//				result.put("frame", parseToInteger(frame).toString());
+//				frames = parseToInteger(frame);
+//			}
+//			if (average != null) {
+//				result.put("average", parseToInteger(average).toString());
+//				averages = parseToInteger(average);
+//			}
+//			if (subtraction != null) {
+//				result.put("subtraction", parseToInteger(subtraction).toString());
+//				subtractions = parseToInteger(subtraction);
+//			}
+//			if (sampleaverage != null) {
+//				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
+//				List<Integer> sampleaverages = parseToInteger(sampleaverage);
+//			}
+//
+//			if (bufferaverage != null) {
+//				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
+//				List<Integer> bufferaverages = parseToInteger(bufferaverage);
+//			}
+//			String json = FactoryProducer.getJSON(frames, averages, subtractions, models, fits, rigids);
+//			this.logFinish(methodName, start, logger);
+//			return sendResponse(json);
+//
+//		} catch (Exception e) {
+//			return this.logError(methodName, e, start, logger);
+//		}
+//
+//	}
+
+//	@PermitAll
+//	@GET
+//	@Path("{token}/saxs/{proposal}/frame/plot")
+//	@Produces({ "application/json" })
+//	public Response plot(@PathParam("token") String token, @PathParam("proposal") String proposal,
+//			@QueryParam("frame") String frame, @QueryParam("average") String average,
+//			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
+//			@QueryParam("bufferaverage") String bufferaverage) {
+//
+//		String methodName = "plot";
+//		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtracted, sampleaverage,
+//				bufferaverage);
+//		try {
+//			HashMap<String, String> result = new HashMap<String, String>();
+//			List<Integer> frames = new ArrayList<Integer>();
+//			List<Integer> averages = new ArrayList<Integer>();
+//			List<Integer> subtracteds = new ArrayList<Integer>();
+//			List<Integer> sampleaverages = new ArrayList<Integer>();
+//			List<Integer> bufferaverages = new ArrayList<Integer>();
+//
+//			if (frame != null) {
+//				result.put("frame", parseToInteger(frame).toString());
+//				frames = parseToInteger(frame);
+//			}
+//			if (average != null) {
+//				result.put("average", parseToInteger(average).toString());
+//				averages = parseToInteger(average);
+//			}
+//			if (subtracted != null) {
+//				result.put("subtracted", parseToInteger(subtracted).toString());
+//				subtracteds = parseToInteger(subtracted);
+//			}
+//			if (sampleaverage != null) {
+//				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
+//				sampleaverages = parseToInteger(sampleaverage);
+//			}
+//
+//			if (bufferaverage != null) {
+//				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
+//				bufferaverages = parseToInteger(bufferaverage);
+//			}
+//
+//			List<Integer> subtractions = new ArrayList<Integer>();
+//			List<Integer> models = new ArrayList<Integer>();
+//			List<Integer> fits = new ArrayList<Integer>();
+//			List<Integer> rigids = new ArrayList<Integer>();
+//
+//			String json = FactoryProducer.getPlot(frames, averages, subtractions, models, fits, rigids, subtracteds,
+//					sampleaverages, bufferaverages);
+//			this.logFinish(methodName, start, logger);
+//			return sendResponse(json);
+//
+//		} catch (Exception e) {
+//			return this.logError(methodName, e, start, logger);
+//		}
+//
+//	}
+
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/get")
-	@Produces({ "application/json" })
-	public Response get(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame, @QueryParam("average") String average,
-			@QueryParam("subtraction") String subtraction, @QueryParam("sampleaverage") String sampleaverage,
-			@QueryParam("bufferaverage") String bufferaverage) {
-
-		String methodName = "get";
-		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtraction, sampleaverage,
-				bufferaverage);
-		try {
-
-			HashMap<String, String> result = new HashMap<String, String>();
-
-			List<Integer> frames = new ArrayList<Integer>();
-			List<Integer> averages = new ArrayList<Integer>();
-			List<Integer> subtractions = new ArrayList<Integer>();
-			List<Integer> models = new ArrayList<Integer>();
-			List<Integer> fits = new ArrayList<Integer>();
-			List<Integer> rigids = new ArrayList<Integer>();
-
-			if (frame != null) {
-				result.put("frame", parseToInteger(frame).toString());
-				frames = parseToInteger(frame);
-			}
-			if (average != null) {
-				result.put("average", parseToInteger(average).toString());
-				averages = parseToInteger(average);
-			}
-			if (subtraction != null) {
-				result.put("subtraction", parseToInteger(subtraction).toString());
-				subtractions = parseToInteger(subtraction);
-			}
-			if (sampleaverage != null) {
-				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
-				List<Integer> sampleaverages = parseToInteger(sampleaverage);
-			}
-
-			if (bufferaverage != null) {
-				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
-				List<Integer> bufferaverages = parseToInteger(bufferaverage);
-			}
-			String json = FactoryProducer.getJSON(frames, averages, subtractions, models, fits, rigids);
-			this.logFinish(methodName, start, logger);
-			return sendResponse(json);
-
-		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
-
-	}
-
-	@PermitAll
-	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/plot")
-	@Produces({ "application/json" })
-	public Response plot(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame, @QueryParam("average") String average,
-			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
-			@QueryParam("bufferaverage") String bufferaverage) {
-
-		String methodName = "plot";
-		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtracted, sampleaverage,
-				bufferaverage);
-		try {
-			HashMap<String, String> result = new HashMap<String, String>();
-			List<Integer> frames = new ArrayList<Integer>();
-			List<Integer> averages = new ArrayList<Integer>();
-			List<Integer> subtracteds = new ArrayList<Integer>();
-			List<Integer> sampleaverages = new ArrayList<Integer>();
-			List<Integer> bufferaverages = new ArrayList<Integer>();
-
-			if (frame != null) {
-				result.put("frame", parseToInteger(frame).toString());
-				frames = parseToInteger(frame);
-			}
-			if (average != null) {
-				result.put("average", parseToInteger(average).toString());
-				averages = parseToInteger(average);
-			}
-			if (subtracted != null) {
-				result.put("subtracted", parseToInteger(subtracted).toString());
-				subtracteds = parseToInteger(subtracted);
-			}
-			if (sampleaverage != null) {
-				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
-				sampleaverages = parseToInteger(sampleaverage);
-			}
-
-			if (bufferaverage != null) {
-				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
-				bufferaverages = parseToInteger(bufferaverage);
-			}
-
-			List<Integer> subtractions = new ArrayList<Integer>();
-			List<Integer> models = new ArrayList<Integer>();
-			List<Integer> fits = new ArrayList<Integer>();
-			List<Integer> rigids = new ArrayList<Integer>();
-
-			String json = FactoryProducer.getPlot(frames, averages, subtractions, models, fits, rigids, subtracteds,
-					sampleaverages, bufferaverages);
-			this.logFinish(methodName, start, logger);
-			return sendResponse(json);
-
-		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
-
-	}
-
-	@PermitAll
-	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/datplot")
+	@Path("{token}/proposal/{proposal}/saxs/frame/datplot")
 	@Produces("text/plain")
-	public Response datplot(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@QueryParam("frame") String frame, @QueryParam("average") String average,
-			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
+	public Response datplot(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@QueryParam("frame") String frame, 
+			@QueryParam("average") String average,
+			@QueryParam("subtracted") String subtracted, 
+			@QueryParam("sampleaverage") String sampleaverage,
 			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
 
 		String methodName = "datplot";
-		long start = this.logInit(methodName, logger, cookie, proposal, frame, average, subtracted, sampleaverage,
+		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtracted, sampleaverage,
 				bufferaverage);
 		try {
 			List<Integer> frames = new ArrayList<Integer>();
@@ -385,14 +391,14 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/subtractionId/{subtracted}/datplotmerge")
+	@Path("{token}/saxs/{proposal}/frame/subtractionId/{subtracted}/datplotmerge")
 	@Produces("text/plain")
-	public Response datplotmerge(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response datplotmerge(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("subtracted") String subtracted, @QueryParam("from") String from, @QueryParam("to") String to,
 			@QueryParam("scale") String scale) throws Exception {
 
 		String methodName = "datplotmerge";
-		long start = this.logInit(methodName, logger, cookie, proposal, subtracted, from, to, scale);
+		long start = this.logInit(methodName, logger, token, proposal, subtracted, from, to, scale);
 		try {
 			List<Integer> subtracteds = new ArrayList<Integer>();
 	
@@ -426,14 +432,14 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/subtractionId/{subtracted}/merge")
+	@Path("{token}/saxs/{proposal}/frame/subtractionId/{subtracted}/merge")
 	@Produces("text/plain")
-	public Response merge(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response merge(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("subtracted") String subtracted, @QueryParam("from") String from, @QueryParam("to") String to,
 			@QueryParam("scale") String scale) throws Exception {
 
 		String methodName = "datplotmerge";
-		long start = this.logInit(methodName, logger, cookie, proposal, subtracted, from, to, scale);
+		long start = this.logInit(methodName, logger, token, proposal, subtracted, from, to, scale);
 		try {
 			List<Integer> subtracteds = new ArrayList<Integer>();
 	
@@ -467,13 +473,13 @@ public class FrameRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/saxs/{proposal}/frame/{frameId}/download")
+	@Path("{token}/saxs/{proposal}/frame/{frameId}/download")
 	@Produces("text/plain")
-	public Response downloadFrame(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response downloadFrame(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("frameId") String frameId) throws Exception {
 
 		String methodName = "downloadFrame";
-		long start = this.logInit(methodName, logger, cookie, frameId);
+		long start = this.logInit(methodName, logger, token, frameId);
 		try {
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator

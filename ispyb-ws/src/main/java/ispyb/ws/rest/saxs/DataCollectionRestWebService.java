@@ -22,12 +22,12 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/datacollection/list")
+	@Path("{token}/proposal/{proposal}/saxs/datacollection/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal) throws Exception {
+	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal) throws Exception {
 
 		String methodName = "list";
-		long id = this.logInit(methodName, logger, cookie, proposal);
+		long id = this.logInit(methodName, logger, token, proposal);
 		try {
 			List<Map<String, Object>> result = this.getAnalysis3Service().getCompactAnalysisByProposalId(
 					getProposalId(proposal), 10000);
@@ -41,13 +41,13 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/datacollection/{datacollectionIdList}/list")
+	@Path("{token}/proposal/{proposal}/saxs/datacollection/{datacollectionIdList}/list")
 	@Produces({ "application/json" })
-	public Response getDataCollections(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response getDataCollections(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("datacollectionIdList") String datacollectionIdList) throws Exception {
 
 		String methodName = "getDataCollections";
-		long id = this.logInit(methodName, logger, cookie, proposal);
+		long id = this.logInit(methodName, logger, token, proposal);
 		try {
 			List<SaxsDataCollection3VO> result = this.getAnalysis3Service().getDataCollections(
 					this.parseToInteger(datacollectionIdList));
@@ -61,13 +61,13 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/datacollection/{key}/{value}/list")
+	@Path("{token}/proposal/{proposal}/saxs/datacollection/{key}/{value}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("key") String key, @PathParam("value") String value) throws Exception {
 
 		String methodName = "getDataCollections";
-		long id = this.logInit(methodName, logger, cookie, proposal);
+		long id = this.logInit(methodName, logger, token, proposal);
 		try {
 			List<String> dataCollectionIdList = this.parseToString(value);
 			List<Map<String, Object>> result = filter(

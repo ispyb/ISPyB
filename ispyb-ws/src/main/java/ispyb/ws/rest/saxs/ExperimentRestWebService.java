@@ -7,10 +7,8 @@ import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
 import ispyb.server.common.hdf5.HDF5FileReader;
-import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.lang.reflect.Type;
@@ -20,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -35,6 +33,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 
 @Path("/")
 public class ExperimentRestWebService extends RestWebService {
@@ -92,15 +91,15 @@ public class ExperimentRestWebService extends RestWebService {
 		return experiments;
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/experiment/list")
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposalId)
+	public Response list(@PathParam("token") String token, @PathParam("proposalId") String proposalId)
 			throws Exception {
 
 		String methodName = "list";
-		long id = this.logInit(methodName, logger, cookie, proposalId);
+		long id = this.logInit(methodName, logger, token, proposalId);
 		try {
 			List<Map<String, Object>> result = getExperimentListByProposal(proposalId);
 			this.logFinish(methodName, id, logger);
@@ -111,15 +110,15 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/experiment/{experimentId}/get")
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/get")
 	@Produces({ "application/json" })
-	public Response getExperimentById(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposalId,
+	public Response getExperimentById(@PathParam("token") String token, @PathParam("proposalId") String proposalId,
 			@PathParam("experimentId") int experimentId) throws Exception {
 
 		String methodName = "getExperimentById";
-		long id = this.logInit(methodName, logger, cookie, proposalId, experimentId);
+		long id = this.logInit(methodName, logger, token, proposalId, experimentId);
 		try {
 			Experiment3VO experiment = this.getExperiment3Service().findById(experimentId, ExperimentScope.MEDIUM,
 					this.getProposalId(proposalId));
@@ -132,16 +131,16 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/experiment/{experimentId}/samplechanger/type/{type}/template")
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/samplechanger/type/{type}/template")
 	@Produces({ "application/json" })
-	public Response getTemplateSourceFile(@PathParam("cookie") String cookie,
+	public Response getTemplateSourceFile(@PathParam("token") String token,
 			@PathParam("proposalId") String proposalId, @PathParam("type") String type,
 			@PathParam("experimentId") int experimentId) throws Exception {
 
 		String methodName = "getTemplateSourceFile";
-		long start = this.logInit("getTemplateSourceFile", logger, cookie, proposalId, type, experimentId);
+		long start = this.logInit("getTemplateSourceFile", logger, token, proposalId, type, experimentId);
 		try {
 			String templateFile = this.getExperiment3Service().toRobotXML(experimentId, this.getProposalId(proposalId));
 			this.logFinish(methodName, start, logger);
@@ -153,28 +152,32 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	private Experiment3VO saveExperiment(int proposalId, String name, ArrayList<HashMap<String, String>> samples)
+	private Experiment3VO saveExperiment(int proposalId, String name, ArrayList<HashMap<String, String>> samples, String comments)
 			throws NamingException, Exception {
 		Boolean optimize = false;
 		// TODO replace by correct sessionId
 		Integer sessionId = null;
 		Experiment3VO experiment = this.getRobot3Service().createExperimentFromRobotParams(samples, sessionId,
-				proposalId, "BeforeAndAfter", "0", "0", "TEMPLATE", null, name, optimize);
+				proposalId, "BeforeAndAfter", "0", "0", "TEMPLATE", null, name, optimize, comments);
 		return this.getWebUserInterfaceService().setPriorities(experiment.getExperimentId(), proposalId,
 				SaxsDataCollectionComparator.defaultComparator);
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@POST
-	@Path("{cookie}/proposal/{proposal}/saxs/experiment/save")
+	@Path("{token}/proposal/{proposal}/saxs/experiment/save")
 	@Produces({ "application/json" })
-	public Response createExperiment(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@FormParam("name") String name, @FormParam("comments") String comments,
-			@FormParam("experimentId") Integer experimentId, @FormParam("measurements") String measurements)
+	public Response createExperiment(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@FormParam("name") String name,
+			@FormParam("comments") String comments,
+			@FormParam("experimentId") Integer experimentId, 
+			@FormParam("measurements") String measurements)
 			throws Exception {
 		
 		String methodName = "createExperiment";
-		long start = this.logInit(methodName, logger, cookie, proposal, name, comments, experimentId, measurements);
+		long start = this.logInit(methodName, logger, token, proposal, name, comments, experimentId, measurements);
 		try {
 			Integer proposalId = this.getProposalId(proposal);
 
@@ -185,7 +188,7 @@ public class ExperimentRestWebService extends RestWebService {
 
 			Experiment3VO experiment = null;
 			if (experimentId == null) {
-				experiment = this.saveExperiment(proposalId, name, samples);
+				experiment = this.saveExperiment(proposalId, name, samples, comments);
 			} else {
 				experiment = getRobot3Service().addMeasurementsToExperiment(experimentId, proposalId, samples);
 			}
@@ -198,16 +201,19 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@POST
-	@Path("{cookie}/proposal/{proposal}/saxs/experiment/{experimentId}/save")
+	@Path("{token}/proposal/{proposal}/saxs/experiment/{experimentId}/save")
 	@Produces({ "application/json" })
-	public Response saveExperiment(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@PathParam("experimentId") int experimentId, @FormParam("name") String name,
+	public Response saveExperiment(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("experimentId") int experimentId, 
+			@FormParam("name") String name,
 			@FormParam("comments") String comments) throws Exception {
 
 		String methodName = "saveExperiment";
-		long start = this.logInit(methodName, logger, cookie, proposal, name, comments, experimentId);
+		long start = this.logInit(methodName, logger, token, proposal, name, comments, experimentId);
 		try {
 			Experiment3VO experiment = getExperiment3Service().findById(experimentId, ExperimentScope.MINIMAL);
 			experiment.setName(name);
@@ -222,15 +228,17 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/experiment/session/{sessionId}/list")
+	@Path("{token}/proposal/{proposal}/saxs/experiment/session/{sessionId}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response list(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
 			@PathParam("sessionId") int sessionId) {
 		
 		String methodName = "list";
-		long start = this.logInit(methodName, logger, cookie, proposal, sessionId);
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
 		try {
 			List<Map<String, Object>> result = getExperimentListBySessionId(proposal, sessionId);
 			this.logFinish(methodName, start, logger);
@@ -241,15 +249,15 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/experiment/{key}/{value}/list")
+	@Path("{token}/proposal/{proposal}/saxs/experiment/{key}/{value}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("key") String key, @PathParam("value") String value) throws Exception {
 		
 		String methodName = "list";
-		long start = this.logInit(methodName, logger, cookie, proposal, key, value);
+		long start = this.logInit(methodName, logger, token, proposal, key, value);
 		try {
 			List<Map<String, Object>> result = filter(getExperimentListByProposal(proposal), key, value);
 			this.logFinish(methodName, start, logger);
@@ -270,15 +278,15 @@ public class ExperimentRestWebService extends RestWebService {
 		return null;
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/overview")
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/overview")
 	@Produces("text/plain")
-	public Response overview(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposal,
+	public Response overview(@PathParam("token") String token, @PathParam("proposalId") String proposal,
 			@PathParam("experimentId") int experimentId) throws Exception {
 		
 		String methodName = "overview";
-		long start = this.logInit(methodName, logger, cookie, proposal, experimentId);
+		long start = this.logInit(methodName, logger, token, proposal, experimentId);
 		
 		try {
 			String params = ("I0,I0_Stdev,sum_I,Rg,Rg_Stdev,Vc,Vc_Stdev,Qr,Qr_Stdev,mass,mass_Stdev,quality");
@@ -348,16 +356,16 @@ public class ExperimentRestWebService extends RestWebService {
 
 	}
 
-	@PermitAll
+	@RolesAllowed({"User"}) 
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/frame/{frameId}/get")
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/frame/{frameId}/get")
 	@Produces("text/plain")
-	public Response getFrame(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposalId,
+	public Response getFrame(@PathParam("token") String token, @PathParam("proposalId") String proposalId,
 			@PathParam("experimentId") int experimentId, @PathParam("frameId") String frameNumberList,
 			@QueryParam("operation") String operation) throws Exception {
 
 		String methodName = "getFrame";
-		long start = this.logInit(methodName, logger, cookie, proposalId, experimentId, frameNumberList, operation);
+		long start = this.logInit(methodName, logger, token, proposalId, experimentId, frameNumberList, operation);
 		
 		try {
 

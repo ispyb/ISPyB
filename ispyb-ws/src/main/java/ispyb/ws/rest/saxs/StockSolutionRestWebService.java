@@ -29,14 +29,14 @@ public class StockSolutionRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(StockSolutionRestWebService.class);
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/stocksolution/list")
+	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/list")
 	@Produces({ "application/json" })
 	public Response getStockSolutions(
-			@PathParam("cookie") String cookie, 
+			@PathParam("token") String token, 
 			@PathParam("proposalId") String login) throws Exception {
 	    
 		String methodName = "getStockSolutions";
-		long start = this.logInit(methodName, logger, cookie, login);
+		long start = this.logInit(methodName, logger, token, login);
 		try {
         		SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
         			List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(login);
@@ -54,16 +54,16 @@ public class StockSolutionRestWebService extends RestWebService {
 
 	@PermitAll
 	@POST
-	@Path("{cookie}/proposal/{proposalId}/saxs/stocksolution/save")
+	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/save")
 	@Produces({ "application/json" })
 	public Response saveStockSolution(
-			@PathParam("cookie") String cookie, 
+			@PathParam("token") String token, 
 			@PathParam("proposalId") String proposalId,
 			@FormParam("stocksolution") String stocksolution) throws Exception {
 		
 		
 		String methodName = "saveStockSolution";
-		long start = this.logInit(methodName, logger, cookie, stocksolution);
+		long start = this.logInit(methodName, logger, token, stocksolution);
 		try {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			StockSolution3VO stockSolution3VO = this.getGson().fromJson(stocksolution, StockSolution3VO.class);

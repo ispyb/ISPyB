@@ -7,11 +7,9 @@ import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
 import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
-import ispyb.server.common.util.LoggerFormatter;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -25,21 +23,19 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-
 @Path("/")
 public class MeasurementRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(MeasurementRestWebService.class);
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/saxs/measurement/{measurementId}/remove")
+	@Path("{token}/proposal/{proposal}/saxs/measurement/{measurementId}/remove")
 	@Produces()
-	public Response removeMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response removeMeasurement(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("measurementId") int measurementId) {
 
 		String methodName = "removeMeasurement";
-		long id = this.logInit(methodName, logger, cookie, proposal, measurementId);
+		long id = this.logInit(methodName, logger, token, proposal, measurementId);
 		try {
 			Experiment3VO experiment = getExperiment3Service().findByMeasurementId(measurementId);
 			Measurement3VO measurement3VO = experiment.getMeasurementById(measurementId);
@@ -69,13 +65,13 @@ public class MeasurementRestWebService extends RestWebService {
 
 	@PermitAll
 	@POST
-	@Path("{cookie}/proposal/{proposal}/saxs/measurement/save")
+	@Path("{token}/proposal/{proposal}/saxs/measurement/save")
 	@Produces({ "application/json" })
-	public Response saveMeasurement(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response saveMeasurement(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@FormParam("measurement") String measurement)  {
 
 		String methodName = "saveMeasurement";
-		long start = this.logInit(methodName, logger, cookie, proposal, measurement);
+		long start = this.logInit(methodName, logger, token, proposal, measurement);
 		try {
 			Measurement3VO measurement3VO = getGson().fromJson(measurement, Measurement3VO.class);
 			measurement3VO = getWebUserInterfaceService().merge(measurement3VO);
@@ -88,13 +84,13 @@ public class MeasurementRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposalId}/saxs/measurement/experiment/{experimentId}/type/{type}/sort")
+	@Path("{token}/proposal/{proposalId}/saxs/measurement/experiment/{experimentId}/type/{type}/sort")
 	@Produces({ "application/json" })
-	public Response sortMeasurements(@PathParam("cookie") String cookie, @PathParam("proposalId") String proposal,
+	public Response sortMeasurements(@PathParam("token") String token, @PathParam("proposalId") String proposal,
 			@PathParam("experimentId") String experimentId, @PathParam("type") String type) throws Exception {
 
 		String methodName = "sortMeasurements";
-		long start = this.logInit(methodName, logger, cookie, proposal, experimentId, type);
+		long start = this.logInit(methodName, logger, token, proposal, experimentId, type);
 		try {
 			Integer proposalId = this.getProposalId(proposal);
 
