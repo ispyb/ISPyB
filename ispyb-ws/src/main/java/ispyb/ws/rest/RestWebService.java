@@ -10,6 +10,7 @@ import ispyb.server.biosaxs.services.core.robot.Robot3Service;
 import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
 import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
 import ispyb.server.common.services.config.MenuGroup3Service;
+import ispyb.server.common.services.login.Login3Service;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
@@ -22,7 +23,6 @@ import ispyb.server.mx.services.collections.Session3Service;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +105,11 @@ public class RestWebService {
 				PrimaryDataProcessing3Service.class);
 	}
 
+	protected Login3Service getLogin3Service() throws NamingException {
+		return (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+				Login3Service.class);
+	}
+	
 	protected LabContact3Service getLabContact3Service() throws NamingException {
 		return (LabContact3Service) Ejb3ServiceLocator.getInstance().getLocalService(LabContact3Service.class);
 	}
@@ -228,7 +233,12 @@ public class RestWebService {
 		this.now = System.currentTimeMillis();
 		ArrayList<String> params = new ArrayList<String>();
 		for (Object object : args) {
-			params.add(object.toString());
+			if (object != null){
+				params.add(object.toString());
+			}
+			else{
+				params.add("null");
+			}
 		}
 		logger.info(methodName.toUpperCase());
 		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, System.currentTimeMillis(),
@@ -248,7 +258,7 @@ public class RestWebService {
 	protected void logFinish(String methodName, long start, Logger logger) {
 		logger.debug("### [" + methodName.toUpperCase() + "] Execution time was "
 				+ (System.currentTimeMillis() - this.now) + " ms.");
-		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, id, System.currentTimeMillis(),
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API, methodName, start, System.currentTimeMillis(),
 				System.currentTimeMillis() - this.now);
 
 	}
