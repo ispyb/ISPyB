@@ -30,11 +30,11 @@ public class ProposalRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/user/{login}/list")
+	@Path("{token}/proposal/user/{login}/list")
 	@Produces({ "application/json" })
-	public Response getProposals(@PathParam("cookie") String cookie, @PathParam("login") String login) throws Exception {
+	public Response getProposals(@PathParam("token") String token, @PathParam("login") String login) throws Exception {
 		
-		long id = this.logInit("getProposals", logger, cookie, login);
+		long id = this.logInit("getProposals", logger, token, login);
 		try {
 			List<Proposal3VO> proposals = this.getSaxsProposal3Service().findProposalByLoginName(login);
 			this.logFinish("getProposals", id, logger);
@@ -47,11 +47,11 @@ public class ProposalRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/technique/{technique}/get")
+	@Path("{token}/proposal/{proposal}/technique/{technique}/get")
 	@Produces({ "application/json" })
-	public Response listProposal(@PathParam("cookie") String cookie, @PathParam("proposal") String login)
+	public Response listProposal(@PathParam("token") String token, @PathParam("proposal") String login)
 			throws Exception {
-		long id = this.logInit("listProposal", logger, cookie, login);
+		long id = this.logInit("listProposal", logger, token, login);
 		try {
 			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();
 			int proposalId = this.getProposalId(login);

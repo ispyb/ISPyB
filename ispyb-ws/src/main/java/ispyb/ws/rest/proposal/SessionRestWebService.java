@@ -20,14 +20,14 @@ public class SessionRestWebService extends RestWebService {
 	
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/session/list")
+	@Path("{token}/proposal/{proposal}/session/list")
 	@Produces({ "application/json" })
 	public Response getSessionList(
-			@PathParam("cookie") String cookie, 
+			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal) throws Exception {
 		
 		String methodName = "getSessionList";
-		long id = this.logInit(methodName, logger, cookie, proposal);
+		long id = this.logInit(methodName, logger, token, proposal);
 		try{
 			List<Session3VO> result = getSession3Service().findFiltered(this.getProposalId(proposal), null, null, null, null, null, false, null);
 			this.logFinish(methodName, id, logger);

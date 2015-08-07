@@ -22,21 +22,21 @@ public class DewarRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/label")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/label")
 	@Produces({ "application/json" })
-	public Response addDewar(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response labelDewar(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("shippingId") int shippingId, @PathParam("dewarId") int dewarId) throws NamingException {
 		return Response.serverError().build();
 	}
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
 	@Produces({ "application/json" })
-	public Response removeDewar(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response removeDewar(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("shippingId") int shippingId, @PathParam("dewarId") int dewarId) throws NamingException {
 
-		long start = this.logInit("removeDewar", logger, cookie, proposal, shippingId, dewarId);
+		long start = this.logInit("removeDewar", logger, token, proposal, shippingId, dewarId);
 
 		try {
 			List<Sampleplate3VO> sampleplate3VOs = getSamplePlate3Service().getSamplePlatesByBoxId(
@@ -69,9 +69,9 @@ public class DewarRestWebService extends RestWebService {
 
 	@PermitAll
 	@POST
-	@Path("{cookie}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
 	@Produces({ "application/json" })
-	public Response saveDewar(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response saveDewar(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("shippingId") int shippingId, @FormParam("sessionId") Integer sessionId,
 			@FormParam("dewarId") Integer dewarId, @FormParam("code") String code,
 			@FormParam("comments") String comments, @FormParam("storageLocation") String storageLocation,
@@ -81,12 +81,14 @@ public class DewarRestWebService extends RestWebService {
 			@FormParam("trackingNumberFromSynchrotron") String trackingNumberFromSynchrotron,
 			@FormParam("trackingNumberToSynchrotron") String trackingNumberToSynchrotron) throws Exception {
 
-		long start = this.logInit("saveDewar", logger, cookie, proposal, shippingId, dewarId, code, comments, storageLocation, dewarStatus, blTimeStamp, isStorageDewar, barCode, customValue, transportValue, trackingNumberFromSynchrotron, trackingNumberToSynchrotron);
+		long start = this.logInit("saveDewar", logger, token, proposal, shippingId, dewarId, code, comments, storageLocation, dewarStatus, blTimeStamp, isStorageDewar, barCode, customValue, transportValue, trackingNumberFromSynchrotron, trackingNumberToSynchrotron);
 		
 		try {
 
 			Dewar3VO dewar3vo = new Dewar3VO();
 			if (dewarId == null) {
+				dewar3vo.setType("Dewar");
+				dewar3vo.setShippingVO(this.getShipping3Service().findByPk(shippingId, true));
 				dewar3vo = getDewar3Service().create(dewar3vo);
 			} else {
 				dewar3vo = getDewar3Service().findByPk(dewarId, false, false);

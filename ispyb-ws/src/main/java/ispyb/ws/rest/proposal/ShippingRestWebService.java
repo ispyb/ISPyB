@@ -26,10 +26,10 @@ public class ShippingRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/shipping/list")
+	@Path("{token}/proposal/{proposal}/shipping/list")
 	@Produces({ "application/json" })
-	public Response listShipping(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal) {
-		long id = this.logInit("listShipping", logger, cookie, proposal);
+	public Response listShipping(@PathParam("token") String token, @PathParam("proposal") String proposal) {
+		long id = this.logInit("listShipping", logger, token, proposal);
 		try {
 			List<Shipping3VO> result = this.getShipping3Service().findByProposal(this.getProposalId(proposal), true);
 			this.logFinish("listShipping", id, logger);
@@ -41,14 +41,14 @@ public class ShippingRestWebService extends RestWebService {
 
 	@PermitAll
 	@GET
-	@Path("{cookie}/proposal/{proposal}/shipping/{shippindId}/get")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/get")
 	@Produces({ "application/json" })
-	public Response getShipping(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
-			@PathParam("getShipping") Integer shippindId) throws Exception {
+	public Response getShipping(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
 
-		long id = this.logInit("listShipping", logger, cookie, proposal, shippindId);
+		long id = this.logInit("listShipping", logger, token, proposal, shippingId);
 		try {
-			Shipping3VO result = this.getShipping3Service().findByPk(shippindId, true);
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true);
 			this.logFinish("getShipping", id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {
@@ -59,9 +59,9 @@ public class ShippingRestWebService extends RestWebService {
 
 	@PermitAll
 	@POST
-	@Path("{cookie}/proposal/{proposal}/shipping/save")
+	@Path("{token}/proposal/{proposal}/shipping/save")
 	@Produces({ "application/json" })
-	public Response saveShipping(@PathParam("cookie") String cookie, @PathParam("proposal") String proposal,
+	public Response saveShipping(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@FormParam("shippingId") String shippingId, @FormParam("name") String name,
 			@FormParam("comments") String comments, @FormParam("billingReference") String billingReference,
 			@FormParam("courierAccount") String courierAccount,
@@ -71,13 +71,19 @@ public class ShippingRestWebService extends RestWebService {
 			@FormParam("sendingLabContactId") int sendingLabContactId,
 			@FormParam("returnLabContactId") int returnLabContactId) {
 
-		long id = this.logInit("saveShipping", logger, cookie, proposal, shippingId, name, comments, billingReference, courierAccount,  dewarAvgCustomsValue, dewarAvgTransportValue, returnCourier, sendingLabContactId, returnLabContactId );
+		long id = this.logInit("saveShipping", logger, token, proposal, shippingId, name, comments, billingReference, courierAccount,  dewarAvgCustomsValue, dewarAvgTransportValue, returnCourier, sendingLabContactId, returnLabContactId );
 		try {
 
 			Shipping3VO shipping3VO = new Shipping3VO();
 
-			if ((!shippingId.equals("null"))) {
+			System.out.println("ShippingId " + shippingId);
+			if ((shippingId != null) && (shippingId != "")) {
+				try{
 				shipping3VO = this.getShipping3Service().findByPk(Integer.parseInt(shippingId), true);
+				}
+				catch(Exception e){
+					System.out.println("shipping Id is not a number");
+				}
 			}
 
 			shipping3VO.setShippingName(name);
@@ -104,7 +110,7 @@ public class ShippingRestWebService extends RestWebService {
 
 			shipping3VO.setReturnLabContactVO(returnLabContact);
 
-			if (!shippingId.equals("null")) {
+			if (shipping3VO.getShippingId() != null) {
 				getShipping3Service().update(shipping3VO);
 			} else {
 				shipping3VO = getShipping3Service().create(shipping3VO);
