@@ -71,6 +71,8 @@ public interface SaxsProposal3Service {
 
 	public Macromolecule3VO findMacromoleculesById(Integer macromoleculeId);
 
+	public List<Proposal3VO> findAllProposals();
+
 	
 
 }

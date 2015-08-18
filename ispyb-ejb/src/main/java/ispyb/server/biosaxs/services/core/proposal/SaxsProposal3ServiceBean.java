@@ -261,5 +261,13 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		return this.findProposalByLoginName(loginName, null);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Proposal3VO> findAllProposals() {
+		String query = "SELECT proposal FROM Proposal3VO proposal";
+		Query EJBQuery = this.entityManager.createQuery(query);
+		return EJBQuery.getResultList();
+	}
+
 	
 }
