@@ -4,6 +4,7 @@ import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,31 +22,41 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-
 @Path("/")
 public class ProposalRestWebService extends RestWebService {
 
 	private final static Logger logger = Logger.getLogger(ProposalRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
-	@Path("{token}/proposal/user/{login}/list")
+	@Path("{token}/proposal/list")
 	@Produces({ "application/json" })
-	public Response getProposals(@PathParam("token") String token, @PathParam("login") String login) throws Exception {
+	public Response getProposals(@PathParam("token") String token) throws Exception {
 		
-		long id = this.logInit("getProposals", logger, token, login);
+		long id = this.logInit("getProposals", logger, token);
 		try {
-			List<Proposal3VO> proposals = this.getSaxsProposal3Service().findProposalByLoginName(login);
-			this.logFinish("getProposals", id, logger);
-			return this.sendResponse(proposals);
+			Login3VO login3VO = this.getLogin3Service().findByToken(token);
+			if (login3VO != null){
+				if (login3VO.isValid()){
+					List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+					if (login3VO.isLocalContact() || login3VO.isManager()){
+						proposals = this.getSaxsProposal3Service().findAllProposals();
+					}
+					else{
+						proposals = this.getSaxsProposal3Service().findProposalByLoginName(login3VO.getUsername());
+					}
+					this.logFinish("getProposals", id, logger);
+					return this.sendResponse(proposals);
+				}
+			}
+			throw new Exception("Token is not valid");
 
 		} catch (Exception e) {
 			return this.logError("getProposals", e, id, logger);
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/technique/{technique}/get")
 	@Produces({ "application/json" })
@@ -56,7 +67,7 @@ public class ProposalRestWebService extends RestWebService {
 			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();
 			int proposalId = this.getProposalId(login);
 			HashMap<String, List<?>> results = new HashMap<String, List<?>>();
-			long time = System.currentTimeMillis();
+
 			List<Macromolecule3VO> macromolecules = this.getSaxsProposal3Service().findMacromoleculesByProposalId(
 					proposalId);
 			List<Buffer3VO> buffers = this.getSaxsProposal3Service().findBuffersByProposalId(proposalId);
@@ -64,7 +75,6 @@ public class ProposalRestWebService extends RestWebService {
 			List<StockSolution3VO> stockSolutions = this.getSaxsProposal3Service().findStockSolutionsByProposalId(
 					proposalId);
 			List<Platetype3VO> plateTypes = this.getPlateType3Service().findAll();
-			time = System.currentTimeMillis();
 			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 			proposals.add(this.getSaxsProposal3Service().findProposalById(proposalId));
 			// List<Session3VO> sessions =

@@ -63,13 +63,6 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		header.add("*");
 		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
 		
-//		cres.getHttpHeaders().add("Access-Control-Allow-Origin", "*");
-//        cres.getHttpHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
-//        cres.getHttpHeaders().add("Access-Control-Allow-Credentials", "true");
-//        cres.getHttpHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-//        cres.getHttpHeaders().add("Access-Control-Max-Age", "1209600");
-        
-		
 		System.out.println("-------SecurityInterceptor----");
 		if (method.isAnnotationPresent(PermitAll.class)) {
 			System.out.println("PermitAll");
@@ -86,12 +79,15 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		if (method.isAnnotationPresent(RolesAllowed.class)) {
 			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
 			Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-			System.out.println("---- ROLES -----");
+			System.out.println("---- ROLES allowed -----");
 			String token = requestContext.getUriInfo().getPathParameters().get("token").get(0);
 			System.out.println(token);
 			System.out.println(rolesSet);
 
-			Login3VO login = this.getLogin(token, rolesSet);
+			Login3VO login = this.getLogin(token);
+			System.out.println("User roles: " + login.getRoles());
+			System.out.println("Roles allowed: " + rolesSet);
+			
 			if (login != null) {
 				System.out.println("Valid: " + login.isValid());
 				if (login.isValid()) {
@@ -107,11 +103,10 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
 	}
 
-	private Login3VO getLogin(String token, Set<String> rolesSet) {
+	private Login3VO getLogin(String token) {
 		try {
 			System.out.println("authenticateToken " + token);
-			Login3Service service = (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(
-					Login3Service.class);
+			Login3Service service = (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(Login3Service.class);
 			return service.findByToken(token);
 		} catch (NamingException e) {
 			e.printStackTrace();

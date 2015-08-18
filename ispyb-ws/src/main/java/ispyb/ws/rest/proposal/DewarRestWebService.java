@@ -4,8 +4,11 @@ import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.ws.rest.RestWebService;
+
 import java.util.List;
+
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -14,13 +17,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
 import org.apache.log4j.Logger;
 
 @Path("/")
 public class DewarRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(DewarRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/label")
 	@Produces({ "application/json" })
@@ -29,7 +33,7 @@ public class DewarRestWebService extends RestWebService {
 		return Response.serverError().build();
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
 	@Produces({ "application/json" })
@@ -67,7 +71,7 @@ public class DewarRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
 	@Produces({ "application/json" })

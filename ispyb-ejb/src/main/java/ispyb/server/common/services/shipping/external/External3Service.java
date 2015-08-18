@@ -44,4 +44,6 @@ public interface External3Service {
 	public List<Map<String, Object>> getAutoprocResultByDataCollectionIdList(
 			ArrayList<Integer> inList);
 
+	public List<Map<String, Object>> getPhasingAnalysisByDataCollectionIdListQuery(Integer autoProcIntegrationId);
+
 }

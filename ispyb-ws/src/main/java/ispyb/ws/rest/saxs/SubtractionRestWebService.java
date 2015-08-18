@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -52,7 +53,7 @@ public class SubtractionRestWebService extends RestWebService {
 		return result;
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/download")
 	@Produces("text/plain")
@@ -79,7 +80,7 @@ public class SubtractionRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/sampleaverage/download")
 	@Produces("text/plain")
@@ -106,7 +107,7 @@ public class SubtractionRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/bufferaverage/download")
 	@Produces("text/plain")
@@ -133,7 +134,7 @@ public class SubtractionRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionIdList}/zip")
 	@Produces("application/x-octet-stream")
@@ -163,7 +164,7 @@ public class SubtractionRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionIdList}/list")
 	@Produces({ "application/json" })

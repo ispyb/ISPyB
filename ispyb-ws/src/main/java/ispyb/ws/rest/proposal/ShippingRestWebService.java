@@ -8,7 +8,7 @@ import ispyb.ws.rest.RestWebService;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -24,7 +24,7 @@ public class ShippingRestWebService extends RestWebService {
 
 	private final static Logger logger = Logger.getLogger(ShippingRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/list")
 	@Produces({ "application/json" })
@@ -39,7 +39,7 @@ public class ShippingRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/get")
 	@Produces({ "application/json" })
@@ -57,7 +57,7 @@ public class ShippingRestWebService extends RestWebService {
 
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/save")
 	@Produces({ "application/json" })

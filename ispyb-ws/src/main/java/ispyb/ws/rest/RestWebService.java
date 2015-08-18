@@ -15,10 +15,20 @@ import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.services.autoproc.AutoProc3Service;
+import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
+import ispyb.server.mx.services.autoproc.AutoProcProgram3Service;
+import ispyb.server.mx.services.autoproc.AutoProcProgramAttachment3Service;
+import ispyb.server.mx.services.autoproc.AutoProcScalingStatistics3Service;
+import ispyb.server.mx.services.autoproc.PhasingAnalysis3Service;
+import ispyb.server.mx.services.autoproc.PhasingHasScaling3Service;
+import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Session3Service;
+import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -87,6 +97,17 @@ public class RestWebService {
 		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
 	}
 
+	
+	protected External3Service getExternal3Service() throws NamingException {
+		return (External3Service) Ejb3ServiceLocator.getInstance().getLocalService(External3Service.class);
+	}
+	
+	
+	protected DataCollection3Service getDataCollection3Service() throws NamingException {
+		return (DataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(DataCollection3Service.class);
+	}
+	
+	
 	protected MeasurementToDataCollection3Service getMeasurementToDataCollectionService() throws NamingException {
 		return (MeasurementToDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(
 				MeasurementToDataCollection3Service.class);

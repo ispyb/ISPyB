@@ -8,7 +8,7 @@ import ispyb.ws.rest.RestWebService;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 public class MacromoleculeRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/list")
 	@Produces({ "application/json" })
@@ -45,7 +45,7 @@ public class MacromoleculeRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/save")
 	@Produces({ "application/json" })

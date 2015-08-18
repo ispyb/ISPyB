@@ -6,7 +6,7 @@ import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
 import ispyb.ws.rest.RestWebService;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class SpecimenRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(SpecimenRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/specimen/save")
 	@Produces({ "application/json" })
@@ -39,7 +39,7 @@ public class SpecimenRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/specimen/merge")
 	@Produces({ "application/json" })

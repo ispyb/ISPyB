@@ -81,17 +81,26 @@ public class Login3VO implements java.io.Serializable {
 	@Transient
 	public long getRemainingMilliseconds(){
 		return this.expirationTime.getTime() - Calendar.getInstance().getTime().getTime();
-//		long loginDuration = 3*(1000*60*60);
-//		System.out.println("login duration: " + loginDuration + " ms");
-//		System.out.println("now: " + Calendar.getInstance().getTime().getTime() + " ms");
-//		System.out.println("expiration: " + this.expirationTime.getTime() + " ms");
-//		System.out.println("subs: " + (loginDuration - (Calendar.getInstance().getTime().getTime() - this.expirationTime.getTime()))  + " ms");
-//	    return (loginDuration - (Calendar.getInstance().getTime().getTime() - this.expirationTime.getTime()));
 	}
 	
 	@Transient
 	public boolean isValid(){
 	    return  this.expirationTime.getTime() > Calendar.getInstance().getTime().getTime();
+	}
+	
+	@Transient
+	public boolean isManager(){
+	    return  this.getRoles().toUpperCase().contains("MANAGER");
+	}
+	
+	@Transient
+	public boolean isUser(){
+	    return  this.getRoles().toUpperCase().contains("USER");
+	}
+	
+	@Transient
+	public boolean isLocalContact(){
+	    return  this.getRoles().toUpperCase().contains("LOCALCONTACT");
 	}
 	
 }

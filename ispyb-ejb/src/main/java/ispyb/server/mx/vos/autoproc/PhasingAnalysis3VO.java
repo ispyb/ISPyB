@@ -19,6 +19,8 @@
 
 package ispyb.server.mx.vos.autoproc;
 
+import ispyb.server.common.vos.ISPyBValueObject;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,8 +28,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import ispyb.server.common.vos.ISPyBValueObject;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +54,6 @@ public class PhasingAnalysis3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 	
-
 	public PhasingAnalysis3VO() {
 		super();
 	}

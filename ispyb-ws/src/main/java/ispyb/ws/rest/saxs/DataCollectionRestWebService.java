@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,7 +21,7 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/list")
 	@Produces({ "application/json" })
@@ -39,7 +40,7 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/{datacollectionIdList}/list")
 	@Produces({ "application/json" })
@@ -59,7 +60,7 @@ public class DataCollectionRestWebService extends RestWebService {
 
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/{key}/{value}/list")
 	@Produces({ "application/json" })

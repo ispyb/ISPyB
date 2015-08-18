@@ -2,15 +2,13 @@ package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
-import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,13 +19,11 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-
 @Path("/")
 public class StockSolutionRestWebService extends RestWebService {
 	
 	private final static Logger logger = Logger.getLogger(StockSolutionRestWebService.class);
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/list")
 	@Produces({ "application/json" })
@@ -52,7 +48,7 @@ public class StockSolutionRestWebService extends RestWebService {
 	}
 	
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/save")
 	@Produces({ "application/json" })

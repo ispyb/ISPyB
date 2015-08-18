@@ -45,8 +45,8 @@ public class AuthenticationRestWebService extends RestWebService {
 		long id = this.logInit(methodName, logger, login);
 		try {
 			
-//			List<String> roles = LoginModule.authenticate(login, password);
-			List<String> roles = new ArrayList<String>();
+			List<String> roles = LoginModule.authenticate(login, password);
+//			List<String> roles = new ArrayList<String>();
 			
 			roles.add("User");
 			

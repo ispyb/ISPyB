@@ -620,4 +620,20 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 
 		});
 	}
+
+	@Override
+	public List<Session3VO> findFiltered(final Integer nbMax,final  String beamline,final  Date date1,final  Date date2,final  Date endDate,
+			final  boolean usedFlag, final  String operatorSiteNumber) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+
+		return (List<Session3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Session3VO> foundEntities = dao.findFiltered(nbMax, beamline, date1, date2, endDate, usedFlag,
+						null/* nbShifts */, operatorSiteNumber);
+				return foundEntities;
+			}
+
+		});
+	}
 }

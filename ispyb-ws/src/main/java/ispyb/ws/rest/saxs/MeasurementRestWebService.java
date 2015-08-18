@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,7 +28,7 @@ import org.apache.log4j.Logger;
 public class MeasurementRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(MeasurementRestWebService.class);
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/measurement/{measurementId}/remove")
 	@Produces()
@@ -63,7 +64,7 @@ public class MeasurementRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/measurement/save")
 	@Produces({ "application/json" })
@@ -82,7 +83,7 @@ public class MeasurementRestWebService extends RestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/measurement/experiment/{experimentId}/type/{type}/sort")
 	@Produces({ "application/json" })

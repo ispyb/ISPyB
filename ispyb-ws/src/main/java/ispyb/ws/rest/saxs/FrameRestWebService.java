@@ -107,8 +107,6 @@ public class FrameRestWebService extends RestWebService {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
 				.getLocalService(PrimaryDataProcessing3Service.class);
-		Measurement3Service measurement3service = (Measurement3Service) ejb3ServiceLocator
-				.getLocalService(Measurement3Service.class);
 
 		List<Integer> mergeIdList = new ArrayList<Integer>();
 		for (Integer measurementId : measurementIdList) {

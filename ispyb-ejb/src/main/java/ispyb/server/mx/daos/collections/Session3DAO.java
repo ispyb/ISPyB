@@ -150,4 +150,7 @@ public interface Session3DAO {
 
 	public Integer getNbOfTests(Integer sessionId) throws Exception;
 
+	public List<Session3VO> findFiltered(Integer nbMax, String beamline, Date date1, Date date2, Date endDate,
+			boolean usedFlag, Object object, String operatorSiteNumber);
+
 }

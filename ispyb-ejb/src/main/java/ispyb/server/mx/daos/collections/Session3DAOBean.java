@@ -523,4 +523,40 @@ public class Session3DAOBean implements Session3DAO {
 		}
 	}
 
+	@Override
+	public List<Session3VO> findFiltered(Integer nbMax, String beamline, Date date1, Date date2, Date dateEnd,
+			boolean usedFlag, Object object, String operatorSiteNumber) {
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria crit = session.createCriteria(Session3VO.class);
+
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+
+		if (beamline != null)
+			crit.add(Restrictions.like("beamlineName", beamline));
+
+		if (date1 != null)
+			crit.add(Restrictions.ge("startDate", date1));
+		if (date2 != null)
+			crit.add(Restrictions.le("startDate", date2));
+
+		if (dateEnd != null)
+			crit.add(Restrictions.ge("endDate", dateEnd));
+
+		// usedFlag =1 or endDate > today
+		if (usedFlag)
+			crit.add(Restrictions.sqlRestriction("(usedFlag = 1 OR endDate >= " + Constants.MYSQL_ORACLE_CURENT_DATE + " )"));
+
+		if (nbMax != null)
+			crit.setMaxResults(nbMax);
+
+
+		if (operatorSiteNumber != null) {
+			crit.add(Restrictions.eq("operatorSiteNumber", operatorSiteNumber));
+		}
+
+		crit.addOrder(Order.desc("startDate"));
+
+		return crit.list();
+	}
+
 }

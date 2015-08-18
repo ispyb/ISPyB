@@ -53,35 +53,35 @@ public class AutoProcProgram3VO extends ISPyBValueObject {
 	@Id
 	@GeneratedValue
 	@Column(name = "autoProcProgramId")
-	private Integer autoProcProgramId;
+	protected Integer autoProcProgramId;
 
 	@Column(name = "processingCommandLine")
-	private String processingCommandLine;
+	protected String processingCommandLine;
 
 	@Column(name = "processingPrograms")
-	private String processingPrograms;
+	protected String processingPrograms;
 
 	@Column(name = "processingStatus")
-	private Boolean processingStatus;
+	protected Boolean processingStatus;
 
 	@Column(name = "processingMessage")
-	private String processingMessage;
+	protected String processingMessage;
 
 	@Column(name = "processingStartTime")
-	private Date processingStartTime;
+	protected Date processingStartTime;
 
 	@Column(name = "processingEndTime")
-	private Date processingEndTime;
+	protected Date processingEndTime;
 
 	@Column(name = "processingEnvironment")
-	private String processingEnvironment;
+	protected String processingEnvironment;
 
 	@Column(name = "recordTimeStamp")
-	private Date recordTimeStamp;
+	protected Date recordTimeStamp;
 
 	@OneToMany
 	@JoinColumn(name = "autoProcProgramId")
-	private Set<AutoProcProgramAttachment3VO> attachmentVOs;
+	protected Set<AutoProcProgramAttachment3VO> attachmentVOs;
 
 	public AutoProcProgram3VO() {
 		super();

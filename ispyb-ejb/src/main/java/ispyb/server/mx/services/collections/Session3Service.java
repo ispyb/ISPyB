@@ -115,6 +115,11 @@ public interface Session3Service {
 			final Date date1, final Date date2, final Date endDate, final boolean usedFlag,
 			final String operatorSiteNumber) throws Exception;
 
+	public List<Session3VO> findFiltered(final Integer nbMax, final String beamline,
+			final Date date1, final Date date2, final Date endDate, final boolean usedFlag,
+			final String operatorSiteNumber) throws Exception;
+	
+	
 	public List<Session3VO> findByShippingId(final Integer shippingId) throws Exception;
 
 	/**
@@ -189,5 +194,7 @@ public interface Session3Service {
 	 * @throws Exception
 	 */
 	public Integer getNbOfTests(final Integer sesId) throws Exception;
+
+	
 
 }

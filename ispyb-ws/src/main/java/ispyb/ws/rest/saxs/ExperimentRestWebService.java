@@ -73,25 +73,7 @@ public class ExperimentRestWebService extends RestWebService {
 		return experiments;
 	}
 
-	private List<Map<String, Object>> getExperimentListExperimentId(String proposal, int sessionId)
-			throws NamingException {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		SaxsProposal3Service saxsProposalService = (SaxsProposal3Service) ejb3ServiceLocator
-				.getLocalService(SaxsProposal3Service.class);
-		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
-
-		Analysis3Service analysis3Service = (Analysis3Service) ejb3ServiceLocator
-				.getLocalService(Analysis3Service.class);
-		List<Map<String, Object>> experiments = new ArrayList<Map<String, Object>>();
-
-		for (Proposal3VO proposal3vo : proposals) {
-			experiments
-					.addAll(analysis3Service.getExperimentListByExperimentId(proposal3vo.getProposalId(), sessionId));
-		}
-		return experiments;
-	}
-
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"}) 
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/list")
 	@Produces({ "application/json" })
@@ -110,7 +92,7 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/get")
 	@Produces({ "application/json" })
@@ -131,7 +113,7 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/samplechanger/type/{type}/template")
 	@Produces({ "application/json" })
@@ -163,7 +145,7 @@ public class ExperimentRestWebService extends RestWebService {
 				SaxsDataCollectionComparator.defaultComparator);
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/experiment/save")
 	@Produces({ "application/json" })
@@ -201,7 +183,7 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{experimentId}/save")
 	@Produces({ "application/json" })
@@ -228,7 +210,7 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/session/{sessionId}/list")
 	@Produces({ "application/json" })
@@ -249,7 +231,7 @@ public class ExperimentRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{key}/{value}/list")
 	@Produces({ "application/json" })
@@ -278,7 +260,7 @@ public class ExperimentRestWebService extends RestWebService {
 		return null;
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/overview")
 	@Produces("text/plain")
@@ -356,7 +338,7 @@ public class ExperimentRestWebService extends RestWebService {
 
 	}
 
-	@RolesAllowed({"User"}) 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/frame/{frameId}/get")
 	@Produces("text/plain")
