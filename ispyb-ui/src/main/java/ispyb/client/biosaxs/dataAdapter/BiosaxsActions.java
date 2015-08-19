@@ -570,10 +570,10 @@ public class BiosaxsActions {
 			Boolean optimize = false;
 			// TODO replace by correct sessionId
 			Integer sessionId = null;
-			Experiment3VO experiment = this.robot3Service.createExperimentFromRobotParams(samples, sessionId, proposalId,
-					"BeforeAndAfter", "0", "0", "TEMPLATE", null, name, optimize);
-			return this.biosaxsWeb3Service.setPriorities(experiment.getExperimentId(), proposalId,
-					SaxsDataCollectionComparator.defaultComparator);
+//			Experiment3VO experiment = this.robot3Service.createExperimentFromRobotParams(samples, sessionId, proposalId,
+//					"BeforeAndAfter", "0", "0", "TEMPLATE", null, name, optimize);
+//			return this.biosaxsWeb3Service.setPriorities(experiment.getExperimentId(), proposalId,
+//					SaxsDataCollectionComparator.defaultComparator);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
