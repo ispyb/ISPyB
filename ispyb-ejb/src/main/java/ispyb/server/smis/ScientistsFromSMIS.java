@@ -71,8 +71,9 @@ public class ScientistsFromSMIS {
 		 LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
 		 firstName);
-		 if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL())//TODO set by ic
+		 if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL()) {
 				scientists_ = ws.findParticipantsForProposal(proposalPk);
+		 }
 
 		 
 		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
