@@ -48,10 +48,6 @@ public class ScientistsFromSMIS {
 		// Get the service
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
 		
-		if (Constants.SITE_IS_SOLEIL()) {
-			// TODO fix pb of class loading smis class present in the ws jar
-			// SMISWebService ws = new SMISServiceImplService().getSMISWebServicePort();
-		}
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, maxResults);
 		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
 		 scientists = scientists_.toArray(scientists);
@@ -70,16 +66,12 @@ public class ScientistsFromSMIS {
 
 		// Get the service
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
-		if (Constants.SITE_IS_SOLEIL()) {
-			// TODO fix pb of class loading smis class present in the ws jar
-			// SMISWebService ws = new SMISServiceImplService().getSMISWebServicePort();
-		}
 		
 		 proposalPk = ws.getProposalPK(proposalCode, proposalNumber.intValue());
 		 LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
 		 firstName);
-		if (name == null && firstName == null)
+		 if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL())//TODO set by ic
 				scientists_ = ws.findParticipantsForProposal(proposalPk);
 
 		 
@@ -104,10 +96,6 @@ public class ScientistsFromSMIS {
 
 		// Get the service
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
-		if (Constants.SITE_IS_SOLEIL()) {
-			// TODO fix pb of class loading smis class present in the ws jar
-			// SMISWebService sws = new SMISServiceImplService().getSMISWebServicePort();
-		}
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, 2);
 		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
 		 scientists = scientists_.toArray(scientists);

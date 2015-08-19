@@ -389,14 +389,8 @@ public class CrimsWebService {
 			if (proposal != null) {
 
 				Long pk = null;
-				if (!Constants.SITE_IS_SOLEIL()) {
 					SMISWebService ws = SMISWebServiceGenerator.getWs();
 					pk = ws.getProposalPK(proposal.getCode(), Integer.parseInt(proposal.getNumber()));
-				} else if (Constants.SITE_IS_SOLEIL()) {
-					// TODO fix pb of class loading smis class present in the ws jar
-					// pk = (new SMISServiceImplService().getSMISWebServicePort()).getProposalPK(proposal.getCode(),
-					// Integer.parseInt(proposal.getNumber()));
-				}
 				UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
 			} else {
 				throw new Exception("Proposal: " + proposalCode + proposalNumber + " not found");

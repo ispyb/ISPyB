@@ -86,4 +86,48 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>SOLEIL</id>
+			<!-- Add dependencies and MANIFEST to declare in Class-Path the .jar needed by securityfilter to solve classloading issue -->
+			<dependencies>
+				<dependency>
+					<groupId>commons-digester</groupId>
+					<artifactId>commons-digester</artifactId>
+					<version>1.7</version>
+				</dependency>
+				<dependency>
+				  <groupId>oro</groupId>
+				  <artifactId>oro</artifactId>
+				  <version>2.0.8</version>
+				</dependency>
+				<dependency>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils</artifactId>
+					<version>1.7.0</version>
+				</dependency>
+				<dependency>
+					<groupId>ojdbc6</groupId>
+					<artifactId>ojdbc6</artifactId>
+					<version>1.0</version>
+				</dependency>
+			</dependencies>
+	        <build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-ear-plugin</artifactId>
+						<version>${version.ear.plugin}</version>
+						<configuration>
+							<archive>
+								<manifestFile>${basedir}/META-INF/MANIFEST.MF</manifestFile>
+							</archive>
+						</configuration>
+					</plugin>
+				</plugins>
+	        </build>
+		</profile>
+	</profiles>
+	
 </project>

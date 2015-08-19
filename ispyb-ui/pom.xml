@@ -15,6 +15,7 @@
 		<common.lib.dir>${basedir}/lib</common.lib.dir>
 		<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
 		<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
+		<build.directory>${project.build.directory}/${project.artifactId}-${project.version}</build.directory>
 	</properties>
 
 	<dependencies>
@@ -481,15 +482,77 @@
 		</profile>
 		<profile>
 			<id>SOLEIL</id>
+
+	        <build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+					        <execution>
+					        	<id>copy-resources</id>
+					            <phase>validate</phase>
+					            <goals>
+					                <goal>run</goal>
+					            </goals>
+					            <configuration>
+					                <tasks>
+					                    <echo message="Copy securityfilter files ..." /> 
+										<copy file="${basedir}/src/main/webapp/mergedir/servlet-securityfilter.xml" tofile="${basedir}/src/main/webapp/mergedir/servlets.xml" overwrite="true" /> 
+										<copy file="${basedir}/src/main/webapp/mergedir/web-security-securityfilter.xml" tofile="${basedir}/src/main/webapp/mergedir/web-security.xml" overwrite="true" />
+										<copy file="${basedir}/src/main/webapp/mergedir/securityfilter-config.xml" tofile="${build.directory}//WEB-INF/securityfilter-config.xml" overwrite="true" /> 
+										<echo message="Copy of securityfilter files done!" /> 
+										<echo message ="project base direct: ${build.directory}" />
+				                    </tasks>
+				                </configuration>
+				            </execution>
+				         </executions>
+				     </plugin>
+				 </plugins>
+			</build>
+			
 			<properties>
+				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
+				<js.minimized>true</js.minimized>
+				<js.alternative.path></js.alternative.path>
+				<js.alternative.path.enabled>false</js.alternative.path.enabled>
+				
 				<ispyb.site>SOLEIL</ispyb.site>
-				<ispyb.dbDialect>ORACLE</ispyb.dbDialect>
-				<ispyb.dbJndiName>java:/oracle/ispyb_db</ispyb.dbJndiName>
-				<ispyb.dbJndiName.direct>java:/oracle/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
+				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
 				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
 				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-				<ispyb.email.admin>sunset.dev@synchrotron-soleil.fr</ispyb.email.admin>
+				
+				<ldap.employee.resource></ldap.employee.resource>
+	  			<ldap.people></ldap.people>
 
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyapdb/</ispyb.uploaded.root.folder>
+				
+				<ispyb.server.name.prod>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>sundemo.synchrotron-soleil.fr</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>sundemo.synchrotron-soleil.fr</ispyb.server.name.test>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>smtp.synchrotron-soleil.fr</mail.smtp.host>
+				<mail.admin>sunset.dev@synchrotron-soleil.fr</mail.admin>
+				<mail.dev>sunset.dev@synchrotron-soleil.fr</mail.dev>
+				<mail.ispyb>noreply-ispyb@synchrotron-soleil.fr</mail.ispyb>
+				<mail.stores>dewar-stores@synchrotron-soleil.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@synchrotron-soleil.fr</mail.report.industry.from>
+				<mail.report.industry.cc>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc.fx12>
+
+				<dictionary.site>SOLEIL</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+				
 			</properties>
 		</profile>
 		<profile>

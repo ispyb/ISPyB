@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: CHADO
+Build-Jdk: 1.7.0_45
+Class-Path: commons-beanutils-1.7.0.jar, commons-digester-1.7.jar, oro-2.0.8.jar, ojdbc6.jar, securityfilter.jar export

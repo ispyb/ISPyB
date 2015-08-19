@@ -97,17 +97,7 @@ public class UpdateFromSMIS {
 
 		// retrieve all new proposals
 		List<Long> newProposalPks = null;
-		if (!Constants.SITE_IS_SOLEIL()) {
 			newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
-		} else if (Constants.SITE_IS_SOLEIL()) {
-			// TODO fix pb of class loading smis class present in the ws jar
-			// List<Long> newProposalPks_ = (new SMISServiceImplService().getSMISWebServicePort()).findNewMXProposalPKs(startDateStr,
-			// endDateStr);
-			// newProposalPks = new long[newProposalPks_.size()];
-			// for (int i = 0; i < newProposalPks_.size(); i++) {
-			// newProposalPks[i] = newProposalPks_.get(i);
-			// }
-		}
 
 		if (newProposalPks != null && newProposalPks.size()> 0) {
 

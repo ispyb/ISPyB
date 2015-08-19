@@ -136,13 +136,7 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 			// Get the service
 			SMISWebService ws = null;
 
-			if (!Constants.SITE_IS_SOLEIL()) {
 				ws = SMISWebServiceGenerator.getWs();
-			} else if (Constants.SITE_IS_SOLEIL()) {
-				// TODO fix pb of class loading smis class present in the ws jar
-				// SMISWebService sws = null;
-				// sws = new SMISServiceImplService().getSMISWebServicePort();
-			}
 
 			LOG.debug("getting SMIS WS");
 			if (proposalNumber == null) {
@@ -158,12 +152,7 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 				if (proposalNumberInt != null) {
 					Long pk = null;
 					// retrieve proposal_no in smis : pk
-					if (!Constants.SITE_IS_SOLEIL()) {
-						pk = ws.getProposalPK(uoCode, proposalNumberInt);
-					} else if (Constants.SITE_IS_SOLEIL()) {
-						// TODO fix pb of class loading smis class present in the ws jar
-						// pk = sws.getProposalPK(proposalCode, proposalNumberInt);
-					}
+					pk = ws.getProposalPK(uoCode, proposalNumberInt);
 
 					if (pk != null) {
 						UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
@@ -216,13 +205,6 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 			// retrieve all new proposals
 
 			List<Long> newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
-			if (Constants.SITE_IS_SOLEIL()) {
-				// TODO fix pb of class loading smis class present in the ws jar
-//				 List<Long> newProposalPks_ = (new
-//				 SMISServiceImplService().getSMISWebServicePort()).findNewMXProposalPKs(startDateStr,
-//				 endDateStr);
-				 
-			}
 
 			LOG.debug("update ISPyB database between startDate = " + startDateStr + "  and endDate =" + endDateStr);
 
