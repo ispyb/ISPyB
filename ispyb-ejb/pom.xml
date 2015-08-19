@@ -50,7 +50,7 @@
                  	</bindingFiles>
 				
 					<wsdlUrls>
-              			<wsdlUrl>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</wsdlUrl>
+              			<wsdlUrl>${userportal.webservices.url}</wsdlUrl>
            			</wsdlUrls>
 					<packageName>generated.ws.smis</packageName>
 				</configuration>
@@ -209,13 +209,13 @@
 			<artifactId>persistence-api</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+<!-- commented because jaxb and ... already exist in wildfly server
 	<dependency>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>jaxws-maven-plugin</artifactId>
 		<version>1.12</version>
 	</dependency>
-
+ -->
 	</dependencies>
 	
 	  <!--  profiles to separate dev to prod properties -->
@@ -300,14 +300,48 @@
   	<profile>
   		<id>SOLEIL</id>
   		<properties>
-  			<ispyb.site>SOLEIL</ispyb.site>
-  			<ispyb.dbDialect>ORACLE</ispyb.dbDialect>
-  			<ispyb.dbJndiName>java:/oracle/ispyb_db</ispyb.dbJndiName>
-  			<ispyb.dbJndiName.direct>java:/oracle/ispyb_db_direct</ispyb.dbJndiName.direct>
-  			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			<ispyb.email.admin>sunset.dev@synchrotron-soleil.fr</ispyb.email.admin>
-  			
+				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
+				<js.minimized>true</js.minimized>
+				<js.alternative.path></js.alternative.path>
+				<js.alternative.path.enabled>false</js.alternative.path.enabled>
+				
+				<ispyb.site>SOLEIL</ispyb.site>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
+				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+				
+	  			<ldap.employee.resource></ldap.employee.resource>
+	  			<ldap.people></ldap.people>
+
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyapdb/</ispyb.uploaded.root.folder>
+				
+				<ispyb.server.name.prod>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>sundemo.synchrotron-soleil.fr</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>sundemo.synchrotron-soleil.fr</ispyb.server.name.test>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>smtp.synchrotron-soleil.fr</mail.smtp.host>
+				<mail.admin>sunset.dev@synchrotron-soleil.fr</mail.admin>
+				<mail.dev>sunset.dev@synchrotron-soleil.fr</mail.dev>
+				<mail.ispyb>noreply-ispyb@synchrotron-soleil.fr</mail.ispyb>
+				<mail.stores>dewar-stores@synchrotron-soleil.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@synchrotron-soleil.fr</mail.report.industry.from>
+				<mail.report.industry.cc>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc.fx12>
+
+				<dictionary.site>SOLEIL</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+			
   		</properties>
   	</profile> 
   	  	<profile>
