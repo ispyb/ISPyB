@@ -79,9 +79,7 @@ public class FactoryProducer {
 	}
 	
 
-	public static String getJSON(List<Integer> frames, List<Integer> averages, List<Integer> subtractions ,List<Integer> models,List<Integer> fits, List<Integer> rigids) throws Exception{
-		return new Gson().toJson(FactoryProducer.get(frames, averages, subtractions, models, fits, rigids, null, null, null));
-	}
+	
 
 
 	private static HashMap<String, String> getKeys(HashMap<String, Object> map, String type){
@@ -282,7 +280,10 @@ public class FactoryProducer {
 //		return points;
 //	}
 
-
+	public static String getJSON(List<Integer> frames, List<Integer> averages, List<Integer> subtractions ,List<Integer> models,List<Integer> fits, List<Integer> rigids) throws Exception{
+		return new Gson().toJson(FactoryProducer.get(frames, averages, subtractions, models, fits, rigids, null, null, null));
+	}
+	
 	public static String getJSON(List<Integer> frames, List<Integer> averages,
 			List<Integer> subtractions, List<Integer> models,
 			List<Integer> fits, List<Integer> rigids,
