@@ -2,7 +2,7 @@ package ispyb.ws.rest.security;
 
 import ispyb.server.common.vos.login.Login3VO;
 import ispyb.ws.rest.RestWebService;
-import ispyb.ws.rest.saxs.BufferRestWebService;
+import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.LoginModule;
 
 import java.io.UnsupportedEncodingException;
@@ -21,6 +21,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
@@ -40,16 +41,28 @@ public class AuthenticationRestWebService extends RestWebService {
 	@POST
 	@Path("/authenticate")
 	@Produces({ "application/json" })
-	public Response authenticate(@FormParam("login") String login, @FormParam("password") String password) throws Exception {
+	public Response authenticate(
+			@FormParam("login") String login, 
+			@FormParam("password") String password,
+			@QueryParam("site") String site) throws Exception {
 		String methodName = "authenticate";
 		long id = this.logInit(methodName, logger, login);
 		try {
+			List<String> roles = new ArrayList<String>();
 			
-			List<String> roles = LoginModule.authenticate(login, password);
-//			List<String> roles = new ArrayList<String>();
+			if (site != null){
+				if (site.equals("EMBL")){
+					roles = EMBLLoginModule.authenticate(login, password);
+				}
+				if (site.equals("ESRF")){
+					roles = LoginModule.authenticate(login, password);
+				}
+			}
+			else{
+				roles = LoginModule.authenticate(login, password);
+			}
 			
 			roles.add("User");
-			
 			String token = generateRamdomUUID();
 			
 			HashMap<String, Object> cookie = new HashMap<String, Object>();

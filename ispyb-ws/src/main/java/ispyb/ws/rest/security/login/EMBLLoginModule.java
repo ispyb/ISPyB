@@ -12,20 +12,27 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
-public class LoginModule {
-	  private	static String groupUniqueMemberName = "uniqueMember";
-	  private	static String principalDNSuffix = ",ou=People,dc=esrf,dc=fr";
-	  private	static String groupCtxDN = "ou=Pxwebgroups,dc=esrf,dc=fr";
-	  private	static String principalDNPrefix = "uid=";
-	  private	static String groupAttributeID = "cn";
-	  private	static String server = "ldap://ldap.esrf.fr:389/";
-
-
-	protected static Properties getConnectionProperties(String username, String password){
+public class EMBLLoginModule{
+	private static String groupUniqueMemberName = "member";
+	private static String principalDNSuffix = ",ou=internal,ou=people,dc=embl-hamburg,dc=de";
+	private  static String groupCtxDN = "ou=Pxwebgroups,dc=embl-hamburg,dc=de";
+	private  static String principalDNPrefix = "uid=";
+	private  static String groupAttributeID = "cn";
+	private  static String server = "ldaps://services:636/";
+	private  static String socketFactory = "ispyb.ws.rest.security.login.SmisSSLSocketFactory";
+	
+      
+	public static Properties getConnectionProperties(String username, String password){
+		System.out.println("EMBL login");
 		Properties env = new Properties();
 		env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put("useTls", "true");
+		env.put("java.naming.security.protocol", "ssl");
+		env.put("tlsHostnameVerifierClass", "ispyb.ws.rest.security.login.IgnoringHostnameVerifier");
+		env.put("sharedAttributeID", "uidNumber");
+		env.put("java.naming.ldap.factory.socket", socketFactory);
 		env.put("principalDNPrefix", principalDNPrefix);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=People,dc=esrf,dc=fr");
+		env.put("java.naming.security.principal", "uid=" + username + ",ou=internal,dc=embl-hamburg,dc=de");
 		env.put("groupAttributeID", groupAttributeID);
 		env.put("groupCtxDN", groupCtxDN);
 		env.put("principalDNSuffix", principalDNSuffix);
@@ -39,12 +46,9 @@ public class LoginModule {
 		
 	}
 	
-	protected static String getFilter(String username){
+	public static String getFilter(String username){
 		String userDN = principalDNPrefix + username + principalDNSuffix;
-		return new StringBuffer().append("(&")
-				.append("(objectClass=groupOfUniqueNames)")
-				.append("(" + groupUniqueMemberName + "=").append(userDN)
-				.append(")").append(")").toString();
+		return new StringBuffer().append("(&").append("(objectClass=groupOfNames)").append("(" + groupUniqueMemberName + "=").append(userDN).append(")").append(")").toString();
 	}
 	
 	public static List<String> authenticate(String username, String password)
@@ -78,3 +82,4 @@ public class LoginModule {
 		return myRoles;
 	}
 }
+
