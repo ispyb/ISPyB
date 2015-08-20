@@ -15,7 +15,6 @@
 		<common.lib.dir>${basedir}/lib</common.lib.dir>
 		<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
 		<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
-		<build.directory>${project.build.directory}/${project.artifactId}-${project.version}</build.directory>
 	</properties>
 
 	<dependencies>
@@ -348,7 +347,7 @@
 										<include name="*.jar" />
 									</fileset>
 									<pathelement
-										location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
+										location="/home/karpics/software/apps/linux/wildfly-8.2.0.Final/modules/system/layers/base/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
 								</path>
 
 								<echo message="user.home: ${xdoclet.client.path}" />
@@ -476,8 +475,45 @@
 		</profile>
 		<profile>
 			<id>EMBL</id>
+			
 			<properties>
 				<ispyb.site>EMBL</ispyb.site>
+				
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+				<ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
+<!-- 				<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people> -->
+
+				<ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/ispyb/db/</ispyb.uploaded.root.folder>
+
+				<ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
+<!-- 				<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext> -->
+<!-- 				<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test> -->
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>160.103.2.175</mail.smtp.host>
+				<mail.admin>ispyb@embl-hamburg.de</mail.admin>
+				<mail.dev>ispyb@embl-hamburg.de</mail.dev>
+				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+				<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+
+				<dictionary.site>The ESRF</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>
+				
 			</properties>
 		</profile>
 		<profile>
