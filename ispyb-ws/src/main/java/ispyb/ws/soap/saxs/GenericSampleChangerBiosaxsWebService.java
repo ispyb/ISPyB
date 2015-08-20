@@ -1033,6 +1033,7 @@ public class GenericSampleChangerBiosaxsWebService {
 				entry.put("title", proposal3vo.getTitle());
 				entry.put("code", proposal3vo.getCode());
 				entry.put("number", proposal3vo.getNumber());
+				entry.put("type", proposal3vo.getType());
 				entry.put("proposalId", proposal3vo.getProposalId().toString());
 				result.add(entry);
 			}
