@@ -1,0 +1,3 @@
+echo -n | openssl s_client -connect services:636 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /tmp/examplecert.crt
+openssl x509 -in /tmp/examplecert.crt -text
+sudo keytool -import -trustcacerts -keystore /usr/lib/jvm/jdk1.7.0_45/jre/lib/security/cacerts -storepass changeit -noprompt -alias ldap -file /tmp/examplecert.crt
