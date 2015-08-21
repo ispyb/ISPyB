@@ -18,11 +18,17 @@
  ****************************************************************************************************/
 package ispyb.ws.soap.common;
 
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.smis.UpdateFromSMIS;
+import ispyb.ws.rest.RestWebService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -45,12 +51,13 @@ import org.jboss.ws.api.annotation.WebContext;
 @WebService(name = "UpdateFromSMISWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.batchUpdate")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
-@RolesAllowed({ "WebService" })
+@RolesAllowed({ "User", "WebService" })
 // allow special access roles
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
-public class UpdateFromSMISWebService {
-	private final static Logger LOG = Logger.getLogger(UpdateFromSMISWebService.class);
+
+public class UpdateFromSMISWebService extends RestWebService{
+	private final static Logger logger = Logger.getLogger(UpdateFromSMISWebService.class);
 
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
@@ -65,23 +72,29 @@ public class UpdateFromSMISWebService {
 	 */
 	@WebMethod
 	public void updateFromSMIS() throws Exception {
-
-		Date today = Calendar.getInstance().getTime();
-
-		// better to do it over more than 1 day, to be sure to recover all
-		// that's why a day is 26h long !
-
-		long yesterdayL = today.getTime() - (26 * 3600 * 1000);
-		Date yesterday = new Date(yesterdayL);
-
-		SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
-		String endDateStr = simple.format(today);
-		String startDateStr = simple.format(yesterday);
-
-		if (startDateStr == null || startDateStr.length() == 0) {
-			startDateStr = simple.format(today);
+		String methodName = "updateFromSMIS";
+		long id = this.logInit(methodName, logger);
+		try {
+			Date today = Calendar.getInstance().getTime();
+			Calendar start = Calendar.getInstance();
+			start.add(Calendar.DAY_OF_MONTH, -30);
+			Date startDate = start.getTime();
+			SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
+			UpdateFromSMIS.updateFromSMIS(simple.format(startDate), simple.format(today));
+			
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
 		}
-		UpdateFromSMIS.updateFromSMIS(startDateStr, endDateStr);
 	}
-
+	
+	@WebMethod
+	public void updateFromSMISByDate(String start, String end) throws Exception {
+		String methodName = "updateFromSMISByDate";
+		long id = this.logInit(methodName, logger, start, end);
+		try {
+			UpdateFromSMIS.updateFromSMIS(new SimpleDateFormat("dd/MM/yyyy").format(start), new SimpleDateFormat("dd/MM/yyyy").format(end));
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+	}
 }
