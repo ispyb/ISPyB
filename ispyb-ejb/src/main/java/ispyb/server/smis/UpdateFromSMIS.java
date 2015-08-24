@@ -146,8 +146,7 @@ public class UpdateFromSMIS {
 			return;
 		default:
 		case SOLEIL:
-			// TODO fix pb of class loading smis class present in the ws jar
-			// SMISWebService sws = new SMISServiceImplService().getSMISWebServicePort();
+			sws = SMISWebServiceGenerator.getWs();
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 			
 			break;
