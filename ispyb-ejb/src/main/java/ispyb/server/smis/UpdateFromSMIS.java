@@ -128,27 +128,14 @@ public class UpdateFromSMIS {
 		case ESRF:
 			sws = SMISWebServiceGenerator.getWs();
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
-
 			break;
 		case EMBL:
-			System.out.println("--------EMB----------L");
-			
-			sws = SMISWebServiceGenerator.getWs();
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
-			// SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
-			// System.out.println(wsEMBL.findMainProposersForProposal(pk));
-			// System.out.println(wsEMBL.findRecentSessionsInfoLightForProposalPk(pk));
-			// System.out.println(wsEMBL.findSamplesheetInfoLightForProposalPk(pk));
-			// ProposalParticipantInfoLightVO[] test = wsEMBL.findMainProposersForProposal(pk);
-			// ExpSessionInfoLightVO[] test2 = wsEMBL.findRecentSessionsInfoLightForProposalPk(pk);
-			// SampleSheetInfoLightVO[] test3 = wsEMBL.findSamplesheetInfoLightForProposalPk(pk);
-			System.out.println("--------Finish----------");
-			return;
+            break;
 		default:
 		case SOLEIL:
 			sws = SMISWebServiceGenerator.getWs();
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			
 			break;
 		}
 		
