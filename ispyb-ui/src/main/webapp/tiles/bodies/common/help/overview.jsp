@@ -21,8 +21,9 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page isELIgnored="false" %>	
 <%@page import="ispyb.common.util.Constants"%>
+
 
 <%
 	String ispybMail = "ispyb@esrf.fr";
@@ -32,21 +33,22 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		ispybMail = "ispyb@synchrotron-soleil.fr";
 	} else if (Constants.SITE_IS_EMBL()){
 		ispybMail = "ispyb@embl-hamburg.de";
-	}	
+	}	   
 %>
 
 <h2>ISPyB OVERVIEW</h2>
 <p>Information System for Protein crYstallography Beamline: ISPyB is a joint development between the ESRF Joint Structural Biology group (JSBG), BM14 (e-HTPX), the EU funded SPINE project.
+
 <c:choose>
-	<c:when test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+	<c:when test="${SITE_ATTRIBUTE == 'MAXIV'}">
 		<br>It was adapted to work at the MAX IV Laboratory.
 		<br>ISPyB provides you with a management environment to keep track of samples and experiments at protein diffraction stations such as I911-3 at the MAX IV Laboratory.
 	</c:when>
-	<c:when test="${SITE_ATTRIBUTE eq 'SOLEIL'}">
+	<c:when test="${SITE_ATTRIBUTE == 'SOLEIL'}">
 		<br>It was adapted to work at the SOLEIL Beamlines.
 		<br>ISPyB provides you with a management environment to keep track of samples and experiments at SOLEIL on SWING, PROXIMA1 and PROXIMA2 beamlines.
 	</c:when>
-	<c:when test="${SITE_ATTRIBUTE eq 'EMBL'}">
+	<c:when test="${SITE_ATTRIBUTE == 'EMBL'}">
 		<br>It was adapted to work at the EMBL Hamburg Beamlines.
 		<br>ISPyB provides you with a management environment to keep track of samples and experiments at EMBL Hamburg on P12, P13 and P14 beamlines.
 	</c:when>
@@ -54,6 +56,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		<br>ISPyB provides you with a truly managed environment for keeping track of your experiments at the ESRF
 	</c:otherwise>
 </c:choose>
+
 </p>
 
 

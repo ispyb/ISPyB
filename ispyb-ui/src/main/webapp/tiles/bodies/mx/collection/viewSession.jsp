@@ -60,6 +60,9 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	String targetExportToGoogleCalendar2	= request.getContextPath() + "/menuSelected.do?leftMenuId=-1&topMenuId=16&targetUrl=/user/viewSession.do";
 	String targetMail = "mailto:";
 	String targetSMIS = "https://wwws.esrf.fr/misapps/SMISWebClient/protected/aform/manageAForm.do?action=view&currentTab=howtoTab";
+	if (Constants.SITE_IS_EMBL()){ 
+	    targetSMIS = "https://smis.embl-hamburg.de/misapps/SMISWebClient/protected/aform/manageAForm.do?action=view&currentTab=howtoTab";
+	}    
 %>
 
 <jsp:include page="/tiles/common/util/breadCrumbsBar.jsp" flush="true" />

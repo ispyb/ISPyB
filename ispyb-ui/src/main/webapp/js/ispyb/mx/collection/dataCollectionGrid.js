@@ -79,6 +79,9 @@ function DataCollectionGrid(args) {
 					name : 'proposal',
 					mapping : 'proposal'
 				}, {
+					name : 'login',
+					mapping : 'login'		
+				}, {
 					name : 'imagePrefix',
 					mapping : 'imagePrefix'
 				}, {
@@ -870,7 +873,15 @@ DataCollectionGrid.prototype._getColumns = function () {
 				id : 'proposal'
 			});
 	}
-
+    if (this.isManager) {
+        columns.push({
+                        text : 'User',
+                        dataIndex : 'login',
+                        flex : 0.1,
+                        id : 'login'
+                });
+    }
+    
 	columns.push(
 	{
 			text : 'Image<br/>Prefix',

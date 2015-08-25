@@ -18,17 +18,12 @@
  ****************************************************************************************************/
 package ispyb.ws.soap.common;
 
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.ws.rest.RestWebService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;

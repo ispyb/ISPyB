@@ -22,8 +22,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <%@page import="ispyb.common.util.Constants"%>
+<%@ page isELIgnored="false" %>	
 
 <script type='text/javascript' src="<%=request.getContextPath()%>/js/external/toggleDiv.js"></script>
 <script src="<%=request.getContextPath()%>/js/external/overlib/overlib.js"></script>
@@ -36,6 +36,7 @@ function onLoad(){
 	var code = document.getElementsByName('code')[0];
 	var number = document.getElementsByName('number')[0];
 	var title = document.getElementsByName('title')[0];
+	var login = document.getElementsByName('login')[0];
 	var searchDiv = document.getElementById('searchDiv');
 	
 	if(code.value == '' && number.value == ''  && title.value == ''){
@@ -98,10 +99,15 @@ function onLoad(){
 			<layout:collectionItem title="Number" 	property="number" sortable="true"/>
 			<layout:collectionItem title="Title" 	property="title" sortable="false" 
 							        href="<%=target%>"
-			                        paramId="proposalId" paramProperty="proposalId"/>	
-							       			                       	           
+			                        paramId="proposalId" paramProperty="proposalId"/>
+			                        
+            <c:if test="${SITE_ATTRIBUTE eq 'EMBL'}">
+				<layout:collectionItem title="User"     property="login" sortable="false" 
+                						href="<%=target%>"
+                                        paramId="login" paramProperty="login"/>                                                         
+            </c:if>
+			                        
 	</layout:collection>
-	
 	</layout:panel>
 	</layout:column>
 </layout:grid>

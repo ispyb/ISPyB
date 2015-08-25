@@ -141,6 +141,9 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		return personVO;
 	}
 
+	public String getLogin() {
+		return personVO == null ? null : personVO.getLogin();
+	}
 
 	public void setPersonVO(Person3VO personVO) {
 		this.personVO = personVO;

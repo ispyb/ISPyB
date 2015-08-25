@@ -1335,8 +1335,8 @@ public class BiosaxsDataAdapterAction extends org.apache.struts.actions.Dispatch
 			List<Integer> models = BiosaxsDataAdapterCommon.parseToInteger(request.getParameter("models"));
 			List<Integer> fits = BiosaxsDataAdapterCommon.parseToInteger(request.getParameter("fits"));
 			List<Integer> rigids = BiosaxsDataAdapterCommon.parseToInteger(request.getParameter("rbm"));
-
-			BiosaxsDataAdapterCommon.sendResponseToclient(response, FactoryProducer.getJSON(frames, subtractions, models, fits, rigids));
+			
+			BiosaxsDataAdapterCommon.sendResponseToclient(response, FactoryProducer.getJSON(frames, null,subtractions, models, fits, rigids));
 			this.logEnd("getDataPlot", start);
 
 		} catch (Exception exp) {

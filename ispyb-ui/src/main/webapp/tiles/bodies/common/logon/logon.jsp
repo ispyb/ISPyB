@@ -163,7 +163,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		  <A href="http://www.maxiv.se/">MAXIV</A>
       </P>
       <P class=x-small>
-      		Copyright © 2004 ISPyB All rights reserved. <br/>
+      		Copyright &copy; 2004 ISPyB All rights reserved. <br/>
       </P>
     </DIV>
 
