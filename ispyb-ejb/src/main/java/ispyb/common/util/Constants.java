@@ -20,6 +20,9 @@ package ispyb.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -384,7 +387,7 @@ public final class Constants {
 	/* *************************************************************
 	 * file paths
 	 */
-
+	                                                     
 	public static final String DATA_PDB_FILEPATH_START = getProperty("ISPyB.uploaded.root.folder"); // Map file path starting by ...
 
 	/*
@@ -1213,10 +1216,32 @@ public final class Constants {
 			Properties mProp2 = PropertyLoader.loadProperties("DoNotCommit");
 			tab[0] = mProp2.getProperty("smis.ws.username");
 			tab[1] = mProp2.getProperty("smis.ws.password");
+			
 		}
 		return tab;
 	}
 
+	public final static List<HashMap<String, String>> getAllProperties() {
+		List<HashMap<String, String>> properties = new ArrayList<HashMap<String, String>>();
+		
+		HashMap<String, String> prop = new HashMap<String, String>();
+		Properties mProp2 = PropertyLoader.loadProperties("DoNotCommit");
+		if (SITE_IS_ESRF() || (SITE_IS_EMBL())) {
+			for (Object key : mProp2.keySet()) {
+				prop.put((String)key, mProp2.getProperty((String)key));
+			}
+		}
+		
+		properties.add(prop);
+		prop = new HashMap<String, String>();
+		Properties mProp3 = PropertyLoader.loadProperties("ISPyB");
+		for (Object key : mProp3.keySet()) {
+			prop.put((String)key, mProp3.getProperty((String)key));
+		}
+		properties.add(prop);
+		return properties;
+	}
+	
 	public static String getProperty(String propertyName) {
 		return mProp.getProperty(propertyName);
 	}
@@ -1244,4 +1269,6 @@ public final class Constants {
 	
 	return props;
 	}
+
+	
 }
