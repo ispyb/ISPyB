@@ -34,7 +34,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 
-import java.nio.file.AccessDeniedException;
 import org.apache.log4j.Logger;
 
 /**
