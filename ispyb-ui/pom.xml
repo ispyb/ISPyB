@@ -589,6 +589,8 @@
 
 				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 				
+				<build.directory>${project.build.directory}/${project.artifactId}-${project.version}</build.directory>
+				
 			</properties>
 		</profile>
 		<profile>
