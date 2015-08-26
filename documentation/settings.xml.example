@@ -231,7 +231,8 @@ under the License.
 	<profile>
       <id>ESRF</id>
 		<properties>
-			<ispyb.site>ESRF</ispyb.site>
+			 <!-- RFC: ispyb.site is already on pom.xml and could be moved to ispyb-parent/pom.xml -->
+			 <!-- <ispyb.site>ESRF</ispyb.site> -->
 			<smis.ws.usr>ispyb</smis.ws.usr>
 			<smis.ws.pwd>******</smis.ws.pwd>
 			<jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
