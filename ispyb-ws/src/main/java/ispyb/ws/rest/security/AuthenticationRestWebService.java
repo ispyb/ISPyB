@@ -50,17 +50,17 @@ public class AuthenticationRestWebService extends RestWebService {
 		try {
 			List<String> roles = new ArrayList<String>();
 			
-			if (site != null){
-				if (site.equals("EMBL")){
-					roles = EMBLLoginModule.authenticate(login, password);
-				}
-				if (site.equals("ESRF")){
-					roles = LoginModule.authenticate(login, password);
-				}
-			}
-			else{
+//			if (site != null){
+//				if (site.equals("EMBL")){
+//					roles = EMBLLoginModule.authenticate(login, password);
+//				}
+//				if (site.equals("ESRF")){
+//					roles = LoginModule.authenticate(login, password);
+//				}
+//			}
+//			else{
 				roles = LoginModule.authenticate(login, password);
-			}
+//			}
 			
 			roles.add("User");
 			String token = generateRamdomUUID();

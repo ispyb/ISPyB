@@ -1,14 +1,23 @@
 package ispyb.ws.rest.saxs;
 
+import file.FileUploadForm;
+import ispyb.common.util.Constants;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.rest.RestWebService;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,7 +26,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @Path("/")
 public class MacromoleculeRestWebService extends RestWebService {
@@ -63,4 +74,169 @@ public class MacromoleculeRestWebService extends RestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
+	
+	
+	@PermitAll
+	@GET
+	@Path("configuration")
+	@Produces({ "application/json" })
+	public Response configuration() {
+		System.out.println(Constants.DATA_PDB_FILEPATH_START);
+		String path = this.getFolderForUploads();
+		System.out.println(path);
+		return this.sendResponse(Constants.getAllProperties());
+	}
+	
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/contactfile/upload")
+	@Consumes("multipart/form-data")
+	@Produces({ "application/json" })
+	public Response uploadContactDescriptionFile(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("macromoleculeId") int macromoleculeId,
+			@MultipartForm FileUploadForm form) throws IllegalStateException, IOException{
+				
+		String methodName = "uploadContactDescriptionFile";
+		long id = this.logInit(methodName, logger, token, proposal, form);
+		try {
+			if (form.getInputStream() != null){
+				String filePath = this.copyFileToDisk(proposal, form);
+				
+				/** If file has been upload then we macromolecule is updated **/
+				Macromolecule3VO macromolecule3VO = this.getSaxsProposal3Service().findMacromoleculesById(macromoleculeId);
+				if (macromolecule3VO != null){
+					macromolecule3VO.setContactsDescriptionFilePath(filePath);
+					macromolecule3VO = this.getSaxsProposal3Service().merge(macromolecule3VO);
+					logger.info("Added contacts " + macromolecule3VO.getContactsDescriptionFilePath());
+				}
+				else{
+					throw new Exception("Macromolecule with id: " + macromoleculeId + " does not exist");
+				}
+				this.logFinish(methodName, id, logger);
+				return this.sendResponse(macromolecule3VO);
+			}
+			else{
+				throw new Exception("File is empty");
+			}
+			
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/contactfile/remove")
+	@Produces({ "application/json" })
+	public Response removeContactDescriptionFile(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("macromoleculeId") int macromoleculeId) throws IllegalStateException, IOException{
+				
+		String methodName = "removeContactDescriptionFile";
+		long id = this.logInit(methodName, logger, token, proposal);
+		try {
+			Macromolecule3VO macromolecule3VO = this.getSaxsProposal3Service().findMacromoleculesById(macromoleculeId);
+			if (macromolecule3VO != null){
+				macromolecule3VO.setContactsDescriptionFilePath(new String());
+				macromolecule3VO = this.getSaxsProposal3Service().merge(macromolecule3VO);
+			}
+			else{
+				throw new Exception("Macromolecule with id: " + macromoleculeId + " does not exist");
+			}
+			this.logFinish(methodName, id, logger);
+			return this.sendResponse(macromolecule3VO);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/upload")
+	@Consumes("multipart/form-data")
+	@Produces({ "application/json" })
+	public Response uploadPDBFile(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("macromoleculeId") int macromoleculeId,
+			@MultipartForm FileUploadForm form) throws IllegalStateException, IOException{
+				
+		String methodName = "uploadPDBFile";
+		long id = this.logInit(methodName, logger, token, proposal, form, macromoleculeId);
+		try {
+			if (form.getInputStream() != null){
+				String filePath = this.copyFileToDisk(proposal, form);
+				Macromolecule3VO macromolecule3VO = this.getSaxsProposal3Service().findMacromoleculesById(macromoleculeId);
+				if (macromolecule3VO != null){
+					this.getExperiment3Service().saveStructure(macromoleculeId, new File(filePath).getName(), filePath, "PDB", "P1", "1");
+				}
+				else{
+					throw new Exception("Macromolecule with id: " + macromoleculeId + " does not exist");
+				}
+				this.logFinish(methodName, id, logger);
+				return this.sendResponse(macromolecule3VO);
+			}
+			else{
+				throw new Exception("File is empty");
+			}
+			
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/{structureId}/remove")
+	public Response removeStructure(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("macromoleculeId") int macromoleculeId,
+			@PathParam("structureId") int structureId) throws IllegalStateException, IOException{
+				
+		String methodName = "removeStructure";
+		long id = this.logInit(methodName, logger, token, proposal, macromoleculeId, structureId);
+		try {
+			/** TODO: check that structure belongs to macromolecule id **/
+			/** TODO: check that macromolecule belongs to proposal **/
+			this.getExperiment3Service().removeStructure(structureId);
+			this.logFinish(methodName, id, logger);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+		return this.sendResponse("ok");
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/{structureId}/save")
+	public Response saveStructure(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("macromoleculeId") int macromoleculeId,
+			@PathParam("structureId") int structureId,
+			@FormParam("symmetry") String symmetry,
+			@FormParam("multiplicity") String multiplicity) throws IllegalStateException, IOException{
+				
+		String methodName = "saveStructure";
+		long id = this.logInit(methodName, logger, token, proposal, structureId, macromoleculeId, structureId, symmetry, multiplicity);
+		try {
+			/** TODO: check that structure belongs to macromolecule id **/
+			/** TODO: check that macromolecule belongs to proposal **/
+			Structure3VO structure = this.getExperiment3Service().findStructureById(structureId);
+			structure.setSymmetry(symmetry);
+			structure.setMultiplicity(multiplicity);
+			this.getExperiment3Service().saveStructure(structure);
+			this.logFinish(methodName, id, logger);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+		return this.sendResponse("ok");
+	}
+	
 }

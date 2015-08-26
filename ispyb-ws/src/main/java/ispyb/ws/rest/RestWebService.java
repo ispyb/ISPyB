@@ -1,5 +1,8 @@
 package ispyb.ws.rest;
 
+import file.FileUploadForm;
+import ispyb.common.util.Constants;
+import ispyb.common.util.PropertyLoader;
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
@@ -19,28 +22,25 @@ import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.autoproc.AutoProc3Service;
-import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
-import ispyb.server.mx.services.autoproc.AutoProcProgram3Service;
-import ispyb.server.mx.services.autoproc.AutoProcProgramAttachment3Service;
-import ispyb.server.mx.services.autoproc.AutoProcScalingStatistics3Service;
-import ispyb.server.mx.services.autoproc.PhasingAnalysis3Service;
-import ispyb.server.mx.services.autoproc.PhasingHasScaling3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Session3Service;
-import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -51,6 +51,36 @@ public class RestWebService {
 
 	private final static Logger log = Logger.getLogger(RestWebService.class);
 
+	/** TODO: it does not work when retrieving using Constants class **/
+	protected String getFolderForUploads() {
+		Properties mProp3 = PropertyLoader.loadProperties("ISPyB");
+		return mProp3.getProperty("ISPyB.uploaded.root.folder");
+	}
+	
+	/** Folder where the pdb and all the other apriori information files will be uploaded **/
+	protected String getTargetFolder(int proposalId) throws Exception {
+		Proposal3VO proposal = this.getSaxsProposal3Service().findProposalById(proposalId);
+		String proposalName = proposal.getCode().toLowerCase() + proposal.getNumber();
+		if (Constants.SITE_IS_EMBL()) {
+			proposalName = proposal.getNumber();
+		}
+		return  this.getFolderForUploads() +  proposalName;
+	}
+	
+	protected String copyFileToDisk(String proposal, FileUploadForm form) throws Exception {
+		int proposalId = this.getProposalId(proposal);
+		String filePath = this.getTargetFolder(proposalId) + "/" + form.getFileName();
+		
+		log.info("Copying file " + form.getFileName() + " to " + filePath );
+		File file = new File(filePath);
+		FileOutputStream fileOut = new FileOutputStream(file.getAbsolutePath());
+		fileOut.write(IOUtils.toByteArray(form.getInputStream()));
+		fileOut.close();
+		log.info("File has been copied on " + filePath);
+		return filePath;
+		
+	}
+	
 	protected Gson getGson() {
 		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
 				.create();
