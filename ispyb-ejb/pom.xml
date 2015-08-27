@@ -287,7 +287,7 @@
 			<dictionary.site>The ESRF</dictionary.site> 
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
 			
-			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>			  			
+			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?WSDL</userportal.webservices.url>			  			
   			
   		</properties>
   	</profile>
