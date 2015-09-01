@@ -169,7 +169,7 @@ public class SubtractionRestWebService extends RestWebService {
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionIdList}/list")
 	@Produces({ "application/json" })
 	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("list") String subtractionIdList) throws Exception {
+			@PathParam("subtractionIdList") String subtractionIdList) throws Exception {
 		String methodName = "list";
 		long start = this.logInit(methodName, logger, token, subtractionIdList);
 		try {

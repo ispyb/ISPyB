@@ -326,6 +326,7 @@ public class FrameRestWebService extends RestWebService {
 			@QueryParam("frame") String frame, 
 			@QueryParam("average") String average,
 			@QueryParam("subtracted") String subtracted, 
+			@QueryParam("models") String modelsIdList,
 			@QueryParam("sampleaverage") String sampleaverage,
 			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
 
@@ -338,6 +339,8 @@ public class FrameRestWebService extends RestWebService {
 			List<Integer> subtracteds = new ArrayList<Integer>();
 			List<Integer> sampleaverages = new ArrayList<Integer>();
 			List<Integer> bufferaverages = new ArrayList<Integer>();
+			
+			List<Integer> models = new ArrayList<Integer>();
 	
 			if (frame != null) {
 				frames = parseToInteger(frame);
@@ -355,14 +358,22 @@ public class FrameRestWebService extends RestWebService {
 			if (bufferaverage != null) {
 				bufferaverages = parseToInteger(bufferaverage);
 			}
-	
+			if (modelsIdList != null) {
+				models = parseToInteger(modelsIdList);
+			}
+			
+			
 			List<Integer> subtractions = new ArrayList<Integer>();
-			List<Integer> models = new ArrayList<Integer>();
+//			List<Integer> models = new ArrayList<Integer>();
 			List<Integer> fits = new ArrayList<Integer>();
 			List<Integer> rigids = new ArrayList<Integer>();
 	
-			List<DatFile> files = FactoryProducer.getDatPlot(frames, averages, subtractions, models, fits, rigids,
-					subtracteds, sampleaverages, bufferaverages);
+			List<DatFile> files = FactoryProducer.getDatPlot(frames, averages, subtractions, models, fits, rigids, subtracteds, sampleaverages, bufferaverages);
+			logger.info("Files");
+			for (DatFile datFile : files) {
+				logger.info(datFile);
+				
+			}
 			DatFilePlotter datFilePlotter = new DatFilePlotter(files);
 			
 			String result = datFilePlotter.getCSV();
