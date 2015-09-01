@@ -160,10 +160,10 @@ public class FactoryProducer {
 			}
 		}
 		
-		if (result.containsKey("bufferaverages")){
-			List<HashMap<String, Object>> myAvg = result.get("bufferaverages");
+		if (result.containsKey("models")){
+			List<HashMap<String, Object>> myAvg = result.get("models");
 			for (HashMap<String, Object> map : myAvg) {
-				HashMap<String, String> keys = getKeys(map, "bufferaverage");
+				HashMap<String, String> keys = getKeys(map, "model");
 				if (keys != null){
 					X.add(keys);
 				}
@@ -239,6 +239,23 @@ public class FactoryProducer {
 				files.add(new DatFile(keys.get("id"), keys.get("fileName"), "bufferaverage", (List<List<Float>>)map.get("data")));
 			}
 		}
+		
+		if (result.containsKey("frames")){
+			List<HashMap<String, Object>> myFrames = result.get("frames");
+			for (HashMap<String, Object> map : myFrames) {
+				HashMap<String, String> keys = getKeys(map, "frame");
+				files.add(new DatFile(keys.get("id"), keys.get("fileName"), "frame", (List<List<Float>>)map.get("data")));
+			}
+		}
+		
+		if (result.containsKey("models")){
+			List<HashMap<String, Object>> myFrames = result.get("models");
+			for (HashMap<String, Object> map : myFrames) {
+				HashMap<String, String> keys = getKeys(map, "model");
+				files.add(new DatFile(keys.get("id"), keys.get("fileName"), "model", (List<List<Float>>)map.get("data")));
+			}
+		}
+		
 		
 		return files;
 	}
