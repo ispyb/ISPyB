@@ -7,6 +7,7 @@ import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
 import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
@@ -55,6 +56,27 @@ public class ProposalRestWebService extends RestWebService {
 			return this.logError("getProposals", e, id, logger);
 		}
 	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/session/{sessionId}/list")
+	@Produces({ "application/json" })
+	public Response getProposalsBySessionId(
+			@PathParam("token") String token,
+			@PathParam("sessionId") int sessionId) throws Exception {
+		String methodName = "getProposalsBySessionId";
+		long id = this.logInit(methodName, logger, token);
+		try {
+			
+			Session3VO sessions = this.getSession3Service().findByPk(sessionId, false, false, false);
+			Proposal3VO proposal = this.getSaxsProposal3Service().findProposalById(sessions.getProposalVOId());
+			this.logFinish(methodName, id, logger);
+			return this.sendResponse(proposal);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
