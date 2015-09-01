@@ -55,11 +55,11 @@ public class PhasingStatistics3VO extends ISPyBValueObject implements Cloneable 
 
 	@ManyToOne
 	@JoinColumn(name = "phasingHasScalingId1")
-	private PhasingHasScaling3VO phasingHasScaling1VO;
+	protected PhasingHasScaling3VO phasingHasScaling1VO;
 	
 	@ManyToOne
 	@JoinColumn(name = "phasingHasScalingId2")
-	private PhasingHasScaling3VO phasingHasScaling2VO;
+	protected PhasingHasScaling3VO phasingHasScaling2VO;
 	
 	@Column(name = "numberOfBins")
 	protected Integer numberOfBins;

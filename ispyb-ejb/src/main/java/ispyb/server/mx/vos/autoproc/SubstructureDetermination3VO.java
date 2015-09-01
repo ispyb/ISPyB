@@ -23,6 +23,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -61,9 +62,9 @@ public class SubstructureDetermination3VO extends ISPyBValueObject implements Cl
 	@JoinColumn(name = "phasingProgramRunId")
 	private PhasingProgramRun3VO phasingProgramRunVO;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "spaceGroupId")
-	private SpaceGroup3VO spaceGroupVO;
+	protected SpaceGroup3VO spaceGroupVO;
 	
 	@Column(name = "method")
 	protected String method;

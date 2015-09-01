@@ -24,6 +24,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -35,6 +36,8 @@ import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
 
 import org.apache.log4j.Logger;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Phasing3 value object mapping table Phasing
@@ -64,9 +67,9 @@ public class Phasing3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "phasingProgramRunId")
 	private PhasingProgramRun3VO phasingProgramRunVO;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "spaceGroupId")
-	private SpaceGroup3VO spaceGroupVO;
+	protected SpaceGroup3VO spaceGroupVO;
 	
 	@Column(name = "method")
 	protected String method;
