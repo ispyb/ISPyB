@@ -248,13 +248,15 @@ public class AdminChart {
 		String relativeFilePath = "/" + tmpDir + "/" + fileName;		
 		String tmpFilePath = "\\" + tmpDir +  "\\";		
 		
-		String filePath = request.getRealPath(tmpFilePath) + "\\" + fileName;
+		String filePathOld = request.getRealPath(tmpFilePath) + "\\" + fileName;
+		String filePath = request.getRealPath("/") + "\\" + tmpDir + "\\" + fileName;	
 		
 		try {
 			File tempFile = new File(filePath);
 			//TODO use fileInputStream because on prod and valid the request.getRealPath(tmpFilePath) returns null.
 			//InputStream fileInputStream = context.getResourceAsStream(relativeFilePath);
-			//File tempFile2 = File.createTempFile(prefix, suffix, directory)			
+			//File tempFile2 = File.createTempFile(prefix, suffix, directory)	
+							
 			Writer output = new BufferedWriter(new FileWriter(tempFile));
 			output.write(xmlData);
 			output.close();
