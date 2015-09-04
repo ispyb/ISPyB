@@ -1067,7 +1067,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				}
 				if (workflowMesh != null) {
 					Image3VO bestImage = workflowMesh.getBestImageVO();
-					if (bestImage != null) {
+					//TODO understand why the thumbnail is replaced by the one of the best image from the mesh ???
+					// because the jpg image is not replaced
+					// for now replace it only if no thumbnail 
+					// TODO remove this later because it is disturbing that the image is not pointing to the same than the thumbnail ?
+					if (bestImage != null && !info.isImageThumbnailExist()) {
 						String jpgThumbFullPath = bestImage.getJpegThumbnailFileFullPath();
 						jpgThumbFullPath = PathUtils.FitPathToOS(jpgThumbFullPath);
 						imageThumbnailExist = PathUtils.fileExists(jpgThumbFullPath);
