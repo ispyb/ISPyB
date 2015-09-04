@@ -37,6 +37,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
 
@@ -141,6 +142,7 @@ public class BatchWebService {
 
 	@WebMethod
 	@TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
+	@TransactionTimeout(3600)
 	public void protectSession(Integer sessionId) throws Exception {
 
 		try {
