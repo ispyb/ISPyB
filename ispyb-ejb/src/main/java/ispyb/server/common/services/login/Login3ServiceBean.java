@@ -30,6 +30,7 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 
@@ -56,6 +57,20 @@ public class Login3ServiceBean implements Login3Service, Login3ServiceLocal {
 		criteria.add(Restrictions.eq("token", token));
 		List<Login3VO> loginList = criteria.list();
 		if (loginList.size() == 1){
+			return loginList.get(0);
+		}
+		/** If loginList size is different to 1 means that either there is no token on the database or that there are several and in both cases it is not valid **/
+		return null;
+	}
+	
+	@Override
+	public Login3VO findBylastByLogin(String login) {
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria criteria = session.createCriteria(Login3VO.class);
+		criteria.add(Restrictions.eq("login", login));
+		criteria.addOrder(Order.desc("loginId"));
+		List<Login3VO> loginList = criteria.list();
+		if (loginList != null && loginList.size() > 0){
 			return loginList.get(0);
 		}
 		/** If loginList size is different to 1 means that either there is no token on the database or that there are several and in both cases it is not valid **/

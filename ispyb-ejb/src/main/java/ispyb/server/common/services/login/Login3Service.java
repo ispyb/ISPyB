@@ -28,6 +28,6 @@ public interface Login3Service {
 
 	public abstract void persist(Login3VO transientInstance);
 	public abstract Login3VO findByToken(String token);
-
+	public abstract Login3VO findBylastByLogin(String login);
 
 }
