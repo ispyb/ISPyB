@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +51,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 /**
  * <p>
@@ -57,6 +59,7 @@ import org.apache.log4j.Logger;
  * </p>
  */
 @Stateless
+@TransactionTimeout(3600)
 public class Session3ServiceBean implements Session3Service, Session3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Session3ServiceBean.class);
@@ -560,7 +563,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 						sessionVO.setProtectedData(protectedData);
 						this.update(sessionVO);
 						
-						LOG.debug("end of session protection");
+						LOG.info("end of session protection");
 						
 						if (client != null && client.getConnectionManager() != null)
 					        client.getConnectionManager().closeExpiredConnections();
