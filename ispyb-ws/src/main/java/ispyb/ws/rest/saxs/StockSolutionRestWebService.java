@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class StockSolutionRestWebService extends RestWebService {
+public class StockSolutionRestWebService extends SaxsRestWebService {
 	
 	private final static Logger logger = Logger.getLogger(StockSolutionRestWebService.class);
 	@RolesAllowed({"User", "Manager", "LocalContact"})

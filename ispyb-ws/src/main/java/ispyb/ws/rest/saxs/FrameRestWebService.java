@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class FrameRestWebService extends RestWebService {
+public class FrameRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(FrameRestWebService.class);
 
 	public class FrameComparator implements Comparator<Frame3VO> {

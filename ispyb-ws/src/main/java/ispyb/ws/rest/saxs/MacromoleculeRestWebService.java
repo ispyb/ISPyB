@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @Path("/")
-public class MacromoleculeRestWebService extends RestWebService {
+public class MacromoleculeRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})

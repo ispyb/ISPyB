@@ -25,7 +25,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class MeasurementRestWebService extends RestWebService {
+public class MeasurementRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(MeasurementRestWebService.class);
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})

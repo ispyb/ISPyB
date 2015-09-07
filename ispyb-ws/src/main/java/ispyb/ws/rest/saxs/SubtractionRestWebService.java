@@ -26,7 +26,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class SubtractionRestWebService extends RestWebService {
+public class SubtractionRestWebService extends SaxsRestWebService {
 
 	private final static Logger logger = Logger.getLogger(SubtractionRestWebService.class);
 
@@ -66,19 +66,17 @@ public class SubtractionRestWebService extends RestWebService {
 			Subtraction3VO subtraction = getPrimaryDataProcessing3Service().getSubstractionById(subtractionId);
 			if (subtraction != null) {
 				String filePath = subtraction.getSubstractedFilePath();
-				File file = new File(filePath);
-				if (file.exists()) {
-					ResponseBuilder response = Response.ok((Object) file);
-					response.header("Content-Disposition", "attachment; filename=" + file.getName());
-					return response.build();
-				}
+				this.logFinish(methodName, start, logger);
+				return this.downloadFile(filePath);
 			}
-			this.logFinish(methodName, start, logger);
-			return Response.noContent().build();
+			
+			throw new Exception("Subtraction does not exist");
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+
+	
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET

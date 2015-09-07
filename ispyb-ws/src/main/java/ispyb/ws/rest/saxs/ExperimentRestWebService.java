@@ -36,7 +36,7 @@ import com.google.gson.reflect.TypeToken;
 
 
 @Path("/")
-public class ExperimentRestWebService extends RestWebService {
+public class ExperimentRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 
 	private List<Map<String, Object>> getExperimentListByProposal(String proposal) throws NamingException {

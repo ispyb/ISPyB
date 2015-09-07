@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class DataCollectionRestWebService extends RestWebService {
+public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
