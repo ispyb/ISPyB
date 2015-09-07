@@ -14,14 +14,14 @@ import javax.naming.ldap.InitialLdapContext;
 
 public class EMBLLoginModule{
 	private static String groupUniqueMemberName = "member";
-	private static String principalDNSuffix = ",ou=internal,ou=people,dc=embl-hamburg,dc=de";
+	private static String principalDNSuffix = ",ou=Internal,ou=People,dc=embl-hamburg,dc=de";
 	private  static String groupCtxDN = "ou=Pxwebgroups,dc=embl-hamburg,dc=de";
 	private  static String principalDNPrefix = "uid=";
 	private  static String groupAttributeID = "cn";
 	private  static String server = "ldaps://services:636/";
 	private  static String socketFactory = "ispyb.ws.rest.security.login.SmisSSLSocketFactory";
 	
-      
+									
 	public static Properties getConnectionProperties(String username, String password){
 		System.out.println("EMBL login");
 		Properties env = new Properties();
@@ -32,7 +32,7 @@ public class EMBLLoginModule{
 		env.put("sharedAttributeID", "uidNumber");
 		env.put("java.naming.ldap.factory.socket", socketFactory);
 		env.put("principalDNPrefix", principalDNPrefix);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=internal,dc=embl-hamburg,dc=de");
+		env.put("java.naming.security.principal", "uid=" + username + ",ou=Internal,ou=People,dc=embl-hamburg,dc=de");
 		env.put("groupAttributeID", groupAttributeID);
 		env.put("groupCtxDN", groupCtxDN);
 		env.put("principalDNSuffix", principalDNSuffix);
