@@ -39,6 +39,7 @@ import java.util.Set;
 
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -51,6 +52,17 @@ public class RestWebService {
 
 	private final static Logger log = Logger.getLogger(RestWebService.class);
 
+	protected Response downloadFile(String filePath) {
+		File file = new File(filePath);
+		if (file.exists()) {
+			ResponseBuilder response = Response.ok((Object) file);
+			response.header("Content-Disposition", "attachment; filename=" + file.getName());
+			return response.build();
+		}
+		return Response.noContent().build();
+	}
+	
+	
 	/** TODO: it does not work when retrieving using Constants class **/
 	protected String getFolderForUploads() {
 		Properties mProp3 = PropertyLoader.loadProperties("ISPyB");
@@ -103,57 +115,33 @@ public class RestWebService {
 		return Response.status(401).build();
 	}
 
-	protected PlateType3Service getPlateType3Service() throws NamingException {
-		return (PlateType3Service) Ejb3ServiceLocator.getInstance().getLocalService(PlateType3Service.class);
-	}
-
-	protected MenuGroup3Service getMenuGroup3Service() throws NamingException {
-		return (MenuGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(MenuGroup3Service.class);
-	}
-
-	protected Analysis3Service getAnalysis3Service() throws NamingException {
-		return (Analysis3Service) Ejb3ServiceLocator.getInstance().getLocalService(Analysis3Service.class);
-	}
-
-	protected Experiment3Service getExperiment3Service() throws NamingException {
-		return (Experiment3Service) Ejb3ServiceLocator.getInstance().getLocalService(Experiment3Service.class);
-	}
-
-	protected Proposal3Service getProposal3Service() throws NamingException {
-		return (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Proposal3Service.class);
-	}
-
-	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
-		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
-	}
-
-	
 	protected External3Service getExternal3Service() throws NamingException {
 		return (External3Service) Ejb3ServiceLocator.getInstance().getLocalService(External3Service.class);
 	}
 	
+	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
+		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
+	}
+	
+	protected Sampleplate3Service getSamplePlate3Service() throws NamingException {
+		return (Sampleplate3Service) Ejb3ServiceLocator.getInstance().getLocalService(Sampleplate3Service.class);
+	}
 	
 	protected DataCollection3Service getDataCollection3Service() throws NamingException {
 		return (DataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(DataCollection3Service.class);
 	}
 	
-	
-	protected MeasurementToDataCollection3Service getMeasurementToDataCollectionService() throws NamingException {
-		return (MeasurementToDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(
-				MeasurementToDataCollection3Service.class);
+	protected MenuGroup3Service getMenuGroup3Service() throws NamingException {
+		return (MenuGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(MenuGroup3Service.class);
 	}
 
+	
 	protected Session3Service getSession3Service() throws NamingException {
 		return (Session3Service) Ejb3ServiceLocator.getInstance().getLocalService(Session3Service.class);
 	}
 
-	protected Sampleplate3Service getSamplePlate3Service() throws NamingException {
-		return (Sampleplate3Service) Ejb3ServiceLocator.getInstance().getLocalService(Sampleplate3Service.class);
-	}
-
-	protected PrimaryDataProcessing3Service getPrimaryDataProcessing3Service() throws NamingException {
-		return (PrimaryDataProcessing3Service) Ejb3ServiceLocator.getInstance().getLocalService(
-				PrimaryDataProcessing3Service.class);
+	protected PlateType3Service getPlateType3Service() throws NamingException {
+		return (PlateType3Service) Ejb3ServiceLocator.getInstance().getLocalService(PlateType3Service.class);
 	}
 
 	protected Login3Service getLogin3Service() throws NamingException {
@@ -169,19 +157,14 @@ public class RestWebService {
 		return (Shipping3Service) Ejb3ServiceLocator.getInstance().getLocalService(Shipping3Service.class);
 	}
 
-	protected Robot3Service getRobot3Service() throws NamingException {
-		return (Robot3Service) Ejb3ServiceLocator.getInstance().getLocalService(Robot3Service.class);
+	
+	protected Proposal3Service getProposal3Service() throws NamingException {
+		return (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Proposal3Service.class);
 	}
 
 	protected Dewar3Service getDewar3Service() throws NamingException {
 		return (Dewar3Service) Ejb3ServiceLocator.getInstance().getLocalService(Dewar3Service.class);
 	}
-
-	protected WebUserInterfaceService getWebUserInterfaceService() throws NamingException {
-		return (WebUserInterfaceService) Ejb3ServiceLocator.getInstance()
-				.getLocalService(WebUserInterfaceService.class);
-	}
-
 	/**
 	 * Gets proposal Id by login name
 	 * 
