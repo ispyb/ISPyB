@@ -50,7 +50,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class ProcAutoProcessingRestWebService extends AutoProcessingRestWebService {
+public class ProcAutoProcessingRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(ProcAutoProcessingRestWebService.class);
 
@@ -519,6 +519,7 @@ public class ProcAutoProcessingRestWebService extends AutoProcessingRestWebServi
 					List<AutoProcIntegration3VO> autoIntegrations = this.getAutoProcIntegration3Service().findByAutoProcId(autoProc3VO.getAutoProcId());
 					HashMap<String, Object> recordautoIntegrationsProgram = new HashMap<String,Object>();
 					for (AutoProcIntegration3VO autoProcIntegration3VO : autoIntegrations) {
+//						recordautoIntegrationsProgram.put("datacollection", this.getDataCollection3Service().findByPk(autoProcIntegration3VO.getDataCollectionVOId(), false, false, false));
 						recordautoIntegrationsProgram.put("autoproc", autoProc3VO);
 						recordautoIntegrationsProgram.put("details", this.getAutoProcessingDetailBy(autoProc3VO.getAutoProcId().toString(), dataCollectionId));
 						recordautoIntegrationsProgram.put("autointegration", autoProcIntegration3VO);

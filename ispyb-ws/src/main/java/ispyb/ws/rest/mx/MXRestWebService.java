@@ -5,6 +5,18 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
+import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
+import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
+import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.services.core.robot.Robot3Service;
+import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
+import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -17,6 +29,8 @@ import ispyb.server.mx.services.autoproc.PhasingHasScaling3Service;
 import ispyb.server.mx.services.autoproc.PhasingStatistics3Service;
 import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
@@ -24,8 +38,9 @@ import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.ws.rest.RestWebService;
 
-public class AutoProcessingRestWebService extends RestWebService {
+public class MXRestWebService extends RestWebService{
 
+	
 	
 	protected AutoProcessingDataParser getAutoprocessingParserByAutoProcIntegrationListId(List<Integer> ids) throws NamingException, Exception {
 		List<List<AutoProcessingData>> lists = new ArrayList<List<AutoProcessingData>>();
@@ -42,6 +57,9 @@ public class AutoProcessingRestWebService extends RestWebService {
 		return new AutoProcessingDataParser(lists);
 	}
 	
+	protected Crystal3Service getCrystal3Service() throws NamingException {
+		return (Crystal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Crystal3Service.class);
+	}
 	
 	protected AutoProcProgramAttachment3Service getAutoProcProgramAttachment3Service() throws NamingException {
 		return (AutoProcProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(AutoProcProgramAttachment3Service.class);
@@ -88,5 +106,4 @@ public class AutoProcessingRestWebService extends RestWebService {
 	protected PhasingStatistics3Service getPhasingStatistics3Service() throws NamingException {
 		return (PhasingStatistics3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStatistics3Service.class);
 	}
-	
 }

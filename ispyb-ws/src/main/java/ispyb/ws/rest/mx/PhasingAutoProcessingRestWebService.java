@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class PhasingAutoProcessingRestWebService extends AutoProcessingRestWebService {
+public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(PhasingAutoProcessingRestWebService.class);
 
