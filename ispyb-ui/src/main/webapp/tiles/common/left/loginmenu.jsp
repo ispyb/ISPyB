@@ -21,7 +21,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page isELIgnored="false" %>	
 <%@page import="ispyb.common.util.Constants"%>
 
 <%
@@ -93,8 +93,25 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
    					Need help
    				</A>
    			</TD>
-     	</TR>
-
-
-  </TBODY>
+     	</TR>    
+     	<c:if test="${SITE_ATTRIBUTE == 'EMBL'}">
+		    <TR>
+   				<TD vAlign=top align=right><IMG height=9 alt="" src="<%=request.getContextPath()%>/images/navbar_arrow2.gif" width=6 border=0></TD>
+				<TD vAlign=top align=left colSpan=2>
+					<A class=navbarparentselected href="http://photon-science.desy.de/e58/e176720/e179421/popup">Petra III ring status</A>
+   				</TD>
+     		</TR>
+			<TR>
+	      		<TD vAlign=top align=right><IMG height=9 alt="" src="<%=request.getContextPath()%>/images/navbar_arrow2.gif" width=6 border=0></TD>
+   				<TD vAlign=top align=left colSpan=2>
+				<A class=navbarparentselected href="file:///tmp/mxcubeTest/mxcube_test_report.html">
+	   					Beamline info
+	   				</A>
+   				</TD>
+   				
+   				
+   				
+     		</TR>
+     	</c:if>	
+	</TBODY>
 </TABLE>

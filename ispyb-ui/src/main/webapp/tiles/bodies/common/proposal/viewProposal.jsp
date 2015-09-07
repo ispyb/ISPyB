@@ -102,9 +102,7 @@ function onLoad(){
 			                        paramId="proposalId" paramProperty="proposalId"/>
 			                        
             <c:if test="${SITE_ATTRIBUTE eq 'EMBL'}">
-				<layout:collectionItem title="User"     property="login" sortable="false" 
-                						href="<%=target%>"
-                                        paramId="login" paramProperty="login"/>                                                         
+				<layout:collectionItem title="User"     property="login" sortable="true"/>                                                      
             </c:if>
 			                        
 	</layout:collection>
