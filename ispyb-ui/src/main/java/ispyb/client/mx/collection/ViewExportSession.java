@@ -68,7 +68,7 @@ public class ViewExportSession extends DispatchAction {
 			viewExportSessionForm form = (viewExportSessionForm) actForm;
 			// ---------------------------------------------------------------------------------------------------
 			String webTarPath = request.getContextPath() + "/tmp/";
-			String finalTarPath = request.getRealPath("/tmp/");
+			String finalTarPath = request.getRealPath("/") + "/tmp/";
 
 			// TODO check if this is used and rewrite it
 			// SessionExporter sessionExporter = new SessionExporter(sessionId, finalTarPath);
