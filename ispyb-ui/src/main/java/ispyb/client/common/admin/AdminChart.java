@@ -249,7 +249,8 @@ public class AdminChart {
 		String tmpFilePath = "\\" + tmpDir +  "\\";		
 		
 		String filePathOld = request.getRealPath(tmpFilePath) + "\\" + fileName;
-		String filePath = request.getRealPath("/") + "\\" + tmpDir + "\\" + fileName;	
+		//String filePath = request.getRealPath("/") + "\\" + tmpDir + "\\" + fileName;	
+		String filePath = request.getRealPath("/") + "/" + tmpDir + "/" + fileName;	
 		
 		try {
 			File tempFile = new File(filePath);
