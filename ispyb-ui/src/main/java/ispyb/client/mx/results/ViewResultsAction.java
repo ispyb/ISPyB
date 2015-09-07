@@ -150,6 +150,8 @@ public class ViewResultsAction extends DispatchAction {
 	private static final String EDNA_FILES_INDEX_FILE = Constants.SITE_IS_DLS() ? "summary.html" : "index_edna.html";
 
 	private final static Logger LOG = Logger.getLogger(ViewResultsAction.class);
+	
+	private final static String TMP_DIR = "tmp";
 
 	// TODO erase this method when DNA no more used, only EDNA and index file name is changed
 	private String getEdna_index_file(DataCollection3VO dataCollectionVO) throws Exception {
@@ -1862,7 +1864,8 @@ public class ViewResultsAction extends DispatchAction {
 			String outFilename = genericFilename;
 			if (proposalId != null) 
 				outFilename = proposalId.toString() + outFilename;
-			String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
+			//String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
+			String realXLSPath = request.getRealPath("/") + "/" + TMP_DIR + "/" + outFilename;
 			File out = new File(realXLSPath);
 			if (out.exists())
 				out.delete();
