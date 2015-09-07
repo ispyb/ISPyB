@@ -46,22 +46,24 @@ public class AuthenticationRestWebService extends RestWebService {
 			@FormParam("password") String password,
 			@QueryParam("site") String site) throws Exception {
 		String methodName = "authenticate";
-		long id = this.logInit(methodName, logger, login);
+		long id = this.logInit(methodName, logger, login, site);
 		try {
 			List<String> roles = new ArrayList<String>();
 			
-//			if (site != null){
-//				if (site.equals("EMBL")){
-//					roles = EMBLLoginModule.authenticate(login, password);
-//				}
-//				if (site.equals("ESRF")){
-//					roles = LoginModule.authenticate(login, password);
-//				}
-//			}
-//			else{
+			if (site != null){
+				if (site.equals("EMBL")){
+					logger.info("Logging as EMBL");
+					roles = EMBLLoginModule.authenticate(login, password);
+					logger.info(roles);
+				}
+				if (site.equals("ESRF")){
+					roles = LoginModule.authenticate(login, password);
+				}
+			}
+			else{
 				roles = LoginModule.authenticate(login, password);
-//			}
-			
+			}
+
 			roles.add("User");
 			String token = generateRamdomUUID();
 			
