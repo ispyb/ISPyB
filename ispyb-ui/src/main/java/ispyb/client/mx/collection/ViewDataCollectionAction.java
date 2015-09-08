@@ -2771,14 +2771,14 @@ public class ViewDataCollectionAction extends DispatchAction {
 				}
 				// create tar
 				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
-				String s = "";
-				//TODO write temp files in /temp NOT in /bin
-				// the name is the same one to avoid too many files on server
-				if (proposalId != null) 
-					s += proposalId.toString();
-				String outFilename = s + "_autoProcessingFilesFromDC.tar";
+				//String s = "";
+				String info = "";
+				if (dc != null) {
+					info += dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber();
+				}
+				String outFilename = info + "_autoProcFilesFromDC.tar";
 				outFilename = outFilename.replaceAll(" ", "_");
-				String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
+				String realXLSPath = request.getRealPath("/") + "/tmp/" + outFilename;
 				File out = new File(realXLSPath);
 				if (out.exists())
 					out.delete();
@@ -2799,11 +2799,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 					return this.display(mapping, actForm, request, response);
 				}
 
-				String info = "";
-				if (dc != null) {
-					info += dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber();
-				}
-				String newfilename = info + outFilename;
+				String newfilename = outFilename;
 				newfilename = newfilename.replaceAll(" ", "_");
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
