@@ -1032,10 +1032,12 @@ public final class Constants {
 	public static final String BCM_ATTRIBUTE = "BCM"; // context attribute used by JSP
 
 	public static final String MAIL_TO = (SITE_IS_ESRF()) ? getProperty("mail.cc") : (SITE_IS_DLS()) ? getProperty("mail.cc")
-			: (SITE_IS_MAXIV()) ? getProperty("mail.cc") : (SITE_IS_SOLEIL()) ? getProperty("mail.cc") : "";
+			: (SITE_IS_MAXIV()) ? getProperty("mail.cc") : (SITE_IS_SOLEIL()) ? getProperty("mail.cc")
+			: (SITE_IS_EMBL()) ? getProperty("mail.cc"): "";
 
 	public static final String MAIL_TO_SITE = (SITE_IS_ESRF()) ? getProperty("mail.to") : (SITE_IS_DLS()) ? getProperty("mail.to")
-			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") : "";
+			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") 
+			: (SITE_IS_EMBL()) ? getProperty("mail.to") : "";
 
 	/*
 	 * Max record retrieved
