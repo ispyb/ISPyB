@@ -1864,7 +1864,6 @@ public class ViewResultsAction extends DispatchAction {
 			String outFilename = genericFilename;
 			if (proposalId != null) 
 				outFilename = proposalId.toString() + outFilename;
-			//String realXLSPath = request.getRealPath("\\tmp\\") + "\\" + outFilename;
 			String realXLSPath = request.getRealPath("/") + "/" + TMP_DIR + "/" + outFilename;
 			File out = new File(realXLSPath);
 			if (out.exists())
