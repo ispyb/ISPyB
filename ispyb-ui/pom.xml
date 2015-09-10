@@ -464,6 +464,8 @@
 
 				<dictionary.site>The ESRF</dictionary.site>
 				<dictionary.bcm>mxCuBE</dictionary.bcm>
+				
+				<protein.allowedToCreate>false</protein.allowedToCreate>
 
 				<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>
 
@@ -565,6 +567,8 @@
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
 				<ispyb.bcm>mxcube</ispyb.bcm>
+				
+				<protein.allowedToCreate>false</protein.allowedToCreate>
 
 				<mail.smtp.host>smtp.synchrotron-soleil.fr</mail.smtp.host>
 				<mail.admin>sunset.dev@synchrotron-soleil.fr</mail.admin>
