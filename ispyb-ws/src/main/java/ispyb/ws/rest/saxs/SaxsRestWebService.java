@@ -10,6 +10,7 @@ import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.services.core.robot.Robot3Service;
 import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
+import ispyb.server.biosaxs.services.stats.Stats3Service;
 import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
@@ -22,6 +23,9 @@ public class SaxsRestWebService extends RestWebService{
 
 	
 	
+	protected Stats3Service getStats3Service() throws NamingException {
+		return (Stats3Service) Ejb3ServiceLocator.getInstance().getLocalService(Stats3Service.class);
+	}
 	
 	protected Analysis3Service getAnalysis3Service() throws NamingException {
 		return (Analysis3Service) Ejb3ServiceLocator.getInstance().getLocalService(Analysis3Service.class);
