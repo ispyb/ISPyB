@@ -259,7 +259,6 @@ public class CreateShippingFileAction extends DispatchAction {
 				}
 
 				if (!errorFile) {
-					//realCSVPath = request.getRealPath("\\tmp\\") + "\\" + uploadedFileName;
 					realCSVPath = request.getRealPath("/") + "/tmp/" + uploadedFileName;
 					// Write the received file to tmp directory
 					FormFile f = form.getRequestFile();

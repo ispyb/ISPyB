@@ -341,7 +341,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 					parser.getValidationErrors().add(new XlsUploadException("The file must be a xls file."));
 					errorFile = true;
 				}
-				//realXLSPath = request.getRealPath("\\tmp\\") + "\\" + fileName;
 				realXLSPath = request.getRealPath("/") + "/tmp/" + fileName;
 				// Write the received file to tmp directory
 				FormFile f = form.getRequestFile();
