@@ -37,7 +37,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.security.PermitAll;
 import javax.naming.NamingException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
@@ -47,7 +51,21 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+@Path("/")
 public class RestWebService {
+	
+	@PermitAll
+	@GET
+	@Path("configuration")
+	@Produces({ "application/json" })
+	public Response configuration() {
+		System.out.println(Constants.DATA_PDB_FILEPATH_START);
+		String path = this.getFolderForUploads();
+		System.out.println(path);
+		return this.sendResponse(Constants.getAllProperties());
+	}
+	
+	
 	private long now;
 
 	private final static Logger log = Logger.getLogger(RestWebService.class);
