@@ -1206,36 +1206,30 @@ public final class Constants {
 	 */
 
 	/**
-	 * method to load the account info to connect to SMIS WS the account info is stored in settings.xml file which should
+	 * method to load the account info to connect to SMIS WS the account info is stored in the DoNoCommit.properties file which should
 	 * NEVER be committed
 	 */
-
+	@Deprecated
 	public final static String[] getSmisWSAccount() {
 		String[] tab = new String[2];
-		tab[0] = "username";
-		tab[1] = "password";
-		if (SITE_IS_ESRF() || (SITE_IS_EMBL())) {
-			Properties mProp2 = PropertyLoader.loadProperties("ISPyB");
-			tab[0] = mProp2.getProperty("smis.ws.username");
-			tab[1] = mProp2.getProperty("smis.ws.password");
-			
-		}
+		tab[0] = getUserSmisLoginName();
+		tab[1] = getUserSmisPassword;
 		return tab;
 	}
+	
+	public final static String getUserSmisLoginName() {
+		return PropertyLoader.loadProperties("ISPyB").getProperty("smis.ws.username");
+	}
+	
+	public final static String getUserSmisPassword() {
+		return PropertyLoader.loadProperties("ISPyB").getProperty("smis.ws.password");
+	}
+	
 
 	public final static List<HashMap<String, String>> getAllProperties() {
 		List<HashMap<String, String>> properties = new ArrayList<HashMap<String, String>>();
 		
 		HashMap<String, String> prop = new HashMap<String, String>();
-		Properties mProp2 = PropertyLoader.loadProperties("ISPyB");
-		if (SITE_IS_ESRF() || (SITE_IS_EMBL())) {
-			for (Object key : mProp2.keySet()) {
-				prop.put((String)key, mProp2.getProperty((String)key));
-			}
-		}
-		
-		properties.add(prop);
-		prop = new HashMap<String, String>();
 		Properties mProp3 = PropertyLoader.loadProperties("ISPyB");
 		for (Object key : mProp3.keySet()) {
 			prop.put((String)key, mProp3.getProperty((String)key));

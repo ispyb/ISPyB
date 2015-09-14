@@ -17,14 +17,11 @@ public class SMISWebServiceGenerator {
 		//SMISWebService ws=service.get
 		BindingProvider bindingProvider = (BindingProvider)wsPort;
 		Map requestContext = bindingProvider.getRequestContext();
-		String usern = Constants.SMIS_WS_USERNAME;
-		String userp = Constants.SMIS_WS_PWD;
 		
 		//usern="*****";
 		//userp="*****";
-		
-		requestContext.put(BindingProvider.USERNAME_PROPERTY, usern);
-		requestContext.put(BindingProvider.PASSWORD_PROPERTY, userp);
+		requestContext.put(BindingProvider.USERNAME_PROPERTY, Constants.getUserSmisLoginName());
+		requestContext.put(BindingProvider.PASSWORD_PROPERTY, Constants.getUserSmisPassword());
 		
 		return wsPort;
 	}
