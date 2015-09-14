@@ -1213,7 +1213,7 @@ public final class Constants {
 	public final static String[] getSmisWSAccount() {
 		String[] tab = new String[2];
 		tab[0] = getUserSmisLoginName();
-		tab[1] = getUserSmisPassword;
+		tab[1] = getUserSmisPassword();
 		return tab;
 	}
 	
