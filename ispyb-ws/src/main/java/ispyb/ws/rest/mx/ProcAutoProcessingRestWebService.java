@@ -377,8 +377,7 @@ public class ProcAutoProcessingRestWebService extends MXRestWebService {
 		String methodName = "getXScaleCompleteness";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			String result = this.getAutoprocessingParserByAutoProcIntegrationListId(
-					this.parseToInteger(autoProcIntegrationListId)).parseCompleteness();
+			String result = this.getAutoprocessingParserByAutoProcIntegrationListId(this.parseToInteger(autoProcIntegrationListId)).parseCompleteness();
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(result);
 		} catch (Exception e) {
