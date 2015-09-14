@@ -1206,7 +1206,7 @@ public final class Constants {
 	 */
 
 	/**
-	 * method to load the account info to connect to SMIS WS the account info is stored in the DoNoCommit.properties file which should
+	 * method to load the account info to connect to SMIS WS the account info is stored in settings.xml file which should
 	 * NEVER be committed
 	 */
 
@@ -1215,7 +1215,7 @@ public final class Constants {
 		tab[0] = "username";
 		tab[1] = "password";
 		if (SITE_IS_ESRF() || (SITE_IS_EMBL())) {
-			Properties mProp2 = PropertyLoader.loadProperties("DoNotCommit");
+			Properties mProp2 = PropertyLoader.loadProperties("ISPyB");
 			tab[0] = mProp2.getProperty("smis.ws.username");
 			tab[1] = mProp2.getProperty("smis.ws.password");
 			
@@ -1227,7 +1227,7 @@ public final class Constants {
 		List<HashMap<String, String>> properties = new ArrayList<HashMap<String, String>>();
 		
 		HashMap<String, String> prop = new HashMap<String, String>();
-		Properties mProp2 = PropertyLoader.loadProperties("DoNotCommit");
+		Properties mProp2 = PropertyLoader.loadProperties("ISPyB");
 		if (SITE_IS_ESRF() || (SITE_IS_EMBL())) {
 			for (Object key : mProp2.keySet()) {
 				prop.put((String)key, mProp2.getProperty((String)key));
