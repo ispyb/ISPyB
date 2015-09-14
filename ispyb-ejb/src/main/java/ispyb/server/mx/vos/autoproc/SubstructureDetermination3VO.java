@@ -56,7 +56,7 @@ public class SubstructureDetermination3VO extends ISPyBValueObject implements Cl
 	
 	@ManyToOne
 	@JoinColumn(name = "phasingAnalysisId")
-	private PhasingAnalysis3VO phasingAnalysisVO;
+	protected PhasingAnalysis3VO phasingAnalysisVO;
 	
 	@ManyToOne
 	@JoinColumn(name = "phasingProgramRunId")

@@ -56,7 +56,7 @@ public class ModelBuilding3VO extends ISPyBValueObject implements Cloneable {
 	
 	@ManyToOne
 	@JoinColumn(name = "phasingAnalysisId")
-	private PhasingAnalysis3VO phasingAnalysisVO;
+	protected PhasingAnalysis3VO phasingAnalysisVO;
 	
 	@ManyToOne
 	@JoinColumn(name = "phasingProgramRunId")
