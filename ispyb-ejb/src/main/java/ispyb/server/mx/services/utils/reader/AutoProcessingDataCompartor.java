@@ -7,5 +7,6 @@ public class AutoProcessingDataCompartor implements Comparator<AutoProcessingDat
 	    public int compare(AutoProcessingData o1, AutoProcessingData o2) {
 	        return o1.getResolutionLimit().compareTo(o2.getResolutionLimit());
 	    }
+	 	
 }
 

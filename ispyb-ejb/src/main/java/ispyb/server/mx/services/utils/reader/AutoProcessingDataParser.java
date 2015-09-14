@@ -19,7 +19,9 @@
 package ispyb.server.mx.services.utils.reader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 
@@ -42,13 +44,15 @@ public class AutoProcessingDataParser {
 
 	
 	public List<Double> getResolutionLimitSorted(){
-		List<AutoProcessingData> file = this.autoProcessingDataListList.get(0);
-		Collections.sort(file, new AutoProcessingDataCompartor());
-		
 		ArrayList<Double> resolutionLimit = new ArrayList<Double>();
-		for (AutoProcessingData autoProcessingData : file) {
-			resolutionLimit.add(autoProcessingData.getResolutionLimit());
+		for (List<AutoProcessingData> file : this.autoProcessingDataListList) {
+			Collections.sort(file, new AutoProcessingDataCompartor());
+			for (AutoProcessingData autoProcessingData : file) {
+				resolutionLimit.add(autoProcessingData.getResolutionLimit());
+			}
 		}
+		Collections.sort(resolutionLimit);
+		resolutionLimit = new ArrayList<Double>(new LinkedHashSet<Double>(resolutionLimit));
 		return resolutionLimit;
 	}
 	
