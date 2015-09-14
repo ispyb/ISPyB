@@ -109,6 +109,8 @@ public interface LabContact3DAO {
 	 * @throws Exception
 	 */
 	public Integer hasShipping(Integer labContactId) throws Exception;
+
+	public List<LabContact3VO> findByProposalId(Integer proposalId);
 	
 
 }

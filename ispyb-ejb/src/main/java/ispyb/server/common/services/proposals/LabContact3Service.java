@@ -85,6 +85,7 @@ public interface LabContact3Service {
 
 	public List<LabContact3VO> findByCardName(final String cardNameWithNum) throws Exception;
 	
+	public List<LabContact3VO> findByProposalId(Integer proposalId) throws Exception;
 	/**
 	 * returns the nb of shipment linked to the given labcontact
 	 * @param labContactId

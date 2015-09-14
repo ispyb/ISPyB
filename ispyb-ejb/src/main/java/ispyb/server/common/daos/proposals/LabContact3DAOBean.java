@@ -202,6 +202,18 @@ public class LabContact3DAOBean implements LabContact3DAO {
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LabContact3VO> findByProposalId(Integer proposalId) {
+		@SuppressWarnings("deprecation")
+		Session session = (Session) this.entityManager.getDelegate();
+		return session.createQuery("from LabContact3VO where proposalId=:proposalId")
+				.setParameter("proposalId", proposalId)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override

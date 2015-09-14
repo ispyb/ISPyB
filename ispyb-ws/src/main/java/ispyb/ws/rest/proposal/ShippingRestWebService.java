@@ -1,8 +1,12 @@
 package ispyb.ws.rest.proposal;
 
+import generated.ws.smis.ProposalParticipantInfoLightVO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.Date;
@@ -24,6 +28,49 @@ public class ShippingRestWebService extends RestWebService {
 
 	private final static Logger logger = Logger.getLogger(ShippingRestWebService.class);
 
+	
+	
+
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/labcontact/smis/list")
+	@Produces({ "application/json" })
+	public Response getSMISLabContact(@PathParam("token") String token, @PathParam("proposal") String proposal) {
+		String methodName = "getSMISLabContact";
+		long id = this.logInit(methodName, logger, token, proposal);
+		try {
+
+			int proposalId = this.getProposalId(proposal);
+			Proposal3VO proposal3VO = this.getProposal3Service().findByPk(proposalId);
+			ProposalParticipantInfoLightVO[] scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(StringUtils.getUoCode(proposal3VO.getCode()), Integer.parseInt(proposal3VO.getNumber()), null, null);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(scientists);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/labcontact/list")
+	@Produces({ "application/json" })
+	public Response getLabContact(@PathParam("token") String token, @PathParam("proposal") String proposal) {
+		String methodName = "getLabContact";
+		long id = this.logInit(methodName, logger, token, proposal);
+		try {
+
+			int proposalId = this.getProposalId(proposal);
+			List<LabContact3VO> labcontacts = this.getLabContact3Service().findByProposalId(proposalId);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(labcontacts);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/list")

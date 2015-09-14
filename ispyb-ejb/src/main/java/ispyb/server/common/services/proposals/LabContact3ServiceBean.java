@@ -248,6 +248,19 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 			}
 
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LabContact3VO> findByProposalId(final Integer proposalId) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				return dao.findByProposalId(proposalId);
+			}
+
+		});
 	};
 
 
