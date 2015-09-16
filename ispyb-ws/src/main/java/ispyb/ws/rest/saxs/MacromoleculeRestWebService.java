@@ -76,16 +76,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@PermitAll
-	@GET
-	@Path("configuration")
-	@Produces({ "application/json" })
-	public Response configuration() {
-		System.out.println(Constants.DATA_PDB_FILEPATH_START);
-		String path = this.getFolderForUploads();
-		System.out.println(path);
-		return this.sendResponse(Constants.getAllProperties());
-	}
+	
 	
 	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
