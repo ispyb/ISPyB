@@ -70,6 +70,23 @@ public class ShippingRestWebService extends RestWebService {
 		}
 	}
 	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/labcontact/{labcontactId}/get")
+	@Produces({ "application/json" })
+	public Response getLabContactByPk(@PathParam("token") String token, @PathParam("proposal") String proposal, @PathParam("labcontactId") int labcontactId) {
+		String methodName = "getLabContactByPk";
+		long id = this.logInit(methodName, logger, token, proposal);
+		try {
+			LabContact3VO labcontacts = this.getLabContact3Service().findByPk(labcontactId);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(labcontacts);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
 	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
