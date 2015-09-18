@@ -41,7 +41,7 @@ function AutoProcFilePanel(args) {
 
 	this.bodyStyle = 'background-color:#dfe8f5;';
 
-	/* type 1 for XDS, 2 for SCALE, 3 for SCALA/AIMLESS, 4 for SCALEPACK, 5 for TRUNCATE */
+	/* type 1 for XDS, 2 for SCALE, 3 for SCALA/AIMLESS, 4 for SCALEPACK, 5 for TRUNCATE, 6 for DIMPLE */
 	this.type = 1;
 
 	if (args != null) {
@@ -76,7 +76,8 @@ AutoProcFilePanel.prototype.isAttachmentInStep = function(step) {
 			(this.type == 2 && step == "XSCALE") ||
 			(this.type == 3 && step == "SCALA") ||
 			(this.type == 4 && step == "SCALEPACK") || 
-			(this.type == 5 && step == "TRUNCATE"));
+			(this.type == 5 && step == "TRUNCATE") || 
+			(this.type == 6 && step == "DIMPLE"));
 };
 
 

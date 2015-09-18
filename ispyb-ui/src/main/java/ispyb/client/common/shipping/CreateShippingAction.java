@@ -681,6 +681,7 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 
 			// retrieve sending labcontact
 			LabContact3VO sendingLabContact = labCService.findByPk(form.getSendingLabContactId());
+			
 			info.setSendingLabContactVO(sendingLabContact);
 
 			// Return Lab Contact
@@ -688,11 +689,21 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 			if (!form.getIsIdenticalReturnAddress()) {
 				LOG.debug("LabContact for return is different." + " Return LabContact Id will be : " + form.getReturnLabContactId());
 				returnLabContact = labCService.findByPk(form.getReturnLabContactId());
-				info.setReturnLabContactVO(returnLabContact);
-			} else {
-				info.setReturnLabContactVO(sendingLabContact);
 			}
 
+			if (form.getLabContact().getBillingReference() != null) 
+				returnLabContact.setBillingReference(form.getLabContact().getBillingReference());
+			if (form.getLabContact().getCourierAccount() != null) 
+				returnLabContact.setCourierAccount(form.getLabContact().getCourierAccount());
+			if (form.getLabContact().getDefaultCourrierCompany() != null) 
+				returnLabContact.setDefaultCourrierCompany(form.getLabContact().getDefaultCourrierCompany());
+			if (form.getLabContact().getDewarAvgCustomsValue() != null) 
+				returnLabContact.setDewarAvgCustomsValue(form.getLabContact().getDewarAvgCustomsValue());
+			if (form.getLabContact().getDewarAvgTransportValue() != null) 
+				returnLabContact.setDewarAvgTransportValue(form.getLabContact().getDewarAvgTransportValue());
+			info.setReturnLabContactVO(returnLabContact);
+
+			
 			// ---------------------------------------------------------------------------------------------------
 			// Create the new Shipping into the database
 			Shipping3VO createdShipping = shippingService.create(info);
@@ -732,9 +743,10 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 						// old infoDewar.setFirstExperimentId(form.getExperimentsScheduled()[0]);
 						infoDewar.setSessionVO(this.sessionService.findByPk(form.getExperimentsScheduled()[0], false,
 								false, false));
-					// set default cost found in sending labcontact
-					infoDewar.setCustomsValue(sendingLabContact.getDewarAvgCustomsValue());
-					infoDewar.setTransportValue(sendingLabContact.getDewarAvgTransportValue());
+					//  set default cost found in return labcontact
+					
+					infoDewar.setCustomsValue(returnLabContact.getDewarAvgCustomsValue());
+					infoDewar.setTransportValue(returnLabContact.getDewarAvgTransportValue());
 					// save it into the database
 					infoDewar = dewarService.create(infoDewar);
 

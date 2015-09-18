@@ -14536,7 +14536,7 @@ function AutoProcFilePanel(args) {
 
 	this.bodyStyle = 'background-color:#dfe8f5;';
 
-	/* type 1 for XDS, 2 for SCALE, 3 for SCALA/AIMLESS, 4 for SCALEPACK, 5 for TRUNCATE */
+	/* type 1 for XDS, 2 for SCALE, 3 for SCALA/AIMLESS, 4 for SCALEPACK, 5 for TRUNCATE, 6 for DIMPLE */
 	this.type = 1;
 
 	if (args != null) {
@@ -14571,7 +14571,8 @@ AutoProcFilePanel.prototype.isAttachmentInStep = function(step) {
 			(this.type == 2 && step == "XSCALE") ||
 			(this.type == 3 && step == "SCALA") ||
 			(this.type == 4 && step == "SCALEPACK") || 
-			(this.type == 5 && step == "TRUNCATE"));
+			(this.type == 5 && step == "TRUNCATE") || 
+			(this.type == 6 && step == "DIMPLE"));
 };
 
 
@@ -16117,6 +16118,16 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 							'autoProcProgramAttachmentId' : autoProcProgramAttachmentId
 						});
 			});
+	// DIMPLE
+	args = [];
+	args.type = 6;
+	_this.dimplePanel = new AutoProcFilePanel(args);
+	_this.dimplePanel.onAutoProcGraphSelected.attach(function(sender, args) {
+				var autoProcProgramAttachmentId = args.autoProcProgramAttachmentId;
+				_this.onAutoProcGraphSelected.notify({
+							'autoProcProgramAttachmentId' : autoProcProgramAttachmentId
+						});
+			});
 
 	// tabs
 	_this.tabs = Ext.create('Ext.tab.Panel', {
@@ -16142,6 +16153,9 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 						}, {
 							title : 'TRUNCATE',
 							items : [_this.truncatePanel.getPanel(data)]
+						}, {
+							title : 'DIMPLE',
+							items : [_this.dimplePanel.getPanel(data)]
 						}
 
 				]
@@ -16184,6 +16198,7 @@ AutoProcRightPanel.prototype.setSelectedAutoProc = function(data) {
 	_this.scalaPanel.setSelectedAutoProc(data);
 	_this.scalePackPanel.setSelectedAutoProc(data);
 	_this.truncatePanel.setSelectedAutoProc(data);
+	_this.dimplePanel.setSelectedAutoProc(data);
 	_this.tabs.setActiveTab(0);
 	_this.panel.doLayout();
 };
@@ -16202,8 +16217,10 @@ AutoProcRightPanel.prototype.displayGraphAttachment = function(dataAttachment) {
 		activPanel = _this.scalaPanel;
 	} else if (idx == 3) {
 		activPanel = _this.scalePackPanel;
-	}else if (idx == 4) {
-		activPanel = _this.truncatePanel;
+	} else if (idx == 4) {
+		activPanel = _this.truncatePanel;	
+	} else if (idx == 5) {
+		activPanel = _this.dimplePanel;
 	}
 	if (activPanel != null) {
 		activPanel.displayGraphAttachment(dataAttachment);

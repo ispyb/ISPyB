@@ -381,18 +381,18 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					Constants.ISPYB_CRYSTAL_CLASS_LIST);
 
 			// session information
-			String mpEmail = null;
-			if (pv != null)
-				mpEmail = pv.getPersonVO().getEmailAddress();
-			String structureDeterminations = slv.getStructureDeterminations() == null || slv.getStructureDeterminations() == 0 ? ""
-					: slv.getStructureDeterminations().toString();
-			String dewarTransport = slv.getDewarTransport() == null || slv.getDewarTransport() == 0 ? "" : slv.getDewarTransport()
-					.toString();
-			String dataBackupFrance = slv.getDatabackupFrance() == null || slv.getDatabackupFrance() == 0 ? "" : slv
-					.getDatabackupFrance().toString();
-			String dataBackupEurope = slv.getDatabackupEurope() == null || slv.getDatabackupEurope() == 0 ? "" : slv
-					.getDatabackupEurope().toString();
-			// gets the email address for the beamline operator
+			//String mpEmail = null;
+			//if (pv != null)
+				//mpEmail = pv.getPersonVO().getEmailAddress();
+//			String structureDeterminations = slv.getStructureDeterminations() == null || slv.getStructureDeterminations() == 0 ? ""
+//					: slv.getStructureDeterminations().toString();
+//			String dewarTransport = slv.getDewarTransport() == null || slv.getDewarTransport() == 0 ? "" : slv.getDewarTransport()
+//					.toString();
+//			String dataBackupFrance = slv.getDatabackupFrance() == null || slv.getDatabackupFrance() == 0 ? "" : slv
+//					.getDatabackupFrance().toString();
+//			String dataBackupEurope = slv.getDatabackupEurope() == null || slv.getDatabackupEurope() == 0 ? "" : slv
+//					.getDatabackupEurope().toString();
+//			// gets the email address for the beamline operator
 			// Get localContact email
 			String beamLineOperatorEmail = slv.getBeamLineOperatorEmail();
 
@@ -1071,6 +1071,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					// because the jpg image is not replaced
 					// for now replace it only if no thumbnail 
 					// TODO remove this later because it is disturbing that the image is not pointing to the same than the thumbnail ?
+					// TODO have more info and examples : bug #2515
 					if (bestImage != null && !info.isImageThumbnailExist()) {
 						String jpgThumbFullPath = bestImage.getJpegThumbnailFileFullPath();
 						jpgThumbFullPath = PathUtils.FitPathToOS(jpgThumbFullPath);
