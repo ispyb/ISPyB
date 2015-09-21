@@ -1,4 +1,12 @@
 **************
+* 14.09.2015     *
+**************
+
+- bugs fixing : #2379, 
+- DIMPLE autoprocessing tab displayed
+- more rest webservices
+
+**************
 * 08.09.2015     *
 **************
 
