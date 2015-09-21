@@ -498,7 +498,7 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 					existingLabContact.setDewarAvgCustomsValue(form.getLabContact().getDewarAvgCustomsValue());
 					existingLabContact.setDewarAvgTransportValue(form.getLabContact().getDewarAvgTransportValue());
 
-					labCService.update(existingLabContact);
+					existingLabContact = labCService.update(existingLabContact);
 					LOG.debug("LabContact updated : " + existingLabContact);
 				}
 			}
@@ -701,6 +701,8 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 				returnLabContact.setDewarAvgCustomsValue(form.getLabContact().getDewarAvgCustomsValue());
 			if (form.getLabContact().getDewarAvgTransportValue() != null) 
 				returnLabContact.setDewarAvgTransportValue(form.getLabContact().getDewarAvgTransportValue());
+			
+			returnLabContact = labCService.update(returnLabContact);
 			info.setReturnLabContactVO(returnLabContact);
 
 			
