@@ -16052,6 +16052,7 @@ function AutoProcRightPanel(args) {
 	this.scalaPanel = null;
 	this.scalePackPanel = null;
 	this.truncatePanel = null;
+	this.dimplePanel = null;
 
 	if (args != null) {
 		if (args.width != null) {
