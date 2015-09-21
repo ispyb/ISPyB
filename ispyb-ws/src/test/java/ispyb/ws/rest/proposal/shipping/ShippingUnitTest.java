@@ -26,7 +26,7 @@ public class ShippingUnitTest  {
 		return (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(
 				Login3Service.class);
 	}
-	@Test
+//	@Test
 	public void testAuthenticate(){
 		 	DefaultHttpClient httpclient = new DefaultHttpClient();
 		    try {
@@ -59,7 +59,7 @@ public class ShippingUnitTest  {
 		    }
 	}
 
-	@Test
+//	@Test
 	public void test(){
 		 	DefaultHttpClient httpclient = new DefaultHttpClient();
 		    try {

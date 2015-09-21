@@ -234,15 +234,5 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 
-	private Response sendImage(String filePath) {
-		if (filePath != null) {
-			if (new File(filePath).exists()) {
-				File file = new File(filePath);
-				ResponseBuilder response = Response.ok((Object) file);
-				response.header("Content-Disposition", "attachment; filename=image_from_server.png");
-				return response.build();
-			}
-		}
-		return Response.status(Response.Status.NOT_FOUND).build();
-	}
+	
 }

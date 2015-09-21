@@ -1,12 +1,10 @@
 package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
-import ispyb.ws.rest.RestWebService;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,7 +24,6 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/list")
 	@Produces({ "application/json" })
 	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal) throws Exception {
-
 		String methodName = "list";
 		long id = this.logInit(methodName, logger, token, proposal);
 		try {

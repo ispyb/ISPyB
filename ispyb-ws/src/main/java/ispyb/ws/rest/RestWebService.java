@@ -23,6 +23,7 @@ import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.Session3Service;
 
 import java.io.File;
@@ -59,12 +60,22 @@ public class RestWebService {
 	@Path("configuration")
 	@Produces({ "application/json" })
 	public Response configuration() {
-		System.out.println(Constants.DATA_PDB_FILEPATH_START);
 		String path = this.getFolderForUploads();
-		System.out.println(path);
 		return this.sendResponse(Constants.getAllProperties());
 	}
 	
+	
+	protected Response sendImage(String filePath) {
+		if (filePath != null) {
+			if (new File(filePath).exists()) {
+				File file = new File(filePath);
+				ResponseBuilder response = Response.ok((Object) file);
+				response.header("Content-Disposition", "attachment; filename=" + new File(filePath).getName());
+				return response.build();
+			}
+		}
+		return Response.status(Response.Status.NOT_FOUND).build();
+	}
 	
 	private long now;
 
@@ -147,6 +158,10 @@ public class RestWebService {
 	
 	protected DataCollection3Service getDataCollection3Service() throws NamingException {
 		return (DataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(DataCollection3Service.class);
+	}
+	
+	protected Image3Service getImage3Service() throws NamingException {
+		return (Image3Service) Ejb3ServiceLocator.getInstance().getLocalService(Image3Service.class);
 	}
 	
 	protected MenuGroup3Service getMenuGroup3Service() throws NamingException {
