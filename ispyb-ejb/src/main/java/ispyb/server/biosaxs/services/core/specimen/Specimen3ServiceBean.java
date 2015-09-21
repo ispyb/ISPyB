@@ -19,7 +19,7 @@
 
 package ispyb.server.biosaxs.services.core.specimen;
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
 
 import javax.ejb.Stateless;

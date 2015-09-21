@@ -21,8 +21,8 @@ package ispyb.server.biosaxs.services.core.measurement;
 
 
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;

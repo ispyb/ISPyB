@@ -21,7 +21,7 @@ package ispyb.server.biosaxs.services.core.proposal;
 
 import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
 import ispyb.server.biosaxs.vos.assembly.AssemblyHasMacromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;

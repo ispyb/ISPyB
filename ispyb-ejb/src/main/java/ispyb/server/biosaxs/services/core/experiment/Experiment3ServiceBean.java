@@ -20,9 +20,9 @@
 package ispyb.server.biosaxs.services.core.experiment;
 
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Stoichiometry3VO;
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;

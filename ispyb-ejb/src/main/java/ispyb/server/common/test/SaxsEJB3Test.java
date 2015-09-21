@@ -59,9 +59,7 @@ public class SaxsEJB3Test {
 		
 		System.setProperty("java.security.auth.login.config", jbossPath);
         UsernamePasswordHandler handler = null;
-        String username = "mx9999";
-        String password = "mxtest";
-        handler = new UsernamePasswordHandler(username, password);
+        handler = new UsernamePasswordHandler("mx9999", "");
         LoginContext lc = new LoginContext("testEJB", handler);
         lc.login();
         System.setProperty("java.security.policy", jbossPolicy);

@@ -20,7 +20,7 @@
 package ispyb.server.biosaxs.services.core.analysis.abInitioModelling;
 
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.datacollection.AbInitioModel3VO;
 import ispyb.server.biosaxs.vos.datacollection.Model3VO;
 import ispyb.server.biosaxs.vos.datacollection.ModelList3VO;

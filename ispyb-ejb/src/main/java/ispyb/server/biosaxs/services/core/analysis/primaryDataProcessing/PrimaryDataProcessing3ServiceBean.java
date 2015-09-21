@@ -20,8 +20,8 @@
 package ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing;
 
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.datacollection.Frame3VO;
 import ispyb.server.biosaxs.vos.datacollection.Framelist3VO;

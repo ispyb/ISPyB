@@ -18,7 +18,8 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping.external;
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
@@ -228,13 +229,13 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 	
 	public String getDataCollectionFromShippingId() {
 		return "select " + 
-				SQLQueryKeeper.getShippingTable() + " ," + 
-				SQLQueryKeeper.getDewarTable() + " ," + 
-				SQLQueryKeeper.getContainerTable() + " ," + 
-				SQLQueryKeeper.getBLSampleTable() + ", " + 
-				SQLQueryKeeper.getDataCollectionGroupTable() + ", " + 
-				SQLQueryKeeper.getDataCollectionTable() + " ," +
-				SQLQueryKeeper.getCrystalTable()  +
+				SqlTableMapper.getShippingTable() + " ," + 
+				SqlTableMapper.getDewarTable() + " ," + 
+				SqlTableMapper.getContainerTable() + " ," + 
+				SqlTableMapper.getBLSampleTable() + ", " + 
+				SqlTableMapper.getDataCollectionGroupTable() + ", " + 
+				SqlTableMapper.getDataCollectionTable() + " ," +
+				SqlTableMapper.getCrystalTable()  +
 				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n" + 
 				"				left join Container on Container.dewarId = Dewar.dewarId\r\n" + 
 				"				left join BLSample on BLSample.containerId = Container.containerId \r\n" + 
@@ -246,16 +247,16 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 
 	public String getAllDataCollectionFromShippingId() {
 		return "select  " +
-				SQLQueryKeeper.getShippingTable() + " ," + 
-				SQLQueryKeeper.getDewarTable() + " ," +
-				SQLQueryKeeper.getContainerTable() + " ," +
-				SQLQueryKeeper.getBLSampleTable() + " ," +
-				SQLQueryKeeper.getDataCollectionGroupTable() + " ," +
-				SQLQueryKeeper.getDataCollectionTable() + " ," +
-				SQLQueryKeeper.getImageTable() + " ," +
-				SQLQueryKeeper.getWorkflowTable() + " ," +
-				SQLQueryKeeper.getWorkflowMeshTable() + " ," +
-				SQLQueryKeeper.getCrystalTable()  +
+				SqlTableMapper.getShippingTable() + " ," + 
+				SqlTableMapper.getDewarTable() + " ," +
+				SqlTableMapper.getContainerTable() + " ," +
+				SqlTableMapper.getBLSampleTable() + " ," +
+				SqlTableMapper.getDataCollectionGroupTable() + " ," +
+				SqlTableMapper.getDataCollectionTable() + " ," +
+				SqlTableMapper.getImageTable() + " ," +
+				SqlTableMapper.getWorkflowTable() + " ," +
+				SqlTableMapper.getWorkflowMeshTable() + " ," +
+				SqlTableMapper.getCrystalTable()  +
 				" from Shipping left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n"
 				+ " left join Container on Container.dewarId = Dewar.dewarId \r\n"
 				+ " left join BLSample  on BLSample.containerId = Container.containerId \r\n"

@@ -20,7 +20,7 @@
 package ispyb.server.biosaxs.services.core.analysis;
 
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 
 import java.util.ArrayList;

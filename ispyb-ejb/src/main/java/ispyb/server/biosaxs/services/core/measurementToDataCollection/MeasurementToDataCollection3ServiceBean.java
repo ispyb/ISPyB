@@ -22,7 +22,7 @@ package ispyb.server.biosaxs.services.core.measurementToDataCollection;
 
 import java.util.List;
 
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 

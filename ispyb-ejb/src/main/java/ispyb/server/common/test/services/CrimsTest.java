@@ -20,10 +20,10 @@
 package ispyb.server.common.test.services;
 
 //import ispyb.client.biosaxs.hdf5.HDF5FileReader;
-import ispyb.server.biosaxs.services.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
 import ispyb.server.biosaxs.services.core.analysis.abInitioModelling.AbInitioModelling3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.utils.BiosaxsZipper;
 import ispyb.server.biosaxs.services.utils.reader.dat.FramesReaderFactory;
 import ispyb.server.biosaxs.services.utils.reader.dat.OneDimensionalFileReader;
