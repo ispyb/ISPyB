@@ -150,7 +150,7 @@ public class UpdateFromSMIS {
 		 SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
 		 smisSamples = smisSamples_.toArray(smisSamples);
 		
-		 List<ProposalParticipantInfoLightVO> labContacts_ = sws.findScientistsForProposalByNameAndFirstName(pk, null, null);
+		 List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
 		 ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
 		 labContacts = labContacts_.toArray(labContacts);
 		 
