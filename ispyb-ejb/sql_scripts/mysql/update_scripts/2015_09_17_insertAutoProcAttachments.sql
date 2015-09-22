@@ -9,7 +9,7 @@
 `hasGraph`
 )
 VALUES (
-'53', 'edna_dimple.png', 'image for dimple', 'DIMPLE', 'output', '0'
+'53', 'dimple.png', 'image for dimple', 'DIMPLE', 'output', '0'
 );
 
 INSERT INTO `pydb`.`IspybAutoProcAttachment` (
@@ -21,7 +21,7 @@ INSERT INTO `pydb`.`IspybAutoProcAttachment` (
 `hasGraph`
 )
 VALUES (
-'54', 'edna_dimple.log', 'log for dimple', 'DIMPLE', 'log', '0'
+'54', 'dimple.log', 'log for dimple', 'DIMPLE', 'log', '0'
 );
 
 INSERT INTO `pydb`.`IspybAutoProcAttachment` (
@@ -33,7 +33,7 @@ INSERT INTO `pydb`.`IspybAutoProcAttachment` (
 `hasGraph`
 )
 VALUES (
-'55', 'edna_dimple.pdf', 'log for dimple', 'DIMPLE', 'log', '0'
+'55', 'dimple.pdf', 'log for dimple', 'DIMPLE', 'log', '0'
 );
 
 INSERT INTO `pydb`.`IspybAutoProcAttachment` (
@@ -45,7 +45,7 @@ INSERT INTO `pydb`.`IspybAutoProcAttachment` (
 `hasGraph`
 )
 VALUES (
-'56', 'edna_dimple.mtz', 'mtz file for dimple', 'DIMPLE', 'output', '0'
+'56', 'dimple.mtz', 'mtz file for dimple', 'DIMPLE', 'output', '0'
 );
 
 INSERT INTO `pydb`.`IspybAutoProcAttachment` (
@@ -57,6 +57,18 @@ INSERT INTO `pydb`.`IspybAutoProcAttachment` (
 `hasGraph`
 )
 VALUES (
-'57', 'edna_unmerged_noanom_pointless_multirecord.mtz.gz', 'unmerged multirecord from pointless with noanom', 'SCALA', 'output', '0'
+'57', 'pointless_multirecord.mtz.gz', 'multirecord from pointless', 'SCALA', 'output', '0'
+);
+
+INSERT INTO `pydb`.`IspybAutoProcAttachment` (
+`autoProcAttachmentId` ,
+`fileName` ,
+`description` ,
+`step` ,
+`fileCategory` ,
+`hasGraph`
+)
+VALUES (
+'58', 'dimple.pdb', 'pdb file for dimple', 'DIMPLE', 'output', '0'
 );
 
