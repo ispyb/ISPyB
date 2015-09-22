@@ -115,21 +115,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 
 	}
 
-	// /**
-	// * main
-	// *
-	// * @param args
-	// */
-	// public static void main(String[] args) {
-	// try {
-	// SubmitPocketSampleInformationAction s = new SubmitPocketSampleInformationAction();
-	// // s.uploadFile(null, null, null, null);
-	// // s.PopulateTemplate(null);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-
 	/**
 	 * execute
 	 * 
@@ -250,7 +235,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 			e.printStackTrace();
 		}
 
-		// return mapping.findForward("submitPocketSampleInformationPage");
 		return redirectPageFromRole(mapping, request);
 	}
 
