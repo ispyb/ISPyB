@@ -89,6 +89,9 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "preferredBeamSizeY")
 	protected Double preferredBeamSizeY;
+	
+	@Column(name = "preferredBeamDiameter")
+	protected Double preferredBeamDiameter;
 
 	@Column(name = "comments")
 	protected String comments;
@@ -160,7 +163,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	public DiffractionPlan3VO(Integer diffractionPlanId, XmlDocument3VO xmlDocumentVO, String experimentKind,
 			Double observedResolution, Double minimalResolution, Double exposureTime, Double oscillationRange,
 			Double maximalResolution, Double screeningResolution, Double radiationSensitivity,
-			String anomalousScatterer, Double preferredBeamSizeX, Double preferredBeamSizeY, String comments,
+			String anomalousScatterer, Double preferredBeamSizeX, Double preferredBeamSizeY, Double preferredBeamDiameter,String comments,
 			Double aimedCompleteness, Double aimedIOverSigmaAtHighestRes, Double aimedMultiplicity,
 			Double aimedResolution, Boolean anomalousData, String complexity, Boolean estimateRadiationDamage,
 			String forcedSpaceGroup, Double requiredCompleteness, Double requiredMultiplicity,
@@ -181,6 +184,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.anomalousScatterer = anomalousScatterer;
 		this.preferredBeamSizeX = preferredBeamSizeX;
 		this.preferredBeamSizeY = preferredBeamSizeY;
+		this.preferredBeamDiameter = preferredBeamDiameter;
 		this.comments = comments;
 		this.aimedCompleteness = aimedCompleteness;
 		this.aimedIOverSigmaAtHighestRes = aimedIOverSigmaAtHighestRes;
@@ -216,6 +220,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.anomalousScatterer = vo.getAnomalousScatterer();
 		this.preferredBeamSizeX = vo.getPreferredBeamSizeX();
 		this.preferredBeamSizeY = vo.getPreferredBeamSizeY();
+		this.preferredBeamDiameter = vo.getPreferredBeamDiameter();
 		this.comments = vo.getComments();
 		this.aimedCompleteness = vo.getAimedCompleteness();
 		this.aimedIOverSigmaAtHighestRes = vo.getAimedIOverSigmaAtHighestRes();
@@ -251,6 +256,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.anomalousScatterer = vo.getAnomalousScatterer();
 		this.preferredBeamSizeX = vo.getPreferredBeamSizeX();
 		this.preferredBeamSizeY = vo.getPreferredBeamSizeY();
+		this.preferredBeamDiameter = vo.getPreferredBeamDiameter();
 		this.comments = vo.getComments();
 		this.aimedCompleteness = vo.getAimedCompleteness();
 		this.aimedIOverSigmaAtHighestRes = vo.getAimedIOverSigmaAtHighestRes();
@@ -388,6 +394,14 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setPreferredBeamSizeY(Double preferredBeamSizeY) {
 		this.preferredBeamSizeY = preferredBeamSizeY;
+	}
+
+	public Double getPreferredBeamDiameter() {
+		return preferredBeamDiameter;
+	}
+
+	public void setPreferredBeamDiameter(Double preferredBeamDiameter) {
+		this.preferredBeamDiameter = preferredBeamDiameter;
 	}
 
 	public String getComments() {
