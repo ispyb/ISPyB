@@ -82,8 +82,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 			<layout:text key="Oscillation range"		name="viewSampleForm" property="difPlanInfo.oscillationRange" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.oscillationRange">&#176;</logic:present></layout:text>
 			<layout:text key="Experiment type"			name="viewSampleForm" property="difPlanInfo.experimentKind" styleClass="FIELD_DISPLAY" mode="I,I,I"/>
   		    <layout:text key="Anomalous scatterer"		name="viewSampleForm" property="difPlanInfo.anomalousScatterer" styleClass="FIELD_DISPLAY" mode="I,I,I"/>
-			<layout:text key="Preferred beamsizeX"		name="viewSampleForm" property="difPlanInfo.preferredBeamSizeX" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.preferredBeamSizeX"> &#181;m</logic:present></layout:text>
-			<layout:text key="Preferred beamsizeY"		name="viewSampleForm" property="difPlanInfo.preferredBeamSizeY" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.preferredBeamSizeY"> &#181;m</logic:present></layout:text>
+			<layout:text key="Preferred beam diameter"		name="viewSampleForm" property="difPlanInfo.preferredBeamDiameter" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.preferredBeamDiameter"> &#181;m</logic:present></layout:text>
+			<layout:text key="Number of positions"		name="viewSampleForm" property="difPlanInfo.numberOfPositions" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.numberOfPositions"></logic:present></layout:text>
+			<layout:text key="Radiation sensitivity"		name="viewSampleForm" property="difPlanInfo.radiationSensitivity" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.radiationSensitivity"></logic:present></layout:text>
+			<layout:text key="Required completeness"		name="viewSampleForm" property="difPlanInfo.requiredCompleteness" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredCompleteness"></logic:present></layout:text>
+			<layout:text key="Required multiplicity"		name="viewSampleForm" property="difPlanInfo.requiredMultiplicity" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredMultiplicity"></logic:present></layout:text>
 			<layout:text key="Comments"					name="viewSampleForm" property="difPlanInfo.comments" styleClass="FIELD_DISPLAY" mode="I,I,I"/>
 	</layout:tab>
 

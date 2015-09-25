@@ -19876,11 +19876,23 @@ function CreatePuckGrid(args) {
 					name : 'neededResolution',
 					mapping : 'neededResolution'
 				}, {
-					name : 'oscillationRange',
-					mapping : 'oscillationRange'
+					name : 'preferredBeamDiameter',
+					mapping : 'preferredBeamDiameter'
 				}, {
 					name : 'experimentType',
 					mapping : 'experimentType'
+				}, {
+					name : 'numberOfPositions',
+					mapping : 'numberOfPositions'
+				}, {
+					name : 'radiationSensitivity',
+					mapping : 'radiationSensitivity'
+				}, {
+					name : 'requiredMultiplicity',
+					mapping : 'requiredMultiplicity'
+				}, {
+					name : 'requiredCompleteness',
+					mapping : 'requiredCompleteness'
 				}, {
 					name : 'unitCellA',
 					mapping : 'unitCellA'
@@ -20411,7 +20423,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 	}, {
 		text : 'Protein<br>Acronym (*)',
 		dataIndex : 'proteinAcronym',
-		flex : 0.1,
+		flex : 0.08,
 		editor : comboProtein,
 		renderer : renderProtein
 	}, {
@@ -20428,7 +20440,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 		},
 		renderer : renderSample
 	}, {
-		text : 'PinBarcode',
+		text : 'Pin<br>Barcode',
 		dataIndex : 'pinBarcode',
 		flex : 0.07,
 		editor : {
@@ -20457,8 +20469,8 @@ CreatePuckGrid.prototype._getColumns = function () {
 			allowBlank : true
 		}
 	}, {
-		text : 'Oscillation<br>Range',
-		dataIndex : 'oscillationRange',
+		text : 'Pref.<br>Diameter',
+		dataIndex : 'preferredBeamDiameter',
 		flex : 0.05,
 		editor : {
 			xtype : 'textfield',
@@ -20473,49 +20485,81 @@ CreatePuckGrid.prototype._getColumns = function () {
 										// instance
 		//renderer : Ext.util.Format.comboRenderer(comboExperimentType)
 	}, {
-		text : 'Unit Cell<br>a',
+		text : 'Number<br>of<br>positions',
+		dataIndex : 'numberOfPositions',
+		flex : 0.05,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true
+		}
+	}, {
+		text : 'Radiation<br>sensitivity',
+		dataIndex : 'radiationSensitivity',
+		flex : 0.05,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true
+		}
+	}, {
+		text : 'Required<br>multiplicity',
+		dataIndex : 'requiredMultiplicity',
+		flex : 0.05,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true
+		}
+	}, {
+		text : 'Required<br>completeness',
+		dataIndex : 'requiredCompleteness',
+		flex : 0.05,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true
+		}
+	}, {
+		text : 'Unit<br>Cell a',
 		dataIndex : 'unitCellA',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Unit Cell<br>b',
+		text : 'Unit<br>Cell b',
 		dataIndex : 'unitCellB',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Unit Cell<br>c',
+		text : 'Unit<br>Cell c',
 		dataIndex : 'unitCellC',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Unit Cell<br>alpha',
+		text : 'Unit<br>Cell<br>alpha',
 		dataIndex : 'unitCellAlpha',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Unit Cell<br>beta',
+		text : 'Unit<br>Cell<br>beta',
 		dataIndex : 'unitCellBeta',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Unit Cell<br>gamma',
+		text : '<center>Unit<br>Cell<br>gamma</center>',
 		dataIndex : 'unitCellGamma',
-		flex : 0.05,
+		flex : 0.04,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
@@ -20524,7 +20568,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 	 {
 		text : 'SMILES',
 		dataIndex : 'smiles',
-		flex : 0.1,
+		flex : 0.08,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true,
