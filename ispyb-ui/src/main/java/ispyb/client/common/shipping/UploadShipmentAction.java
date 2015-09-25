@@ -76,7 +76,7 @@ import org.apache.struts.actions.DispatchAction;
 
 // public class UploadShipmentAction extends AbstractSampleAction {
 public class UploadShipmentAction extends DispatchAction {
-	private final Logger LOG = Logger.getLogger(UploadShipmentAction.class);
+	private final static Logger LOG = Logger.getLogger(UploadShipmentAction.class);
 
 	private String mFileType = Constants.TEMPLATE_FILE_TYPE_EXPORT_SHIPPING;
 
@@ -389,7 +389,7 @@ public class UploadShipmentAction extends DispatchAction {
 			// List listProteins = (List) protein3Service..findByProposalId(proposalLight.getPrimaryKey());
 			List<Protein3VO> listProteins = protein3Service.findByProposalId(proposals.get(0).getProposalId(), true,
 					true);
-
+			LOG.info("xlsPath = "+xlsPath + "populatedTemplateFileName = " + populatedTemplateFileName);
 			parser.populate(xlsPath, populatedTemplateFileName, listProteins, dmCodesinSC);
 
 			if (populateForShipment)

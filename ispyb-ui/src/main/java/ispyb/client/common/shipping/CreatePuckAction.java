@@ -526,13 +526,13 @@ public class CreatePuckAction extends DispatchAction {
 					} catch (NumberFormatException ex) {
 						errors.add("neededResolution incorrect " + samplePuck.getNeededResolution());
 					}
-					// oscillationRange
-					Double oscillationRange = null;
+					// preferredBeamDiameter
+					Double preferredBeamDiameter = null;
 					try {
-						if (samplePuck.getOscillationRange() != null && !samplePuck.getOscillationRange().isEmpty())
-							oscillationRange = Double.parseDouble(samplePuck.getOscillationRange());
+						if (samplePuck.getPreferredBeamDiameter() != null && !samplePuck.getPreferredBeamDiameter().isEmpty())
+							preferredBeamDiameter = Double.parseDouble(samplePuck.getPreferredBeamDiameter());
 					} catch (NumberFormatException ex) {
-						errors.add("oscillationRange incorrect " + samplePuck.getOscillationRange());
+						errors.add("preferredBeamDiameter incorrect " + samplePuck.getPreferredBeamDiameter());
 						sampleRowOK = false;
 					}
 					// experimentType
@@ -540,6 +540,46 @@ public class CreatePuckAction extends DispatchAction {
 					if (experimentType != null && experimentType.isEmpty()) {
 						experimentType = null;
 					}
+					// numberOfPositions
+					Integer numberOfPositions = null;
+					try {
+						if (samplePuck.getNumberOfPositions() != null && !samplePuck.getNumberOfPositions().isEmpty())
+							numberOfPositions = Integer.parseInt(samplePuck.getNumberOfPositions());
+					} catch (NumberFormatException ex) {
+						errors.add("numberOfPositions incorrect " + samplePuck.getNumberOfPositions());
+						sampleRowOK = false;
+					}
+
+					// radiationSensitivity
+					Double radiationSensitivity = null;
+					try {
+						if (samplePuck.getRadiationSensitivity() != null && !samplePuck.getRadiationSensitivity().isEmpty())
+							radiationSensitivity = Double.parseDouble(samplePuck.getRadiationSensitivity());
+					} catch (NumberFormatException ex) {
+						errors.add("radiationSensitivity incorrect " + samplePuck.getRadiationSensitivity());
+						sampleRowOK = false;
+					}
+
+					// requiredMultiplicity
+					Double requiredMultiplicity = null;
+					try {
+						if (samplePuck.getRequiredMultiplicity() != null && !samplePuck.getRequiredMultiplicity().isEmpty())
+							requiredMultiplicity = Double.parseDouble(samplePuck.getRequiredMultiplicity());
+					} catch (NumberFormatException ex) {
+						errors.add("requiredMultiplicity incorrect " + samplePuck.getRequiredMultiplicity());
+						sampleRowOK = false;
+					}
+
+					// requiredCompleteness
+					Double requiredCompleteness = null;
+					try {
+						if (samplePuck.getRequiredCompleteness() != null && !samplePuck.getRequiredCompleteness().isEmpty())
+							requiredCompleteness = Double.parseDouble(samplePuck.getRequiredCompleteness());
+					} catch (NumberFormatException ex) {
+						errors.add("requiredCompleteness incorrect " + samplePuck.getRequiredCompleteness());
+						sampleRowOK = false;
+					}
+
 					// unitCellA
 					Double unitCellA = null;
 					try {
@@ -662,7 +702,11 @@ public class CreatePuckAction extends DispatchAction {
 								difPlan.setObservedResolution(preObservedResolution);
 								difPlan.setRequiredResolution(neededResolution);
 								difPlan.setExposureTime((double) 0);
-								difPlan.setOscillationRange(oscillationRange);
+								difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
+								difPlan.setRadiationSensitivity(radiationSensitivity);
+								difPlan.setRequiredCompleteness(requiredCompleteness);
+								difPlan.setRequiredMultiplicity(requiredMultiplicity);
+								difPlan.setNumberOfPositions(numberOfPositions);
 								difPlan.setExperimentKind(experimentType);
 								difPlan = difPlanService.create(difPlan);
 								listDifPlanCreated.add(difPlan);
@@ -674,13 +718,21 @@ public class CreatePuckAction extends DispatchAction {
 										difPlan.setObservedResolution(preObservedResolution);
 										difPlan.setRequiredResolution(neededResolution);
 										difPlan.setExposureTime((double) 0);
-										difPlan.setOscillationRange(oscillationRange);
+										difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
+										difPlan.setRadiationSensitivity(radiationSensitivity);
+										difPlan.setRequiredCompleteness(requiredCompleteness);
+										difPlan.setRequiredMultiplicity(requiredMultiplicity);
+										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
 										listDifPlanCreated.add(difPlan);
 									} else {
 										difPlan.setObservedResolution(preObservedResolution);
 										difPlan.setRequiredResolution(neededResolution);
-										difPlan.setOscillationRange(oscillationRange);
+										difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
+										difPlan.setRadiationSensitivity(radiationSensitivity);
+										difPlan.setRequiredCompleteness(requiredCompleteness);
+										difPlan.setRequiredMultiplicity(requiredMultiplicity);
+										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
 										listDifPlanUpdated.add(difPlan);
 									}

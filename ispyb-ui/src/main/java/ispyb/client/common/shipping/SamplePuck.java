@@ -34,8 +34,12 @@ public class SamplePuck {
 	protected String pinBarcode;
 	protected String preObservedResolution;
 	protected String neededResolution;
-	protected String oscillationRange;
+	protected String preferredBeamDiameter;
 	protected String experimentType;
+	protected String numberOfPositions;
+	protected String radiationSensitivity;
+	protected String requiredCompleteness;
+	protected String requiredMultiplicity;
 	protected String unitCellA;
 	protected String unitCellB;
 	protected String unitCellC;
@@ -50,14 +54,15 @@ public class SamplePuck {
 		super();
 	}
 
-
-	
-
-
 	public SamplePuck(String sampleId, String position, String sampleName,
 			String proteinAcronym, String spaceGroup,
 			String preObservedResolution, String neededResolution,
-			String oscillationRange, String experimentType, String unitCellA,
+			String preferredBeamDiameter, String experimentType, 
+			String numberOfPositions,
+			String radiationSensitivity,
+			String requiredCompleteness,
+			String requiredMultiplicity,
+			String unitCellA,
 			String unitCellB, String unitCellC, String unitCellAlpha,
 			String unitCellBeta, String unitCellGamma, String smiles, String comments, String pinBarcode) {
 		super();
@@ -68,7 +73,11 @@ public class SamplePuck {
 		this.spaceGroup = spaceGroup;
 		this.preObservedResolution = preObservedResolution;
 		this.neededResolution = neededResolution;
-		this.oscillationRange = oscillationRange;
+		this.preferredBeamDiameter = preferredBeamDiameter;
+		this.numberOfPositions = numberOfPositions;
+		this.radiationSensitivity = radiationSensitivity;
+		this.requiredCompleteness = requiredCompleteness;
+		this.requiredMultiplicity = requiredMultiplicity;
 		this.experimentType = experimentType;
 		this.unitCellA = unitCellA;
 		this.unitCellB = unitCellB;
@@ -96,13 +105,29 @@ public class SamplePuck {
 		if (blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredResolution() != null){
 			this.neededResolution = blSample3VO.getDiffractionPlanVO().getRequiredResolution().toString();
 		}
-		this.oscillationRange = "";
-		if (blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getOscillationRange() != null){
-			this.oscillationRange = blSample3VO.getDiffractionPlanVO().getOscillationRange().toString();
+		this.preferredBeamDiameter = "";
+		if (blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getPreferredBeamDiameter() != null){
+			this.preferredBeamDiameter = blSample3VO.getDiffractionPlanVO().getPreferredBeamDiameter().toString();
 		}
 		this.experimentType = "";
 		if(blSample3VO.getDiffractionPlanVO() != null){
 			this.experimentType = blSample3VO.getDiffractionPlanVO().getExperimentKind();
+		}
+		this.numberOfPositions = "";
+		if(blSample3VO.getDiffractionPlanVO() != null){
+			this.numberOfPositions = blSample3VO.getDiffractionPlanVO().getNumberOfPositions().toString();
+		}
+		this.radiationSensitivity = "";
+		if(blSample3VO.getDiffractionPlanVO() != null){
+			this.radiationSensitivity = blSample3VO.getDiffractionPlanVO().getRadiationSensitivity().toString();
+		}
+		this.requiredMultiplicity = "";
+		if(blSample3VO.getDiffractionPlanVO() != null){
+			this.requiredMultiplicity = blSample3VO.getDiffractionPlanVO().getRequiredMultiplicity().toString();
+		}
+		this.requiredCompleteness = "";
+		if(blSample3VO.getDiffractionPlanVO() != null){
+			this.requiredCompleteness = blSample3VO.getDiffractionPlanVO().getRequiredCompleteness().toString();
 		}
 		this.unitCellA = "";
 		if ( blSample3VO.getCrystalVO().getCellA() != null){
@@ -189,12 +214,12 @@ public class SamplePuck {
 		this.neededResolution = neededResolution;
 	}
 
-	public String getOscillationRange() {
-		return oscillationRange;
+	public String getPreferredBeamDiameter() {
+		return preferredBeamDiameter;
 	}
 
-	public void setOscillationRange(String oscillationRange) {
-		this.oscillationRange = oscillationRange;
+	public void setPreferredBeamDiameter(String preferredBeamDiameter) {
+		this.preferredBeamDiameter = preferredBeamDiameter;
 	}
 
 	public String getExperimentType() {
@@ -203,6 +228,37 @@ public class SamplePuck {
 	
 	public void setExperimentType(String experimentType) {
 		this.experimentType = experimentType;
+	}
+
+	public String getNumberOfPositions() {
+		return numberOfPositions;
+	}
+
+	public void setNumberOfPositions(String numberOfPositions) {
+		this.numberOfPositions = numberOfPositions;
+	}
+
+	public String getRadiationSensitivity() {
+		return radiationSensitivity;
+	}
+	public void setRadiationSensitivity(String radiationSensitivity) {
+		this.radiationSensitivity = radiationSensitivity;
+	}
+
+	public String getRequiredCompleteness() {
+		return requiredCompleteness;
+	}
+
+	public void setRequiredCompleteness(String requiredCompleteness) {
+		this.requiredCompleteness = requiredCompleteness;
+	}
+
+	public String getRequiredMultiplicity() {
+		return requiredMultiplicity;
+	}
+
+	public void setRequiredMultiplicity(String requiredMultiplicity) {
+		this.requiredMultiplicity = requiredMultiplicity;
 	}
 
 	public String getUnitCellA() {

@@ -385,8 +385,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 			}
 
 		} catch (Exception e) {
-			// Reset dewar and sample counts
-			UploadShipmentUtils.resetCounts(shippingId);
 			// Set up errors
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
 			LOG.error(e.toString());
@@ -395,9 +393,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 			return mapping.findForward("error");
 		}
 
-		// Marjolaine 13/08/2012: nothing is done in UploadShipmentUtils.setCounts(shippingId); ??
-		// Count dewars and samples
-		// UploadShipmentUtils.setCounts(shippingId);
 		if (!messages.isEmpty())
 			saveMessages(request, messages);
 		// return mapping.findForward(returnPage);

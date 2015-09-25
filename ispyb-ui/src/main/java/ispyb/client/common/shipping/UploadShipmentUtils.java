@@ -79,22 +79,6 @@ public class UploadShipmentUtils {
 
 	private static final short dewarCol = puckCol;
 
-	// private static final String ShippingLabel = "Shipping Id";
-	//
-	// private static final String ProposalAndShippingLabel = "Proposal Id / Shipping Id";
-	//
-	// private static final int idLabelRow = 3;
-	//
-	// private static final short idLabelCol = puckCol - 1;
-	//
-	// private static final int value1IdRow = 3;
-	//
-	// private static final short value1IdCol = puckCol;
-	//
-	// private static final int value2IdRow = 3;
-	//
-	// private static final short value2IdCol = puckCol + 1;
-
 	private static final int dataRow = 6;
 
 	private static final short samplePosCol = 0;
@@ -113,29 +97,31 @@ public class UploadShipmentUtils {
 
 	private static final short neededResolutionCol = 7;
 
-	private static final short oscillationRangeCol = 8;
+	private static final short preferredBeamCol = 8;
 
 	private static final short experimentTypeCol = 9;
 
-	private static final short anomalousScattererCol = 10;
+	private static final short nbOfPositionsCol = 10;
+	
+	private static final short radiationSensitivityCol =11;
+	
+	private static final short requiredCompletenessCol = 12;
+	
+	private static final short requiredMultiplicityCol = 13;
 
-	private static final short unitCellACol = 11;
+	private static final short unitCellACol = 14;
 
-	private static final short unitCellBCol = 12;
+	private static final short unitCellBCol = 15;
 
-	private static final short unitCellCCol = 13;
+	private static final short unitCellCCol = 16;
 
-	private static final short unitCellAlphaCol = 14;
+	private static final short unitCellAlphaCol = 17;
 
-	private static final short unitCellBetaCol = 15;
+	private static final short unitCellBetaCol = 18;
 
-	private static final short unitCellGammaCol = 16;
+	private static final short unitCellGammaCol = 19;
 
-	private static final short loopTypeCol = 17;
-
-	private static final short holderLengthCol = 18;
-
-	private static final short commentsCol = 19;
+	private static final short commentsCol = 20;
 
 	private static final short courrierNameRow = 1;
 
@@ -148,10 +134,10 @@ public class UploadShipmentUtils {
 	private static final short shippingDateRow = 3;
 
 	private static final short shippingDateCol = 10;
-
-	// private static final short proteinAcronymRow = 49; // Log4J
-	//
-	// private final boolean populateDMCodes = false;
+	
+	private static Double holderLength = new Double(22);
+	
+	private static String loopType = "Nylon";
 
 	/**
 	 * PopulateTemplate
@@ -453,18 +439,19 @@ public class UploadShipmentUtils {
 					String pinBarCode = cellToString(sheet.getRow(i).getCell(pinBarCodeCol));
 					double preObsResolution = cellToDouble(sheet.getRow(i).getCell(preObsResolutionCol));
 					double neededResolution = cellToDouble(sheet.getRow(i).getCell(neededResolutionCol));
-					double oscillationRange = cellToDouble(sheet.getRow(i).getCell(oscillationRangeCol));
+					double preferedBeamDiameter = cellToDouble(sheet.getRow(i).getCell(preferredBeamCol));
 					String experimentType = cellToString(sheet.getRow(i).getCell(experimentTypeCol));
-					String anomalousScatterer = cellToString(sheet.getRow(i).getCell(anomalousScattererCol));
+					int nbOfPositions = cellToInt(sheet.getRow(i).getCell(nbOfPositionsCol));
 					String spaceGroup = cellToString(sheet.getRow(i).getCell(spaceGroupCol)).toUpperCase().trim().replace(" ", "");
 					double unitCellA = cellToDouble(sheet.getRow(i).getCell(unitCellACol));
+					double radiationSensitivity = cellToDouble(sheet.getRow(i).getCell(radiationSensitivityCol));
+					double requiredCompleteness = cellToDouble(sheet.getRow(i).getCell(requiredCompletenessCol));
+					double requiredMultiplicity = cellToDouble(sheet.getRow(i).getCell(requiredMultiplicityCol));
 					double unitCellB = cellToDouble(sheet.getRow(i).getCell(unitCellBCol));
 					double unitCellC = cellToDouble(sheet.getRow(i).getCell(unitCellCCol));
 					double unitCellAlpha = cellToDouble(sheet.getRow(i).getCell(unitCellAlphaCol));
 					double unitCellBeta = cellToDouble(sheet.getRow(i).getCell(unitCellBetaCol));
 					double unitCellGamma = cellToDouble(sheet.getRow(i).getCell(unitCellGammaCol));
-					String loopType = cellToString(sheet.getRow(i).getCell(loopTypeCol));
-					double holderLength = cellToDouble(sheet.getRow(i).getCell(holderLengthCol));
 					String sampleComments = cellToString(sheet.getRow(i).getCell(commentsCol));
 
 					// Fill in values by default
@@ -548,16 +535,18 @@ public class UploadShipmentUtils {
 									// Diffraction Plan
 									DiffractionPlan3VO difPlan = new DiffractionPlan3VO();
 
-									difPlan.setAnomalousScatterer(anomalousScatterer);
+									difPlan.setNumberOfPositions(nbOfPositions);
 									difPlan.setObservedResolution(preObsResolution);
 									difPlan.setRequiredResolution(neededResolution);
 									difPlan.setExposureTime((double) 0);
-									difPlan.setOscillationRange(oscillationRange);
+									difPlan.setPreferredBeamDiameter(preferedBeamDiameter);
 									if (experimentType == null || experimentType.isEmpty()) {
 										experimentType = "Default";
 									}
 									difPlan.setExperimentKind(experimentType);
-
+									difPlan.setRadiationSensitivity(radiationSensitivity);
+									difPlan.setRequiredCompleteness(requiredCompleteness);
+									difPlan.setRequiredMultiplicity(requiredMultiplicity);
 									difPlan = difPlanService.create(difPlan);
 
 									// Crystal
@@ -680,77 +669,6 @@ public class UploadShipmentUtils {
 	}
 
 	/**
-	 * Reset dewar and sample counts
-	 * 
-	 * @param shippingId
-	 */
-	public static void resetCounts(int shippingId) {
-		try {
-			// Shipping3Service shippingService = (Shipping3Service) ejb3ServiceLocator
-			// .getLocalService(Shipping3Service.class);
-			//
-			// Shipping3VO shipping = shippingService.findByPk(shippingId, false);
-			// shipping.setParcelsNumber(0);
-
-			// Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-			// Shipping3Service shipping3Service = (Shipping3Service)
-			// ejb3ServiceLocator.getLocalService(Shipping3Service.class);
-			// Shipping3VO shipping = shipping3Service.findByPk(shippingId, false);
-			// shipping.setSamplesNumber(0);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Set dewar and sample count
-	 * 
-	 * @param shippingId
-	 */
-	public static void setCounts(int shippingId) {
-		try {
-			// Shipping3Service shippingService = (Shipping3Service) ejb3ServiceLocator
-			// .getLocalService(Shipping3Service.class);
-
-			int nbDewars = 0;
-			int nbSamples = 0;
-
-			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-			Container3Service container3Service = (Container3Service) ejb3ServiceLocator.getLocalService(Container3Service.class);
-			BLSample3Service blSample3Service = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
-
-			// Facades
-			// old ContainerFacadeLocal _containers = ContainerFacadeUtil.getLocalHome().create();
-			// BlsampleFacadeLocal _samples = BlsampleFacadeUtil.getLocalHome().create();
-
-			// Dewars
-			Dewar3Service dewarService = (Dewar3Service) ejb3ServiceLocator.getLocalService(Dewar3Service.class);
-			List<Dewar3VO> dewarList = dewarService.findByShippingId(shippingId);
-			for (Dewar3VO dewar : dewarList) {
-				nbDewars++;
-				// Containers
-				container3Service.findByDewarId(dewar.getDewarId());
-				// old Collection<ContainerLightValue> containerList = _containers.findByDewarId(dewar.getDewarId());
-				List<Container3VO> containerList = container3Service.findByDewarId(dewar.getDewarId());
-				for (Container3VO container : containerList) {
-					// Samples
-					// old Collection<BlsampleLightValue> BlsampleList =
-					// _samples.findByContainerId(container.getContainerId());
-					List<BLSample3VO> BlsampleList = blSample3Service.findByContainerId(container.getContainerId());
-					nbSamples += BlsampleList.size();
-				}
-			}
-			// Shipping3VO shipping = shippingService.findByPk(shippingId, false);
-			// shipping.setParcelsNumber(nbDewars);
-			// shipping.setSamplesNumber(nbSamples);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Converts from Excel Cell contents to a String
 	 * 
 	 * @param cell
@@ -793,6 +711,25 @@ public class UploadShipmentUtils {
 		}
 		return retVal.doubleValue();
 	}
+	
+	/**
+	 * Converts from Excel Cell contents to a double
+	 * 
+	 * @param cell
+	 *            The Cell to convert
+	 * @return The double value contained within the Cell or 0.0 if the Cell is not the correct type or is undefined
+	 */
+	public static int cellToInt(HSSFCell cell) {
+		Double retVal = new Double(0);
+		if (cell == null) {
+			return retVal.intValue();
+		}
+		if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+			retVal = new Double(cell.getNumericCellValue());
+		}
+		return retVal.intValue();
+	}
+
 
 	private static Crystal3VO getCrystal(List<Crystal3VO> listCrystal, Crystal3VO crystalVO) {
 		return CreateShippingFileAction.getCrystal(listCrystal, crystalVO);
