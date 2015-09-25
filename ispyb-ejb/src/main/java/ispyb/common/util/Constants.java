@@ -802,10 +802,10 @@ public final class Constants {
 	public static final String[] LIST_EXPERIMENT_KIND_MAXIV = { "Default", "OSC", "SAD", "MAD", "Fixed", "Ligand binding",
 			"Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressL", "MXScore", "OSC", "SAD",
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 			"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_MAXIV()) ? LIST_EXPERIMENT_KIND_MAXIV : LIST_EXPERIMENT_KIND_ESRF;
+	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
 
 	public static final String[] DATA_COLLECTION_TYPE = { "Peak", "Inflection", "High Energy Remote", "Low Energy Remote" };
 
@@ -856,9 +856,9 @@ public final class Constants {
 	 */
 	public static final String TEMPLATE_RELATIVE_DIRECTORY_PATH = "/tmp/";
 
-	public static final String TEMPLATE_XLS_FILENAME_N_1 = "ispyb-template4.xlt";
+//	public static final String TEMPLATE_XLS_FILENAME_N_1 = "ispyb-template4.xlt";
 
-	public static final String TEMPLATE_XLS_POPULATED_FILENAMEN_1 = "ispyb-template4.1.xlt";
+//	public static final String TEMPLATE_XLS_POPULATED_FILENAMEN_1 = "ispyb-template4.1.xlt";
 
 	public static final String TEMPLATE_XLS_FILENAME = getProperty("shipment.upload.template");
 
