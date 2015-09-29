@@ -16149,7 +16149,7 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 							title : 'SCALA/AIMLESS',
 							items : [_this.scalaPanel.getPanel(data)]
 						}, {
-							title : 'SCALEPACK',
+							title : 'SCALEPACK/XTRIAGE',
 							items : [_this.scalePackPanel.getPanel(data)]
 						}, {
 							title : 'TRUNCATE',
@@ -20475,8 +20475,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
-		},
-		renderer : renderOscillationRange
+		}
 	}, {
 		text : 'Experiment<br>Type',
 		dataIndex : 'experimentType',
@@ -20656,8 +20655,13 @@ CreatePuckGrid.prototype.pasteSample = function (rowIndex) {
 		_this.grid.store.getAt(rowIndex).set('spaceGroup', _this.sampleToCopy.spaceGroup);
 		_this.grid.store.getAt(rowIndex).set('preObservedResolution', _this.sampleToCopy.preObservedResolution);
 		_this.grid.store.getAt(rowIndex).set('neededResolution', _this.sampleToCopy.neededResolution);
-		_this.grid.store.getAt(rowIndex).set('oscillationRange', _this.sampleToCopy.oscillationRange);
+		_this.grid.store.getAt(rowIndex).set('preferredBeamDiameter', _this.sampleToCopy.preferredBeamDiameter);
 		_this.grid.store.getAt(rowIndex).set('experimentType', _this.sampleToCopy.experimentType);
+		_this.grid.store.getAt(rowIndex).set('numberOfPositions', _this.sampleToCopy.numberOfPositions);
+		_this.grid.store.getAt(rowIndex).set('radiationSensitivity', _this.sampleToCopy.radiationSensitivity);
+		_this.grid.store.getAt(rowIndex).set('requiredCompleteness', _this.sampleToCopy.requiredCompleteness);
+		_this.grid.store.getAt(rowIndex).set('requiredMultiplicity', _this.sampleToCopy.requiredMultiplicity);
+
 		_this.grid.store.getAt(rowIndex).set('unitCellA', _this.sampleToCopy.unitCellA);
 		_this.grid.store.getAt(rowIndex).set('unitCellB', _this.sampleToCopy.unitCellB);
 		_this.grid.store.getAt(rowIndex).set('unitCellC', _this.sampleToCopy.unitCellC);
@@ -20705,10 +20709,14 @@ CreatePuckGrid.prototype.changeProteinAcronym = function (newValue, idRow) {
 	this.grid.store.getAt(idRow).set('spaceGroup',  crystal.spaceGroup);
 	this.grid.store.getAt(idRow).set('comments',  crystal.comments);
 	if (crystal.diffractionPlanVO) {
-		this.grid.store.getAt(idRow).set('oscillationRange',  crystal.diffractionPlanVO.oscillationRange);
+		this.grid.store.getAt(idRow).set('preferredBeamDiameter',  crystal.diffractionPlanVO.preferredBeamDiameter);
 		this.grid.store.getAt(idRow).set('neededResolution',  crystal.diffractionPlanVO.requiredResolution);
 		this.grid.store.getAt(idRow).set('preObservedResolution',  crystal.diffractionPlanVO.observedResolution);
 		this.grid.store.getAt(idRow).set('experimentType',  crystal.diffractionPlanVO.experimentKind);
+		this.grid.store.getAt(idRow).set('numberOfPositions',  crystal.diffractionPlanVO.numberOfPositions);
+		this.grid.store.getAt(idRow).set('radiationSensitivity', crystal.diffractionPlanVO.radiationSensitivity);
+		this.grid.store.getAt(idRow).set('requiredCompleteness', crystal.diffractionPlanVO.requiredCompleteness);
+		this.grid.store.getAt(idRow).set('requiredMultiplicity', crystal.diffractionPlanVO.requiredMultiplicity);
 	}
 };
 
