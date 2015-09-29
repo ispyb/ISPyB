@@ -132,7 +132,7 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 							title : 'SCALA/AIMLESS',
 							items : [_this.scalaPanel.getPanel(data)]
 						}, {
-							title : 'SCALEPACK',
+							title : 'SCALEPACK/XTRIAGE',
 							items : [_this.scalePackPanel.getPanel(data)]
 						}, {
 							title : 'TRUNCATE',
