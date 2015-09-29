@@ -114,19 +114,19 @@ public class SamplePuck {
 			this.experimentType = blSample3VO.getDiffractionPlanVO().getExperimentKind();
 		}
 		this.numberOfPositions = "";
-		if(blSample3VO.getDiffractionPlanVO() != null){
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getNumberOfPositions() != null){
 			this.numberOfPositions = blSample3VO.getDiffractionPlanVO().getNumberOfPositions().toString();
 		}
 		this.radiationSensitivity = "";
-		if(blSample3VO.getDiffractionPlanVO() != null){
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRadiationSensitivity() != null){
 			this.radiationSensitivity = blSample3VO.getDiffractionPlanVO().getRadiationSensitivity().toString();
 		}
 		this.requiredMultiplicity = "";
-		if(blSample3VO.getDiffractionPlanVO() != null){
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredMultiplicity() != null){
 			this.requiredMultiplicity = blSample3VO.getDiffractionPlanVO().getRequiredMultiplicity().toString();
 		}
 		this.requiredCompleteness = "";
-		if(blSample3VO.getDiffractionPlanVO() != null){
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredCompleteness() != null){
 			this.requiredCompleteness = blSample3VO.getDiffractionPlanVO().getRequiredCompleteness().toString();
 		}
 		this.unitCellA = "";
