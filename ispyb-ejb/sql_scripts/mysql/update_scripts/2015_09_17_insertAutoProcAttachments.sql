@@ -72,3 +72,15 @@ VALUES (
 '58', 'dimple.pdb', 'pdb file for dimple', 'DIMPLE', 'output', '0'
 );
 
+INSERT INTO `pydb`.`IspybAutoProcAttachment` (
+`autoProcAttachmentId` ,
+`fileName` ,
+`description` ,
+`step` ,
+`fileCategory` ,
+`hasGraph`
+)
+VALUES (
+'59', 'xtriage_noanom.log', 'log file for xtriage', 'SCALEPACK', 'log', '0'
+);
+
