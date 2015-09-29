@@ -1,4 +1,11 @@
 **************
+* 29.09.2015     *
+**************
+
+- TODO #2525 : Diffraction plan modifications 
+- fix some issues with DIMPLE autoprocessing tab displayed
+
+**************
 * 21.09.2015     *
 **************
 
