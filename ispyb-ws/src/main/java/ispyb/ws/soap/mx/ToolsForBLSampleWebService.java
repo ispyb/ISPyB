@@ -175,7 +175,9 @@ public class ToolsForBLSampleWebService {
 	Double radiationSensitivity, @WebParam(name = "anomalousScatterer")
 	String anomalousScatterer, @WebParam(name = "preferredBeamSizeX")
 	Double preferredBeamSizeX, @WebParam(name = "preferredBeamSizeY")
-	Double preferredBeamSizeY, @WebParam(name = "comments")
+	Double preferredBeamSizeY,
+	@WebParam(name = "preferredBeamDiameter") Double preferredBeamDiameter,
+	@WebParam(name = "comments")
 	String comments, @WebParam(name = "aimedCompleteness")
 	Double aimedCompleteness, @WebParam(name = "aimedIOverSigmaAtHighestRes")
 	Double aimedIOverSigmaAtHighestRes, @WebParam(name = "aimedMultiplicity")
@@ -197,7 +199,7 @@ public class ToolsForBLSampleWebService {
 	Double radiationSensitivityGamma) throws Exception {
 		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, xmlDocumentId, experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
-				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
+				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta,
@@ -219,7 +221,9 @@ public class ToolsForBLSampleWebService {
 	Double radiationSensitivity, @WebParam(name = "anomalousScatterer")
 	String anomalousScatterer, @WebParam(name = "preferredBeamSizeX")
 	Double preferredBeamSizeX, @WebParam(name = "preferredBeamSizeY")
-	Double preferredBeamSizeY, @WebParam(name = "comments")
+	Double preferredBeamSizeY, 
+	@WebParam(name = "preferredBeamDiameter") Double preferredBeamDiameter,
+	@WebParam(name = "comments")
 	String comments, @WebParam(name = "aimedCompleteness")
 	Double aimedCompleteness, @WebParam(name = "aimedIOverSigmaAtHighestRes")
 	Double aimedIOverSigmaAtHighestRes, @WebParam(name = "aimedMultiplicity")
@@ -237,7 +241,7 @@ public class ToolsForBLSampleWebService {
 	Integer numberOfPositions) throws Exception {
 		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, xmlDocumentId, experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
-				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
+				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, null, null, null, null);
