@@ -28,7 +28,6 @@ import ispyb.client.mx.results.ImageValueInfo;
 import ispyb.client.mx.results.SnapshotInfo;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PathUtils;
-import ispyb.common.util.StringUtils;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
@@ -138,8 +137,26 @@ public class FileUtil {
 	        br.close();
 	    }
 	}
-	
+		
 	public static String fileToString(String sourceFileName) {
+		
+		String output = "nofile";
+		try {
+			if (sourceFileName != null) {
+				File file = new File(sourceFileName);
+				if (file.exists()) {
+					output =fileToString(file);
+				} 
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+	
+	//TODO remove the following method if previous OK
+	public static String fileToStringOld(String sourceFileName) {
 		BufferedReader inFile = null;
 		String output = new String();// = null;
 
