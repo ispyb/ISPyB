@@ -423,93 +423,19 @@
 		</profile>
 		
 
-		<!-- profiles to separate site dependent properties -->
+		<!-- profiles to separate site dependent properties : the properties are stored in pom.xml of ispyb-ejb module -->
 		<profile>
 			<id>ESRF</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 
-			<properties>
-				<ispyb.site>ESRF</ispyb.site>
-				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-
-				<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
-				<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
-
-				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-				<ispyb.root.folder>/data/pyapdb/</ispyb.root.folder>
-
-				<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
-				<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
-				<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
-				<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
-
-				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-				<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
-				<ispyb.bcm>mxcube</ispyb.bcm>
-
-				<mail.smtp.host>160.103.2.175</mail.smtp.host>
-				<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-				<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-				<mail.stores>dewar-stores@esrf.fr</mail.stores>
-
-				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
-				<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
-
-				<dictionary.site>The ESRF</dictionary.site>
-				<dictionary.bcm>mxCuBE</dictionary.bcm>
-				
-				<protein.allowedToCreate>false</protein.allowedToCreate>
-
-				<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>
-
-			</properties>
 		</profile>
+		
 		<profile>
-			<id>EMBL</id>
-			
-			<properties>
-				<ispyb.site>EMBL</ispyb.site>
-				
-				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-				<ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
-				<ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
-				<ispyb.uploaded.root.folder>/data/ispyb/db/</ispyb.uploaded.root.folder>
-
-				<ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
-				<ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
-				<ispyb.dataprocessing.denzo>false</ispyb.dataprocessing.denzo>
-				<ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
-				<ispyb.bcm>mxcube</ispyb.bcm>
-
-				<protein.allowedToCreate>true</protein.allowedToCreate>
-
-				<mail.smtp.host>160.103.2.175</mail.smtp.host>
-				<mail.admin>ispyb@embl-hamburg.de</mail.admin>
-				<mail.dev>ispyb@embl-hamburg.de</mail.dev>
-				<mail.ispyb>ispyb@embl-hamburg.de</mail.ispyb>
-				<mail.stores>ispyb@embl-hamburg.de</mail.stores>
-
-				<mail.report.industry.from>ispyb@embl-hamburg.de</mail.report.industry.from>
-				<mail.report.industry.cc>ispyb@embl-hamburg.de</mail.report.industry.cc>
-				<mail.report.industry.cc.fx12>ispyb@embl-hamburg.de</mail.report.industry.cc.fx12>
-
-				<dictionary.site>The EMBL</dictionary.site>
-				<dictionary.bcm>mxCuBE</dictionary.bcm>
-
-				<userportal.webservices.url>http://smis-test.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean</userportal.webservices.url>
-				
-			</properties>
+			<id>EMBL</id>			
 		</profile>
+		
 		<profile>
 			<id>SOLEIL</id>
 
@@ -541,59 +467,14 @@
 			</build>
 			
 			<properties>
-				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
-				<js.minimized>true</js.minimized>
-				<js.alternative.path></js.alternative.path>
-				<js.alternative.path.enabled>false</js.alternative.path.enabled>
-				
-				<ispyb.site>SOLEIL</ispyb.site>
-				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
-				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
-				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-				
-				<ldap.employee.resource></ldap.employee.resource>
-	  			<ldap.people></ldap.people>
-
-				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-				<ispyb.uploaded.root.folder>/data/pyapdb/</ispyb.uploaded.root.folder>
-				
-				<ispyb.server.name.prod>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod>
-				<ispyb.server.name.prod.alias>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod.alias>
-				<ispyb.server.name.prod.ext>sundemo.synchrotron-soleil.fr</ispyb.server.name.prod.ext>
-				<ispyb.server.name.test>sundemo.synchrotron-soleil.fr</ispyb.server.name.test>
-
-				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
-				<ispyb.bcm>mxcube</ispyb.bcm>
-				
-				<protein.allowedToCreate>false</protein.allowedToCreate>
-
-				<mail.smtp.host>smtp.synchrotron-soleil.fr</mail.smtp.host>
-				<mail.admin>sunset.dev@synchrotron-soleil.fr</mail.admin>
-				<mail.dev>sunset.dev@synchrotron-soleil.fr</mail.dev>
-				<mail.ispyb>noreply-ispyb@synchrotron-soleil.fr</mail.ispyb>
-				<mail.stores>dewar-stores@synchrotron-soleil.fr</mail.stores>
-
-				<mail.report.industry.from>mxind@synchrotron-soleil.fr</mail.report.industry.from>
-				<mail.report.industry.cc>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc>
-				<mail.report.industry.cc.fx12>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc.fx12>
-
-				<dictionary.site>SOLEIL</dictionary.site>
-				<dictionary.bcm>mxCuBE</dictionary.bcm>
-
-				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-				
+			
 				<build.directory>${project.build.directory}/${project.artifactId}-${project.version}</build.directory>
 				
 			</properties>
 		</profile>
+		
 		<profile>
 			<id>MAXIV</id>
-			<properties>
-				<ispyb.site>MAXIV</ispyb.site>
-			</properties>
 		</profile>
 
 	</profiles>
