@@ -207,6 +207,21 @@ public final class Constants {
 	public static final String LOGIN_PREFIX_MX = "mx";
 
 	/*
+	 * mailing
+	 */	
+	public static final String MAIL_HOST = mProp.getProperty("mail.smtp.host");
+	public static final String MAIL_FROM = mProp.getProperty("mail.from");
+	public static final String MAIL_CC = mProp.getProperty("mail.cc");
+	public static final String MAIL_TO = (SITE_IS_ESRF()) ? getProperty("mail.cc") : (SITE_IS_DLS()) ? getProperty("mail.cc")
+			: (SITE_IS_MAXIV()) ? getProperty("mail.cc") : (SITE_IS_SOLEIL()) ? getProperty("mail.cc")
+			: (SITE_IS_EMBL()) ? getProperty("mail.cc"): "";
+
+	public static final String MAIL_TO_SITE = (SITE_IS_ESRF()) ? getProperty("mail.to") : (SITE_IS_DLS()) ? getProperty("mail.to")
+			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") 
+			: (SITE_IS_EMBL()) ? getProperty("mail.to") : "";
+
+	
+	/*
 	 * phasing
 	 */
 	public static final Integer PHASING_STEP_PREPARE_PHASING_DATA = 1;
@@ -854,11 +869,10 @@ public final class Constants {
 	/*
 	 * Upload
 	 */
+	
+	public static final String UPLOAD_PATH= mProp.getProperty("upload.path");
+	
 	public static final String TEMPLATE_RELATIVE_DIRECTORY_PATH = "/tmp/";
-
-//	public static final String TEMPLATE_XLS_FILENAME_N_1 = "ispyb-template4.xlt";
-
-//	public static final String TEMPLATE_XLS_POPULATED_FILENAMEN_1 = "ispyb-template4.1.xlt";
 
 	public static final String TEMPLATE_XLS_FILENAME = getProperty("shipment.upload.template");
 
@@ -919,6 +933,14 @@ public final class Constants {
 	public static final String TEMPLATE_FILE_TYPE_POPULATED_TEMPLATE_FROM_SHIPMENT = "populatedTemplateFromShipment";
 
 	public static final String TEMPLATE_FILE_TYPE_EXPORT_SHIPPING = "exportShipping";
+	
+	public static final String BZIP2_PATH_W = mProp.getProperty("bzip2.path.windows");
+	
+	public static final String BZIP2_PATH_OUT = mProp.getProperty("bzip2.outputFilePath");
+
+	public static final String BZIP2_PATH = mProp.getProperty("bzip2.path");
+
+	public static final String BZIP2_ARGS = mProp.getProperty("bzip2.arguments");
 
 	/*
 	 * SampleOnBeamline Link Response
@@ -1030,14 +1052,6 @@ public final class Constants {
 	public static final String BCM = getProperty("ISPyB.BCM"); // internal name
 
 	public static final String BCM_ATTRIBUTE = "BCM"; // context attribute used by JSP
-
-	public static final String MAIL_TO = (SITE_IS_ESRF()) ? getProperty("mail.cc") : (SITE_IS_DLS()) ? getProperty("mail.cc")
-			: (SITE_IS_MAXIV()) ? getProperty("mail.cc") : (SITE_IS_SOLEIL()) ? getProperty("mail.cc")
-			: (SITE_IS_EMBL()) ? getProperty("mail.cc"): "";
-
-	public static final String MAIL_TO_SITE = (SITE_IS_ESRF()) ? getProperty("mail.to") : (SITE_IS_DLS()) ? getProperty("mail.to")
-			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") 
-			: (SITE_IS_EMBL()) ? getProperty("mail.to") : "";
 
 	/*
 	 * Max record retrieved
