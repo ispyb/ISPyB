@@ -89,7 +89,6 @@ import org.apache.struts.action.ActionMessages;
  * @struts.action-forward name="viewImageThumbnails" path="user.results.viewImageThumbnails.page"
  */
 public class ViewImageWallAction extends ViewResultsAction {
-	Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	private String dataCollectionIdst;
 

@@ -82,12 +82,11 @@ public class SendReportAction extends org.apache.struts.actions.DispatchAction {
 			BreadCrumbsForm.getIt(request).setSelectedSession(selectedSession);
 
 			// --- Retrieve existing file ---
-			Properties mProp = PropertyLoader.loadProperties("ISPyB");
 			Proposal3VO proposal = selectedSession.getProposalVO();
 			String proposalName = proposal.getCode() + proposal.getNumber();
 			String proposalFileName = GetReportName(proposalName, sessionId);
 
-			File reportPath = new File(mProp.getProperty("upload.path") + File.separator);
+			File reportPath = new File(Constants.UPLOAD_PATH + File.separator);
 
 			File filesOnDisk[] = reportPath.listFiles(new ReportNameFilter(proposalFileName));
 			if (filesOnDisk != null){
@@ -258,10 +257,9 @@ public class SendReportAction extends org.apache.struts.actions.DispatchAction {
 	}
 
 	private static String GetReportPath() {
-		Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 		String fullPath = new String();
-		File reportPath = new File(mProp.getProperty("upload.path") + File.separator);
+		File reportPath = new File(Constants.UPLOAD_PATH + File.separator);
 		reportPath.mkdirs();
 		try {
 			fullPath = reportPath.getCanonicalPath();

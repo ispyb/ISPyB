@@ -86,8 +86,6 @@ import org.apache.struts.action.ActionMessages;
 public class CreateDewarAction extends org.apache.struts.actions.DispatchAction {
 	private final Logger LOG = Logger.getLogger(CreateDewarAction.class);
 
-	// Properties mProp = PropertyLoader.loadProperties("ApplicationResources");
-
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private Session3Service sessionService;

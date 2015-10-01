@@ -65,7 +65,6 @@ import org.apache.struts.actions.DispatchAction;
  * 
  */
 public class ViewScreeningStrategyAction extends DispatchAction {
-	Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	ActionMessages errors = new ActionMessages();
 

@@ -80,8 +80,6 @@ import org.apache.struts.action.ActionMessages;
 
 public class CreateContainerAction extends org.apache.struts.actions.DispatchAction {
 
-	// Properties mProp = PropertyLoader.loadProperties("ApplicationResources");
-
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private Dewar3Service dewarService;

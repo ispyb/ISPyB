@@ -135,7 +135,6 @@ import org.apache.struts.actions.DispatchAction;
  * @struts.action-forward name="viewHTMLFile" path="user.results.HTMLFile.page"
  */
 public class ViewResultsAction extends DispatchAction {
-	Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	private String dataCollectionIdst;
 
@@ -1107,8 +1106,7 @@ public class ViewResultsAction extends DispatchAction {
 
 		ActionMessages errors = new ActionMessages();
 		boolean isWindows = (System.getProperty("os.name").indexOf("Win") != -1) ? true : false;
-		String tmpDirectory = ((isWindows) ? mProp.getProperty("bzip2.outputFilePath.windows") : mProp
-				.getProperty("bzip2.outputFilePath"));
+		String tmpDirectory = ((isWindows) ? Constants.BZIP2_PATH_W : Constants.BZIP2_PATH_OUT);
 
 		try {
 			Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
@@ -1134,8 +1132,8 @@ public class ViewResultsAction extends DispatchAction {
 				FileUtils.copyFile(source, destination, false);
 
 				// --- BZIP2 File ---
-				String cmd = ((isWindows) ? mProp.getProperty("bzip2.path.windows") : mProp.getProperty("bzip2.path"));
-				String argument = mProp.getProperty("bzip2.arguments");
+				String cmd = ((isWindows) ? Constants.BZIP2_PATH_W : Constants.BZIP2_PATH);
+				String argument = Constants.BZIP2_ARGS;
 				argument = " " + argument + " " + _destinationfullFilename;
 				cmd = cmd + argument;
 				this.CmdExec(cmd, false);

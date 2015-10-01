@@ -66,8 +66,6 @@ import org.apache.struts.action.ActionMessages;
 public class SendMailAction extends org.apache.struts.actions.DispatchAction {
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
-	Properties mProp = PropertyLoader.loadProperties("ISPyB");
-
 	private final static Logger LOG = Logger.getLogger(SendMailAction.class);
 
 	public ActionForward display(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
@@ -116,16 +114,16 @@ public class SendMailAction extends org.apache.struts.actions.DispatchAction {
 			Proposal3VO proposal = proposalService.findByPk(mProposalId);
 			// ---------------------------------
 
-			String host = mProp.getProperty("mail.smtp.host");
+			String host = Constants.MAIL_HOST;
 			if (host == null)
 				host = "localhost";
-			String from = mProp.getProperty("mail.from");
+			String from = Constants.MAIL_FROM;
 			if (from == null)
 				from = "ispyb@embl-grenoble.fr";
-			String to = mProp.getProperty("mail.to");
+			String to = Constants.MAIL_TO;
 			if (to == null)
 				to = "root@localhost";
-			String cc = mProp.getProperty("mail.cc");
+			String cc = Constants.MAIL_CC;
 			if (cc == null)
 				cc = "root@localhost";
 
