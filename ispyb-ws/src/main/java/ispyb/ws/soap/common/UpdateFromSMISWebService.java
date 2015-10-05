@@ -35,6 +35,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
 /**
@@ -66,6 +67,7 @@ public class UpdateFromSMISWebService extends RestWebService{
 	 * @throws Exception
 	 */
 	@WebMethod
+	@TransactionTimeout(1500)
 	public void updateFromSMIS() throws Exception {
 		String methodName = "updateFromSMIS";
 		long id = this.logInit(methodName, logger);

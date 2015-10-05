@@ -243,7 +243,7 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 		if (!messages.isEmpty())
 			saveMessages(request, messages);
 
-		LOG.debug("Update of ISPyB is finished");
+		LOG.info("Update of ISPyB is finished");
 		// return mapping.findForward("updateISPYBdbPage");
 		return redirectPageFromRole(mapping, request);
 	}

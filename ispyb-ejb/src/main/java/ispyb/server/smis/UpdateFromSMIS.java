@@ -97,19 +97,33 @@ public class UpdateFromSMIS {
 
 		// retrieve all new proposals
 		List<Long> newProposalPks = null;
-			newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
-
+		newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
+			
+		int nbFoundESRF = 0;
 		if (newProposalPks != null && newProposalPks.size()> 0) {
-
+						
 			LOG.debug("Nb of new proposals found : " + newProposalPks.size());
-
-			for (Iterator iterator = newProposalPks.iterator(); iterator
+			
+			for (Iterator<Long> iterator = newProposalPks.iterator(); iterator
 					.hasNext();) {
 				Long pk = (Long) iterator.next();
-				updateThisProposalFromSMISPk(pk);
+
+				if (Constants.SITE_IS_ESRF()) {
+					// in case of ESRF we do not want old proposals
+					if ( pk.longValue() > 40000) {
+						updateThisProposalFromSMISPk(pk);
+						nbFoundESRF = nbFoundESRF+1;
+					}
+					else {
+						LOG.debug("proposal is an old one, not updated ");
+						}
+				}
+				else
+					updateThisProposalFromSMISPk(pk);
+				
 			}
 		}
-		LOG.debug("Update of ISPyB is finished");
+		LOG.info("Update of ISPyB is finished, nbFound for ESRF = "+nbFoundESRF);
 	}
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
@@ -533,9 +547,15 @@ public class UpdateFromSMIS {
 
 				// retrieve proposal to get 'proposalId' for persistence of the labContact
 				Proposal3VO currentProposal = proposal.findForWSByCodeAndNumber(proposalCode, proposalNumber.toString());
+				if (currentProposal == null){
+					LOG.debug("proposal not found for:"+ proposalCode + proposalNumber.toString());
+					continue;
+				}
 				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
 
-				List<LabContact3VO> labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
+				List<LabContact3VO> labContactsList = null;
+				if (currentPerson != null) 
+					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
 						currentProposal.getProposalId());
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
