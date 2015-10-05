@@ -212,9 +212,20 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 
 				LOG.debug("Nb of new proposals found : " + newProposalPks.size());
 
-				for (Iterator iterator = newProposalPks.iterator(); iterator.hasNext();) {
+				for (Iterator<Long> iterator = newProposalPks.iterator(); iterator.hasNext();) {
 					long pk = (Long) iterator.next();
-					UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
+					// TODO only for ESRF
+					if (Constants.SITE_IS_ESRF()) {
+						// in case of ESRF we do not want old proposals
+						if ( pk > 40000) {
+							UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
+						}
+						else {
+							LOG.debug("proposal is an old one, not updated ");
+							}
+					}
+					else
+						UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
 				}
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", " new sessions + proteins"));
 			}
