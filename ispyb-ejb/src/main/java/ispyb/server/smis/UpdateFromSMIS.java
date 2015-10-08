@@ -176,15 +176,14 @@ public class UpdateFromSMIS {
 
 		switch (Constants.getSite()) {
 		case ESRF:
-			sws = SMISWebServiceGenerator.getWs();
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
+			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+					//findRecentSessionsInfoLightForProposalPk(pk);
 			break;
 		case EMBL:
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 			break;
 		default:
 		case SOLEIL:
-			sws = SMISWebServiceGenerator.getWs();
 			smisSessions_ = sws
 					.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 			break;
