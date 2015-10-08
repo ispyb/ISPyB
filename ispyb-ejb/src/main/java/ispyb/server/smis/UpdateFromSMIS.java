@@ -66,6 +66,18 @@ public class UpdateFromSMIS {
 
 	private static final Logger LOG = Logger.getLogger(UpdateFromSMIS.class);
 
+	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
+			.getInstance();
+
+	private static Proposal3Service proposal;
+	private static Laboratory3Service lab;
+	private static Person3Service person;
+	private static Session3Service session;
+	private static Protein3Service protein;
+	private static Crystal3Service crystal;
+	private static BeamLineSetup3Service setup;
+	private static LabContact3Service labContactService;
+
 	public void updateFromSMIS() throws Exception {
 
 		Date today = Calendar.getInstance().getTime();
@@ -86,9 +98,31 @@ public class UpdateFromSMIS {
 		updateFromSMIS(startDateStr, endDateStr);
 	}
 
-	public static void updateFromSMIS(String startDateStr, String endDateStr) throws Exception {
+	private static void  initServices() throws Exception {
 
-		LOG.debug("update ISPyB database start date = " + startDateStr + " end date = " + endDateStr);
+		proposal = (Proposal3Service) ejb3ServiceLocator
+				.getLocalService(Proposal3Service.class);
+		lab = (Laboratory3Service) ejb3ServiceLocator
+				.getLocalService(Laboratory3Service.class);
+		person = (Person3Service) ejb3ServiceLocator
+				.getLocalService(Person3Service.class);
+		session = (Session3Service) ejb3ServiceLocator
+				.getLocalService(Session3Service.class);
+		protein = (Protein3Service) ejb3ServiceLocator
+				.getLocalService(Protein3Service.class);
+		crystal = (Crystal3Service) ejb3ServiceLocator
+				.getLocalService(Crystal3Service.class);
+		setup = (BeamLineSetup3Service) ejb3ServiceLocator
+				.getLocalService(BeamLineSetup3Service.class);
+		labContactService = (LabContact3Service) ejb3ServiceLocator
+				.getLocalService(LabContact3Service.class);
+	}
+
+	public static void  updateFromSMIS(String startDateStr, String endDateStr)
+			throws Exception {
+
+		LOG.debug("update ISPyB database start date = " + startDateStr
+				+ " end date = " + endDateStr);
 
 		// Get the service
 		SMISWebService wsInit = SMISWebServiceGenerator.getWs();
@@ -98,32 +132,31 @@ public class UpdateFromSMIS {
 		// retrieve all new proposals
 		List<Long> newProposalPks = null;
 		newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
-			
+
 		int nbFoundESRF = 0;
-		if (newProposalPks != null && newProposalPks.size()> 0) {
-						
+		if (newProposalPks != null && newProposalPks.size() > 0) {
+
 			LOG.debug("Nb of new proposals found : " + newProposalPks.size());
-			
+
 			for (Iterator<Long> iterator = newProposalPks.iterator(); iterator
 					.hasNext();) {
 				Long pk = (Long) iterator.next();
 
 				if (Constants.SITE_IS_ESRF()) {
 					// in case of ESRF we do not want old proposals
-					if ( pk.longValue() > 40000) {
+					if (pk.longValue() > 40000) {
 						updateThisProposalFromSMISPk(pk);
-						nbFoundESRF = nbFoundESRF+1;
-					}
-					else {
+						nbFoundESRF = nbFoundESRF + 1;
+					} else {
 						LOG.debug("proposal is an old one, not updated ");
-						}
-				}
-				else
+					}
+				} else
 					updateThisProposalFromSMISPk(pk);
-				
+
 			}
 		}
-		LOG.info("Update of ISPyB is finished, nbFound for ESRF = "+nbFoundESRF);
+		LOG.info("Update of ISPyB is finished, nbFound for ESRF = "
+				+ nbFoundESRF);
 	}
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
@@ -131,9 +164,12 @@ public class UpdateFromSMIS {
 
 		Integer nbDays = 365;
 
-		LOG.debug("--------------------- ws created looking for proposalPk =  " + pk);
+		initServices();
 
-		List<ExpSessionInfoLightVO> smisSessions_ ;
+		LOG.debug("--------------------- ws created looking for proposalPk =  "
+				+ pk);
+
+		List<ExpSessionInfoLightVO> smisSessions_;
 
 		// Get the service
 		SMISWebService sws = SMISWebServiceGenerator.getWs();
@@ -145,45 +181,42 @@ public class UpdateFromSMIS {
 			break;
 		case EMBL:
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
-            break;
+			break;
 		default:
 		case SOLEIL:
 			sws = SMISWebServiceGenerator.getWs();
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+			smisSessions_ = sws
+					.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 			break;
 		}
-		
-		 List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
-		 ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
-		 mainProposers = mainProposers_.toArray(mainProposers);
-		
-		 ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
-		 smisSessions = smisSessions_.toArray(smisSessions);
-		
-		 List<SampleSheetInfoLightVO> smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
-		 SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
-		 smisSamples = smisSamples_.toArray(smisSamples);
-		
-		 List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
-		 ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
-		 labContacts = labContacts_.toArray(labContacts);
-		 
-			
-		 LOG.info("Nb of proposers found : " + mainProposers.length);
-		 LOG.info("Nb of sessions found : " + smisSessions.length);
-		 LOG.info("Nb of samplesheets found : " + smisSamples.length);
 
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		List<ProposalParticipantInfoLightVO> mainProposers_ = sws
+				.findMainProposersForProposal(pk);
+		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_
+				.size()];
+		mainProposers = mainProposers_.toArray(mainProposers);
 
-		Proposal3Service proposal = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
-		Laboratory3Service lab = (Laboratory3Service) ejb3ServiceLocator.getLocalService(Laboratory3Service.class);
-		Person3Service person = (Person3Service) ejb3ServiceLocator.getLocalService(Person3Service.class);
-		Session3Service session = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
-		Protein3Service protein = (Protein3Service) ejb3ServiceLocator.getLocalService(Protein3Service.class);
-		Crystal3Service crystal = (Crystal3Service) ejb3ServiceLocator.getLocalService(Crystal3Service.class);
-		BeamLineSetup3Service setup = (BeamLineSetup3Service) ejb3ServiceLocator.getLocalService(BeamLineSetup3Service.class);
+		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_
+				.size()];
+		smisSessions = smisSessions_.toArray(smisSessions);
 
-		LabContact3Service labContactService = (LabContact3Service) ejb3ServiceLocator.getLocalService(LabContact3Service.class);
+		List<SampleSheetInfoLightVO> smisSamples_ = sws
+				.findSamplesheetInfoLightForProposalPk(pk);
+		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_
+				.size()];
+		smisSamples = smisSamples_.toArray(smisSamples);
+
+		List<ProposalParticipantInfoLightVO> labContacts_ = sws
+				.findParticipantsForProposal(pk);
+		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_
+				.size()];
+		labContacts = labContacts_.toArray(labContacts);
+
+		LOG.info("Nb of proposers found : " + mainProposers.length);
+		LOG.info("Nb of sessions found : " + smisSessions.length);
+		LOG.info("Nb of samplesheets found : " + smisSamples.length);
+
+		initServices();
 
 		Integer proposalId = null;
 
@@ -196,25 +229,31 @@ public class UpdateFromSMIS {
 			mainProp.getCategoryCode();
 			String uoCode = mainProp.getCategoryCode();
 			Integer proposalNumber = mainProp.getCategoryCounter();
-			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
+			String proposalCode = StringUtils.getProposalCode(uoCode,
+					Integer.toString(proposalNumber));
 
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber
+					+ " uoCode = " + uoCode);
 			LOG.debug("Bllogin : " + mainProp.getBllogin());
 
-			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, Integer.toString(proposalNumber), false,
+			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(
+					proposalCode, Integer.toString(proposalNumber), false,
 					false, false);
 			if (listProposals.isEmpty()) {
 				// the proposal does not belong yet to ISPyB database
 
 				LOG.debug("proposal is new");
 
-				Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
+				Proposal3VO propv = getProposal(mainProp, lab, person,
+						proposalNumber, proposalCode);
 
 				proposalId = proposal.create(propv).getProposalId();
 
-				LOG.debug("inserted a new proposal inside ISPyB db:" + proposalCode + proposalNumber);
+				LOG.debug("inserted a new proposal inside ISPyB db:"
+						+ proposalCode + proposalNumber);
 			} else {
-				// proposal already exists: update information for the main proposer and the laboratory if needed
+				// proposal already exists: update information for the main
+				// proposer and the laboratory if needed
 				// Issue 1656
 				LOG.debug("proposal already exists");
 				Proposal3VO proposalVO = listProposals.get(0);
@@ -224,25 +263,30 @@ public class UpdateFromSMIS {
 				// main proposer
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
-				
-				if (Constants.getSite().equals(SITE.EMBL)){
-					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())){
+
+				if (Constants.getSite().equals(SITE.EMBL)) {
+					if (!StringUtils.matchString(mainProp.getBllogin(),
+							currentPerson.getLogin())) {
 						currentPerson.setLogin(mainProp.getBllogin());
 						person.update(currentPerson);
 						LOG.debug("Update person");
 					}
 				}
 
-				if (!StringUtils.matchString(currentFamilyName, familyName) || !StringUtils.matchString(currentGivenName, givenName)) {
+				if (!StringUtils.matchString(currentFamilyName, familyName)
+						|| !StringUtils
+								.matchString(currentGivenName, givenName)) {
 					// proposer has changed
 					Integer oldPersonId = proposalVO.getPersonVOId();
-					Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
+					Proposal3VO propv = getProposal(mainProp, lab, person,
+							proposalNumber, proposalCode);
 					proposalVO.setPersonVO(propv.getPersonVO());
 					proposalVO.setTitle(propv.getTitle());
 					proposalVO.setType(propv.getType());
 					proposal.update(proposalVO);
-					LOG.debug("proposal updated " + proposalVO.getProposalId() + " (" + oldPersonId + " -> " + propv.getPersonVOId()
-							+ ")");
+					LOG.debug("proposal updated " + proposalVO.getProposalId()
+							+ " (" + oldPersonId + " -> "
+							+ propv.getPersonVOId() + ")");
 				}
 			}
 		} else {
@@ -253,16 +297,20 @@ public class UpdateFromSMIS {
 		// the proposal is created : load samples and sessions
 		// -----------------------------------------------------------------------------------
 
-		if (smisSessions != null && smisSessions.length > 0) { // && smisSamples != null && smisSamples.length > 0) {
+		if (smisSessions != null && smisSessions.length > 0) { 
 
 			String uoCode = smisSessions[0].getCategCode();
 			Integer proposalNumber = smisSessions[0].getCategCounter();
-			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
+			String proposalCode = StringUtils.getProposalCode(uoCode,
+					Integer.toString(proposalNumber));
 
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber
+					+ " uoCode = " + uoCode);
 
-			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, Integer.toString(proposalNumber),
-					false, false, false);
+			List<Proposal3VO> existingProposalList = proposal
+					.findByCodeAndNumber(proposalCode,
+							Integer.toString(proposalNumber), false, false,
+							false);
 
 			if (existingProposalList.size() > 1)
 				LOG.debug("error ! duplicate code and number in ISPyB database");
@@ -274,250 +322,81 @@ public class UpdateFromSMIS {
 			for (int k = 0; k < smisSessions.length; k++) {
 				ExpSessionInfoLightVO sessionVO = smisSessions[k];
 
-				// local contact name + 1st letter of firstname is retrieved
-				String beamLineO = "";
-				if (sessionVO.getLocalContactName() != null) {
-					beamLineO = sessionVO.getLocalContactName() + "  " + sessionVO.getLocalContactFirstName().substring(0, 1);
-				}
-				// site number is retrieved
-				String siteNumber = null;
-				if (sessionVO.getLocalContactSiteNumber() != null) {
-					siteNumber = sessionVO.getLocalContactSiteNumber().toString();
-				}
-				Calendar startDateCal = Calendar.getInstance();
-				startDateCal.setTime(sessionVO.getStartDate().getTime());
-				Timestamp startDate = new Timestamp(startDateCal.getTimeInMillis());
+				retrieveSession(proplv, sessionVO);
 
-				// for SOLEIL
-				Integer visit_number = sessionVO.getStartShift(); // we use startShift for the session number because we always start
-																	// with 0
-				Integer nbShifts = sessionVO.getShifts();
-				Integer startShift = sessionVO.getStartShift(); // startShift equals 1, 2 or 3 and stands for 8:30am,
-																// 4:30pm or 00:30am
-				startShift = Constants.SITE_IS_SOLEIL() ? 0 : startShift;
-				Integer daysToAdd = nbShifts / 3 + 1;
-				if ((startShift == 1 && nbShifts % 3 == 2) || (startShift == 2 && nbShifts % 3 != 0))
-					daysToAdd++;
-
-				// only new sessions are retrieved
-				String beamlineName = sessionVO.getBeamlineName();
-				Calendar endDateCal = Calendar.getInstance();
-				endDateCal.setTime(sessionVO.getEndDate().getTime());
-				Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
-
-				// the finder should be replaced by a finder on the smis session Pk, instead of the startDate
-				// startDate finder is a problem with a session scheduled on 08/11-09/11, 1 on 09/11-10/11
-				// the first one is not inserted in ispby (cf. mail David vS)
-				// List<Session3VO> col = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDateBegin,
-				// startDateEnd, beamlineName, nbShifts);
-				Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
-
-				List<Session3VO> sessFromDBs = null;
-				if (!Constants.SITE_IS_SOLEIL()) {
-					sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
-				} else if (Constants.SITE_IS_SOLEIL()) {
-					sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDate, endDate, beamlineName,
-							nbShifts);
-					LOG.debug("look for session for proposalId = " + proposalId + " | startDate = " + startDate + " | endDate = "
-							+ endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
-				}
-
-				// if (col == null || col.isEmpty()) {
-				if (sessFromDB == null || (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() == 0)) {
-
-					Session3VO sesv = new Session3VO();
-					BeamLineSetup3VO setupv = new BeamLineSetup3VO();
-					setupv = setup.create(setupv);
-					sesv.setBeamLineSetupVO(setupv);
-
-					sesv.setNbShifts(new Integer(sessionVO.getShifts()));
-					sesv.setScheduled(new Byte("1"));
-					LOG.debug("scheduled = :" + sesv.getScheduled());
-
-					sesv.setProposalVO(proplv);
-					sesv.setStartDate(startDate);
-					sesv.setEndDate(endDate);
-					sesv.setLastUpdate(endDate);
-					sesv.setBeamlineName(beamlineName);
-					sesv.setBeamlineOperator(beamLineO);
-					sesv.setExpSessionPk(sessionVO.getPk());
-					sesv.setOperatorSiteNumber(siteNumber);
-
-					if (Constants.SITE_IS_SOLEIL()) {
-						sesv.setVisit_number(visit_number);
-					}
-					session.create(sesv);
-					LOG.debug("inserted a new session inside ISPyB db: " + sessionVO.getStartDate().getTime() + " start shift="
-							+ startShift + " nb shifts=" + nbShifts + " end date=" + ((Date) endDate).toString());
-
-					// list of BioSaxs beamLine name
-					ArrayList<String> beamlineNamesList = new ArrayList<String>();
-					beamlineNamesList.add("BM29");
-					beamlineNamesList.add("SWING");
-					// If beamline=BM29 && proposalType is MX => proposalType is MB, ie both BX and MX
-					if (beamlineNamesList.contains(beamlineName) && proplv.getType().equals(Constants.PROPOSAL_MX)) {
-						proplv.setType(Constants.PROPOSAL_MX_BX);
-						proplv = proposal.update(proplv);
-					}
-				} else {
-					Boolean isSoleil = Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() > 0;
-					Session3VO ispybSession = isSoleil ? sessFromDBs.get(0) : sessFromDB;
-					// update the coming session if needed -
-					if (ispybSession != null && ispybSession.getStartDate().after(new Date())) {
-						boolean changeSession = false;
-						String changeTxt = "updated session in ISPyB db: ";
-						String ispybBeamLineOperator = ispybSession.getBeamlineOperator();
-						if (beamLineO != null && ispybBeamLineOperator != null && !beamLineO.equals(ispybBeamLineOperator)) {
-							changeTxt += ispybBeamLineOperator + " => " + beamLineO;
-							ispybSession.setBeamlineOperator(beamLineO);
-							ispybSession.setTimeStamp(StringUtils.getCurrentTimeStamp());
-							ispybSession.setOperatorSiteNumber(siteNumber);
-							changeSession = true;
-						}
-						if (startDate != null && ispybSession.getStartDate() != null && !startDate.equals(ispybSession.getStartDate())) {
-							changeTxt += ", startDate " + ispybSession.getStartDate() + " => " + startDate;
-							ispybSession.setStartDate(startDate);
-							changeSession = true;
-						}
-						if (endDate != null && ispybSession.getEndDate() != null && !endDate.equals(ispybSession.getEndDate())) {
-							changeTxt += ", endDate " + ispybSession.getEndDate() + " => " + endDate;
-							ispybSession.setEndDate(endDate);
-							ispybSession.setLastUpdate(endDate);
-							changeSession = true;
-						}
-						if (beamlineName != null && ispybSession.getBeamlineName() != null
-								&& !beamlineName.equals(ispybSession.getBeamlineName())) {
-							changeTxt += ", beamline " + ispybSession.getBeamlineName() + " => " + beamlineName;
-							ispybSession.setBeamlineName(beamlineName);
-							changeSession = true;
-						}
-						if (sessionVO.getShifts() != null && ispybSession.getNbShifts() != null
-								&& !sessionVO.getShifts().equals(ispybSession.getNbShifts())) {
-							changeTxt += ", nbShifts " + ispybSession.getNbShifts() + " => " + sessionVO.getShifts();
-							ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
-							changeSession = true;
-						}
-						if (isSoleil) {
-							if (sessionVO.getStartShift() != null && ispybSession.getVisit_number() != null
-									&& !sessionVO.getStartShift().equals(ispybSession.getVisit_number())) {
-								changeTxt += ", visit_number " + ispybSession.getVisit_number() + " => " + sessionVO.getStartShift();
-								ispybSession.setVisit_number(new Integer(sessionVO.getStartShift()));
-								changeSession = true;
-							}
-						}
-						if (changeSession) {
-							changeTxt += " (with sessionId = " + ispybSession.getSessionId() + ")";
-							session.update(ispybSession);
-							LOG.debug(changeTxt);
-						}
-					}
-
-				}
-			}
-
-			if (smisSamples != null && smisSamples.length > 0) {
-				// retrieve all new samplesheets
-
-				LOG.debug("searching for new samplesheets");
-
-				/** For Biosaxs, copying proteins to macromolecule table if they don't exist yet **/
-				if (proplv.getType().equals("MB") || proplv.getType().equals("BX")) {
-					for (SampleSheetInfoLightVO sampleSheetInfoLightVO : smisSamples) {
-						try {
-							SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
-									.getLocalService(SaxsProposal3Service.class);
-							/** If there is not any macromolecule with that acronym and proposalId it will be created **/
-							if (saxsProposal3Service.findMacromoleculesBy(sampleSheetInfoLightVO.getAcronym(), proposalId).size() == 0) {
-								saxsProposal3Service.merge(new Macromolecule3VO(proposalId, sampleSheetInfoLightVO.getAcronym(),
-										sampleSheetInfoLightVO.getAcronym(), sampleSheetInfoLightVO.getDescription()));
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-							LoggerFormatter.log(LOG, Package.BIOSAXS_DB, "updateThisProposalFromSMISPk", System.currentTimeMillis(),
-									System.currentTimeMillis(), e.getMessage(), e);
-						}
-					}
-				}
-
-				for (int j = 0; j < smisSamples.length; j++) {
-					Protein3VO plv = new Protein3VO();
-					Crystal3VO clv = new Crystal3VO();
-					SampleSheetInfoLightVO value = smisSamples[j];
-					// LOG.debug(value.getAcronym() + " samplesheet primary key = " + value.getPk());
-
-					List<Protein3VO> protlist = protein.findByAcronymAndProposalId(proposalId, value.getAcronym());
-
-					if (protlist.isEmpty()) {
-
-						plv.setAcronym(value.getAcronym());
-						plv.setProposalVO(proplv);
-						// SV
-						Person3VO persv = new Person3VO();
-
-						if (person.findByFamilyAndGivenName(value.getUserName(), null).isEmpty()) {
-							persv.setFamilyName(value.getUserName());
-							persv.setEmailAddress(value.getUserEmail());
-							persv.setPhoneNumber(value.getUserPhone());
-							persv = person.create(persv);
-							LOG.debug("getting SMIS WS person created");
-						} else {
-							persv = person.findByFamilyAndGivenName(value.getUserName(), null).get(0);
-							persv.setPhoneNumber(value.getUserPhone());
-							persv = person.update(persv);
-							LOG.debug("getting SMIS WS person already exists personId = " + persv.getPersonId()
-									+ " | for proposalId = " + proplv.getProposalId());
-						}
-
-						plv.setPersonId(persv.getPersonId());
-						String desc = value.getDescription();
-
-						if (desc.length() > 254)
-							desc = desc.substring(0, 254);
-						plv.setName(desc);
-						plv.setIsCreatedBySampleSheet((byte) 1);
-
-						clv.setSpaceGroup(value.getSpaceGroup());
-						clv.setCellA(value.getCellA());
-						clv.setCellB(value.getCellB());
-						clv.setCellC(value.getCellC());
-						clv.setCellAlpha(value.getCellAlpha());
-						clv.setCellBeta(value.getCellBeta());
-						clv.setCellGamma(value.getCellGamma());
-
-						plv = protein.create(plv);
-						clv.setProteinVO(plv);
-						crystal.create(clv);
-
-						LOG.debug("inserted a new protein+crystal inside ISPyB db:" + value.getAcronym());
-					} else {
-						Protein3VO prot = protlist.get(0);
-						prot = protein.findByPk(prot.getProteinId(), true);
-
-						if (prot != null && prot.getCrystalVOs() != null && prot.getCrystalVOs().isEmpty()) { // TODO solve
-																												// NullPointerException
-
-							clv.setSpaceGroup(value.getSpaceGroup());
-							clv.setCellA(value.getCellA());
-							clv.setCellB(value.getCellB());
-							clv.setCellC(value.getCellC());
-							clv.setCellAlpha(value.getCellAlpha());
-							clv.setCellBeta(value.getCellBeta());
-							clv.setCellGamma(value.getCellGamma());
-							clv.setProteinVO(prot);
-							crystal.create(clv);
-
-							LOG.debug("inserted a new crystal for an existing protein inside ISPyB db:" + value.getAcronym());
-
-						}
-					}
-				}
-			} else {
-				LOG.debug(" no samples found for propos_no = " + pk);
 			}
 
 		} else {
 			LOG.debug(" no sessions found for propos_no = " + pk);
 
+		}
+
+		if (smisSamples != null && smisSamples.length > 0) {
+
+			String uoCode = smisSamples[0].getCategoryCode();
+			Integer proposalNumber = smisSamples[0].getCategoryCounter();
+			String proposalCode = StringUtils.getProposalCode(uoCode,
+					Integer.toString(proposalNumber));
+
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber
+					+ " uoCode = " + uoCode);
+
+			List<Proposal3VO> existingProposalList = proposal
+					.findByCodeAndNumber(proposalCode,
+							Integer.toString(proposalNumber), false, false,
+							false);
+
+			if (existingProposalList.size() > 1)
+				LOG.debug("error ! duplicate code and number in ISPyB database");
+			Proposal3VO proplv = existingProposalList.get(0);
+			proposalId = proplv.getProposalId();
+			LOG.debug("proposal is not new, proposalId = " + proposalId);
+
+			// retrieve all new samplesheets
+
+			LOG.debug("searching for new samplesheets");
+
+			/**
+			 * For Biosaxs, copying proteins to macromolecule table if they
+			 * don't exist yet
+			 **/
+			if (proplv.getType().equals("MB") || proplv.getType().equals("BX")) {
+				for (SampleSheetInfoLightVO sampleSheetInfoLightVO : smisSamples) {
+					try {
+						SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
+								.getLocalService(SaxsProposal3Service.class);
+						/**
+						 * If there is not any macromolecule with that acronym
+						 * and proposalId it will be created
+						 **/
+						if (saxsProposal3Service
+								.findMacromoleculesBy(
+										sampleSheetInfoLightVO.getAcronym(),
+										proposalId).size() == 0) {
+							saxsProposal3Service.merge(new Macromolecule3VO(
+									proposalId, sampleSheetInfoLightVO
+											.getAcronym(),
+									sampleSheetInfoLightVO.getAcronym(),
+									sampleSheetInfoLightVO.getDescription()));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LoggerFormatter.log(LOG, Package.BIOSAXS_DB,
+								"updateThisProposalFromSMISPk",
+								System.currentTimeMillis(),
+								System.currentTimeMillis(), e.getMessage(), e);
+					}
+				}
+			}
+
+			for (int j = 0; j < smisSamples.length; j++) {
+
+				SampleSheetInfoLightVO value = smisSamples[j];
+				retrieveSampleSheet(proplv, value);
+
+			}
+		} else {
+			LOG.debug(" no samples found for propos_no = " + pk);
 		}
 
 		// -----------------------------------------------------------------------------------
@@ -529,61 +408,351 @@ public class UpdateFromSMIS {
 				labContact.getCategoryCode();
 				String uoCode = labContact.getCategoryCode();
 				Integer proposalNumber = labContact.getCategoryCounter();
-				String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
+				String proposalCode = StringUtils.getProposalCode(uoCode,
+						Integer.toString(proposalNumber));
 
-				LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+				LOG.debug("Proposal found : " + proposalCode + proposalNumber
+						+ " uoCode = " + uoCode);
 				// create or update the person and his/her laboratory
-				getProposal(labContact, lab, person, proposalNumber, proposalCode);
+				getProposal(labContact, lab, person, proposalNumber,
+						proposalCode);
 
-				// retrieve person to get it 'personId' for persistence of the labContact
+				// retrieve person to get it 'personId' for persistence of the
+				// labContact
 				String familyName = labContacts[i].getScientistName();
 				String givenName = labContacts[i].getScientistFirstName();
-				List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);
+				List<Person3VO> persons = person.findByFamilyAndGivenName(
+						familyName, givenName);
 				Person3VO currentPerson = null;
 				if (persons != null && !persons.isEmpty()) {
 					currentPerson = persons.get(0);
-					LOG.debug("currentPerson Id : " + currentPerson.getPersonId() + " inside ISPyB db");
+					LOG.debug("currentPerson Id : "
+							+ currentPerson.getPersonId() + " inside ISPyB db");
 				}
 
-				// retrieve proposal to get 'proposalId' for persistence of the labContact
-				Proposal3VO currentProposal = proposal.findForWSByCodeAndNumber(proposalCode, proposalNumber.toString());
-				if (currentProposal == null){
-					LOG.debug("proposal not found for:"+ proposalCode + proposalNumber.toString());
+				// retrieve proposal to get 'proposalId' for persistence of the
+				// labContact
+				Proposal3VO currentProposal = proposal
+						.findForWSByCodeAndNumber(proposalCode,
+								proposalNumber.toString());
+				if (currentProposal == null) {
+					LOG.debug("proposal not found for:" + proposalCode
+							+ proposalNumber.toString());
 					continue;
 				}
-				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
+				LOG.debug("currentProposal Id : "
+						+ currentProposal.getProposalId() + " inside ISPyB db");
 
 				List<LabContact3VO> labContactsList = null;
-				if (currentPerson != null) 
-					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
-						currentProposal.getProposalId());
+				if (currentPerson != null)
+					labContactsList = labContactService
+							.findByPersonIdAndProposalId(
+									currentPerson.getPersonId(),
+									currentProposal.getProposalId());
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
 					continue;
 				}
 
 				// fill the laboratory
-				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
+				Laboratory3VO currentLabo = ScientistsFromSMIS
+						.extractLaboratoryInfo(labContacts[i]);
 				//
 				LabContact3VO labContact3VO = new LabContact3VO();
 				labContact3VO.setPersonVO(currentPerson);
 				// generate labContact infos
 				if (currentPerson != null & currentLabo != null) {
-					labContact3VO.setCardName(generateCardName(currentPerson, currentLabo, currentProposal.getProposalId()));
+					labContact3VO.setCardName(generateCardName(currentPerson,
+							currentLabo, currentProposal.getProposalId()));
 				}
 				labContact3VO.setProposalVO(currentProposal);
 				labContact3VO.setDewarAvgCustomsValue(0);
 				labContact3VO.setDewarAvgTransportValue(0);
 				labContactService.create(labContact3VO);
-				LOG.debug("inserted a new labcontact : " + labContact3VO.getCardName() + " for proposal " + proposalId
-						+ " inside ISPyB db");
+				LOG.debug("inserted a new labcontact : "
+						+ labContact3VO.getCardName() + " for proposal "
+						+ proposalId + " inside ISPyB db");
 			}
 		}
 
 	}
 
-	private static Proposal3VO getProposal(ProposalParticipantInfoLightVO mainProp, Laboratory3Service lab, Person3Service person,
-			Integer proposalNumber, String proposalCode) throws Exception {
+	private static void retrieveSampleSheet(Proposal3VO proplv,
+			SampleSheetInfoLightVO value) throws Exception {
+
+		Protein3VO plv = new Protein3VO();
+		Crystal3VO clv = new Crystal3VO();
+
+		initServices();
+
+		List<Protein3VO> protlist = protein.findByAcronymAndProposalId(
+				proplv.getProposalId(), value.getAcronym());
+
+		if (protlist.isEmpty()) {
+
+			plv.setAcronym(value.getAcronym());
+			plv.setProposalVO(proplv);
+			// SV
+			Person3VO persv = new Person3VO();
+
+			if (person.findByFamilyAndGivenName(value.getUserName(), null)
+					.isEmpty()) {
+				persv.setFamilyName(value.getUserName());
+				persv.setEmailAddress(value.getUserEmail());
+				persv.setPhoneNumber(value.getUserPhone());
+				persv = person.create(persv);
+				LOG.debug("getting SMIS WS person created");
+			} else {
+				persv = person.findByFamilyAndGivenName(value.getUserName(),
+						null).get(0);
+				persv.setPhoneNumber(value.getUserPhone());
+				persv = person.update(persv);
+				LOG.debug("getting SMIS WS person already exists personId = "
+						+ persv.getPersonId() + " | for proposalId = "
+						+ proplv.getProposalId());
+			}
+
+			plv.setPersonId(persv.getPersonId());
+			String desc = value.getDescription();
+
+			if (desc.length() > 254)
+				desc = desc.substring(0, 254);
+			plv.setName(desc);
+			plv.setIsCreatedBySampleSheet((byte) 1);
+
+			clv.setSpaceGroup(value.getSpaceGroup());
+			clv.setCellA(value.getCellA());
+			clv.setCellB(value.getCellB());
+			clv.setCellC(value.getCellC());
+			clv.setCellAlpha(value.getCellAlpha());
+			clv.setCellBeta(value.getCellBeta());
+			clv.setCellGamma(value.getCellGamma());
+
+			plv = protein.create(plv);
+			clv.setProteinVO(plv);
+			crystal.create(clv);
+
+			LOG.debug("inserted a new protein+crystal inside ISPyB db:"
+					+ value.getAcronym());
+		} else {
+			Protein3VO prot = protlist.get(0);
+			prot = protein.findByPk(prot.getProteinId(), true);
+
+			if (prot != null && prot.getCrystalVOs() != null
+					&& prot.getCrystalVOs().isEmpty()) { // TODO solve
+															// NullPointerException
+
+				clv.setSpaceGroup(value.getSpaceGroup());
+				clv.setCellA(value.getCellA());
+				clv.setCellB(value.getCellB());
+				clv.setCellC(value.getCellC());
+				clv.setCellAlpha(value.getCellAlpha());
+				clv.setCellBeta(value.getCellBeta());
+				clv.setCellGamma(value.getCellGamma());
+				clv.setProteinVO(prot);
+				crystal.create(clv);
+
+				LOG.debug("inserted a new crystal for an existing protein inside ISPyB db:"
+						+ value.getAcronym());
+
+			}
+		}
+	}
+
+	private static void retrieveSession(Proposal3VO proplv,
+			ExpSessionInfoLightVO sessionVO) throws Exception {
+		// local contact name + 1st letter of firstname is retrieved
+
+		initServices();
+
+		Integer proposalId = proplv.getProposalId();
+
+		String beamLineO = "";
+		if (sessionVO.getLocalContactName() != null) {
+			beamLineO = sessionVO.getLocalContactName() + "  "
+					+ sessionVO.getLocalContactFirstName().substring(0, 1);
+		}
+		// site number is retrieved
+		String siteNumber = null;
+		if (sessionVO.getLocalContactSiteNumber() != null) {
+			siteNumber = sessionVO.getLocalContactSiteNumber().toString();
+		}
+		Calendar startDateCal = Calendar.getInstance();
+		startDateCal.setTime(sessionVO.getStartDate().getTime());
+		Timestamp startDate = new Timestamp(startDateCal.getTimeInMillis());
+
+		// for SOLEIL
+		Integer visit_number = sessionVO.getStartShift(); // we use startShift
+															// for the session
+															// number because we
+															// always start
+															// with 0
+		Integer nbShifts = sessionVO.getShifts();
+		Integer startShift = sessionVO.getStartShift(); // startShift equals 1,
+														// 2 or 3 and stands for
+														// 8:30am,
+														// 4:30pm or 00:30am
+		startShift = Constants.SITE_IS_SOLEIL() ? 0 : startShift;
+		Integer daysToAdd = nbShifts / 3 + 1;
+		if ((startShift == 1 && nbShifts % 3 == 2)
+				|| (startShift == 2 && nbShifts % 3 != 0))
+			daysToAdd++;
+
+		// only new sessions are retrieved
+		String beamlineName = sessionVO.getBeamlineName();
+		Calendar endDateCal = Calendar.getInstance();
+		endDateCal.setTime(sessionVO.getEndDate().getTime());
+		Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
+
+		// the finder should be replaced by a finder on the smis session Pk,
+		// instead of the startDate
+		// startDate finder is a problem with a session scheduled on
+		// 08/11-09/11, 1 on 09/11-10/11
+		// the first one is not inserted in ispby (cf. mail David vS)
+		// List<Session3VO> col =
+		// session.findByStartDateAndBeamLineNameAndNbShifts(proposalId,
+		// startDateBegin,
+		// startDateEnd, beamlineName, nbShifts);
+		Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
+
+		List<Session3VO> sessFromDBs = null;
+		if (!Constants.SITE_IS_SOLEIL()) {
+			sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
+		} else if (Constants.SITE_IS_SOLEIL()) {
+			sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(
+					proposalId, startDate, endDate, beamlineName, nbShifts);
+			LOG.debug("look for session for proposalId = " + proposalId
+					+ " | startDate = " + startDate + " | endDate = " + endDate
+					+ " | beamlineName = " + beamlineName + " | nbShifts = "
+					+ nbShifts);
+		}
+
+		// if (col == null || col.isEmpty()) {
+		if (sessFromDB == null
+				|| (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs
+						.size() == 0)) {
+
+			Session3VO sesv = new Session3VO();
+			BeamLineSetup3VO setupv = new BeamLineSetup3VO();
+			setupv = setup.create(setupv);
+			sesv.setBeamLineSetupVO(setupv);
+
+			sesv.setNbShifts(new Integer(sessionVO.getShifts()));
+			sesv.setScheduled(new Byte("1"));
+			LOG.debug("scheduled = :" + sesv.getScheduled());
+
+			sesv.setProposalVO(proplv);
+			sesv.setStartDate(startDate);
+			sesv.setEndDate(endDate);
+			sesv.setLastUpdate(endDate);
+			sesv.setBeamlineName(beamlineName);
+			sesv.setBeamlineOperator(beamLineO);
+			sesv.setExpSessionPk(sessionVO.getPk());
+			sesv.setOperatorSiteNumber(siteNumber);
+
+			if (Constants.SITE_IS_SOLEIL()) {
+				sesv.setVisit_number(visit_number);
+			}
+			session.create(sesv);
+			LOG.debug("inserted a new session inside ISPyB db: "
+					+ sessionVO.getStartDate().getTime() + " start shift="
+					+ startShift + " nb shifts=" + nbShifts + " end date="
+					+ ((Date) endDate).toString());
+
+			// list of BioSaxs beamLine name
+			ArrayList<String> beamlineNamesList = new ArrayList<String>();
+			beamlineNamesList.add("BM29");
+			beamlineNamesList.add("SWING");
+			// If beamline=BM29 && proposalType is MX => proposalType is MB, ie
+			// both BX and MX
+			if (beamlineNamesList.contains(beamlineName)
+					&& proplv.getType().equals(Constants.PROPOSAL_MX)) {
+				proplv.setType(Constants.PROPOSAL_MX_BX);
+				proplv = proposal.update(proplv);
+			}
+		} else {
+			Boolean isSoleil = Constants.SITE_IS_SOLEIL()
+					&& sessFromDBs != null && sessFromDBs.size() > 0;
+			Session3VO ispybSession = isSoleil ? sessFromDBs.get(0)
+					: sessFromDB;
+			// update the coming session if needed -
+			if (ispybSession != null
+					&& ispybSession.getStartDate().after(new Date())) {
+				boolean changeSession = false;
+				String changeTxt = "updated session in ISPyB db: ";
+				String ispybBeamLineOperator = ispybSession
+						.getBeamlineOperator();
+				if (beamLineO != null && ispybBeamLineOperator != null
+						&& !beamLineO.equals(ispybBeamLineOperator)) {
+					changeTxt += ispybBeamLineOperator + " => " + beamLineO;
+					ispybSession.setBeamlineOperator(beamLineO);
+					ispybSession
+							.setTimeStamp(StringUtils.getCurrentTimeStamp());
+					ispybSession.setOperatorSiteNumber(siteNumber);
+					changeSession = true;
+				}
+				if (startDate != null && ispybSession.getStartDate() != null
+						&& !startDate.equals(ispybSession.getStartDate())) {
+					changeTxt += ", startDate " + ispybSession.getStartDate()
+							+ " => " + startDate;
+					ispybSession.setStartDate(startDate);
+					changeSession = true;
+				}
+				if (endDate != null && ispybSession.getEndDate() != null
+						&& !endDate.equals(ispybSession.getEndDate())) {
+					changeTxt += ", endDate " + ispybSession.getEndDate()
+							+ " => " + endDate;
+					ispybSession.setEndDate(endDate);
+					ispybSession.setLastUpdate(endDate);
+					changeSession = true;
+				}
+				if (beamlineName != null
+						&& ispybSession.getBeamlineName() != null
+						&& !beamlineName.equals(ispybSession.getBeamlineName())) {
+					changeTxt += ", beamline " + ispybSession.getBeamlineName()
+							+ " => " + beamlineName;
+					ispybSession.setBeamlineName(beamlineName);
+					changeSession = true;
+				}
+				if (sessionVO.getShifts() != null
+						&& ispybSession.getNbShifts() != null
+						&& !sessionVO.getShifts().equals(
+								ispybSession.getNbShifts())) {
+					changeTxt += ", nbShifts " + ispybSession.getNbShifts()
+							+ " => " + sessionVO.getShifts();
+					ispybSession
+							.setNbShifts(new Integer(sessionVO.getShifts()));
+					changeSession = true;
+				}
+				if (isSoleil) {
+					if (sessionVO.getStartShift() != null
+							&& ispybSession.getVisit_number() != null
+							&& !sessionVO.getStartShift().equals(
+									ispybSession.getVisit_number())) {
+						changeTxt += ", visit_number "
+								+ ispybSession.getVisit_number() + " => "
+								+ sessionVO.getStartShift();
+						ispybSession.setVisit_number(new Integer(sessionVO
+								.getStartShift()));
+						changeSession = true;
+					}
+				}
+				if (changeSession) {
+					changeTxt += " (with sessionId = "
+							+ ispybSession.getSessionId() + ")";
+					session.update(ispybSession);
+					LOG.debug(changeTxt);
+				}
+
+			}
+		}
+
+	}
+
+	private static Proposal3VO getProposal(
+			ProposalParticipantInfoLightVO mainProp, Laboratory3Service lab,
+			Person3Service person, Integer proposalNumber, String proposalCode)
+			throws Exception {
 		// main proposer
 		String familyName = mainProp.getScientistName();
 		String givenName = mainProp.getScientistFirstName();
@@ -599,21 +768,23 @@ public class UpdateFromSMIS {
 		labv.setCity(mainProp.getLabCity());
 		labv.setCountry(mainProp.getLabCountryCode());
 		String address = "";
-		
+
 		List<String> smisAddress = mainProp.getLabAddress();
 		for (Iterator iterator = smisAddress.iterator(); iterator.hasNext();) {
 			String ligne = (String) iterator.next();
 			if (ligne != null)
 				address += ligne + "\n";
-		}		
+		}
 		labv.setAddress(address);
 
-		if (lab.findByNameAndCityAndCountry(laboratoryName, labv.getCity(), labv.getCountry()).isEmpty()) {
+		if (lab.findByNameAndCityAndCountry(laboratoryName, labv.getCity(),
+				labv.getCountry()).isEmpty()) {
 			labv = lab.create(labv);
 			labId = labv.getLaboratoryId();
 			LOG.debug("getting SMIS WS labo created");
 		} else {
-			List<Laboratory3VO> labList = lab.findByNameAndCityAndCountry(laboratoryName, null, null);
+			List<Laboratory3VO> labList = lab.findByNameAndCityAndCountry(
+					laboratoryName, null, null);
 			labv = labList.get(0);
 			labId = labv.getLaboratoryId();
 			LOG.debug("getting SMIS WS labo already exists");
@@ -622,7 +793,8 @@ public class UpdateFromSMIS {
 		Person3VO persv = new Person3VO();
 		Integer persId;
 
-		List<Person3VO> listPerson = person.findByFamilyAndGivenName(familyName, givenName);
+		List<Person3VO> listPerson = person.findByFamilyAndGivenName(
+				familyName, givenName);
 		if (listPerson.isEmpty()) {
 			persv.setFamilyName(familyName);
 			persv.setGivenName(givenName);
@@ -630,18 +802,19 @@ public class UpdateFromSMIS {
 			persv.setTitle(title);
 			persv.setLaboratoryVO(labv);
 			persv.setFaxNumber(faxNumber);
-			
+
 			/** Adding the logging **/
 			LOG.debug("Adding login: " + persv.getLogin());
-			
+
 			persv.setLogin(mainProp.getBllogin());
-			
+
 			persv = person.create(persv);
 			persId = persv.getPersonId();
 
 			LOG.debug("getting SMIS WS person created");
 		} else {
-			// person is existing but may has changed labo : we set the new labId
+			// person is existing but may has changed labo : we set the new
+			// labId
 			persv = listPerson.get(0);
 			persId = persv.getPersonId();
 			persv.setLaboratoryVO(labv);
@@ -658,16 +831,18 @@ public class UpdateFromSMIS {
 		// Proposal Type: MX, BX, MB (both: MX with sessions on BM29)
 		switch (Constants.getSite()) {
 		case EMBL:
-			if ((mainProp.getCategoryCode() != null)&&((mainProp.getCategoryCode().toUpperCase().equals("SAXS")))){
-					propv.setType(Constants.PROPOSAL_BIOSAXS);
-			}
-			else{
+			if ((mainProp.getCategoryCode() != null)
+					&& ((mainProp.getCategoryCode().toUpperCase()
+							.equals("SAXS")))) {
+				propv.setType(Constants.PROPOSAL_BIOSAXS);
+			} else {
 				propv.setType(Constants.PROPOSAL_MX);
 			}
 			break;
 
 		default:
-			if (mainProp.getProposalType() != null && mainProp.getProposalGroup() != null) {
+			if (mainProp.getProposalType() != null
+					&& mainProp.getProposalGroup() != null) {
 				if (mainProp.getProposalType().intValue() == Constants.PROPOSAL_BIOSAXS_TYPE
 						&& mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_BIOSAXS_EXPGROUP) {
 					LOG.debug("proposal is BioSaxs");
@@ -693,32 +868,41 @@ public class UpdateFromSMIS {
 	}
 
 	/**
-	 * Generates the lab-contact card name thanks to the person and laboratory names
+	 * Generates the lab-contact card name thanks to the person and laboratory
+	 * names
 	 * 
 	 * @param person
 	 * @param laboratory
 	 * @return
 	 * @throws Exception
 	 */
-	private static String generateCardName(Person3VO person, Laboratory3VO laboratory, Integer proposalId) throws Exception {
+	private static String generateCardName(Person3VO person,
+			Laboratory3VO laboratory, Integer proposalId) throws Exception {
 		int maxLength = 15;
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		LabContact3Service labCService = (LabContact3Service) ejb3ServiceLocator.getLocalService(LabContact3Service.class);
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator
+				.getInstance();
+		LabContact3Service labCService = (LabContact3Service) ejb3ServiceLocator
+				.getLocalService(LabContact3Service.class);
 
 		String personName = person.getFamilyName();
-		personName = personName.substring(0, Math.min(personName.length(), maxLength));
+		personName = personName.substring(0,
+				Math.min(personName.length(), maxLength));
 
 		String laboName = laboratory.getName();
-		laboName = laboName.substring(0, Math.min(laboName.length(), maxLength));
+		laboName = laboName
+				.substring(0, Math.min(laboName.length(), maxLength));
 
-		String cardName = personName + "-" + laboName;// max length = 15x2 + 1 = 31
+		String cardName = personName + "-" + laboName;// max length = 15x2 + 1 =
+														// 31
 		// check the card name does not exist yet
 		String cardNameWithNum = cardName;
 		try {
-			List<LabContact3VO> labContact = labCService.findFiltered(proposalId, cardNameWithNum);
+			List<LabContact3VO> labContact = labCService.findFiltered(
+					proposalId, cardNameWithNum);
 			int i = 1;
 			while (labContact.size() != 0) {
-				cardNameWithNum = cardName + "_" + i; // max length = 31 + 1 + l(i) = 32+
+				cardNameWithNum = cardName + "_" + i; // max length = 31 + 1 +
+														// l(i) = 32+
 				labContact = labCService.findByCardName(cardNameWithNum);
 				LOG.info(labContact);
 				i++;
