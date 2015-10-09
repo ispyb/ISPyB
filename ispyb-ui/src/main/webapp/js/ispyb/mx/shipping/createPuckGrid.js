@@ -629,18 +629,18 @@ CreatePuckGrid.prototype._getColumns = function () {
 
 	// builds the columns
 	var columns = [{
-		text : 'Sample<br>Position',
+		text : 'Sample<br>position',
 		dataIndex : 'position',
 		flex : 0.04,
 		renderer : renderPosition
 	}, {
-		text : 'Protein<br>Acronym (*)',
+		text : 'Protein<br>acronym (*)',
 		dataIndex : 'proteinAcronym',
 		flex : 0.08,
 		editor : comboProtein,
 		renderer : renderProtein
 	}, {
-		text : 'Sample<br>Name (*)',
+		text : 'Sample<br>name (*)',
 		dataIndex : 'sampleName',
 		flex : 0.09,
 		editor : {
@@ -653,20 +653,20 @@ CreatePuckGrid.prototype._getColumns = function () {
 		},
 		renderer : renderSample
 	}, {
-		text : 'Pin<br>Barcode',
+		text : 'Pin<br>barcode',
 		dataIndex : 'pinBarcode',
 		flex : 0.07,
 		editor : {
 			xtype : 'textfield'
 		}
 	}, {
-		text : 'Space<br>Group',
+		text : 'Space<br>group',
 		dataIndex : 'spaceGroup',
 		flex : 0.075,
 		editor : comboSpaceGroup // specify reference to combo instance
 		//renderer : Ext.util.Format.comboRenderer(comboSpaceGroup)
 	}, {
-		text : 'Pre-Observed<br>resolution',
+		text : 'Pre-observed<br>resolution',
 		dataIndex : 'preObservedResolution',
 		flex : 0.05,
 		editor : {
@@ -682,7 +682,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 			allowBlank : true
 		}
 	}, {
-		text : 'Pref.<br>Diameter',
+		text : 'Preferred<br>beam<br>diameter',
 		dataIndex : 'preferredBeamDiameter',
 		flex : 0.05,
 		editor : {
@@ -690,7 +690,7 @@ CreatePuckGrid.prototype._getColumns = function () {
 			allowBlank : true
 		}
 	}, {
-		text : 'Experiment<br>Type',
+		text : 'Experiment<br>type',
 		dataIndex : 'experimentType',
 		flex : 0.075,
 		editor : comboExperimentType // specify reference to combo
