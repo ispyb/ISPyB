@@ -818,16 +818,14 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 			// stats
 			int nbCollect = 0;
 			int nbTest = 0;
-			// has MXPressO/MXPressE workflows?
+			// has MXPressO/MXPressE/I/M workflows?
 			boolean sessionHasMXpressOWF = false;
 			for (Iterator<DataCollectionGroup> ite = listOfGroups.iterator(); ite.hasNext();) {
 				DataCollectionGroup dcg = ite.next();
-				if (dcg.getWorkflowVO() != null
-						&& dcg.getWorkflowVO().getWorkflowType() != null
-						&& (dcg.getWorkflowVO().getWorkflowType().equals(Constants.WORKFLOW_MXPRESSO) || dcg
-								.getWorkflowVO().getWorkflowType().equals(Constants.WORKFLOW_MXPRESSE))) {
+				if (dcg.getWorkflowVO()!=null && dcg.getWorkflowVO().isMXPressEOIA()){
 					sessionHasMXpressOWF = true;
 				}
+				
 				List<DataCollection3VO> listCollect = dcg.getDataCollectionsList();
 				for (Iterator<DataCollection3VO> iterator = listCollect.iterator(); iterator.hasNext();) {
 					DataCollection3VO dataCollection3VO = iterator.next();

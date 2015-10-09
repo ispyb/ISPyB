@@ -81,13 +81,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * @struts.action name="viewSessionSummaryForm" path="/user/viewSessionSummary" input="user.collection.viewSession.page"
- *                parameter="reqCode" scope="request" validate="false"
+ * @struts.action name="viewSessionSummaryForm" path="/user/viewSessionSummary"
+ *                input="user.collection.viewSession.page" parameter="reqCode"
+ *                scope="request" validate="false"
  * 
- * @struts.action-forward name="successAll" path="user.collection.viewSessionSummary.page"
- * @struts.action-forward name="managerSuccessAll" path="manager.collection.viewSessionSummary.page"
- * @struts.action-forward name="fedexmanagerSuccessAll" path="fedexmanager.collection.viewSessionSummary.page" *
- * @struts.action-forward name="localContactSuccessAll" path="localcontact.collection.viewSessionSummary.page"
+ * @struts.action-forward name="successAll"
+ *                        path="user.collection.viewSessionSummary.page"
+ * @struts.action-forward name="managerSuccessAll"
+ *                        path="manager.collection.viewSessionSummary.page"
+ * @struts.action-forward name="fedexmanagerSuccessAll"
+ *                        path="fedexmanager.collection.viewSessionSummary.page"
+ *                        *
+ * @struts.action-forward name="localContactSuccessAll"
+ *                        path="localcontact.collection.viewSessionSummary.page"
  * @struts.action-forward name="error" path="site.default.error.page"
  * 
  */
@@ -196,8 +202,10 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		this.sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 		this.dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 				.getLocalService(DataCollectionGroup3Service.class);
-		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-		this.xfeService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator.getLocalService(XFEFluorescenceSpectrum3Service.class);
+		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
+				.getLocalService(DataCollection3Service.class);
+		this.xfeService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator
+				.getLocalService(XFEFluorescenceSpectrum3Service.class);
 		this.energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
 		this.blSampleHasEnergyScanService = (BLSampleHasEnergyScan3Service) ejb3ServiceLocator
 				.getLocalService(BLSampleHasEnergyScan3Service.class);
@@ -219,7 +227,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	 * @param response
 	 * @return
 	 */
-	public ActionForward display(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward display(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response) {
 		ActionMessages errors = new ActionMessages();
 
 		try {
@@ -248,7 +257,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			BreadCrumbsForm.getItClean(request).setSelectedSession(slv);
 
 		} catch (Exception e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollectionGroup"));
+			errors.add(ActionMessages.GLOBAL_MESSAGE,
+					new ActionMessage("error.user.collection.viewDataCollectionGroup"));
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
 			e.printStackTrace();
 		}
@@ -270,7 +280,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		}
 	}
 
-	public ActionForward displayAll(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward displayAll(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response) {
 		ActionMessages errors = new ActionMessages();
 
 		try {
@@ -295,7 +306,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			BreadCrumbsForm.getItClean(request).setSelectedSession(slv);
 
 		} catch (Exception e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollectionGroup"));
+			errors.add(ActionMessages.GLOBAL_MESSAGE,
+					new ActionMessage("error.user.collection.viewDataCollectionGroup"));
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
 			e.printStackTrace();
 		}
@@ -317,7 +329,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		}
 	}
 
-	public void getSessionSummary(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
+	public void getSessionSummary(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response) {
 
 		// set the number of sessiondataInformationObjects to display
 		Integer nbOfItems = null;
@@ -377,22 +390,26 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 			// crystal classes
 			// Get an object list.
-			List<IspybCrystalClass3VO> listOfCrystalClass = (List<IspybCrystalClass3VO>) request.getSession().getAttribute(
-					Constants.ISPYB_CRYSTAL_CLASS_LIST);
+			List<IspybCrystalClass3VO> listOfCrystalClass = (List<IspybCrystalClass3VO>) request.getSession()
+					.getAttribute(Constants.ISPYB_CRYSTAL_CLASS_LIST);
 
 			// session information
-			//String mpEmail = null;
-			//if (pv != null)
-				//mpEmail = pv.getPersonVO().getEmailAddress();
-//			String structureDeterminations = slv.getStructureDeterminations() == null || slv.getStructureDeterminations() == 0 ? ""
-//					: slv.getStructureDeterminations().toString();
-//			String dewarTransport = slv.getDewarTransport() == null || slv.getDewarTransport() == 0 ? "" : slv.getDewarTransport()
-//					.toString();
-//			String dataBackupFrance = slv.getDatabackupFrance() == null || slv.getDatabackupFrance() == 0 ? "" : slv
-//					.getDatabackupFrance().toString();
-//			String dataBackupEurope = slv.getDatabackupEurope() == null || slv.getDatabackupEurope() == 0 ? "" : slv
-//					.getDatabackupEurope().toString();
-//			// gets the email address for the beamline operator
+			// String mpEmail = null;
+			// if (pv != null)
+			// mpEmail = pv.getPersonVO().getEmailAddress();
+			// String structureDeterminations = slv.getStructureDeterminations()
+			// == null || slv.getStructureDeterminations() == 0 ? ""
+			// : slv.getStructureDeterminations().toString();
+			// String dewarTransport = slv.getDewarTransport() == null ||
+			// slv.getDewarTransport() == 0 ? "" : slv.getDewarTransport()
+			// .toString();
+			// String dataBackupFrance = slv.getDatabackupFrance() == null ||
+			// slv.getDatabackupFrance() == 0 ? "" : slv
+			// .getDatabackupFrance().toString();
+			// String dataBackupEurope = slv.getDatabackupEurope() == null ||
+			// slv.getDatabackupEurope() == 0 ? "" : slv
+			// .getDatabackupEurope().toString();
+			// // gets the email address for the beamline operator
 			// Get localContact email
 			String beamLineOperatorEmail = slv.getBeamLineOperatorEmail();
 
@@ -403,7 +420,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					.hasNext();) {
 				DataCollectionGroup3VO myDataCollectionGroup = myDataCollectionGroups.next();
 				int nbCol = myDataCollectionGroup.getDataCollectionsList().size();
-				// if ((nbCol > 0) || !selectedNbCollect.equals("WithCollect")) {
+				// if ((nbCol > 0) || !selectedNbCollect.equals("WithCollect"))
+				// {
 				if ((nbCol > 0)) {
 					aListTmp.add(myDataCollectionGroup);
 				}
@@ -432,8 +450,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			List<DataCollection3VO> tmpDataCollectionList = new ArrayList<DataCollection3VO>();
 			for (Iterator<DataCollection3VO> iterator = dataCollectionList.iterator(); iterator.hasNext();) {
 				DataCollection3VO dataCollection3VO = iterator.next();
-				DataCollection3VO collect = dataCollectionService
-						.findByPk(dataCollection3VO.getDataCollectionId(), false, true, false);
+				DataCollection3VO collect = dataCollectionService.findByPk(dataCollection3VO.getDataCollectionId(),
+						false, true, false);
 				tmpDataCollectionList.add(collect);
 			}
 			dataCollectionList = tmpDataCollectionList;
@@ -451,19 +469,22 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				String imagePrefix = "";
 				if (vo.getBlSampleVO() != null) {
 					sampleName = vo.getBlSampleVO().getName();
-					if (vo.getBlSampleVO().getCrystalVO() != null && vo.getBlSampleVO().getCrystalVO().getProteinVO() != null) {
+					if (vo.getBlSampleVO().getCrystalVO() != null
+							&& vo.getBlSampleVO().getCrystalVO().getProteinVO() != null) {
 						proteinAcronym = vo.getBlSampleVO().getCrystalVO().getProteinVO().getAcronym();
 					}
 				}
 				if (vo.getDataCollectionsList() != null && vo.getDataCollectionsList().size() > 0) {
 					imagePrefix = vo.getDataCollectionsList().get(0).getImagePrefix();
 				}
-				DataCollectionGroup group = new DataCollectionGroup(vo, runNumber, proteinAcronym, sampleName, imagePrefix);
+				DataCollectionGroup group = new DataCollectionGroup(vo, runNumber, proteinAcronym, sampleName,
+						imagePrefix);
 				listOfGroups.add(group);
 			}
 
 			// Issue 1763: set the group comments to dc
-			// dataCollectionList = ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
+			// dataCollectionList =
+			// ViewDataCollectionAction.setDataCollectionComments(dataCollectionList);
 			request.getSession().setAttribute(Constants.DATACOLLECTION_LIST, dataCollectionList);
 			// Set EnergyScan list (for export)
 			request.getSession().setAttribute(Constants.ENERGYSCAN_LIST, energyScanList);
@@ -476,7 +497,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				int jpegScanExists = PathUtils.fileExists(xfe.getJpegScanFileFullPath());
 				String jpegScanFileFullPathParser = PathUtils.FitPathToOS(xfe.getJpegScanFileFullPath());
 				int annotatedPymcaXfeSpectrumExists = PathUtils.fileExists(xfe.getAnnotatedPymcaXfeSpectrum());
-				String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xfe.getAnnotatedPymcaXfeSpectrum());
+				String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xfe
+						.getAnnotatedPymcaXfeSpectrum());
 				String sampleName = "";
 				if (xfe.getBlSampleVO() != null) {
 					sampleName = xfe.getBlSampleVO().getName();
@@ -495,13 +517,14 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				int choochExists = PathUtils.fileExists(energyScan.getJpegChoochFileFullPath());
 				String jpegChoochFileFitPath = PathUtils.FitPathToOS(energyScan.getJpegChoochFileFullPath());
 				String sampleName = "";
-				List<BLSampleHasEnergyScan3VO> listLink = blSampleHasEnergyScanService.findByEnergyScan(energyScan.getEnergyScanId());
+				List<BLSampleHasEnergyScan3VO> listLink = blSampleHasEnergyScanService.findByEnergyScan(energyScan
+						.getEnergyScanId());
 				if (listLink != null && listLink.size() > 0) {
 					BLSampleHasEnergyScan3VO o = listLink.get(0);
 					sampleName = o.getBlSampleVO().getName();
 				}
-				EnergyScan es = new EnergyScan(energyScan, scanFileFullPathExists == 1, shortFileName, choochExists == 1,
-						jpegChoochFileFitPath, sampleName);
+				EnergyScan es = new EnergyScan(energyScan, scanFileFullPathExists == 1, shortFileName,
+						choochExists == 1, jpegChoochFileFitPath, sampleName);
 				energyScans.add(es);
 			}
 
@@ -550,10 +573,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			boolean sessionHasMXpressOWF = false;
 			for (Iterator<DataCollectionGroup> ite = listOfGroups.iterator(); ite.hasNext();) {
 				DataCollectionGroup dcg = ite.next();
-				if (dcg.getWorkflowVO() != null
-						&& dcg.getWorkflowVO().getWorkflowType() != null
-						&& (dcg.getWorkflowVO().getWorkflowType().equals(Constants.WORKFLOW_MXPRESSO) || dcg.getWorkflowVO()
-								.getWorkflowType().equals(Constants.WORKFLOW_MXPRESSE))) {
+				if (dcg.getWorkflowVO()!=null && dcg.getWorkflowVO().isMXPressEOIA()){
 					sessionHasMXpressOWF = true;
 				}
 			}
@@ -570,8 +590,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			// view session summary
 			List<SessionDataObjectInformation> listSessionDataObjectInformation = new ArrayList<SessionDataObjectInformation>();
 			try {
-				listSessionDataObjectInformation = buildSessionDataInformation(dataCollectionList, energyScanList, xfeList,
-						proposalCode, proposalNumber, request);
+				listSessionDataObjectInformation = buildSessionDataInformation(dataCollectionList, energyScanList,
+						xfeList, proposalCode, proposalNumber, request);
 
 				request.getSession().setAttribute(Constants.SESSION_DATA_OBJECT_LIST, listSessionDataObjectInformation);
 			} catch (Exception e) {
@@ -589,7 +609,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			if (!isIndus) {
 				// Perform only for IFX proposal in case of MXPress experiment
 				if (proposalCode != null && proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) {
-					// for MXPress users, calculate number of Crystals of class 1(C),2(SC), 3(PS), T, E
+					// for MXPress users, calculate number of Crystals of class
+					// 1(C),2(SC), 3(PS), T, E
 					// initialization
 					List<Integer> listOfNbCrystalPerClass = new ArrayList<Integer>();
 					int nbCC = listOfCrystalClass.size();
@@ -695,8 +716,10 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 		} catch (Exception e) {
 			// errors.add(ActionMessages.GLOBAL_MESSAGE,
-			// new ActionMessage("error.user.collection.viewDataCollectionGroup"));
-			// errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			// new
+			// ActionMessage("error.user.collection.viewDataCollectionGroup"));
+			// errors.add(ActionMessages.GLOBAL_MESSAGE, new
+			// ActionMessage("errors.detail", e.toString()));
 			e.printStackTrace();
 			errors.add(e.toString());
 			HashMap<String, Object> data = new HashMap<String, Object>();
@@ -721,8 +744,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	}
 
 	/**
-	 * build the sessionDataObjectsList from the different list of collects, energy scan and xrfSpectra This list is then sorted by
-	 * time asc
+	 * build the sessionDataObjectsList from the different list of collects,
+	 * energy scan and xrfSpectra This list is then sorted by time asc
 	 * 
 	 * @param dataCollectionList
 	 * @param listEnergyScan
@@ -750,12 +773,14 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					for (int k = id + 1; k < nbCollect; k++) {
 						DataCollection3VO c = dataCollectionList.get(k);
 						if (c.getDataCollectionGroupVO().getWorkflowVO() != null
-								&& c.getDataCollectionGroupVO().getWorkflowVO().getWorkflowId().equals(workflow.getWorkflowId())) {
+								&& c.getDataCollectionGroupVO().getWorkflowVO().getWorkflowId()
+										.equals(workflow.getWorkflowId())) {
 							listDataCollection.add(c);
 							listDCStored.add(c.getDataCollectionId());
 						}
 					}
-					List<DataCollection3VO> sortedList = ViewSessionSummaryAction.getSortedDataCollectionList(listDataCollection);
+					List<DataCollection3VO> sortedList = ViewSessionSummaryAction
+							.getSortedDataCollectionList(listDataCollection);
 					listSessionDataObject.add(new SessionDataObject(workflow, sortedList));
 				}
 			}
@@ -846,14 +871,17 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		// parameters
 		List<Param> listParameters = new ArrayList<Param>();
 		listParameters.add(new Param(KEY_ELEMENT, "Element", energyScan.getElement(), false));
-		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (energyScan.getExposureTime() == null ? "" : (""
-				+ energyScan.getExposureTime() + " s")), false));
-		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission factor", (energyScan.getTransmissionFactor() == null ? "" : (""
-				+ energyScan.getTransmissionFactor() + " %")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (energyScan.getBeamSizeHorizontal() == null ? "" : (""
-				+ energyScan.getBeamSizeHorizontal() + " μm")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert", (energyScan.getBeamSizeVertical() == null ? "" : (""
-				+ energyScan.getBeamSizeVertical() + " μm")), false));
+		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (energyScan.getExposureTime() == null ? ""
+				: ("" + energyScan.getExposureTime() + " s")), false));
+		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission factor",
+				(energyScan.getTransmissionFactor() == null ? "" : ("" + energyScan.getTransmissionFactor() + " %")),
+				false));
+		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
+				(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " μm")),
+				false));
+		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+				(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " μm")),
+				false));
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(energyScan.getComments());
@@ -873,7 +901,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		listResults.add(new Param(KEY_INFLECTION_F_PRIME, "Inflection f'", ""
 				+ (energyScan.getInflectionFPrime() == null ? "" : energyScan.getInflectionFPrime() + ""), false));
 		listResults.add(new Param(KEY_INFLECTION_F_DOUBLE_PRIME, "Inflection f''", ""
-				+ (energyScan.getInflectionFDoublePrime() == null ? "" : energyScan.getInflectionFDoublePrime() + ""), false));
+				+ (energyScan.getInflectionFDoublePrime() == null ? "" : energyScan.getInflectionFDoublePrime() + ""),
+				false));
 		listResults.add(new Param(KEY_PEAK_ENERGY, "Peak Energy", ""
 				+ (energyScan.getPeakEnergy() == null ? "" : energyScan.getPeakEnergy() + " keV"), false));
 		listResults.add(new Param(KEY_PEAK_ENERGY_PRIME, "Peak f'", ""
@@ -895,14 +924,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setCrystalSnapshotPath("");
 		// parameters
 		List<Param> listParameters = new ArrayList<Param>();
-		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : Float.toString(xrfSpectrum
-				.getEnergy()), false));
-		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (xrfSpectrum.getExposureTime() == null ? "" : (""
-				+ xrfSpectrum.getExposureTime() + " s")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? "" : (""
-				+ xrfSpectrum.getBeamSizeHorizontal() + " μm")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert", (xrfSpectrum.getBeamSizeVertical() == null ? "" : (""
-				+ xrfSpectrum.getBeamSizeVertical() + " μm")), false));
+		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : Float
+				.toString(xrfSpectrum.getEnergy()), false));
+		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (xrfSpectrum.getExposureTime() == null ? ""
+				: ("" + xrfSpectrum.getExposureTime() + " s")), false));
+		listParameters
+				.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
+						: ("" + xrfSpectrum.getBeamSizeHorizontal() + " μm")), false));
+		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+				(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " μm")),
+				false));
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(xrfSpectrum.getComments());
@@ -916,7 +947,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		// results
 		String result = "";
 		int annotatedPymcaXfeSpectrumExists = PathUtils.fileExists(xrfSpectrum.getAnnotatedPymcaXfeSpectrum());
-		String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xrfSpectrum.getAnnotatedPymcaXfeSpectrum());
+		String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xrfSpectrum
+				.getAnnotatedPymcaXfeSpectrum());
 		if (annotatedPymcaXfeSpectrumExists == 0) {
 			result = "Html report not found: " + shortFileNameAnnotatedPymcaXfeSpectrum;
 		} else if (annotatedPymcaXfeSpectrumExists == 1) {
@@ -931,13 +963,14 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	}
 
 	private static SessionDataObjectInformation getSessionDataObjectForWorkflow(SessionDataObject sessionDataObject,
-			String proposalCode, String proposalNumber, HttpServletRequest request, List<DataCollection3VO> dataCollectionList,
-			AutoProcShellWrapper wrapper) throws Exception {
+			String proposalCode, String proposalNumber, HttpServletRequest request,
+			List<DataCollection3VO> dataCollectionList, AutoProcShellWrapper wrapper) throws Exception {
 		SessionDataObjectInformation info = new SessionDataObjectInformation(sessionDataObject);
 		Workflow3VO workflow = sessionDataObject.getWorkflow();
 
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		GridInfo3Service gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
+		GridInfo3Service gridInfoService = (GridInfo3Service) ejb3ServiceLocator
+				.getLocalService(GridInfo3Service.class);
 		ImageQualityIndicators3Service imageQualityIndicatorsService = (ImageQualityIndicators3Service) ejb3ServiceLocator
 				.getLocalService(ImageQualityIndicators3Service.class);
 
@@ -964,7 +997,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		// }
 		DataCollectionInformation dcInfo = null;
 		if (lastCollect != null) {
-			DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber, request);
+			DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
+					request);
 			dcInfo = dcExporter.getDataCollectionInformation(lastCollect, null, null);
 
 		}
@@ -994,7 +1028,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				sampleName = lastCollect.getDataCollectionGroupVO().getBlSampleVO().getName();
 				if (lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO() != null
 						&& lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO() != null) {
-					proteinAcronym = lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO().getAcronym();
+					proteinAcronym = lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO()
+							.getProteinVO().getAcronym();
 				}
 			}
 			info.setProteinAcronym(proteinAcronym);
@@ -1013,20 +1048,21 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			listParameters.add(new Param(KEY_NB_TOT_IMAGES, "Nb tot images", Integer.toString(nbTotImages), false));
 			if (workflow.isMXPress())
 				listParameters.add(new Param(KEY_NB_IMAGES, "Nb images", Integer.toString(nbTotImages), false));
-			listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exp. time", (dcInfo.getExposureTime().isEmpty() ? "" : dcInfo
-					.getExposureTime() + " s"), false));
-			listParameters.add(new Param(KEY_PHI_RANGE, "Phi range", (dcInfo.getAxisRange().isEmpty() ? "" : dcInfo.getAxisRange()
-					+ " " + Constants.DEGREE), false));
-			listParameters.add(new Param(KEY_FLUX, "Flux", (dcInfo.getFlux().isEmpty() ? "" : dcInfo.getFlux() + " ph/sec"), false));
-			listParameters.add(new Param(KEY_DETECTOR_RESOLUTION, "Detector resolution", (dcInfo.getResolution().isEmpty() ? ""
-					: dcInfo.getResolution() + " " + Constants.ANGSTROM), false));
-			listParameters.add(new Param(KEY_TRANSMISSION, "Transmission", (lastCollect.getTransmission() == null ? "" : df2
-					.format(lastCollect.getTransmission())), false));
-			listParameters.add(new Param(KEY_WAVELENGTH, "Wavelength", (dcInfo.getWavelength().isEmpty() ? "" : dcInfo.getWavelength()
-					+ " " + Constants.ANGSTROM), false));
-			listParameters.add(new Param(KEY_TOTAL_EXPOSURE_TIME, "Total expo time", (dcInfo.getTotalExposure().isEmpty() ? ""
-					: dcInfo.getTotalExposure() + " s"), false));
-			if (workflow.getWorkflowType().equals(Constants.WORKFLOW_MESHSCAN)) {
+			listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exp. time", (dcInfo.getExposureTime().isEmpty() ? ""
+					: dcInfo.getExposureTime() + " s"), false));
+			listParameters.add(new Param(KEY_PHI_RANGE, "Phi range", (dcInfo.getAxisRange().isEmpty() ? "" : dcInfo
+					.getAxisRange() + " " + Constants.DEGREE), false));
+			listParameters.add(new Param(KEY_FLUX, "Flux", (dcInfo.getFlux().isEmpty() ? "" : dcInfo.getFlux()
+					+ " ph/sec"), false));
+			listParameters.add(new Param(KEY_DETECTOR_RESOLUTION, "Detector resolution", (dcInfo.getResolution()
+					.isEmpty() ? "" : dcInfo.getResolution() + " " + Constants.ANGSTROM), false));
+			listParameters.add(new Param(KEY_TRANSMISSION, "Transmission", (lastCollect.getTransmission() == null ? ""
+					: df2.format(lastCollect.getTransmission())), false));
+			listParameters.add(new Param(KEY_WAVELENGTH, "Wavelength", (dcInfo.getWavelength().isEmpty() ? "" : dcInfo
+					.getWavelength() + " " + Constants.ANGSTROM), false));
+			listParameters.add(new Param(KEY_TOTAL_EXPOSURE_TIME, "Total expo time", (dcInfo.getTotalExposure()
+					.isEmpty() ? "" : dcInfo.getTotalExposure() + " s"), false));
+			if (workflow.isMeshMXpressM()) {
 				String meshSize = "";
 				// gridinfo dx_mm and dy_mm
 				if (listWorkflowMesh != null && listWorkflowMesh.size() > 0) {
@@ -1059,18 +1095,20 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			if (listWorkflowMesh != null && listWorkflowMesh.size() > 0) {
 				// in case of XRayCentring: Line bestImage
 				WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
-				boolean wfWith2Mesh = (workflow.getWorkflowType().equals(Constants.WORKFLOW_XRAYCENTERING) || workflow.isMXPress())
-						&& listWorkflowMesh.size() > 1;
+				boolean wfWith2Mesh = (workflow.getWorkflowType().equals(Constants.WORKFLOW_XRAYCENTERING) || workflow
+						.isMXPress()) && listWorkflowMesh.size() > 1;
 
 				if (wfWith2Mesh) {
 					workflowMesh = listWorkflowMesh.get(1);
 				}
 				if (workflowMesh != null) {
 					Image3VO bestImage = workflowMesh.getBestImageVO();
-					//TODO understand why the thumbnail is replaced by the one of the best image from the mesh ???
+					// TODO understand why the thumbnail is replaced by the one
+					// of the best image from the mesh ???
 					// because the jpg image is not replaced
-					// for now replace it only if no thumbnail 
-					// TODO remove this later because it is disturbing that the image is not pointing to the same than the thumbnail ?
+					// for now replace it only if no thumbnail
+					// TODO remove this later because it is disturbing that the
+					// image is not pointing to the same than the thumbnail ?
 					// TODO have more info and examples : bug #2515
 					if (bestImage != null && !info.isImageThumbnailExist()) {
 						String jpgThumbFullPath = bestImage.getJpegThumbnailFileFullPath();
@@ -1122,8 +1160,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			info.setListResults(listResults);
 			if (workflow.isMXPress()) {
 				// autoProcessing Result
-				info = getAutoProcResult(info, lastCollect, dcInfo, dataCollectionList, wrapper, proposalCode, proposalNumber,
-						request, false);
+				info = getAutoProcResult(info, lastCollect, dcInfo, dataCollectionList, wrapper, proposalCode,
+						proposalNumber, request, false);
 			} else {
 				// first: Mesh
 				// second :Line
@@ -1131,12 +1169,21 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
 
 					if (workflowMesh != null) {
-						listResults.add(new Param(KEY_V1, "V1", ""
-								+ (workflowMesh.getValue1() == null ? "" : df2.format(workflowMesh.getValue1())), false));
-						listResults.add(new Param(KEY_V2, "V2", ""
-								+ (workflowMesh.getValue2() == null ? "" : df2.format(workflowMesh.getValue2())), false));
-						listResults.add(new Param(KEY_N, "N", ""
-								+ (workflowMesh.getValue3() == null ? "" : df2.format(workflowMesh.getValue3())), false));
+						listResults
+								.add(new Param(KEY_V1, "V1",
+										""
+												+ (workflowMesh.getValue1() == null ? "" : df2.format(workflowMesh
+														.getValue1())), false));
+						listResults
+								.add(new Param(KEY_V2, "V2",
+										""
+												+ (workflowMesh.getValue2() == null ? "" : df2.format(workflowMesh
+														.getValue2())), false));
+						listResults
+								.add(new Param(KEY_N, "N",
+										""
+												+ (workflowMesh.getValue3() == null ? "" : df2.format(workflowMesh
+														.getValue3())), false));
 						// best position
 						if (workflowMesh.getBestImageVO() != null) {
 							Image3VO bestImage = workflowMesh.getBestImageVO();
@@ -1144,8 +1191,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 									+ bestImage.getImageNumber(), false));
 							// imageQualityIndicators
 							ImageQualityIndicators3VO quality = null;
-							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService.findByImageId(bestImage
-									.getImageId());
+							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService
+									.findByImageId(bestImage.getImageId());
 							if (listIQ != null && listIQ.size() > 0) {
 								quality = listIQ.get(0);
 							}
@@ -1153,11 +1200,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							String meshSig2 = "";
 							if (quality != null) {
 								meshSig1 = "" + (quality.getDozor_score() == null ? "" : quality.getDozor_score());
-								meshSig2 = "" + (quality.getTotalIntegratedSignal() == null ? "" : quality.getTotalIntegratedSignal());
+								meshSig2 = ""
+										+ (quality.getTotalIntegratedSignal() == null ? "" : quality
+												.getTotalIntegratedSignal());
 							}
-							// listResults.add(new Param("meshSignal1", "Mesh Signal 1", meshSig1, false));
-							// listResults.add(new Param("meshSignal2", "Mesh Signal 2", meshSig2, false));
-							listResults.add(new Param(KEY_MESH_SIGNAL, "Mesh Signal 1 / Signal2", meshSig1 + " / " + meshSig2, false));
+							// listResults.add(new Param("meshSignal1",
+							// "Mesh Signal 1", meshSig1, false));
+							// listResults.add(new Param("meshSignal2",
+							// "Mesh Signal 2", meshSig2, false));
+							listResults.add(new Param(KEY_MESH_SIGNAL, "Mesh Signal 1 / Signal2", meshSig1 + " / "
+									+ meshSig2, false));
 						}
 					}
 					// line
@@ -1169,8 +1221,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 									+ bestImageLine.getImageNumber(), false));
 							// imageQualityIndicators
 							ImageQualityIndicators3VO quality = null;
-							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService.findByImageId(bestImageLine
-									.getImageId());
+							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService
+									.findByImageId(bestImageLine.getImageId());
 							if (listIQ != null && listIQ.size() > 0) {
 								quality = listIQ.get(0);
 							}
@@ -1178,12 +1230,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							String lineSig2 = "";
 							if (quality != null) {
 								lineSig1 = "" + (quality.getDozor_score() == null ? "" : quality.getDozor_score());
-								lineSig2 = "" + (quality.getTotalIntegratedSignal() == null ? "" : quality.getTotalIntegratedSignal());
+								lineSig2 = ""
+										+ (quality.getTotalIntegratedSignal() == null ? "" : quality
+												.getTotalIntegratedSignal());
 							}
-							// listResults.add(new Param("lineSigna1", "Line Signal 1", lineSig1, false));
-							// listResults.add(new Param("lineSignal2", "Line Signal 2",lineSig2, false));
-							listResults
-									.add(new Param(KEY_LINE_SIGNAL, "Line Signal 1 / Signal 2", lineSig1 + " / " + lineSig2, false));
+							// listResults.add(new Param("lineSigna1",
+							// "Line Signal 1", lineSig1, false));
+							// listResults.add(new Param("lineSignal2",
+							// "Line Signal 2",lineSig2, false));
+							listResults.add(new Param(KEY_LINE_SIGNAL, "Line Signal 1 / Signal 2", lineSig1 + " / "
+									+ lineSig2, false));
 						}
 					}
 				}
@@ -1196,8 +1252,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	}
 
 	private static SessionDataObjectInformation getSessionDataObjectForCollect(SessionDataObject sessionDataObject,
-			String proposalCode, String proposalNumber, HttpServletRequest request, List<DataCollection3VO> dataCollectionList,
-			AutoProcShellWrapper wrapper) throws Exception {
+			String proposalCode, String proposalNumber, HttpServletRequest request,
+			List<DataCollection3VO> dataCollectionList, AutoProcShellWrapper wrapper) throws Exception {
 
 		SessionDataObjectInformation info = new SessionDataObjectInformation(sessionDataObject);
 		DataCollection3VO dataCollection = sessionDataObject.getDataCollection();
@@ -1222,7 +1278,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			sampleName = dataCollection.getDataCollectionGroupVO().getBlSampleVO().getName();
 			if (dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO() != null
 					&& dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO() != null) {
-				proteinAcronym = dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO().getAcronym();
+				proteinAcronym = dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO()
+						.getProteinVO().getAcronym();
 			}
 		}
 		info.setProteinAcronym(proteinAcronym);
@@ -1241,17 +1298,18 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		listParameters.add(new Param(KEY_NB_IMAGES, "Nb images", dcInfo.getNumberOfImages(), false));
 		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exp. time", (dcInfo.getExposureTime().isEmpty() ? "" : dcInfo
 				.getExposureTime() + " s"), false));
-		listParameters.add(new Param(KEY_PHI_RANGE, "Phi range", (dcInfo.getAxisRange().isEmpty() ? "" : dcInfo.getAxisRange() + " "
-				+ Constants.DEGREE), false));
-		listParameters.add(new Param(KEY_FLUX, "Flux", (dcInfo.getFlux().isEmpty() ? "" : dcInfo.getFlux() + " ph/sec"), false));
-		listParameters.add(new Param(KEY_DETECTOR_RESOLUTION, "Detector resolution", (dcInfo.getResolution().isEmpty() ? "" : dcInfo
-				.getResolution() + " " + Constants.ANGSTROM), false));
-		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission", (dataCollection.getTransmission() == null ? "" : df2
-				.format(dataCollection.getTransmission())), false));
-		listParameters.add(new Param(KEY_WAVELENGTH, "Wavelength", (dcInfo.getWavelength().isEmpty() ? "" : dcInfo.getWavelength()
-				+ " " + Constants.ANGSTROM), false));
-		listParameters.add(new Param(KEY_TOTAL_EXPOSURE_TIME, "Total expo time", (dcInfo.getTotalExposure().isEmpty() ? "" : dcInfo
-				.getTotalExposure() + " s"), false));
+		listParameters.add(new Param(KEY_PHI_RANGE, "Phi range", (dcInfo.getAxisRange().isEmpty() ? "" : dcInfo
+				.getAxisRange() + " " + Constants.DEGREE), false));
+		listParameters.add(new Param(KEY_FLUX, "Flux",
+				(dcInfo.getFlux().isEmpty() ? "" : dcInfo.getFlux() + " ph/sec"), false));
+		listParameters.add(new Param(KEY_DETECTOR_RESOLUTION, "Detector resolution",
+				(dcInfo.getResolution().isEmpty() ? "" : dcInfo.getResolution() + " " + Constants.ANGSTROM), false));
+		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission", (dataCollection.getTransmission() == null ? ""
+				: df2.format(dataCollection.getTransmission())), false));
+		listParameters.add(new Param(KEY_WAVELENGTH, "Wavelength", (dcInfo.getWavelength().isEmpty() ? "" : dcInfo
+				.getWavelength() + " " + Constants.ANGSTROM), false));
+		listParameters.add(new Param(KEY_TOTAL_EXPOSURE_TIME, "Total expo time",
+				(dcInfo.getTotalExposure().isEmpty() ? "" : dcInfo.getTotalExposure() + " s"), false));
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(dcInfo.getComments());
@@ -1270,14 +1328,19 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setCrystalSnapshotPath(crystalSnapshotPath);
 		// graph, results depending of the type of the object
 		// CHARACTERIZATION
-		if (dataCollection.getDataCollectionGroupVO().getExperimentType().equals(Constants.EXPERIMENT_TYPE_CHARACTERIZATION)) {
+		if (dataCollection.getDataCollectionGroupVO().getExperimentType()
+				.equals(Constants.EXPERIMENT_TYPE_CHARACTERIZATION)) {
 			info = buildInfoForCharacterization(info, dcInfo);
-		} else {// if (dataCollection.getDataCollectionGroupVO().getExperimentType().equalsIgnoreCase("OSC") ||
-				// dataCollection.getDataCollectionGroupVO().getExperimentType().equals("SAD") ||
-				// dataCollection.getDataCollectionGroupVO().getExperimentType().equals("Helical")){ // OSC or SAD or
+		} else {// if
+				// (dataCollection.getDataCollectionGroupVO().getExperimentType().equalsIgnoreCase("OSC")
+				// ||
+				// dataCollection.getDataCollectionGroupVO().getExperimentType().equals("SAD")
+				// ||
+				// dataCollection.getDataCollectionGroupVO().getExperimentType().equals("Helical")){
+				// // OSC or SAD or
 				// Helical
-			info = buildInfoWithAutoProcResults(info, dcInfo, dataCollection, dataCollectionList, wrapper, proposalCode,
-					proposalNumber, request);
+			info = buildInfoWithAutoProcResults(info, dcInfo, dataCollection, dataCollectionList, wrapper,
+					proposalCode, proposalNumber, request);
 
 		}
 
@@ -1285,15 +1348,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	}
 
 	private List<SessionDataObjectInformation> buildSessionDataInformation(List<DataCollection3VO> dataCollectionList,
-			List<EnergyScan3VO> energyScanList, List<XFEFluorescenceSpectrum3VO> xfeList, String proposalCode, String proposalNumber,
-			HttpServletRequest request) throws Exception {
+			List<EnergyScan3VO> energyScanList, List<XFEFluorescenceSpectrum3VO> xfeList, String proposalCode,
+			String proposalNumber, HttpServletRequest request) throws Exception {
 		// auto proc wrapper
 		double rMerge = 10.0;
 		double iSigma = 1.0;
-		AutoProcShellWrapper wrapper = ViewDataCollectionAction.getAutoProcStatistics(dataCollectionList, rMerge, iSigma);
+		AutoProcShellWrapper wrapper = ViewDataCollectionAction.getAutoProcStatistics(dataCollectionList, rMerge,
+				iSigma);
 
-		List<SessionDataObject> listSessionDataObject = ViewSessionSummaryAction.getSessionDataObjects(dataCollectionList,
-				energyScanList, xfeList);
+		List<SessionDataObject> listSessionDataObject = ViewSessionSummaryAction.getSessionDataObjects(
+				dataCollectionList, energyScanList, xfeList);
 
 		List<SessionDataObjectInformation> listSessionDataObjectInformation = new ArrayList<SessionDataObjectInformation>();
 
@@ -1302,11 +1366,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			SessionDataObjectInformation info = new SessionDataObjectInformation(sessionDataObject);
 
 			if (sessionDataObject.isDataCollection()) { // COLLECT
-				info = ViewSessionSummaryAction.getSessionDataObjectForCollect(sessionDataObject, proposalCode, proposalNumber,
-						request, dataCollectionList, wrapper);
+				info = ViewSessionSummaryAction.getSessionDataObjectForCollect(sessionDataObject, proposalCode,
+						proposalNumber, request, dataCollectionList, wrapper);
 			} else if (sessionDataObject.isWorkflow()) { // WORKFLOW
-				info = ViewSessionSummaryAction.getSessionDataObjectForWorkflow(sessionDataObject, proposalCode, proposalNumber,
-						request, dataCollectionList, wrapper);
+				info = ViewSessionSummaryAction.getSessionDataObjectForWorkflow(sessionDataObject, proposalCode,
+						proposalNumber, request, dataCollectionList, wrapper);
 			} else if (sessionDataObject.isEnergyScan()) { // ENERGY SCAN
 				info = ViewSessionSummaryAction.getSessionDataObjectForEnergyScan(sessionDataObject);
 			} else if (sessionDataObject.isXRFSpectra()) { // XRF SPECTRA
@@ -1360,33 +1424,36 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		}
 		listResults.add(new Param(KEY_UNIT_CELL_TITLE, "Unit Cell", "", false));
 		listResults.add(new Param(KEY_UNIT_CELL, "a, b, c", unitCells, false));
-		listResults.add(new Param(KEY_UNIT_CELL2, Constants.ALPHA + " " + Constants.BETA + " " + Constants.GAMMA, unitCells2, false));
-		listResults.add(new Param(KEY_MOSAICITY, "Mosaicity", (dcInfo.getMosaicity().isEmpty() ? "" : dcInfo.getMosaicity() + " "
-				+ Constants.DEGREE), false));
-		listResults.add(new Param(KEY_RANKING_RESOLUTION, "Ranking Resolution", (dcInfo.getResObserved().isEmpty() ? "" : dcInfo
-				.getResObserved() + " " + Constants.ANGSTROM), false));
+		listResults.add(new Param(KEY_UNIT_CELL2, Constants.ALPHA + " " + Constants.BETA + " " + Constants.GAMMA,
+				unitCells2, false));
+		listResults.add(new Param(KEY_MOSAICITY, "Mosaicity", (dcInfo.getMosaicity().isEmpty() ? "" : dcInfo
+				.getMosaicity() + " " + Constants.DEGREE), false));
+		listResults.add(new Param(KEY_RANKING_RESOLUTION, "Ranking Resolution", (dcInfo.getResObserved().isEmpty() ? ""
+				: dcInfo.getResObserved() + " " + Constants.ANGSTROM), false));
 		info.setListResults(listResults);
 
 		return info;
 	}
 
 	private static SessionDataObjectInformation buildInfoWithAutoProcResults(SessionDataObjectInformation info,
-			DataCollectionInformation dcInfo, DataCollection3VO dataCollection, List<DataCollection3VO> dataCollectionList,
-			AutoProcShellWrapper wrapper, String proposalCode, String proposalNumber, HttpServletRequest request) throws Exception {
+			DataCollectionInformation dcInfo, DataCollection3VO dataCollection,
+			List<DataCollection3VO> dataCollectionList, AutoProcShellWrapper wrapper, String proposalCode,
+			String proposalNumber, HttpServletRequest request) throws Exception {
 
 		info.setGraphExist(false);
 		info.setGraphPath(null);
 
-		info = getAutoProcResult(info, dataCollection, dcInfo, dataCollectionList, wrapper, proposalCode, proposalNumber, request,
-				true);
+		info = getAutoProcResult(info, dataCollection, dcInfo, dataCollectionList, wrapper, proposalCode,
+				proposalNumber, request, true);
 
 		return info;
 	}
 
 	@SuppressWarnings("unchecked")
-	private static SessionDataObjectInformation getAutoProcResult(SessionDataObjectInformation info, DataCollection3VO dataCollection,
-			DataCollectionInformation dcInfo, List<DataCollection3VO> dataCollectionList, AutoProcShellWrapper wrapper,
-			String proposalCode, String proposalNumber, HttpServletRequest request, boolean withGraph) throws Exception {
+	private static SessionDataObjectInformation getAutoProcResult(SessionDataObjectInformation info,
+			DataCollection3VO dataCollection, DataCollectionInformation dcInfo,
+			List<DataCollection3VO> dataCollectionList, AutoProcShellWrapper wrapper, String proposalCode,
+			String proposalNumber, HttpServletRequest request, boolean withGraph) throws Exception {
 		String result = "";
 		if (info.getResult() != null && !info.getResult().isEmpty()) {
 			result = info.getResult() + "<br />";
@@ -1434,8 +1501,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 						List<AutoProcessingData> listAutoProcessingData = (List<AutoProcessingData>) o[2];
 						if (xscaleFile && withGraph) {
 							info.setGraphData(listAutoProcessingData);
-							info.setGraphPath(request.getRealPath(Constants.TEMPLATE_RELATIVE_DIRECTORY_PATH + proposalCode
-									+ proposalNumber + "_chart_" + xscaleAtt.getAutoProcProgramAttachmentId() + ".png"));
+							info.setGraphPath(request.getRealPath(Constants.TEMPLATE_RELATIVE_DIRECTORY_PATH
+									+ proposalCode + proposalNumber + "_chart_"
+									+ xscaleAtt.getAutoProcProgramAttachmentId() + ".png"));
 						}
 
 					} catch (Exception e) {
@@ -1484,13 +1552,18 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				String resolutionString = new String();
 				if (autoProcOverall != null && autoProcInner != null && autoProcOuter != null) {
 					completenessString += df2.format(autoProcInner.getCompleteness()) + ","
-							+ df2.format(autoProcOuter.getCompleteness()) + "," + df2.format(autoProcOverall.getCompleteness());
-					rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner.getRmerge())) + "<br/>"
-							+ (autoProcOuter.getRmerge() == null ? "" : df2.format(autoProcOuter.getRmerge())) + "<br/>"
+							+ df2.format(autoProcOuter.getCompleteness()) + ","
+							+ df2.format(autoProcOverall.getCompleteness());
+					rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner.getRmerge()))
+							+ "<br/>"
+							+ (autoProcOuter.getRmerge() == null ? "" : df2.format(autoProcOuter.getRmerge()))
+							+ "<br/>"
 							+ (autoProcOverall.getRmerge() == null ? "" : df2.format(autoProcOverall.getRmerge()));
-					resolutionString += autoProcInner.getResolutionLimitLow() + " - " + autoProcInner.getResolutionLimitHigh()
-							+ "<br/>" + autoProcOuter.getResolutionLimitLow() + " - " + autoProcOuter.getResolutionLimitHigh()
-							+ "<br/>" + autoProcOverall.getResolutionLimitLow() + " - " + autoProcOverall.getResolutionLimitHigh();
+					resolutionString += autoProcInner.getResolutionLimitLow() + " - "
+							+ autoProcInner.getResolutionLimitHigh() + "<br/>" + autoProcOuter.getResolutionLimitLow()
+							+ " - " + autoProcOuter.getResolutionLimitHigh() + "<br/>"
+							+ autoProcOverall.getResolutionLimitLow() + " - "
+							+ autoProcOverall.getResolutionLimitHigh();
 				}
 				// unit cell
 				String unitCell = "";
@@ -1524,8 +1597,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	 * @param response
 	 * @throws Exception
 	 */
-	public void saveAllData(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public void saveAllData(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		try {
 			String comments;
 			String crystalClass = null;
@@ -1555,9 +1628,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							oFromDB.setCrystalClass(crystalClass);
 						}
 						energyScanService.update(oFromDB);
-						LOG.debug("update energyScan: ID=" + o.getEnergyScan().getEnergyScanId() + "   COMMENTS=" + comments);
+						LOG.debug("update energyScan: ID=" + o.getEnergyScan().getEnergyScanId() + "   COMMENTS="
+								+ comments);
 					} else if (o.isXRFSpectra()) {
-						XFEFluorescenceSpectrum3VO oFromDB = xfeService.findByPk(o.getXrfSpectra().getXfeFluorescenceSpectrumId());
+						XFEFluorescenceSpectrum3VO oFromDB = xfeService.findByPk(o.getXrfSpectra()
+								.getXfeFluorescenceSpectrumId());
 						comments = o.getComments();
 						if (comments == null) {
 							comments = "";
@@ -1568,11 +1643,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							oFromDB.setCrystalClass(crystalClass);
 						}
 						xfeService.update(oFromDB);
-						LOG.debug("update xrfSpectra: ID=" + o.getXrfSpectra().getXfeFluorescenceSpectrumId() + "   COMMENTS="
-								+ comments);
+						LOG.debug("update xrfSpectra: ID=" + o.getXrfSpectra().getXfeFluorescenceSpectrumId()
+								+ "   COMMENTS=" + comments);
 					} else if (o.isDataCollection()) {
-						DataCollection3VO oFromDB = dataCollectionService.findByPk(o.getDataCollection().getDataCollectionId(), false,
-								false, false);
+						DataCollection3VO oFromDB = dataCollectionService.findByPk(o.getDataCollection()
+								.getDataCollectionId(), false, false, false);
 						comments = o.getComments();
 						if (comments != null) {
 							oFromDB.setComments(comments);
@@ -1585,8 +1660,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							dcGroupVO.setCrystalClass(crystalClass);
 						}
 						dataCollectionGroupService.update(dcGroupVO);
-						LOG.debug("update dataCollectionGroup: ID=" + o.getDataCollection().getDataCollectionGroupVOId()
-								+ "   COMMENTS=" + comments);
+						LOG.debug("update dataCollectionGroup: ID="
+								+ o.getDataCollection().getDataCollectionGroupVOId() + "   COMMENTS=" + comments);
 					} else if (o.isDataCollectionGroup()) {
 						DataCollectionGroup3VO oFromDB = dataCollectionGroupService.findByPk(o.getDataCollectionGroup()
 								.getDataCollectionGroupId(), true);
@@ -1601,12 +1676,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							oFromDB.setCrystalClass(crystalClass);
 						}
 						dataCollectionGroupService.update(oFromDB);
-						LOG.debug("update dataCollectionGroup: ID=" + o.getDataCollectionGroup().getDataCollectionGroupId()
-								+ "   COMMENTS=" + comments);
+						LOG.debug("update dataCollectionGroup: ID="
+								+ o.getDataCollectionGroup().getDataCollectionGroupId() + "   COMMENTS=" + comments);
 
 					} else if (o.isWorkflow()) {
-						List<DataCollectionGroup3VO> listGroup = dataCollectionGroupService.findByWorkflow(o.getWorkflow()
-								.getWorkflowId());
+						List<DataCollectionGroup3VO> listGroup = dataCollectionGroupService.findByWorkflow(o
+								.getWorkflow().getWorkflowId());
 						DataCollectionGroup3VO oFromDB = null;
 						if (listGroup != null && listGroup.size() > 0) {
 							oFromDB = listGroup.get(0);
@@ -1623,8 +1698,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 							oFromDB.setCrystalClass(crystalClass);
 						}
 						dataCollectionGroupService.update(oFromDB);
-						LOG.debug("update wf dataCollectionGroup: ID=" + oFromDB.getDataCollectionGroupId() + "   COMMENTS="
-								+ comments);
+						LOG.debug("update wf dataCollectionGroup: ID=" + oFromDB.getDataCollectionGroupId()
+								+ "   COMMENTS=" + comments);
 					}
 				}
 
@@ -1642,5 +1717,5 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		String pageNumber = request.getParameter("sessionReportCurrentPageNumber");
 		request.getSession().setAttribute("sessionReportCurrentPageNumber", pageNumber);
 		request.getSession().setAttribute("forSessionId", request.getParameter("sessionId"));
-	}
+	}	
 }

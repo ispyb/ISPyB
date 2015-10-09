@@ -20,6 +20,7 @@ package ispyb.client.mx.collection;
 
 import java.util.List;
 
+import ispyb.common.util.Constants;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 
