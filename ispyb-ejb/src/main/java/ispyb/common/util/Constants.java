@@ -366,6 +366,12 @@ public final class Constants {
 	public static final String WORKFLOW_XRAYCENTERING = "XrayCentering";
 
 	public static final String WORKFLOW_MXPRESSO = "MXPressO";
+	
+	public static final String WORKFLOW_MXPRESSI = "MXPressI";
+	
+	public static final String WORKFLOW_MXPRESSM = "MXPressM";
+	
+	public static final String WORKFLOW_MXPRESSA = "MXPressA";
 
 	public static final String WORKFLOW_MXPRESSE = "MXPressE";
 

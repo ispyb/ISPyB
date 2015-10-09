@@ -34,10 +34,10 @@ import javax.persistence.Table;
 import org.apache.log4j.Logger;
 
 /**
- * Workflow3 value object mapping table Workflow
- * the resultFilePath contains the path of the directory 
- * where the result web pages from the workflow are stored.
- * ISPyB displays all index.html that are stored in this directory or subdirectory, sorted by alphabetical order.
+ * Workflow3 value object mapping table Workflow the resultFilePath contains the
+ * path of the directory where the result web pages from the workflow are
+ * stored. ISPyB displays all index.html that are stored in this directory or
+ * subdirectory, sorted by alphabetical order.
  * 
  */
 @Entity
@@ -46,8 +46,10 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 
 	private final static Logger LOG = Logger.getLogger(Workflow3VO.class);
 
-	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
-	// this prevents later invalid class version exceptions when the value object evolves
+	// generate the serialVersionUID using the 'serialver' tool of java and
+	// enter it here
+	// this prevents later invalid class version exceptions when the value
+	// object evolves
 	private static final long serialVersionUID = 1234567901234567890L;
 
 	@Id
@@ -57,35 +59,34 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "workflowTitle")
 	protected String workflowTitle;
-	
+
 	@Column(name = "workflowType")
 	protected String workflowType;
-	
+
 	@Column(name = "comments")
 	protected String comments;
-	
+
 	@Column(name = "status")
 	protected String status;
-	
+
 	@Column(name = "resultFilePath")
 	protected String resultFilePath;
-	
+
 	@Column(name = "logFilePath")
 	protected String logFilePath;
-	
+
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
-	
+
 	@Column(name = "proposalId")
 	protected Integer proposalId;
-	
+
 	public Workflow3VO() {
 		super();
 	}
 
-	public Workflow3VO(Integer workflowId, String workflowTitle,
-			String workflowType, String comments, String status,
-			String resultFilePath, String logFilePath,  Date recordTimeStamp) {
+	public Workflow3VO(Integer workflowId, String workflowTitle, String workflowType, String comments, String status,
+			String resultFilePath, String logFilePath, Date recordTimeStamp) {
 		super();
 		this.workflowId = workflowId;
 		this.workflowTitle = workflowTitle;
@@ -96,7 +97,7 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 		this.logFilePath = logFilePath;
 		this.recordTimeStamp = recordTimeStamp;
 	}
-	
+
 	public Workflow3VO(Workflow3VO vo) {
 		super();
 		this.workflowId = vo.getWorkflowId();
@@ -108,7 +109,6 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 		this.logFilePath = vo.getLogFilePath();
 		this.recordTimeStamp = vo.getRecordTimeStamp();
 	}
-	
 
 	public Integer getWorkflowId() {
 		return workflowId;
@@ -175,10 +175,14 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	/**
-	 * Checks the values of this value object for correctness and
-	 * completeness. Should be done before persisting the data in the DB.
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
-	 * @throws Exception if the data of the value object is not correct
+	 * Checks the values of this value object for correctness and completeness.
+	 * Should be done before persisting the data in the DB.
+	 * 
+	 * @param create
+	 *            should be true if the value object is just being created in
+	 *            the DB, this avoids some checks like testing the primary key
+	 * @throws Exception
+	 *             if the data of the value object is not correct
 	 */
 	public void checkValues(boolean create) throws Exception {
 		int maxLengthWorkflowTitle = 255;
@@ -186,54 +190,90 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 		int maxLengthStatus = 255;
 		int maxLengthResultFilePath = 255;
 		int maxLengthLogFilePath = 255;
-		
-		
-		String[] listWorkflowType = {"BioSAXS Post Processing", "Undefined","EnhancedCharacterisation","LineScan","MeshScan","XrayCentering","DiffractionTomography","Dehydration","BurnStrategy", "KappaReorientation", "TroubleShooting", "VisualReorientation",  "Massif1", "Massif2", "HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore"};
-		
+
+		String[] listWorkflowType = { "BioSAXS Post Processing", "Undefined", "EnhancedCharacterisation", "LineScan",
+				"MeshScan", "XrayCentering", "DiffractionTomography", "Dehydration", "BurnStrategy",
+				"KappaReorientation", "TroubleShooting", "VisualReorientation", "Massif1", "Massif2",
+				"HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore" };
+
 		// workflowTitle
-		if(!StringUtils.isStringLengthValid(this.workflowTitle, maxLengthWorkflowTitle))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "workflowTitle", maxLengthWorkflowTitle));
+		if (!StringUtils.isStringLengthValid(this.workflowTitle, maxLengthWorkflowTitle))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "workflowTitle",
+					maxLengthWorkflowTitle));
 		// workflowType
-		if(!StringUtils.isStringInPredefinedList(this.workflowType, listWorkflowType, true))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("Workflow", "workflowType", listWorkflowType));
+		if (!StringUtils.isStringInPredefinedList(this.workflowType, listWorkflowType, true))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("Workflow", "workflowType",
+					listWorkflowType));
 		// comments
-		if(!StringUtils.isStringLengthValid(this.comments, maxLengthComments))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "comments", maxLengthComments));
+		if (!StringUtils.isStringLengthValid(this.comments, maxLengthComments))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "comments",
+					maxLengthComments));
 		// status
-		if(!StringUtils.isStringLengthValid(this.status, maxLengthStatus))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "status", maxLengthStatus));
+		if (!StringUtils.isStringLengthValid(this.status, maxLengthStatus))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "status",
+					maxLengthStatus));
 		// resultFilePath
-		if(!StringUtils.isStringLengthValid(this.resultFilePath, maxLengthResultFilePath))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "resultFilePath", maxLengthResultFilePath));
+		if (!StringUtils.isStringLengthValid(this.resultFilePath, maxLengthResultFilePath))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "resultFilePath",
+					maxLengthResultFilePath));
 		// logFilePath
-		if(!StringUtils.isStringLengthValid(this.logFilePath, maxLengthLogFilePath))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "logFilePath", maxLengthLogFilePath));
+		if (!StringUtils.isStringLengthValid(this.logFilePath, maxLengthLogFilePath))
+			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "logFilePath",
+					maxLengthLogFilePath));
 	}
 
 	/**
-	 * used to clone an entity to set the linked collectio9ns to null, for webservices
+	 * used to clone an entity to set the linked collectio9ns to null, for
+	 * webservices
 	 */
 	@Override
 	public Workflow3VO clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 		return (Workflow3VO) super.clone();
 	}
-	
-	public String toWSString(){
-		String s = "workflowId="+this.workflowId +", "+
-		"workflowTitle="+this.workflowTitle+", "+
-		"workflowType="+this.workflowType+", "+
-		"comments="+this.comments+", "+
-		"status="+this.status+", "+
-		"resultFilePath="+this.resultFilePath+", "+
-		"logFilePath="+this.logFilePath+", "+
-		"recordTimeStamp="+this.recordTimeStamp+", ";
-		
+
+	public String toWSString() {
+		String s = "workflowId=" + this.workflowId + ", " + "workflowTitle=" + this.workflowTitle + ", "
+				+ "workflowType=" + this.workflowType + ", " + "comments=" + this.comments + ", " + "status="
+				+ this.status + ", " + "resultFilePath=" + this.resultFilePath + ", " + "logFilePath="
+				+ this.logFilePath + ", " + "recordTimeStamp=" + this.recordTimeStamp + ", ";
+
 		return s;
 	}
+
+	public boolean isMXPress() {
+		return this.workflowType != null
+				&& (this.workflowType.equals(Constants.WORKFLOW_MXPRESSE)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSO)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSL) || this.workflowType
+							.equals(Constants.WORKFLOW_MXScore));
+	}
+
+	public boolean isMXPressOI(){
+		return this.workflowType != null
+				&& ( this.workflowType.equals(Constants.WORKFLOW_MXPRESSO)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSI)
+						);
+	}
 	
-	public boolean isMXPress(){
-		return this.workflowType != null && (this.workflowType.equals(Constants.WORKFLOW_MXPRESSE) || this.workflowType.equals(Constants.WORKFLOW_MXPRESSO)||  this.workflowType.equals(Constants.WORKFLOW_MXPRESSL) || this.workflowType.equals(Constants.WORKFLOW_MXScore));
+	public boolean isMXPressEA(){
+		return this.workflowType != null
+				&& (this.workflowType.equals(Constants.WORKFLOW_MXPRESSE)						
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSA));
+	}
+	
+	public boolean isMXPressEOIA(){
+		return this.workflowType != null
+				&& (this.workflowType.equals(Constants.WORKFLOW_MXPRESSE)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSO)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSI)
+						|| this.workflowType.equals(Constants.WORKFLOW_MXPRESSA));
+	}
+	
+	public boolean isMeshMXpressM(){
+		return this.workflowType != null
+				&& (this.workflowType.equals(Constants.WORKFLOW_MXPRESSM)
+						|| this.workflowType.equals(Constants.WORKFLOW_MESHSCAN));
 	}
 
 	public Integer getProposalId() {
