@@ -1,4 +1,11 @@
 **************
+* 09.10.2015     *
+**************
+
+- Action #2538 : new workflows
+- Code refactoring : properties, profile, SMIS WS
+
+**************
 * 29.09.2015     *
 **************
 
