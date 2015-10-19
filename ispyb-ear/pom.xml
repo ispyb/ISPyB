@@ -61,7 +61,7 @@
 				 		<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ws</artifactId>
-							<contextRoot>/ispyb-ws</contextRoot>
+							<contextRoot>/ispyb/ispyb-ws</contextRoot>
 						</webModule>
 						 
 						<webModule>
