@@ -21,6 +21,7 @@ package ispyb.ws.soap.crims;
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
 import ispyb.server.biosaxs.services.BiosaxsServices;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
@@ -56,6 +57,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -91,9 +93,81 @@ public class CrimsWebService {
 		return "echo from server...";
 	}
 
+	private SaxsProposal3Service getSaxsProposal3Service() throws NamingException{
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		return (SaxsProposal3Service) ejb3ServiceLocator.getLocalService(SaxsProposal3Service.class);
+	}
+	
+	private Proposal3Service getProposal3Service() throws NamingException{
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		return (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+		
+	}
+	
+	/**
+	 * Method to be called with user credentials and will get all the proteins linked to that user
+	 * @return
+	 * @throws Exception
+	 */
 	@WebMethod
 	@WebResult(name = "listProteinAcronyms")
-	public List<String> findProteinAcronymsForProposal(
+	public String findProteinAcronyms() throws Exception {
+		long id = 0;
+		try {
+			String userName = sessionContext.getCallerPrincipal().getName();
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("userName", String.valueOf(userName));
+			id = this.logInit("findProteinAcronyms", new Gson().toJson(params));
+			
+			List<Proposal3VO> proposals = getSaxsProposal3Service().findProposalByLoginName(userName);
+			HashMap<String, List<String>> listProteinAcronyms = new HashMap<String, List<String>>();
+			
+			for (Proposal3VO proposal3vo : proposals) {
+				List<Proposal3VO> filled = getProposal3Service().findByCodeAndNumber(proposal3vo.getCode(), proposal3vo.getNumber(), false, true, false);
+				if (filled.size() > 0){
+					for (Proposal3VO proposal3vo2 : filled) {
+						listProteinAcronyms.put(proposal3vo2.getCode() + proposal3vo2.getNumber(), this.getProteinAcronymByProposal(proposal3vo2));
+					}
+				}
+			}
+			
+			this.logFinish("findProteinAcronyms", id);
+			return getGson().toJson(listProteinAcronyms);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOG, LoggerFormatter.Package.CRIMS_WS_ERROR, "findProteinAcronyms", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	private List<String> getProteinAcronymByProposal(Proposal3VO proposal){
+		List<String> listProteinAcronyms = new ArrayList<String>();
+		Set<Protein3VO> proteinVOs = proposal.getProteinVOs();
+		if (proteinVOs != null) {
+			List<Protein3VO> listProtein = new ArrayList<Protein3VO>(Arrays.asList(proteinVOs
+					.toArray(new Protein3VO[proteinVOs.size()])));
+			for (Iterator<Protein3VO> p = listProtein.iterator(); p.hasNext();) {
+				listProteinAcronyms.add(p.next().getAcronym());
+			}
+		}
+		return listProteinAcronyms;
+	}
+	
+//	private HashMap<String, List<String>> getProteinAcronymByProposals(List<Proposal3VO> proposals){
+//		HashMap<String, List<String>> listAcronyms = new HashMap<String, List<String>>();
+//		if (proposals != null && proposals.size() > 0) {
+//			for (Proposal3VO proposal3vo : proposals) {
+//				listAcronyms.put(proposal3vo.getCode() + proposal3vo.getNumber(), this.getProteinAcronymByProposal(proposal3vo));	
+//			}
+//		}
+//		return listAcronyms;
+//	}
+//	
+	
+	@WebMethod
+	@WebResult(name = "listProteinAcronyms")
+	public String findProteinAcronymsForProposal(
 			@WebParam(name = "proposalCode")String proposalCode, @WebParam(name = "proposalNumber")
 	String proposalNumber) throws Exception {
 		long id = 0;
@@ -121,10 +195,9 @@ public class CrimsWebService {
 						listProteinAcronyms.add(p.next().getAcronym());
 					}
 				}
-
 			}
 			this.logFinish("findProteinAcronymsForProposal", id);
-			return listProteinAcronyms;
+			return getGson().toJson(listProteinAcronyms);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LoggerFormatter.log(LOG, LoggerFormatter.Package.CRIMS_WS_ERROR, "findProteinAcronymsForProposal", id,
