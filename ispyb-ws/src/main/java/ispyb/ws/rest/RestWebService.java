@@ -15,8 +15,12 @@ import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
 import ispyb.server.common.services.config.MenuGroup3Service;
 import ispyb.server.common.services.login.Login3Service;
 import ispyb.server.common.services.proposals.LabContact3Service;
+import ispyb.server.common.services.proposals.Laboratory3Service;
+import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
 import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
@@ -25,6 +29,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.Session3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -91,6 +96,12 @@ public class RestWebService {
 		return Response.noContent().build();
 	}
 	
+	protected Response downloadFile(byte[] bs, String fileName) {
+		ResponseBuilder response = Response.ok((Object) bs);
+		response.header("Content-Disposition", "attachment; filename=" + fileName);
+		return response.build();
+	}
+	
 	
 	/** TODO: it does not work when retrieving using Constants class **/
 	protected String getFolderForUploads() {
@@ -148,6 +159,18 @@ public class RestWebService {
 		return (External3Service) Ejb3ServiceLocator.getInstance().getLocalService(External3Service.class);
 	}
 	
+	protected DewarTransportHistory3Service getDewarTransportHistory3Service() throws NamingException {
+		return (DewarTransportHistory3Service) Ejb3ServiceLocator.getInstance().getLocalService(DewarTransportHistory3Service.class);
+	}
+	
+	protected Protein3Service getProtein3Service() throws NamingException {
+		return (Protein3Service) Ejb3ServiceLocator.getInstance().getLocalService(Protein3Service.class);
+	}
+	
+	protected Container3Service getContainer3Service() throws NamingException {
+		return (Container3Service) Ejb3ServiceLocator.getInstance().getLocalService(Container3Service.class);
+	}
+	
 	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
 		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
 	}
@@ -184,6 +207,14 @@ public class RestWebService {
 	
 	protected LabContact3Service getLabContact3Service() throws NamingException {
 		return (LabContact3Service) Ejb3ServiceLocator.getInstance().getLocalService(LabContact3Service.class);
+	}
+	
+	protected Laboratory3Service getLaboratory3Service() throws NamingException {
+		return (Laboratory3Service) Ejb3ServiceLocator.getInstance().getLocalService(Laboratory3Service.class);
+	}
+	
+	protected Person3Service getPerson3Service() throws NamingException {
+		return (Person3Service) Ejb3ServiceLocator.getInstance().getLocalService(Person3Service.class);
 	}
 
 	protected Shipping3Service getShipping3Service() throws NamingException {

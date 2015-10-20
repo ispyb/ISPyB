@@ -31,6 +31,7 @@ import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.NativeDataCollection3Service;
+import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.utils.reader.AutoProcessingData;
@@ -88,6 +89,11 @@ public class MXRestWebService extends RestWebService{
 	protected AutoProcIntegration3Service getAutoProcIntegration3Service() throws NamingException {
 		return (AutoProcIntegration3Service) Ejb3ServiceLocator.getInstance().getLocalService(AutoProcIntegration3Service.class);
 	}
+	
+	protected BLSample3Service getBLSample3Service() throws NamingException {
+		return (BLSample3Service) Ejb3ServiceLocator.getInstance().getLocalService(BLSample3Service.class);
+	}
+	
 	
 	protected PhasingHasScaling3Service getPhasingHasScaling3Service() throws NamingException {
 		return (PhasingHasScaling3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingHasScaling3Service.class);
