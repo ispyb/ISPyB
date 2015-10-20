@@ -410,11 +410,15 @@ public class GenericSampleChangerBiosaxsWebService {
 			@WebParam(name = "rgGuinier") String rgGuinier, @WebParam(name = "rgStdev") String rgStdev,
 			@WebParam(name = "i0") String i0, @WebParam(name = "i0Stdev") String i0Stdev,
 
-			@WebParam(name = "firstPointUsed") String firstPointUsed, @WebParam(name = "lastPointUsed") String lastPointUsed,
-			@WebParam(name = "quality") String quality, @WebParam(name = "isagregated") String isagregated,
+			@WebParam(name = "firstPointUsed") String firstPointUsed, 
+			@WebParam(name = "lastPointUsed") String lastPointUsed,
+			@WebParam(name = "quality") String quality, 
+			@WebParam(name = "isagregated") String isagregated,
 
 			/** XSDataGnom **/
-			@WebParam(name = "rgGnom") String rgGnom, @WebParam(name = "dmax") String dmax, @WebParam(name = "total") String total,
+			@WebParam(name = "rgGnom") String rgGnom, 
+			@WebParam(name = "dmax") String dmax, 
+			@WebParam(name = "total") String total,
 
 			/** Volume **/
 			@WebParam(name = "volume") String volume,

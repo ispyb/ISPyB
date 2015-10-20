@@ -82,7 +82,10 @@ public class ProposalRestWebService extends RestWebService {
 		try {
 			
 			Session3VO sessions = this.getSession3Service().findByPk(sessionId, false, false, false);
-			Proposal3VO proposal = this.getSaxsProposal3Service().findProposalById(sessions.getProposalVOId());
+			List<Map<String, Object>> proposal = this.getSaxsProposal3Service().findProposalById(sessions.getProposalVOId());
+			
+			
+			
 			this.logFinish(methodName, id, logger);
 			return this.sendResponse(proposal);
 		} catch (Exception e) {
