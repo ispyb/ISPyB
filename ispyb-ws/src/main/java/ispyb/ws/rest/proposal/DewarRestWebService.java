@@ -302,7 +302,7 @@ public class DewarRestWebService extends RestWebService {
 	}
 
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@PermitAll
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/labels")
 	@Produces({ "application/pdf" })
