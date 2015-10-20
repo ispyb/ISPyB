@@ -8,11 +8,13 @@ import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -35,19 +37,30 @@ public class ProposalRestWebService extends RestWebService {
 	public Response getProposals(@PathParam("token") String token) throws Exception {
 		
 		long id = this.logInit("getProposals", logger, token);
+		
+		long startTime = System.currentTimeMillis();
+		System.out.println("1 -- " + startTime);
 		try {
 			Login3VO login3VO = this.getLogin3Service().findByToken(token);
+			long second = System.currentTimeMillis();
+			System.out.println("2 -- " + second + "   " + (second - startTime));
 			if (login3VO != null){
 				if (login3VO.isValid()){
-					List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+					List<Map<String, Object>> proposals = new ArrayList<Map<String,Object>>(); 
 					if (login3VO.isLocalContact() || login3VO.isManager()){
-						proposals = this.getSaxsProposal3Service().findAllProposals();
+						proposals = this.getSaxsProposal3Service().findProposals();
+						
 					}
 					else{
-						proposals = this.getSaxsProposal3Service().findProposalByLoginName(login3VO.getUsername());
+						proposals = this.getSaxsProposal3Service().findProposals(login3VO.getUsername());
 					}
-					this.logFinish("getProposals", id, logger);
+					
+					long third = System.currentTimeMillis();
+					System.out.println("3 -- " + third + "   " + (third - second));
+					long total = System.currentTimeMillis();
+					System.out.println("4 -- " + total + "   " + (total - startTime));
 					return this.sendResponse(proposals);
+					
 				}
 			}
 			throw new Exception("Token is not valid");
@@ -90,8 +103,7 @@ public class ProposalRestWebService extends RestWebService {
 			int proposalId = this.getProposalId(login);
 			HashMap<String, List<?>> results = new HashMap<String, List<?>>();
 
-			List<Macromolecule3VO> macromolecules = this.getSaxsProposal3Service().findMacromoleculesByProposalId(
-					proposalId);
+			List<Macromolecule3VO> macromolecules = this.getSaxsProposal3Service().findMacromoleculesByProposalId(proposalId);
 			List<Buffer3VO> buffers = this.getSaxsProposal3Service().findBuffersByProposalId(proposalId);
 
 			List<StockSolution3VO> stockSolutions = this.getSaxsProposal3Service().findStockSolutionsByProposalId(
@@ -99,6 +111,10 @@ public class ProposalRestWebService extends RestWebService {
 			List<Platetype3VO> plateTypes = this.getPlateType3Service().findAll();
 			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 			proposals.add(this.getSaxsProposal3Service().findProposalById(proposalId));
+			
+
+			List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
+			
 			// List<Session3VO> sessions =
 			// this.getSession3Service().findFiltered(proposalId, null, null,
 			// null, null, null, false, null);
@@ -116,6 +132,8 @@ public class ProposalRestWebService extends RestWebService {
 			results.put("stockSolutions", stockSolutions);
 			// results.put("assemblies", assemblies);
 			results.put("labcontacts", labContacts);
+			
+			results.put("proteins", proteins);
 			// results.put("shippings", shippings);
 
 			multiple.add(results);
