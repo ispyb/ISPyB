@@ -26,6 +26,7 @@ import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -72,7 +73,13 @@ public interface SaxsProposal3Service {
 	public Macromolecule3VO findMacromoleculesById(Integer macromoleculeId);
 
 	public List<Proposal3VO> findAllProposals();
+	
+	public List<Map<String, Object>> findProposals();
+	
+	public List<Map<String, Object>> findProposals(String loginName);
 
+	public List<Map<String, Object>> findProposalById(Integer proposalId);
+	
 	
 
 }

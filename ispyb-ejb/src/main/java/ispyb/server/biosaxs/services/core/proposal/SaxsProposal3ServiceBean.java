@@ -22,6 +22,7 @@ package ispyb.server.biosaxs.services.core.proposal;
 import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
 import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
 import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
 import ispyb.server.biosaxs.vos.assembly.AssemblyHasMacromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,6 +45,10 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 @Stateless
 public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsProposal3ServiceLocal {
@@ -268,6 +274,43 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		Query EJBQuery = this.entityManager.createQuery(query);
 		return EJBQuery.getResultList();
 	}
+	
+	@Override
+	public List<Map<String, Object>> findProposals() {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery("select " + SqlTableMapper.getProposalTable() + " from Proposal");
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String,Object>> aliasToValueMapList= query.list();
+		return 	aliasToValueMapList;
+	}
+	
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> findProposals(String loginName) {
+		List<Proposal3VO> proposals = this.findProposalByLoginName(loginName);
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		for (Proposal3VO proposal : proposals) {
+			result.addAll(findProposalByProposalId(proposal.getProposalId()));
+		}
+		return 	result;
+	}
+	
+	private List findProposalByProposalId(Integer proposalId){
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery("select " + SqlTableMapper.getProposalTable() + " from Proposal where proposalId= :proposalId");
+		query.setParameter("proposalId", proposalId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> findProposalById(Integer proposalId) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		result.addAll(findProposalByProposalId(proposalId));
+		return 	result;
+	}
 	
 }

@@ -23,6 +23,7 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -127,5 +128,8 @@ public interface Shipping3Service {
 	public Shipping3VO loadEager(Shipping3VO vo) throws Exception;
 
 	public Integer[] countShippingInfo(final Integer shippingId) throws Exception;
+
+	public List<Map<String, Object>> getShippingById(Integer shippingId)
+			throws Exception;
 
 }

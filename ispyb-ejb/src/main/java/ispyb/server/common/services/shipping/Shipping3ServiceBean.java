@@ -28,6 +28,7 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -157,6 +158,20 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 
 		});
 	}
+	
+	@Override
+	public List<Map<String, Object>> getShippingById(final Integer shippingId) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Map<String, Object>>) template.execute(new EJBAccessCallback() {
+			public List<Map<String, Object>> doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				List<Map<String, Object>> found = dao.getShippingById(shippingId);
+				return found;
+			}
+
+		});
+	}
+	
 
 	// TODO remove following method if not adequate
 	/**

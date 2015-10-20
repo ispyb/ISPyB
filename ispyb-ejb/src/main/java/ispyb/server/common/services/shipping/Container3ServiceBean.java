@@ -22,6 +22,11 @@ import ispyb.server.common.daos.shipping.Container3DAO;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.mx.daos.sample.DiffractionPlan3DAO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 import java.util.List;
 
@@ -29,6 +34,8 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +49,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 
 	private final static Logger LOG = Logger.getLogger(Container3ServiceBean.class);
 
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
+	
 	@EJB
 	private Container3DAO dao;
 
@@ -236,6 +246,46 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 			}
 
 		});
+	}
+
+	@Override
+	public Container3VO savePuck(Container3VO container) throws Exception {
+		Container3VO containerDB = this.findByPk(container.getContainerId(), true);
+		
+		/** Removing all samples **/
+		for (BLSample3VO sample : containerDB.getSampleVOs()) {
+			entityManager.remove(sample);
+		}
+		
+		containerDB.setCapacity(container.getCapacity());
+		containerDB.setCode(container.getCode());
+		
+		/** Adding Sample **/
+		for (BLSample3VO sample : container.getSampleVOs()) {
+			/** We create a new sample **/
+			sample.setBlSampleId(null);
+			
+			System.out.println("\t\t\t Creating new diffraction plan ");
+			DiffractionPlan3VO diff = sample.getDiffractionPlanVO();
+			diff.setDiffractionPlanId(null);
+			diff = entityManager.merge(diff);
+			
+			Crystal3VO crystal = sample.getCrystalVO();
+			Protein3VO protein = entityManager.find(Protein3VO.class, sample.getCrystalVO().getProteinVO().getProteinId());
+			crystal.setProteinVO(protein);
+			crystal.setCrystalId(null);
+			crystal = entityManager.merge(crystal);
+			
+			sample.setCrystalVO(crystal);
+			sample.setDiffractionPlanVO(diff);
+
+			sample.setBlSampleId(null);
+			sample.setContainerVO(containerDB);
+			sample = entityManager.merge(sample);
+		}
+		/** Retrieving container **/
+		containerDB = this.findByPk(container.getContainerId(), true);
+		return containerDB;
 	}
 
 }

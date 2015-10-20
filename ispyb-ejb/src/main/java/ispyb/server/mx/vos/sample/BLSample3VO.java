@@ -62,7 +62,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 
 	@ManyToOne
 	@JoinColumn(name = "diffractionPlanId")
-	private DiffractionPlan3VO diffractionPlanVO;
+	protected DiffractionPlan3VO diffractionPlanVO;
 
 	@ManyToOne
 	@JoinColumn(name = "crystalId")

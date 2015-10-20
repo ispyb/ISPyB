@@ -86,4 +86,7 @@ public interface Container3Service {
 			throws Exception;
 
 	public List<Container3VO> findByBarCode(final Integer dewarId, final String code)throws Exception;
+
+	public Container3VO savePuck(Container3VO fromJson) throws Exception;
+	
 }

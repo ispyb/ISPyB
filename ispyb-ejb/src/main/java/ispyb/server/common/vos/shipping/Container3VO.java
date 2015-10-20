@@ -87,7 +87,7 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "containerId")
-	private Set<BLSample3VO> sampleVOs;
+	protected Set<BLSample3VO> sampleVOs;
 
 	public Container3VO() {
 		super();

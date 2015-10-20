@@ -20,12 +20,15 @@
 package ispyb.server.common.daos.shipping;
 
 //import ispyb.common.util.ServerConstants;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 
 import java.math.BigInteger;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,9 +38,11 @@ import javax.persistence.Query;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 /**
  * <p>
@@ -64,6 +69,19 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		}
 		return FIND_BY_PK(fetchDewars);
 	}
+	
+	private static final String FIND_BY_SHIPPING_ID() {
+		return "select  " +
+				SqlTableMapper.getShippingTable() + ", (select count(*) from BLSample where BLSample.containerId = Container.containerId) as sampleCount, " +
+				SqlTableMapper.getContainerTable() + " , (select count(*) from StockSolution where Dewar.dewarId = StockSolution.boxId) as stockSolutionCount, " +
+				SqlTableMapper.getDewarTable()  +
+				" from Shipping \r\n"
+				+ " left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n"
+				+ " left join Container on Dewar.dewarId = Container.dewarId \r\n"
+				+ " where Shipping.shippingId = :shippingId";
+		
+	}
+	
 	
 	// Generic HQL request to find all instances of Shipping3
 	// TODO choose between left/inner join
@@ -185,6 +203,17 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		return entityManager.createQuery(FIND_ALL()).getResultList();
 	}
 
+	@Override
+	public List<Map<String, Object>> getShippingById(int shippingId) {
+		String mySQLQuery = this.FIND_BY_SHIPPING_ID();
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("shippingId", shippingId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Shipping3VO> findFiltered(Integer proposalId, String type) {
 

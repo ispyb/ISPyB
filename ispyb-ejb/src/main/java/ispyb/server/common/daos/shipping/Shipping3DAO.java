@@ -23,6 +23,7 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 
@@ -124,5 +125,7 @@ public interface Shipping3DAO {
 	 * @return
 	 */
 	public Shipping3VO findByPk(Integer pk, boolean withDewars,boolean withSession);
+
+	public List<Map<String, Object>> getShippingById(int shippingId);
 
 }
