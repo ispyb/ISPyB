@@ -2,15 +2,23 @@ package ispyb.ws.rest.proposal;
 
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.PropertyLoader;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.RestWebService;
+import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
@@ -21,10 +29,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.apache.james.mime4j.field.datetime.DateTime;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class ShippingRestWebService extends RestWebService {
+public class ShippingRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(ShippingRestWebService.class);
 
@@ -87,6 +96,44 @@ public class ShippingRestWebService extends RestWebService {
 		}
 	}
 	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/shipping/labcontact/save")
+	@Produces({ "application/json" })
+	public Response saveLabContact(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal, 
+			@FormParam("labcontact") String labContactJson) {
+		String methodName = "saveLabContact";
+		long id = this.logInit(methodName, logger, token, proposal, labContactJson);
+		try {
+			LabContact3VO labContact = this.getGson().fromJson(labContactJson, LabContact3VO.class);
+			/** Update Person **/
+			
+			Person3VO person = this.getPerson3Service().findByPk(labContact.getPersonVO().getPersonId(), false);
+			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());
+			
+			person.setFamilyName(labContact.getPersonVO().getFamilyName());
+			person.setFaxNumber(labContact.getPersonVO().getFaxNumber());
+			person.setGivenName(labContact.getPersonVO().getGivenName());
+			person.setPhoneNumber(labContact.getPersonVO().getPhoneNumber());
+			person.setTitle(labContact.getPersonVO().getTitle());
+			person = this.getPerson3Service().update(person);
+			
+			
+			labContact.setPersonVO(person);
+			/** Update LabContact **/
+			labContact.setProposalVO(this.getProposal3Service().findByPk(this.getProposalId(proposal)));
+			labContact = this.getLabContact3Service().update(labContact);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(labContact);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	
 	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
@@ -110,7 +157,7 @@ public class ShippingRestWebService extends RestWebService {
 	public Response getShipping(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("shippingId") Integer shippingId) throws Exception {
 
-		long id = this.logInit("listShipping", logger, token, proposal, shippingId);
+		long id = this.logInit("getShipping", logger, token, proposal, shippingId);
 		try {
 			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true);
 			this.logFinish("getShipping", id, logger);
@@ -122,12 +169,135 @@ public class ShippingRestWebService extends RestWebService {
 	}
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
+	@Produces({ "application/json" })
+	public Response getContainers(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+
+		long id = this.logInit("getContainers", logger, token, proposal, shippingId);
+		try {
+//			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true);
+			List<Map<String, Object>> result = this.getShipping3Service().getShippingById(shippingId);
+			this.logFinish("getContainers", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getContainers", e, id, logger);
+		}
+
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/add")
+	@Produces({ "application/json" })
+	public Response addPuck(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId, @PathParam("dewarId") Integer dewarId) throws Exception {
+
+		long id = this.logInit("addPuck", logger, token, proposal, shippingId);
+		try {
+			Container3VO container = new Container3VO();
+			container.setDewarVO(this.getDewar3Service().findByPk(dewarId, false, false));
+			container.setContainerType("Puck");
+			container.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
+			container.setTimeStamp(StringUtils.getCurrentTimeStamp());
+			container = this.getContainer3Service().create(container);
+			this.logFinish("addPuck", id, logger);
+			return sendResponse(container);
+		} catch (Exception e) {
+			return this.logError("addPuck", e, id, logger);
+		}
+
+	}
+	
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/get")
+	@Produces({ "application/json" })
+	public Response getPuckById(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId, @PathParam("dewarId") Integer dewarId, @PathParam("containerId") Integer containerId) throws Exception {
+
+		long id = this.logInit("getPuckById", logger, token, proposal, shippingId);
+		try {
+			Container3VO container = this.getContainer3Service().findByPk(containerId, true);
+			this.logFinish("getPuckById", id, logger);
+			return sendResponse(container);
+		} catch (Exception e) {
+			return this.logError("getPuckById", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/save")
+	@Produces({ "application/json" })
+	public Response savePuck(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId,
+			@PathParam("dewarId") Integer dewarId,
+			@PathParam("containerId") Integer containerId,
+			@FormParam("puck") String puck) throws Exception {
+
+		long id = this.logInit("savePuck", logger, token, proposal, shippingId, containerId,puck);
+		try {
+			Container3VO container = this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class));
+			this.logFinish("savePuck", id, logger);
+			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
+		} catch (Exception e) {
+			return this.logError("savePuck", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+//	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/remove")
+	@Produces({ "application/json" })
+	public Response removePuck(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId,
+			@PathParam("dewarId") Integer dewarId,
+			@PathParam("containerId") Integer containerId) throws Exception {
+
+		long id = this.logInit("removePuck", logger, token, proposal, shippingId, containerId);
+		try {
+			Container3VO container = this.getContainer3Service().findByPk(containerId, true);
+			this.getContainer3Service().delete(container);
+			this.logFinish("removePuck", id, logger);
+			return sendResponse(this.getShipping3Service().getShippingById(shippingId));
+		} catch (Exception e) {
+			return this.logError("removePuck", e, id, logger);
+		}
+
+	}
+
+	
+	
+	/** 
+	 * 
+	 * @param token
+	 * @param proposal
+	 * @param shippingId
+	 * @param name
+	 * @param comments
+	 * @param billingReference
+	 * @param courierAccount
+	 * @param dewarAvgCustomsValue
+	 * @param dewarAvgTransportValue
+	 * @param returnCourier
+	 * @param sendingLabContactId
+	 * @param returnLabContactId value = 0 if there is not any return requested
+	 * 							 value = -1 if receiver and sender are the same person
+	 * @return
+	 */
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/save")
 	@Produces({ "application/json" })
+	
 	public Response saveShipping(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@FormParam("shippingId") String shippingId, @FormParam("name") String name,
-			@FormParam("comments") String comments, @FormParam("billingReference") String billingReference,
+			@FormParam("comments") String comments, 
+			@FormParam("billingReference") String billingReference,
 			@FormParam("courierAccount") String courierAccount,
 			@FormParam("dewarAvgCustomsValue") String dewarAvgCustomsValue,
 			@FormParam("dewarAvgTransportValue") String dewarAvgTransportValue,
@@ -140,7 +310,9 @@ public class ShippingRestWebService extends RestWebService {
 
 			Shipping3VO shipping3VO = new Shipping3VO();
 
-			System.out.println("ShippingId " + shippingId);
+			
+			
+			System.out.println("New ShippingId " + shippingId);
 			if ((shippingId != null) && (shippingId != "")) {
 				try{
 				shipping3VO = this.getShipping3Service().findByPk(Integer.parseInt(shippingId), true);
@@ -163,16 +335,33 @@ public class ShippingRestWebService extends RestWebService {
 			LabContact3VO sendingLabContact = this.getLabContact3Service().findByPk(sendingLabContactId);
 			shipping3VO.setSendingLabContactVO(sendingLabContact);
 
-			LabContact3VO returnLabContact = this.getLabContact3Service().findByPk(returnLabContactId);
-			returnLabContact.setBillingReference(billingReference);
-			returnLabContact.setCourierAccount(courierAccount);
-			returnLabContact.setDewarAvgCustomsValue(Integer.parseInt(dewarAvgCustomsValue));
-			returnLabContact.setDewarAvgTransportValue(Integer.parseInt(dewarAvgTransportValue));
-
-			returnLabContact.setDefaultCourrierCompany(returnCourier);
-			getLabContact3Service().update(returnLabContact);
-
-			shipping3VO.setReturnLabContactVO(returnLabContact);
+			if ((returnLabContactId != 0)&&(returnLabContactId != -1)){
+				LabContact3VO returnLabContact = this.getLabContact3Service().findByPk(returnLabContactId);
+				returnLabContact.setBillingReference(billingReference);
+				returnLabContact.setCourierAccount(courierAccount);
+				returnLabContact.setDewarAvgCustomsValue(Integer.parseInt(dewarAvgCustomsValue));
+				returnLabContact.setDewarAvgTransportValue(Integer.parseInt(dewarAvgTransportValue));
+				returnLabContact.setDefaultCourrierCompany(returnCourier);
+				getLabContact3Service().update(returnLabContact);
+				shipping3VO.setReturnLabContactVO(returnLabContact);
+			}
+			
+			/** No return requested **/
+			if (returnLabContactId == 0){
+				shipping3VO.setReturnLabContactVO(null);
+			}
+			
+			/** Same person **/
+			if (returnLabContactId == -1){
+				sendingLabContact.setBillingReference(billingReference);
+				sendingLabContact.setCourierAccount(courierAccount);
+				sendingLabContact.setDewarAvgCustomsValue(Integer.parseInt(dewarAvgCustomsValue));
+				sendingLabContact.setDewarAvgTransportValue(Integer.parseInt(dewarAvgTransportValue));
+				sendingLabContact.setDefaultCourrierCompany(returnCourier);
+				getLabContact3Service().update(sendingLabContact);
+				shipping3VO.setReturnLabContactVO(sendingLabContact);
+			}
+			
 
 			if (shipping3VO.getShippingId() != null) {
 				getShipping3Service().update(shipping3VO);
