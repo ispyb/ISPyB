@@ -18,12 +18,20 @@
  ******************************************************************************************************************************/
 package ispyb.common.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.commons.compress.utils.IOUtils;
+
 
 /**
  * Constants class with constant attributes used in all application.
@@ -1254,6 +1262,7 @@ public final class Constants {
 		for (Object key : mProp3.keySet()) {
 			prop.put((String)key, mProp3.getProperty((String)key));
 		}
+		prop.put("TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH", Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH);
 		properties.add(prop);
 		return properties;
 	}
@@ -1267,9 +1276,22 @@ public final class Constants {
 		return (val == null) ? defaultValue : val;
 	}
 
+
+	public byte[] getTemplatePDFParcelLabelsWorldCourierFile() throws IOException {
+		InputStream inputStream = this.getTemplatePDFParcelLabelsWorldCourier();
+	    return IOUtils.toByteArray(inputStream);
+	}
+	
+	
+	public InputStream getTemplatePDFParcelLabelsWorldCourier() {
+		ClassLoader classLoader = getClass().getClassLoader();
+		return classLoader.getResourceAsStream("pdf/ParcelLabelsTemplate-WithWorldCourierCL.pdf");
+	}
+	
 	public static Properties getProperties() {		
 		return mProp;
 	}
+	
 
 	public static Properties getPropertiesNew() {	
 		
@@ -1279,7 +1301,6 @@ public final class Constants {
 	try(InputStream resourceStream = loader.getResourceAsStream(resourceName)) {
 	    props.load(resourceStream);
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	
