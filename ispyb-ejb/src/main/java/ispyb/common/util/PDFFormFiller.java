@@ -21,6 +21,7 @@
  ******************************************************************************/
 package ispyb.common.util;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -196,13 +197,26 @@ public class PDFFormFiller extends PdfWriter {
 	 * @throws Exception
 	 */
 	private void init(byte[] bs, OutputStream os, int pageOrientation) throws Exception {
-		System.out.println("Initializing with template: " + bs.length);
 		try {
 			this.reader = new PdfReader(bs);
 			this.stamper = new PdfStamper(this.reader, os);
 			this.writer = this.stamper.getWriter();
 			this.writer.setPdfVersion(PdfWriter.VERSION_1_3);
 			this.setPageOrientation(pageOrientation);
+			this.formFields = this.stamper.getAcroFields();
+		} catch (Exception e) {
+			LOG.error("init", e);
+			throw new Exception("Error initializing the PDF objects for file bytes.");
+		}
+	}
+	
+	public void init(InputStream input, OutputStream os) throws Exception {
+		try {
+			this.reader = new PdfReader(input);
+			this.stamper = new PdfStamper(this.reader, os);
+			this.writer = this.stamper.getWriter();
+			this.writer.setPdfVersion(PdfWriter.VERSION_1_3);
+			this.setPageOrientation(PAGE_PORTRAIT);
 			this.formFields = this.stamper.getAcroFields();
 		} catch (Exception e) {
 			LOG.error("init", e);
@@ -235,6 +249,7 @@ public class PDFFormFiller extends PdfWriter {
 	public void init(byte[] bs, OutputStream os) throws Exception {
 		init(bs, os, PAGE_PORTRAIT);
 	}
+
 
 	
 	/**
