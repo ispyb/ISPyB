@@ -144,10 +144,13 @@ public class DewarRestWebService extends RestWebService {
 //		zz
 		if (returnLabContact.getDefaultCourrierCompany() != null && returnLabContact.getDefaultCourrierCompany().equals(Constants.SHIPPING_DELIVERY_AGENT_NAME_WORLDCOURIER)) {
 //			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH),outputStream);
-			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
+//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
+			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
+			
 		} else {
-			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
+//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
 //			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH), outputStream);
+			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
 		}
 
 		// } catch (Exception e) {
