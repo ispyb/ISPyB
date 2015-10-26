@@ -134,7 +134,7 @@ public class RestWebService {
 	}
 	
 	protected Gson getGson() {
-		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
+		return new GsonBuilder().serializeNulls().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
 				.create();
 	}
 

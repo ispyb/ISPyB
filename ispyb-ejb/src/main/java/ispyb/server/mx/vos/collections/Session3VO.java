@@ -68,11 +68,11 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 
 	@ManyToOne
 	@JoinColumn(name = "proposalId")
-	private Proposal3VO proposalVO;
+	protected Proposal3VO proposalVO;
 
 	@ManyToOne
 	@JoinColumn(name = "beamLineSetupId")
-	private BeamLineSetup3VO beamLineSetupVO;
+	protected BeamLineSetup3VO beamLineSetupVO;
 
 	@Column(name = "projectCode")
 	protected String projectCode;
