@@ -38,9 +38,7 @@ function HelpPanel(args) {
 		if (args.allHelp != null) {
 			this.allHelp = args.allHelp;
 		}
-	}
-	
-	
+	}		
 }
 
 // builds and returns the main panel
@@ -86,12 +84,18 @@ HelpPanel.prototype.getPanel = function () {
 	helpText += "<img src=\"../images/help/changeSampleNameAuto.PNG\" alt=\"change sample name\">: to automatically update the names of the samples in the puck, with the same protein (protein acronym and space group), by adding an increment number to the name of the 1st sample.</br>";
 	
 	helpText += "</br><h4>Experiment type definitions</h4>";
-	helpText += "These types are defined for automatic processes to be performed on that sample. This is an ongoing developement. These parameters will only be taken in account for specific pilote studies. Don't use this field if you don't belong to that studies.</br>";
+	helpText += "These types are defined for automatic processes to be performed on that sample. This is an ongoing development. These parameters will only be taken in account for specific pilot studies. Don't use this field if you don't belong to that studies.</br>";
 	helpText += "<b>Default</b> = manual intervention by the crystallographer at the beamline</br>";
 	helpText += "<b>MXPressE</b> = the sample is automatically going through an autoloop centring followed by an X-ray centring, by an EDNA enhanced characterisation and a data collection based on the EDNA proposed diffraction plan</br>";
 	helpText += "<b>MXPressO</b> = the sample is automatically going through an autoloop centring followed by an X-ray centring and a data collection of 180&deg; by steps of 0.2&deg; oscillations with an attenuated beam (value calculated on an average protein crystal size)</br>";
-	helpText += "<b>MXPressL</b> = the sample is automatically going through an autoloop centring followed by a data collection of 180&deg; by steps of 0.2&deg; oscillations with an attenuated beam (value calculated on an average protein crystal size)</br>";
+	helpText += "<b>MXPressI</b> = the sample is automatically going through an autoloop centring followed by an X-ray centring, an EDNA characterisation and a data collection of 180° by steps of 0.2° oscillations with an attenuated beam (value calculated on an average protein crystal size) using the start angle and resolution coming from the EDNA proposed diffraction plan.</br>";
+	helpText += "<b>MXPressL</b> = the sample is automatically going through an autoloop centring followed by a data collection of 180&deg; by steps of 0.2&deg; oscillations with an attenuated beam (value calculated on an average protein crystal size)(MXPressO without X-ray centering)</br>";
 	helpText += "<b>MXScore</b> = the sample is automatically going through an autoloop centring followed by an X-ray centring and an EDNA characterisation.</br>";
+	
+	helpText += "</br><h4>Resolution definitions</h4>";
+	helpText += "By default if the fields are empty, a 2A resolution will be used for MXpressO and MXScore while the real sample resolution will be used for MXpressE, MXpressI.</br>";
+	helpText += "<b>Pre-observed resolution</b> = resolution at which the detector will be set at the beginning of any worflow.</br>";
+	helpText += "<b>Needed resolution</b> = in the case of a workflow with a successful EDNA characterisation, a collect will not be performed if the resolution observed is worse than this value.</br>";
 	
 	helpText += "</div>";
 	
