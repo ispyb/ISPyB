@@ -55,6 +55,7 @@ import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -887,6 +888,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setComments(energyScan.getComments());
 		// crystal class
 		info.setCrystalClass(energyScan.getCrystalClass());
+		
+		// protein and sampleName
+		info.setProteinAcronym("");
+		info.setSampleName("");
+		info.setSampleNameProtein("");
+		//TODO change Many2Many relationship : like XRF spectrum
+//		if (energyScan.getBlSampleVO() != null) {
+//			setSampleAndProteinNames(info, energyScan.getBlSampleVO());
+//		} 
+
 		// graph
 		int choochExists = PathUtils.fileExists(energyScan.getJpegChoochFileFullPath());
 		String jpegChoochFileFitPath = PathUtils.FitPathToOS(energyScan.getJpegChoochFileFullPath());
@@ -939,6 +950,15 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setComments(xrfSpectrum.getComments());
 		// crystal class
 		info.setCrystalClass(xrfSpectrum.getCrystalClass());
+		
+		// protein and sampleName
+		info.setProteinAcronym("");
+		info.setSampleName("");
+		info.setSampleNameProtein("");
+		if (xrfSpectrum.getBlSampleVO() != null) {
+			setSampleAndProteinNames(info, xrfSpectrum.getBlSampleVO());
+		} 
+
 		// graph
 		int jpegScanExists = PathUtils.fileExists(xrfSpectrum.getJpegScanFileFullPath());
 		String jpegScanFileFullPathParser = PathUtils.FitPathToOS(xrfSpectrum.getJpegScanFileFullPath());
@@ -1021,24 +1041,15 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			}
 			// crystal class
 			info.setCrystalClass(lastCollect.getDataCollectionGroupVO().getCrystalClass());
+			
 			// protein and sampleName
-			String proteinAcronym = "";
-			String sampleName = "";
+			info.setProteinAcronym("");
+			info.setSampleName("");
+			info.setSampleNameProtein("");
 			if (lastCollect.getDataCollectionGroupVO().getBlSampleVO() != null) {
-				sampleName = lastCollect.getDataCollectionGroupVO().getBlSampleVO().getName();
-				if (lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO() != null
-						&& lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO() != null) {
-					proteinAcronym = lastCollect.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO()
-							.getProteinVO().getAcronym();
-				}
-			}
-			info.setProteinAcronym(proteinAcronym);
-			info.setSampleName(sampleName);
-			String sampleNameProtein = "";
-			if (proteinAcronym != null && sampleName != null && !proteinAcronym.isEmpty() && !sampleName.isEmpty()) {
-				sampleNameProtein = proteinAcronym + "-" + sampleName;
-			}
-			info.setSampleNameProtein(sampleNameProtein);
+				setSampleAndProteinNames(info, lastCollect.getDataCollectionGroupVO().getBlSampleVO());
+			} 
+			
 			// parameters
 			List<Param> listParameters = new ArrayList<Param>();
 			String barcode = lastCollect.getDataCollectionGroupVO().getActualSampleBarcode();
@@ -1271,24 +1282,15 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setImagePrefix(dcInfo.getImagePrefix());
 		info.setDataCollectionId(dataCollection.getDataCollectionId());
 		info.setRunNumber(dcInfo.getDataCollectionNumber());
+		
 		// protein and sampleName
-		String proteinAcronym = "";
-		String sampleName = "";
+		info.setProteinAcronym("");
+		info.setSampleName("");
+		info.setSampleNameProtein("");
 		if (dataCollection.getDataCollectionGroupVO().getBlSampleVO() != null) {
-			sampleName = dataCollection.getDataCollectionGroupVO().getBlSampleVO().getName();
-			if (dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO() != null
-					&& dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO().getProteinVO() != null) {
-				proteinAcronym = dataCollection.getDataCollectionGroupVO().getBlSampleVO().getCrystalVO()
-						.getProteinVO().getAcronym();
-			}
-		}
-		info.setProteinAcronym(proteinAcronym);
-		info.setSampleName(sampleName);
-		String sampleNameProtein = "";
-		if (proteinAcronym != null && sampleName != null && !proteinAcronym.isEmpty() && !sampleName.isEmpty()) {
-			sampleNameProtein = proteinAcronym + "-" + sampleName;
-		}
-		info.setSampleNameProtein(sampleNameProtein);
+			setSampleAndProteinNames(info, dataCollection.getDataCollectionGroupVO().getBlSampleVO());
+		} 
+		
 		// parameters
 		List<Param> listParameters = new ArrayList<Param>();
 		String barcode = dataCollection.getDataCollectionGroupVO().getActualSampleBarcode();
@@ -1712,6 +1714,26 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		}
 	}
 
+	private static void setSampleAndProteinNames(SessionDataObjectInformation info, BLSample3VO sampleVO){
+		
+		String proteinAcronym = "";
+		String sampleName = "";
+	
+		sampleName = sampleVO.getName();
+		if (sampleVO.getCrystalVO() != null
+					&& sampleVO.getCrystalVO().getProteinVO() != null) {
+				proteinAcronym = sampleVO.getCrystalVO()
+						.getProteinVO().getAcronym();
+		}
+		
+		info.setProteinAcronym(proteinAcronym);
+		info.setSampleName(sampleName);
+		String sampleNameProtein = "";
+		if (proteinAcronym != null && sampleName != null && !proteinAcronym.isEmpty() && !sampleName.isEmpty()) {
+			sampleNameProtein = proteinAcronym + "-" + sampleName;
+		}
+		info.setSampleNameProtein(sampleNameProtein);
+	}
 	public void changeCurrentPageNumber(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
 			HttpServletResponse response) {
 		String pageNumber = request.getParameter("sessionReportCurrentPageNumber");
