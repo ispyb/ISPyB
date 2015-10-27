@@ -307,7 +307,37 @@
   		<id>EMBL</id>
   		<properties>
   			<ispyb.site>EMBL</ispyb.site>
-  		</properties>
+                        <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+                        <ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+                        <ispyb.authentication.method>LDAP</ispyb.authentication.method>
+                        <ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+                        <ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
+                        <ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
+                        <ispyb.uploaded.root.folder>/data/ispyb/db/</ispyb.uploaded.root.folder>
+
+                        <ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
+                        <ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
+                        <ispyb.dataprocessing.denzo>false</ispyb.dataprocessing.denzo>
+                        <ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
+                        <ispyb.bcm>mxcube</ispyb.bcm>
+
+                        <protein.allowedToCreate>true</protein.allowedToCreate>
+
+                        <mail.smtp.host>160.103.2.175</mail.smtp.host>
+                        <mail.admin>ispyb@embl-hamburg.de</mail.admin>
+                        <mail.dev>ispyb@embl-hamburg.de</mail.dev>
+                        <mail.ispyb>ispyb@embl-hamburg.de</mail.ispyb>
+                        <mail.stores>ispyb@embl-hamburg.de</mail.stores>
+
+                        <mail.report.industry.from>ispyb@embl-hamburg.de</mail.report.industry.from>
+                        <mail.report.industry.cc>ispyb@embl-hamburg.de</mail.report.industry.cc>
+                        <mail.report.industry.cc.fx12>ispyb@embl-hamburg.de</mail.report.industry.cc.fx12>
+                        <dictionary.site>The EMBL</dictionary.site>
+                        <dictionary.bcm>mxCuBE</dictionary.bcm>
+  
+                        <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
+                        <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+                </properties>
   	</profile>
   	<profile>
   		<id>SOLEIL</id>
