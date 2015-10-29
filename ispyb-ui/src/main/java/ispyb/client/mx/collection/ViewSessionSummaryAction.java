@@ -32,7 +32,6 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.autoproc.AutoProcProgramAttachment3Service;
 import ispyb.server.mx.services.autoproc.ImageQualityIndicators3Service;
-import ispyb.server.mx.services.collections.BLSampleHasEnergyScan3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.EnergyScan3Service;
@@ -43,7 +42,6 @@ import ispyb.server.mx.vos.autoproc.AutoProc3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
 import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
-import ispyb.server.mx.vos.collections.BLSampleHasEnergyScan3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.EnergyScan3VO;
@@ -114,8 +112,6 @@ public class ViewSessionSummaryAction extends DispatchAction {
 	private XFEFluorescenceSpectrum3Service xfeService;
 
 	private EnergyScan3Service energyScanService;
-
-	private BLSampleHasEnergyScan3Service blSampleHasEnergyScanService;
 
 	private final static Logger LOG = Logger.getLogger(ViewSessionSummaryAction.class);
 
@@ -208,8 +204,6 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		this.xfeService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator
 				.getLocalService(XFEFluorescenceSpectrum3Service.class);
 		this.energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
-		this.blSampleHasEnergyScanService = (BLSampleHasEnergyScan3Service) ejb3ServiceLocator
-				.getLocalService(BLSampleHasEnergyScan3Service.class);
 	}
 
 	@Override
@@ -518,11 +512,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				int choochExists = PathUtils.fileExists(energyScan.getJpegChoochFileFullPath());
 				String jpegChoochFileFitPath = PathUtils.FitPathToOS(energyScan.getJpegChoochFileFullPath());
 				String sampleName = "";
-				List<BLSampleHasEnergyScan3VO> listLink = blSampleHasEnergyScanService.findByEnergyScan(energyScan
-						.getEnergyScanId());
-				if (listLink != null && listLink.size() > 0) {
-					BLSampleHasEnergyScan3VO o = listLink.get(0);
-					sampleName = o.getBlSampleVO().getName();
+				if (energyScan.getBlSampleVO() != null) {
+					sampleName = energyScan.getBlSampleVO().getName();
 				}
 				EnergyScan es = new EnergyScan(energyScan, scanFileFullPathExists == 1, shortFileName,
 						choochExists == 1, jpegChoochFileFitPath, sampleName);
@@ -893,10 +884,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setProteinAcronym("");
 		info.setSampleName("");
 		info.setSampleNameProtein("");
-		//TODO change Many2Many relationship : like XRF spectrum
-//		if (energyScan.getBlSampleVO() != null) {
-//			setSampleAndProteinNames(info, energyScan.getBlSampleVO());
-//		} 
+		if (energyScan.getBlSampleVO() != null) {
+			setSampleAndProteinNames(info, energyScan.getBlSampleVO());
+		} 
 
 		// graph
 		int choochExists = PathUtils.fileExists(energyScan.getJpegChoochFileFullPath());

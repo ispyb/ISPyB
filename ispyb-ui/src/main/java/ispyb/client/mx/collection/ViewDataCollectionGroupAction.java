@@ -31,14 +31,12 @@ import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.collections.BLSampleHasEnergyScan3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.EnergyScan3Service;
 import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.collections.BLSampleHasEnergyScan3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.EnergyScan3VO;
@@ -100,8 +98,6 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 
 	private DataCollectionGroup3Service dataCollectionGroupService;
 
-	private BLSampleHasEnergyScan3Service blSampleHasEnergyScanService;
-
 	private final static Logger LOG = Logger.getLogger(ViewDataCollectionGroupAction.class);
 
 	/**
@@ -123,8 +119,6 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 		this.xfeService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator
 				.getLocalService(XFEFluorescenceSpectrum3Service.class);
 		this.energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
-		this.blSampleHasEnergyScanService = (BLSampleHasEnergyScan3Service) ejb3ServiceLocator
-				.getLocalService(BLSampleHasEnergyScan3Service.class);
 
 	}
 
@@ -587,17 +581,7 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 				}
 			}
 			dataCollectionGroupList = aListTmp;
-
-			List<BLSampleHasEnergyScan3VO> listBlSampleHasEnergyScan = blSampleHasEnergyScanService
-					.findFiltered(sampleId);
-			if (listBlSampleHasEnergyScan != null) {
-				for (Iterator<BLSampleHasEnergyScan3VO> iterator = listBlSampleHasEnergyScan.iterator(); iterator
-						.hasNext();) {
-					BLSampleHasEnergyScan3VO blSampleHasEnergyScan3VO = iterator.next();
-					EnergyScan3VO energyScanVO = blSampleHasEnergyScan3VO.getEnergyScanVO();
-					energyScanList.add(energyScanVO);
-				}
-			}
+			energyScanList = energyScanService.findFiltered(null, sampleId);
 			xfeList = xfeService.findFiltered(null, sampleId, null);
 
 			SessionInformation sessionInformation = null;
@@ -763,12 +747,10 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 				int choochExists = PathUtils.fileExists(energyScan.getJpegChoochFileFullPath());
 				String jpegChoochFileFitPath = PathUtils.FitPathToOS(energyScan.getJpegChoochFileFullPath());
 				String sampleName = "";
-				List<BLSampleHasEnergyScan3VO> listLink = blSampleHasEnergyScanService.findByEnergyScan(energyScan
-						.getEnergyScanId());
-				if (listLink != null && listLink.size() > 0) {
-					BLSampleHasEnergyScan3VO o = listLink.get(0);
-					sampleName = o.getBlSampleVO().getName();
+				if (energyScan.getBlSampleVO() != null) {
+					sampleName = energyScan.getBlSampleVO().getName();
 				}
+
 				EnergyScan es = new EnergyScan(energyScan, scanFileFullPathExists == 1, shortFileName,
 						choochExists == 1, jpegChoochFileFitPath, sampleName);
 				energyScans.add(es);

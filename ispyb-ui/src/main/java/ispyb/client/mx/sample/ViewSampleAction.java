@@ -37,16 +37,16 @@ import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.BLSampleHasEnergyScan3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.EnergyScan3Service;
 import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.CrystalHasUuid3Service;
 import ispyb.server.mx.services.sample.DiffractionPlan3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.collections.BLSampleHasEnergyScan3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
@@ -113,7 +113,7 @@ public class ViewSampleAction extends DispatchAction {
 	
 	private XFEFluorescenceSpectrum3Service xrfSpectraService;
 	
-	private BLSampleHasEnergyScan3Service blSampleHasEnergyScanService ;
+	private EnergyScan3Service energyScanService ;
 
 	private final static Logger LOG = Logger.getLogger(ViewSampleAction.class);
 
@@ -135,7 +135,7 @@ public class ViewSampleAction extends DispatchAction {
 		this.difPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
 				.getLocalService(DiffractionPlan3Service.class);
 		this.xrfSpectraService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator.getLocalService(XFEFluorescenceSpectrum3Service.class);
-		this.blSampleHasEnergyScanService = (BLSampleHasEnergyScan3Service) ejb3ServiceLocator.getLocalService(BLSampleHasEnergyScan3Service.class);
+		this.energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
 
 	}
 
@@ -201,7 +201,7 @@ public class ViewSampleAction extends DispatchAction {
 				
 				
 				List<XFEFluorescenceSpectrum3VO> listXrfSpectra = xrfSpectraService.findFiltered(null, mySample.getBlSampleId(), null);
-				List<BLSampleHasEnergyScan3VO> listEnergyScan = blSampleHasEnergyScanService.findFiltered(mySample.getBlSampleId());
+				List<EnergyScan3VO> listEnergyScan = energyScanService.findFiltered(null, mySample.getBlSampleId());
 				boolean energyScanFound = listEnergyScan != null && listEnergyScan.size() > 0;
 				boolean xrfSpectraFound = listXrfSpectra != null && listXrfSpectra.size() > 0;
 				
@@ -715,7 +715,7 @@ public class ViewSampleAction extends DispatchAction {
 				}
 				
 				List<XFEFluorescenceSpectrum3VO> listXrfSpectra = xrfSpectraService.findFiltered(null, mySample.getBlSampleId(), null);
-				List<BLSampleHasEnergyScan3VO> listEnergyScan = blSampleHasEnergyScanService.findFiltered(mySample.getBlSampleId());
+				List<EnergyScan3VO> listEnergyScan = energyScanService.findFiltered(null, mySample.getBlSampleId());
 				boolean energyScanFound = listEnergyScan != null && listEnergyScan.size() > 0;
 				boolean xrfSpectraFound = listXrfSpectra != null && listXrfSpectra.size() > 0;
 				
@@ -937,7 +937,7 @@ public class ViewSampleAction extends DispatchAction {
 					}
 					
 					List<XFEFluorescenceSpectrum3VO> listXrfSpectra = xrfSpectraService.findFiltered(null, mySample.getBlSampleId(), null);
-					List<BLSampleHasEnergyScan3VO> listEnergyScan = blSampleHasEnergyScanService.findFiltered(mySample.getBlSampleId());
+					List<EnergyScan3VO> listEnergyScan = energyScanService.findFiltered(null, mySample.getBlSampleId());
 					boolean energyScanFound = listEnergyScan != null && listEnergyScan.size() > 0;
 					boolean xrfSpectraFound = listXrfSpectra != null && listXrfSpectra.size() > 0;
 					
