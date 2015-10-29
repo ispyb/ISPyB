@@ -71,6 +71,6 @@ public interface EnergyScan3Service {
 	public List<EnergyScan3VO> findAll() throws Exception;
 
 	
-	public List<EnergyScan3VO> findFiltered(final Integer sessionId ) throws Exception;
+	public List<EnergyScan3VO> findFiltered(final Integer sessionId, final Integer sampleId ) throws Exception;
 
 }

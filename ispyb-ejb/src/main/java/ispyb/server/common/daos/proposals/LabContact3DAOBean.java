@@ -149,7 +149,7 @@ public class LabContact3DAOBean implements LabContact3DAO {
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
 		if (cardName != null && !cardName.isEmpty()) {
-			crit.add(Restrictions.like("cardName", cardName));
+			crit.add(Restrictions.ilike("cardName", cardName));
 		}
 
 		if (proposalId != null) {
@@ -206,7 +206,6 @@ public class LabContact3DAOBean implements LabContact3DAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LabContact3VO> findByProposalId(Integer proposalId) {
-		@SuppressWarnings("deprecation")
 		Session session = (Session) this.entityManager.getDelegate();
 		return session.createQuery("from LabContact3VO where proposalId=:proposalId")
 				.setParameter("proposalId", proposalId)
@@ -218,7 +217,6 @@ public class LabContact3DAOBean implements LabContact3DAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LabContact3VO> findByCardName(String cardNameWithNum) {
-		@SuppressWarnings("deprecation")
 		Session session = (Session) this.entityManager.getDelegate();
 		return session.createCriteria(LabContact3VO.class).add(Restrictions.eq("cardName", cardNameWithNum)).list();
 

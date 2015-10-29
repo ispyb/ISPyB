@@ -600,7 +600,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 */
 	private BLSample3VO getLightBLSampleVO(BLSample3VO vo) throws CloneNotSupportedException {
 		BLSample3VO otherVO = (BLSample3VO) vo.clone();
-		otherVO.setEnergyScanVOs(null);
+		//otherVO.setEnergyScanVOs(null);
 		return otherVO;
 	}
 
@@ -616,7 +616,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		otherVO.getContainer().setSampleVOs(null);
 		otherVO.getCrystal().setSampleVOs(null);
 		otherVO.getProtein().setCrystalVOs(null);
-		otherVO.getBlSample().setEnergyScanVOs(null);
+		//otherVO.getBlSample().setEnergyScanVOs(null);
 		otherVO.getDiffractionPlan().setExperimentKindVOs(null);
 		return otherVO;
 	}

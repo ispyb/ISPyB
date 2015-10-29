@@ -21,6 +21,7 @@ package ispyb.server.mx.vos.collections;
 
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.mx.vos.sample.BLSample3VO;
 
 import java.util.Date;
 
@@ -56,6 +57,10 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	@ManyToOne
 	@JoinColumn(name = "sessionId")
 	private Session3VO sessionVO;
+	
+	@ManyToOne
+	@JoinColumn(name = "blSampleId")
+	private BLSample3VO blSampleVO;
 	
 	@Column(name = "fluorescenceDetector")
 	protected String fluorescenceDetector;
@@ -295,13 +300,21 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		return sessionVO;
 	}
 
-
-
 	public void setSessionVO(Session3VO sessionVO) {
 		this.sessionVO = sessionVO;
 	}
 
+	public Integer getBlSampleVOId(){
+		return blSampleVO == null ? null : blSampleVO.getBlSampleId();
+	}
 
+	public BLSample3VO getBlSampleVO() {
+		return blSampleVO;
+	}
+
+	public void setBlSampleVO(BLSample3VO blSampleVO) {
+		this.blSampleVO = blSampleVO;
+	}
 
 	public String getFluorescenceDetector() {
 		return fluorescenceDetector;

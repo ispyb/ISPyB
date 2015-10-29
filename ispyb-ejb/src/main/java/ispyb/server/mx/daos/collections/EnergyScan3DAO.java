@@ -92,5 +92,5 @@ public interface EnergyScan3DAO {
 	 */
 	public List<EnergyScan3VO> findAll();
 
-	public List<EnergyScan3VO> findFiltered(Integer sessionId);
+	public List<EnergyScan3VO> findFiltered(Integer sessionId, Integer sampleId);
 }

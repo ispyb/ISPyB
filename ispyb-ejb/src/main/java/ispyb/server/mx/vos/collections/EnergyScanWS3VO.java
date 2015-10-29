@@ -28,14 +28,17 @@ public class EnergyScanWS3VO extends EnergyScan3VO{
 	private static final long serialVersionUID = 7080709203057256940L;
 	
 	private Integer sessionId;
+	
+	private Integer blSampleId;
 
 	public EnergyScanWS3VO() {
 		super();
 	}
 
-	public EnergyScanWS3VO(Integer sessionId) {
+	public EnergyScanWS3VO(Integer sessionId, Integer blSampleId) {
 		super();
 		this.sessionId = sessionId;
+		this.blSampleId = blSampleId;
 	}
 	
 	public EnergyScanWS3VO(EnergyScan3VO vo) {
@@ -50,6 +53,14 @@ public class EnergyScanWS3VO extends EnergyScan3VO{
 		this.sessionId = sessionId;
 	}
 
+	public Integer getBlSampleId() {
+		return blSampleId;
+	}
+
+	public void setBlSampleId(Integer blSampleId) {
+		this.blSampleId = blSampleId;
+	}
+	
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();

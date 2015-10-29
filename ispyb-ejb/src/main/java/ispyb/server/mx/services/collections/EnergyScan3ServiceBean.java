@@ -190,12 +190,12 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<EnergyScan3VO> findFiltered(final Integer sessionId ) throws Exception{
+	public List<EnergyScan3VO> findFiltered(final Integer sessionId , final Integer sampleId) throws Exception{
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<EnergyScan3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<EnergyScan3VO> foundEntities = dao.findFiltered(sessionId);
+				List<EnergyScan3VO> foundEntities = dao.findFiltered(sessionId, sampleId);
 				return foundEntities;
 			}
 

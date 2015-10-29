@@ -165,18 +165,22 @@ public class EnergyScan3DAOBean implements EnergyScan3DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<EnergyScan3VO> findFiltered(Integer sessionId) {
+	public List<EnergyScan3VO> findFiltered(Integer sessionId, Integer sampleId) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(EnergyScan3VO.class);
 
-		Criteria subCritSess = crit.createCriteria("sessionVO");
-
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
 		if (sessionId != null) {
+			Criteria subCritSess = crit.createCriteria("sessionVO");
 			subCritSess.add(Restrictions.eq("sessionId", sessionId));
+		}
+		
+		if (sampleId != null) {
+			Criteria subCritSample = crit.createCriteria("blSampleVO");
+			subCritSample.add(Restrictions.eq("blSampleId", sampleId));
 		}
 
 		crit.addOrder(Order.desc("energyScanId"));
