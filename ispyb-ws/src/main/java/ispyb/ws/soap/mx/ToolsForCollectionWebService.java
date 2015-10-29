@@ -32,7 +32,6 @@ import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.BLSampleHasEnergyScan3Service;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
@@ -50,8 +49,6 @@ import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.BLSubSample3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategySubWedge3Service;
-import ispyb.server.mx.vos.collections.BLSampleHasEnergyScan3VO;
-import ispyb.server.mx.vos.collections.BLSampleHasEnergyScanWS3VO;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -888,8 +885,17 @@ public class ToolsForCollectionWebService {
 
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sessionVO = null;
-			if (vo.getSessionId() != null && vo.getSessionId() > 0)
+			if (vo.getSessionId() != null && vo.getSessionId() > 0) {
 				sessionVO = sessionService.findByPk(vo.getSessionId(), false, false, false);
+			}
+			
+			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
+			BLSample3VO blSampleVO = null;
+			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0) {
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+				LOG.debug(" with sample " + blSampleVO.toString());
+			}
+
 
 			EnergyScan3VO energyScan = new EnergyScan3VO();
 			// load the object elsewhere there is an error with the childs
@@ -898,6 +904,8 @@ public class ToolsForCollectionWebService {
 			}
 			energyScan.fillVOFromLight(vo);
 			energyScan.setSessionVO(sessionVO);
+			energyScan.setBlSampleVO(blSampleVO);
+			
 			// Issue 1511: dates set by ispyb
 			if (energyScanId == null || energyScanId == 0) {
 				// creation: startTime = endTime= currentTime
@@ -923,62 +931,6 @@ public class ToolsForCollectionWebService {
 			return energyScanId;
 		} catch (Exception e) {
 			LOG.error("WS ERROR: storeOrUpdateEnergyScan - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
-			throw e;
-		}
-	}
-
-	@WebMethod
-	@WebResult(name = "blSampleHasEnergyScanId")
-	public Integer storeBLSampleHasEnergyScan(@WebParam(name = "energyScanId")
-	Integer energyScanId, @WebParam(name = "blSampleId")
-	Integer blSampleId) throws Exception {
-
-		try {
-			LOG.debug("storeBLSampleHasEnergyScan");
-			if (energyScanId == null || energyScanId == 0)
-				energyScanId = null;
-			if (blSampleId == null || blSampleId == 0)
-				blSampleId = null;
-
-			if (blSampleId == null) {
-				LOG.debug("WS PB : blSampleId is null , could not create blSampleHasEnergyScan");
-				return errorCodeFK;
-			}
-
-			if (energyScanId == null) {
-				LOG.debug("WS PB : energyScanId is null , could not create blSampleHasEnergyScan");
-				return errorCodeFK;
-			}
-
-			BLSampleHasEnergyScan3Service blsampleHasEnergyScanService = (BLSampleHasEnergyScan3Service) ejb3ServiceLocator
-					.getLocalService(BLSampleHasEnergyScan3Service.class);
-
-			BLSampleHasEnergyScanWS3VO valueObject = new BLSampleHasEnergyScanWS3VO();
-
-			valueObject.setEnergyScanId(energyScanId);
-			valueObject.setBlSampleId(blSampleId);
-
-			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
-			BLSample3VO blSampleVO = null;
-			if (blSampleId != null && blSampleId > 0)
-				blSampleVO = blSampleService.findByPk(blSampleId, false, false);
-
-			EnergyScan3Service energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
-			EnergyScan3VO energyScanVO = null;
-			if (energyScanId != null && energyScanId > 0)
-				energyScanVO = energyScanService.findByPk(energyScanId);
-
-			BLSampleHasEnergyScan3VO blSampleHasEnergyScan = new BLSampleHasEnergyScan3VO();
-			blSampleHasEnergyScan.fillVOFromWS(valueObject);
-			blSampleHasEnergyScan.setBlSampleVO(blSampleVO);
-			blSampleHasEnergyScan.setEnergyScanVO(energyScanVO);
-
-			BLSampleHasEnergyScan3VO newValue = blsampleHasEnergyScanService.create(blSampleHasEnergyScan);
-			LOG.debug("storeBLSampleHasEnergyScan : " + newValue.getBlSampleHasEnergyScanId());
-			return newValue.getBlSampleHasEnergyScanId();
-		} catch (Exception e) {
-			LOG.error("WS ERROR: storeBLSampleHasEnergyScan - " + StringUtils.getCurrentDate() + " - " + energyScanId + ", "
-					+ blSampleId);
 			throw e;
 		}
 	}
