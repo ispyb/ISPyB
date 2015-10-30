@@ -76,7 +76,7 @@ import com.google.gson.reflect.TypeToken;
 @WebService(name = "CrimsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.sample")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
-@RolesAllowed({ "WebService", "User" })
+@RolesAllowed({ "WebService", "User", "Industrial" })
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
 public class CrimsWebService {
