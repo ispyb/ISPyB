@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -141,16 +142,24 @@ public class DewarRestWebService extends RestWebService {
 		PDFFormFiller pdfFormFiller = new PDFFormFiller();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		// try {
-//		zz
+		
+		String path= "/tmp/ParcelLabelsTemplate.pdf";
+		if (!new File(path).exists()){
+			Files.copy(new Constants().getTemplatePDFParcelLabelsWorldCourier(), Paths.get(path));
+		}
+		
+		
 		if (returnLabContact.getDefaultCourrierCompany() != null && returnLabContact.getDefaultCourrierCompany().equals(Constants.SHIPPING_DELIVERY_AGENT_NAME_WORLDCOURIER)) {
 //			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH),outputStream);
 //			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
-			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
+//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
+			pdfFormFiller.init(path,outputStream);
 			
 		} else {
 //			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
 //			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH), outputStream);
-			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
+//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
+			pdfFormFiller.init(path,outputStream);
 		}
 
 		// } catch (Exception e) {

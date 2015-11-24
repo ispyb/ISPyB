@@ -303,16 +303,14 @@ public class ShippingRestWebService extends MXRestWebService {
 			@FormParam("dewarAvgTransportValue") String dewarAvgTransportValue,
 			@FormParam("returnCourier") String returnCourier,
 			@FormParam("sendingLabContactId") int sendingLabContactId,
-			@FormParam("returnLabContactId") int returnLabContactId) {
+			@FormParam("returnLabContactId") int returnLabContactId,
+			@FormParam("sessionId") String sessionId) {
 
-		long id = this.logInit("saveShipping", logger, token, proposal, shippingId, name, comments, billingReference, courierAccount,  dewarAvgCustomsValue, dewarAvgTransportValue, returnCourier, sendingLabContactId, returnLabContactId );
+		long id = this.logInit("saveShipping", logger, token, proposal, shippingId, name, comments, billingReference, courierAccount,  dewarAvgCustomsValue, dewarAvgTransportValue, returnCourier, sendingLabContactId, returnLabContactId, sessionId );
 		try {
 
 			Shipping3VO shipping3VO = new Shipping3VO();
 
-			
-			
-			System.out.println("New ShippingId " + shippingId);
 			if ((shippingId != null) && (shippingId != "")) {
 				try{
 				shipping3VO = this.getShipping3Service().findByPk(Integer.parseInt(shippingId), true);
@@ -329,7 +327,6 @@ public class ShippingRestWebService extends MXRestWebService {
 			shipping3VO.setCreationDate(new Date());
 			shipping3VO.setTimeStamp(new Date());
 			shipping3VO.setShippingType(Constants.DEWAR_TRACKING_SHIPPING_TYPE);
-			// shipping3VO.setReturnCourier(returnCourier);
 
 			/** Lab contacts **/
 			LabContact3VO sendingLabContact = this.getLabContact3Service().findByPk(sendingLabContactId);
@@ -362,6 +359,17 @@ public class ShippingRestWebService extends MXRestWebService {
 				shipping3VO.setReturnLabContactVO(sendingLabContact);
 			}
 			
+			/** Sessions **/
+			if (shipping3VO.getSessions() != null){
+				shipping3VO.getSessions().clear();
+			}
+			
+			/** Is session a number **/
+			String regex = "\\d+";
+			if (sessionId.matches(regex)){
+				/** It is a number **/
+				shipping3VO.getSessions().add(this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false));	
+			}
 
 			if (shipping3VO.getShippingId() != null) {
 				getShipping3Service().update(shipping3VO);

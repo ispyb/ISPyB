@@ -1,7 +1,6 @@
 package ispyb.ws.rest.mx;
 
 import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.Image3VO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +22,25 @@ public class DataCollectionWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/old")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionIdList}/get")
 	@Produces({ "application/json" })
-	public Response getDataCollectionBySessionId(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, 
-			@PathParam("sessionId") int sessionId) {
+	public Response getDataCollectionById(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("dataCollectionIdList") String dataCollectionIdList) {
 
-		String methodName = "getDataCollectionBySessionId";
-		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		String methodName = "getDataCollectionById";
+		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
 		try {
-			List<DataCollection3VO> dataCollections = this.getDataCollection3Service().findFiltered(null, null, null, sessionId, null, true, null);
+			List<Integer> ids = this.parseToInteger(dataCollectionIdList);
+			
+			List<Map<String, Object>> result = this.getNativeDataCollection3Service().getDataCollectionById(ids);
 			this.logFinish(methodName, start, logger);
-			return this.sendResponse(dataCollections);
+			return this.sendResponse(result);
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
 	
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
