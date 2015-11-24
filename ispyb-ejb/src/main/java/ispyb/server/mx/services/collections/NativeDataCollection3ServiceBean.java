@@ -21,6 +21,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 	// LEFT JOIN Crystal cr on cr.crystalId = bl.crystalId
 	// LEFT JOIN Protein pr on pr.proteinId = cr.proteinId
 
-	private static String getBySessionQUERY = "select "
+	private static String getByQUERY = "select "
 			+ "(select count(*) from Image where Image.dataCollectionId = DataCollection.dataCollectionId) as nbStoredImages, "
 			+ "(select min(Image.imageId) from Image where Image.dataCollectionId = DataCollection.dataCollectionId) as firstImageId,"
 			+ "(select max(Image.imageId) from Image where Image.dataCollectionId = DataCollection.dataCollectionId) as lastImageId,"
@@ -83,20 +84,25 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 			+ NativeDataCollection3ServiceBean.getProteinColumns()
 			+ "," 
 			+ NativeDataCollection3ServiceBean.getDataCollectionColumns()
+			+ "," 
+			+ NativeDataCollection3ServiceBean.getDetectorColumns()
 			+ " from DataCollectionGroup  "
 			+ " LEFT JOIN DataCollection on DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId"
+			+ " LEFT JOIN Detector on DataCollection.detectorId = Detector.detectorId"
 			+ " LEFT JOIN Screening on Screening.dataCollectionId = DataCollection.dataCollectionGroupId"
 			+ " LEFT JOIN ScreeningOutput on ScreeningOutput.screeningId = Screening.screeningId"
 			+ " LEFT JOIN ScreeningStrategy  on ScreeningStrategy.screeningOutputId = ScreeningOutput.screeningOutputId"
 			+ " LEFT JOIN BLSession  on BLSession.sessionId = DataCollectionGroup.sessionId"
-			// +
-			// " LEFT JOIN ScreeningStrategyWedge Sctw on Sctw.screeningStrategyId = Sct.screeningStrategyId"
-			// +
-			// " LEFT JOIN ScreeningStrategySubWedge SctwSub on SctwSub.screeningStrategyWedgeId = Sctw.screeningStrategyWedgeId"
 			+ " LEFT JOIN BLSample on BLSample.blSampleId = DataCollectionGroup.blSampleId"
 			+ " LEFT JOIN Crystal  on Crystal.crystalId = BLSample.crystalId" 
-			+ " LEFT JOIN Protein  on Protein.proteinId = Crystal.proteinId"
+			+ " LEFT JOIN Protein  on Protein.proteinId = Crystal.proteinId";
+	
+	private static String getBySessionQUERY = getByQUERY
 			+ " where DataCollectionGroup.sessionId = :sessionId";
+	
+	private static String getByDataCollectionId = getByQUERY
+			+ " where DataCollection.dataCollectionId = :dataCollectionId";
+	
 
 	@Override
 	public List<Map<String, Object>> getDataCollectionBySessionId(int sessionId) {
@@ -280,6 +286,26 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 					"DataCollectionGroup.xtalSnapshotFullPath as DataCollectionGroup_xtalSnapshotFullPath";
 	}
 
+	private static String getDetectorColumns(){
+		return  "Detector.detectorId as Detector_detectorId,\r\n " +
+				"Detector.detectorType as Detector_detectorType,\r\n " +
+				"Detector.detectorManufacturer as Detector_detectorManufacturer,\r\n " +
+				"Detector.detectorModel as Detector_detectorModel,\r\n " +
+				"Detector.detectorPixelSizeHorizontal as Detector_detectorPixelSizeHorizontal,\r\n " +
+				"Detector.detectorPixelSizeVertical as Detector_detectorPixelSizeVertical,\r\n " +
+				"Detector.detectorSerialNumber as Detector_detectorSerialNumber,\r\n " +
+				"Detector.detectorDistanceMin as Detector_detectorDistanceMin,\r\n " +
+				"Detector.detectorDistanceMax as Detector_detectorDistanceMax,\r\n " +
+				"Detector.trustedPixelValueRangeLower as Detector_trustedPixelValueRangeLower,\r\n " +
+				"Detector.trustedPixelValueRangeUpper as Detector_trustedPixelValueRangeUpper,\r\n " +
+				"Detector.sensorThickness as Detector_sensorThickness,\r\n " +
+				"Detector.overload as Detector_overload,\r\n " +
+				"Detector.XGeoCorr as Detector_XGeoCorr,\r\n " +
+				"Detector.YGeoCorr as Detector_YGeoCorr,\r\n " +
+				"Detector.detectorMode as Detector_detectorMode";
+		
+		
+	}
 	private static String getDataCollectionColumns() {
 		return  "DataCollection.dataCollectionId as DataCollection_dataCollectionId,\r\n " +
 				"DataCollection.dataCollectionGroupId as DataCollection_dataCollectionGroupId,\r\n " +
@@ -340,6 +366,27 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 				"DataCollection.bestWilsonPlotPath as DataCollection_bestWilsonPlotPath";
 
 
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataCollectionById(int dataCollectionId) {
+		String mySQLQuery = getByDataCollectionId;
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("dataCollectionId", dataCollectionId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataCollectionById(List<Integer> ids) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		for (Integer id : ids) {
+			result.addAll(this.getDataCollectionById(id));
+		}
+		return result;
 	}
 
 }

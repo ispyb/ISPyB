@@ -30,6 +30,10 @@ public interface NativeDataCollection3Service {
 
 	public List<Map<String,Object>> getDataCollectionBySessionId(int sessionId);
 
+	public  List<Map<String,Object>> getDataCollectionById(int dataCollectionId);
+
+	public List<Map<String,Object>> getDataCollectionById(List<Integer> ids);
+
 
 
 }
