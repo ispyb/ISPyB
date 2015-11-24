@@ -126,7 +126,7 @@ public class Shipping3VO extends ISPyBValueObject implements Cloneable {
 	@Fetch(value = FetchMode.SELECT)
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "ShippingHasSession", joinColumns = { @JoinColumn(name = "shippingId", referencedColumnName = "shippingId") }, inverseJoinColumns = { @JoinColumn(name = "sessionId", referencedColumnName = "sessionId") })
-	private Set<Session3VO> sessions;
+	protected Set<Session3VO> sessions;
 
 	public Shipping3VO() {
 		super();
