@@ -328,7 +328,7 @@ public class DewarRestWebService extends RestWebService {
 
 		try {
 			byte[] pdf = this.getLabels(dewarId);
-			return this.downloadFile(pdf, "test.pdf");
+			return this.downloadFile(pdf, "parcel_" + dewarId +".pdf");
 		} catch (Exception e) {
 			return this.logError("getLabels", e, start, logger);
 		}
