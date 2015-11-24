@@ -1,9 +1,20 @@
 **************
+* 24.11.2015     *
+**************
+
+- fix bug concerning csv export of collections linked to : Replace Many2Many link by One2Many for link between BlSample and EnergyScans
+
+**************
+
+New TAG : TAG ISPYB-17nov2015
+
+
+**************
 * 30.10.2015     *
 **************
 
 - Replace Many2Many link by One2Many for link between BlSample and EnergyScans
-- Change the webservices address : replace /ispyv-ws/ by /ispyb/ispyb-ws/
+- Change the webservices address : replace /ispyb-ws/ by /ispyb/ispyb-ws/
 
 **************
 * 09.10.2015     *
