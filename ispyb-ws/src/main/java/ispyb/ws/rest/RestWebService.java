@@ -76,7 +76,7 @@ public class RestWebService {
 				File file = new File(filePath);
 				ResponseBuilder response = Response.ok((Object) file);
 				response.header("Content-Disposition", "attachment; filename=" + new File(filePath).getName());
-				return response.build();
+				return response.header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
 		return Response.status(Response.Status.NOT_FOUND).build();
