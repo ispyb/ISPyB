@@ -1,5 +1,7 @@
 package ispyb.ws.rest.security.login;
 
+import ispyb.ws.rest.security.AuthenticationRestWebService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -12,7 +14,11 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.apache.log4j.Logger;
+
 public class EMBLLoginModule{
+	private final static Logger logger = Logger.getLogger(EMBLLoginModule.class);
+	
 	private static String groupUniqueMemberName = "member";
 	private static String principalDNSuffix = ",ou=Internal,ou=People,dc=embl-hamburg,dc=de";
 	private  static String groupCtxDN = "ou=Pxwebgroups,dc=embl-hamburg,dc=de";
@@ -21,9 +27,7 @@ public class EMBLLoginModule{
 	private  static String server = "ldaps://services:636/";
 	private  static String socketFactory = "ispyb.ws.rest.security.login.SmisSSLSocketFactory";
 	
-									
-	public static Properties getConnectionProperties(String username, String password){
-		System.out.println("EMBL login");
+	private static Properties getConnectionProperties(String username, String password){
 		Properties env = new Properties();
 		env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put("useTls", "true");
@@ -32,7 +36,6 @@ public class EMBLLoginModule{
 		env.put("sharedAttributeID", "uidNumber");
 		env.put("java.naming.ldap.factory.socket", socketFactory);
 		env.put("principalDNPrefix", principalDNPrefix);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=Internal,ou=People,dc=embl-hamburg,dc=de");
 		env.put("groupAttributeID", groupAttributeID);
 		env.put("groupCtxDN", groupCtxDN);
 		env.put("principalDNSuffix", principalDNSuffix);
@@ -43,21 +46,32 @@ public class EMBLLoginModule{
 		env.put("java.naming.security.authentication", "simple");
 		env.put("java.naming.security.credentials", password);
 		return env;
-		
 	}
+	
+	private static Properties getInternalConnectionProperties(String username, String password){
+			Properties env = EMBLLoginModule.getConnectionProperties(username, password);
+			env.put("java.naming.security.principal", "uid=" + username + ",ou=Internal,ou=People,dc=embl-hamburg,dc=de");
+			return env;
+	}
+	
+	private static Properties getVisitorConnectionProperties(String username, String password){
+		Properties env = EMBLLoginModule.getConnectionProperties(username, password);
+		env.put("java.naming.security.principal", "uid=" + username + ",ou=Visitor,ou=People,dc=embl-hamburg,dc=de");
+		return env;
+	}
+	
 	
 	public static String getFilter(String username){
 		String userDN = principalDNPrefix + username + principalDNSuffix;
 		return new StringBuffer().append("(&").append("(objectClass=groupOfNames)").append("(" + groupUniqueMemberName + "=").append(userDN).append(")").append(")").toString();
+		
 	}
 	
-	public static List<String> authenticate(String username, String password)
-			throws NamingException {
 		
+	private static List<String> authenticate(String username, String password, Properties properties) throws NamingException {
 		List<String> myRoles = new ArrayList<String>();
-		
-		InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
-		
+//		InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
+		InitialLdapContext ctx = new InitialLdapContext(properties, null);
 		// Set up search constraints
 		SearchControls cons = new SearchControls();
 		cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -66,7 +80,6 @@ public class EMBLLoginModule{
 		while (answer.hasMore()) {
 			SearchResult sr = answer.next();
 			Attributes attrs = sr.getAttributes();
-			System.out.println(attrs.toString());
 			Attribute roles = attrs.get(groupAttributeID);
 			for (int r = 0; r < roles.size(); r++) {
 				Object value = roles.get(r);
@@ -80,6 +93,17 @@ public class EMBLLoginModule{
 			}
 		}
 		return myRoles;
+	}
+	
+	public static List<String> authenticate(String username, String password) throws NamingException {
+		try{
+			return authenticate(username, password, EMBLLoginModule.getInternalConnectionProperties(username, password));
+		}
+		catch(Exception e){
+			logger.info("Failed to authentica as staff (internal");
+			e.printStackTrace();
+		}
+		return authenticate(username, password, EMBLLoginModule.getVisitorConnectionProperties(username, password));
 	}
 }
 
