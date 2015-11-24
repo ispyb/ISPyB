@@ -61,7 +61,7 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	@ManyToOne
 	@JoinColumn(name = "blSampleId")
 	private BLSample3VO blSampleVO;
-	
+		
 	@Column(name = "fluorescenceDetector")
 	protected String fluorescenceDetector;
 	

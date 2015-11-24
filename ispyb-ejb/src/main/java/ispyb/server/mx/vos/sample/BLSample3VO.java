@@ -124,6 +124,9 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 //	@ManyToMany(fetch = FetchType.EAGER)
 //	@JoinTable(name = "BLSample_has_EnergyScan", joinColumns = { @JoinColumn(name = "blSampleId", referencedColumnName = "blSampleId") }, inverseJoinColumns = { @JoinColumn(name = "energyScanId", referencedColumnName = "energyScanId") })
 //	private Set<EnergyScan3VO> energyScanVOs;
+	@OneToMany
+	@JoinColumn(name = "blSampleId")
+	private Set<EnergyScan3VO> energyScanVOs;
 	
 	@OneToMany
 	@JoinColumn(name = "blSampleId")
@@ -390,17 +393,17 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		return crystalVO == null ? null : crystalVO.getCrystalId();
 	}
 
-//	public Set<EnergyScan3VO> getEnergyScanVOs() {
-//		return energyScanVOs;
-//	}
-//
-//	public void setEnergyScanVOs(Set<EnergyScan3VO> energyScanVOs) {
-//		this.energyScanVOs = energyScanVOs;
-//	}
-//
-//	public EnergyScan3VO[] getEnergyScansTab() {
-//		return this.energyScanVOs == null ? null : energyScanVOs.toArray(new EnergyScan3VO[this.energyScanVOs.size()]);
-//	}
+	public Set<EnergyScan3VO> getEnergyScanVOs() {
+		return energyScanVOs;
+	}
+
+	public void setEnergyScanVOs(Set<EnergyScan3VO> energyScanVOs) {
+		this.energyScanVOs = energyScanVOs;
+	}
+
+	public EnergyScan3VO[] getEnergyScansTab() {
+		return this.energyScanVOs == null ? null : energyScanVOs.toArray(new EnergyScan3VO[this.energyScanVOs.size()]);
+	}
 
 	public Integer getDiffractionPlanVOId() {
 		if (this.diffractionPlanVO != null)
