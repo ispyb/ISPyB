@@ -132,7 +132,8 @@ public class SessionDataObject {
 		this.listDataCollection = listDataCollection;
 					
 		if (listDataCollection != null && listDataCollection.size() > 0){
-			this.dataTime = listDataCollection.get(0).getStartTime();
+			//this.dataTime = listDataCollection.get(0).getStartTime();
+			this.dataTime = listDataCollection.get(listDataCollection.size()-1).getStartTime();
 		}
 	} 
 	
