@@ -1,4 +1,11 @@
 **************
+* 22.12.2015     *
+**************
+
+- fix bug # 2601 starting time of workflow is starting time of first collect
+- Add some snowflakes ! hoping it would call the snow in Grenoble !
+
+**************
 * 24.11.2015     *
 **************
 
