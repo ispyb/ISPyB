@@ -203,7 +203,7 @@ public class WorkflowManagerService {
 	public byte[] getFile(String filePath) {
 		long start = this.logInit("getFile");
 		try {
-			byte[] result =  ispyb.common.util.FileUtils.getFile(filePath.trim());
+			byte[] result =  ispyb.common.util.IspybFileUtils.getFile(filePath.trim());
 			this.logFinish("getFile", start);
 			return result;
 		} catch (IOException e) {

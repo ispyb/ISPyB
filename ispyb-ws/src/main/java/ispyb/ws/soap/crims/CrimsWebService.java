@@ -360,7 +360,7 @@ public class CrimsWebService {
 				Image3VO image3VO = image3Service.findByPk(Integer.parseInt(imageId));
 				if (image3VO != null) {
 					if (image3VO.getFileLocation() != null) {
-						byte[] result = ispyb.common.util.FileUtils.getFile(image3VO.getJpegThumbnailFileFullPath().trim());
+						byte[] result = ispyb.common.util.IspybFileUtils.getFile(image3VO.getJpegThumbnailFileFullPath().trim());
 						this.logFinish("getFileByImageId", id);
 						return result;
 					}
@@ -418,7 +418,7 @@ public class CrimsWebService {
 					System.out.println(filePath);
 					if (filePath != null) {
 						if (new File(filePath.trim()).exists()){
-							byte[] result = ispyb.common.util.FileUtils.getFile(filePath.trim());
+							byte[] result = ispyb.common.util.IspybFileUtils.getFile(filePath.trim());
 							this.logFinish("getSnapshotFileByDataCollectionId", id);
 							return result;
 						}
