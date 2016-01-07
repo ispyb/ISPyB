@@ -22,7 +22,7 @@
 
 package ispyb.client.mx.sample;
 
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
 import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;

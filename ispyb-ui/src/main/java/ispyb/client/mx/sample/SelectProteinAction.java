@@ -25,7 +25,7 @@
 package ispyb.client.mx.sample;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.sample.BLSample3Service;

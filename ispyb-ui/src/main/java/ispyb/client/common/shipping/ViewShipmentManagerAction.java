@@ -19,7 +19,7 @@
 package ispyb.client.common.shipping;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;

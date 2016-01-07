@@ -22,7 +22,7 @@ package ispyb.client.common.shipping;
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.proposal.ProposalUtils;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.client.common.util.QueryBuilder;
 import ispyb.common.util.Constants;
 import ispyb.server.common.services.proposals.LabContact3Service;

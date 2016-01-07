@@ -21,7 +21,7 @@ package ispyb.client.mx.sample;
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.DBConstants;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PathUtils;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;

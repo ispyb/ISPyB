@@ -24,7 +24,7 @@
 
 package ispyb.client.common;
 
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;

@@ -1867,7 +1867,7 @@ public class ViewResultsAction extends DispatchAction {
 			if (out.exists())
 				out.delete();
 			try {
-				ispyb.common.util.FileUtils.createTarGz(listFilesToDownload, out, false);
+				ispyb.common.util.IspybFileUtils.createTarGz(listFilesToDownload, out, false);
 			} catch (IOException e) {
 				e.printStackTrace();
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewResults"));

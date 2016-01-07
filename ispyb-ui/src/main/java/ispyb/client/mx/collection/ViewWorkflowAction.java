@@ -31,7 +31,7 @@ import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.EMBLBeamlineEnum;
 import ispyb.common.util.ESRFBeamlineEnum;
-import ispyb.common.util.FileUtils;
+import ispyb.common.util.IspybFileUtils;
 import ispyb.common.util.MAXIVBeamlineEnum;
 import ispyb.common.util.PathUtils;
 import ispyb.common.util.SOLEILBeamlineEnum;
@@ -646,7 +646,7 @@ public class ViewWorkflowAction extends DispatchAction {
 			// for each directory in resultFileFullPath, display index.html
 			List<FileInformation> listFileInformation = new ArrayList<FileInformation>();
 			File resultDirectory = new File(resultFileFullPath);
-			List<File> resultFilesList =FileUtils.getListFile(resultDirectory,Constants.INDEX_FILE_NAME_WORKFLOW_RESULT);
+			List<File> resultFilesList =IspybFileUtils.getListFile(resultDirectory,Constants.INDEX_FILE_NAME_WORKFLOW_RESULT);
 			for (Iterator<File> iterator = resultFilesList.iterator(); iterator.hasNext();) {
 				File file = (File) iterator.next();
 				String path = file.getPath();

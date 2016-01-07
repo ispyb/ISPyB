@@ -178,12 +178,12 @@
       type="ispyb.client.mx.collection.ViewWorkflowForm"
     />
     <form-bean
-      name="launchDataConfidentialityForm"
-      type="ispyb.client.common.admin.LaunchDataConfidentialityForm"
-    />
-    <form-bean
       name="uploadForm"
       type="ispyb.client.common.shipping.UploadForm"
+    />
+    <form-bean
+      name="launchDataConfidentialityForm"
+      type="ispyb.client.common.admin.LaunchDataConfidentialityForm"
     />
     <form-bean
       name="viewSessionForm"

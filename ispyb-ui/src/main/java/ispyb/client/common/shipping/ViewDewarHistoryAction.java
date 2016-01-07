@@ -26,7 +26,7 @@ package ispyb.client.common.shipping;
 
 import ispyb.client.security.roles.RoleDO;
 import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;

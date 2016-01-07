@@ -25,18 +25,16 @@
 package ispyb.client.common.shipping;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.security.roles.RoleDO;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.Confidentiality;
-import ispyb.client.common.util.DBTools;
 import ispyb.client.common.util.MISServletUtils;
 import ispyb.client.common.util.PDFFormFiller;
+import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
-import ispyb.common.util.PropertyLoader;
+import ispyb.common.util.DBTools;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
-import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
@@ -61,7 +59,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;

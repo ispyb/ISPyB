@@ -33,11 +33,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.1-FINAL</version>
-		</dependency>
-		<dependency>
 			<groupId>struts-layout</groupId>
 			<artifactId>struts-layout</artifactId>
 			<version>1.2</version>
@@ -164,11 +159,6 @@
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.18.1-GA</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>

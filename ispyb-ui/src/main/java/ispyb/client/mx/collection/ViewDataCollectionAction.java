@@ -2783,7 +2783,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 				if (out.exists())
 					out.delete();
 				try {
-					ispyb.common.util.FileUtils.createTarGz(listFilesToDownload, out, true);
+					ispyb.common.util.IspybFileUtils.createTarGz(listFilesToDownload, out, true);
 				} catch (IOException e) {
 					e.printStackTrace();
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewResults"));

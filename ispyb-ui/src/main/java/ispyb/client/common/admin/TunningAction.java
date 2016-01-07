@@ -84,7 +84,7 @@ public class TunningAction extends org.apache.struts.actions.DispatchAction {
 			String auth_prefix = (String) authenticationInfo.get(1);
 			String auth_proposalNumber = (String) authenticationInfo.get(2);
 
-			Proposal3VO proposal = ispyb.client.common.util.DBTools.getProposal(auth_proposalCode, auth_proposalNumber);
+			Proposal3VO proposal = ispyb.common.util.DBTools.getProposal(auth_proposalCode, auth_proposalNumber);
 			Integer proposalId = proposal.getProposalId();
 
 			request.getSession().setAttribute(Constants.PROPOSAL_ID, proposalId);

@@ -26,7 +26,7 @@ package ispyb.client.mx.container;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.DBTools;
+import ispyb.common.util.DBTools;
 import ispyb.common.util.Constants;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
