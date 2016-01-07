@@ -225,7 +225,8 @@ public class UploadShipmentUtils {
 				if (getTemplateFilenameOnly && !populateForShipment)
 					return proposalCode + proposalNumber + ((populateDMCodes) ? "_#" : "") + today;
 
-				xlsPath = request.getRealPath(xlsPath);
+				String requestPath = request.getRealPath("/");
+				xlsPath = requestPath + xlsPath;
 				String prefix = new File(xlsPath).getParent();
 				populatedTemplateFileName	= (prefix + "/" + new File(populatedTemplateFileName).getName());
 			
