@@ -39,7 +39,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
  * @author BODIN
  *
  */
-public final class FileUtils {
+public final class IspybFileUtils {
 
 	private static final int BUFFER_SIZE = 1024;
 
