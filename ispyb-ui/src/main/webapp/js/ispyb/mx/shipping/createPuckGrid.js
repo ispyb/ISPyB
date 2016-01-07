@@ -217,7 +217,7 @@ CreatePuckGrid.prototype.getGrid = function (data) {
 // initGrid: set the position value and the default values
 CreatePuckGrid.prototype.initGrid = function () {
 	this.features = [];
-	for (var i = 0; i < 10; i++) {
+	for (var i = 0; i < 16; i++) {
 		this.features.push({
 			sampleId : -1,
 			position : i + 1,
@@ -253,7 +253,7 @@ CreatePuckGrid.prototype.updateListSamples = function (data) {
 
 // format the position number on 2 digit, in order to have a correct sort
 CreatePuckGrid.prototype._formatPostionNumber = function (i) {
-	if (i && i < 10) {
+	if (i && i < 16) {
 		return "0" + i;
 	}
 	return i;
@@ -486,7 +486,7 @@ CreatePuckGrid.prototype.changeSampleName = function (value, idRow) {
 		var proteinValue = this.grid.store.getAt(idRow).data.proteinAcronym;
 		var idToIncrement = 1;
 		// set the new values automatically for the same protein acronym
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 16; i++) {
 			var currentProtein = this.grid.store.getAt(i).data.proteinAcronym;
 			if (proteinValue == currentProtein) {
 				this.grid.store.getAt(i).set('sampleName',
@@ -970,7 +970,7 @@ CreatePuckGrid.prototype.getCellValue = function (proteinValue) {
 // reset the whole grid
 CreatePuckGrid.prototype.reset = function () {
 	var f = [];
-	for (var i = 0; i < 10; i++) {
+	for (var i = 0; i < 16; i++) {
 		f.push({
 					sampleId : this.features[i].sampleId,
 					position : i + 1,
