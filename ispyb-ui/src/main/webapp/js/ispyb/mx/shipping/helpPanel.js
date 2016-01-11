@@ -64,6 +64,7 @@ HelpPanel.prototype.getPanel = function () {
 		helpText += "Each tab represents a puck. </br>";
 	}
 	helpText += "Each row of the table represents a sample at a given position in the puck. Make sure you provide data in all mandatory fields (highlighted in light red) for each sample. </br>";
+	helpText += "<span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of UNIPUCKS pucks, not with SPINE Pucks. </br>";
 	helpText += "Sample names: </br>";
 	helpText += "- Make sure the sample name contains only a-z , A-Z or 0-9 or - or _ characters.</br>";
 	helpText += "- Make sure the sample name is unique for a protein in the same shipment.</br>";

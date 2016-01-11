@@ -20349,10 +20349,13 @@ CreatePuckGrid.prototype._getColumns = function () {
 	}
 
 	// render position (without formating)
-	function renderPosition(value, p, record) {
+	function renderPosition(value, metadata, p, record) {
 		if (value == null){
 			return "";
 		}
+		if (value > 10){
+			metadata.tdAttr = 'style="background-color: #ffcc66"';
+		}	
 		return Number(value);
 	}
 
@@ -21756,6 +21759,7 @@ HelpPanel.prototype.getPanel = function () {
 		helpText += "Each tab represents a puck. </br>";
 	}
 	helpText += "Each row of the table represents a sample at a given position in the puck. Make sure you provide data in all mandatory fields (highlighted in light red) for each sample. </br>";
+	helpText += "<span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of UNIPUCKS pucks, not with SPINE Pucks. </br>";
 	helpText += "Sample names: </br>";
 	helpText += "- Make sure the sample name contains only a-z , A-Z or 0-9 or - or _ characters.</br>";
 	helpText += "- Make sure the sample name is unique for a protein in the same shipment.</br>";
@@ -21927,7 +21931,7 @@ var IspybCreatePuck = {
 				items : [ {
 					xtype: 'component',
 					style: 'margin-top:10px',
-					html: "(*) mandatory field for each sample"
+					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of UNIPUCKS pucks, not with SPINE Pucks. "
 				}]
 			});
 			mainItems.push(subPanel);
@@ -22154,7 +22158,7 @@ var IspybFillShipment = {
 				items : [ {
 					xtype: 'component',
 					style: 'margin-top:10px',
-					html: "(*) mandatory field for each sample"
+					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of UNIPUCKS pucks, not with SPINE Pucks. "
 				}]
 			});
 			mainItems.push(subPanel);

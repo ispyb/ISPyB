@@ -562,10 +562,13 @@ CreatePuckGrid.prototype._getColumns = function () {
 	}
 
 	// render position (without formating)
-	function renderPosition(value, p, record) {
+	function renderPosition(value, metadata, p, record) {
 		if (value == null){
 			return "";
 		}
+		if (value > 10){
+			metadata.tdAttr = 'style="background-color: #ffcc66"';
+		}	
 		return Number(value);
 	}
 
