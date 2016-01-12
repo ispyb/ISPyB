@@ -193,7 +193,7 @@ var IspybFillShipment = {
 				items : [ {
 					xtype: 'component',
 					style: 'margin-top:10px',
-					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of UNIPUCKS pucks, not with SPINE Pucks. "
+					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks. Be aware that only ID30B can accomodate unipucks (16 samples), other ESRF MX beamlines only accomodate SPINE pucks (10 samples) "
 				}]
 			});
 			mainItems.push(subPanel);
