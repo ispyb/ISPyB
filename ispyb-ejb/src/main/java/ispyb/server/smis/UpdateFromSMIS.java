@@ -200,157 +200,102 @@ public class UpdateFromSMIS {
 		// -----------------------------------------------------------------------------------
 		// create the proposal + person + labo if it does not exist
 		// -----------------------------------------------------------------------------------
-		if (mainProposers != null && mainProposers.length > 0) {
-
-			ProposalParticipantInfoLightVO mainProp = mainProposers[0];
-			mainProp.getCategoryCode();
-			String uoCode = mainProp.getCategoryCode();
-			Integer proposalNumber = mainProp.getCategoryCounter();
-			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
-
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-			LOG.debug("Bllogin : " + mainProp.getBllogin());
-
-			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode,
-					Integer.toString(proposalNumber), false, false, false);
-			if (listProposals.isEmpty()) {
-				// the proposal does not belong yet to ISPyB database
-
-				LOG.debug("proposal is new");
-
-				Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
-
-				proposalId = proposal.create(propv).getProposalId();
-
-				LOG.debug("inserted a new proposal inside ISPyB db:" + proposalCode + proposalNumber);
-			} else {
-				// proposal already exists: update information for the main
-				// proposer and the laboratory if needed
-				// Issue 1656
-				LOG.debug("proposal already exists");
-				Proposal3VO proposalVO = listProposals.get(0);
-				Person3VO currentPerson = proposalVO.getPersonVO();
-				String currentFamilyName = currentPerson.getFamilyName();
-				String currentGivenName = currentPerson.getGivenName();
-				// main proposer
-				String familyName = mainProp.getScientistName();
-				String givenName = mainProp.getScientistFirstName();
-
-				if (Constants.getSite().equals(SITE.EMBL)) {
-					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
-						currentPerson.setLogin(mainProp.getBllogin());
-						person.update(currentPerson);
-						LOG.debug("Update person");
+		ArrayList<ProposalParticipantInfoLightVO> mxProposers = new ArrayList<ProposalParticipantInfoLightVO>();
+		ArrayList<ProposalParticipantInfoLightVO> bxProposers = new ArrayList<ProposalParticipantInfoLightVO>();
+		if (Constants.SITE_IS_SOLEIL()) {
+			if (mainProposers != null && mainProposers.length > 0) {
+				for (ProposalParticipantInfoLightVO proposer : mainProposers) {
+					if (proposer.getCategoryCode().equalsIgnoreCase("mx")) {
+						mxProposers.add(proposer);
+						LOG.debug(" mx proposers for propos_no = " + pk + " | size = " + mxProposers.size());
+					} else if (proposer.getCategoryCode().equalsIgnoreCase("bx")) {
+						bxProposers.add(proposer);
+						LOG.debug(" bx proposers for propos_no = " + pk + " | size = " + bxProposers.size());
 					}
 				}
-
-				if (!StringUtils.matchString(currentFamilyName, familyName)
-						|| !StringUtils.matchString(currentGivenName, givenName)) {
-					// proposer has changed
-					Integer oldPersonId = proposalVO.getPersonVOId();
-					Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
-					proposalVO.setPersonVO(propv.getPersonVO());
-					proposalVO.setTitle(propv.getTitle());
-					proposalVO.setType(propv.getType());
-					proposal.update(proposalVO);
-					LOG.debug("proposal updated " + proposalVO.getProposalId() + " (" + oldPersonId + " -> "
-							+ propv.getPersonVOId() + ")");
-				}
 			}
-		} else {
-			LOG.debug("No main proposers found for Proposal ");
+		}
+		
+		if (!Constants.SITE_IS_SOLEIL()) {
+			loadProposers(mainProposers);
+		} else if (Constants.SITE_IS_SOLEIL()) {
+			if (mxProposers != null && !mxProposers.isEmpty()) {
+				LOG.debug(" search for mx sessions for propos_no = " + pk + " | size = " + mxProposers.size());
+				mainProposers = new ProposalParticipantInfoLightVO[mxProposers.size()];
+				mainProposers = mxProposers.toArray(mainProposers);
+				loadProposers(mainProposers);
+			}
+			if (bxProposers != null && !bxProposers.isEmpty()) {
+				LOG.debug(" search for bx sessions for propos_no = " + pk);
+				mainProposers = new ProposalParticipantInfoLightVO[bxProposers.size()];
+				mainProposers = bxProposers.toArray(mainProposers);
+				loadProposers(mainProposers);
+			}
 		}
 
 		// -----------------------------------------------------------------------------------
 		// the proposal is created : load samples and sessions
 		// -----------------------------------------------------------------------------------
-
-		if (smisSessions != null && smisSessions.length > 0) {
-
-			String uoCode = smisSessions[0].getCategCode();
-			Integer proposalNumber = smisSessions[0].getCategCounter();
-			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
-
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-
-			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode,
-					Integer.toString(proposalNumber), false, false, false);
-
-			if (existingProposalList.size() > 1)
-				LOG.debug("error ! duplicate code and number in ISPyB database");
-			Proposal3VO proplv = existingProposalList.get(0);
-			proposalId = proplv.getProposalId();
-			LOG.debug("proposal is not new, proposalId = " + proposalId);
-
-			// retrieve all new sessions
-			for (int k = 0; k < smisSessions.length; k++) {
-				ExpSessionInfoLightVO sessionVO = smisSessions[k];
-
-				retrieveSession(proplv, sessionVO);
-
-			}
-
-		} else {
-			LOG.debug(" no sessions found for propos_no = " + pk);
-
-		}
-
-		if (smisSamples != null && smisSamples.length > 0) {
-
-			String uoCode = smisSamples[0].getCategoryCode();
-			Integer proposalNumber = smisSamples[0].getCategoryCounter();
-			String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
-
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-
-			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode,
-					Integer.toString(proposalNumber), false, false, false);
-
-			if (existingProposalList.size() > 1)
-				LOG.debug("error ! duplicate code and number in ISPyB database");
-			Proposal3VO proplv = existingProposalList.get(0);
-			proposalId = proplv.getProposalId();
-			LOG.debug("proposal is not new, proposalId = " + proposalId);
-
-			// retrieve all new samplesheets
-
-			LOG.debug("searching for new samplesheets");
-
-			/**
-			 * For Biosaxs, copying proteins to macromolecule table if they
-			 * don't exist yet
-			 **/
-			if (proplv.getType().equals("MB") || proplv.getType().equals("BX")) {
-				for (SampleSheetInfoLightVO sampleSheetInfoLightVO : smisSamples) {
-					try {
-						SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
-								.getLocalService(SaxsProposal3Service.class);
-						/**
-						 * If there is not any macromolecule with that acronym
-						 * and proposalId it will be created
-						 **/
-						if (saxsProposal3Service.findMacromoleculesBy(sampleSheetInfoLightVO.getAcronym(), proposalId)
-								.size() == 0) {
-							saxsProposal3Service.merge(new Macromolecule3VO(proposalId, sampleSheetInfoLightVO
-									.getAcronym(), sampleSheetInfoLightVO.getAcronym(), sampleSheetInfoLightVO
-									.getDescription()));
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-						LoggerFormatter.log(LOG, Package.BIOSAXS_DB, "updateThisProposalFromSMISPk",
-								System.currentTimeMillis(), System.currentTimeMillis(), e.getMessage(), e);
+		ArrayList<ExpSessionInfoLightVO> mxSessions = new ArrayList<ExpSessionInfoLightVO>();
+		ArrayList<ExpSessionInfoLightVO> bxSessions = new ArrayList<ExpSessionInfoLightVO>();
+		if (Constants.SITE_IS_SOLEIL()) {
+			if (smisSessions != null && smisSessions.length > 0) {
+				for (ExpSessionInfoLightVO session : smisSessions) {
+					if (session.getCategCode().equalsIgnoreCase("mx")) {
+						mxSessions.add(session);
+					} else if (session.getCategCode().equalsIgnoreCase("bx")) {
+						bxSessions.add(session);
 					}
 				}
 			}
-
-			for (int j = 0; j < smisSamples.length; j++) {
-
-				SampleSheetInfoLightVO value = smisSamples[j];
-				retrieveSampleSheet(proplv, value);
-
+		}
+		
+		if (!Constants.SITE_IS_SOLEIL()) {
+			loadSessions(smisSessions);
+		} else if (Constants.SITE_IS_SOLEIL()) {
+			if (mxSessions != null && !mxSessions.isEmpty()) {
+				LOG.debug(" search for mx sessions for propos_no = " + pk);
+				smisSessions = new ExpSessionInfoLightVO[mxSessions.size()];
+				smisSessions = mxSessions.toArray(smisSessions);
+				loadSessions(smisSessions);
 			}
-		} else {
-			LOG.debug(" no samples found for propos_no = " + pk);
+			if (bxSessions != null && !bxSessions.isEmpty()) {
+				LOG.debug(" search for bx sessions for propos_no = " + pk);
+				smisSessions = new ExpSessionInfoLightVO[bxSessions.size()];
+				smisSessions = bxSessions.toArray(smisSessions);
+				loadSessions(smisSessions);
+			}
+		}
+		
+		ArrayList<SampleSheetInfoLightVO> mxSamples = new ArrayList<SampleSheetInfoLightVO>();
+		ArrayList<SampleSheetInfoLightVO> bxSamples = new ArrayList<SampleSheetInfoLightVO>();
+		if (Constants.SITE_IS_SOLEIL()) {
+			if (smisSamples != null && smisSamples.length > 0) {
+				for (SampleSheetInfoLightVO sample : smisSamples) {
+					if (sample.getCategoryCode().equalsIgnoreCase("mx")) {
+						mxSamples.add(sample);
+					} else if (sample.getCategoryCode().equalsIgnoreCase("bx")) {
+						bxSamples.add(sample);
+					}
+				}
+			}
+		}
+		
+		if (!Constants.SITE_IS_SOLEIL()) {
+			loadSamples(smisSamples);
+		} else if (Constants.SITE_IS_SOLEIL()) {
+			if (mxSamples != null && !mxSamples.isEmpty()) {
+				LOG.debug(" search for mx samples for propos_no = " + pk);
+				smisSamples = new SampleSheetInfoLightVO[mxSamples.size()];
+				smisSamples = mxSamples.toArray(smisSamples);
+				loadSamples(smisSamples);
+			}
+			if (bxSamples != null && !bxSamples.isEmpty()) {
+				LOG.debug(" search for bx samples for propos_no = " + pk);
+				smisSamples = new SampleSheetInfoLightVO[bxSamples.size()];
+				smisSamples = bxSamples.toArray(smisSamples);
+				loadSamples(smisSamples);
+			}
 		}
 
 		// -----------------------------------------------------------------------------------
@@ -361,8 +306,8 @@ public class UpdateFromSMIS {
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
 				labContact.getCategoryCode();
 				String uoCode = labContact.getCategoryCode();
-				Integer proposalNumber = labContact.getCategoryCounter();
-				String proposalCode = StringUtils.getProposalCode(uoCode, Integer.toString(proposalNumber));
+				String proposalNumber = labContact.getCategoryCounter() != null ? labContact.getCategoryCounter().toString() : "";
+				String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 				LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 				// create or update the person and his/her laboratory
@@ -419,6 +364,165 @@ public class UpdateFromSMIS {
 
 	}
 
+	@SuppressWarnings("unused")
+	private static void loadProposers(ProposalParticipantInfoLightVO[] mainProposers) throws Exception {
+		String proposalNumber = null;
+		
+		if (mainProposers != null && mainProposers.length > 0) {
+
+			ProposalParticipantInfoLightVO mainProp = mainProposers[0];
+			mainProp.getCategoryCode();
+			String uoCode = mainProp.getCategoryCode();
+			proposalNumber = mainProp.getCategoryCounter() != null ? mainProp.getCategoryCounter().toString() : "";
+			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
+
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+			LOG.debug("Bllogin : " + mainProp.getBllogin());
+
+			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+			if (listProposals.isEmpty()) {
+				// the proposal does not belong yet to ISPyB database
+
+				LOG.debug("proposal is new");
+
+				Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
+
+				Integer proposalId = proposal.create(propv).getProposalId();
+
+				LOG.debug("inserted a new proposal inside ISPyB db:" + proposalCode + proposalNumber);
+			} else {
+				// proposal already exists: update information for the main
+				// proposer and the laboratory if needed
+				// Issue 1656
+				LOG.debug("proposal already exists");
+				Proposal3VO proposalVO = listProposals.get(0);
+				Person3VO currentPerson = proposalVO.getPersonVO();
+				String currentFamilyName = currentPerson.getFamilyName();
+				String currentGivenName = currentPerson.getGivenName();
+				// main proposer
+				String familyName = mainProp.getScientistName();
+				String givenName = mainProp.getScientistFirstName();
+
+				if (Constants.getSite().equals(SITE.EMBL)) {
+					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
+						currentPerson.setLogin(mainProp.getBllogin());
+						person.update(currentPerson);
+						LOG.debug("Update person");
+					}
+				}
+
+				if (!StringUtils.matchString(currentFamilyName, familyName)
+						|| !StringUtils.matchString(currentGivenName, givenName)) {
+					// proposer has changed
+					Integer oldPersonId = proposalVO.getPersonVOId();
+					Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
+					proposalVO.setPersonVO(propv.getPersonVO());
+					proposalVO.setTitle(propv.getTitle());
+					proposalVO.setType(propv.getType());
+					proposal.update(proposalVO);
+					LOG.debug("proposal updated " + proposalVO.getProposalId() + " (" + oldPersonId + " -> "
+							+ propv.getPersonVOId() + ")");
+				}
+			}
+		} else {
+			LOG.debug("No main proposers found for propos_no = " + proposalNumber);
+		}
+	}
+	
+	private static void loadSessions(ExpSessionInfoLightVO[] smisSessions) throws Exception {
+		String proposalNumber = null;
+		
+		if (smisSessions != null && smisSessions.length > 0) {
+
+			String uoCode = smisSessions[0].getCategCode();
+			proposalNumber = smisSessions[0].getCategCounter() != null ? smisSessions[0].getCategCounter().toString() : "";
+			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
+
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+
+			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+
+			if (existingProposalList.size() > 1)
+				LOG.debug("error ! duplicate code and number in ISPyB database");
+			Proposal3VO proplv = existingProposalList.get(0);
+			Integer proposalId = proplv.getProposalId();
+			LOG.debug("proposal is not new, proposalId = " + proposalId);
+
+			// retrieve all new sessions
+			for (int k = 0; k < smisSessions.length; k++) {
+				ExpSessionInfoLightVO sessionVO = smisSessions[k];
+
+				retrieveSession(proplv, sessionVO);
+
+			}
+
+		} else {
+			LOG.debug(" no sessions found for propos_no = " + proposalNumber);
+
+		}	
+	}
+	
+	private static void loadSamples(SampleSheetInfoLightVO[] smisSamples) throws Exception {
+		String proposalNumber = null;
+		
+		if (smisSamples != null && smisSamples.length > 0) {
+
+			String uoCode = smisSamples[0].getCategoryCode();
+			proposalNumber = smisSamples[0].getCategoryCounter() != null ? smisSamples[0].getCategoryCounter().toString() : "";
+			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
+System.out.println("UpdateFromSMS proposalCode = " + proposalCode + " | proposalNumber = " + proposalNumber);
+			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+
+			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+System.out.println("UpdateFromSMS existingProposalList.size = " + existingProposalList + " | existingProposalList = " + existingProposalList);
+			if (existingProposalList.size() > 1)
+				LOG.debug("error ! duplicate code and number in ISPyB database");
+			Proposal3VO proplv = existingProposalList.get(0);
+			Integer proposalId = proplv.getProposalId();
+			LOG.debug("proposal is not new, proposalId = " + proposalId);
+
+			// retrieve all new samplesheets
+
+			LOG.debug("searching for new samplesheets");
+
+			/**
+			 * For Biosaxs, copying proteins to macromolecule table if they
+			 * don't exist yet
+			 **/
+			if (proplv.getType().equals("MB") || proplv.getType().equals("BX")) {
+				for (SampleSheetInfoLightVO sampleSheetInfoLightVO : smisSamples) {
+					try {
+						SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
+								.getLocalService(SaxsProposal3Service.class);
+						/**
+						 * If there is not any macromolecule with that acronym
+						 * and proposalId it will be created
+						 **/
+						if (saxsProposal3Service.findMacromoleculesBy(sampleSheetInfoLightVO.getAcronym(), proposalId)
+								.size() == 0) {
+							saxsProposal3Service.merge(new Macromolecule3VO(proposalId, sampleSheetInfoLightVO
+									.getAcronym(), sampleSheetInfoLightVO.getAcronym(), sampleSheetInfoLightVO
+									.getDescription()));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LoggerFormatter.log(LOG, Package.BIOSAXS_DB, "updateThisProposalFromSMISPk",
+								System.currentTimeMillis(), System.currentTimeMillis(), e.getMessage(), e);
+					}
+				}
+			}
+
+			for (int j = 0; j < smisSamples.length; j++) {
+
+				SampleSheetInfoLightVO value = smisSamples[j];
+				retrieveSampleSheet(proplv, value);
+
+			}
+		} else {
+			LOG.debug(" no samples found for propos_no = " + proposalNumber);
+		}
+	}
+	
 	private static void retrieveSampleSheet(Proposal3VO proplv, SampleSheetInfoLightVO value) throws Exception {
 
 		Protein3VO plv = new Protein3VO();
@@ -473,7 +577,7 @@ public class UpdateFromSMIS {
 		} else {
 			Protein3VO prot = protlist.get(0);
 			prot = protein.findByPk(prot.getProteinId(), true);
-			// TODO solve NullPointerException
+			
 			if (prot != null && prot.getCrystalVOs() != null && prot.getCrystalVOs().isEmpty()) { 
 
 				clv.setSpaceGroup(value.getSpaceGroup());
@@ -652,8 +756,9 @@ public class UpdateFromSMIS {
 
 	}
 
+	@SuppressWarnings({ "unused", "rawtypes" })
 	private static Proposal3VO getProposal(ProposalParticipantInfoLightVO mainProp, Laboratory3Service lab,
-			Person3Service person, Integer proposalNumber, String proposalCode) throws Exception {
+			Person3Service person, String proposalNumber, String proposalCode) throws Exception {
 		// main proposer
 		String familyName = mainProp.getScientistName();
 		String givenName = mainProp.getScientistFirstName();
@@ -722,7 +827,7 @@ public class UpdateFromSMIS {
 
 		Proposal3VO propv = new Proposal3VO();
 		propv.setCode(proposalCode);
-		propv.setNumber(Integer.toString(proposalNumber));
+		propv.setNumber(proposalNumber);
 		propv.setTitle(mainProp.getProposalTitle());
 		propv.setPersonVO(persv);
 
