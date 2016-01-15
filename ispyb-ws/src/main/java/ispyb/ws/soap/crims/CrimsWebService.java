@@ -19,8 +19,6 @@
 package ispyb.ws.soap.crims;
 
 import generated.ws.smis.SMISWebService;
-import ispyb.common.util.Constants;
-import ispyb.server.biosaxs.services.BiosaxsServices;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
@@ -463,7 +461,7 @@ public class CrimsWebService {
 
 				Long pk = null;
 					SMISWebService ws = SMISWebServiceGenerator.getWs();
-					pk = ws.getProposalPK(proposal.getCode(), Integer.parseInt(proposal.getNumber()));
+					pk = ws.getProposalPK(proposal.getCode(), Long.parseLong(proposal.getNumber()));
 				UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
 			} else {
 				throw new Exception("Proposal: " + proposalCode + proposalNumber + " not found");

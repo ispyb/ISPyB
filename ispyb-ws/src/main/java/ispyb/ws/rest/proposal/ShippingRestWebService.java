@@ -29,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.apache.james.mime4j.field.datetime.DateTime;
 import org.apache.log4j.Logger;
 
 @Path("/")
@@ -51,7 +50,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 			int proposalId = this.getProposalId(proposal);
 			Proposal3VO proposal3VO = this.getProposal3Service().findByPk(proposalId);
-			ProposalParticipantInfoLightVO[] scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(StringUtils.getUoCode(proposal3VO.getCode()), Integer.parseInt(proposal3VO.getNumber()), null, null);
+			ProposalParticipantInfoLightVO[] scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(StringUtils.getUoCode(proposal3VO.getCode()), Long.parseLong(proposal3VO.getNumber()), null, null);
 			this.logFinish(methodName, id, logger);
 			return sendResponse(scientists);
 		} catch (Exception e) {

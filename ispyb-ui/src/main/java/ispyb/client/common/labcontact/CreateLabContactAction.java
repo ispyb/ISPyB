@@ -925,9 +925,9 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 
 						Proposal3VO currentProposal = this.proposalService.findByPk(proposalId);
 						// ProposalLightValue currentProposal = proposalFacade.findByPrimaryKeyLight(proposalId);
-						Integer proposalNumberInt = null;
+						Long proposalNumberInt = null;
 						try {
-							proposalNumberInt = Integer.parseInt(currentProposal.getNumber());
+							proposalNumberInt = Long.parseLong(currentProposal.getNumber());
 						} catch (NumberFormatException e) {
 
 						}
@@ -984,9 +984,9 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 
 		try {
 			Proposal3VO currentProposal = this.proposalService.findByPk(proposalId);
-			Integer proposalNumberInt = null;
+			Long proposalNumberInt = null;
 			try {
-				proposalNumberInt = Integer.parseInt(currentProposal.getNumber());
+				proposalNumberInt = Long.parseLong(currentProposal.getNumber());
 			} catch (NumberFormatException e) {
 
 			}

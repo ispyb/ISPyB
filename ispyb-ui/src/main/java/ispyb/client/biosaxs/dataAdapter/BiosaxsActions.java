@@ -715,18 +715,20 @@ public class BiosaxsActions {
 		switch (Constants.getSite()) {
 		case ESRF:
 			SMISWebService ws = SMISWebServiceGenerator.getWs();
-			pk = ws.getProposalPK(myProposal.getCode(), Integer.parseInt(myProposal.getNumber()));
+			pk = ws.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
 			UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-
+			break;
 		case SOLEIL:
-
+			SMISWebService wsSOLEIL = SMISWebServiceGenerator.getWs();
+			pk = wsSOLEIL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
+			UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
 			break;
 		case EMBL:
 
 			SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
-			Long uId = wsEMBL.getProposalPK("SAXS", 225);
+			Long uId = wsEMBL.getProposalPK("SAXS", 225L);
 			System.out.println("GREAT!!! " + uId.toString());
-			// pk = wsEMBL.getProposalPK(myProposal.getCode(), Integer.parseInt(myProposal.getNumber()));
+			// pk = wsEMBL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
 			UpdateFromSMIS.updateThisProposalFromSMISPk(uId);
 
 			break;
@@ -1113,6 +1115,7 @@ public class BiosaxsActions {
 			throws Exception {
 		System.out.println("getH5ParametersByExperimentId");
 		String filePath = this.getH5FilePathByExperimentId(experimentId, proposalId);
+		System.out.println("getH5ParametersByExperimentId filePath = '" + filePath + "' \n parameters = '" + parameters + "'");
 		HDF5FileReader reader = new HDF5FileReader(filePath);
 		return reader.getH5ParametersByExperimentId(parameters);
 	}

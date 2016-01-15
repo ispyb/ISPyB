@@ -142,9 +142,9 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 			if (proposalNumber == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "Please fill the proposal number"));
 			} else {
-				Integer proposalNumberInt = null;
+				Long proposalNumberInt = null;
 				try {
-					proposalNumberInt = Integer.parseInt(proposalNumber);
+					proposalNumberInt = Long.parseLong(proposalNumber);
 				} catch (NumberFormatException e) {
 					errors.add(ActionMessages.GLOBAL_MESSAGE,
 							new ActionMessage("errors.detail", "The proposal number is not a number"));

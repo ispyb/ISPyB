@@ -54,7 +54,7 @@ public class SmisWebServiceTest {
 	private static void getProposalPk() throws Exception {
 		System.out.println("*************** test getProposalPk() ***************");
 		String code = "MX";
-		Integer number = new Integer(415);
+		Long number = 415L;
 		Long pk = wsPort.getProposalPK(code, number);
 
 		System.out.println("This is proposalPk : " + pk);

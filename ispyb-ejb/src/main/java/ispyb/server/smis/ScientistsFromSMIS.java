@@ -58,7 +58,7 @@ public class ScientistsFromSMIS {
 	}
 
 	public static ProposalParticipantInfoLightVO[] findScientistsForProposalByNameAndFirstName(String proposalCode,
-			Integer proposalNumber, String name, String firstName) throws Exception {
+			Long proposalNumber, String name, String firstName) throws Exception {
 		LOG.debug("WS created looking for scientist with name/firstname =  " + name + "/" + firstName);
 
 		Long proposalPk = null;
@@ -67,7 +67,7 @@ public class ScientistsFromSMIS {
 		// Get the service
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
 		
-		 proposalPk = ws.getProposalPK(proposalCode, proposalNumber.intValue());
+		 proposalPk = ws.getProposalPK(proposalCode, proposalNumber);
 		 LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
 		 firstName);
