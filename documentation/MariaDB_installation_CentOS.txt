@@ -1,0 +1,131 @@
+INSTALLATION of MaraiaDB and Connection on CentOS 7:
+--------------------------------------------------
+
+0/ OS: CentOS Linux release 7.1.1503 (Core) x64
+	[root@srvdb ~]# tail /etc/redhat-release
+	CentOS Linux release 7.1.1503 (Core)
+
+1/ Make sure that you have internet access:
+	[root@srvdb tmp]# wget http://google.fr
+	
+2/ Adding the MariaDB YUM Repository:
+	[root@srvdb ~]# vi /etc/yum.repos.d/MariaDB.repo
+		[mariadb]
+		name = MariaDB
+		baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+		gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+		gpgcheck=1
+
+3/ Installing MariaDB:
+	[root@srvdb ~]# yum install MariaDB-server MariaDB-client
+
+4/ Mariadb stat, start and Set to start on boot:
+	[root@srvdb ~]# systemctl status mariadb
+	[root@srvdb ~]# systemctl start mariadb
+	[root@srvdb ~]# systemctl enable mariadb
+
+5/ Login and View Existing Databases:
+	[root@srvdb ~]# mysql
+	
+6/ First Installation of MariaDB:
+	[root@srvdb ~]# mysql_secure_installation
+	    login:									root
+	    root password:                  		PPPPPPPP
+	    Remove anonymous user : 				Yes
+	    disable root login remotely:  			Yes
+	    remove test database and access to it:  Yes
+	    Reload privileges tables now:			Yes
+	    
+	[root@srvdb ~]# systemctl restart mariadb
+
+7/ Connection and set password:
+	[root@srvdb ~]# mysql -u root -p
+		Enter password: PPPPPPP
+
+8/ Importing ISPyB schema into MaraiDB
+	Create Database and User Account:
+	---------------------------------
+		[root@srvdb ~]# mysql -u root -p
+		Enter password: PPPPPPPP
+		
+		MariaDB [(none)]> use mysql;
+		MariaDB [(none)]> CREATE DATABASE IF NOT EXISTS `ispyb_config` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+		MariaDB [(mysql)]> GRANT ALL PRIVILEGES ON *.* TO 'ispyb_config'@'localhost' IDENTIFIED BY 'PPPPPPPP' WITH GRANT OPTION;
+
+		MariaDB [(none)]> CREATE DATABASE IF NOT EXISTS `ispyb_db` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+		MariaDB [(mysql)]> GRANT ALL PRIVILEGES ON *.* TO 'ispyb_db'@'localhost' IDENTIFIED BY 'PPPPPPPP' WITH GRANT OPTION;
+
+		MariaDB [(mysql)]> GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
+		
+		MariaDB [(mysql)]> FLUSH PRIVILEGES;
+
+		MariaDB [mysql]> quit;
+		Bye
+
+	See
+	----
+		MariaDB [(mysql)]> SELECT User,Host,Password FROM mysql.user;
+			+--------------+---------------+-------------------------------------------+
+			| User         | Host          | Password                                  |
+			+--------------+---------------+-------------------------------------------+
+			| root         | localhost     | *DCDD362A8D61A6EF15DBC1FCA1D97E0B0F6F134B |
+			| root         | 127.0.0.1     | *DCDD362A8D61A6EF15DBC1FCA1D97E0B0F6F134B |
+			| root         | ::1           | *DCDD362A8D61A6EF15DBC1FCA1D97E0B0F6F134B |
+			| ispyb_db     | 127.0.0.1     | *B659BF6BE0C776E1949529F99ADEE9D7E9061468 |
+			| ispyb_config | 127.0.0.1     | *6560351E4A775F27F05DD50F9E6C06BD79008276 |
+			| ispyb_config | localhost     | *6560351E4A775F27F05DD50F9E6C06BD79008276 |
+			| ispyb_db     | localhost     | *B659BF6BE0C776E1949529F99ADEE9D7E9061468 |
+			+--------------+---------------+-------------------------------------------+
+			16 rows in set (0.00 sec)
+
+		
+9/ Log into new data:
+	[root@srvdb ~]# mysql -u ispyb_config -p 
+		Enter password: PPPPPPPPP
+
+10/ Solve case sensitive issue in linux by declaring case sensitive attribute in the '/etc/my.conf' file
+	[root@srvdb ~]# vi /etc/my.cnf
+		...
+		#added by IC to tell MySQL that table name comparaison should not be case sensitive
+		lower_case_table_names=1
+
+		# Disabling symbolic-links is recommended to prevent assorted security risks
+		symbolic-links=0
+
+11/ Import ispyb_config and ispyb_db into the MaraiDB:
+	Before doing that you need to export ispyb schema and data from your MySQL database for instance into 'export_ispyb_config.sql' and 'export_ispyb_db.sql' files.
+	 
+	[root@srvdb ~]# systemctl restart mariadb
+	[root@srvdb ~]# mysql -u ispyb_config -p --database=ispyb_config < /path_to/export_ispyb_config.sql 
+	Enter password: PPPPPPPP
+
+	[root@srvdb ~]# mysql -u ispyb_db -p --database=ispyb_db < /path_to/export_ispyb_db.sql 
+	Enter password: PPPPPPPP
+
+12/ Test of MaraiDB:
+	In the ISPyB server:
+		1/ Stop the ISPyB server (Wildfly server)
+			[root@ispyb ~]# systemctl stop wildfly
+
+		2/ Update the url and credentials to connect to the MaraiDB
+			[root@ispyb ~]# vi %WILDFLY_HOME%/standalone/configuration/standalone.xml
+		 		<datasources>
+		 			<datasource jndi-name="java:jboss/ispybDS" pool-name="ispybDS" enabled="true" use-java-context="true">
+		 				<connection-url>jdbc:mysql://pydevserv.esrf.fr:3306/pydb</connection-url>
+		 				<driver>mysql-connector-java-5.1.21.jar</driver>
+		 				<security>
+		 					<user-name>UUUUUUUU</user-name>
+		 					<password>PPPPPPPP</password>
+		 				</security>
+		 			</datasource>
+				</datasources>
+				<drivers>
+					<driver name="mysql-connector-java-5.1.21.jar" module="com.mysql"/>
+				</drivers>
+
+		3/ Start the ISpyB server
+			[root@ispyb ~]# systemctl start wildfly
+
+		4/ Log into the ISPyB web site and test it. 
+
+That's.
