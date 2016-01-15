@@ -85,6 +85,10 @@ public class LogoffAction extends Action {
 			return (mapping.findForward("error"));
 		}
 
+		if (Constants.SITE_IS_SOLEIL()) {
+			return new ActionForward(Constants.USER_PORTAL_URL, true);
+		}
+		
 		return mapping.findForward("success");
 	}
 }

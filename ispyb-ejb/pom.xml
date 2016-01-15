@@ -295,6 +295,9 @@
   			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
   			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
   			
+  			<shipping.container.capacity>16</shipping.container.capacity>
+			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
   			<ispyb.bcm>mxcube</ispyb.bcm>
@@ -379,6 +382,9 @@
 				<ispyb.server.name.prod.ext>sundemo.synchrotron-soleil.fr</ispyb.server.name.prod.ext>
 				<ispyb.server.name.test>sundemo.synchrotron-soleil.fr</ispyb.server.name.test>
 
+				<shipping.container.capacity>16</shipping.container.capacity>
+				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
 				<ispyb.bcm>mxcube</ispyb.bcm>
@@ -395,9 +401,9 @@
 
 				<dictionary.site>SOLEIL</dictionary.site>
 				<dictionary.bcm>mxCuBE</dictionary.bcm>
-
+				
 				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-			
+				<userportal.url>http://suntest.synchrotron-soleil.fr:8084/sunset/main?function=proposal_personal</userportal.url>
   		</properties>
   	</profile> 
   	  	<profile>

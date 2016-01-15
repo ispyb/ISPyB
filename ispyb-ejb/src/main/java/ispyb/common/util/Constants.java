@@ -164,6 +164,8 @@ public final class Constants {
 	public static final String SMIS_WS_USERNAME = getSmisWSAccount()[0];
 
 	public static final String SMIS_WS_URL = getProperty("userportal.webservices.url");
+	
+	public static final String USER_PORTAL_URL = getProperty("userportal.url");
 
 	/*
 	 * proposal s types
