@@ -1,4 +1,15 @@
 
+**************
+* 15.01.2016     *
+**************
+
+- replace type Integer by Long for proposalNumber attribute in the SMISWebservice
+- correct PX2 beamline name
+- additional refactoring of the UpdateFromSMIS class
+- add logger in the ToosForAssembly
+- add in the ejb-pom two properties 'shipping.container.capacity' and 'userportal.url'
+
+**************
 
 New TAG : TAG ISPYB-14jan2016 before AutoProc/Phasing refactoring. ToDo#2510
 
