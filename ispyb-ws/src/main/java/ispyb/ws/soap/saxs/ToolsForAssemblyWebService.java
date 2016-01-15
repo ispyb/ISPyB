@@ -84,6 +84,13 @@ public class ToolsForAssemblyWebService {
 		params.put("proposalNumber", String.valueOf(proposalNumber));
 		params.put("name", String.valueOf(name));
 		long start = this.logInit("createHPLC", new Gson().toJson(params));
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" proposalCode:\t '" + proposalCode + "'");
+		LOGGER.info(" proposalNumber:\t" + proposalNumber);
+		LOGGER.info(" name:\t" + name);
+		this.logFinish("createHPLC", start);
+		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			int experimentId = biosaxsWebServiceActions.createHPLC(proposalCode, proposalNumber, name);
@@ -108,6 +115,13 @@ public class ToolsForAssemblyWebService {
 		params.put("sourceFilePath", String.valueOf(h5FilePath));
 		params.put("json", String.valueOf(jsonFilePath));
 		long start = this.logInit("storeHPLC", new Gson().toJson(params));
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		LOGGER.info(" h5FilePath:\t" + h5FilePath);
+		LOGGER.info(" jsonFilePath:\t" + jsonFilePath);
+		this.logFinish("storeHPLC", start);
+		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Integer id = biosaxsWebServiceActions.storeHPLC(experimentId, h5FilePath, jsonFilePath);
@@ -210,9 +224,45 @@ public class ToolsForAssemblyWebService {
 		params.put("kratkyFilePath", String.valueOf(kratkyFilePath));
 		params.put("densityPlot", String.valueOf(densityPlot));
 		long start = this.logInit("storeHPLCDataAnalysisResult", new Gson().toJson(params));
+		
+		long start_ = this.logInit("storeHPLCDataAnalysisResult");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" storeHPLCDataAnalysisResult");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		LOGGER.info(" experimentId Integer:\t" + Integer.valueOf(experimentId));
+		LOGGER.info(" filename:\t" + filename);
+		LOGGER.info(" rg:\t" + rg);
+		LOGGER.info(" rgStdev:\t" + rgStdev);
+		LOGGER.info(" i0:\t" + i0);
+		LOGGER.info(" i0Stdev:\t" + i0Stdev);
+		LOGGER.info(" firstPointUsed:\t" + firstPointUsed);
+		LOGGER.info(" lastPointUsed:\t" + lastPointUsed);
+		LOGGER.info(" quality:\t" + quality);
+		LOGGER.info(" isagregated:\t" + isagregated);
+		LOGGER.info(" code:\t" + code);
+		LOGGER.info(" concentration:\t" + concentration);
+		LOGGER.info(" gnomFile:\t" + gnomFile);
+		LOGGER.info(" rgGuinier:\t" + rgGuinier);
+		LOGGER.info(" rgGnom:\t" + rgGnom);
+		LOGGER.info(" dmax:\t" + dmax);
+		LOGGER.info(" total:\t" + total);
+		LOGGER.info(" volume:\t" + volume);
+		LOGGER.info(" frameStart:\t" + frameStart);
+		LOGGER.info(" frameEnd:\t" + frameEnd);
+		LOGGER.info(" curveParam:\t" + curveParam);
+		LOGGER.info(" bestBufferFilePath:\t" + bestBufferFilePath);
+		LOGGER.info(" scatteringFilePath:\t" + scatteringFilePath);
+		LOGGER.info(" guinierFilePath:\t" + guinierFilePath);
+		LOGGER.info(" kratkyFilePath:\t" + kratkyFilePath);
+		LOGGER.info(" densityPlot:\t" + densityPlot);
+		this.logFinish("storeHPLCDataAnalysisResult", start_);
+		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
-			Integer measurementId = biosaxsWebServiceActions.saveHPLCCurveAnalysis(Integer.parseInt(experimentId),
+			Integer expId = experimentId != null && experimentId.length() > 0 ? Integer.valueOf(experimentId) : 5500 ;
+			LOGGER.info(" experimentId:\t '" + experimentId + "'");
+			Integer measurementId = biosaxsWebServiceActions.saveHPLCCurveAnalysis(expId,
 					Integer.parseInt(frameStart), Integer.parseInt(frameEnd), curveParam, rg, rgStdev, i0, i0Stdev, firstPointUsed,
 					lastPointUsed, quality, isagregated, code, concentration, gnomFile, rgGuinier, rgGnom, dmax, total, volume,
 					scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot);
@@ -254,7 +304,21 @@ public class ToolsForAssemblyWebService {
 		params.put("dammin", String.valueOf(dammin));
 		params.put("nsdPlot", String.valueOf(nsdPlot));
 		params.put("chi2plot", String.valueOf(chi2plot));
-
+		
+		long start_ = this.logInit("storeAbInitioModels");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" storeAbInitioModels");
+		LOGGER.info(" measurementId:\t '" + measurementId + "'");
+		LOGGER.info(" models:\t '" + models + "'");
+		LOGGER.info(" dammaver:\t '" + dammaver + "'");
+		LOGGER.info(" dammif:\t '" + dammif + "'");
+		LOGGER.info(" dammin:\t '" + dammin + "'");
+		LOGGER.info(" nsdPlot:\t '" + nsdPlot + "'");
+		LOGGER.info(" chi2plot:\t '" + chi2plot + "'");
+		
+		this.logFinish("storeAbInitioModels", start_);
+		
 		long start = this.logInit("storeAbInitioModels", new Gson().toJson(params));
 		try {
 			Type measurementIdType = new TypeToken<ArrayList<Integer>>() {}.getType();
@@ -303,6 +367,17 @@ public class ToolsForAssemblyWebService {
 			params.put("averaged", String.valueOf(averaged));
 			params.put("discarded", String.valueOf(discarded));
 			params.put("averageFile", String.valueOf(averageFile));
+			
+			long start_ = this.logInit("addAveraged");
+			
+			LOGGER.info("-----------------------");
+			LOGGER.info(" addAveraged");
+			LOGGER.info(" measurementId:\t '" + measurementId + "'");
+			LOGGER.info(" averaged:\t '" + averaged + "'");
+			LOGGER.info(" discarded:\t '" + discarded + "'");
+			LOGGER.info(" averageFile:\t '" + averageFile + "'");
+			this.logFinish("addAveraged", start_);
+			
 			id = this.logInit("addAveraged", new Gson().toJson(params));
 		} catch (Exception exp) {
 			id = this.logInit("addAveraged");
@@ -374,6 +449,36 @@ public class ToolsForAssemblyWebService {
 			params.put("guinierPlotFilePath", String.valueOf(guinierPlotFilePath));
 			params.put("kratkyPlotFilePath", String.valueOf(kratkyPlotFilePath));
 			params.put("gnomOutputFilePath", String.valueOf(gnomOutputFilePath));
+			
+			long start_ = this.logInit("addSubtraction");
+			
+			LOGGER.info("-----------------------");
+			LOGGER.info(" addSubtraction");
+			LOGGER.info(" measurementId:\t '" + measurementId + "'");
+			LOGGER.info(" rgGuinier:\t '" + rgGuinier + "'");
+			LOGGER.info(" rgStdev:\t '" + rgStdev + "'");
+			LOGGER.info(" i0:\t '" + i0 + "'");
+			LOGGER.info(" i0Stdev:\t '" + i0Stdev + "'");
+			LOGGER.info(" firstPointUsed:\t '" + firstPointUsed + "'");
+			LOGGER.info(" lastPointUsed:\t '" + lastPointUsed + "'");
+			LOGGER.info(" quality:\t '" + quality + "'");
+			LOGGER.info(" isagregated:\t '" + isagregated + "'");
+			LOGGER.info(" rgGnom:\t '" + rgGnom + "'");
+			LOGGER.info(" dmax:\t '" + dmax + "'");
+			LOGGER.info(" total:\t '" + total + "'");
+			LOGGER.info(" volume:\t '" + volume + "'");
+			LOGGER.info(" sampleOneDimensionalFiles:\t '" + sampleOneDimensionalFiles + "'");
+			LOGGER.info(" bufferOneDimensionalFiles:\t '" + bufferOneDimensionalFiles + "'");
+			LOGGER.info(" sampleAverageFilePath:\t '" + sampleAverageFilePath + "'");
+			LOGGER.info(" bestBufferFilePath:\t '" + bestBufferFilePath + "'");
+			LOGGER.info(" subtractedFilePath:\t '" + subtractedFilePath + "'");
+			LOGGER.info(" experimentalDataPlotFilePath:\t '" + experimentalDataPlotFilePath + "'");
+			LOGGER.info(" densityPlotFilePath:\t '" + densityPlotFilePath + "'");
+			LOGGER.info(" guinierPlotFilePath:\t '" + guinierPlotFilePath + "'");
+			LOGGER.info(" kratkyPlotFilePath:\t '" + kratkyPlotFilePath + "'");
+			LOGGER.info(" gnomOutputFilePath:\t '" + gnomOutputFilePath + "'");
+			this.logFinish("addSubtraction", start_);
+			
 			id = this.logInit("addSubtraction", new Gson().toJson(params));
 		} catch (Exception exp) {
 			id = this.logInit("addSubtraction");
@@ -436,13 +541,66 @@ public class ToolsForAssemblyWebService {
 			throws Exception {
 
 		long id = this.logInit("storeDataAnalysisResultByMeasurementId");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" measurementId:\t '" + measurementId + "'");
+		LOGGER.info(" measurementId Integer:\t" + Integer.valueOf(measurementId));
+		LOGGER.info(" filename:\t" + filename);
+		LOGGER.info(" rg:\t" + rg);
+		LOGGER.info(" rgStdev:\t" + rgStdev);
+		LOGGER.info(" i0:\t" + i0);
+		LOGGER.info(" i0Stdev:\t" + i0Stdev);
+		LOGGER.info(" firstPointUsed:\t" + firstPointUsed);
+		LOGGER.info(" lastPointUsed:\t" + lastPointUsed);
+		LOGGER.info(" quality:\t" + quality);
+		LOGGER.info(" isagregated:\t" + isagregated);
+		LOGGER.info(" code:\t" + code);
+		LOGGER.info(" concentration:\t" + concentration);
+		LOGGER.info(" gnomFile:\t" + gnomFile);
+		LOGGER.info(" rgGuinier:\t" + rgGuinier);
+		LOGGER.info(" rgGnom:\t" + rgGnom);
+		LOGGER.info(" dmax:\t" + dmax);
+		LOGGER.info(" total:\t" + total);
+		LOGGER.info(" volume:\t" + volume);
+		LOGGER.info(" frameStart:\t" + framesCount);
+		LOGGER.info(" frameEnd:\t" + framesAverage);
+		LOGGER.info(" curveParam:\t" + curveParam);
+		LOGGER.info(" dataCollectionOrderParam:\t" + dataCollectionOrderParam);
+		LOGGER.info(" bestBufferFilePath:\t" + bestBufferFilePath);
+		LOGGER.info(" scatteringFilePath:\t" + scatteringFilePath);
+		LOGGER.info(" guinierFilePath:\t" + guinierFilePath);
+		LOGGER.info(" kratkyFilePath:\t" + kratkyFilePath);
+		LOGGER.info(" densityPlot:\t" + densityPlot);
+		this.logFinish("storeDataAnalysisResultByMeasurementId", id);
+		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
-			biosaxsWebServiceActions.saveCurveAnalysis(Integer.parseInt(measurementId), Integer.valueOf(dataCollectionOrderParam),
-					Integer.parseInt(framesAverage), Integer.parseInt(framesCount), curveParam, rg, rgStdev, i0, i0Stdev,
+			Integer measId = 241; //measurementId != null && measurementId.length() > 0 ? Integer.valueOf(measurementId) : 0;
+			Integer dataCol = dataCollectionOrderParam != null && dataCollectionOrderParam.length() > 0 ? Integer.valueOf(dataCollectionOrderParam) : 0;
+			int framesAv = framesAverage != null && framesAverage.length() > 0 ? Integer.parseInt(framesAverage) : 0;
+			int framesCount_ = framesCount != null && framesCount.length() > 0 ?Integer.valueOf(framesCount) : 0;
+			
+			LOGGER.info(" measurementId:\t '" + measId + "'");
+			LOGGER.info(" dataCollectionOrderParam:\t '" + dataCol + "'");
+			LOGGER.info(" framesAverage:\t '" + framesAv + "'");
+			
+			biosaxsWebServiceActions.saveCurveAnalysis(
+					measId, 
+					dataCol,
+					framesAv, framesCount_, curveParam, rg, rgStdev, i0, i0Stdev,
 					firstPointUsed, lastPointUsed, quality, isagregated, code, concentration, gnomFile, rgGuinier, rgGnom, dmax,
 					total, volume, scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot);
-
+			
+//			saveCurveAnalysis(Integer measurementId, 
+//					Integer dataCollectionOrderParam, 
+//					int framesAverage,	int framesCount, 
+//					String curveParam,	String rg, 
+//					String rgStdev, String i0, String i0Stdev, 
+//					String firstPointUsed, String lastPointUsed, String quality, 
+//					String isagregated, String code, String concentration, String gnomFile, String rgGuinier, 
+//					String rgGnom, String dmax, String total, String volume, String scatteringFilePath, 
+//					String guinierFilePath, String kratkyFilePath, String densityPlot)
+			
 			this.logFinish("storeDataAnalysisResultByMeasurementId", id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -461,6 +619,15 @@ public class ToolsForAssemblyWebService {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("code", String.valueOf(code));
 		params.put("number", String.valueOf(number));
+		
+		long start_ = this.logInit("addAveraged");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" addAveraged");
+		LOGGER.info(" code:\t '" + code + "'");
+		LOGGER.info(" number:\t '" + number + "'");
+		this.logFinish("addAveraged", start_);
+		
 		long id = this.logInit("findExperimentByProposalCode", new Gson().toJson(params));
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -480,6 +647,14 @@ public class ToolsForAssemblyWebService {
 	public String getRobotByExperimentId(@WebParam(name = "experimentId") Integer experimentId) throws Exception {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
+		
+		long start_ = this.logInit("addAveraged");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" addAveraged");
+		LOGGER.info(" experimmentId:\t '" + experimentId + "'");
+		this.logFinish("addAveraged", start_);
+		
 		long id = this.logInit("getRobotByExperimentId", new Gson().toJson(params));
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -534,6 +709,37 @@ public class ToolsForAssemblyWebService {
 		params.put("pixelSizeY", String.valueOf(pixelSizeY));
 		params.put("normalization", String.valueOf(normalization));
 		params.put("transmission", String.valueOf(transmission));
+		
+		long start_ = this.logInit("saveFrame");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" saveFrame");
+		LOGGER.info(" mode:\t '" + measurementId + "'");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		LOGGER.info(" measurementId:\t '" + measurementId + "'");
+		LOGGER.info(" runNumber:\t '" + runNumber + "'");
+		LOGGER.info(" exposureTemperature:\t '" + exposureTemperature + "'");
+		LOGGER.info(" storageTemperature:\t '" + storageTemperature + "'");
+		LOGGER.info(" timePerFrame:\t '" + timePerFrame + "'");
+		LOGGER.info(" timeStart:\t '" + timeStart + "'");
+		LOGGER.info(" timeEnd:\t '" + timeEnd + "'");
+		LOGGER.info(" energy:\t '" + energy + "'");
+		LOGGER.info(" detectorDistance:\t '" + detectorDistance + "'");
+		LOGGER.info(" edfFileArray:\t '" + edfFileArray + "'");
+		LOGGER.info(" snapshotCapillary:\t '" + snapshotCapillary + "'");
+		LOGGER.info(" currentMachine:\t '" + currentMachine + "'");
+		LOGGER.info(" tocollect:\t '" + tocollect + "'");
+		LOGGER.info(" pars:\t '" + pars + "'");
+		LOGGER.info(" beamCenterX:\t '" + beamCenterX + "'");
+		LOGGER.info(" beamCenterY:\t '" + beamCenterY + "'");
+		LOGGER.info(" radiationRelative:\t '" + radiationRelative + "'");
+		LOGGER.info(" radiationAbsolute:\t '" + radiationAbsolute + "'");
+		LOGGER.info(" pixelSizeX:\t '" + pixelSizeX + "'");
+		LOGGER.info(" pixelSizeY:\t '" + pixelSizeY + "'");
+		LOGGER.info(" normalization:\t '" + normalization + "'");
+		LOGGER.info(" transmission:\t '" + transmission + "'");
+		
+		this.logFinish("saveFrame", start_);
 
 		long id = this.logInit("saveFrame", new Gson().toJson(params));
 
@@ -590,6 +796,22 @@ public class ToolsForAssemblyWebService {
 		params.put("type", String.valueOf(type));
 		params.put("sourceFilePath", String.valueOf(sourceFilePath));
 		params.put("name", String.valueOf(name));
+		
+		long start_ = this.logInit("createExperiment");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" createExperiment");
+		LOGGER.info(" code:\t '" + code + "'");
+		LOGGER.info(" number:\t '" + number + "'");
+		LOGGER.info(" samples:\t '" + samples + "'");
+		LOGGER.info(" storageTemperature:\t '" + storageTemperature + "'");
+		LOGGER.info(" mode:\t '" + mode + "'");
+		LOGGER.info(" extraFlowTime:\t '" + extraFlowTime + "'");
+		LOGGER.info(" type:\t '" + type + "'");
+		LOGGER.info(" sourceFilePath:\t '" + sourceFilePath + "'");
+		LOGGER.info(" name:\t '" + name + "'");
+		this.logFinish("createExperiment", start_);
+		//
 
 		long id = this.logInit("createExperiment", new Gson().toJson(params));
 		try {
@@ -620,6 +842,14 @@ public class ToolsForAssemblyWebService {
 	public Experiment3VO getExperimentById(@WebParam(name = "experimentId") int experimentId) {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
+		
+		long start_ = this.logInit("getExperimentById");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" getExperimentById");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		this.logFinish("getExperimentById", start_);
+		
 		long id = this.logInit("getExperimentById", new Gson().toJson(params));
 		try {
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
@@ -658,6 +888,15 @@ public class ToolsForAssemblyWebService {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
 		params.put("status", String.valueOf(status));
+		
+		long start_ = this.logInit("updateStatus");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" updateStatus");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		LOGGER.info(" status:\t '" + status + "'");
+		this.logFinish("updateStatus", start_);
+		
 		long id = this.logInit("updateStatus", new Gson().toJson(params));
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -682,6 +921,15 @@ public class ToolsForAssemblyWebService {
 	public void setDataAcquisitionFilePath(@WebParam(name = "experimentId") Integer experimentId,
 			@WebParam(name = "dataAcquisitionFilePath") String dataAcquisitionFilePath) throws Exception {
 		long id = this.logInit("setDataAcquisitionFilePath");
+		
+		long start_ = this.logInit("setDataAcquisitionFilePath");
+		
+		LOGGER.info("-----------------------");
+		LOGGER.info(" setDataAcquisitionFilePath");
+		LOGGER.info(" experimentId:\t '" + experimentId + "'");
+		LOGGER.info(" dataAcquisitionFilePath:\t '" + dataAcquisitionFilePath + "'");
+		this.logFinish("setDataAcquisitionFilePath", start_);
+		
 		try {
 			LOGGER.info("\texperimentId:" + experimentId);
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
