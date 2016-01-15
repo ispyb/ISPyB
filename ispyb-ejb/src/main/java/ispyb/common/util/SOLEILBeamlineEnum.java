@@ -33,7 +33,7 @@ public enum SOLEILBeamlineEnum {
 	
 	SWING("SWING", "swing", new String[]{"SWING"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9783</font></font>", null, true, true),
 	PROXIMA1("PROXIMA1", "proxima1", new String[]{"PROXIMA1"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9608</font></font>", null, true, true),
-	PROXIMA2("PROXIMA2", "proxima1", new String[]{"PROXIMA2"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9636</font></font>", null, true, true)
+	PROXIMA2("PROXIMA2A", "proxima2a", new String[]{"PROXIMA2A"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9636</font></font>", null, true, true)
 	;
 	
 	private SOLEILBeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber, String[] correctionFiles, boolean emailNotification, boolean inActivity){
