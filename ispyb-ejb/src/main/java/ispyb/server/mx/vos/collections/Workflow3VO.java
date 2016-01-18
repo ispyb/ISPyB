@@ -194,7 +194,8 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 		String[] listWorkflowType = { "BioSAXS Post Processing", "Undefined", "EnhancedCharacterisation", "LineScan",
 				"MeshScan", "XrayCentering", "DiffractionTomography", "Dehydration", "BurnStrategy",
 				"KappaReorientation", "TroubleShooting", "VisualReorientation", "Massif1", "Massif2",
-				"HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore" };
+				"HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore",
+				"MXPressI","MXPressM","MXPressA","CollectAndSpectra","LowDoseDC"};
 
 		// workflowTitle
 		if (!StringUtils.isStringLengthValid(this.workflowTitle, maxLengthWorkflowTitle))
