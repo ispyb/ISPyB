@@ -1,3 +1,4 @@
+New TAG : TAG ISPYB_4.0.2 after SOLEIL updates and before AutoProc/Phasing refactoring. ToDo#2510
 
 **************
 * 15.01.2016     *
