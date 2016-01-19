@@ -16,8 +16,9 @@
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+			<attribute name="owner.project.facets" value="jboss.m2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/ispyb-WSclient-gen-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/ispyb-WSclient-smis-0.0.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
