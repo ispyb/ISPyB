@@ -1,11 +1,12 @@
 package ispyb.server.webservice.smis.util;
 
+import java.util.Map;
+
+import javax.xml.ws.BindingProvider;
+
 import generated.ws.smis.SMISWebService;
 import generated.ws.smis.SMISWebService_Service;
 import ispyb.common.util.Constants;
-
-import javax.xml.ws.BindingProvider;
-import java.util.Map;
 
 public class SMISWebServiceGenerator {
 	
