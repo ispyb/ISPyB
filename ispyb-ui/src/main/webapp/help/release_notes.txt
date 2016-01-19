@@ -6,7 +6,7 @@
 - replace type Integer by Long for proposalNumber attribute in the SMISWebservice
 - correct PX2 beamline name
 - additional refactoring of the UpdateFromSMIS class
-- add logger in the ToosForAssembly
+- add logger in the ToolsForAssembly
 - add in the ejb-pom two properties 'shipping.container.capacity' and 'userportal.url'
 
 **************
