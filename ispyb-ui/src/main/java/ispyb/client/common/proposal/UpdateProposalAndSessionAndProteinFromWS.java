@@ -214,14 +214,13 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 
 				for (Iterator<Long> iterator = newProposalPks.iterator(); iterator.hasNext();) {
 					long pk = (Long) iterator.next();
-					// TODO only for ESRF
 					if (Constants.SITE_IS_ESRF()) {
 						// in case of ESRF we do not want old proposals
-						if ( pk > 40000) {
+						if ( pk > 20000) {
 							UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
 						}
 						else {
-							LOG.debug("proposal is an old one, not updated ");
+							LOG.debug("proposal with pk = "+ pk + " is an old one, not updated ");
 							}
 					}
 					else
