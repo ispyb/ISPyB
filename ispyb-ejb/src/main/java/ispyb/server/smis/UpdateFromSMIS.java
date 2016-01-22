@@ -132,11 +132,11 @@ public class UpdateFromSMIS {
 
 				if (Constants.SITE_IS_ESRF()) {
 					// in case of ESRF we do not want old proposals
-					if (pk.longValue() > 40000) {
+					if (pk.longValue() > 20000) {
 						updateThisProposalFromSMISPk(pk);
 						nbFoundESRF = nbFoundESRF + 1;
 					} else {
-						LOG.debug("proposal is an old one, not updated ");
+						LOG.debug("proposal with pk = "+ pk.toString() + " is an old one, not updated ");
 					}
 				} else
 					updateThisProposalFromSMISPk(pk);
