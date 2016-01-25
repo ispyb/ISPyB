@@ -17,25 +17,21 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.collections;
-
-import java.util.List;
-import java.util.Map;
+package ispyb.server.mx.services.autoproc.phasingStep;
 
 import javax.ejb.Remote;
 
+import ispyb.server.mx.vos.autoproc.PhasingStepVO;
+
 
 @Remote
-public interface NativeDataCollection3Service {
+public interface PhasingStep3Service {
 
-	public List<Map<String,Object>> getDataCollectionBySessionId(int sessionId);
+	public abstract PhasingStepVO findById(Integer id);
 
-	public  List<Map<String,Object>> getDataCollectionById(int dataCollectionId);
+	public abstract void persist(PhasingStepVO phasingStep);
 
-	public List<Map<String,Object>> getDataCollectionById(List<Integer> ids);
+	public PhasingStepVO merge(PhasingStepVO phasingStep);
 	
-	public List<Map<String, Object>> getByProteinAcronymList(int proposalId, List<String> acronymList);
 
-
-	
 }

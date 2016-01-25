@@ -20,6 +20,26 @@ public class DataCollectionWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionWebService.class);
 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/acronyms/{acronyms}/list")
+	@Produces({ "application/json" })
+	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("acronyms") String acronyms) throws Exception {
+
+		String methodName = "getDataCollections";
+		long id = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Map<String, Object>> result = this.getNativeDataCollection3Service().getByProteinAcronymList(this.getProposalId(proposal), this.parseToString(acronyms));
+			this.logFinish(methodName, id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+
+	}
+	
+	//TODO: /get should be changed by list
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionIdList}/get")

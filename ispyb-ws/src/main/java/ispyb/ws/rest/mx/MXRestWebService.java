@@ -26,9 +26,14 @@ import ispyb.server.mx.services.autoproc.AutoProcScalingStatistics3Service;
 import ispyb.server.mx.services.autoproc.ModelBuilding3Service;
 import ispyb.server.mx.services.autoproc.Phasing3Service;
 import ispyb.server.mx.services.autoproc.PhasingHasScaling3Service;
+import ispyb.server.mx.services.autoproc.PhasingProgramAttachment3Service;
+import ispyb.server.mx.services.autoproc.PhasingProgramRun3Service;
 import ispyb.server.mx.services.autoproc.PhasingStatistics3Service;
 import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
+import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
+import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
+import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3ServiceBean;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.NativeDataCollection3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
@@ -38,6 +43,8 @@ import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
+import ispyb.server.mx.vos.autoproc.PhasingProgramRun3VO;
+import ispyb.server.mx.vos.autoproc.PhasingStepVO;
 import ispyb.ws.rest.RestWebService;
 
 public class MXRestWebService extends RestWebService{
@@ -61,6 +68,22 @@ public class MXRestWebService extends RestWebService{
 	
 	protected Crystal3Service getCrystal3Service() throws NamingException {
 		return (Crystal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Crystal3Service.class);
+	}
+	
+	protected PhasingStep3Service getPhasingStep3Service() throws NamingException {
+		return (PhasingStep3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStep3Service.class);
+	}
+	
+	protected SpaceGroup3Service getSpaceGroup3Service() throws NamingException {
+		return (SpaceGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(SpaceGroup3Service.class);
+	}
+	
+	protected PhasingProgramRun3Service getPhasingProgramRun3Service() throws NamingException {
+		return (PhasingProgramRun3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramRun3Service.class);
+	}
+	
+	protected PhasingProgramAttachment3Service getPhasingProgramAttachment3Service() throws NamingException {
+		return (PhasingProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramAttachment3Service.class);
 	}
 	
 	protected NativeDataCollection3Service getNativeDataCollection3Service() throws NamingException {

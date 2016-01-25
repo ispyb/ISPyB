@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,42 +60,13 @@ public class DewarRestWebService extends RestWebService {
 			@PathParam("dewarId") int dewarId) throws NamingException {
 		return Response.serverError().build();
 	}
-
-
-//	@GET
-//	@PermitAll
-//	@Path("{token}/proposal/{proposal}/shipping/pdf")
-//	@Produces("application/pdf")
-//	public Response getContent()
-//	{ 
-//		try {
-////			InputStream inputStream = new Constants().getTemplatePDFParcelLabelsWorldCourier();
-//			File file = new Constants().getTemplatePDFParcelLabelsWorldCourierFile();
-////			return this.downloadFile(file.getAbsolutePath());
-////			byte[] fileInBytes = new byte[(int) file.length()];
-////		    
-////		    InputStream inputStream = null;
-////		    try {
-////		    
-////		        inputStream = new FileInputStream(file);
-////		        
-////		        inputStream.read(fileInBytes);
-////		        
-////		    } finally {
-////		        inputStream.close();
-////		    }
-//			System.out.println(file.getAbsolutePath());
-//		    
-//		    return this.downloadFile(file.getAbsolutePath());
-//		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return Response.noContent().build();
-//	
-//	}
 	
 	
+	
+	
+	
+
+
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
@@ -150,15 +122,9 @@ public class DewarRestWebService extends RestWebService {
 		
 		
 		if (returnLabContact.getDefaultCourrierCompany() != null && returnLabContact.getDefaultCourrierCompany().equals(Constants.SHIPPING_DELIVERY_AGENT_NAME_WORLDCOURIER)) {
-//			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH),outputStream);
-//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
-//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
 			pdfFormFiller.init(path,outputStream);
 			
 		} else {
-//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourierFile(),outputStream);
-//			pdfFormFiller.init(request.getRealPath(Constants.TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH), outputStream);
-//			pdfFormFiller.init(new Constants().getTemplatePDFParcelLabelsWorldCourier(),outputStream);
 			pdfFormFiller.init(path,outputStream);
 		}
 
@@ -333,6 +299,28 @@ public class DewarRestWebService extends RestWebService {
 			return this.logError("getLabels", e, start, logger);
 		}
 	}
+	
+	@Deprecated
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
+	@Produces({ "application/json" })
+	public Response getContainers(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+
+		long id = this.logInit("getContainers", logger, token, proposal, shippingId);
+		try {
+			List<Map<String, Object>> result = this.getShipping3Service().getShippingById(shippingId);
+			this.logFinish("getContainers", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getContainers", e, id, logger);
+		}
+
+	}
+	
+	
+	
 	
 	
 	@RolesAllowed({ "User", "Manager", "LocalContact" })

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*************************************************************************************************
  * This file is part of ISPyB.
  * 
  * ISPyB is free software: you can redistribute it and/or modify
@@ -15,27 +15,14 @@
  * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
- ******************************************************************************************************************************/
+ ****************************************************************************************************/
 
-package ispyb.server.mx.services.collections;
+package ispyb.server.mx.services.autoproc.phasingStep;
 
-import java.util.List;
-import java.util.Map;
+import javax.ejb.Local;
 
-import javax.ejb.Remote;
-
-
-@Remote
-public interface NativeDataCollection3Service {
-
-	public List<Map<String,Object>> getDataCollectionBySessionId(int sessionId);
-
-	public  List<Map<String,Object>> getDataCollectionById(int dataCollectionId);
-
-	public List<Map<String,Object>> getDataCollectionById(List<Integer> ids);
-	
-	public List<Map<String, Object>> getByProteinAcronymList(int proposalId, List<String> acronymList);
-
-
+@Local
+public interface PhasingStep3ServiceLocal extends  PhasingStep3Service {
 	
 }
+

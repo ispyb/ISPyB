@@ -103,6 +103,9 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 	private static String getByDataCollectionId = getByQUERY
 			+ " where DataCollection.dataCollectionId = :dataCollectionId";
 	
+	private static String getByProteinAcronym = getByQUERY
+			+ " where Protein.proposalId = :proposalId and Protein.acronym = :acronym";
+	
 
 	@Override
 	public List<Map<String, Object>> getDataCollectionBySessionId(int sessionId) {
@@ -380,6 +383,24 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 		return aliasToValueMapList;
 	}
 
+	@Override
+	public List<Map<String, Object>> getByProteinAcronymList(int proposalId, List<String> acronymList) {
+		List<Map<String, Object>> aliasToValueMapList = new ArrayList<Map<String, Object>>();
+		
+		for (String	acronym : acronymList) {
+			String mySQLQuery = getByProteinAcronym;
+			Session session = (Session) this.entityManager.getDelegate();
+			SQLQuery query = session.createSQLQuery(mySQLQuery);
+			query.setParameter("proposalId", proposalId);
+			query.setParameter("acronym", acronym);
+			query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+			aliasToValueMapList = query.list();
+		}
+		
+		return aliasToValueMapList;
+	}
+	
+	
 	@Override
 	public List<Map<String, Object>> getDataCollectionById(List<Integer> ids) {
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();

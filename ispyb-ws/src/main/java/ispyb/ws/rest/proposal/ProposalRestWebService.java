@@ -7,6 +7,7 @@ import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
 import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.ws.rest.RestWebService;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -69,6 +71,30 @@ public class ProposalRestWebService extends RestWebService {
 			return this.logError("getProposals", e, id, logger);
 		}
 	}
+	
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/dewar/list")
+	@Produces({ "application/json" })
+	public Response getDewarsByProposalId(@PathParam("token") String token,
+			@PathParam("proposal") String proposal) throws NamingException {
+		long id = this.logInit("getDewarsByProposalId", logger, token, proposal);
+		try {
+			List<Shipping3VO> shipments = this.getShipping3Service().findByProposal(this.getProposalId(proposal), true);
+			List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+			
+			for (Shipping3VO shipping3vo : shipments) {
+				result.addAll(this.getShipping3Service().getShippingById(shipping3vo.getShippingId()));
+			}
+			
+			this.logFinish("getDewarsByProposalId", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getDewarsByProposalId", e, id, logger);
+		}
+	}
+	
 	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET

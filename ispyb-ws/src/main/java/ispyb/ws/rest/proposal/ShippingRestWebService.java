@@ -141,7 +141,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	public Response listShipping(@PathParam("token") String token, @PathParam("proposal") String proposal) {
 		long id = this.logInit("listShipping", logger, token, proposal);
 		try {
-			List<Shipping3VO> result = this.getShipping3Service().findByProposal(this.getProposalId(proposal), true);
+			List<Map<String, Object>> result = this.getShipping3Service().getShippingByProposalId(this.getProposalId(proposal));
 			this.logFinish("listShipping", id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {
@@ -158,7 +158,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("getShipping", logger, token, proposal, shippingId);
 		try {
-			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true);
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, true, true);
 			this.logFinish("getShipping", id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {
@@ -167,24 +167,9 @@ public class ShippingRestWebService extends MXRestWebService {
 
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
-	@Produces({ "application/json" })
-	public Response getContainers(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("shippingId") Integer shippingId) throws Exception {
-
-		long id = this.logInit("getContainers", logger, token, proposal, shippingId);
-		try {
-//			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true);
-			List<Map<String, Object>> result = this.getShipping3Service().getShippingById(shippingId);
-			this.logFinish("getContainers", id, logger);
-			return sendResponse(result);
-		} catch (Exception e) {
-			return this.logError("getContainers", e, id, logger);
-		}
-
-	}
+	
+	
+	
 	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
