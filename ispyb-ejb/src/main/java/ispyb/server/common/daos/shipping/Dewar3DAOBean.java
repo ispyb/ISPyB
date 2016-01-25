@@ -64,6 +64,13 @@ public class Dewar3DAOBean implements Dewar3DAO {
 				+ (fetchDewarTransportHitory ? "left join fetch vo.dewarTransportHistoryVOs " : "")
 				+ "where vo.dewarId = :pk";
 	}
+	
+	private static final String FIND_BY_PK(boolean fetchContainers, boolean fetchDewarTransportHitory, boolean fetchSample) {
+		return "from Dewar3VO vo " + (fetchContainers ? "left join fetch vo.containerVOs co" : "")
+				+ (fetchDewarTransportHitory ? "left join fetch vo.dewarTransportHistoryVOs " : "")
+				+ (fetchSample ? "left join fetch co.sampleVOs " : "")
+				+ "where vo.dewarId = :pk";
+	}
 
 	// Generic HQL request to find all instances of Dewar3
 	// TODO choose between left/inner join
@@ -71,6 +78,8 @@ public class Dewar3DAOBean implements Dewar3DAO {
 		return "from Dewar3VO vo " + (fetchContainers ? "left join fetch vo.containerVOs " : "")
 				+ (fetchDewarTransportHitory ? "left join fetch vo.dewarTransportHistoryVOs " : "");
 	}
+	
+	
 
 	private final static String COUNT_DEWAR_SAMPLE = "SELECT " + " count(DISTINCT(bls.blSampleId)) samplesNumber "
 			+ "FROM Shipping s  " + " LEFT JOIN Dewar d ON (d.shippingId=s.shippingId) "
@@ -143,6 +152,15 @@ public class Dewar3DAOBean implements Dewar3DAO {
 			return null;
 		}
 	}
+	
+	public Dewar3VO findByPk(Integer pk, boolean fetchContainers, boolean fetchDewarTransportHitory, boolean fetchSamples) {
+		try {
+			return (Dewar3VO) entityManager.createQuery(FIND_BY_PK(fetchContainers, fetchDewarTransportHitory, fetchSamples))
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * <p>
@@ -163,6 +181,9 @@ public class Dewar3DAOBean implements Dewar3DAO {
 		return entityManager.createQuery(FIND_ALL(fetchContainers, fetchDewarTransportHitory)).getResultList();
 	}
 
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<Dewar3VO> findByCustomQuery(Integer proposalId, String dewarName, String comments, String barCode,
 			String dewarStatus, String storageLocation, Date experimentDateStart, Date experimentDateEnd,

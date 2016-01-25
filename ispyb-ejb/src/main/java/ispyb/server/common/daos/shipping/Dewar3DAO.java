@@ -83,6 +83,10 @@ public interface Dewar3DAO {
 	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
 	public Dewar3VO findByPk(Integer pk, boolean fetchContainers, boolean fetchDewarTransportHitory);
+	
+	public Dewar3VO findByPk(Integer pk, boolean fetchContainers, boolean fetchDewarTransportHitory, boolean fecthSamples);
+	
+	
 
 	/**
 	 * <p>

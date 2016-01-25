@@ -83,6 +83,8 @@ public interface Shipping3DAO {
 	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
 	public Shipping3VO findByPk(Integer pk, boolean fetchDewars);
+	
+	public Shipping3VO findByPk(Integer pk, boolean fetchDewars, boolean fetchContainers, boolean fetchSamples);
 
 	/**
 	 * <p>
@@ -127,5 +129,10 @@ public interface Shipping3DAO {
 	public Shipping3VO findByPk(Integer pk, boolean withDewars,boolean withSession);
 
 	public List<Map<String, Object>> getShippingById(int shippingId);
+
+	public List<Shipping3VO> findByProposalId(Integer proposalId, boolean fetchDewars, boolean fetchContainers,
+			boolean feacthSamples);
+
+	public List<Map<String, Object>> getShippingByProposalId(int proposalId);
 
 }

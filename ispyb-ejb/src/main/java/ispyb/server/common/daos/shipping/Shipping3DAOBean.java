@@ -70,6 +70,31 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		return FIND_BY_PK(fetchDewars);
 	}
 	
+	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean feacthSamples) {
+		if (fetchDewars){
+			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
+					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
+					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ " WHERE vo.shippingId = :pk";
+		}
+		return FIND_BY_PK(fetchDewars);
+	}
+	
+	private static final String FIND_BY_PROPOSAL_ID(boolean fetchDewars, boolean fetchContainers, boolean feacthSamples) {
+		if (fetchDewars){
+			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
+					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
+					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+  " LEFT JOIN FETCH vo.sessions se "
+					+  " LEFT JOIN FETCH se.proposalVO proposal "
+					+ " WHERE proposal.proposalId = :proposalId";
+		}
+		return FIND_BY_PK(fetchDewars);
+	}
+	
+	
+	
+	
 	private static final String FIND_BY_SHIPPING_ID() {
 		return "select  " +
 				SqlTableMapper.getShippingTable() + ", (select count(*) from BLSample where BLSample.containerId = Container.containerId) as sampleCount, " +
@@ -81,6 +106,20 @@ public class Shipping3DAOBean implements Shipping3DAO {
 				+ " where Shipping.shippingId = :shippingId";
 		
 	}
+	
+	private static final String FIND_BY_PROPOSAL_ID() {
+		return "select  " +
+				SqlTableMapper.getShippingTable() + ", (select count(*) from BLSample where BLSample.containerId = Container.containerId) as sampleCount, " +
+				SqlTableMapper.getContainerTable() + " , (select count(*) from StockSolution where Dewar.dewarId = StockSolution.boxId) as stockSolutionCount, " +
+				SqlTableMapper.getDewarTable()  +
+				" from Shipping \r\n"
+				+ " left join Dewar on Dewar.shippingId = Shipping.shippingId \r\n"
+				+ " left join Container on Dewar.dewarId = Container.dewarId \r\n"
+				+ " where Shipping.proposalId = :proposalId";
+		
+	}
+	
+	
 	
 	
 	// Generic HQL request to find all instances of Shipping3
@@ -184,6 +223,16 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		}
 	}
 	
+	public Shipping3VO findByPk(Integer pk, boolean fetchDewars, boolean fetchContainers, boolean fetchSamples) {
+		try {
+			return (Shipping3VO) entityManager.createQuery(FIND_BY_PK(fetchDewars, fetchContainers, fetchSamples)).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * <p>
 	 * Returns the Shipping3VO instances.
@@ -209,6 +258,17 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("shippingId", shippingId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getShippingByProposalId(int proposalId) {
+		String mySQLQuery = this.FIND_BY_PROPOSAL_ID();
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		List<Map<String, Object>> aliasToValueMapList = query.list();
 		return aliasToValueMapList;
@@ -401,6 +461,18 @@ public class Shipping3DAOBean implements Shipping3DAO {
 		tab[0] = nbDewarHistory;
 		tab[1] = nbSamples;
 		return tab;
+	}
+
+	@Override
+	public List<Shipping3VO> findByProposalId(Integer proposalId, boolean fetchDewars, boolean fetchContainers,
+			boolean fetchSamples) {
+		try {
+			return  entityManager.createQuery(FIND_BY_PROPOSAL_ID(fetchDewars, fetchContainers, fetchSamples))
+					.setParameter("proposalId", proposalId)
+					.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 }
