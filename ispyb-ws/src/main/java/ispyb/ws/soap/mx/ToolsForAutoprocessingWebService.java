@@ -40,6 +40,7 @@ import ispyb.server.mx.services.autoproc.PhasingStatistics3Service;
 import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
 import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
+import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.Session3Service;
@@ -72,6 +73,7 @@ import ispyb.server.mx.vos.autoproc.PhasingProgramAttachmentWS3VO;
 import ispyb.server.mx.vos.autoproc.PhasingProgramRun3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStatistics3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStatisticsWS3VO;
+import ispyb.server.mx.vos.autoproc.PhasingStepVO;
 import ispyb.server.mx.vos.autoproc.PhasingWS3VO;
 import ispyb.server.mx.vos.autoproc.PreparePhasingData3VO;
 import ispyb.server.mx.vos.autoproc.PreparePhasingDataWS3VO;
@@ -82,6 +84,9 @@ import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.Image3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -95,10 +100,15 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Web services for AutoProc & Phasing
@@ -1491,6 +1501,83 @@ public class ToolsForAutoprocessingWebService {
 	}
 	
 	
+	protected Gson getGson() {
+		return new GsonBuilder().serializeNulls().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
+				.create();
+	}
+
+	protected PhasingStep3Service getPhasingStep3Service() throws NamingException {
+		return (PhasingStep3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStep3Service.class);
+	}
+	
+	protected SpaceGroup3Service getSpaceGroup3Service() throws NamingException {
+		return (SpaceGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(SpaceGroup3Service.class);
+	}
+	
+	protected PhasingProgramRun3Service getPhasingProgramRun3Service() throws NamingException {
+		return (PhasingProgramRun3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramRun3Service.class);
+	}
+	
+	protected PhasingProgramAttachment3Service getPhasingProgramAttachment3Service() throws NamingException {
+		return (PhasingProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramAttachment3Service.class);
+	}
+	
+	@WebMethod
+	@WebResult(name = "storePhasingAnalysis")
+	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments){
+		String methodName = "PhasingStep";
+		System.out.println("testing phasing Step");
+		
+		
+		System.out.println("STOREPHASING");
+		System.out.println("STOREPHASING phasingStep: " + phasingStep);
+		System.out.println("STOREPHASING spaceGroup: " + spaceGroup);
+		System.out.println("STOREPHASING run: " + run);
+		System.out.println("STOREPHASING attachments: " + attachments);
+		try {
+			
+			PhasingStepVO phasingStepVO = this.getGson().fromJson(phasingStep, PhasingStepVO.class);
+			
+			SpaceGroup3VO spaceGroup3VO = this.getGson().fromJson(spaceGroup, SpaceGroup3VO.class);
+			
+			List<SpaceGroup3VO> spaceGroups = this.getSpaceGroup3Service().findBySpaceGroupShortName(spaceGroup3VO.getSpaceGroupShortName());
+			
+			if (spaceGroups.size() > 0){
+				phasingStepVO.setSpaceGroupVO(spaceGroups.get(0));
+			}
+			else{
+				/* Creating Space Group **/
+				phasingStepVO.setSpaceGroupVO(this.getSpaceGroup3Service().create(spaceGroup3VO));
+			}
+
+			List<PhasingProgramAttachment3VO> phasingProgramAttachment3VOs = new ArrayList<PhasingProgramAttachment3VO>();
+			if (attachments != null){
+				Type listType = new TypeToken<ArrayList<PhasingProgramAttachment3VO>>() {}.getType();
+				phasingProgramAttachment3VOs = this.getGson().fromJson(attachments, listType);
+			}
+			System.out.println(phasingProgramAttachment3VOs.size());
+			
+			PhasingProgramRun3VO phasingProgramRun3VO =  this.getGson().fromJson(run, PhasingProgramRun3VO.class);
+			PhasingProgramRun3VO program = this.getPhasingProgramRun3Service().create(phasingProgramRun3VO);
+			phasingStepVO.setPhasingProgramRunVO(program);
+			
+			for (PhasingProgramAttachment3VO phasingProgramAttachment3VO : phasingProgramAttachment3VOs) {
+				phasingProgramAttachment3VO.setPhasingProgramRunVO(program);
+				System.out.println("creating");
+				this.getPhasingProgramAttachment3Service().create(phasingProgramAttachment3VO);
+			}
+			
+			phasingStepVO = this.getPhasingStep3Service().merge(phasingStepVO);
+			return this.getGson().toJson(phasingStepVO);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		
+		
+	}
+			
 	@WebMethod
 	@WebResult(name = "phasingDataId")
 	public Integer storePhasingData(
