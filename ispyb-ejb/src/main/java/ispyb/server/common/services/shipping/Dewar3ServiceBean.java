@@ -158,6 +158,21 @@ public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 
 		});
 	}
+	
+	public Dewar3VO findByPk(final Integer pk, final boolean withContainers, final boolean withDewarTransportHistory, final boolean withSamples)
+			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Dewar3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				Dewar3VO found = dao.findByPk(pk, withContainers, withDewarTransportHistory, withSamples);
+				return found;
+			}
+
+		});
+	}
 
 	/**
 	 * Find all Dewar3s and set linked value objects if necessary

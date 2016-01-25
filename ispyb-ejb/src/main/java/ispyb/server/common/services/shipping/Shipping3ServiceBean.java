@@ -159,6 +159,22 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		});
 	}
 	
+	
+	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Shipping3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				Shipping3VO found = dao.findByPk(pk, withDewars, withcontainers, withSamples);
+				return found;
+			}
+
+		});
+	}
+	
+	
+	
 	@Override
 	public List<Map<String, Object>> getShippingById(final Integer shippingId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
@@ -166,6 +182,20 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 			public List<Map<String, Object>> doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				List<Map<String, Object>> found = dao.getShippingById(shippingId);
+				return found;
+			}
+
+		});
+	}
+	
+	
+	@Override
+	public List<Map<String, Object>> getShippingByProposalId(final Integer proposalId) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Map<String, Object>>) template.execute(new EJBAccessCallback() {
+			public List<Map<String, Object>> doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				List<Map<String, Object>> found = dao.getShippingByProposalId(proposalId);
 				return found;
 			}
 
@@ -251,6 +281,19 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		});
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Shipping3VO> findByProposal(final Integer proposalId,final boolean fetchDewars, final boolean fetchContainers, final boolean feacthSamples) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Shipping3VO>) template.execute(new EJBAccessCallback() {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				return dao.findByProposalId(proposalId, fetchDewars, fetchContainers, feacthSamples);
+			}
+
+		});
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Shipping3VO> findByCreationDate(final Date firstDate, final boolean withDewars) throws Exception {

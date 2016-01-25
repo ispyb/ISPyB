@@ -76,6 +76,8 @@ public interface Shipping3Service {
 	/** Fetch session relation in dewars **/
 	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withSession) throws Exception;
 	
+	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withContainers, final boolean withSamples) throws Exception;
+	
 	/**
 	 * Find all Shipping3 and set linked value objects if necessary.
 	 * 
@@ -131,5 +133,10 @@ public interface Shipping3Service {
 
 	public List<Map<String, Object>> getShippingById(Integer shippingId)
 			throws Exception;
+
+	public List<Shipping3VO> findByProposal(Integer proposalId, boolean fetchDewars, boolean fetchContainers,
+			boolean feacthSamples) throws Exception;
+
+	public List<Map<String, Object>> getShippingByProposalId(Integer proposalId) throws Exception;
 
 }
