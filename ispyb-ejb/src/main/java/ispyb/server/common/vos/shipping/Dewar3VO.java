@@ -106,7 +106,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	@OneToMany(cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "dewarId")
-	private Set<Container3VO> containerVOs;
+	protected Set<Container3VO> containerVOs;
 	
 	@OneToMany(cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "dewarId")
