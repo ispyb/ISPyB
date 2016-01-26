@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `pydb`.`PhasingStep` (
   `spaceGroupId` INT UNSIGNED NULL,
   `autoProcScalingId` INT UNSIGNED NULL,
   `phasingAnalysisId` INT UNSIGNED NULL,
-  `phasingStepType` VARCHAR(45) NULL,
+  `phasingStepType` enum('Prepare','SubStructDeter','Phasing','ModelBuilding') DEFAULT NULL,
   `method` VARCHAR(45) NULL,
   `solventContent` VARCHAR(45) NULL,
   `enantiomorph` VARCHAR(45) NULL,
