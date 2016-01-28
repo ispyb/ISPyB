@@ -1,27 +1,9 @@
 CREATE 
-    ALGORITHM = UNDEFINED 
+    ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
 VIEW `pydb`.`V_datacollection_summary` AS
     SELECT 
-        (SELECT 
-                COUNT(0)
-            FROM
-                `pydb`.`Image`
-            WHERE
-                (`pydb`.`Image`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)) AS `nbStoredImages`,
-        (SELECT 
-                MIN(`pydb`.`Image`.`imageId`)
-            FROM
-                `pydb`.`Image`
-            WHERE
-                (`pydb`.`Image`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)) AS `firstImageId`,
-        (SELECT 
-                MAX(`pydb`.`Image`.`imageId`)
-            FROM
-                `pydb`.`Image`
-            WHERE
-                (`pydb`.`Image`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)) AS `lastImageId`,
         `pydb`.`DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,
         `pydb`.`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,
         `pydb`.`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,
