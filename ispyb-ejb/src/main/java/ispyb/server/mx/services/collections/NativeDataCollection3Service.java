@@ -19,6 +19,7 @@
 
 package ispyb.server.mx.services.collections;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public interface NativeDataCollection3Service {
 	public List<Map<String,Object>> getDataCollectionById(List<Integer> ids);
 	
 	public List<Map<String, Object>> getByProteinAcronymList(int proposalId, List<String> acronymList);
+
+	public List<Map<String,Object>> getViewDataCollectionBySessionId(int id);
 
 
 	

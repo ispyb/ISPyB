@@ -122,6 +122,32 @@ public class DataCollectionWebService extends MXRestWebService {
 		}
 	}
 	
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionIdList}/view")
+	@Produces({ "application/json" })
+	public Response getViewDataCollectionBySessionId(@PathParam("token") String token,
+			@PathParam("proposal") String proposal, 
+			@PathParam("sessionIdList") String sessionIdList) {
+
+		String methodName = "getDataCollectionNativelyBySessionId";
+		long start = this.logInit(methodName, logger, token, proposal, sessionIdList);
+		try {
+			List<Integer> ids = this.parseToInteger(sessionIdList);
+			List<Map<String, Object>> dataCollections = new ArrayList<Map<String,Object>>();
+			
+			for (Integer id : ids) {
+				dataCollections.addAll(this.getNativeDataCollection3Service().getViewDataCollectionBySessionId(id));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(dataCollections);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	
 		
 
 }

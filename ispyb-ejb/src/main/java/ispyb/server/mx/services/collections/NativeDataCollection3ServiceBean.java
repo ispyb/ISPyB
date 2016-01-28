@@ -19,8 +19,6 @@
 
 package ispyb.server.mx.services.collections;
 
-import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -408,6 +406,18 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 			result.addAll(this.getDataCollectionById(id));
 		}
 		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getViewDataCollectionBySessionId(int sessionId) {
+		String mySQLQuery = "select * from V_datacollection_summary where sessionId = :sessionId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("sessionId", sessionId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
 	}
 
 }
