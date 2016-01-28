@@ -23,6 +23,7 @@ import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.mx.daos.sample.DiffractionPlan3DAO;
+import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
@@ -54,6 +55,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	
 	@EJB
 	private Container3DAO dao;
+	
+	@EJB
+	private Crystal3Service crystal3Service;
 
 	@Resource
 	private SessionContext context;
@@ -271,10 +275,20 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 			diff = entityManager.merge(diff);
 			
 			Crystal3VO crystal = sample.getCrystalVO();
-			Protein3VO protein = entityManager.find(Protein3VO.class, sample.getCrystalVO().getProteinVO().getProteinId());
-			crystal.setProteinVO(protein);
-			crystal.setCrystalId(null);
-			crystal = entityManager.merge(crystal);
+			
+			Crystal3VO searchCrystal = crystal3Service.findByAcronymAndCellParam(sample.getCrystalVO().getProteinVO().getAcronym(), crystal, null); 
+			if (searchCrystal != null ){
+				/** Crystal for this acronym and cell unit parameters already exist **/
+				System.out.println("Crystal found");
+				sample.setCrystalVO(searchCrystal);
+			}
+			else{
+				/** Crystal not found then we create a new one **/
+				crystal.setCrystalId(null);
+				Protein3VO protein = entityManager.find(Protein3VO.class, sample.getCrystalVO().getProteinVO().getProteinId());
+				crystal.setProteinVO(protein);
+				crystal = entityManager.merge(crystal);
+			}
 			
 			sample.setCrystalVO(crystal);
 			sample.setDiffractionPlanVO(diff);
