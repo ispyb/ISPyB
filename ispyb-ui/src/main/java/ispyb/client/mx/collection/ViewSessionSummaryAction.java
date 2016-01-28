@@ -1047,7 +1047,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			String samplePosition = lastCollect.getSamplePosition();
 			info.setSamplePosition(samplePosition);
 			listParameters.add(new Param(KEY_NB_TOT_IMAGES, "Nb tot images", Integer.toString(nbTotImages), false));
-			if (workflow.isMXPress())
+			if (workflow.isMXPressEOIA())
 				listParameters.add(new Param(KEY_NB_IMAGES, "Nb images", Integer.toString(nbTotImages), false));
 			listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exp. time", (dcInfo.getExposureTime().isEmpty() ? ""
 					: dcInfo.getExposureTime() + " s"), false));
@@ -1097,7 +1097,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				// in case of XRayCentring: Line bestImage
 				WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
 				boolean wfWith2Mesh = (workflow.getWorkflowType().equals(Constants.WORKFLOW_XRAYCENTERING) || workflow
-						.isMXPress()) && listWorkflowMesh.size() > 1;
+						.isMXPressEOIA()) && listWorkflowMesh.size() > 1;
 
 				if (wfWith2Mesh) {
 					workflowMesh = listWorkflowMesh.get(1);
@@ -1159,7 +1159,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			info.setResultStatus(resultStatus);
 			List<Param> listResults = new ArrayList<Param>();
 			info.setListResults(listResults);
-			if (workflow.isMXPress()) {
+			if (workflow.isMXPressEOIA()) {
 				// autoProcessing Result
 				info = getAutoProcResult(info, lastCollect, dcInfo, dataCollectionList, wrapper, proposalCode,
 						proposalNumber, request, false);
@@ -1514,7 +1514,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					if (dcInfo.getAutoProcEdnaStatus().contains("Green")) {
 						img = imgSuccess;
 					}
-					result += "EDNA dp " + "<img src='" + img + "'  border='0' />";
+					result += "EDNA_proc " + "<img src='" + img + "'  border='0' />";
 				}
 
 				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_MAXIV() || Constants.SITE_IS_SOLEIL()) {
@@ -1524,7 +1524,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 						if (dcInfo.getAutoProcFastStatus().contains("Green")) {
 							img = imgSuccess;
 						}
-						result += " GrenADES fp " + "<img src='" + img + "'  border='0' />";
+						result += " grenades_fastproc " + "<img src='" + img + "'  border='0' />";
 					}
 
 					// parallelproc
@@ -1533,7 +1533,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 						if (dcInfo.getAutoProcParallelStatus().contains("Green")) {
 							img = imgSuccess;
 						}
-						result += " GrenADES pp " + "<img src='" + img + "'  border='0' />";
+						result += " grenades_parallelproc " + "<img src='" + img + "'  border='0' />";
 					}
 				}
 

@@ -64,7 +64,7 @@ public class AutoProcIntegration3DAOBean implements AutoProcIntegration3DAO {
 			"FROM `AutoProcIntegration` api, AutoProcProgram app, AutoProcProgramAttachment apppa " +
 			"WHERE api.dataCollectionId = :dataCollectionId AND " +
 			"api.autoProcProgramId = app.autoProcProgramId AND " +
-			"app.processingPrograms = :processingProgram AND  " +
+			"app.processingPrograms like :processingProgram AND  " +
 			"apppa.autoProcProgramId = app.autoProcProgramId AND " +
 			"apppa.fileName like '%XSCALE%' ";
 

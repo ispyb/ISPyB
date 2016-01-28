@@ -836,7 +836,7 @@ public final class Constants {
 //	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 //		"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM" };
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressA" };
 
 
 	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
@@ -1182,11 +1182,11 @@ public final class Constants {
 
 	public static final String ISIGMA = "isigma";
 
-	public static final String AUTOPROC_FASTPROC = "fastproc";
+	public static final String AUTOPROC_FASTPROC = "%fastproc";
 
-	public static final String AUTOPROC_PARALLELPROC = "parallelproc";
+	public static final String AUTOPROC_PARALLELPROC = "%parallelproc";
 
-	public static final String AUTOPROC_EDNAPROC = "EDNAproc";
+	public static final String AUTOPROC_EDNAPROC = "EDNA%proc";
 
 	public static final String EXPERIMENT_TYPE_CHARACTERIZATION = "Characterization";
 

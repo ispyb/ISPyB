@@ -1412,7 +1412,7 @@ public class PdfRtfExporter {
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
-			} else if (sessionDataObject.isWorkflow() && sessionDataObject.getWorkflow().isMXPress()) { // MXPRESS
+			} else if (sessionDataObject.isWorkflow() && sessionDataObject.getWorkflow().isMXPressEOIA()) { // MXPRESS
 																										// wf
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
 						mRequest);
@@ -2807,21 +2807,21 @@ public class PdfRtfExporter {
 		Paragraph p = new Paragraph();
 		// edna
 		if (dcInfo != null && dcInfo.getAutoProcEdnaStatus() != null) {
-			p.add(new Phrase("EDNA dp ", FONT_DOC_BOLD));
+			p.add(new Phrase("EDNA_proc ", FONT_DOC_BOLD));
 			p.add(getChunkImage(dcInfo.getAutoProcEdnaStatus()));
 			p.add(new Phrase("  "));
 		}
 
 		// fastproc
 		if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
-			p.add(new Phrase("GrenADES fp ", FONT_DOC_BOLD));
+			p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
 			p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
 			p.add(new Phrase("  "));
 		}
 
 		// parallelproc
 		if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
-			p.add(new Phrase("GrenADES pp ", FONT_DOC_BOLD));
+			p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
 			p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
 			p.add(new Phrase("  "));
 		}
