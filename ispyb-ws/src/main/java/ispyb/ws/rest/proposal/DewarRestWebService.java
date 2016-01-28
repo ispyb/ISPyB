@@ -439,12 +439,11 @@ public class DewarRestWebService extends RestWebService {
 			}
 			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
 			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
-			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId,
-					false, false, false));
+			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
 			getDewar3Service().update(dewar3vo);
 			this.logFinish("saveDewar", start, logger);
-			return this.sendResponse(getShipping3Service().findByPk(shippingId,
-					true));
+			
+			return new ShippingRestWebService().getShipping(token, proposal, shippingId);
 		} catch (Exception e) {
 			this.logError("saveDewar", e, start, logger);
 		}

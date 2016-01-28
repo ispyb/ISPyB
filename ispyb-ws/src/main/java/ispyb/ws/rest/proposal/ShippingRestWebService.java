@@ -360,10 +360,8 @@ public class ShippingRestWebService extends MXRestWebService {
 			} else {
 				shipping3VO = getShipping3Service().create(shipping3VO);
 			}
-			
-			Shipping3VO result = getShipping3Service().findByPk(shipping3VO.getShippingId(), true);
 			this.logFinish("saveShipping", id, logger);
-			return this.sendResponse(result);
+			return this.getShipping(token, proposal, shipping3VO.getShippingId());
 		} catch (Exception e) {
 			return this.logError("saveShipping", e, id, logger);
 		}
