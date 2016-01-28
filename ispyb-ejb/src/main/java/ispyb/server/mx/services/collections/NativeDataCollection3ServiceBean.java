@@ -410,7 +410,7 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 
 	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySessionId(int sessionId) {
-		String mySQLQuery = "select * from V_datacollection_summary where sessionId = :sessionId";
+		String mySQLQuery = "select * from V_datacollection_summary where DataCollectionGroup_sessionId = :sessionId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
