@@ -29,6 +29,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -104,7 +105,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "type")
 	protected String type;
 
-	@OneToMany(cascade = { CascadeType.REMOVE })
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "dewarId")
 	protected Set<Container3VO> containerVOs;
 	
