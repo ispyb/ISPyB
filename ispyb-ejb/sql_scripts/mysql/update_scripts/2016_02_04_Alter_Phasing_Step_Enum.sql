@@ -1,0 +1,3 @@
+use pydb;
+ALTER TABLE `pydb`.`PhasingStep` 
+CHANGE COLUMN `phasingStepType` `phasingStepType` ENUM('PREPARE', 'SUBSTRUCTUREDETERMINATION', 'PHASING', 'MODELBUILDING') NULL DEFAULT NULL ;
