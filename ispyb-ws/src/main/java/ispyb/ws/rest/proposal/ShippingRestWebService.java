@@ -117,7 +117,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			person.setGivenName(labContact.getPersonVO().getGivenName());
 			person.setPhoneNumber(labContact.getPersonVO().getPhoneNumber());
 			person.setTitle(labContact.getPersonVO().getTitle());
-			person = this.getPerson3Service().update(person);
+			person = this.getPerson3Service().merge(person);
 			
 			
 			labContact.setPersonVO(person);
