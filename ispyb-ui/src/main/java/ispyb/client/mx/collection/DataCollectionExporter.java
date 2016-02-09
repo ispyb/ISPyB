@@ -289,7 +289,7 @@ public class DataCollectionExporter {
 		if (dcValue.getDetectorDistance() != null)
 			mDetectorDistance = df2.format(dcValue.getDetectorDistance());
 		if (dcValue.getExposureTime() != null)
-			mExposureTime = df2.format(dcValue.getExposureTime());
+			mExposureTime = df3.format(dcValue.getExposureTime());
 		if (dcValue.getAxisStart() != null)
 			mAxisStart = df2.format(dcValue.getAxisStart());
 		if (dcValue.getAxisRange() != null)

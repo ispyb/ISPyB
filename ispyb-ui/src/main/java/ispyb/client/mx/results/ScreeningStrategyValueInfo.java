@@ -46,6 +46,8 @@ public class ScreeningStrategyValueInfo extends ScreeningStrategy3VO {
 			df1.applyPattern("#####0.0");
 			DecimalFormat df2 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 			df2.applyPattern("#####0.00");
+			DecimalFormat df3 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+			df3.applyPattern("#####0.000");
 
 			Double nbImagesdb = null;
 			Double rotation = this.getRotation();
@@ -76,7 +78,7 @@ public class ScreeningStrategyValueInfo extends ScreeningStrategy3VO {
 			if (rotation != null)
 				rotationf = new Double(df2.format(rotation));
 			if (exposureT != null) {
-				exposureTf = new Double(df1.format(exposureT));
+				exposureTf = new Double(df3.format(exposureT));
 				// calculate total exposure time
 				totExposureTimef = new Double(df2.format(nbImagesdb * exposureT));
 			}

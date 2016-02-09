@@ -216,7 +216,7 @@ public class CsvExporter {
 
 			// Exposure time
 			if (col.getExposureTime() != null)
-				doc += df2.format(col.getExposureTime()) + CSV_DELIMITER;
+				doc += df3.format(col.getExposureTime()) + CSV_DELIMITER;
 			else
 				doc += CSV_DELIMITER;
 
