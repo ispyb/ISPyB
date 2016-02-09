@@ -342,7 +342,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 				existingPerson.setFaxNumber(personForm.getFaxNumber());
 				existingPerson.setEmailAddress(personForm.getEmailAddress());
 
-				personService.update(existingPerson);
+				personService.merge(existingPerson);
 				LOG.debug("Existing person updated : " + existingPerson);
 			}
 
@@ -461,7 +461,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 				}
 
 				// Insert into DB
-				person = personService.create(person);
+				person = personService.merge(person);
 				LOG.debug("New Person created =" + person);
 			} else {
 				// the person is already existing
@@ -479,7 +479,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 					existingPerson.setFaxNumber(person.getFaxNumber());
 					existingPerson.setEmailAddress(person.getEmailAddress());
 
-					personService.update(existingPerson);
+					personService.merge(existingPerson);
 					LOG.debug("Existing person updated : " + existingPerson);
 				}
 			}

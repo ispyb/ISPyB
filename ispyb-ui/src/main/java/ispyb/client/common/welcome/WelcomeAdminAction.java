@@ -94,17 +94,11 @@ public class WelcomeAdminAction extends Action {
 
 		try {
 
-			List<Person3VO> personValues = personService.findByLogin(personLogin);
+			Person3VO personValue = personService.findByLogin(personLogin);
 
-			int sizeList = personValues.size();
-			if (sizeList > 0) {
-				Iterator<Person3VO> it = personValues.iterator();
-				while (it.hasNext()) {
-					Person3VO value = it.next();
-					personId = value.getPersonId();
+			if (personValue != null ) {
+					personId = personValue.getPersonId();
 					request.getSession().setAttribute(Constants.PERSON_ID, personId);
-
-				}
 			} else {
 				personId = new Integer(0);
 				request.getSession().setAttribute(Constants.PERSON_ID, personId);

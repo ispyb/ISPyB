@@ -85,9 +85,9 @@ public class WelcomePersonAction extends Action {
 			Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			Person3Service personService = (Person3Service) ejb3ServiceLocator.getLocalService(Person3Service.class);
 
-			List<Person3VO> personValues = personService.findByLogin(personLogin);
-			if (personValues.size() > 0) {
-				personId = personValues.get(personValues.size() - 1).getPersonId();
+			Person3VO personValue = personService.findByLogin(personLogin);
+			if (personValue != null) {
+				personId = personValue.getPersonId();
 				request.getSession().setAttribute(Constants.PERSON_ID, personId);
 			}
 			// used by DLS
