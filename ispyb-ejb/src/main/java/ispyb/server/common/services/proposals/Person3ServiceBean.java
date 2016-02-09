@@ -18,22 +18,24 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.proposals;
 
-import ispyb.server.common.daos.proposals.Person3DAO;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.PersonWS3VO;
-
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.jws.WebMethod;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.PersonWS3VO;
+	
 
 /**
  * <p>
@@ -44,16 +46,47 @@ import org.apache.log4j.Logger;
 public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Person3ServiceBean.class);
+	
 
-	@EJB
-	private Person3DAO dao;
+	// Generic HQL request to find instances of Person3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK(boolean withProposals) {
+		return "from Person3VO vo " + (withProposals ? "left join fetch vo.proposalVOs " : "")
+				+ "where vo.personId = :pk";
+	}
 
-	@Resource
-	private SessionContext context;
+	private static final String FIND_BY_SITE_ID() {
+		return "from Person3VO vo where vo.siteId = :siteId";
+	}
 
+	private static String SELECT_PERSON = "SELECT p.personId, p.laboratoryId, p.siteId, p.personUUID, "
+			+ "p.familyName, p.givenName, p.title, p.emailAddress, p.phoneNumber, p.login, p.passwd, p.faxNumber ";
+
+	private static String FIND_BY_SESSION = SELECT_PERSON + " FROM Person p, Proposal pro, BLSession ses "
+			+ "WHERE p.personId = pro.personId AND pro.proposalId = ses.proposalId AND ses.sessionId = :sessionId ";
+
+	private static String FIND_BY_PROPOSAL_CODE_NUMBER = SELECT_PERSON + " FROM Person p, Proposal pro "
+			+ "WHERE p.personId = pro.personId AND pro.proposalCode like :code AND pro.proposalNumber = :number ";
+	
+	private static String FIND_BY_LOGIN = SELECT_PERSON + " FROM Person p "
+			+ "WHERE p.login = :login ";
+	
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
+	
 	public Person3ServiceBean() {
 	};
 
+
+	@Override
+	public Person3VO merge(Person3VO detachedInstance) {
+		try {
+			Person3VO result = entityManager.merge(detachedInstance);
+			return result;
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
 	/**
 	 * Create new Person3.
 	 * 
@@ -61,39 +94,11 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 *            the entity to persist.
 	 * @return the persisted entity.
 	 */
-	public Person3VO create(final Person3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Person3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	public Person3VO create(final Person3VO vo)  {
+		
+		return this.merge(vo);
 	}
 
-	/**
-	 * Update the Person3 data.
-	 * 
-	 * @param vo
-	 *            the entity data to update.
-	 * @return the updated entity.
-	 */
-	public Person3VO update(final Person3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Person3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
-	}
 
 	/**
 	 * Remove the Person3 from its pk
@@ -102,19 +107,10 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Person3VO vo = findByPk(pk, false);
-				// TODO Edit this business code
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		
+		Person3VO vo = findByPk(pk, false);
+		checkCreateChangeRemoveAccess();
+		delete(vo);
 	}
 
 	/**
@@ -124,108 +120,129 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 *            the entity to remove.
 	 */
 	public void delete(final Person3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
+	 * <p>
+	 * Returns the Person3VO instance matching the given primary key.
+	 * </p>
+	 * <p>
+	 * <u>Please note</u> that the booleans to fetch relationships are needed <u>ONLY</u> if the value object has to be
+	 * used out the EJB container.
+	 * </p>
 	 * 
 	 * @param pk
-	 *            the primary key
-	 * @param withLink1
-	 * @param withLink2
-	 * @return the Person3 value object
+	 *            the primary key of the object to load.
+	 * @param fetchRelation1
+	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
-	@WebMethod
-	public Person3VO findByPk(final Integer pk, final boolean withProposals) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Person3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Person3VO found = dao.findByPk(pk, withProposals);
-				return found;
-			}
-
-		});
+	public Person3VO findByPk(Integer pk, boolean withProposals) {
+		try {
+			return (Person3VO) entityManager.createQuery(FIND_BY_PK(withProposals)).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
-	// TODO remove following method if not adequate
 	/**
-	 * Find all Person3s and set linked value objects if necessary
-	 * 
-	 * @param withLink1
-	 * @param withLink2
+	 * find a Person with a sessionId
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Person3VO> findAll(final boolean withLink1, final boolean withLink2) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Person3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Person3VO> foundEntities = dao.findAll(withLink1, withLink2);
-				return foundEntities;
-			}
-
-		});
+	public Person3VO findPersonBySessionId(Integer sessionId) {
+		String query = FIND_BY_SESSION;
+		List<Person3VO> listVOs = this.entityManager.createNativeQuery(query, "personNativeQuery")
+				.setParameter("sessionId", sessionId).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		return (Person3VO) listVOs.toArray()[0];
 	}
 
-	/**
-	 * Check if user has access rights to create, change and remove Person3 entities. If not set rollback only and throw
-	 * AccessDeniedException
-	 * 
-	 * @throws AccessDeniedException
-	 */
-	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-				// to the one checking the needed access rights
-				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+	@SuppressWarnings("unchecked")
+	public Person3VO findPersonByProposalCodeAndNumber(String code, String number) {
+		String query = FIND_BY_PROPOSAL_CODE_NUMBER;
+		List<Person3VO> listVOs = this.entityManager.createNativeQuery(query, "personNativeQuery")
+				.setParameter("code", code).setParameter("number", number).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		return (Person3VO) listVOs.toArray()[0];
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Person3VO> findFiltered(String familyName, String givenName, String login) {
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria criteria = session.createCriteria(Person3VO.class);
+
+		if (givenName != null) {
+			criteria.add(Restrictions.like("givenName", givenName));
+		}
+
+		if (familyName != null) {
+			criteria.add(Restrictions.like("familyName", familyName));
+		}
+
+		if (!StringUtils.isEmpty(login)) {
+			criteria.add(Restrictions.like("login", login));
+		}
+
+		return criteria.list();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public Person3VO findPersonByLastNameAndFirstNameLetter(String lastName, String firstNameLetter) {
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria crit = session.createCriteria(Person3VO.class);
+		if (lastName != null) {
+			crit.add(Restrictions.like("familyName", lastName));
+		}
+		if (firstNameLetter != null) {
+			firstNameLetter = firstNameLetter.replace('*', '%');
+			crit.add(Restrictions.like("givenName", firstNameLetter));
+		}
+		List<Person3VO> list = crit.list();
+		if (list == null || list.isEmpty())
+			return null;
+		return list.get(0);
+	}
+	
+	public Person3VO findBySiteId(String siteId) {
+		try {
+			return (Person3VO) entityManager.createQuery(FIND_BY_SITE_ID()).setParameter("siteId", siteId)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Person3VO findByLogin(String login) {
+		String query = FIND_BY_LOGIN;
+		try {
+			return (Person3VO) this.entityManager.createNativeQuery(query, "personNativeQuery")
+				.setParameter("login", login).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
 
 	/**
 	 * Find a Person for a specified sessionId
 	 * 
 	 * @param sessionId
-	 * @param detachLight
 	 * @return
 	 * @throws Exception
 	 */
 	public PersonWS3VO findForWSPersonBySessionId(final Integer sessionId) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		EJBAccessCallback callBack = new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Person3VO foundEntities = dao.findPersonBySessionId(sessionId);
+		Person3VO foundEntities = findPersonBySessionId(sessionId);
 				PersonWS3VO personWS = getWSPersonVO(foundEntities);
 				return personWS;
-			};
-		};
-		PersonWS3VO ret = (PersonWS3VO) template.execute(callBack);
-
-		return ret;
 	}
 	
-	
-
 	/**
 	 * Find a Person for a specified code and proposal number
 	 * 
@@ -236,18 +253,9 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 * @throws Exception
 	 */
 	public PersonWS3VO findForWSPersonByProposalCodeAndNumber(final String code, final String number) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		EJBAccessCallback callBack = new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Person3VO foundEntities = dao.findPersonByProposalCodeAndNumber(code, number);
+		Person3VO foundEntities = findPersonByProposalCodeAndNumber(code, number);
 				PersonWS3VO personWS = getWSPersonVO(foundEntities);
 				return personWS;
-			};
-		};
-		PersonWS3VO ret = (PersonWS3VO) template.execute(callBack);
-
-		return ret;
 	}
 
 	/**
@@ -261,37 +269,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Person3VO> findByFamilyAndGivenName(final String familyName, final String givenName) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Person3VO>) template.execute(new EJBAccessCallback() {
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Person3VO> foundEntities = dao.findFiltered(familyName, givenName, null);
-				return foundEntities;
-			}
-
-		});
-
-	}
-
-	/**
-	 * Find a Person for a specified code and proposal number
-	 * 
-	 * @param code
-	 * @param number
-	 * @param detachLight
-	 * @return
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Person3VO> findByLogin(final String login) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Person3VO>) template.execute(new EJBAccessCallback() {
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Person3VO> foundEntities = dao.findFiltered(null, null, login);
-				return foundEntities;
-			}
-
-		});
-
+		return findFiltered(familyName, givenName, null);
 	}
 	
 	/**
@@ -305,34 +283,27 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PersonWS3VO> findPersonWS3VOByLogin(final String login) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<PersonWS3VO>) template.execute(new EJBAccessCallback() {
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Person3VO> foundEntities = dao.findFiltered(null, null, login);
-				List<PersonWS3VO> foundEntitiesWS = new ArrayList<PersonWS3VO>();
-				for (Person3VO person : foundEntities){
+		List<Person3VO> foundEntities = findFiltered(null, null, login);
+		List<PersonWS3VO> foundEntitiesWS = new ArrayList<PersonWS3VO>();
+		for (Person3VO person : foundEntities){
 					PersonWS3VO personWS = getWSPersonVO(person);
 					foundEntitiesWS.add(personWS);
-				}
-				return foundEntitiesWS;
-			}
-
-		});
-
+		}
+		return foundEntitiesWS;
 	}
-
-	private PersonWS3VO getWSPersonVO(Person3VO vo) throws CloneNotSupportedException {
-		if(vo == null)
-			return null;
-		Person3VO otherVO = getLightPersonVO(vo);
-		Integer laboratoryId = null;
-		laboratoryId = otherVO.getLaboratoryVOId();
-		otherVO.setLaboratoryVO(null);
-		PersonWS3VO wsPerson = new PersonWS3VO(otherVO);
-		wsPerson.setLaboratoryId(laboratoryId);
-		return wsPerson;
+	
+	public PersonWS3VO findForWSPersonByLastNameAndFirstNameLetter(final String lastName, final String firstNameLetter) throws Exception{
+		Person3VO foundEntities = findPersonByLastNameAndFirstNameLetter(lastName, firstNameLetter);
+				PersonWS3VO personWS = getWSPersonVO(foundEntities);
+				return personWS;
 	}
-
+	
+	public PersonWS3VO findForWSPersonByLogin(final String login) throws Exception {
+		Person3VO foundEntities = findByLogin(login);
+				PersonWS3VO personWS = getWSPersonVO(foundEntities);
+				return personWS;
+	}
+	
 	/**
 	 * Get all lights entities
 	 * 
@@ -348,34 +319,61 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		return otherVO;
 	}
 	
-	public PersonWS3VO findForWSPersonByLastNameAndFirstNameLetter(final String lastName, final String firstNameLetter) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		EJBAccessCallback callBack = new EJBAccessCallback() {
+	private PersonWS3VO getWSPersonVO(Person3VO vo) throws CloneNotSupportedException {
+		if(vo == null)
+			return null;
+		Person3VO otherVO = getLightPersonVO(vo);
+		Integer laboratoryId = null;
+		laboratoryId = otherVO.getLaboratoryVOId();
+		otherVO.setLaboratoryVO(null);
+		PersonWS3VO wsPerson = new PersonWS3VO(otherVO);
+		wsPerson.setLaboratoryId(laboratoryId);
+		return wsPerson;
+	}
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Person3VO foundEntities = dao.findPersonByLastNameAndFirstNameLetter(lastName, firstNameLetter);
-				PersonWS3VO personWS = getWSPersonVO(foundEntities);
-				return personWS;
-			};
-		};
-		PersonWS3VO ret = (PersonWS3VO) template.execute(callBack);
 
-		return ret;
+	
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(Person3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getPersonId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getPersonId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
 	}
 	
-	public PersonWS3VO findForWSPersonByLogin(final String login) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		EJBAccessCallback callBack = new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Person3VO foundEntities = dao.findPersonByLogin(login);
-				PersonWS3VO personWS = getWSPersonVO(foundEntities);
-				return personWS;
-			};
-		};
-		PersonWS3VO ret = (PersonWS3VO) template.execute(callBack);
-
-		return ret;
+	/**
+	 * Check if user has access rights to create, change and remove Person3 entities. If not set rollback only and throw
+	 * AccessDeniedException
+	 * 
+	 * @throws AccessDeniedException
+	 */
+	private void checkCreateChangeRemoveAccess() throws Exception {
+		
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
+				// to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
 	}
+
 
 }

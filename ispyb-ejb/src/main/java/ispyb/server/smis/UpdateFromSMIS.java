@@ -19,6 +19,19 @@
 
 package ispyb.server.smis;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ejb.FinderException;
+import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
+
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
@@ -32,8 +45,6 @@ import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.LoggerFormatter.Package;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
@@ -49,18 +60,8 @@ import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
-import javax.ejb.FinderException;
-import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
 
 public class UpdateFromSMIS {
 
@@ -399,29 +400,46 @@ public class UpdateFromSMIS {
 				Person3VO currentPerson = proposalVO.getPersonVO();
 				String currentFamilyName = currentPerson.getFamilyName();
 				String currentGivenName = currentPerson.getGivenName();
+				String currentSiteId = currentPerson.getSiteId();
 				// main proposer
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
+				String siteId = null;
+				if (mainProp.getSiteId() != null ) 
+					siteId=mainProp.getSiteId().toString();
 
 				if (Constants.getSite().equals(SITE.EMBL)) {
 					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
 						currentPerson.setLogin(mainProp.getBllogin());
-						person.update(currentPerson);
+						currentPerson = person.merge(currentPerson);
 						LOG.debug("Update person");
 					}
 				}
-
-				if (!StringUtils.matchString(currentFamilyName, familyName)
-						|| !StringUtils.matchString(currentGivenName, givenName)) {
-					// proposer has changed
-					Integer oldPersonId = proposalVO.getPersonVOId();
-					Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
-					proposalVO.setPersonVO(propv.getPersonVO());
-					proposalVO.setTitle(propv.getTitle());
-					proposalVO.setType(propv.getType());
-					proposal.update(proposalVO);
-					LOG.debug("proposal updated " + proposalVO.getProposalId() + " (" + oldPersonId + " -> "
-							+ propv.getPersonVOId() + ")");
+				
+				// fill the siteId if it was null before
+				if (StringUtils.matchString(currentFamilyName, familyName)
+						&& StringUtils.matchString(currentGivenName, givenName) && (siteId != null) && (currentSiteId==null) ) {
+					currentPerson.setSiteId(siteId);
+					currentPerson = person.merge(currentPerson);
+					currentSiteId = siteId;
+					LOG.debug("Update person with siteId");
+				}
+				
+				// test if siteId are different or are not filled
+				if (!StringUtils.matchStringNotNull(currentSiteId, siteId)) {
+					
+					if (!StringUtils.matchString(currentFamilyName, familyName)
+							|| !StringUtils.matchString(currentGivenName, givenName) ) {
+						// proposer has changed
+						Integer oldPersonId = proposalVO.getPersonVOId();
+						Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
+						proposalVO.setPersonVO(propv.getPersonVO());
+						proposalVO.setTitle(propv.getTitle());
+						proposalVO.setType(propv.getType());
+						proposal.update(proposalVO);
+						LOG.debug("proposal updated " + proposalVO.getProposalId() + " (" + oldPersonId + " -> "
+								+ propv.getPersonVOId() + ")");
+					}
 				}
 			}
 		} else {
@@ -506,8 +524,8 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
-						LoggerFormatter.log(LOG, Package.BIOSAXS_DB, "updateThisProposalFromSMISPk",
-								System.currentTimeMillis(), System.currentTimeMillis(), e.getMessage(), e);
+						//LoggerFormatter.log(LOG, Package.BIOSAXS_DB, "updateThisProposalFromSMISPk",
+								//System.currentTimeMillis(), System.currentTimeMillis(), e.getMessage(), e);
 					}
 				}
 			}
@@ -543,12 +561,12 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 				persv.setFamilyName(value.getUserName());
 				persv.setEmailAddress(value.getUserEmail());
 				persv.setPhoneNumber(value.getUserPhone());
-				persv = person.create(persv);
+				persv = person.merge(persv);
 				LOG.debug("getting SMIS WS person created");
 			} else {
 				persv = person.findByFamilyAndGivenName(value.getUserName(), null).get(0);
 				persv.setPhoneNumber(value.getUserPhone());
-				persv = person.update(persv);
+				persv = person.merge(persv);
 				LOG.debug("getting SMIS WS person already exists personId = " + persv.getPersonId()
 						+ " | for proposalId = " + proplv.getProposalId());
 			}
@@ -766,6 +784,9 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 		String email = mainProp.getScientistEmail();
 		String title = mainProp.getScientistTitle();
 		String faxNumber = mainProp.getScientistFax();
+		String siteId = null;
+		if (mainProp.getSiteId()!= null)
+			siteId = mainProp.getSiteId().toString();
 
 		// labo
 		Integer labId;
@@ -796,32 +817,47 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 
 		Person3VO persv = new Person3VO();
 		Integer persId;
-
-		List<Person3VO> listPerson = person.findByFamilyAndGivenName(familyName, givenName);
-		if (listPerson.isEmpty()) {
+		boolean personDoesNotExist = true;
+		
+		if (siteId != null) {
+			Person3VO personVO = person.findBySiteId(siteId);
+			if (personVO != null ) {
+				persv = personVO;
+				personDoesNotExist = false;
+			}	
+		} else {
+			List<Person3VO> listPerson = person.findByFamilyAndGivenName(familyName, givenName);
+			if (!listPerson.isEmpty()) {			
+				persv = listPerson.get(0);
+				personDoesNotExist = false;
+			}
+		}
+			
+		if (personDoesNotExist) {
+			
 			persv.setFamilyName(familyName);
 			persv.setGivenName(givenName);
 			persv.setEmailAddress(email);
 			persv.setTitle(title);
 			persv.setLaboratoryVO(labv);
 			persv.setFaxNumber(faxNumber);
+			persv.setSiteId(siteId);
 
 			/** Adding the logging **/
 			LOG.debug("Adding login: " + persv.getLogin());
 
 			persv.setLogin(mainProp.getBllogin());
 
-			persv = person.create(persv);
+			persv = person.merge(persv);
 			persId = persv.getPersonId();
 
 			LOG.debug("getting SMIS WS person created");
 		} else {
 			// person is existing but may has changed labo : we set the new
 			// labId
-			persv = listPerson.get(0);
 			persId = persv.getPersonId();
 			persv.setLaboratoryVO(labv);
-			person.update(persv);
+			person.merge(persv);
 			LOG.debug("getting SMIS WS person already exists");
 		}
 

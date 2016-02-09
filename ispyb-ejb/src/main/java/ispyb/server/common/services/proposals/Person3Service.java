@@ -19,6 +19,7 @@
 
 package ispyb.server.common.services.proposals;
 
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.PersonWS3VO;
 
@@ -28,24 +29,8 @@ import javax.ejb.Remote;
 
 @Remote
 public interface Person3Service {
-
-	/**
-	 * Create new Person3.
-	 * 
-	 * @param vo
-	 *            the entity to persist
-	 * @return the persisted entity
-	 */
-	public Person3VO create(final Person3VO vo) throws Exception;
-
-	/**
-	 * Update the Person3 data.
-	 * 
-	 * @param vo
-	 *            the entity data to update
-	 * @return the updated entity
-	 */
-	public Person3VO update(final Person3VO vo) throws Exception;
+		
+	public abstract Person3VO merge(Person3VO detachedInstance);
 
 	/**
 	 * Remove the Person3 from its pk.
@@ -73,14 +58,6 @@ public interface Person3Service {
 	public Person3VO findByPk(final Integer pk, final boolean withProposals) throws Exception;
 
 	/**
-	 * Find all Person3 and set linked value objects if necessary.
-	 * 
-	 * @param withLink1
-	 * @param withLink2
-	 */
-	public List<Person3VO> findAll(final boolean withLink1, final boolean withLink2) throws Exception;
-
-	/**
 	 * Find a Person for a specified sessionId
 	 * 
 	 * @param sessionId
@@ -89,8 +66,6 @@ public interface Person3Service {
 	 */
 	public PersonWS3VO findForWSPersonBySessionId(final Integer sessionId) throws Exception;
 	
-	
-
 	/**
 	 * Find a Person for a specified code and proposal number
 	 * 
@@ -104,7 +79,9 @@ public interface Person3Service {
 
 	public List<Person3VO> findByFamilyAndGivenName(final String familyName, final String givenName) throws Exception;
 
-	public List<Person3VO> findByLogin(final String personLogin) throws Exception;
+	public Person3VO findByLogin(final String personLogin) throws Exception;
+	
+	public Person3VO findBySiteId(final String siteId) throws Exception;
 	
 	public PersonWS3VO findForWSPersonByLastNameAndFirstNameLetter(final String lastName, final String firstNameLetter) throws Exception;
 

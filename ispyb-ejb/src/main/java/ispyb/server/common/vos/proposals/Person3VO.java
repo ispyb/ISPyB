@@ -65,9 +65,12 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "laboratoryId")
 	private Laboratory3VO laboratoryVO;
 
+	@Column(name = "siteId")
+	protected String siteId;
+
 	@Column(name = "personUUID")
 	protected String personUUID;
-
+	
 	@Column(name = "familyName")
 	protected String familyName;
 
@@ -105,13 +108,14 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		super();
 	}
 
-	public Person3VO(Integer personId, Laboratory3VO laboratoryVO, String personUUID, String familyName, String givenName,
+	public Person3VO(Integer personId, Laboratory3VO laboratoryVO, String siteId, String personUUID, String familyName, String givenName,
 			String title, String emailAddress, String phoneNumber, String login, String passwd, String faxNumber,
 			Set<Proposal3VO> proposalVOs) {
 		super();
 		this.personId = personId;
 		this.laboratoryVO = laboratoryVO;
 		this.personUUID = personUUID;
+		this.siteId = siteId;
 		this.familyName = familyName;
 		this.givenName = givenName;
 		this.title = title;
@@ -127,6 +131,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		super();
 		this.personId = vo.getPersonId();
 		this.laboratoryVO = vo.getLaboratoryVO();
+		this.siteId = vo.getSiteId();
 		this.personUUID = vo.getPersonUUID();
 		this.familyName = vo.getFamilyName();
 		this.givenName = vo.getGivenName();
@@ -142,6 +147,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	public void fillVOFromLight(PersonWS3VO vo) {
 		this.personId = vo.getPersonId();
 		this.laboratoryVO = null;
+		this.siteId = vo.getSiteId();
 		this.personUUID = vo.getPersonUUID();
 		this.familyName = vo.getFamilyName();
 		this.givenName = vo.getGivenName();
@@ -181,6 +187,14 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setLaboratoryVO(Laboratory3VO laboratoryVO) {
 		this.laboratoryVO = laboratoryVO;
+	}
+
+	public String getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(String siteId) {
+		this.siteId = siteId;
 	}
 
 	public String getPersonUUID() {

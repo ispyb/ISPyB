@@ -499,6 +499,23 @@ public class StringUtils {
 		}
 		return false;
 	}
+	
+	/**
+	 * returns true if the 2 given string are equal and not null
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
+	public static boolean matchStringNotNull(String s1, String s2) {
+		if (s1 == null || s2 == null)
+			return false;
+		else 
+		if (s1 != null && s2 != null && s1.equalsIgnoreCase(s2)) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * returns the filename of a filePath
