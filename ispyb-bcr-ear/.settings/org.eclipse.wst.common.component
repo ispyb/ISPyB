@@ -2,9 +2,6 @@
     <wb-module deploy-name="bcr">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
-        <dependent-module archiveName="ispyb-ejb3.jar" deploy-path="/" handle="module:/resource/ispyb-ejb3/ispyb-ejb3">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="ispyb-bcr.war" deploy-path="/" handle="module:/resource/ispyb-bcr/ispyb-bcr">
             <dependency-type>uses</dependency-type>
         </dependent-module>

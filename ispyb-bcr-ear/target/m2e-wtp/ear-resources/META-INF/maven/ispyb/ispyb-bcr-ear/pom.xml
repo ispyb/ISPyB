@@ -59,13 +59,13 @@
 					<defaultLibBundleDir>lib</defaultLibBundleDir>
 
 					<modules>
-<!--  	-->					 
+<!--  					 
 						<ejbModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ejb3</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
-											 						 
+	-->											 						 
 						<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-bcr</artifactId>
