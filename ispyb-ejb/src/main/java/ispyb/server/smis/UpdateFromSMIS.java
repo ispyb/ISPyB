@@ -406,7 +406,7 @@ public class UpdateFromSMIS {
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
 				String siteId = null;
-				if (mainProp.getSiteId() != null ) 
+				if (Constants.SITE_IS_ESRF() && mainProp.getSiteId() != null ) 
 					siteId=mainProp.getSiteId().toString();
 
 				if (Constants.getSite().equals(SITE.EMBL)) {
@@ -786,8 +786,9 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 		String title = mainProp.getScientistTitle();
 		String faxNumber = mainProp.getScientistFax();
 		String siteId = null;
-		if (mainProp.getSiteId()!= null)
-			siteId = mainProp.getSiteId().toString();
+		if (Constants.SITE_IS_ESRF() && mainProp.getSiteId()!= null) {
+				siteId = mainProp.getSiteId().toString();
+		}
 
 		// labo
 		Integer labId;
