@@ -30,6 +30,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.common.util.StringUtils;
@@ -56,7 +57,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	}
 
 	private static final String FIND_BY_SITE_ID() {
-		return "from Person3VO vo where vo.siteId = :siteId";
+		return "from Person3VO vo where vo.siteId = :siteId order by vo.personId desc";
 	}
 
 	private static String SELECT_PERSON = "SELECT p.personId, p.laboratoryId, p.siteId, p.personUUID, "
@@ -186,6 +187,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		if (!StringUtils.isEmpty(login)) {
 			criteria.add(Restrictions.like("login", login));
 		}
+		criteria.addOrder(Order.desc("personId"));
 
 		return criteria.list();
 
@@ -209,13 +211,13 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		return list.get(0);
 	}
 	
+	@SuppressWarnings("unchecked")	
 	public Person3VO findBySiteId(String siteId) {
-		try {
-			return (Person3VO) entityManager.createQuery(FIND_BY_SITE_ID()).setParameter("siteId", siteId)
-					.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+			List<Person3VO> listVOs = entityManager.createQuery(FIND_BY_SITE_ID()).setParameter("siteId", siteId)
+					.getResultList();
+			if (listVOs == null || listVOs.isEmpty())
+						return null;
+			return (Person3VO) listVOs.toArray()[0];
 	}
 
 	@Override

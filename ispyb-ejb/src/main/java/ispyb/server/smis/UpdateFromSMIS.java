@@ -346,6 +346,7 @@ public class UpdateFromSMIS {
 
 				// fill the laboratory
 				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
+				LOG.debug("current labo is : " + currentLabo.getAddress());
 				//
 				LabContact3VO labContact3VO = new LabContact3VO();
 				labContact3VO.setPersonVO(currentPerson);
@@ -809,7 +810,7 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			labId = labv.getLaboratoryId();
 			LOG.debug("getting SMIS WS labo created");
 		} else {
-			List<Laboratory3VO> labList = lab.findByNameAndCityAndCountry(laboratoryName, null, null);
+			List<Laboratory3VO> labList = lab.findByNameAndCityAndCountry(laboratoryName, labv.getCity(), labv.getCountry());
 			labv = labList.get(0);
 			labId = labv.getLaboratoryId();
 			LOG.debug("getting SMIS WS labo already exists");
@@ -922,7 +923,7 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 		String personName = person.getFamilyName();
 		personName = personName.substring(0, Math.min(personName.length(), maxLength));
 
-		String laboName = laboratory.getName();
+		String laboName = laboratory.getName() + "-" + laboratory.getCity();
 		laboName = laboName.substring(0, Math.min(laboName.length(), maxLength));
 
 		String cardName = personName + "-" + laboName;// max length = 15x2 + 1 =
