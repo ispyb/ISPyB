@@ -141,6 +141,8 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 					if (crystal3VO.getDiffractionPlanVO() != null) {
 						crystal3VO.setDiffractionPlanVO(this.createDiffractionPlan(crystal3VO.getDiffractionPlanVO()));
 					}
+					//TODO check if crystal already exist before creating a new one
+					// use UploadShipmentUtils.getCrystal(List<Crystal3VO> listCrystal, Crystal3VO crystalVO) 
 					return this.entityManager.merge(crystal3VO);
 				} else {
 					System.out.println("No protein found: " + aux.getAcronym());
