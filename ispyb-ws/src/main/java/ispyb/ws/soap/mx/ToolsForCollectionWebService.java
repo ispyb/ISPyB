@@ -306,7 +306,7 @@ public class ToolsForCollectionWebService {
 				session.setSessionId(null);
 				Integer nbShifts = 3;
 				
-				// if dates sent by BCM then take them
+				// if both dates sent by BCM then take them
 				if (vo.getStartDate() != null  && vo.getEndDate() != null) {
 					session.setStartDate(vo.getStartDate());
 					session.setEndDate(vo.getEndDate());
@@ -317,6 +317,18 @@ public class ToolsForCollectionWebService {
 						session.setNbShifts(nbShifts);
 					}
 				}
+				// if only start date sent by BCM then take it and put 3 shifts
+				else if (vo.getStartDate() != null ) {				
+						session.setStartDate(vo.getStartDate());
+						Calendar endDateCal = Calendar.getInstance();
+						Integer daysToAdd = 1;
+						endDateCal.setTime(vo.getStartDate());
+						endDateCal.add(Calendar.DATE, daysToAdd);	
+						Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
+						nbShifts = 3;
+						session.setEndDate(endDate);	
+						session.setNbShifts(nbShifts);
+				}				
 				else {
 					// force startDate, endDate and nbShifts=3
 					Calendar startDateCal = Calendar.getInstance();
@@ -348,7 +360,7 @@ public class ToolsForCollectionWebService {
 				session.setLastUpdate(session.getEndDate());
 				sessionValue = sessionService.create(session);
 				sessionId = sessionValue.getSessionId();
-				LOG.debug("Session created " + sessionId);
+				LOG.debug("Session created " + sessionId + "startdate = " + sessionValue.getStartDate());
 			} else {
 				sessionValue = sessionService.update(session);
 				LOG.debug("Session updated " + sessionId);
