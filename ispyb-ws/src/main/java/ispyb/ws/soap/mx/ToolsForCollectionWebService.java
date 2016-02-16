@@ -46,9 +46,11 @@ import ispyb.server.mx.services.collections.Workflow3Service;
 import ispyb.server.mx.services.collections.WorkflowDehydration3Service;
 import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
+import ispyb.server.mx.services.collections.workflowStep.WorkflowStep3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.BLSubSample3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategySubWedge3Service;
+import ispyb.server.mx.vos.autoproc.PhasingStepVO;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -75,6 +77,7 @@ import ispyb.server.mx.vos.collections.WorkflowDehydration3VO;
 import ispyb.server.mx.vos.collections.WorkflowDehydrationWS3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.WorkflowMeshWS3VO;
+import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 import ispyb.server.mx.vos.collections.XDSInfo;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrumWS3VO;
@@ -83,6 +86,7 @@ import ispyb.server.mx.vos.sample.BLSampleWS3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
 
+import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -100,6 +104,9 @@ import javax.jws.soap.SOAPBinding.Style;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Web services for Collection
@@ -306,7 +313,7 @@ public class ToolsForCollectionWebService {
 				session.setSessionId(null);
 				Integer nbShifts = 3;
 				
-				// if both dates sent by BCM then take them
+				// if dates sent by BCM then take them
 				if (vo.getStartDate() != null  && vo.getEndDate() != null) {
 					session.setStartDate(vo.getStartDate());
 					session.setEndDate(vo.getEndDate());
@@ -328,7 +335,7 @@ public class ToolsForCollectionWebService {
 						nbShifts = 3;
 						session.setEndDate(endDate);	
 						session.setNbShifts(nbShifts);
-				}				
+				}	
 				else {
 					// force startDate, endDate and nbShifts=3
 					Calendar startDateCal = Calendar.getInstance();
@@ -1139,7 +1146,32 @@ public class ToolsForCollectionWebService {
 			throw e;
 		}
 	}
-
+	
+	protected Gson getGson() {
+		return new GsonBuilder().serializeNulls().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
+				.create();
+	}
+	
+	@WebMethod
+	@WebResult(name = "workflowId")
+	public void storeWorkflowStep(
+			@WebParam(name = "workflowStep") String workflowStep) throws Exception {
+		try {
+			LOG.info("storeWorkflowStep");
+			LOG.info("workflowStep");
+			LOG.info(workflowStep);
+			
+			WorkflowStep3VO workflowStep3VO = this.getGson().fromJson(workflowStep, WorkflowStep3VO.class);
+			WorkflowStep3Service workflowStep3Service = (WorkflowStep3Service) ejb3ServiceLocator.getLocalService(WorkflowStep3Service.class);
+			workflowStep3Service.merge(workflowStep3VO);
+		} catch (Exception e) {
+			LOG.error("WS ERROR: storeWorkflowStep - " + StringUtils.getCurrentDate());
+			throw e;
+		}
+		
+	}
+	
+	
 	@WebMethod
 	@WebResult(name = "workflowId")
 	public Integer storeOrUpdateWorkflow(@WebParam(name = "workflow")
