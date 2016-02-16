@@ -360,7 +360,7 @@ public class ToolsForCollectionWebService {
 				session.setLastUpdate(session.getEndDate());
 				sessionValue = sessionService.create(session);
 				sessionId = sessionValue.getSessionId();
-				LOG.debug("Session created " + sessionId + "startdate = " + sessionValue.getStartDate());
+				LOG.debug("Session created: " + sessionId + " startdate = " + sessionValue.getStartDate() + " enddate = " + sessionValue.getEndDate());
 			} else {
 				sessionValue = sessionService.update(session);
 				LOG.debug("Session updated " + sessionId);
