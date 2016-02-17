@@ -74,10 +74,18 @@
             </goals>
             <configuration>
               <finalName>dewarAPI</finalName>
-              <includes>
-                <include>**/shipping/Dewar*.*</include>
+                <includes>
+              	<include>**/src/main/resources/META-INF/persistence.xml</include>
+                <include>ispyb/server/common/services/shipping/DewarAPI*.*</include>
                 <include>**/vos/ISPyB*.*</include>
+                <include>**/vos/shipping/*.*</include>
                 <include>**/common/util/ejb/*.*</include>
+                <include>ispyb/server/common/services/proposals/Proposal3Service*.*</include>
+                <include>ispyb/server/mx/services/collections/Session3Service*.*</include>
+                <include>ispyb/server/common/daos/proposals/Proposal*.*</include>
+                <include>ispyb/server/mx/daos/collections/Session*.*</include>
+                <include>ispyb/server/mx/vos/collections/Session*.*</include>
+                <include>ispyb/server/common/vos/proposals/Proposal*.*</include>
               </includes>
             </configuration>
           </execution>
@@ -87,6 +95,7 @@
     -->	  
       
 		</plugins>
+
 	</build>
 	<dependencies>
 		<!-- Import the CDI API, we use provided scope as the API is included in 
