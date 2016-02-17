@@ -1526,20 +1526,16 @@ public class ToolsForAutoprocessingWebService {
 	@WebResult(name = "storePhasingAnalysis")
 	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments){
 		String methodName = "PhasingStep";
-		System.out.println("testing phasing Step");
 		
-		
-		System.out.println("STOREPHASING");
-		System.out.println("STOREPHASING phasingStep: " + phasingStep);
-		System.out.println("STOREPHASING spaceGroup: " + spaceGroup);
-		System.out.println("STOREPHASING run: " + run);
-		System.out.println("STOREPHASING attachments: " + attachments);
+		LOG.debug("testing phasing Step");
+		LOG.debug("STOREPHASING");
+		LOG.debug("STOREPHASING phasingStep: " + phasingStep);
+		LOG.debug("STOREPHASING spaceGroup: " + spaceGroup);
+		LOG.debug("STOREPHASING run: " + run);
+		LOG.debug("STOREPHASING attachments: " + attachments);
 		try {
-			
 			PhasingStepVO phasingStepVO = this.getGson().fromJson(phasingStep, PhasingStepVO.class);
-			
 			SpaceGroup3VO spaceGroup3VO = this.getGson().fromJson(spaceGroup, SpaceGroup3VO.class);
-			
 			List<SpaceGroup3VO> spaceGroups = this.getSpaceGroup3Service().findBySpaceGroupShortName(spaceGroup3VO.getSpaceGroupShortName());
 			
 			if (spaceGroups.size() > 0){
@@ -1555,7 +1551,6 @@ public class ToolsForAutoprocessingWebService {
 				Type listType = new TypeToken<ArrayList<PhasingProgramAttachment3VO>>() {}.getType();
 				phasingProgramAttachment3VOs = this.getGson().fromJson(attachments, listType);
 			}
-			System.out.println(phasingProgramAttachment3VOs.size());
 			
 			PhasingProgramRun3VO phasingProgramRun3VO =  this.getGson().fromJson(run, PhasingProgramRun3VO.class);
 			PhasingProgramRun3VO program = this.getPhasingProgramRun3Service().create(phasingProgramRun3VO);
@@ -1563,7 +1558,6 @@ public class ToolsForAutoprocessingWebService {
 			
 			for (PhasingProgramAttachment3VO phasingProgramAttachment3VO : phasingProgramAttachment3VOs) {
 				phasingProgramAttachment3VO.setPhasingProgramRunVO(program);
-				System.out.println("creating");
 				this.getPhasingProgramAttachment3Service().create(phasingProgramAttachment3VO);
 			}
 			
