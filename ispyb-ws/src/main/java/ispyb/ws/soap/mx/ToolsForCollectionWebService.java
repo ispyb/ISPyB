@@ -315,6 +315,7 @@ public class ToolsForCollectionWebService {
 				
 				// if dates sent by BCM then take them
 				if (vo.getStartDate() != null  && vo.getEndDate() != null) {
+					LOG.debug("Session to be created with : startdate = " + vo.getStartDate() + " enddate = " + vo.getEndDate());
 					session.setStartDate(vo.getStartDate());
 					session.setEndDate(vo.getEndDate());
 					if (vo.getNbShifts() != null) 
@@ -325,7 +326,8 @@ public class ToolsForCollectionWebService {
 					}
 				}
 				// if only start date sent by BCM then take it and put 3 shifts
-				else if (vo.getStartDate() != null ) {				
+				else if (vo.getStartDate() != null ) {	
+					LOG.debug("Session to be created with : startdate = " + vo.getStartDate() + " enddate = null ");
 						session.setStartDate(vo.getStartDate());
 						Calendar endDateCal = Calendar.getInstance();
 						Integer daysToAdd = 1;
