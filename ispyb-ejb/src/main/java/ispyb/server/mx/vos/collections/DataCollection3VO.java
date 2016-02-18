@@ -145,11 +145,17 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "detectorDistance")
 	protected Double detectorDistance;
 
-	@Column(name = "xbeam")
+	@Column(name = "xBeam")
 	protected Double xbeam;
 
-	@Column(name = "ybeam")
+	@Column(name = "yBeam")
 	protected Double ybeam;
+
+	@Column(name = "xBeamPix")
+	protected Double xbeamPix;
+
+	@Column(name = "yBeamPix")
+	protected Double ybeamPix;
 
 	@Column(name = "comments")
 	protected String comments;
@@ -260,7 +266,7 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 			Date startTime, Date endTime, String runStatus, Double axisStart, Double axisEnd, Double axisRange,
 			Double overlap, Integer numberOfImages, Integer startImageNumber, Integer numberOfPasses,
 			Double exposureTime, String imageDirectory, String imagePrefix, String imageSuffix, String fileTemplate,
-			Double wavelength, Double resolution, Double detectorDistance, Double xbeam, Double ybeam, String comments,
+			Double wavelength, Double resolution, Double detectorDistance, Double xbeam, Double ybeam, Double xbeamPix, Double ybeamPix, String comments,
 			Byte printableForReport, Double slitGapVertical, Double slitGapHorizontal, Double transmission,
 			String synchrotronMode, String xtalSnapshotFullPath1, String xtalSnapshotFullPath2,
 			String xtalSnapshotFullPath3, String xtalSnapshotFullPath4, String rotationAxis, Double phiStart,
@@ -298,6 +304,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.detectorDistance = detectorDistance;
 		this.xbeam = xbeam;
 		this.ybeam = ybeam;
+		this.xbeamPix = xbeamPix;
+		this.ybeamPix = ybeamPix;
 		this.comments = comments;
 		this.printableForReport = printableForReport;
 		this.slitGapVertical = slitGapVertical;
@@ -359,6 +367,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.detectorDistance = vo.getDetectorDistance();
 		this.xbeam = vo.getXbeam();
 		this.ybeam = vo.getYbeam();
+		this.xbeamPix = vo.getXbeamPix();
+		this.ybeamPix = vo.getYbeamPix();
 		this.comments = vo.getComments();
 		this.printableForReport = vo.getPrintableForReport();
 		this.slitGapVertical = vo.getSlitGapVertical();
@@ -413,6 +423,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.detectorDistance = vo.getDetectorDistance();
 		this.xbeam = vo.getXbeam();
 		this.ybeam = vo.getYbeam();
+		this.xbeamPix = vo.getXbeamPix();
+		this.ybeamPix = vo.getYbeamPix();
 		this.comments = vo.getComments();
 		this.printableForReport = vo.getPrintableForReport();
 		this.slitGapVertical = vo.getSlitGapVertical();
@@ -703,6 +715,22 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setYbeam(Double ybeam) {
 		this.ybeam = ybeam;
+	}
+
+	public Double getXbeamPix() {
+		return xbeamPix;
+	}
+
+	public void setXbeamPix(Double xBeamPix) {
+		this.xbeamPix = xBeamPix;
+	}
+
+	public Double getYbeamPix() {
+		return ybeamPix;
+	}
+
+	public void setYbeamPix(Double yBeamPix) {
+		this.ybeamPix = yBeamPix;
 	}
 
 	public String getComments() {

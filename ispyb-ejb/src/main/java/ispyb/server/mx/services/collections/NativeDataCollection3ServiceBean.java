@@ -336,6 +336,8 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 				"DataCollection.detectorDistance as DataCollection_detectorDistance,\r\n " +
 				"DataCollection.xBeam as DataCollection_xBeam,\r\n " +
 				"DataCollection.yBeam as DataCollection_yBeam,\r\n " +
+				"DataCollection.xBeamPix as DataCollection_xBeamPix,\r\n " +
+				"DataCollection.yBeamPix as DataCollection_yBeamPix,\r\n " +
 				"DataCollection.comments as DataCollection_comments,\r\n " +
 				"DataCollection.printableForReport as DataCollection_printableForReport,\r\n " +
 				"DataCollection.slitGapVertical as DataCollection_slitGapVertical,\r\n " +
