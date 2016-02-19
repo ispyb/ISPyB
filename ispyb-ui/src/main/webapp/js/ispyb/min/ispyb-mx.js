@@ -2108,7 +2108,7 @@ DataCollectionGrid.prototype._getColumns = function () {
 				text : 'Ex.<br>Time',
 				dataIndex : 'exposureTime',
 				flex : 0.05,
-				renderer : renderFixed2
+				renderer : renderFixed3
 			}, {
 				text : 'Phi<br>start',
 				dataIndex : 'axisStart',
