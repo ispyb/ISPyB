@@ -193,7 +193,8 @@ public class ToolsForAssemblyWebService {
 			/** Some extra params **/
 			@WebParam(name = "bestBufferFilePath") String bestBufferFilePath,
 			@WebParam(name = "scatterFilePath") String scatteringFilePath, @WebParam(name = "guinierFilePath") String guinierFilePath,
-			@WebParam(name = "kratkyFilePath") String kratkyFilePath, @WebParam(name = "densityPlot") String densityPlot) {
+			@WebParam(name = "kratkyFilePath") String kratkyFilePath, @WebParam(name = "densityPlot") String densityPlot,
+			@WebParam(name = "samples") String samples) {
 
 		/** Logging params **/
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -223,6 +224,7 @@ public class ToolsForAssemblyWebService {
 		params.put("guinierFilePath", String.valueOf(guinierFilePath));
 		params.put("kratkyFilePath", String.valueOf(kratkyFilePath));
 		params.put("densityPlot", String.valueOf(densityPlot));
+		params.put("samples", String.valueOf(samples));
 		long start = this.logInit("storeHPLCDataAnalysisResult", new Gson().toJson(params));
 		
 		long start_ = this.logInit("storeHPLCDataAnalysisResult");
@@ -256,16 +258,24 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" guinierFilePath:\t" + guinierFilePath);
 		LOGGER.info(" kratkyFilePath:\t" + kratkyFilePath);
 		LOGGER.info(" densityPlot:\t" + densityPlot);
+		LOGGER.info(" samples:\t '" + samples + "'");
 		this.logFinish("storeHPLCDataAnalysisResult", start_);
 		
 		try {
+			/**
+			 * Parsing samples in json format to ArrayList<HashMap<String, String>>
+			 **/
+			Gson gson = new Gson();
+			Type mapType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
+			ArrayList<HashMap<String, String>> json = gson.fromJson(samples, mapType);
+			
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Integer expId = experimentId != null && experimentId.length() > 0 ? Integer.valueOf(experimentId) : 5500 ;
 			LOGGER.info(" experimentId:\t '" + experimentId + "'");
 			Integer measurementId = biosaxsWebServiceActions.saveHPLCCurveAnalysis(expId,
 					Integer.parseInt(frameStart), Integer.parseInt(frameEnd), curveParam, rg, rgStdev, i0, i0Stdev, firstPointUsed,
 					lastPointUsed, quality, isagregated, code, concentration, gnomFile, rgGuinier, rgGnom, dmax, total, volume,
-					scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot);
+					scatteringFilePath, guinierFilePath, kratkyFilePath, densityPlot, json);
 
 			this.logFinish("storeHPLCDataAnalysisResult", start);
 			return measurementId;

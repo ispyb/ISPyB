@@ -29,6 +29,8 @@ import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.Primary
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
 import ispyb.server.biosaxs.services.core.robot.Robot3Service;
 import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
@@ -81,6 +83,8 @@ public class BiosaxsServices {
 
 	private ATSASPipeline3Service atsasPipeline3Service;
 
+	private Robot3Service robotService;
+
 	public BiosaxsServices() {
 		try {
 			this.proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
@@ -94,6 +98,7 @@ public class BiosaxsServices {
 					.getLocalService(PrimaryDataProcessing3Service.class);
 			this.hplcDataProcessing3Service = (HPLCDataProcessing3Service) ejb3ServiceLocator
 					.getLocalService(HPLCDataProcessing3Service.class);
+			this.robotService = (Robot3Service) ejb3ServiceLocator.getLocalService(Robot3Service.class);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -494,9 +499,9 @@ public class BiosaxsServices {
 	/**
 	 * This method stores averages and subtractions
 	 * 
-	 * @param valueOf
-	 * @param parseInt
-	 * @param parseInt2
+	 * @param experimentId
+	 * @param frameStart
+	 * @param framesEnd
 	 * @param curveParam
 	 * @param rg
 	 * @param rgStdev
@@ -518,18 +523,28 @@ public class BiosaxsServices {
 	 * @param guinierFilePath
 	 * @param kratkyFilePath
 	 * @param densityPlot
-	 * @param substractedFilePath
-	 * @param gnomFilePathOutput
+	 * @param samples
+	 * @throws Exception 
 	 */
 	public Integer saveHPLCCurveAnalysis(Integer experimentId, int frameStart, int framesEnd, String curveParam,
 			String rg, String rgStdev, String i0, String i0Stdev, String firstPointUsed, String lastPointUsed,
 			String quality, String isagregated, String code, String concentration, String gnomFile, String rgGuinier,
 			String rgGnom, String dmax, String total, String volume, String scatteringFilePath, String guinierFilePath,
-			String kratkyFilePath, String densityPlot) {
+			String kratkyFilePath, String densityPlot, ArrayList<HashMap<String, String>> samples) throws Exception {
 
 		Experiment3VO experiment = experiment3Service.findById(experimentId, ExperimentScope.MEDIUM);
-		SaxsDataCollection3VO dataCollection = this.hplcDataProcessing3Service.createDatacollection(experiment,
+		SaxsDataCollection3VO dataCollection = null;
+		
+		if (samples == null || samples.isEmpty()) {
+			dataCollection = this.hplcDataProcessing3Service.createDatacollection(experiment,
 				"HPLC_M", "HPLC_B", experiment.getProposalId());
+		} else {
+			Integer proposalId = experiment.getProposalId();
+			ArrayList<Macromolecule3VO> macromoleculeList = robotService.createOrUpdateMacromolecule(samples, proposalId);
+			ArrayList<Buffer3VO> bufferList = robotService.createOrUpdateBuffer(samples, proposalId);
+			dataCollection = this.hplcDataProcessing3Service.createDatacollection(experiment,
+					macromoleculeList.get(0).getAcronym(), bufferList.get(0).getAcronym(), experiment.getProposalId());
+		}
 
 
 		LOG.warn("Dc size " + experiment.getDataCollectionList().size());

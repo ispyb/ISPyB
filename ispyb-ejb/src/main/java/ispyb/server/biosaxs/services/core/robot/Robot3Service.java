@@ -19,6 +19,8 @@
 
 package ispyb.server.biosaxs.services.core.robot;
 
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
 
@@ -75,5 +77,7 @@ public interface Robot3Service {
 	
 	HashMap<String, Sampleplate3VO> getDefaultSampleChangerPlateconfiguration(String storageTemperature);
 
-
+	public ArrayList<Macromolecule3VO> createOrUpdateMacromolecule(ArrayList<HashMap<String, String>> samples, int proposalId) throws Exception;
+	
+	public ArrayList<Buffer3VO> createOrUpdateBuffer(ArrayList<HashMap<String, String>> samples, int proposalId) throws Exception;
 }

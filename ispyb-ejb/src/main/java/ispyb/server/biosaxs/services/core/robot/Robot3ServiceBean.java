@@ -117,7 +117,7 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 	 */
 	private HashMap<String, Buffer3VO> parseBuffers(ArrayList<HashMap<String, String>> samples, int proposalId) {
 		List<Buffer3VO> buffersProposal = proposal3Service.findBuffersByProposalId(proposalId);
-
+		Robot3ServiceBean.log.info("----------------- parseBuffers ------------ ");
 		HashMap<String, Buffer3VO> bufferNameToBuffer3VO = new HashMap<String, Buffer3VO>();
 
 		/** Store the name of the macromolecules <BufferName, Acronym> **/
@@ -136,16 +136,15 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 				buffer.setAcronym(sample.get("macromolecule").trim());
 				buffer.setComment(sample.get("comments"));
 
-				System.out.println(sample.toString());
-				System.out.println(sample.get("buffername"));
-				System.out.println(sample.get("buffername"));
+				Robot3ServiceBean.log.info("sample: " + sample.toString());
+				Robot3ServiceBean.log.info("buffername: " + sample.get("buffername"));
 
 				String positionCode = this.getSamplePositionKey(sample);
 				if (bufferPositionToBufferAcronym.get(positionCode) == null) {
 					bufferNameToBufferAcronym.put(sample.get("buffername").trim(), sample.get("macromolecule").trim());
 					bufferPositionToBufferAcronym.put(positionCode, sample.get("macromolecule").trim());
 				} else {
-					System.out.println("Buffers detected in the same position with different macromolecule name");
+					Robot3ServiceBean.log.info("Buffers detected in the same position with different macromolecule name");
 					log.warn("Buffers detected in the same position with different macromolecule name");
 					bufferNameToBufferAcronym.put(sample.get("buffername").trim(),
 							bufferPositionToBufferAcronym.get(positionCode));
@@ -199,6 +198,7 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 	private HashMap<String, Macromolecule3VO> parseMacromolecules(ArrayList<HashMap<String, String>> samples,
 			int proposalId) {
 		List<Macromolecule3VO> macromoleculesProposalList = proposal3Service.findMacromoleculesByProposalId(proposalId);
+		Robot3ServiceBean.log.info("----------------- parseMacromolecules ------------ ");
 		HashMap<String, Macromolecule3VO> acronymToMacromolecule3VO = new HashMap<String, Macromolecule3VO>();
 		/** Store the name of the macromolecules **/
 		HashSet<String> macromoleculeAcronyms = new HashSet<String>();
@@ -969,5 +969,78 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 		return platePositionToSamplePlate3VO;
 	}
 
+	public ArrayList<Macromolecule3VO> createOrUpdateMacromolecule(ArrayList<HashMap<String, String>> samples, int proposalId) throws Exception {
+		Robot3ServiceBean.log.info("createOrUpdateMacromolecule");
+		
+		ArrayList<Macromolecule3VO> macromoleculeList = new ArrayList<Macromolecule3VO>();
+		
+		/** Triming all values **/
+		for (HashMap<String, String> hashMap : samples) {
+			for (String key : hashMap.keySet()) {
+				/** It may be null when creating template and plate = null **/
+				if (hashMap.get(key) != null) {
+					hashMap.put(key, hashMap.get(key).trim());
+				}
+			}
+		}
+		
+		HashMap<String, Macromolecule3VO> macromolecules = this.parseMacromolecules(samples, proposalId);
+		for (String key : macromolecules.keySet()) {
+			Robot3ServiceBean.log.info("createOrUpdateMacromolecule: " + macromolecules.get(key));
+		}
+		
+		/** Macromolecule **/
+		for (HashMap<String, String> sample : samples) {
+			if (sample.get("type").equals("Sample")) {
+				Macromolecule3VO macromolecule3VO = macromolecules.get(sample.get("macromolecule"));
+				Robot3ServiceBean.log.info("createOrUpdateMacromolecule macromolecule.acronym = " + macromolecule3VO.getAcronym());
+				if (macromolecule3VO != null) {
+					macromolecule3VO.setProposalId(proposalId);
+					macromolecule3VO = this.proposal3Service.merge(macromolecule3VO);
+					macromoleculeList.add(macromolecule3VO);
+				}
+			}
+		}
+		Robot3ServiceBean.log.info("createOrUpdateMacromolecule size = " + macromoleculeList.size());
+		
+		return macromoleculeList;
+	}
 	
+	public ArrayList<Buffer3VO> createOrUpdateBuffer(ArrayList<HashMap<String, String>> samples, int proposalId) throws Exception {
+		Robot3ServiceBean.log.info("createOrUpdateBuffer");
+		
+		ArrayList<Buffer3VO> bufferList = new ArrayList<Buffer3VO>();
+		
+		/** Triming all values **/
+		for (HashMap<String, String> hashMap : samples) {
+			for (String key : hashMap.keySet()) {
+				/** It may be null when creating template and plate = null **/
+				if (hashMap.get(key) != null) {
+					hashMap.put(key, hashMap.get(key).trim());
+				}
+			}
+		}
+
+		HashMap<String, Buffer3VO> buffers = this.parseBuffers(samples, proposalId);
+		for (String key : buffers.keySet()) {
+			Robot3ServiceBean.log.info("createOrUpdateBuffer: key= " + key + " | value= " + buffers.get(key));
+		}
+		
+		/** Buffer **/
+		for (HashMap<String, String> sample : samples) {
+			Buffer3VO buffer3VO = buffers.get(sample.get("buffername").trim());
+			if (buffer3VO == null) {
+				log.error("Buffer not found with buffer name: " + sample.get("buffername"));
+			}
+			
+			if (buffer3VO != null) {
+				buffer3VO.setProposalId(proposalId);
+				buffer3VO = this.proposal3Service.merge(buffer3VO);
+				bufferList.add(buffer3VO);
+			}
+		}
+		Robot3ServiceBean.log.info("createOrUpdateBuffer size = " + bufferList.size());
+		
+		return bufferList;
+	}
 }
