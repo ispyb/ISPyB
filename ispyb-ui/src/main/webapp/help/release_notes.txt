@@ -1,4 +1,17 @@
 **************
+* 24.02.2016     *
+**************
+
+- See FEATURE#2324 for the following changes:
+- Renamed "Workflow" tab to "Workflow Log"
+- Commented out the display of "Mesh" and "Dehydration" tabs
+- If present the "Results" tab is automatically selected
+- Renamed "html_XX" tab to "Characterisation_XX" 
+- Organisation of the "Results" subtabs: 
+    Snapshots/Automesh/Mesh/Line_01/Line_02/Line_03/Characterisation_01/Characterisation_02
+- The last subtab is automatically selected
+
+**************
 * 09.02.2016     *
 **************
 

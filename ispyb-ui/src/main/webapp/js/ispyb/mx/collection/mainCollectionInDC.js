@@ -106,6 +106,7 @@ var IspybCollection2 = {
 							});
 */
 					var items = [];
+					var activeTab = 0;
 //					items.push({
 //								tabConfig : {
 //									title : "DataCollections"
@@ -118,7 +119,7 @@ var IspybCollection2 = {
 						workflowPanel = new WorkflowPanel();
 						items.push({
 									tabConfig : {
-										title : "Workflow"
+										title : "Workflow Log"
 									},
 									items : [workflowPanel.getPanel(data)]
 								});
@@ -132,24 +133,24 @@ var IspybCollection2 = {
 //									items : [imagePanel.getPanel(data.snapshot, data.imageList, data.displayMesh, data.meshData)]
 //								});
 //					}
-					if (data.displayMesh == 1) {
-						meshScanPanel = new MeshScanPanel();
-						items.push({
-									tabConfig : {
-										title : "Mesh"
-									},
-									items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
-								});
-					}
-					if (data.displayDehydration == 1) {
-						dehydrationPanel = new DehydrationPanel();
-						items.push({
-									tabConfig : {
-										title : "Dehydration"
-									},
-									items : [dehydrationPanel.getPanel(data)]
-								});
-					}
+//					if (data.displayMesh == 1) {
+//						meshScanPanel = new MeshScanPanel();
+//						items.push({
+//									tabConfig : {
+//										title : "Mesh"
+//									},
+//									items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
+//								});
+//					}
+//					if (data.displayDehydration == 1) {
+//						dehydrationPanel = new DehydrationPanel();
+//						items.push({
+//									tabConfig : {
+//										title : "Dehydration"
+//									},
+//									items : [dehydrationPanel.getPanel(data)]
+//								});
+//					}
 					if (data && data.workflowVO && data.workflowVO.resultFiles && data.workflowVO.resultFiles.length > 0) {
 						resultPanel = new ResultPanel();
 						items.push({
@@ -158,12 +159,13 @@ var IspybCollection2 = {
 									},
 									items : [resultPanel.getPanel(data)]
 								});
+						activeTab = items.length - 1;
 					}
 					if (items.length > 0){
 
 						var tabs = Ext.create('Ext.tab.Panel', {
 								width: "99%",
-								activeTab : 0,
+								activeTab : activeTab,
 								defaults : {
 									bodyPadding : 0,
 									autoScroll : true

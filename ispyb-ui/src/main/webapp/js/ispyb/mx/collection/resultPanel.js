@@ -38,11 +38,48 @@ function ResultPanel(args) {
 ResultPanel.prototype.getPanel = function(data) {
 	var _this = this;
 	var items = [];
+	var activeTab = 0;
 	if (data && data.workflowVO && data.workflowVO.resultFiles) {
 		var nbResult = data.workflowVO.resultFiles.length;
+		// Rank results in order to make tabs appear in the correct order
+		for (var i = 0; i < nbResult; i++) {
+			var title = data.workflowVO.resultFiles[i].directoryName;
+		    if (title.indexOf("Snapshots") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 10;
+		    } else if (title.indexOf("Automesh") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 20;
+		    } else if (title.indexOf("Mesh_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 30;
+		    } else if (title.indexOf("Line_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 40;
+		    } else if (title.indexOf("html_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 50;
+		    } else {
+		        data.workflowVO.resultFiles[i]["rank"] = 60;
+		    }
+		}
+		// Sort results
+		data.workflowVO.resultFiles.sort(function(a,b) {
+				var deltaRank = a.rank - b.rank;
+				if (deltaRank == 0) {
+					// If same rank then sort by directoryName
+					listA = a.directoryName.split("_")
+					listB = b.directoryName.split("_")
+					if (listA.length==2 && listB.length==2) {
+					 	valueA = parseInt(listA[1])
+					 	valueB = parseInt(listB[1])
+					 	deltaRank = valueA - valueB
+					}		 
+				}   
+				return deltaRank; 
+			} );
 		for (var i = 0; i < nbResult; i++) {
 			var webPanel = new WebPanel();
 			var title = data.workflowVO.resultFiles[i].directoryName;
+			if (title.indexOf("html_") != -1) {
+				// Rename 'html' tab to 'Characterisation'
+				title = "Characterisation_" + title.split("_")[1];
+			}
 			//var l = title.lastIndexOf("\\");
 			//if (l != -1) {
 			//	title = title.substring(0, l);
@@ -58,11 +95,12 @@ ResultPanel.prototype.getPanel = function(data) {
 						items : [webPanel.getPanel(data.workflowVO.resultFiles[i])]
 					});
 		}
+		activeTab = items.length - 1;
 	}
 
 	var tabs = Ext.create('Ext.tab.Panel', {
 				layout : 'fit',
-				activeTab : 0,
+				activeTab : activeTab,
 				defaults : {
 					bodyPadding : 0
 				},

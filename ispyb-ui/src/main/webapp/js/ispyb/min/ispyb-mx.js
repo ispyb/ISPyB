@@ -5034,6 +5034,7 @@ var IspybCollection = {
 							});
 
 					var items = [];
+					var activeTab = 0;
 					items.push({
 							tabConfig : {
 									title : "DataCollections"
@@ -5054,29 +5055,29 @@ var IspybCollection = {
 						workflowPanel = new WorkflowPanel();
 						items.push({
 								tabConfig : {
-									title : "Workflow"
+									title : "Workflow Log"
 								},
 								items : [workflowPanel.getPanel(data)]
 							});
 					}
-					if (data.displayMesh == 1) {
-						meshScanPanel = new MeshScanPanel();
-						items.push({
-								tabConfig : {
-										title : "Mesh"
-									},
-								items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
-							});
-					}
-					if (data.displayDehydration == 1) {
-						dehydrationPanel = new DehydrationPanel();
-						items.push({
-								tabConfig : {
-										title : "Dehydration"
-									},
-								items : [dehydrationPanel.getPanel(data)]
-							});
-					}
+//					if (data.displayMesh == 1) {
+//						meshScanPanel = new MeshScanPanel();
+//						items.push({
+//								tabConfig : {
+//										title : "Mesh"
+//									},
+//								items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
+//							});
+//					}
+//					if (data.displayDehydration == 1) {
+//						dehydrationPanel = new DehydrationPanel();
+//						items.push({
+//								tabConfig : {
+//										title : "Dehydration"
+//									},
+//								items : [dehydrationPanel.getPanel(data)]
+//							});
+//					}
 					if (data && data.workflowVO && data.workflowVO.resultFiles && data.workflowVO.resultFiles.length > 0) {
 						resultPanel = new ResultPanel();
 						items.push({
@@ -5085,11 +5086,12 @@ var IspybCollection = {
 									},
 								items : [resultPanel.getPanel(data)]
 							});
+						activeTab = items.length - 1;
 					}
 
 					var tabs = Ext.create('Ext.tab.Panel', {
 								// width: "100%",
-							activeTab : 0,
+							activeTab : activeTab,
 							style : {
 									marginTop : '10px'
 								},
@@ -5562,6 +5564,7 @@ var IspybCollection2 = {
 							});
 */
 					var items = [];
+					var activeTab = 0;
 //					items.push({
 //								tabConfig : {
 //									title : "DataCollections"
@@ -5574,7 +5577,7 @@ var IspybCollection2 = {
 						workflowPanel = new WorkflowPanel();
 						items.push({
 									tabConfig : {
-										title : "Workflow"
+										title : "Workflow Log"
 									},
 									items : [workflowPanel.getPanel(data)]
 								});
@@ -5588,24 +5591,24 @@ var IspybCollection2 = {
 //									items : [imagePanel.getPanel(data.snapshot, data.imageList, data.displayMesh, data.meshData)]
 //								});
 //					}
-					if (data.displayMesh == 1) {
-						meshScanPanel = new MeshScanPanel();
-						items.push({
-									tabConfig : {
-										title : "Mesh"
-									},
-									items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
-								});
-					}
-					if (data.displayDehydration == 1) {
-						dehydrationPanel = new DehydrationPanel();
-						items.push({
-									tabConfig : {
-										title : "Dehydration"
-									},
-									items : [dehydrationPanel.getPanel(data)]
-								});
-					}
+//					if (data.displayMesh == 1) {
+//						meshScanPanel = new MeshScanPanel();
+//						items.push({
+//									tabConfig : {
+//										title : "Mesh"
+//									},
+//									items : [meshScanPanel.getPanel(data.meshData, data.snapshot, 0)]
+//								});
+//					}
+//					if (data.displayDehydration == 1) {
+//						dehydrationPanel = new DehydrationPanel();
+//						items.push({
+//									tabConfig : {
+//										title : "Dehydration"
+//									},
+//									items : [dehydrationPanel.getPanel(data)]
+//								});
+//					}
 					if (data && data.workflowVO && data.workflowVO.resultFiles && data.workflowVO.resultFiles.length > 0) {
 						resultPanel = new ResultPanel();
 						items.push({
@@ -5614,12 +5617,13 @@ var IspybCollection2 = {
 									},
 									items : [resultPanel.getPanel(data)]
 								});
+						activeTab = items.length - 1;
 					}
 					if (items.length > 0){
 
 						var tabs = Ext.create('Ext.tab.Panel', {
 								width: "99%",
-								activeTab : 0,
+								activeTab : activeTab,
 								defaults : {
 									bodyPadding : 0,
 									autoScroll : true
@@ -6264,6 +6268,7 @@ var IspybWorkflow = {
 							});
 
 					var items = [];
+					var activeTab = 0;
 					//tabs workflow: image has been removed (too much image, too much time to display)
 					items.push({
 								tabConfig : {
@@ -6310,41 +6315,41 @@ var IspybWorkflow = {
 									items : [workflowPanel.getPanel(data)]
 								});
 					}
-					if (data.displayMesh == 1) {
-						var nb  = data.listOfMeshData.length;
-						if (nb > 1 ){
-							var meshTabPanel = new MeshTabPanel();
-							items.push({
-								tabConfig : {
-									title : "Mesh"
-								},
-								items : [meshTabPanel.getPanel(data)]
-							});
-						}else if (nb == 1){
-							var meshScanPanel = new MeshScanPanel();
-							var meshData =data.listOfMeshData[0];
-							var snapshot = null;
-							if (data.listOfSnapshot && data.listOfSnapshot.length > 0)
-								snapshot = data.listOfSnapshot[0];
-							items.push({
-										tabConfig : {
-											title : "Mesh"
-										},
-										items : [meshScanPanel.getPanel(meshData,snapshot, 0)]
-									});
-						}
-						
-						
-					}
-					if (data.displayDehydration == 1) {
-						dehydrationPanel = new DehydrationPanel();
-						items.push({
-									tabConfig : {
-										title : "Dehydration"
-									},
-									items : [dehydrationPanel.getPanel(data)]
-								});
-					}
+//					if (data.displayMesh == 1) {
+//						var nb  = data.listOfMeshData.length;
+//						if (nb > 1 ){
+//							var meshTabPanel = new MeshTabPanel();
+//							items.push({
+//								tabConfig : {
+//									title : "Mesh"
+//								},
+//								items : [meshTabPanel.getPanel(data)]
+//							});
+//						}else if (nb == 1){
+//							var meshScanPanel = new MeshScanPanel();
+//							var meshData =data.listOfMeshData[0];
+//							var snapshot = null;
+//							if (data.listOfSnapshot && data.listOfSnapshot.length > 0)
+//								snapshot = data.listOfSnapshot[0];
+//							items.push({
+//										tabConfig : {
+//											title : "Mesh"
+//										},
+//										items : [meshScanPanel.getPanel(meshData,snapshot, 0)]
+//									});
+//						}
+//						
+//						
+//					}
+//					if (data.displayDehydration == 1) {
+//						dehydrationPanel = new DehydrationPanel();
+//						items.push({
+//									tabConfig : {
+//										title : "Dehydration"
+//									},
+//									items : [dehydrationPanel.getPanel(data)]
+//								});
+//					}
 					if (data && data.workflowVO && data.workflowVO.resultFiles && data.workflowVO.resultFiles.length > 0) {
 						resultPanel = new ResultPanel();
 						items.push({
@@ -6353,12 +6358,13 @@ var IspybWorkflow = {
 									},
 									items : [resultPanel.getPanel(data)]
 								});
+						activeTab = items.length - 1;
 					}
 					if (items.length > 0){
 
 						var tabs = Ext.create('Ext.tab.Panel', {
 								width: "99%",
-								activeTab : 0,
+								activeTab : activeTab,
 								defaults : {
 									bodyPadding : 0,
 									autoScroll : true
@@ -11183,11 +11189,48 @@ function ResultPanel(args) {
 ResultPanel.prototype.getPanel = function(data) {
 	var _this = this;
 	var items = [];
+	var activeTab = 0;
 	if (data && data.workflowVO && data.workflowVO.resultFiles) {
 		var nbResult = data.workflowVO.resultFiles.length;
+		// Rank results in order to make tabs appear in the correct order
+		for (var i = 0; i < nbResult; i++) {
+			var title = data.workflowVO.resultFiles[i].directoryName;
+		    if (title.indexOf("Snapshots") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 10;
+		    } else if (title.indexOf("Automesh") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 20;
+		    } else if (title.indexOf("Mesh_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 30;
+		    } else if (title.indexOf("Line_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 40;
+		    } else if (title.indexOf("html_") != -1) {
+		        data.workflowVO.resultFiles[i]["rank"] = 50;
+		    } else {
+		        data.workflowVO.resultFiles[i]["rank"] = 60;
+		    }
+		}
+		// Sort results
+		data.workflowVO.resultFiles.sort(function(a,b) {
+				var deltaRank = a.rank - b.rank;
+				if (deltaRank == 0) {
+					// If same rank then sort by directoryName
+					listA = a.directoryName.split("_")
+					listB = b.directoryName.split("_")
+					if (listA.length==2 && listB.length==2) {
+					 	valueA = parseInt(listA[1])
+					 	valueB = parseInt(listB[1])
+					 	deltaRank = valueA - valueB
+					}		 
+				}   
+				return deltaRank; 
+			} );
 		for (var i = 0; i < nbResult; i++) {
 			var webPanel = new WebPanel();
 			var title = data.workflowVO.resultFiles[i].directoryName;
+			if (title.indexOf("html_") != -1) {
+				// Rename 'html' tab to 'Characterisation'
+				title = "Characterisation_" + title.split("_")[1];
+			}
 			//var l = title.lastIndexOf("\\");
 			//if (l != -1) {
 			//	title = title.substring(0, l);
@@ -11203,11 +11246,12 @@ ResultPanel.prototype.getPanel = function(data) {
 						items : [webPanel.getPanel(data.workflowVO.resultFiles[i])]
 					});
 		}
+		activeTab = items.length - 1;
 	}
 
 	var tabs = Ext.create('Ext.tab.Panel', {
 				layout : 'fit',
-				activeTab : 0,
+				activeTab : activeTab,
 				defaults : {
 					bodyPadding : 0
 				},
