@@ -43,8 +43,8 @@ public class WorkflowStep3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "workflowId")
 	protected Integer workflowId;
 
-	@Column(name = "type")
-	protected String type;
+	@Column(name = "workflowStepType")
+	protected String workflowStepType;
 
 	@Column(name = "status")
 	protected String status;
@@ -92,13 +92,6 @@ public class WorkflowStep3VO extends ISPyBValueObject implements Cloneable {
 		this.workflowId = workflowId;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
 
 	public String getStatus() {
 		return status;
@@ -154,6 +147,14 @@ public class WorkflowStep3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getWorkflowStepType() {
+		return workflowStepType;
+	}
+
+	public void setWorkflowStepType(String workflowStepType) {
+		this.workflowStepType = workflowStepType;
 	}
 
 }
