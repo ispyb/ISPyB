@@ -137,6 +137,14 @@ public class RestWebService {
 		return new GsonBuilder().serializeNulls().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
 				.create();
 	}
+	
+	protected Gson getGson(boolean serializeNull) {
+		if (serializeNull)
+			return this.getGson();
+					
+		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
+				.create();
+	}
 
 	protected Gson getWithoutExposeAnnotationGson() {
 		return new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
@@ -149,6 +157,10 @@ public class RestWebService {
 
 	protected Response sendResponse(Object response) {
 		return Response.ok(getGson().toJson(response)).header("Access-Control-Allow-Origin", "*").build();
+	}
+	
+	protected Response sendResponse(Object response, boolean serializeNulls) {
+		return Response.ok(getGson(serializeNulls).toJson(response)).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	protected Response unauthorizedResponse() {
