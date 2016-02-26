@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 @Path("/")
 public class DataCollectionWebService extends MXRestWebService {
@@ -125,6 +126,7 @@ public class DataCollectionWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionIdList}/view")
 	@Produces({ "application/json" })
 	public Response getViewDataCollectionBySessionId(@PathParam("token") String token,
@@ -141,7 +143,7 @@ public class DataCollectionWebService extends MXRestWebService {
 				dataCollections.addAll(this.getNativeDataCollection3Service().getViewDataCollectionBySessionId(id));
 			}
 			this.logFinish(methodName, start, logger);
-			return this.sendResponse(dataCollections);
+			return this.sendResponse(dataCollections, false);
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
