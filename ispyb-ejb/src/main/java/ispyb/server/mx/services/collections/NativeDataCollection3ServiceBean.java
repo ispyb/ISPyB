@@ -410,13 +410,52 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 		return result;
 	}
 
+	private String getPhasingSpaceGroupQuery(){
+		return "  (SELECT GROUP_CONCAT(distinct(`pydb`.`SpaceGroup`.`spaceGroupShortName`)) AS `v_datacollection_summary_phasing_spaceGroupShortName`\n" + 
+				"    FROM `pydb`.`AutoProcIntegration` " + 
+				"        LEFT JOIN `pydb`.`AutoProcScaling_has_Int` ON `pydb`.`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `pydb`.`AutoProcIntegration`.`autoProcIntegrationId` " + 
+				"        LEFT JOIN `pydb`.`AutoProcScaling` ON `pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`Phasing_has_Scaling` ON `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`PhasingStep` ON `pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`SpaceGroup` ON `pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId` " +
+				"		where `pydb`.`AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId " +  
+				") as Phasing_spaceGroup, ";
+		
+	}
+	
+	private String getPhasingStepQuery(){
+		return "  (SELECT GROUP_CONCAT(distinct(`pydb`.`PhasingStep`.`phasingStepType`)) AS `v_datacollection_summary_phasing_spaceGroupShortName`\n" + 
+				"    FROM `pydb`.`AutoProcIntegration` " + 
+				"        LEFT JOIN `pydb`.`AutoProcScaling_has_Int` ON `pydb`.`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `pydb`.`AutoProcIntegration`.`autoProcIntegrationId` " + 
+				"        LEFT JOIN `pydb`.`AutoProcScaling` ON `pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`Phasing_has_Scaling` ON `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`PhasingStep` ON `pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` " + 
+				"        LEFT JOIN `pydb`.`SpaceGroup` ON `pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId` " +
+				"		where `pydb`.`AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId " +  
+				") as Phasing_phasingStepType, ";
+		
+	}
+	
 	private String getViewTableQuery(){
-			return "select * from V_datacollection_summary";
+			//return "select * from V_datacollection_summary";
+		return "select *, "
+				+ " GROUP_CONCAT(`AutoProcProgram_processingPrograms` SEPARATOR ', ') AS `processingPrograms`, "
+				+ " GROUP_CONCAT(`AutoProcProgram_processingStatus` SEPARATOR ', ') AS `processingStatus`,"
+				+ " GROUP_CONCAT(`AutoProcIntegration_autoProcIntegrationId` SEPARATOR ', ') AS `autoProcIntegrationId`, "
+				+ this.getPhasingSpaceGroupQuery()
+				+ this.getPhasingStepQuery()
+				+ " (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,"
+				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,"
+				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId"
+				+ " from v_datacollection_summary";
 	}
 	
 	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySessionId(int sessionId) {
 		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		
+		System.out.println(mySQLQuery);
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
