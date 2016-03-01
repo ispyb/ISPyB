@@ -1,3 +1,4 @@
+DROP TABLE `pydb`.`WorkflowStep`;
 CREATE TABLE `pydb`.`WorkflowStep` (
   `workflowStepId` INT NOT NULL AUTO_INCREMENT,
   `workflowId` INT(11) NOT NULL,

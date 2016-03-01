@@ -21,7 +21,7 @@ VIEW `pydb`.`v_datacollection_summary_screening` AS
     FROM
         ((`pydb`.`Screening`
         LEFT JOIN `pydb`.`ScreeningOutput` ON ((`pydb`.`Screening`.`screeningId` = `pydb`.`ScreeningOutput`.`screeningId`)))
-        LEFT JOIN `pydb`.`ScreeningOutputLattice` ON ((`pydb`.`ScreeningOutput`.`screeningOutputId` = `pydb`.`ScreeningOutputLattice`.`screeningOutputId`)))
+        LEFT JOIN `pydb`.`ScreeningOutputLattice` ON ((`pydb`.`ScreeningOutput`.`screeningOutputId` = `pydb`.`ScreeningOutputLattice`.`screeningOutputId`)));
         
 CREATE 
     ALGORITHM = MERGE 
@@ -47,7 +47,7 @@ VIEW `pydb`.`v_datacollection_summary_phasing` AS
         LEFT JOIN `pydb`.`AutoProcScaling` ON ((`pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId`)))
         LEFT JOIN `pydb`.`Phasing_has_Scaling` ON ((`pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId`)))
         LEFT JOIN `pydb`.`PhasingStep` ON ((`pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId`)))
-        LEFT JOIN `pydb`.`SpaceGroup` ON ((`pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId`)))
+        LEFT JOIN `pydb`.`SpaceGroup` ON ((`pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId`)));
         
         
 CREATE 
@@ -117,7 +117,7 @@ VIEW `pydb`.`v_datacollection_summary_datacollectiongroup` AS
         LEFT JOIN `pydb`.`BLSample` ON ((`pydb`.`BLSample`.`blSampleId` = `pydb`.`DataCollectionGroup`.`blSampleId`)))
         LEFT JOIN `pydb`.`Crystal` ON ((`pydb`.`Crystal`.`crystalId` = `pydb`.`BLSample`.`crystalId`)))
         LEFT JOIN `pydb`.`Protein` ON ((`pydb`.`Protein`.`proteinId` = `pydb`.`Crystal`.`proteinId`)))
-        LEFT JOIN `pydb`.`Workflow` ON ((`pydb`.`DataCollectionGroup`.`workflowId` = `pydb`.`Workflow`.`workflowId`)))
+        LEFT JOIN `pydb`.`Workflow` ON ((`pydb`.`DataCollectionGroup`.`workflowId` = `pydb`.`Workflow`.`workflowId`)));
 
 
 CREATE 
@@ -140,7 +140,7 @@ VIEW `pydb`.`v_datacollection_summary_autoprocintegration` AS
         LEFT JOIN `pydb`.`AutoProcScaling` ON ((`pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId`)))
         LEFT JOIN `pydb`.`Phasing_has_Scaling` ON ((`pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId`)))
         LEFT JOIN `pydb`.`PhasingStep` ON ((`pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId`)))
-        LEFT JOIN `pydb`.`SpaceGroup` ON ((`pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId`)))
+        LEFT JOIN `pydb`.`SpaceGroup` ON ((`pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId`)));
         
 
 CREATE 
@@ -233,5 +233,5 @@ VIEW `pydb`.`v_datacollection_summary` AS
         LEFT JOIN `pydb`.`Protein` ON ((`pydb`.`Protein`.`proteinId` = `pydb`.`Crystal`.`proteinId`)))
         LEFT JOIN `pydb`.`Workflow` ON ((`pydb`.`DataCollectionGroup`.`workflowId` = `pydb`.`Workflow`.`workflowId`)))
         LEFT JOIN `pydb`.`v_datacollection_summary_autoprocintegration` ON ((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)))
-        LEFT JOIN `pydb`.`v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)))       
+        LEFT JOIN `pydb`.`v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)))  ;     
         
