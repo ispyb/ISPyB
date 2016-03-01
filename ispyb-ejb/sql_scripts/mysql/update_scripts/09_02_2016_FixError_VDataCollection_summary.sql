@@ -3,9 +3,7 @@ CREATE
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
 VIEW `pydb`.`V_datacollection_summary` AS
-  
-
-SELECT 
+   SELECT 
         `pydb`.`DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,
         `pydb`.`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,
         `pydb`.`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,
@@ -215,46 +213,41 @@ SELECT
         `pydb`.`Detector`.`XGeoCorr` AS `Detector_XGeoCorr`,
         `pydb`.`Detector`.`YGeoCorr` AS `Detector_YGeoCorr`,
         `pydb`.`Detector`.`detectorMode` AS `Detector_detectorMode`,
-        
         `pydb`.`AutoProcIntegration`.`startImageNumber` AS `AutoProcIntegration_startImageNumber`,
         `pydb`.`AutoProcIntegration`.`endImageNumber` AS `AutoProcIntegration_endImageNumber`,
-        
-        `pydb`.`AutoProcIntegration`.`autoprocIntegrationId` AS `AutoProcIntegration_autoprocIntegrationId`,
+        `pydb`.`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoprocIntegrationId`,
         `pydb`.`AutoProcIntegration`.`refinedDetectorDistance` AS `AutoProcIntegration_refinedDetectorDistance`,
         `pydb`.`AutoProcIntegration`.`refinedXBeam` AS `AutoProcIntegration_refinedXBeam`,
         `pydb`.`AutoProcIntegration`.`refinedYBeam` AS `AutoProcIntegration_refinedYBeam`,
         `pydb`.`AutoProcIntegration`.`rotationAxisX` AS `AutoProcIntegration_rotationAxisX`,
         `pydb`.`AutoProcIntegration`.`rotationAxisY` AS `AutoProcIntegration_rotationAxisY`,
-        
-        
-        
-        
-        
         `pydb`.`PhasingStep`.`phasingStepType` AS `PhasingStep_phasingStepType`,
         `pydb`.`PhasingStep`.`method` AS `PhasingStep_method`,
+        `pydb`.`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,
+        `pydb`.`Workflow`.`workflowType` AS `Workflow_workflowType`,
+        `pydb`.`Workflow`.`status` AS `Workflow_status`,
+        `pydb`.`Workflow`.`comments` AS `Workflow_comments`,
+        `pydb`.`Image`.`imageId` AS `Image_imageId`,
+        `pydb`.`Image`.`temperature` AS `Image_temperature`,
+        `pydb`.`Image`.`fileName` AS `Image_fileName`,
+        `pydb`.`Image`.`machineMessage` AS `Image_machineMessage`,
+        `pydb`.`Image`.`measuredIntensity` AS `Image_measuredIntensity`
         
-		`pydb`.`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,
-		`pydb`.`Workflow`.`workflowType` AS `Workflow_workflowType`,
-		`pydb`.`Workflow`.`Status` AS `Workflow_status`,
-		`pydb`.`Workflow`.`comments` AS `Workflow_comments`
-
-            
     FROM
-        ((((((((((((((`pydb`.`DataCollectionGroup`
+        (((((((((((((((`pydb`.`DataCollectionGroup`
         LEFT JOIN `pydb`.`DataCollection` ON ((`pydb`.`DataCollection`.`dataCollectionGroupId` = `pydb`.`DataCollectionGroup`.`dataCollectionGroupId`)))
+         LEFT JOIN `pydb`.`Image` ON ((`pydb`.`Image`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`))
         LEFT JOIN `pydb`.`Detector` ON ((`pydb`.`DataCollection`.`detectorId` = `pydb`.`Detector`.`detectorId`)))
-        LEFT JOIN `pydb`.`Screening` ON ((`pydb`.`Screening`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionGroupId`)))
+        LEFT JOIN `pydb`.`Screening` ON ((`pydb`.`Screening`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)))
         LEFT JOIN `pydb`.`ScreeningOutput` ON ((`pydb`.`ScreeningOutput`.`screeningId` = `pydb`.`Screening`.`screeningId`)))
         LEFT JOIN `pydb`.`ScreeningStrategy` ON ((`pydb`.`ScreeningStrategy`.`screeningOutputId` = `pydb`.`ScreeningOutput`.`screeningOutputId`)))
         LEFT JOIN `pydb`.`BLSession` ON ((`pydb`.`BLSession`.`sessionId` = `pydb`.`DataCollectionGroup`.`sessionId`)))
         LEFT JOIN `pydb`.`BLSample` ON ((`pydb`.`BLSample`.`blSampleId` = `pydb`.`DataCollectionGroup`.`blSampleId`)))
         LEFT JOIN `pydb`.`Crystal` ON ((`pydb`.`Crystal`.`crystalId` = `pydb`.`BLSample`.`crystalId`)))
-        
         LEFT JOIN `pydb`.`Workflow` ON ((`pydb`.`DataCollectionGroup`.`workflowId` = `pydb`.`Workflow`.`workflowId`)))
-        
         LEFT JOIN `pydb`.`Protein` ON ((`pydb`.`Protein`.`proteinId` = `pydb`.`Crystal`.`proteinId`)))
         LEFT JOIN `pydb`.`AutoProcIntegration` ON ((`pydb`.`AutoProcIntegration`.`dataCollectionId` = `pydb`.`DataCollection`.`dataCollectionId`)))
         LEFT JOIN `pydb`.`AutoProcScaling_has_Int` ON ((`pydb`.`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `pydb`.`AutoProcIntegration`.`autoProcIntegrationId`)))
         LEFT JOIN `pydb`.`AutoProcScaling` ON ((`pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId`)))
         LEFT JOIN `pydb`.`Phasing_has_Scaling` ON ((`pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId`)))
-        LEFT JOIN `pydb`.`PhasingStep` ON ((`pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId`))
+        LEFT JOIN `pydb`.`PhasingStep` ON ((`pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId`)))
