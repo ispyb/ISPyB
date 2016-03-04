@@ -9,8 +9,10 @@ import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.ws.rest.RestWebService;
+import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 @Path("/")
-public class ProposalRestWebService extends RestWebService {
+public class ProposalRestWebService extends MXRestWebService{
 
 	private final static Logger logger = Logger.getLogger(ProposalRestWebService.class);
 
@@ -141,29 +143,18 @@ public class ProposalRestWebService extends RestWebService {
 			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 			proposals.add(this.getSaxsProposal3Service().findProposalById(proposalId));
 			
-
 			List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
+			List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
 			
-			// List<Session3VO> sessions =
-			// this.getSession3Service().findFiltered(proposalId, null, null,
-			// null, null, null, false, null);
-			// List<Assembly3VO> assemblies =
-			// this.getSaxsProposal3Service().findAssembliesByProposalId(proposalId);
 			List<LabContact3VO> labContacts = this.getLabContact3Service().findFiltered(proposalId, null);
-			// List<Shipping3VO> shippings =
-			// this.getShipping3Service().findByProposal(proposalId, true);
-
 			results.put("proposal", proposals);
+			results.put("crystals", crystals);
 			results.put("plateTypes", plateTypes);
-			// results.put("sessions", sessions);
 			results.put("macromolecules", macromolecules);
 			results.put("buffers", buffers);
 			results.put("stockSolutions", stockSolutions);
-			// results.put("assemblies", assemblies);
 			results.put("labcontacts", labContacts);
-			
 			results.put("proteins", proteins);
-			// results.put("shippings", shippings);
 
 			multiple.add(results);
 			this.logFinish("listProposal", id, logger);
