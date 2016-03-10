@@ -21,6 +21,7 @@ public class DataCollectionWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionWebService.class);
 
+	/*
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/acronyms/{acronyms}/list")
@@ -38,7 +39,7 @@ public class DataCollectionWebService extends MXRestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 
-	}
+	}*/
 	
 	//TODO: /get should be changed by list
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
@@ -148,6 +149,32 @@ public class DataCollectionWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/datacollection/protein_acronym/{protein_acronyms}/view")
+	@Produces({ "application/json" })
+	public Response getViewDataCollectionByProteinAcronym(@PathParam("token") String token,
+			@PathParam("proposal") String proposal, 
+			@PathParam("protein_acronyms") String proteinAcronyms) {
+
+		String methodName = "getViewDataCollectionByProteinAcronym";
+		long start = this.logInit(methodName, logger, token, proposal, proteinAcronyms);
+		try {
+			List<String> acronyms = this.parseToString(proteinAcronyms);
+			List<Map<String, Object>> dataCollections = new ArrayList<Map<String,Object>>();
+			
+			for (String acronym : acronyms) {
+				dataCollections.addAll(this.getNativeDataCollection3Service().getViewDataCollectionByProteinAcronym(this.getProposalId(proposal), acronym));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(dataCollections, false);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 	
 	
 		

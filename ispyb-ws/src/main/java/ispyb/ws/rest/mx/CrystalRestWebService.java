@@ -31,7 +31,6 @@ public class CrystalRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
 			String filePath = this.getDataCollection3Service().findPdbFullPath(dataCollectionId);
-			System.out.println(filePath);
 			this.logFinish(methodName, start, logger);
 			if (filePath != null){
 				if (new File(filePath).exists()){
@@ -73,8 +72,6 @@ public class CrystalRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
 			List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(this.getProposalId(proposal));
-			System.out.println("ProposalId: " + this.getProposalId(proposal));
-			System.out.println("Crystals: " + crystals.size());
 			return this.sendResponse(crystals);
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);

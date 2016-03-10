@@ -30,7 +30,7 @@ public class BufferRestWebService extends SaxsRestWebService {
 	public Response getBuffers(
 			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal) {
-		
+
 		String methodName = "getBuffers";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try{

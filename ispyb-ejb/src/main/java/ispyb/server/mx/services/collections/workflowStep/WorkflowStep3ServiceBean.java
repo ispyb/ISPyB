@@ -40,5 +40,18 @@ public class WorkflowStep3ServiceBean implements WorkflowStep3Service, WorkflowS
 			throw re;
 		}
 	}
+	
+	
+
+	@Override
+	public WorkflowStep3VO findById(Integer workflowStepId) {
+		try {
+			return entityManager.find(WorkflowStep3VO.class, workflowStepId);
+		} catch (RuntimeException re) {
+			throw re;
+		}
+		
+	}
+
 
 }

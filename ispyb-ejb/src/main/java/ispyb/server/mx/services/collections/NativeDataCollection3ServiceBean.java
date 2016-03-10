@@ -437,8 +437,9 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 	}
 	
 	private String getViewTableQuery(){
-			//return "select * from V_datacollection_summary";
 		return "select *, "
+				+ "(select GROUP_CONCAT(workflowStepId) from WorkflowStep \n" + 
+				" where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId order by  WorkflowStep.workflowStepId DESC) as WorkflowStep_workflowStepId,"
 				+ "(select GROUP_CONCAT(workflowStepType) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_workflowStepType,"  
 				+ "(select GROUP_CONCAT(status) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_status,"
 				+ " GROUP_CONCAT(`AutoProcProgram_processingPrograms` SEPARATOR ', ') AS `processingPrograms`, "
@@ -452,15 +453,28 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 				+ " from v_datacollection_summary";
 	}
 	
+	
 	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySessionId(int sessionId) {
 		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId";
 		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
-		
-		System.out.println(mySQLQuery);
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym) {
+		String mySQLQuery = getViewTableQuery() + " where BLSession_proposalId = :proposalId and Protein_acronym = :proteinAcronym";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("proteinAcronym", proteinAcronym);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> aliasToValueMapList = query.list();

@@ -29,7 +29,7 @@ public interface WorkflowStep3Service {
 
 	void merge(WorkflowStep3VO workflowStep3VO);
 
-
+	public WorkflowStep3VO findById(Integer workflowStepId);
 
 	
 }
