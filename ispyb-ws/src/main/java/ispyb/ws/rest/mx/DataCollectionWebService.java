@@ -20,28 +20,7 @@ import org.jboss.resteasy.annotations.GZIP;
 public class DataCollectionWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionWebService.class);
-
-	/*
-	@RolesAllowed({"User", "Manager", "LocalContact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/acronyms/{acronyms}/list")
-	@Produces({ "application/json" })
-	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("acronyms") String acronyms) throws Exception {
-
-		String methodName = "getDataCollections";
-		long id = this.logInit(methodName, logger, token, proposal);
-		try {
-			List<Map<String, Object>> result = this.getNativeDataCollection3Service().getByProteinAcronymList(this.getProposalId(proposal), this.parseToString(acronyms));
-			this.logFinish(methodName, id, logger);
-			return sendResponse(result);
-		} catch (Exception e) {
-			return this.logError(methodName, e, id, logger);
-		}
-
-	}*/
 	
-	//TODO: /get should be changed by list
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionIdList}/get")
@@ -66,8 +45,34 @@ public class DataCollectionWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/wilson")
+	@Produces("image/png")
+	public Response getWilsonPlot(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("dataCollectionId") int dataCollectionId,
+			@PathParam("id") int id) {
+
+		String methodName = "getWilsonPlot";
+		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId, id);
+		try {
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
+			this.logFinish(methodName, start, logger);
+			if (dataCollection != null){
+				return this.sendImage(dataCollection.getBestWilsonPlotPath());
+			}
+			
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+		return null;
+	}
+	
+	
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/crystalsnaphot/{id}/get")
-	@Produces({ "application/json" })
+	@Produces("image/png")
 	public Response getCrystalSnapshot(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
 			@PathParam("dataCollectionId") int dataCollectionId,
