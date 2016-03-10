@@ -49,7 +49,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/image")
-	@Produces("text/plain")
+	@Produces({ "application/json" })
 	public Response getWorkflowStepImageById(
 			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
@@ -78,7 +78,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/html")
-	@Produces("text/plain")
+	@Produces({ "text/html" })
 	public Response getWorkflowStepHTMLById(
 			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
@@ -107,7 +107,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/result")
-	@Produces("text/plain")
+	@Produces({ "text/html" })
 	public Response getWorkflowStepResultById(
 			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
