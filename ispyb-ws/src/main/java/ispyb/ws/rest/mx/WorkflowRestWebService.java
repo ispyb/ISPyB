@@ -49,7 +49,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/image")
-	@Produces({ "application/json" })
+	@Produces("image/png")
 	public Response getWorkflowStepImageById(
 			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
