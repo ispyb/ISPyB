@@ -1,4 +1,13 @@
 **************
+* 10.03.2016     *
+**************
+
+- Retrieve crystal list at login through rest WS (for EXI)
+- WS for workflowStep
+- retrieve the image Wilson plot through WS
+
+
+**************
 * 24.02.2016     *
 **************
 
