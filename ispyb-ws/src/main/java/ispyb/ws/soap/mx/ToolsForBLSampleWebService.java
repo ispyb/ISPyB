@@ -163,7 +163,8 @@ public class ToolsForBLSampleWebService {
 
 	@WebMethod
 	@WebResult(name = "diffractionPlanId")
-	public Integer storeOrUpdateDiffractionPlanNew(java.lang.Integer diffractionPlanId, @WebParam(name = "xmlDocumentId")
+	public Integer storeOrUpdateDiffractionPlanNew(java.lang.Integer diffractionPlanId, 
+	@WebParam(name = "xmlDocumentId")
 	Integer xmlDocumentId, @WebParam(name = "experimentKind")
 	String experimentKind, @WebParam(name = "observedResolution")
 	Double observedResolution, @WebParam(name = "minimalResolution")
@@ -195,15 +196,17 @@ public class ToolsForBLSampleWebService {
 	Integer numberOfPositions, @WebParam(name = "minDimAccrossSpindleAxis")
 	Double minDimAccrossSpindleAxis, @WebParam(name = "maxDimAccrossSpindleAxis")
 	Double maxDimAccrossSpindleAxis, @WebParam(name = "radiationSensitivityBeta")
-	Double radiationSensitivityBeta, @WebParam(name = "radiationSensitivityGamma")
-	Double radiationSensitivityGamma) throws Exception {
+	Double radiationSensitivityBeta, 
+	@WebParam(name = "radiationSensitivityGamma") Double radiationSensitivityGamma, 
+	@WebParam(name = "minOscWidth") Double minOscWidth
+	) throws Exception {
 		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, xmlDocumentId, experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
 				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta,
-				radiationSensitivityGamma);
+				radiationSensitivityGamma,minOscWidth);
 		return storeOrUpdateDiffractionPlanValue(vo);
 	}
 
@@ -244,7 +247,7 @@ public class ToolsForBLSampleWebService {
 				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
-				numberOfPositions, null, null, null, null);
+				numberOfPositions, null, null, null, null,null);
 		return storeOrUpdateDiffractionPlanValue(vo);
 	}
 
