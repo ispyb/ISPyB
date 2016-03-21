@@ -51,7 +51,7 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 			String forcedSpaceGroup, Double requiredCompleteness, Double requiredMultiplicity,
 			Double requiredResolution, String strategyOption, String kappaStrategyOption, Integer numberOfPositions, 
 			Double minDimAccrossSpindleAxis, Double maxDimAccrossSpindleAxis, Double radiationSensitivityBeta, 
-			Double radiationSensitivityGamma) {
+			Double radiationSensitivityGamma, Double minOscWidth) {
 		super(diffractionPlanId, null, experimentKind,
 				observedResolution, minimalResolution, exposureTime, oscillationRange,
 				maximalResolution, screeningResolution, radiationSensitivity,
@@ -60,7 +60,7 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 				aimedResolution, anomalousData, complexity, estimateRadiationDamage,
 				forcedSpaceGroup, requiredCompleteness, requiredMultiplicity,
 				requiredResolution, strategyOption, kappaStrategyOption, numberOfPositions, 
-				minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta, radiationSensitivityGamma);
+				minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta, radiationSensitivityGamma, minOscWidth);
 		this.xmlDocumentId = xmlDocumentId2;
 	}
 

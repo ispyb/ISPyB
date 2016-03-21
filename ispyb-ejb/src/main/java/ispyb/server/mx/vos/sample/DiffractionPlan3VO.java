@@ -150,6 +150,9 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "radiationSensitivityGamma")
 	protected Double radiationSensitivityGamma;
 	
+	@Column(name = "minOscWidth")
+	protected Double minOscWidth;
+	
 
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER)
@@ -169,7 +172,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 			String forcedSpaceGroup, Double requiredCompleteness, Double requiredMultiplicity,
 			Double requiredResolution, String strategyOption, String kappaStrategyOption, Integer numberOfPositions, 
 			Double minDimAccrossSpindleAxis, Double maxDimAccrossSpindleAxis, Double radiationSensitivityBeta, 
-			Double radiationSensitivityGamma) {
+			Double radiationSensitivityGamma, Double minOscWidth) {
 		super();
 		this.diffractionPlanId = diffractionPlanId;
 		this.xmlDocumentVO = xmlDocumentVO;
@@ -204,6 +207,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.maxDimAccrossSpindleAxis = maxDimAccrossSpindleAxis ;
 		this.radiationSensitivityBeta = radiationSensitivityBeta;
 		this.radiationSensitivityGamma = radiationSensitivityGamma;
+		this.minOscWidth = minOscWidth;
 	}
 
 	public DiffractionPlan3VO(DiffractionPlan3VO vo) {
@@ -240,6 +244,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.maxDimAccrossSpindleAxis = vo.getMaxDimAccrossSpindleAxis();
 		this.radiationSensitivityBeta = vo.getRadiationSensitivityBeta();
 		this.radiationSensitivityGamma = vo.getRadiationSensitivityGamma();
+		this.minOscWidth = vo.getMinOscWidth();
 	}
 
 	public void fillVOFromWS(DiffractionPlanWS3VO vo) {
@@ -276,6 +281,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.maxDimAccrossSpindleAxis = vo.getMaxDimAccrossSpindleAxis();
 		this.radiationSensitivityBeta = vo.getRadiationSensitivityBeta();
 		this.radiationSensitivityGamma = vo.getRadiationSensitivityGamma();
+		this.minOscWidth = vo.getMinOscWidth();
 
 	}
 
@@ -562,6 +568,14 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setRadiationSensitivityGamma(Double radiationSensitivityGamma) {
 		this.radiationSensitivityGamma = radiationSensitivityGamma;
+	}	
+
+	public Double getMinOscWidth() {
+		return minOscWidth;
+	}
+
+	public void setMinOscWidth(Double minOscWidth) {
+		this.minOscWidth = minOscWidth;
 	}
 
 	/**
