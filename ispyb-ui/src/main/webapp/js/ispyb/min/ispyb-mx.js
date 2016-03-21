@@ -19967,6 +19967,9 @@ function CreatePuckGrid(args) {
 				}, {
 					name : 'pinBarcode',
 					mapping : 'pinBarcode'
+				}, {
+					name : 'minOscWidth',
+					mapping : 'minOscWidth'
 				}],
 			idProperty : 'sampleId'
 		});
@@ -20524,6 +20527,14 @@ CreatePuckGrid.prototype._getColumns = function () {
 			allowBlank : true
 		}
 	}, {
+		text : 'Min.<br>osc.<br>width',
+		dataIndex : 'minOscWidth',
+		flex : 0.05,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true
+		}
+	}, {
 		text : 'Experiment<br>type',
 		dataIndex : 'experimentType',
 		flex : 0.075,
@@ -20716,6 +20727,7 @@ CreatePuckGrid.prototype.pasteSample = function (rowIndex) {
 		_this.grid.store.getAt(rowIndex).set('unitCellBeta', _this.sampleToCopy.unitCellBeta);
 		_this.grid.store.getAt(rowIndex).set('unitCellGamma', _this.sampleToCopy.unitCellGamma);
 		_this.grid.store.getAt(rowIndex).set('smiles', _this.sampleToCopy.smiles);
+		_this.grid.store.getAt(rowIndex).set('minOscWidth', _this.sampleToCopy.minOscWidth);
 		_this.grid.store.getAt(rowIndex).set('comments', _this.sampleToCopy.comments);
 		
 		_this.copyId = _this.copyId + 1;
@@ -20764,6 +20776,7 @@ CreatePuckGrid.prototype.changeProteinAcronym = function (newValue, idRow) {
 		this.grid.store.getAt(idRow).set('radiationSensitivity', crystal.diffractionPlanVO.radiationSensitivity);
 		this.grid.store.getAt(idRow).set('requiredCompleteness', crystal.diffractionPlanVO.requiredCompleteness);
 		this.grid.store.getAt(idRow).set('requiredMultiplicity', crystal.diffractionPlanVO.requiredMultiplicity);
+		this.grid.store.getAt(idRow).set('minOscWidth', crystal.diffractionPlanVO.minOscWidth);
 	}
 };
 
