@@ -116,8 +116,12 @@ public class UploadShipmentUtils {
 	private static final short unitCellBetaCol = 18;
 
 	private static final short unitCellGammaCol = 19;
+	
+	private static final short smilesCol = 20;
+	
+	private static final short minOscWidthCol = 21;
 
-	private static final short commentsCol = 20;
+	private static final short commentsCol = 22;
 
 	private static final short courrierNameRow = 1;
 
@@ -450,6 +454,8 @@ public class UploadShipmentUtils {
 					double unitCellBeta = cellToDouble(sheet.getRow(i).getCell(unitCellBetaCol));
 					double unitCellGamma = cellToDouble(sheet.getRow(i).getCell(unitCellGammaCol));
 					String sampleComments = cellToString(sheet.getRow(i).getCell(commentsCol));
+					String smiles = cellToString(sheet.getRow(i).getCell(smilesCol));
+					double minOscWidth = cellToDouble(sheet.getRow(i).getCell(minOscWidthCol));
 
 					// Fill in values by default
 					// Protein Name
@@ -544,6 +550,7 @@ public class UploadShipmentUtils {
 									difPlan.setRadiationSensitivity(radiationSensitivity);
 									difPlan.setRequiredCompleteness(requiredCompleteness);
 									difPlan.setRequiredMultiplicity(requiredMultiplicity);
+									difPlan.setMinOscWidth(minOscWidth);
 									difPlan = difPlanService.create(difPlan);
 
 									// Crystal
@@ -615,6 +622,7 @@ public class UploadShipmentUtils {
 									holder.setName(sampleName);
 									holder.setCode(pinBarCode);
 									holder.setLocation(samplePos);
+									holder.setSmiles(smiles);
 
 									// ASSUMPTION: holder is SPINE standard!
 									holder.setHolderLength(holderLength);

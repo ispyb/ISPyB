@@ -141,29 +141,35 @@ public class ISPyBParser extends XLSParser {
 
 	private static final short neededResolutionCol = 7;
 
-	private static final short oscillationRangeCol = 8;
-
 	private static final short experimentTypeCol = 9;
 
-	private static final short anomalousScattererCol = 10;
+	private static final short preferredBeamCol = 8;
 
-	private static final short unitCellACol = 11;
+	private static final short nbOfPositionsCol = 10;
+	
+	private static final short radiationSensitivityCol =11;
+	
+	private static final short requiredCompletenessCol = 12;
+	
+	private static final short requiredMultiplicityCol = 13;
 
-	private static final short unitCellBCol = 12;
+	private static final short unitCellACol = 14;
 
-	private static final short unitCellCCol = 13;
+	private static final short unitCellBCol = 15;
 
-	private static final short unitCellAlphaCol = 14;
+	private static final short unitCellCCol = 16;
 
-	private static final short unitCellBetaCol = 15;
+	private static final short unitCellAlphaCol = 17;
 
-	private static final short unitCellGammaCol = 16;
+	private static final short unitCellBetaCol = 18;
 
-	private static final short loopTypeCol = 17;
+	private static final short unitCellGammaCol = 19;
+	
+	private static final short smilesCol = 20;
+	
+	private static final short minOscWidthCol = 21;
 
-	private static final short holderLengthCol = 18;
-
-	private static final short commentsCol = 19;
+	private static final short commentsCol = 22;
 
 	private static final short courrierNameRow = 1;
 
@@ -348,13 +354,13 @@ public class ISPyBParser extends XLSParser {
 						else
 							cell.setCellValue(new HSSFRichTextString(""));
 
-						// Oscillation range
+						// Preferred beam diameter
 						row = sheet.getRow(currentRow);
-						cell = row.getCell(oscillationRangeCol);
+						cell = row.getCell(preferredBeamCol);
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 						if (diffractionPlan != null) {
-							if (diffractionPlan.getOscillationRange() != null)
-								cell.setCellValue(diffractionPlan.getOscillationRange());
+							if (diffractionPlan.getPreferredBeamDiameter() != null)
+								cell.setCellValue(diffractionPlan.getPreferredBeamDiameter());
 						} else
 							cell.setCellValue(new HSSFRichTextString(""));
 
@@ -415,16 +421,32 @@ public class ISPyBParser extends XLSParser {
 						cell.setCellValue((crystal.getCellGamma() != null) ? crystal.getCellGamma() : 0);
 
 						// LoopType
-						row = sheet.getRow(currentRow);
-						cell = row.getCell(loopTypeCol);
-						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-						cell.setCellValue(new HSSFRichTextString(sample.getSample().getLoopType()));
+//						row = sheet.getRow(currentRow);
+//						cell = row.getCell(loopTypeCol);
+//						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+//						cell.setCellValue(new HSSFRichTextString(sample.getSample().getLoopType()));
 
 						// HolderLength
+//						row = sheet.getRow(currentRow);
+//						cell = row.getCell(holderLengthCol);
+//						cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+//						cell.setCellValue(sample.getSample().getHolderLength());
+
+						// SMILES
 						row = sheet.getRow(currentRow);
-						cell = row.getCell(holderLengthCol);
-						cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-						cell.setCellValue(sample.getSample().getHolderLength());
+						cell = row.getCell(smilesCol);
+						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+						cell.setCellValue(new HSSFRichTextString(sample.getSample().getSmiles()));
+						
+						// min osc width
+						row = sheet.getRow(currentRow);
+						cell = row.getCell(minOscWidthCol);
+						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+						if (diffractionPlan != null) {
+							if (diffractionPlan.getMinOscWidth() != null)
+								cell.setCellValue(diffractionPlan.getMinOscWidth());
+						} else
+							cell.setCellValue(new HSSFRichTextString(""));
 
 						// Comments
 						row = sheet.getRow(currentRow);

@@ -159,6 +159,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "diffractionPlanId")
 	private Set<ExperimentKindDetails3VO> experimentKindVOs;
 
+
 	public DiffractionPlan3VO() {
 		super();
 	}
