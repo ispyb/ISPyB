@@ -1,0 +1,1 @@
+ALTER TABLE `DiffractionPlan`  ADD `minOscWidth` FLOAT NULL AFTER radiationSensitivityGamma;
