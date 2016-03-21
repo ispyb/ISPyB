@@ -678,7 +678,7 @@ public class FillShipmentAction   extends DispatchAction{
 							samplePuck.getNumberOfPositions(),samplePuck.getRadiationSensitivity(),samplePuck.getRequiredCompleteness(),samplePuck.getRequiredMultiplicity(),
 							samplePuck.getUnitCellA(), samplePuck.getUnitCellB(), samplePuck.getUnitCellC(), 
 							samplePuck.getUnitCellAlpha(), samplePuck.getUnitCellBeta(), samplePuck.getUnitCellGamma(), 
-							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode());
+							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode(), samplePuck.getMinOscWidth());
 					
 					newListSamples.add(newSamplePuck);
 				}

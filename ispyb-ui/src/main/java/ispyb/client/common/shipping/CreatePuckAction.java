@@ -580,6 +580,15 @@ public class CreatePuckAction extends DispatchAction {
 						sampleRowOK = false;
 					}
 
+					// minOscWidth
+					Double minOscWidth = null;
+					try {
+						if (samplePuck.getMinOscWidth() != null && !samplePuck.getMinOscWidth().isEmpty())
+							minOscWidth = Double.parseDouble(samplePuck.getMinOscWidth());
+					} catch (NumberFormatException ex) {
+						errors.add("minOscWidth incorrect " + samplePuck.getMinOscWidth());
+						sampleRowOK = false;
+					}
 					// unitCellA
 					Double unitCellA = null;
 					try {
@@ -724,6 +733,7 @@ public class CreatePuckAction extends DispatchAction {
 										difPlan.setRequiredMultiplicity(requiredMultiplicity);
 										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
+										difPlan.setMinOscWidth(minOscWidth);
 										listDifPlanCreated.add(difPlan);
 									} else {
 										difPlan.setObservedResolution(preObservedResolution);
@@ -735,6 +745,7 @@ public class CreatePuckAction extends DispatchAction {
 										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
 										listDifPlanUpdated.add(difPlan);
+										difPlan.setMinOscWidth(minOscWidth);
 									}
 								}
 							}

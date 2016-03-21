@@ -48,6 +48,7 @@ public class SamplePuck {
 	protected String unitCellGamma;
 	protected String smiles;
 	protected String comments;
+	protected String minOscWidth;
 	
 	
 	public SamplePuck() {
@@ -64,7 +65,7 @@ public class SamplePuck {
 			String requiredMultiplicity,
 			String unitCellA,
 			String unitCellB, String unitCellC, String unitCellAlpha,
-			String unitCellBeta, String unitCellGamma, String smiles, String comments, String pinBarcode) {
+			String unitCellBeta, String unitCellGamma, String smiles, String comments, String pinBarcode, String minOscWidth) {
 		super();
 		this.sampleId = sampleId;
 		this.position = position;
@@ -88,6 +89,7 @@ public class SamplePuck {
 		this.smiles = smiles;
 		this.comments = comments;
 		this.pinBarcode = pinBarcode;
+		this.minOscWidth= minOscWidth;
 	}
 	
 	public SamplePuck(BLSample3VO blSample3VO) {
@@ -128,6 +130,10 @@ public class SamplePuck {
 		this.requiredCompleteness = "";
 		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredCompleteness() != null){
 			this.requiredCompleteness = blSample3VO.getDiffractionPlanVO().getRequiredCompleteness().toString();
+		}
+		this.minOscWidth = "";
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getMinOscWidth() != null){
+			this.minOscWidth = blSample3VO.getDiffractionPlanVO().getMinOscWidth().toString();
 		}
 		this.unitCellA = "";
 		if ( blSample3VO.getCrystalVO().getCellA() != null){
@@ -331,6 +337,14 @@ public class SamplePuck {
 
 	public void setPinBarcode(String pinBarcode) {
 		this.pinBarcode = pinBarcode;
+	}
+
+	public String getMinOscWidth() {
+		return minOscWidth;
+	}
+
+	public void setMinOscWidth(String minOscWidth) {
+		this.minOscWidth = minOscWidth;
 	}
 	
 }
