@@ -1,4 +1,11 @@
 **************
+* 21.03.2016     *
+**************
+
+- New parameters for diffraction plan : minimum oscillation width
+- SMILES added to excel file
+
+**************
 * 10.03.2016     *
 **************
 
