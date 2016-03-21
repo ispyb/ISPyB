@@ -10,6 +10,7 @@ import ispyb.server.mx.vos.autoproc.SubstructureDetermination3VO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -39,10 +40,7 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 			List<HashMap<String, Object>> result = new ArrayList<HashMap<String,Object>>();
 			for (Integer autoProcId : autoProcIds) {
 				HashMap<String, Object> record = new HashMap<String, Object>();
-				logger.info("-----------");
-				logger.info(autoProcId);
 				List<PhasingHasScaling3VO> phasingHasScaling = this.getPhasingHasScaling3Service().findByAutoProc(autoProcId);
-				logger.info(phasingHasScaling);
 				record.put("phasinghasscaling", phasingHasScaling);
 				
 				List<PhasingStatistics3VO> statistics = this.getPhasingStatistics3Service().findFiltered(autoProcId, null, true);
@@ -77,5 +75,29 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 		}
 	}
 	
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/phasing/datacollection/{dataCollectionIdList}/view")
+	@Produces({ "application/json" })
+	public Response getPhasingByDatacollectionId(@PathParam("token") String token,
+			@PathParam("proposal") String proposal, @PathParam("dataCollectionIdList") String dataCollectionIdList) {
+
+		String methodName = "getPhasingByDatacollectionId";
+		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
+		
+		
+		try {
+			List<Integer> dataCollectionIds = this.parseToInteger(dataCollectionIdList);
+			List<List<Map<String, Object>>> result = new ArrayList<List<Map<String,Object>>>();
+			for (Integer dataCollectionId : dataCollectionIds) {
+				result.add(this.getNativeDataCollection3Service().getPhasingViewByDataCollectionId(dataCollectionId));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 
 }

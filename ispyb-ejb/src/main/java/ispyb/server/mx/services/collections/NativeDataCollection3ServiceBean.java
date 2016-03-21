@@ -46,20 +46,6 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 	private EntityManager entityManager;
 
 	/** Query for DataCollectionGroup by session **/
-	// select * from DataCollectionGroup DcGroup
-	// LEFT JOIN DataCollection Dc on Dc.dataCollectionGroupId =
-	// DcGroup.dataCollectionGroupId
-	// LEFT JOIN Screening Sc on Sc.dataCollectionId = Dc.dataCollectionGroupId
-	// LEFT JOIN ScreeningOutput So on So.screeningId = Sc.screeningId
-	// LEFT JOIN ScreeningStrategy Sct on Sct.screeningOutputId =
-	// So.screeningOutputId
-	// LEFT JOIN ScreeningStrategyWedge Sctw on Sctw.screeningStrategyId =
-	// Sct.screeningStrategyId
-	// LEFT JOIN ScreeningStrategySubWedge SctwSub on
-	// SctwSub.screeningStrategyWedgeId = Sctw.screeningStrategyWedgeId
-	// LEFT JOIN BLSample bl on bl.blSampleId = DcGroup.blSampleId
-	// LEFT JOIN Crystal cr on cr.crystalId = bl.crystalId
-	// LEFT JOIN Protein pr on pr.proteinId = cr.proteinId
 
 	private static String getByQUERY = "select "
 			+ "(select count(*) from Image where Image.dataCollectionId = DataCollection.dataCollectionId) as nbStoredImages, "
@@ -481,4 +467,20 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 		return aliasToValueMapList;
 	}
 
+	private String getPhasingViewTableQuery(){
+		return "select * from v_datacollection_summary_phasing ";
+	}
+	
+	@Override
+	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId) {
+		String mySQLQuery = getPhasingViewTableQuery() + " where v_datacollection_summary_phasing_dataCollectionId = :dataCollectionId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("dataCollectionId", dataCollectionId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+	
 }

@@ -39,7 +39,9 @@ public interface NativeDataCollection3Service {
 
 	public List<Map<String,Object>> getViewDataCollectionBySessionId(int sessionId);
 
-	List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym);
+	public List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym);
+
+	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId);
 
 
 	
