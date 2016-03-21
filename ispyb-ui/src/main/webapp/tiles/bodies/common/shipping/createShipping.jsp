@@ -29,6 +29,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 <%
     //String targetCreateLabContact = request.getContextPath() + "/user/loginLabContactAction.do?reqCode=loginDisplay";
+	String targetUpdateDB 	= request.getContextPath() + "/updateDB.do?reqCode=updateProposal"; 
 %>
 
 <layout:skin includeScript="true" />
@@ -51,6 +52,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	</layout:panel>
 </c:if>
 <%-- Shipping --%>
+
 <layout:panel key="New/Edit Shipment" align="left" styleClass="PANEL">
 	<layout:form action="/user/createShippingAction.do" reqCode="save">	
 		<layout:grid cols="1" styleClass="SEARCH_GRID">	
@@ -73,7 +75,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 					<logic:empty name="viewShippingForm" property="listSessions">
 						<tr><th class="FIELD">Beamline / Experiment</th><td class="FIELD"><font color="red">No <%=Constants.SESSION_VISIT%> available</font></td></tr>
 					</logic:empty>					
-					
+						<tr><td class="FIELD" >--> If you do not find your latest sessions </td>
+						<td class="FIELD" >
+							<a href="<%=targetUpdateDB%>" >update ISPyB database.</a>
+						</td>
+						</tr>
 					<layout:space/>
 					
 					<layout:textarea key="Comments" 			property="info.comments" 			styleClass="OPTIONAL"	mode="E,E,I"	size="25" rows="4"/>
