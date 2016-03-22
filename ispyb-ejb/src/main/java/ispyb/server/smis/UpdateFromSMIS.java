@@ -349,18 +349,20 @@ public class UpdateFromSMIS {
 				LOG.debug("current labo is : " + currentLabo.getAddress());
 				//
 				LabContact3VO labContact3VO = new LabContact3VO();
-				labContact3VO.setPersonVO(currentPerson);
+				
 				// generate labContact infos
 				if (currentPerson != null & currentLabo != null) {
 					labContact3VO.setCardName(generateCardName(currentPerson, currentLabo,
 							currentProposal.getProposalId()));
-				}
-				labContact3VO.setProposalVO(currentProposal);
-				labContact3VO.setDewarAvgCustomsValue(0);
-				labContact3VO.setDewarAvgTransportValue(0);
-				labContactService.create(labContact3VO);
-				LOG.debug("inserted a new labcontact : " + labContact3VO.getCardName() + " for proposal " + proposalId
-						+ " inside ISPyB db");
+					labContact3VO.setPersonVO(currentPerson);
+					labContact3VO.setProposalVO(currentProposal);
+					labContact3VO.setDewarAvgCustomsValue(0);
+					labContact3VO.setDewarAvgTransportValue(0);
+					labContactService.create(labContact3VO);
+					LOG.debug("inserted a new labcontact : " + labContact3VO.getCardName() + " for proposal " + proposalId
+							+ " inside ISPyB db");
+				} 
+					
 			}
 		}
 
