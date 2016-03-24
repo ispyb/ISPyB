@@ -468,7 +468,37 @@ public class NativeDataCollection3ServiceBean implements NativeDataCollection3Se
 	}
 
 	private String getPhasingViewTableQuery(){
-		return "select * from v_datacollection_summary_phasing ";
+		return "select *,"
+				+ "(\n" + 
+				"select GROUP_CONCAT(scalingStatisticsType) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as scalingStatisticsType,\n" + 
+				"\n" + 
+				"(\n" + 
+				"select GROUP_CONCAT(resolutionLimitLow) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as resolutionLimitLow,\n" + 
+				"\n" + 
+				"(\n" + 
+				"select GROUP_CONCAT(resolutionLimitHigh) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as resolutionLimitHigh,\n" + 
+				"\n" + 
+				"(\n" + 
+				"select GROUP_CONCAT(completeness) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as completeness,\n" + 
+				"\n" + 
+				"(\n" + 
+				"select GROUP_CONCAT(multiplicity) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as multiplicity,\n" + 
+				"\n" + 
+				"(\n" + 
+				"select GROUP_CONCAT(meanIOverSigI) from AutoProcScalingStatistics \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId\n" + 
+				") as meanIOverSigI"
+				+ " from v_datacollection_summary_phasing ";
 	}
 	
 	@Override
