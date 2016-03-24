@@ -3,6 +3,8 @@ package ispyb.ws.rest.mx;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 @Path("/")
@@ -79,7 +82,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/html")
 	@Produces({ "text/html" })
-	public Response getWorkflowStepHTMLById(
+	public String getWorkflowStepHTMLById(
 			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
 			@PathParam("workflowStepId") int workflowStepId) {
@@ -92,7 +95,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 			if (workflowStep != null){
 				if (workflowStep.getHtmlResultFilePath() != null){
 					if (new File(workflowStep.getHtmlResultFilePath()).exists()){
-						return this.downloadFile(workflowStep.getHtmlResultFilePath());
+						return new String(Files.readAllBytes(Paths.get(workflowStep.getHtmlResultFilePath())));
 					}
 				}
 				throw new Exception("File " + workflowStep.getHtmlResultFilePath() + " does not exit");
@@ -100,7 +103,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 			throw new Exception("WorkflowStep with id " + workflowStepId + " does not exit");
 
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
+			return this.logError(methodName, e, start, logger).toString();
 		}
 	}
 	
