@@ -281,6 +281,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 				/** Crystal for this acronym and cell unit parameters already exist **/
 				System.out.println("Crystal found");
 				sample.setCrystalVO(searchCrystal);
+//				searchCrystal.getSampleVOs().add(sample);
 			}
 			else{
 				/** Crystal not found then we create a new one **/
@@ -288,9 +289,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 				Protein3VO protein = entityManager.find(Protein3VO.class, sample.getCrystalVO().getProteinVO().getProteinId());
 				crystal.setProteinVO(protein);
 				crystal = entityManager.merge(crystal);
+				sample.setCrystalVO(crystal);
 			}
 			
-			sample.setCrystalVO(crystal);
 			sample.setDiffractionPlanVO(diff);
 
 			sample.setBlSampleId(null);
