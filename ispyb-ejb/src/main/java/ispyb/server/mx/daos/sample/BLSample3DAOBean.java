@@ -62,6 +62,16 @@ public class BLSample3DAOBean implements BLSample3DAO {
 		return "from BLSample3VO vo " + (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
 		+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "");
 	}
+	
+	private static final String SELECT_SAMPLE_INFO = " SELECT BLSample.blSampleId, BLSample.name, BLSample.code,  "
+			+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
+			+ "Crystal.crystalId, Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
+			+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
+			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, Container.sampleChangerLocation  "
+			+ "FROM BLSample, Crystal, Protein,Container "
+			+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
+			+ "Crystal.proteinId=Protein.proteinId AND "
+			+ "BLSample.containerId=Container.containerId ";
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -353,6 +363,25 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	}
 
 	/**
+	 * find all sample info (Tuple of SampleInfo) for a specified proposal
+	 * 
+	 * @param proposalId
+	 * @param beamlineLocation
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	public List findSampleInfoLightForProposal(Integer proposalId)
+			throws Exception {
+
+		Query q = this.entityManager
+				.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId);
+		List orders = q.getResultList();
+
+		return orders;
+	}
+	
+	/**
 	 * find all sample info (Tuple of SampleInfo) for a specified proposal and a specified beamlineLocation and a given
 	 * status(blSample or container)
 	 * 
@@ -366,19 +395,28 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			throws Exception {
 
 		Query q = this.entityManager
-				.createNativeQuery("SELECT BLSample.blSampleId, BLSample.name, BLSample.code, "
-						+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
-						+ "Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
-						+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
-						+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, Container.sampleChangerLocation  "
-						+ "FROM BLSample, Crystal, Protein,Container "
-						+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
-						+ "Crystal.proteinId=Protein.proteinId AND "
-						+ "BLSample.containerId=Container.containerId AND " + "Protein.proposalId = " + proposalId
+				.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
 						+ " AND " + "(Container.containerStatus LIKE '" + status
 						+ "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
 						+ "(Container.beamlineLocation like '" + beamlineLocation
 						+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
+		List orders = q.getResultList();
+
+		return orders;
+	}
+	
+	/**
+	 * find all sample info (Tuple of SampleInfo) for a specified crystalId
+	 * 
+	 * @param crystalId
+	 * @return
+	 * @throws Exception
+	 */
+	public List findSampleInfoLightForCrystalId(Integer crystalId)
+			throws Exception {
+
+		Query q = this.entityManager
+				.createNativeQuery(SELECT_SAMPLE_INFO + " AND Crystal.crystalId = " + crystalId );
 		List orders = q.getResultList();
 
 		return orders;
@@ -450,15 +488,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			throws Exception {
 
 		Query q = this.entityManager
-				.createNativeQuery("SELECT BLSample.blSampleId, BLSample.name, BLSample.code, "
-						+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
-						+ "Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
-						+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
-						+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, Container.sampleChangerLocation  "
-						+ "FROM BLSample, Crystal, Protein,Container "
-						+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
-						+ "Crystal.proteinId=Protein.proteinId AND "
-						+ "BLSample.containerId=Container.containerId AND " + "BLSample.blSampleId = " + sampleId);
+				.createNativeQuery(SELECT_SAMPLE_INFO + " AND BLSample.blSampleId = " + sampleId);
 		List orders = q.getResultList();
 
 		return orders;

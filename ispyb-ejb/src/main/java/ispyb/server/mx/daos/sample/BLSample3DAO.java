@@ -127,6 +127,10 @@ public interface BLSample3DAO {
 	
 	public List findSampleInfoLightForProposal(Integer proposalId, String beamlineLocation, String status) throws Exception ;
 
+	public List findSampleInfoLightForProposal(Integer proposalId) throws Exception ;
+	
+	public List findSampleInfoLightForCrystalId(Integer crystalId) throws Exception ;
+
 	public List<BLSample3VO> findByProposalIdAndDewarNull(Integer proposalId);
 
 	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, Integer dewarId, Integer containerId,
