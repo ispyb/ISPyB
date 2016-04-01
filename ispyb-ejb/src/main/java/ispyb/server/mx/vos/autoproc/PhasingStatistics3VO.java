@@ -61,11 +61,14 @@ public class PhasingStatistics3VO extends ISPyBValueObject implements Cloneable 
 	@JoinColumn(name = "phasingHasScalingId2")
 	protected PhasingHasScaling3VO phasingHasScaling2VO;
 	
+	@Column(name = "binNumber")
+	protected Integer binNumber;
+	
 	@Column(name = "numberOfBins")
 	protected Integer numberOfBins;
 	
-	@Column(name = "binNumber")
-	protected Integer binNumber;
+	@Column(name = "phasingStepId")
+	protected Integer phasingStepId;
 	
 	@Column(name = "lowRes")
 	protected Double lowRes;
@@ -252,6 +255,15 @@ public class PhasingStatistics3VO extends ISPyBValueObject implements Cloneable 
 		"recordTimeStamp="+this.recordTimeStamp;
 		
 		return s;
+	}
+	
+	public Integer getPhasingStepId() {
+		return phasingStepId;
+	}
+
+
+	public void setPhasingStepId(Integer phasingStepId) {
+		this.phasingStepId = phasingStepId;
 	}
 	
 }

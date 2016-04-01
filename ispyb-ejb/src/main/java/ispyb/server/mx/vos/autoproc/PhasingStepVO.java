@@ -220,5 +220,4 @@ public class PhasingStepVO extends ISPyBValueObject implements Cloneable {
 		this.highRes = highRes;
 	}
 
-
 }

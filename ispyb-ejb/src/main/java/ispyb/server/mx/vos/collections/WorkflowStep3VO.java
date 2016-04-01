@@ -64,6 +64,18 @@ public class WorkflowStep3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 
+	@Column(name = "crystalSizeX")
+	protected String crystalSizeX;
+	
+	@Column(name = "crystalSizeY")
+	protected String crystalSizeY;
+	
+	@Column(name = "crystalSizeZ")
+	protected String crystalSizeZ;
+	
+	@Column(name = "maxDozorScore")
+	protected String maxDozorScore;
+	
 	@Column(name = "comments")
 	protected String comments;
 
@@ -155,6 +167,38 @@ public class WorkflowStep3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setWorkflowStepType(String workflowStepType) {
 		this.workflowStepType = workflowStepType;
+	}
+
+	public String getCrystalSizeX() {
+		return crystalSizeX;
+	}
+
+	public void setCrystalSizeX(String crystalSizeX) {
+		this.crystalSizeX = crystalSizeX;
+	}
+
+	public String getCrystalSizeY() {
+		return crystalSizeY;
+	}
+
+	public void setCrystalSizeY(String crystalSizeY) {
+		this.crystalSizeY = crystalSizeY;
+	}
+
+	public String getCrystalSizeZ() {
+		return crystalSizeZ;
+	}
+
+	public void setCrystalSizeZ(String crystalSizeZ) {
+		this.crystalSizeZ = crystalSizeZ;
+	}
+
+	public String getMaxDozorScore() {
+		return maxDozorScore;
+	}
+
+	public void setMaxDozorScore(String maxDozorScore) {
+		this.maxDozorScore = maxDozorScore;
 	}
 
 }

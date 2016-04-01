@@ -1524,7 +1524,7 @@ public class ToolsForAutoprocessingWebService {
 	
 	@WebMethod
 	@WebResult(name = "storePhasingAnalysis")
-	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments){
+	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments, String phasingStatistics){
 		String methodName = "PhasingStep";
 		
 		LOG.debug("testing phasing Step");
@@ -1533,7 +1533,10 @@ public class ToolsForAutoprocessingWebService {
 		LOG.debug("STOREPHASING spaceGroup: " + spaceGroup);
 		LOG.debug("STOREPHASING run: " + run);
 		LOG.debug("STOREPHASING attachments: " + attachments);
+		LOG.debug("STOREPHASING phasingStatistics: " + phasingStatistics);
 		try {
+			
+			
 			PhasingStepVO phasingStepVO = this.getGson().fromJson(phasingStep, PhasingStepVO.class);
 			SpaceGroup3VO spaceGroup3VO = this.getGson().fromJson(spaceGroup, SpaceGroup3VO.class);
 			List<SpaceGroup3VO> spaceGroups = this.getSpaceGroup3Service().findBySpaceGroupShortName(spaceGroup3VO.getSpaceGroupShortName());
@@ -1542,16 +1545,18 @@ public class ToolsForAutoprocessingWebService {
 				phasingStepVO.setSpaceGroupVO(spaceGroups.get(0));
 			}
 			else{
-				/* Creating Space Group **/
+				/** Creating Space Group **/
 				phasingStepVO.setSpaceGroupVO(this.getSpaceGroup3Service().create(spaceGroup3VO));
 			}
 
+			/** Creating the attachments **/
 			List<PhasingProgramAttachment3VO> phasingProgramAttachment3VOs = new ArrayList<PhasingProgramAttachment3VO>();
 			if (attachments != null){
 				Type listType = new TypeToken<ArrayList<PhasingProgramAttachment3VO>>() {}.getType();
 				phasingProgramAttachment3VOs = this.getGson().fromJson(attachments, listType);
 			}
 			
+			/** Program Run **/
 			PhasingProgramRun3VO phasingProgramRun3VO =  this.getGson().fromJson(run, PhasingProgramRun3VO.class);
 			PhasingProgramRun3VO program = this.getPhasingProgramRun3Service().create(phasingProgramRun3VO);
 			phasingStepVO.setPhasingProgramRunVO(program);
@@ -1562,6 +1567,21 @@ public class ToolsForAutoprocessingWebService {
 			}
 			
 			phasingStepVO = this.getPhasingStep3Service().merge(phasingStepVO);
+			
+			/** Statistics **/
+			List<PhasingStatistics3VO> phasingStatistics3VOList = new ArrayList<PhasingStatistics3VO>();
+			if (phasingStatistics != null){
+				Type listType = new TypeToken<ArrayList<PhasingStatistics3VO>>() {}.getType();
+				phasingStatistics3VOList = this.getGson().fromJson(phasingStatistics, listType);
+			}
+			PhasingStatistics3Service phasingStatisticsService = (PhasingStatistics3Service) ejb3ServiceLocator.getLocalService(PhasingStatistics3Service.class);
+			if (phasingStatistics3VOList.size() > 0){
+				for (PhasingStatistics3VO phasingStatistics3VO : phasingStatistics3VOList) {
+					phasingStatistics3VO.setPhasingStepId(phasingStepVO.getPhasingStepId());
+					phasingStatisticsService.create(phasingStatistics3VO);
+				}
+			}
+			
 			return this.getGson().toJson(phasingStepVO);
 			
 		} catch (Exception e) {
