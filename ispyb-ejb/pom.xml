@@ -348,6 +348,8 @@
                         <ispyb.bcm>mxcube</ispyb.bcm>
 
                         <protein.allowedToCreate>true</protein.allowedToCreate>
+                        <shipping.container.capacity>16</shipping.container.capacity>
+                        <samplechanger.container.capacity>16</samplechanger.container.capacity>
 
                         <mail.smtp.host>160.103.2.175</mail.smtp.host>
                         <mail.admin>ispyb@embl-hamburg.de</mail.admin>
