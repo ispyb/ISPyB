@@ -400,12 +400,19 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public SampleInfo[] findForWSSampleInfoLightForProposal(final Integer proposalId, final String beamlineLocation,
+	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalFormId, final String beamlineLocation,
 			final String status) throws Exception{
+		
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List listInfo = dao.findSampleInfoLightForProposal(proposalId, beamlineLocation, status);
+				List listInfo= new ArrayList<>();
+				if (beamlineLocation == null && status == null && crystalFormId == null)
+					listInfo = dao.findSampleInfoLightForProposal(proposalId);
+				else if (crystalFormId != null)
+					listInfo = dao.findSampleInfoLightForCrystalId(crystalFormId);
+				else
+					listInfo = dao.findSampleInfoLightForProposal(proposalId, beamlineLocation, status);
 				return listInfo;
 			}
 		});
@@ -430,6 +437,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String smiles = (String) o[j++];
 			Integer sampleDiffractionPlanId = (Integer) o[j++];
 			String proteinAcronym = (String) o[j++];
+			Integer crystalId = (Integer) o[j++];
 			String crystalSpaceGroup = (String) o[j++];
 			Double cellA = (Double) o[j++];
 			Double cellB = (Double) o[j++];
@@ -449,7 +457,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String experimentType = diffractionPlan.getExperimentKind();
 			DiffractionPlanWS3VO diffPlanws = new DiffractionPlanWS3VO(diffractionPlan);
 			SampleInfo sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
-					 holderLength,  sampleLocation,  smiles, proteinAcronym,
+					 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 					 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
 					 experimentType, containerSCLocation, diffPlanws) ;
 			listVOs.add(sampleInfo);
@@ -819,6 +827,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String smiles = (String) o[j++];
 			Integer sampleDiffractionPlanId = (Integer) o[j++];
 			String proteinAcronym = (String) o[j++];
+			Integer crystalId = (Integer) o[j++];
 			String crystalSpaceGroup = (String) o[j++];
 			Double cellA = (Double) o[j++];
 			Double cellB = (Double) o[j++];
@@ -838,7 +847,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String experimentType = diffractionPlan.getExperimentKind();
 			DiffractionPlanWS3VO diffPlanws = new DiffractionPlanWS3VO(diffractionPlan);
 			sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
-						 holderLength,  sampleLocation,  smiles, proteinAcronym,
+						 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 						 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
 						 experimentType, containerSCLocation, diffPlanws) ;
 		}

@@ -144,15 +144,17 @@ public interface BLSample3Service {
 	/**
 	 * find all sample info (Tuple of SampleInfo) for a specified proposal
 	 * and a specified beamlineLocation and a given status(blSample or container)
+	 * if a crystalId is specified then gives all the list of samples linked to this crystal
+	 * if location and status is null then gives all for the proposal
 	 * 
 	 * @param proposalId
 	 * @param beamlineLocation
 	 * @param status
-	 * @param detachLight
+	 * @param crystalId
 	 * @return
 	 * @throws Exception
 	 */
-	public SampleInfo[] findForWSSampleInfoLightForProposal(final Integer proposalId, final String beamlineLocation,
+	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalId, final String beamlineLocation,
 			final String status) throws Exception;
 	
 	/**
