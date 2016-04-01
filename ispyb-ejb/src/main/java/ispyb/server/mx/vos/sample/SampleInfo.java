@@ -30,32 +30,33 @@ public class SampleInfo implements Serializable, Cloneable{
 	private static final long serialVersionUID = -3203393739645665888L;
 	
 	// sample info
-	private Integer sampleId;
-	private String sampleName;
-	private String code;
-	private Double holderLength;
-	private String sampleLocation;
-	private String smiles;
+	protected Integer sampleId;
+	protected String sampleName;
+	protected String code;
+	protected Double holderLength;
+	protected String sampleLocation;
+	protected String smiles;
 	
 	// protein
-	private String proteinAcronym;
+	protected String proteinAcronym;
 	
 	// crystal
-	private String crystalSpaceGroup;
-	private Double cellA;
-	private Double cellB;
-	private Double cellC;
-	private Double cellAlpha;
-	private Double cellBeta;
-	private Double cellGamma;
+	protected Integer crystalId;
+	protected String crystalSpaceGroup;
+	protected Double cellA;
+	protected Double cellB;
+	protected Double cellC;
+	protected Double cellAlpha;
+	protected Double cellBeta;
+	protected Double cellGamma;
 	
 	// diffractionPlan
-	private Double minimalResolution;
-	private String experimentType;
-	private DiffractionPlanWS3VO diffractionPlan;
+	protected Double minimalResolution;
+	protected String experimentType;
+	protected DiffractionPlanWS3VO diffractionPlan;
 	
 	// container
-	private String containerSampleChangerLocation;
+	protected String containerSampleChangerLocation;
 
 	
 	public SampleInfo() {
@@ -63,7 +64,7 @@ public class SampleInfo implements Serializable, Cloneable{
 	}
 
 	public SampleInfo(Integer sampleId, String sampleName, String code,
-			Double holderLength, String sampleLocation, String smiles, String proteinAcronym,
+			Double holderLength, String sampleLocation, String smiles, String proteinAcronym, Integer crystalId,
 			String crystalSpaceGroup, Double cellA, Double cellB, Double cellC, Double cellAlpha, 
 			Double cellBeta, Double cellGamma, Double minimalResolution, String experimentType,
 			String containerSampleChangerLocation, DiffractionPlanWS3VO diffractionPlan) {
@@ -75,6 +76,7 @@ public class SampleInfo implements Serializable, Cloneable{
 		this.sampleLocation = sampleLocation;
 		this.smiles = smiles;
 		this.proteinAcronym = proteinAcronym;
+		this.crystalId=crystalId;
 		this.crystalSpaceGroup = crystalSpaceGroup;
 		this.cellA = cellA;
 		this.cellB = cellB;
@@ -144,6 +146,14 @@ public class SampleInfo implements Serializable, Cloneable{
 
 	public void setProteinAcronym(String proteinAcronym) {
 		this.proteinAcronym = proteinAcronym;
+	}
+
+	public Integer getCrystalId() {
+		return crystalId;
+	}
+
+	public void setCrystalId(Integer crystalId) {
+		this.crystalId = crystalId;
 	}
 
 	public String getCrystalSpaceGroup() {
