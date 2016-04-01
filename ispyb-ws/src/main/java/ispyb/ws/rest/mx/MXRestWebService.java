@@ -123,7 +123,6 @@ public class MXRestWebService extends RestWebService{
 		return (BLSample3Service) Ejb3ServiceLocator.getInstance().getLocalService(BLSample3Service.class);
 	}
 	
-	
 	protected PhasingHasScaling3Service getPhasingHasScaling3Service() throws NamingException {
 		return (PhasingHasScaling3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingHasScaling3Service.class);
 	}

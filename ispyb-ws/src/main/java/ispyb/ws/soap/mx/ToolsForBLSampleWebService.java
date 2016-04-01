@@ -458,7 +458,7 @@ public class ToolsForBLSampleWebService {
 			}
 			// if (bl != null)
 			// beamlineLoc = bl.getBeamlineName();
-			sampleInfos = blSampleService.findForWSSampleInfoLightForProposal(proposalId, beamlineLoc, status);
+			sampleInfos = blSampleService.findForWSSampleInfoLight(proposalId, null, beamlineLoc, status);
 			long endTime = System.currentTimeMillis();
 			long duration = endTime - startTime;
 			if (sampleInfos != null)
@@ -512,7 +512,7 @@ public class ToolsForBLSampleWebService {
 				SOLEILBeamlineEnum sbl = SOLEILBeamlineEnum.retrieveBeamlineWithName(beamlineLocation);
 				beamlineLoc = sbl != null ? sbl.getBeamlineName() : beamlineLocation;
 			}
-			sampleInfos = blSampleService.findForWSSampleInfoLightForProposal(proposalId, beamlineLoc, status);
+			sampleInfos = blSampleService.findForWSSampleInfoLight(proposalId, null, beamlineLoc, status);
 			long endTime = System.currentTimeMillis();
 			long duration = endTime - startTime;
 			if (sampleInfos != null)
