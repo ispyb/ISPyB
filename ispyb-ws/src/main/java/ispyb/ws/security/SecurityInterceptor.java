@@ -82,6 +82,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 			/** Forcing only manager to connect **/
 			rolesSet.clear();
 			rolesSet.add("Manager");
+			rolesSet.add("LocalContact");
 			
 			
 			System.out.println("---- ROLES allowed -----");
