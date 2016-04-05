@@ -27,6 +27,7 @@ public class PhasingStepRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(PhasingStepRestWebService.class);
 
+	@Deprecated
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/mx/phasingStep")
@@ -39,22 +40,15 @@ public class PhasingStepRestWebService extends MXRestWebService {
 		System.out.println("testing phasing Step");
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			
 			PhasingStepVO phasingStepVO = this.getGson().fromJson(json, PhasingStepVO.class);
-			
 			phasingStepVO = this.getPhasingStep3Service().findById(1);
-			
-			System.out.println(phasingStepVO.getPhasingStepId());
-			
-			
 			return this.sendResponse(phasingStepVO);
-			
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
 	
-	
+	@Deprecated
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/mx/program")
@@ -77,8 +71,7 @@ public class PhasingStepRestWebService extends MXRestWebService {
 		}
 	}
 	
-	
-	
+	@Deprecated
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/mx/save")
@@ -96,9 +89,7 @@ public class PhasingStepRestWebService extends MXRestWebService {
 		try {
 			
 			PhasingStepVO phasingStepVO = this.getGson().fromJson(phasingStep, PhasingStepVO.class);
-			
 			SpaceGroup3VO spaceGroup3VO = this.getGson().fromJson(spaceGroup, SpaceGroup3VO.class);
-			
 			List<SpaceGroup3VO> spaceGroups = this.getSpaceGroup3Service().findBySpaceGroupShortName(spaceGroup3VO.getSpaceGroupShortName());
 			
 			if (spaceGroups.size() > 0){

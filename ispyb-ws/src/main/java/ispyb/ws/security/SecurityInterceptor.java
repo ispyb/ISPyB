@@ -79,6 +79,11 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		if (method.isAnnotationPresent(RolesAllowed.class)) {
 			RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
 			Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+			/** Forcing only manager to connect **/
+			rolesSet.clear();
+			rolesSet.add("Manager");
+			
+			
 			System.out.println("---- ROLES allowed -----");
 			String token = requestContext.getUriInfo().getPathParameters().get("token").get(0);
 			System.out.println(token);

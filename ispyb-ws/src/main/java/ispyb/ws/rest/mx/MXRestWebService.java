@@ -35,7 +35,6 @@ import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
 import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
 import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3ServiceBean;
 import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.NativeDataCollection3Service;
 import ispyb.server.mx.services.collections.workflowStep.WorkflowStep3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
@@ -46,6 +45,7 @@ import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.vos.autoproc.PhasingProgramRun3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStepVO;
+import ispyb.server.ws.mx.datacollection.DataCollectionService;
 import ispyb.ws.rest.RestWebService;
 
 public class MXRestWebService extends RestWebService{
@@ -92,8 +92,8 @@ public class MXRestWebService extends RestWebService{
 		return (PhasingProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramAttachment3Service.class);
 	}
 	
-	protected NativeDataCollection3Service getNativeDataCollection3Service() throws NamingException {
-		return (NativeDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(NativeDataCollection3Service.class);
+	protected DataCollectionService getWebServiceDataCollection3Service() throws NamingException {
+		return (DataCollectionService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionService.class);
 	}
 	
 	

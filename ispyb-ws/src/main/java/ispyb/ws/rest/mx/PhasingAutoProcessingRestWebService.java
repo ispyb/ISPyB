@@ -1,11 +1,14 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.vos.autoproc.ModelBuilding3VO;
 import ispyb.server.mx.vos.autoproc.Phasing3VO;
 import ispyb.server.mx.vos.autoproc.PhasingHasScaling3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStatistics3VO;
 import ispyb.server.mx.vos.autoproc.PreparePhasingData3VO;
 import ispyb.server.mx.vos.autoproc.SubstructureDetermination3VO;
+import ispyb.server.ws.mx.datacollection.DataCollectionService;
+import ispyb.server.ws.mx.phasing.PhasingService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,6 +30,7 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(PhasingAutoProcessingRestWebService.class);
 
+	@Deprecated
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/autoprocid/{autoProcListId}/list")
@@ -75,6 +80,9 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 		}
 	}
 	
+	protected PhasingService getPhasingService() throws NamingException {
+		return (PhasingService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingService.class);
+	}
 	
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
@@ -85,13 +93,11 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 
 		String methodName = "getPhasingByDatacollectionId";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
-		
-		
 		try {
 			List<Integer> dataCollectionIds = this.parseToInteger(dataCollectionIdList);
 			List<List<Map<String, Object>>> result = new ArrayList<List<Map<String,Object>>>();
 			for (Integer dataCollectionId : dataCollectionIds) {
-				result.add(this.getNativeDataCollection3Service().getPhasingViewByDataCollectionId(dataCollectionId));
+				result.add(this.getPhasingService().getPhasingViewByDataCollectionId(dataCollectionId));
 			}
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(result);

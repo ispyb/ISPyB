@@ -62,7 +62,221 @@ public class DewarRestWebService extends RestWebService {
 	}
 	
 	
+	@PermitAll
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/labels")
+	@Produces({ "application/pdf" })
+	public Response getLabels(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("shippingId") int shippingId,
+			@PathParam("dewarId") int dewarId) throws NamingException {
+
+		long start = this.logInit("getLabels", logger, token, proposal,
+				shippingId, dewarId);
+
+		try {
+			byte[] pdf = this.getLabels(dewarId);
+			return this.downloadFile(pdf, "parcel_" + dewarId +".pdf");
+		} catch (Exception e) {
+			return this.logError("getLabels", e, start, logger);
+		}
+	}
 	
+	@Deprecated
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
+	@Produces({ "application/json" })
+	public Response getContainers(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+
+		long id = this.logInit("getContainers", logger, token, proposal, shippingId);
+		try {
+			List<Map<String, Object>> result = this.getShipping3Service().getShippingById(shippingId);
+			this.logFinish("getContainers", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getContainers", e, id, logger);
+		}
+
+	}
+	
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/dewar/list")
+	@Produces({ "application/json" })
+	public Response getDewars(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal
+			) throws Exception {
+
+		long id = this.logInit("getDewars", logger, token, proposal);
+		try {
+			List<Dewar3VO> dewars = this.getDewar3Service().findByProposalId(this.getProposalId(proposal));
+			this.logFinish("getDewars", id, logger);
+			return sendResponse(dewars);
+		} catch (Exception e) {
+			return this.logError("getContainers", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/dewar/status/{status}/list")
+	@Produces({ "application/json" })
+	public Response getDewarsByStatus(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal, 
+			@PathParam("status") String status) throws Exception {
+
+		long id = this.logInit("getDewarsByStatus", logger, token, proposal);
+		try {
+			List<Dewar3VO> dewars = this.getDewar3Service().findByProposalId(this.getProposalId(proposal));
+			List<Dewar3VO> result = new ArrayList<Dewar3VO>();
+			for (Dewar3VO dewar3vo : dewars) {
+				if (dewar3vo.getDewarStatus() != null){
+					if (dewar3vo.getDewarStatus().toUpperCase().equals(status.toUpperCase())){
+						result.add(dewar3vo);
+					}
+				}
+			}
+			this.logFinish("getDewarsByStatus", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getDewarsByStatus", e, id, logger);
+		}
+	}
+	
+	
+	
+	
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
+	@Produces({ "application/json" })
+	public Response removeDewar(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("shippingId") int shippingId,
+			@PathParam("dewarId") int dewarId) throws NamingException {
+
+		long start = this.logInit("removeDewar", logger, token, proposal,
+				shippingId, dewarId);
+
+		try {
+			List<Sampleplate3VO> sampleplate3VOs = getSamplePlate3Service()
+					.getSamplePlatesByBoxId(String.valueOf(dewarId));
+			for (Sampleplate3VO plate : sampleplate3VOs) {
+				if (plate.getBoxId() != null) {
+					if (plate.getBoxId() == dewarId) {
+						plate.setBoxId(null);
+						getSamplePlate3Service().merge(plate);
+					}
+				}
+			}
+			List<StockSolution3VO> stockSolution3VOs = getSaxsProposal3Service()
+					.findStockSolutionsByBoxId(String.valueOf(dewarId));
+			for (StockSolution3VO stockSolution3VO : stockSolution3VOs) {
+				if (stockSolution3VO.getBoxId() != null) {
+					if (stockSolution3VO.getBoxId() == dewarId) {
+						stockSolution3VO.setBoxId(null);
+						getSaxsProposal3Service().merge(stockSolution3VO);
+					}
+				}
+			}
+			this.getDewar3Service().deleteByPk(dewarId);
+			this.logFinish("removeDewar", start, logger);
+			return this.sendResponse(getShipping3Service().findByPk(shippingId,
+					true));
+		} catch (Exception e) {
+			return this.logError("removeDewar", e, start, logger);
+		}
+	}
+
+	/**
+	 * getDateTime
+	 * 
+	 * @return
+	 */
+	private Timestamp getDateTime() {
+		java.util.Date today = new java.util.Date();
+		return (new java.sql.Timestamp(today.getTime()));
+	}
+	
+	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@POST
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
+	@Produces({ "application/json" })
+	public Response saveDewar(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("shippingId") int shippingId,
+			@FormParam("sessionId") Integer sessionId,
+			@FormParam("dewarId") Integer dewarId,
+			@FormParam("code") String code,
+			@FormParam("comments") String comments,
+			@FormParam("storageLocation") String storageLocation,
+			@FormParam("dewarStatus") String dewarStatus,
+			@FormParam("blTimeStamp") String blTimeStamp,
+			@FormParam("isStorageDewar") String isStorageDewar,
+			@FormParam("barCode") String barCode,
+			@FormParam("customValue") String customValue,
+			@FormParam("transportValue") String transportValue,
+			@FormParam("trackingNumberFromSynchrotron") String trackingNumberFromSynchrotron,
+			@FormParam("trackingNumberToSynchrotron") String trackingNumberToSynchrotron)
+			throws Exception {
+
+		long start = this.logInit("saveDewar", logger, token, proposal,
+				shippingId, dewarId, code, comments, storageLocation,
+				dewarStatus, blTimeStamp, isStorageDewar, barCode, customValue,
+				transportValue, trackingNumberFromSynchrotron,
+				trackingNumberToSynchrotron);
+
+		try {
+
+			Dewar3VO dewar3vo = new Dewar3VO();
+			if (dewarId == null) {
+				dewar3vo.setType("Dewar");
+				dewar3vo.setShippingVO(this.getShipping3Service().findByPk(
+						shippingId, true));
+				dewar3vo = getDewar3Service().create(dewar3vo);
+			} else {
+				dewar3vo = getDewar3Service().findByPk(dewarId, false, false);
+			}
+			dewar3vo.setComments(comments);
+			dewar3vo.setCode(code);
+			dewar3vo.setStorageLocation(storageLocation);
+			if (customValue != null) {
+				if (!customValue.isEmpty()) {
+					dewar3vo.setCustomsValue(Integer.parseInt(customValue));
+				} else {
+					dewar3vo.setCustomsValue(null);
+				}
+			} else {
+				dewar3vo.setCustomsValue(null);
+			}
+			if (transportValue != null) {
+				if (!transportValue.isEmpty()) {
+					dewar3vo.setTransportValue(Integer.parseInt(transportValue));
+				} else {
+					dewar3vo.setTransportValue(null);
+				}
+			} else {
+				dewar3vo.setTransportValue(null);
+			}
+			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
+			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
+			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			getDewar3Service().update(dewar3vo);
+			this.logFinish("saveDewar", start, logger);
+			
+			return new ShippingRestWebService().getShipping(token, proposal, shippingId);
+		} catch (Exception e) {
+			this.logError("saveDewar", e, start, logger);
+		}
+		return null;
+	}
 	
 	
 
@@ -280,173 +494,5 @@ public class DewarRestWebService extends RestWebService {
 	}
 
 	
-	@PermitAll
-	@GET
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/labels")
-	@Produces({ "application/pdf" })
-	public Response getLabels(@PathParam("token") String token,
-			@PathParam("proposal") String proposal,
-			@PathParam("shippingId") int shippingId,
-			@PathParam("dewarId") int dewarId) throws NamingException {
 
-		long start = this.logInit("getLabels", logger, token, proposal,
-				shippingId, dewarId);
-
-		try {
-			byte[] pdf = this.getLabels(dewarId);
-			return this.downloadFile(pdf, "parcel_" + dewarId +".pdf");
-		} catch (Exception e) {
-			return this.logError("getLabels", e, start, logger);
-		}
-	}
-	
-	@Deprecated
-	@RolesAllowed({"User", "Manager", "LocalContact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
-	@Produces({ "application/json" })
-	public Response getContainers(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("shippingId") Integer shippingId) throws Exception {
-
-		long id = this.logInit("getContainers", logger, token, proposal, shippingId);
-		try {
-			List<Map<String, Object>> result = this.getShipping3Service().getShippingById(shippingId);
-			this.logFinish("getContainers", id, logger);
-			return sendResponse(result);
-		} catch (Exception e) {
-			return this.logError("getContainers", e, id, logger);
-		}
-
-	}
-	
-	
-	
-	
-	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
-	@GET
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
-	@Produces({ "application/json" })
-	public Response removeDewar(@PathParam("token") String token,
-			@PathParam("proposal") String proposal,
-			@PathParam("shippingId") int shippingId,
-			@PathParam("dewarId") int dewarId) throws NamingException {
-
-		long start = this.logInit("removeDewar", logger, token, proposal,
-				shippingId, dewarId);
-
-		try {
-			List<Sampleplate3VO> sampleplate3VOs = getSamplePlate3Service()
-					.getSamplePlatesByBoxId(String.valueOf(dewarId));
-			for (Sampleplate3VO plate : sampleplate3VOs) {
-				if (plate.getBoxId() != null) {
-					if (plate.getBoxId() == dewarId) {
-						plate.setBoxId(null);
-						getSamplePlate3Service().merge(plate);
-					}
-				}
-			}
-			List<StockSolution3VO> stockSolution3VOs = getSaxsProposal3Service()
-					.findStockSolutionsByBoxId(String.valueOf(dewarId));
-			for (StockSolution3VO stockSolution3VO : stockSolution3VOs) {
-				if (stockSolution3VO.getBoxId() != null) {
-					if (stockSolution3VO.getBoxId() == dewarId) {
-						stockSolution3VO.setBoxId(null);
-						getSaxsProposal3Service().merge(stockSolution3VO);
-					}
-				}
-			}
-			this.getDewar3Service().deleteByPk(dewarId);
-			this.logFinish("removeDewar", start, logger);
-			return this.sendResponse(getShipping3Service().findByPk(shippingId,
-					true));
-		} catch (Exception e) {
-			return this.logError("removeDewar", e, start, logger);
-		}
-	}
-
-	/**
-	 * getDateTime
-	 * 
-	 * @return
-	 */
-	private Timestamp getDateTime() {
-
-		java.util.Date today = new java.util.Date();
-		return (new java.sql.Timestamp(today.getTime()));
-	}
-	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
-	@POST
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
-	@Produces({ "application/json" })
-	public Response saveDewar(
-			@PathParam("token") String token,
-			@PathParam("proposal") String proposal,
-			@PathParam("shippingId") int shippingId,
-			@FormParam("sessionId") Integer sessionId,
-			@FormParam("dewarId") Integer dewarId,
-			@FormParam("code") String code,
-			@FormParam("comments") String comments,
-			@FormParam("storageLocation") String storageLocation,
-			@FormParam("dewarStatus") String dewarStatus,
-			@FormParam("blTimeStamp") String blTimeStamp,
-			@FormParam("isStorageDewar") String isStorageDewar,
-			@FormParam("barCode") String barCode,
-			@FormParam("customValue") String customValue,
-			@FormParam("transportValue") String transportValue,
-			@FormParam("trackingNumberFromSynchrotron") String trackingNumberFromSynchrotron,
-			@FormParam("trackingNumberToSynchrotron") String trackingNumberToSynchrotron)
-			throws Exception {
-
-		long start = this.logInit("saveDewar", logger, token, proposal,
-				shippingId, dewarId, code, comments, storageLocation,
-				dewarStatus, blTimeStamp, isStorageDewar, barCode, customValue,
-				transportValue, trackingNumberFromSynchrotron,
-				trackingNumberToSynchrotron);
-
-		try {
-
-			Dewar3VO dewar3vo = new Dewar3VO();
-			if (dewarId == null) {
-				dewar3vo.setType("Dewar");
-				dewar3vo.setShippingVO(this.getShipping3Service().findByPk(
-						shippingId, true));
-				dewar3vo = getDewar3Service().create(dewar3vo);
-			} else {
-				dewar3vo = getDewar3Service().findByPk(dewarId, false, false);
-			}
-			dewar3vo.setComments(comments);
-			dewar3vo.setCode(code);
-			dewar3vo.setStorageLocation(storageLocation);
-			if (customValue != null) {
-				if (!customValue.isEmpty()) {
-					dewar3vo.setCustomsValue(Integer.parseInt(customValue));
-				} else {
-					dewar3vo.setCustomsValue(null);
-				}
-			} else {
-				dewar3vo.setCustomsValue(null);
-			}
-			if (transportValue != null) {
-				if (!transportValue.isEmpty()) {
-					dewar3vo.setTransportValue(Integer.parseInt(transportValue));
-				} else {
-					dewar3vo.setTransportValue(null);
-				}
-			} else {
-				dewar3vo.setTransportValue(null);
-			}
-			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
-			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
-			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
-			getDewar3Service().update(dewar3vo);
-			this.logFinish("saveDewar", start, logger);
-			
-			return new ShippingRestWebService().getShipping(token, proposal, shippingId);
-		} catch (Exception e) {
-			this.logError("saveDewar", e, start, logger);
-		}
-		return null;
-	}
 }
