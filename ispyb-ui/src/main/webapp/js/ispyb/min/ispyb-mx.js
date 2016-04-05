@@ -15426,7 +15426,7 @@ AutoProcListPanel.prototype.getPanel = function(data) {
 		items.push(_this.autoProcGrid.getGrid(data));
 
 		if (data && data.nbRemoved) {
-			html = "<html><h4><font color=orange> " + data.nbRemoved + " other autoprocessings exist without the selected RSymm - I/sigma thresholds. </font></h4></html>";
+			html = "<html><h4><font color=orange> " + data.nbRemoved + " other autoprocessing results exist without the selected RSymm - I/sigma thresholds. </font></h4></html>";
 			items.push({
 				xtype : 'panel',
 				layout: 'fit',
