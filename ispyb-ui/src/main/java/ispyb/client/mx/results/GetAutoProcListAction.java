@@ -56,6 +56,10 @@ public class GetAutoProcListAction extends DispatchAction {
 	
 	private AutoProcScalingStatistics3Service apssService;
 	
+	private double DEFAULT_RMERGE = 50.0;
+
+	private double DEFAULT_ISIGMA = 1.0;
+	
 	/**
 	 * Initialize the needed services.
 	 * 
@@ -85,8 +89,8 @@ public class GetAutoProcListAction extends DispatchAction {
 		String iSigma = form.getIsigma();
 		boolean anomalous = form.getAnomalous();
 
-		double rMerge_d = 50.0;
-		double iSigma_d = 1.0;
+		double rMerge_d = DEFAULT_RMERGE;
+		double iSigma_d = DEFAULT_ISIGMA;
 
 		try {
 			if (!rMerge.equals("undefined") && !rMerge.equals(""))
@@ -94,7 +98,7 @@ public class GetAutoProcListAction extends DispatchAction {
 			if (!iSigma.equals("undefined") && !iSigma.equals(""))
 				iSigma_d = Double.parseDouble(iSigma);
 			if (!dataCollectionId.equals("undefined") && !dataCollectionId.equals(""))
-				//dataCollectionId = Integer.parseInt(form.getDataCollectionId());
+
 				if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null){
 					dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 				}else if (form.getDataCollectionId() != null){
@@ -109,18 +113,14 @@ public class GetAutoProcListAction extends DispatchAction {
 
 		try {
 			// nb total autoProc
+			int nbRemoved = 0;
+			
 			List<AutoProc3VO> autoProcs = apService.findByDataCollectionId(dataCollectionId);
 
 			// find autoProcs, sorting directly in the database
-			// Collection<AutoProc3VO> autoProcsAnomalous = facade.findByAnomalousDataCollectionId(dataCollectionId,
-			// anomalous);
 			List<AutoProc3VO> autoProcsAnomalous = apService
 					.findByAnomalousDataCollectionIdAndOrderBySpaceGroupNumber(dataCollectionId, anomalous);
-			// SpaceGroupFacadeLocal space_facade = SpaceGroupFacadeUtil.getLocalHome().create();
-			// Collection<SpaceGroupValue> spaceGroups = space_facade.findAll();
 
-			
-			// ArrayList<AutoProc3VO> autoProcList = sortAutoProcList(autoProcsAnomalous, spaceGroups);
 			ArrayList<AutoProc3VO> autoProcList = new ArrayList<AutoProc3VO>();
 			if (autoProcsAnomalous != null) {
 				autoProcList = new ArrayList<AutoProc3VO>(autoProcsAnomalous);
@@ -138,12 +138,15 @@ public class GetAutoProcListAction extends DispatchAction {
 						existsUnderRmergeAndOverSigma = true;
 				}
 
-				if (!existsUnderRmergeAndOverSigma)
+				if (!existsUnderRmergeAndOverSigma){
 					i.remove();
+					nbRemoved = nbRemoved +1;
+				}
 			}
 			form.setNbAutoProc(autoProcs.size());
-
+			form.setNbRemoved(nbRemoved);
 			form.setAutoProcs(autoProcList);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return mapping.findForward("success");

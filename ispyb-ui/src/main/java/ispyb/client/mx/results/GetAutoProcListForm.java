@@ -58,6 +58,8 @@ public class GetAutoProcListForm extends ActionForm implements Serializable {
 	private boolean anomalous = false;
 
 	private int nbAutoProc = 0;
+	
+	private int nbRemoved = 0;
 
 	public String getRmerge() {
 		return rmerge;
@@ -198,6 +200,14 @@ public class GetAutoProcListForm extends ActionForm implements Serializable {
 
 	public void setNbAutoProc(int nbAutoProc) {
 		this.nbAutoProc = nbAutoProc;
+	}
+
+	public int getNbRemoved() {
+		return nbRemoved;
+	}
+
+	public void setNbRemoved(int nbRemoved) {
+		this.nbRemoved = nbRemoved;
 	}
 
 }

@@ -15424,14 +15424,27 @@ AutoProcListPanel.prototype.getPanel = function(data) {
 				});
 
 		items.push(_this.autoProcGrid.getGrid(data));
+
+		if (data.nbRemoved) {
+			html = "<html><h4><font color=orange> " + data.nbRemoved + " other autoprocessings exist over the selected RSymm - I/sigma threshold </font></h4></html>";
+			items.push({
+				xtype : 'panel',
+				layout: 'fit',
+				title : 'Other autoprocessings',
+				html  : html
+			});
+		}
 	} else {
 		// No autoProcessings
-		html = '<html><h4>No Autoprocessings have been found</h4></html>';
+		html = "<html><h4>No Autoprocessings have been found with selected RSymm - I/sigma  </h4></html>";
+		if (data.nbRemoved) {
+			html = "<html><h4><font color=orange>No Autoprocessings have been found with selected RSymm - I/sigma thresholds but " + data.nbRemoved + " autoprocessings exist </font></h4></html>" ;
+		}
 	}
-
+	
 	_this.panel = Ext.create('Ext.Panel', {
 				layout : {
-					type : 'fit',
+					//type : 'fit',
 					border : 0,
 					bodyPadding : 0
 				},
@@ -16639,6 +16652,12 @@ AutoprocessingPanel.prototype.getPanel = function(data) {
 		_this.interruptedAutoProcPanel = new InterruptedAutoProcPanel();
 		items.push(_this.interruptedAutoProcPanel.getPanel(data));
 	}
+	// if exist other autoproc not displayed
+	if (data && data.nbRemoved > 0){
+		var removedExist = "<html><h4>Some autoprocessings have been filtered out by RSymm - I/sigma</h4></html>";
+		items.push(removedExist);
+	}
+
 
 	// main panel
 	_this.panel = Ext.widget({
@@ -16675,7 +16694,6 @@ AutoprocessingPanel.prototype.displayGraphAttachment = function(dataAttachment) 
 AutoprocessingPanel.prototype.hasStatusData = function(data) {
 	return (data && data.autoProcDetail && data.autoProcDetail.autoProcEvents && data.autoProcDetail.autoProcEvents.length > 0);
 };
-
 
 // display a given autoProcessing
 AutoprocessingPanel.prototype.displayAutoProc = function(data) {

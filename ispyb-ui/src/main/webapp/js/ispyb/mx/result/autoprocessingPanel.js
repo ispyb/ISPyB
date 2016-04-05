@@ -113,7 +113,6 @@ AutoprocessingPanel.prototype.hasStatusData = function(data) {
 	return (data && data.autoProcDetail && data.autoProcDetail.autoProcEvents && data.autoProcDetail.autoProcEvents.length > 0);
 };
 
-
 // display a given autoProcessing
 AutoprocessingPanel.prototype.displayAutoProc = function(data) {
 	var _this = this;

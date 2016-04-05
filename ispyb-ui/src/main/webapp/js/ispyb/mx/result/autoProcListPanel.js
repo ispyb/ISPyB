@@ -52,14 +52,27 @@ AutoProcListPanel.prototype.getPanel = function(data) {
 				});
 
 		items.push(_this.autoProcGrid.getGrid(data));
+
+		if (data && data.nbRemoved) {
+			html = "<html><h4><font color=orange> " + data.nbRemoved + " other autoprocessings exist without the selected RSymm - I/sigma thresholds. </font></h4></html>";
+			items.push({
+				xtype : 'panel',
+				layout: 'fit',
+				title : 'Other autoprocessings',
+				html  : html
+			});
+		}
 	} else {
 		// No autoProcessings
-		html = '<html><h4>No Autoprocessings have been found</h4></html>';
+		html = "<html><h4>No Autoprocessings have been found with selected RSymm - I/sigma  </h4></html>";
+		if (data && data.nbRemoved) {
+			html = "<html><h4><font color=orange>No Autoprocessings have been found with selected RSymm - I/sigma thresholds but " + data.nbRemoved + " autoprocessings exist </font></h4></html>" ;
+		}
 	}
-
+	
 	_this.panel = Ext.create('Ext.Panel', {
 				layout : {
-					type : 'fit',
+					//type : 'fit',
 					border : 0,
 					bodyPadding : 0
 				},

@@ -151,6 +151,10 @@ public class ViewResultsAction extends DispatchAction {
 	private final static Logger LOG = Logger.getLogger(ViewResultsAction.class);
 	
 	private final static String TMP_DIR = "tmp";
+	
+	private final double DEFAULT_RMERGE = 50.0;
+
+	private final double DEFAULT_ISIGMA = 1.0;
 
 	// TODO erase this method when DNA no more used, only EDNA and index file name is changed
 	private String getEdna_index_file(DataCollection3VO dataCollectionVO) throws Exception {
@@ -2187,8 +2191,9 @@ public class ViewResultsAction extends DispatchAction {
 			String rMerge = (String) request.getSession().getAttribute("rMerge");
 			String iSigma = (String) request.getSession().getAttribute("iSigma");
 
-			double rMerge_d = 50.0;
-			double iSigma_d = 1.0;
+			double rMerge_d = DEFAULT_RMERGE;
+			double iSigma_d = DEFAULT_ISIGMA;
+			int nbRemoved = 0;
 
 			try {
 				if (rMerge != null && !rMerge.equals("undefined") && !rMerge.equals(""))
@@ -2209,6 +2214,7 @@ public class ViewResultsAction extends DispatchAction {
 							dataCollectionId, anomalous);
 					if (autoProcsAnomalous != null) {
 						LOG.debug("..nbAutoProc " + anomalous + " found before rMerge =" + autoProcsAnomalous.size());
+						nbRemoved = 0;
 						for (Iterator<AutoProc3VO> a = autoProcsAnomalous.iterator(); a.hasNext();) {
 							AutoProc3VO apv = a.next();
 
@@ -2222,8 +2228,10 @@ public class ViewResultsAction extends DispatchAction {
 									existsUnderRmergeAndOverSigma = true;
 							}
 
-							if (!existsUnderRmergeAndOverSigma)
+							if (!existsUnderRmergeAndOverSigma) {
 								a.remove();
+								nbRemoved = nbRemoved +1;
+							}
 						}
 						LOG.debug("..nbAutoProc " + anomalous + " found=" + autoProcsAnomalous.size());
 						for (Iterator<AutoProc3VO> iterator = autoProcsAnomalous.iterator(); iterator.hasNext();) {
@@ -2297,6 +2305,7 @@ public class ViewResultsAction extends DispatchAction {
 			// rMerge & iSigma
 			data.put("rMerge", rMerge);
 			data.put("iSigma", iSigma);
+			data.put("nbRemoved", nbRemoved);
 			data.put("dataCollectionId", dataCollectionId);
 			// interrupted autoProc
 			data.put("interruptedAutoProcEvents", interruptedAutoProcEvents);
@@ -2544,8 +2553,10 @@ public class ViewResultsAction extends DispatchAction {
 			String rMerge = (String) request.getSession().getAttribute(Constants.RSYMM);
 			String iSigma = (String) request.getSession().getAttribute(Constants.ISIGMA);
 
-			double rMerge_d = 10.0;
-			double iSigma_d = 1.0;
+			double rMerge_d = DEFAULT_RMERGE;
+			double iSigma_d = DEFAULT_ISIGMA;
+			
+			int nbRemoved = 0;
 
 			try {
 				if (rMerge != null && !rMerge.equals("undefined") && !rMerge.equals(""))
@@ -2596,6 +2607,7 @@ public class ViewResultsAction extends DispatchAction {
 				List<AutoProc3VO> autoProcsAnomalous = apService.findByAnomalousDataCollectionIdAndOrderBySpaceGroupNumber(
 						dataCollectionId, anomalous);
 				if (autoProcsAnomalous != null) {
+					nbRemoved=0;
 					LOG.debug("..nbAutoProc " + anomalous + " found before rMerge =" + autoProcsAnomalous.size());
 					for (Iterator<AutoProc3VO> a = autoProcsAnomalous.iterator(); a.hasNext();) {
 						AutoProc3VO apv = a.next();
@@ -2610,8 +2622,10 @@ public class ViewResultsAction extends DispatchAction {
 								existsUnderRmergeAndOverSigma = true;
 						}
 
-						if (!existsUnderRmergeAndOverSigma)
+						if (!existsUnderRmergeAndOverSigma){
 							a.remove();
+							nbRemoved = nbRemoved+1;
+						}
 					}
 					LOG.debug("..nbAutoProc " + anomalous + " found=" + autoProcsAnomalous.size());
 					for (Iterator<AutoProc3VO> iterator = autoProcsAnomalous.iterator(); iterator.hasNext();) {
@@ -2932,6 +2946,7 @@ public class ViewResultsAction extends DispatchAction {
 			// rMerge & iSigma
 			data.put("rMerge", rMerge);
 			data.put("iSigma", iSigma);
+			data.put("nbRemoved", nbRemoved);
 			data.put("dataCollectionId", dataCollectionId);
 			data.put("dataCollection", dataCollection);
 			// beamlinesetup

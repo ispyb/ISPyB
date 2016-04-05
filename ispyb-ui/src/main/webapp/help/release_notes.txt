@@ -1,4 +1,11 @@
 **************
+* 05.04.2016     *
+**************
+
+- Add new sampleInfo WebServices for EXI
+- Add message when existing autoprocessings but filtered by Rsymm I/Sigma
+
+**************
 * 21.03.2016     *
 **************
 
