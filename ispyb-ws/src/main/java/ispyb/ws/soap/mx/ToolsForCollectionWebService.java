@@ -491,6 +491,7 @@ public class ToolsForCollectionWebService {
 			updateSession(dataCollection.getDataCollectionGroupVO().getSessionVO());
 			return dataCollectionId;
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("WS ERROR: storeOrUpdateDataCollection - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
 			throw e;
 		}
