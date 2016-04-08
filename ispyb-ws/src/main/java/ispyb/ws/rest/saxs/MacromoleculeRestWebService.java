@@ -32,7 +32,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @Path("/")
 public class MacromoleculeRestWebService extends SaxsRestWebService {
-	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
+	private final static Logger logger = Logger.getLogger(MacromoleculeRestWebService.class);
 
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
