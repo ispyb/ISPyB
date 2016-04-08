@@ -1419,7 +1419,7 @@ public class ViewResultsAction extends DispatchAction {
 			String[] archivePathDir = archivePath.split("/");
 			String beamLineName = dc.getDataCollectionGroupVO().getSessionVO().getBeamlineName().toLowerCase();
 			archivePath = Constants.DATA_FILEPATH_START + beamLineName + "/";
-			for (int k = 3; k < archivePathDir.length; k++) {
+			for (int k = 4; k < archivePathDir.length; k++) {
 				archivePath = archivePath + archivePathDir[k] + "/";
 			}
 		}
