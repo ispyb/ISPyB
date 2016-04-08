@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -102,5 +103,24 @@ public class Login3VO implements java.io.Serializable {
 	public boolean isLocalContact(){
 	    return  this.getRoles().toUpperCase().contains("LOCALCONTACT");
 	}
+
+	/**
+	 * This method checks if this login contains at least one role of the roles list
+	 * @param rolesSet
+	 * @return True if the role is in the login
+	 */
+	public boolean checkRoles(Set<String> rolesSet) {
+		for (String role : rolesSet) {
+			for (String loginRole : this.getRoles().split(",")) {
+				System.out.println(loginRole.toUpperCase() + " " + role.toUpperCase() + " " + loginRole.toUpperCase().equals(role.toUpperCase()));
+				if (loginRole.toUpperCase().trim().equals(role.toUpperCase().trim())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 	
 }

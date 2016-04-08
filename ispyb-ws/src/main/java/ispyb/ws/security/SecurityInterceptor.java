@@ -3,6 +3,7 @@ package ispyb.ws.security;
 import ispyb.server.common.services.login.Login3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.login.Login3VO;
+import ispyb.ws.rest.saxs.MacromoleculeRestWebService;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.log4j.Logger;
 import org.hibernate.mapping.Array;
 //
 import org.jboss.resteasy.core.Headers;
@@ -38,7 +40,7 @@ import com.google.gson.Gson;
  * */
 @Provider
 public class SecurityInterceptor implements javax.ws.rs.container.ContainerRequestFilter {
-
+	private final static Logger logger = Logger.getLogger(SecurityInterceptor.class);
 //	private static final ServerResponse SESSION_EXPIRED = new ServerResponse("Session has expired", 401,new Headers<Object>());
 	private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401,
 			new Headers<Object>());
@@ -63,15 +65,15 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		header.add("*");
 		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
 		
-		System.out.println("-------SecurityInterceptor----");
+		logger.info("-------SecurityInterceptor----");
 		if (method.isAnnotationPresent(PermitAll.class)) {
-			System.out.println("PermitAll");
+			logger.info("PermitAll");
 			return;
 		}
 
-		// Access denied for all
+		/**  Access denied for all **/
 		if (method.isAnnotationPresent(DenyAll.class)) {
-			System.out.println("DenyAll");
+			logger.info("DenyAll");
 			requestContext.abortWith(ACCESS_FORBIDDEN);
 			return;
 		}
@@ -85,33 +87,38 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 			rolesSet.add("LocalContact");
 			
 			
-			System.out.println("---- ROLES allowed -----");
+			logger.info("---- ROLES allowed -----");
 			String token = requestContext.getUriInfo().getPathParameters().get("token").get(0);
-			System.out.println(token);
-			System.out.println(rolesSet);
+			logger.info(token);
+			logger.info(rolesSet);
 
 			Login3VO login = this.getLogin(token);
-			System.out.println("User roles: " + login.getRoles());
-			System.out.println("Roles allowed: " + rolesSet);
+			logger.info("User roles: " + login.getRoles());
+			logger.info("Roles allowed: " + rolesSet);
 			
 			if (login != null) {
-				System.out.println("Valid: " + login.isValid());
-				if (login.isValid()) {
-					return;
-				} else {
-					System.out.println("Expired");
+				if (login.checkRoles(rolesSet)){
+					logger.info("Valid: " + login.isValid());
+					if (login.isValid()) {
+						return;
+					} else {
+						logger.info("Expired");
+						requestContext.abortWith(this.getUnauthorizedResponse());
+					}
+				}
+				else{
+					logger.info("Roles not valid");
 					requestContext.abortWith(this.getUnauthorizedResponse());
 				}
-			} else {
-				requestContext.abortWith(this.getUnauthorizedResponse());
-			}
+			} 
+			requestContext.abortWith(this.getUnauthorizedResponse());
 		}
 
 	}
 
 	private Login3VO getLogin(String token) {
 		try {
-			System.out.println("authenticateToken " + token);
+			logger.info("authenticateToken " + token);
 			Login3Service service = (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(Login3Service.class);
 			return service.findByToken(token);
 		} catch (NamingException e) {

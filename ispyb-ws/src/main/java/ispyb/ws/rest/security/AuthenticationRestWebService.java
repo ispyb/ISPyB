@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -64,7 +65,7 @@ public class AuthenticationRestWebService extends RestWebService {
 				roles = LoginModule.authenticate(login, password);
 			}
 
-			roles.add("User");
+//			roles.add("User");
 			String token = generateRamdomUUID();
 			
 			HashMap<String, Object> cookie = new HashMap<String, Object>();
