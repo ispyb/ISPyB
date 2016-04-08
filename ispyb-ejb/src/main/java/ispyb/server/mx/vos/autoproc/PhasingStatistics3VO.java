@@ -224,13 +224,13 @@ public class PhasingStatistics3VO extends ISPyBValueObject implements Cloneable 
 	 * @throws Exception if the data of the value object is not correct
 	 */
 	public void checkValues(boolean create) throws Exception {
-		String[] listMetric = {"Rcullis", "CC", "PhasingPower", "FOM", "<d\"/sig>","Best CC","CC(1/2)","Weak CC","CFOM","Pseudo_free_CC","CC of partial model"};
-		//phasingHasScaling1VO
-		if(phasingHasScaling1VO == null)
-			throw new IllegalArgumentException(StringUtils.getMessageRequiredField("PhasingStatistics", "phasingHasScaling1VO"));
-		// metric
-		if(!StringUtils.isStringInPredefinedList(this.metric, listMetric, true))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("PhasingStatistics", "metric", listMetric));
+//		String[] listMetric = {"Rcullis", "CC", "PhasingPower", "FOM", "<d\"/sig>","Best CC","CC(1/2)","Weak CC","CFOM","Pseudo_free_CC","CC of partial model"};
+//		//phasingHasScaling1VO
+//		if(phasingHasScaling1VO == null)
+//			throw new IllegalArgumentException(StringUtils.getMessageRequiredField("PhasingStatistics", "phasingHasScaling1VO"));
+//		// metric
+//		if(!StringUtils.isStringInPredefinedList(this.metric, listMetric, true))
+//			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("PhasingStatistics", "metric", listMetric));
 		
 	}
 
