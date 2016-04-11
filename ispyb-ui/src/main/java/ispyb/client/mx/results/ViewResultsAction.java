@@ -583,76 +583,82 @@ public class ViewResultsAction extends DispatchAction {
 				// catch the file not found error to change the name of the file accordingly
 				// xxx.mtz.gz becomes xxx.mtz or xxx.mtz becomes xxx.mtz.gz
 				// xxx.sca.gz becomes xxx.sca or xxx.sca becomes xxx.sca.gz
-				java.io.FileInputStream in;
+				HashMap<String, String> filesToZip = new HashMap<String, String>();
+				File f;
+				String finalFilePath= fullFilePath;	
 				try {
-					in = new java.io.FileInputStream(new File(fullFilePath));
-				} catch (java.io.IOException e) {
-					String otherPath = fullFilePath;
+					f = new File(fullFilePath);
+					if (!f.canRead()) {
+						String otherPath = fullFilePath;
+						if (filename.contains(".mtz")) {
+							if (filename.contains(".mtz.gz")) {
+								otherPath = fullFilePath.substring(0, fullFilePath.length() - 3);
+								filename = filename.substring(0, filename.length() - 3);
+							} else {
+								otherPath = fullFilePath + ".gz";
+								filename = filename + ".gz";
+							}
 
-					if (filename.contains(".mtz")) {
-						if (filename.contains(".mtz.gz")) {
-							otherPath = fullFilePath.substring(0, fullFilePath.length() - 3);
-							filename = filename.substring(0, filename.length() - 3);
-						} else {
-							otherPath = fullFilePath + ".gz";
-							filename = filename + ".gz";
+						} else if (filename.contains(".sca")) {
+							if (filename.contains(".sca.gz")) {
+								otherPath = fullFilePath.substring(0, fullFilePath.length() - 3);
+								filename = filename.substring(0, filename.length() - 3);
+							} else {
+								otherPath = fullFilePath + ".gz";
+								filename = filename + ".gz";
+							}
 						}
-
-					} else if (filename.contains(".sca")) {
-						if (filename.contains(".sca.gz")) {
-							otherPath = fullFilePath.substring(0, fullFilePath.length() - 3);
-							filename = filename.substring(0, filename.length() - 3);
-						} else {
-							otherPath = fullFilePath + ".gz";
-							filename = filename + ".gz";
+						finalFilePath= otherPath;	
+						f = new File(otherPath);						
+					}
+					
+					if (f.canRead()) {
+						
+						filesToZip.put(f.getName(), finalFilePath);		
+		
+						String info = "";
+						if (filename != null && !filename.contains("_run")) {
+							Integer dataCollectionId = form.getDataCollectionId();
+							if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null) {
+								dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
+							}
+							if (dataCollectionId != null) {
+								DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+								if (dc != null) {
+									info = dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber() + "_";
+								}
+							}
 						}
-
-					}
-
-					in = new java.io.FileInputStream(new File(otherPath));
-				}
-				String info = "";
-				if (filename != null && !filename.contains("_run")) {
-					Integer dataCollectionId = form.getDataCollectionId();
-					if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null) {
-						dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
-					}
-					if (dataCollectionId != null) {
-						DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
-						if (dc != null) {
-							info = dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber() + "_";
+										
+						String newfilename = info + filename;
+						byte[] zippedFiles = HashMapToZip.doZip(filesToZip);
+		
+						response.setContentType("application/zip");
+						response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
+						OutputStream output;
+						try {
+							output = response.getOutputStream();
+							output.write(zippedFiles);
+							output.close();				
+						} catch (java.io.IOException e) {
+								errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "Unable to open file: " + fullFilePath));
+								saveErrors(request, errors);
+								e.printStackTrace();
+								return mapping.findForward("error");								
 						}
 					}
+							
+				} catch (Exception e) {
+						e.printStackTrace();
+						return mapping.findForward("error");
 				}
-				String newfilename = info + filename;
-				response.setContentType("application/octet-stream");
-				response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
-
-				ServletOutputStream out = response.getOutputStream();
-
-				byte[] buf = new byte[4096];
-				int bytesRead;
-
-				while ((bytesRead = in.read(buf)) != -1) {
-					out.write(buf, 0, bytesRead);
-				}
-
-				in.close();
-				out.flush();
-				out.close();
-
-				return null;
 			}
-		} catch (java.io.IOException e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "Unable to open file: " + fullFilePath));
-			saveErrors(request, errors);
-			e.printStackTrace();
-			return mapping.findForward("error");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return mapping.findForward("error");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				return mapping.findForward("error");
 		}
-
+		return null;
 	}
 
 	public ActionForward displayCorrectionFile(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,

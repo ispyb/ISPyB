@@ -16861,7 +16861,7 @@ BeamlinePanel.prototype.getPanel = function(data) {
 				name : 'beamTransmission',
 				fieldLabel : 'Beam transmission',
 				labelStyle : labelStyle,
-				value : dataCollection?(dataCollection.transmission?(dataCollection.transmission.toFixed(0)+ " %" ):""):""
+				value : dataCollection?(dataCollection.transmission?(dataCollection.transmission.toFixed(2)+ " %" ):""):""
 			},
 			{
 				xtype : 'displayfield',
