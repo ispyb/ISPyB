@@ -1820,8 +1820,9 @@ public class ViewResultsAction extends DispatchAction {
 						fullFilePath = PathUtils.FitPathToOS(fullFilePath);
 						File f = new File(fullFilePath);
 						if (f.canRead()) {
-							listFilesToDownload.add(new File(fullFilePath));
-							filesToZip.put(attBean.getFileName(), fullFilePath);
+							listFilesToDownload.add(f);
+							filesToZip.put(f.getName(), fullFilePath);
+							LOG.debug("Put in zip : " + f.getName() + " file: "+ fullFilePath);
 						}
 						i = i + 1;
 					}
@@ -1847,8 +1848,9 @@ public class ViewResultsAction extends DispatchAction {
 								String fullFilePath = PathUtils.FitPathToOS(correctionFilePath);
 								File f = new File(fullFilePath);
 								if (f.canRead()) {
-									listFilesToDownload.add(new File(fullFilePath));
-									filesToZip.put(correctionFileName, fullFilePath);
+									listFilesToDownload.add(f);
+									filesToZip.put(f.getName(), fullFilePath);
+									LOG.debug("Put in zip : " + f.getName() + " file: "+ fullFilePath);
 								}
 							}
 						}
@@ -2950,25 +2952,6 @@ public class ViewResultsAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * @param result
-	 * @param response
-	 */
-	private ActionForward sendZipFileReponse(String fileName, byte[] result, HttpServletResponse response) {
-		response.setContentType("application/zip");
-		response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-		OutputStream output;
-		try {
-			output = response.getOutputStream();
-			output.write(result);
-			output.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }
