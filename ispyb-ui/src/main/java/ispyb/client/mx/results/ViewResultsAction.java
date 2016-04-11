@@ -22,7 +22,37 @@
  */
 package ispyb.client.mx.results;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
+
 import fr.improve.struts.taglib.layout.util.FormUtils;
+import ispyb.client.biosaxs.dataAdapter.BiosaxsDataAdapterCommon;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.DataAdapterCommon;
 import ispyb.client.common.util.Confidentiality;
@@ -37,8 +67,8 @@ import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.ESRFBeamlineEnum;
 import ispyb.common.util.PathUtils;
-import ispyb.common.util.PropertyLoader;
 import ispyb.common.util.StringUtils;
+import ispyb.server.common.util.HashMapToZip;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -77,35 +107,6 @@ import ispyb.server.mx.vos.screening.ScreeningRankSet3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategy3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 
 /**
  * Clss to handle results from beamline datacollections
@@ -1779,6 +1780,7 @@ public class ViewResultsAction extends DispatchAction {
 		Integer autoProcProgramId = null;
 		List<File> listFilesToDownload = new ArrayList<File>();
 		Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
+		HashMap<String, String> filesToZip = new HashMap<String, String>();
 
 		try {
 			// auto proc attachment
@@ -1799,6 +1801,7 @@ public class ViewResultsAction extends DispatchAction {
 			}
 			List<AutoProcProgramAttachment3VO> attachments = null;
 			AutoProcAttachmentWebBean[] attachmentWebBeans = null;
+			
 			if (autoProcProgramId != null) {
 				attachments = appService.findByPk(autoProcProgramId, true).getAttachmentListVOs();
 				if (!attachments.isEmpty()) {
@@ -1818,6 +1821,7 @@ public class ViewResultsAction extends DispatchAction {
 						File f = new File(fullFilePath);
 						if (f.canRead()) {
 							listFilesToDownload.add(new File(fullFilePath));
+							filesToZip.put(attBean.getFileName(), fullFilePath);
 						}
 						i = i + 1;
 					}
@@ -1844,6 +1848,7 @@ public class ViewResultsAction extends DispatchAction {
 								File f = new File(fullFilePath);
 								if (f.canRead()) {
 									listFilesToDownload.add(new File(fullFilePath));
+									filesToZip.put(correctionFileName, fullFilePath);
 								}
 							}
 						}
@@ -1860,35 +1865,13 @@ public class ViewResultsAction extends DispatchAction {
 			return this.display(mapping, actForm, request, response);
 		}
 
-		// create tar
+		// create zip
 		if (autoProcProgramId != null) {
-			String genericFilename = "autoProcessingFiles.tar";
-			String outFilename = genericFilename;
-			if (proposalId != null) 
-				outFilename = proposalId.toString() + outFilename;
-			String realXLSPath = request.getRealPath("/") + "/" + TMP_DIR + "/" + outFilename;
-			File out = new File(realXLSPath);
-			if (out.exists())
-				out.delete();
-			try {
-				ispyb.common.util.IspybFileUtils.createTarGz(listFilesToDownload, out, false);
-			} catch (IOException e) {
-				e.printStackTrace();
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewResults"));
-				return this.display(mapping, actForm, request, response);
-			}
-			// offer to download
-			java.io.FileInputStream in;
-			try {
-				in = new java.io.FileInputStream(out);
-			} catch (java.io.IOException e) {
-				e.printStackTrace();
-				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewResults"));
-				return this.display(mapping, actForm, request, response);
-			}
+			String genericFilename = "autoProcessingFiles.zip";
+			
+			byte[] zippedFiles = HashMapToZip.doZip(filesToZip);
 
 			String info = "";
-			// Integer dataCollectionId = form.getDataCollectionId();
 			Integer dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 			if (dataCollectionId != null) {
 				try {
@@ -1902,29 +1885,22 @@ public class ViewResultsAction extends DispatchAction {
 					return this.display(mapping, actForm, request, response);
 				}
 			}
-			String newfilename = info + genericFilename;
-			response.setContentType("application/octet-stream");
+			String newfilename = info + genericFilename;			
+			response.setContentType("application/zip");
 			response.setHeader("Content-Disposition", "attachment;filename=" + newfilename);
-
-			ServletOutputStream sout;
+			OutputStream output;
 			try {
-				sout = response.getOutputStream();
-				byte[] buf = new byte[4096];
-				int bytesRead;
-
-				while ((bytesRead = in.read(buf)) != -1) {
-					sout.write(buf, 0, bytesRead);
-				}
-
-				in.close();
-				sout.flush();
-				sout.close();
+				output = response.getOutputStream();
+				output.write(zippedFiles);
+				output.close();
+						
 			} catch (IOException e) {
 				e.printStackTrace();
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewResults"));
 				return this.display(mapping, actForm, request, response);
 			}
 		}
+		
 		return null;
 	}
 
@@ -2974,6 +2950,25 @@ public class ViewResultsAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @param result
+	 * @param response
+	 */
+	private ActionForward sendZipFileReponse(String fileName, byte[] result, HttpServletResponse response) {
+		response.setContentType("application/zip");
+		response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+		OutputStream output;
+		try {
+			output = response.getOutputStream();
+			output.write(result);
+			output.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
