@@ -220,4 +220,14 @@ public class PhasingStepVO extends ISPyBValueObject implements Cloneable {
 		this.highRes = highRes;
 	}
 
+
+	public Date getRecordTimeStamp() {
+		return recordTimeStamp;
+	}
+
+
+	public void setRecordTimeStamp(Date recordTimeStamp) {
+		this.recordTimeStamp = recordTimeStamp;
+	}
+
 }
