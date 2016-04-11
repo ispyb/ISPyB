@@ -22,9 +22,9 @@ package ispyb.server.biosaxs.services.utils;
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
 import ispyb.server.biosaxs.services.core.analysis.abInitioModelling.AbInitioModelling3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
-import ispyb.server.biosaxs.services.utils.reader.zip.HashMapToZip;
 import ispyb.server.biosaxs.vos.datacollection.Frametolist3VO;
 import ispyb.server.biosaxs.vos.datacollection.Merge3VO;
+import ispyb.server.common.util.HashMapToZip;
 
 import java.io.File;
 import java.util.ArrayList;

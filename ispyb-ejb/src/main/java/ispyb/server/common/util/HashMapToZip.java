@@ -1,4 +1,4 @@
-package ispyb.server.biosaxs.services.utils.reader.zip;
+package ispyb.server.common.util;
 
 import ispyb.common.util.PathUtils;
 
