@@ -1527,13 +1527,13 @@ public class ToolsForAutoprocessingWebService {
 	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments, String phasingStatistics){
 		String methodName = "PhasingStep";
 		
-		LOG.debug("testing phasing Step");
-		LOG.debug("STOREPHASING");
-		LOG.debug("STOREPHASING phasingStep: " + phasingStep);
-		LOG.debug("STOREPHASING spaceGroup: " + spaceGroup);
-		LOG.debug("STOREPHASING run: " + run);
-		LOG.debug("STOREPHASING attachments: " + attachments);
-		LOG.debug("STOREPHASING phasingStatistics: " + phasingStatistics);
+		LOG.info("testing phasing Step");
+		LOG.info("STOREPHASING");
+		LOG.info("STOREPHASING phasingStep: " + phasingStep);
+		LOG.info("STOREPHASING spaceGroup: " + spaceGroup);
+		LOG.info("STOREPHASING run: " + run);
+		LOG.info("STOREPHASING attachments: " + attachments);
+		LOG.info("STOREPHASING phasingStatistics: " + phasingStatistics);
 		try {
 			
 			
@@ -1561,11 +1561,12 @@ public class ToolsForAutoprocessingWebService {
 			PhasingProgramRun3VO program = this.getPhasingProgramRun3Service().create(phasingProgramRun3VO);
 			phasingStepVO.setPhasingProgramRunVO(program);
 			
+			
 			for (PhasingProgramAttachment3VO phasingProgramAttachment3VO : phasingProgramAttachment3VOs) {
 				phasingProgramAttachment3VO.setPhasingProgramRunVO(program);
 				this.getPhasingProgramAttachment3Service().create(phasingProgramAttachment3VO);
 			}
-			
+			phasingStepVO.setRecordTimeStamp(StringUtils.getCurrentTimeStamp());
 			phasingStepVO = this.getPhasingStep3Service().merge(phasingStepVO);
 			
 			/** Statistics **/
@@ -1578,6 +1579,7 @@ public class ToolsForAutoprocessingWebService {
 			if (phasingStatistics3VOList.size() > 0){
 				for (PhasingStatistics3VO phasingStatistics3VO : phasingStatistics3VOList) {
 					phasingStatistics3VO.setPhasingStepId(phasingStepVO.getPhasingStepId());
+					phasingStatistics3VO.setRecordTimeStamp(StringUtils.getCurrentTimeStamp());
 					phasingStatisticsService.create(phasingStatistics3VO);
 				}
 			}
