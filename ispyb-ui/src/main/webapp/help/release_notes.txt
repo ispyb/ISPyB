@@ -1,4 +1,11 @@
 **************
+* 11.04.2016     *
+**************
+
+- Increased the number of decimals for transmission to two for the
+    "Beamline parameters" tab (feature #2711).
+
+**************
 * 05.04.2016     *
 **************
 
