@@ -1,3 +1,6 @@
+DROP VIEW `pydb`.`v_datacollection_summary`;
+DROP VIEW `pydb`.`V_datacollection_summary`;
+
 CREATE 
     ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
