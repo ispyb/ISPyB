@@ -24,10 +24,10 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="ispyb.common.util.Constants"%>
-<%@page import="ispyb.common.util.ESRFBeamlineEnum"%>
-<%@page import="ispyb.common.util.EMBLBeamlineEnum"%>
-<%@page import="ispyb.common.util.MAXIVBeamlineEnum"%>
-<%@page import="ispyb.common.util.SOLEILBeamlineEnum"%>
+<%@page import="ispyb.common.util.beamlines.ESRFBeamlineEnum"%>
+<%@page import="ispyb.common.util.beamlines.EMBLBeamlineEnum"%>
+<%@page import="ispyb.common.util.beamlines.MAXIVBeamlineEnum"%>
+<%@page import="ispyb.common.util.beamlines.SOLEILBeamlineEnum"%>
 
 <% 
    String targetSelectedSession = request.getContextPath() + "/menuSelected.do?leftMenuId=-1&topMenuId=16&targetUrl=/user/viewSessionSummary.do?reqCode=display";
