@@ -19,11 +19,11 @@
 package ispyb.ws.soap.mx;
 
 import ispyb.common.util.Constants;
-import ispyb.common.util.EMBLBeamlineEnum;
-import ispyb.common.util.ESRFBeamlineEnum;
-import ispyb.common.util.MAXIVBeamlineEnum;
-import ispyb.common.util.SOLEILBeamlineEnum;
 import ispyb.common.util.StringUtils;
+import ispyb.common.util.beamlines.EMBLBeamlineEnum;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
+import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.external.External3Service;

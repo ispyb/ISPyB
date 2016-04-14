@@ -20,9 +20,9 @@
 package ispyb.ws.soap.mx;
 
 import ispyb.common.util.Constants;
-import ispyb.common.util.ESRFBeamlineEnum;
 import ispyb.common.util.SendMailUtils;
 import ispyb.common.util.StringUtils;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
