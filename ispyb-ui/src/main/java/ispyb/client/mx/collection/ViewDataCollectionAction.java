@@ -2734,8 +2734,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 									// LOG.debug(fullFilePath);
 									File f = new File(fullFilePath);
 									if (f.canRead()) {										
-											filesToZip.put(fullFilePath, f.getName());
-										
+										filesToZip.put(f.getName(), fullFilePath);
 									}
 									i = i + 1;
 								}
@@ -2762,7 +2761,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 									String fullFilePath = PathUtils.FitPathToOS(correctionFilePath);
 									File f = new File(fullFilePath);
 									if (f.canRead()) {
-										filesToZip.put(fullFilePath, f.getName());
+										filesToZip.put(f.getName(), fullFilePath);
 									}
 								}
 							}
