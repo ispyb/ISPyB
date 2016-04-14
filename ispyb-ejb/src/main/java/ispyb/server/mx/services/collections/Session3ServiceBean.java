@@ -18,7 +18,7 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.collections;
 
-import ispyb.common.util.ESRFBeamlineEnum;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.mx.daos.collections.Session3DAO;

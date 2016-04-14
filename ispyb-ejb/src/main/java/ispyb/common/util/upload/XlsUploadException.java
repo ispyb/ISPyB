@@ -19,7 +19,7 @@
 /**
  * XlsUploadException
  */
-package ispyb.common.util;
+package ispyb.common.util.upload;
 
 public class XlsUploadException extends Exception {
 

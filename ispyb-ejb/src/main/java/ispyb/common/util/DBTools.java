@@ -24,7 +24,8 @@
 
 package ispyb.common.util;
 
-import ispyb.common.util.ShippingInformation.DewarInformation;
+import ispyb.common.util.upload.ShippingInformation;
+import ispyb.common.util.upload.ShippingInformation.DewarInformation;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;

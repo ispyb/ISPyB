@@ -22,7 +22,7 @@
  * Feb 20, 2008
  */
 
-package ispyb.common.util;
+package ispyb.common.util.upload;
 
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;

@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************/
 
-package ispyb.common.util;
+package ispyb.common.util.beamlines;
 
 import java.util.ArrayList;
 import java.util.List;

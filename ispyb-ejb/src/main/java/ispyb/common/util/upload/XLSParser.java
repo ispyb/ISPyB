@@ -23,7 +23,7 @@
  * Updated 29/10/2009 - PBU - Code formatting
  */
 
-package ispyb.common.util;
+package ispyb.common.util.upload;
 
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;

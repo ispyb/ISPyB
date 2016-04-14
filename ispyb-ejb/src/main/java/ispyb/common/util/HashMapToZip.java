@@ -1,6 +1,4 @@
-package ispyb.server.common.util;
-
-import ispyb.common.util.PathUtils;
+package ispyb.common.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

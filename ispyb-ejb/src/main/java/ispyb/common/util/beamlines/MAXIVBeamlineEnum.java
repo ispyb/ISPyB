@@ -17,26 +17,24 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************/
 
-package ispyb.common.util;
+package ispyb.common.util.beamlines;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * This class represents beamlines using ISPyB at SOLEIL. 
+ * This class represents a beamline at MAXIV. 
  * A beamline has a name, a name for the directory where data is stored, and a phone number
  * The beamline name can have others names associated (eg ID14-1 & ID14 1)
  *
  */
-public enum SOLEILBeamlineEnum {
-	
-	SWING("SWING", "swing", new String[]{"SWING"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9783</font></font>", null, true, true),
-	PROXIMA1("PROXIMA1", "proxima1", new String[]{"PROXIMA1"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9608</font></font>", null, true, true),
-	PROXIMA2("PROXIMA2A", "proxima2a", new String[]{"PROXIMA2A"}, "<font style='color:#000080;font-size:90%'>+3316935<font style='color:#0000FF;font-weight:bold;'>9636</font></font>", null, true, true)
+public enum MAXIVBeamlineEnum {
+	BIOMAX("BioMAX", "idBioMAX", new String[]{"BioMAX"}, "<font style='color:#6888A8;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>312</font></font>", null, true, false),
+	MX("MX", "idi911_3", new String[]{"i911-3 (MX)"}, "<font style='color:#000080;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, true),
 	;
 	
-	private SOLEILBeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber, String[] correctionFiles, boolean emailNotification, boolean inActivity){
+	private MAXIVBeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber, String[] correctionFiles, boolean emailNotification, boolean inActivity){
 		this.beamlineName = beamlineName;
 		this.directoryName = directoryName;
 		this.associatedName = associatedName;
@@ -110,8 +108,8 @@ public enum SOLEILBeamlineEnum {
 		return inActivity;
 	}
 
-	public static SOLEILBeamlineEnum retrieveBeamlineWithName(String aName){
-		for(SOLEILBeamlineEnum b:SOLEILBeamlineEnum.values()){
+	public static MAXIVBeamlineEnum retrieveBeamlineWithName(String aName){
+		for(MAXIVBeamlineEnum b:MAXIVBeamlineEnum.values()){
 			if(b.getBeamlineName().equals(aName)){
 				return b;
 			}
@@ -127,7 +125,7 @@ public enum SOLEILBeamlineEnum {
 	}
 	
 	public static List<String> getAllBeamlinesForName(String aName){
-		for(SOLEILBeamlineEnum b:SOLEILBeamlineEnum.values()){
+		for(MAXIVBeamlineEnum b:MAXIVBeamlineEnum.values()){
 			if(b.getBeamlineName().equals(aName)){
 				List<String> list = new ArrayList<String>();
 				list.add(b.getBeamlineName());
@@ -143,7 +141,7 @@ public enum SOLEILBeamlineEnum {
 	}
 	
 	public static String retrieveDirectoryNameWithName(String aName){
-		SOLEILBeamlineEnum beamline = retrieveBeamlineWithName(aName);
+		MAXIVBeamlineEnum beamline = retrieveBeamlineWithName(aName);
 		if(beamline != null){
 			return beamline.getDirectoryName();
 		}
@@ -153,7 +151,7 @@ public enum SOLEILBeamlineEnum {
 	public static String retrievePhoneNumberWithName(String aName){
 		if(aName == null)
 			return "";
-		SOLEILBeamlineEnum beamline = retrieveBeamlineWithName(aName);
+		MAXIVBeamlineEnum beamline = retrieveBeamlineWithName(aName);
 		if(beamline != null){
 			return beamline.getPhoneNumber();
 		}
@@ -161,9 +159,9 @@ public enum SOLEILBeamlineEnum {
 	}
 	
 	public static String[] getBeamlineNames(){
-		String[] list = new String[SOLEILBeamlineEnum.values().length];
+		String[] list = new String[MAXIVBeamlineEnum.values().length];
 		int i=0;
-		for(SOLEILBeamlineEnum b:SOLEILBeamlineEnum.values()){
+		for(MAXIVBeamlineEnum b:MAXIVBeamlineEnum.values()){
 			list[i++] = b.getBeamlineName();
 		}
 		return list;
@@ -171,7 +169,7 @@ public enum SOLEILBeamlineEnum {
 	
 	public static String[] getBeamlineNamesInActivity(){
 		List<String> listBeamlinesInActivity = new ArrayList<String>();
-		for(SOLEILBeamlineEnum b:SOLEILBeamlineEnum.values()){
+		for(MAXIVBeamlineEnum b:MAXIVBeamlineEnum.values()){
 			if (b.inActivity)
 				listBeamlinesInActivity.add(b.getBeamlineName());
 		}
@@ -181,7 +179,7 @@ public enum SOLEILBeamlineEnum {
 	}
 	
 	public static String[] retrieveCorrectionFilesNameWithName(String aName){
-		SOLEILBeamlineEnum beamline = retrieveBeamlineWithName(aName);
+		MAXIVBeamlineEnum beamline = retrieveBeamlineWithName(aName);
 		if(beamline != null){
 			return beamline.getCorrectionFiles();
 		}
@@ -189,7 +187,7 @@ public enum SOLEILBeamlineEnum {
 	}
 	
 	public static boolean isBeamlineEmailNotification(String aName){
-		SOLEILBeamlineEnum beamline = retrieveBeamlineWithName(aName);
+		MAXIVBeamlineEnum beamline = retrieveBeamlineWithName(aName);
 		if(beamline != null){
 			return beamline.isEmailNotification();
 		}

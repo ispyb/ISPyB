@@ -23,17 +23,7 @@
  * Updated 29/10/2009 - PBU - Code formatting
  */
 
-package ispyb.common.util;
-
-import ispyb.common.util.ShippingInformation.DewarInformation;
-import ispyb.common.util.ShippingInformation.DewarInformation.ContainerInformation;
-import ispyb.common.util.ShippingInformation.DewarInformation.ContainerInformation.SampleInformation;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.sample.DiffractionPlan3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
+package ispyb.common.util.upload;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -54,6 +44,18 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.upload.ShippingInformation.DewarInformation;
+import ispyb.common.util.upload.ShippingInformation.DewarInformation.ContainerInformation;
+import ispyb.common.util.upload.ShippingInformation.DewarInformation.ContainerInformation.SampleInformation;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.sample.DiffractionPlan3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 /**
  * The instance class for parsing eHTPX style Excel Spreadsheets

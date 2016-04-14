@@ -17,8 +17,11 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.common.util;
+package ispyb.common.util.upload;
 
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.StringUtils;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Shipping3Service;

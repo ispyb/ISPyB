@@ -62,42 +62,6 @@ public final class IspybFileUtils {
 		return null;
 	}
 
-	/***
-	 * 
-	 * @param listFile
-	 *            files to archive files
-	 * @param out
-	 *            the out file
-	 * @throws IOException
-	 */
-	public static void createTarGz(List<File> listFile, File out, boolean keepFilePath) throws IOException {
-		TarArchiveOutputStream tos = new TarArchiveOutputStream(new FileOutputStream(out));
-		tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-		for (File file : listFile) {
-			byte[] buf = new byte[BUFFER_SIZE];
-			int len;
-			// Create a tar entry with the file
-			String f = file.getName();
-			if (keepFilePath) {
-				f = file.toString();
-			}
-			TarArchiveEntry tarEntry = new TarArchiveEntry(f);
-			tarEntry.setSize(file.length());
-			// Create the input stream
-			FileInputStream fin = new FileInputStream(file);
-			BufferedInputStream in = new BufferedInputStream(fin);
-			tos.putArchiveEntry(tarEntry);
-			// read the file
-			while ((len = in.read(buf)) != -1)
-				tos.write(buf, 0, len);
-			// close the input stream
-			in.close();
-			// close the input stream of the tar
-			tos.closeArchiveEntry();
-		}
-		tos.close();
-	}
-
 	/**
 	 * returns the list of files in the given directoryFile (and sub-directories) with the given fileName
 	 * 
@@ -124,5 +88,7 @@ public final class IspybFileUtils {
 		}
 		return resultFilesList;
 	}
+	
+	
 
 }

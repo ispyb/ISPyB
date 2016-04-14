@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
+import ispyb.common.util.HashMapToZip;
 import ispyb.common.util.PathUtils;
 import ispyb.server.biosaxs.vos.advanced.FitStructureToExperimentalData3VO;
 import ispyb.server.biosaxs.vos.advanced.RigidBodyModeling3VO;
@@ -13,7 +14,6 @@ import ispyb.server.biosaxs.vos.datacollection.Merge3VO;
 import ispyb.server.biosaxs.vos.datacollection.ModelToList3VO;
 import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
 import ispyb.server.biosaxs.vos.datacollection.SubtractiontoAbInitioModel3VO;
-import ispyb.server.common.util.HashMapToZip;
 
 public class SAXSZipper {
 
