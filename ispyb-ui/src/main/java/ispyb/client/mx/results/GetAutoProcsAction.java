@@ -20,8 +20,8 @@ package ispyb.client.mx.results;
 
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.common.util.Constants;
-import ispyb.common.util.ESRFBeamlineEnum;
 import ispyb.common.util.PathUtils;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;

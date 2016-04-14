@@ -23,10 +23,10 @@
 package ispyb.client.mx.collection;
 
 import ispyb.common.util.Constants;
-import ispyb.common.util.ESRFBeamlineEnum;
-import ispyb.common.util.EMBLBeamlineEnum;
-import ispyb.common.util.MAXIVBeamlineEnum;
-import ispyb.common.util.SOLEILBeamlineEnum;
+import ispyb.common.util.beamlines.EMBLBeamlineEnum;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
+import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
 import ispyb.server.mx.vos.collections.Session3VO;
 
 import java.io.Serializable;

@@ -5,7 +5,8 @@
 - Increased the number of decimals for transmission to two for the
     "Beamline parameters" tab (feature #2711).
  - Replace the .tar  creation and temporary saved in xxxx/tmp by .zip created on the fly
-
+ - Refactoring of the ispyb.common.util module
+ 
 **************
 * 05.04.2016     *
 **************
