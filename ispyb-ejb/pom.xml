@@ -324,6 +324,8 @@
 			<dictionary.site>The ESRF</dictionary.site> 
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
 			
+			<ispyb.authorisation.active>true</ispyb.authorisation.active>
+			
 <!-- 		<userportal.webservices.url>http://localhost:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?WSDL</userportal.webservices.url>	-->		  			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
   			
@@ -365,6 +367,9 @@
   
                         <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
                         <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+                
+                	<ispyb.authorisation.active>false</ispyb.authorisation.active>
+                	
                 </properties>
   	</profile>
   	<profile>
@@ -415,12 +420,17 @@
 				
 				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 				<userportal.url>http://suntest.synchrotron-soleil.fr:8084/sunset/main?function=proposal_personal</userportal.url>
+				
+				<ispyb.authorisation.active>false</ispyb.authorisation.active>
+				
+				
   		</properties>
   	</profile> 
   	  	<profile>
   		<id>MAXIV</id>
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
+  			<ispyb.authorisation.active>false</ispyb.authorisation.active>
   		</properties>
   	</profile> 
   	

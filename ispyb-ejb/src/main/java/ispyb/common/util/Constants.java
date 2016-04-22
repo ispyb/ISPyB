@@ -166,7 +166,19 @@ public final class Constants {
 	public static final String SMIS_WS_URL = getProperty("userportal.webservices.url");
 	
 	public static final String USER_PORTAL_URL = getProperty("userportal.url");
+	
+	/*
+	 * Configuration properties
+	 */
 
+	public static final boolean isAuthorisationActive() {
+		String active = getProperty(AUTHORISATION_ACTIVE, "false");
+		if (active != null ) 
+			return new Boolean(active).booleanValue() ;
+		return false;
+	}
+
+	public static final String AUTHORISATION_ACTIVE = "ISPyB.authorisation.active";
 	/*
 	 * proposal s types
 	 */
