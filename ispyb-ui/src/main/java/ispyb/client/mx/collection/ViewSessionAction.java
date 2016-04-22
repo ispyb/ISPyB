@@ -36,10 +36,10 @@ import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
 import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 

@@ -29,9 +29,9 @@
 package ispyb.client.mx.collection;
 
 import ispyb.common.util.Constants;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;

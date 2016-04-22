@@ -22,8 +22,8 @@
 package ispyb.client.common.admin;
 
 import ispyb.client.common.util.GSonUtils;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 
 import java.text.SimpleDateFormat;

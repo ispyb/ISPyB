@@ -35,6 +35,7 @@ import ispyb.common.util.SendMailUtils;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.LabContact3VO;
@@ -42,7 +43,6 @@ import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.collections.Session3VO;
 
 import java.sql.Timestamp;

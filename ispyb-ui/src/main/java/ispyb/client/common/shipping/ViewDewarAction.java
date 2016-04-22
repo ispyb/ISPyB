@@ -35,6 +35,7 @@ import ispyb.common.util.DBTools;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
@@ -48,7 +49,6 @@ import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.collections.Session3VO;
 
 import java.io.ByteArrayInputStream;
