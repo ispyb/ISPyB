@@ -58,14 +58,11 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
 			throws Exception{
-//		Integer userPk = this.getUserPk();
-//
-//		
+//		Integer userPk = this.getUserPk();		
 //		if (vo == null) throw new Exception("no session has been found");
 //		if (! vo.getProposalVOId().equals(userPk)){
 //			throw new Exception("Access not authorised to session:" + vo.toString() + " for user:"+ userPk);
-//		}
-		
+//		}		
 		return;
 	}
 	

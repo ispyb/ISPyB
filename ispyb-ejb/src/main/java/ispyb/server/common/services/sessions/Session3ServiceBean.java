@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
@@ -57,7 +58,7 @@ import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import ispyb.common.util.Constants;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
-import ispyb.server.common.services.AuthorisationService;
+import ispyb.server.common.services.AuthorisationServiceLocal;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 
@@ -152,7 +153,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 	
-	private AuthorisationService autService;
+	@EJB
+	private AuthorisationServiceLocal autService;
 
 	@Resource
 	private SessionContext context;
