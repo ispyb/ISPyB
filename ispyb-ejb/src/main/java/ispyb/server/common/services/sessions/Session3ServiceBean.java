@@ -218,10 +218,12 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * @param withLink2
 	 * @return the Session3 value object
 	 */
-	public Session3VO findByPk(Integer pk, boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) {
+	public Session3VO findByPk(Integer pk, boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) throws Exception {
 		try {
-			return (Session3VO) entityManager.createQuery(FIND_BY_PK(fetchDataCollectionGroup, fetchEnergyScan, fetchXFESpectrum))
+			Session3VO vo = (Session3VO) entityManager.createQuery(FIND_BY_PK(fetchDataCollectionGroup, fetchEnergyScan, fetchXFESpectrum))
 					.setParameter("pk", pk).getSingleResult();
+			checkChangeRemoveAccess(vo);
+			return vo;
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -806,7 +808,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * @throws AccessDeniedException
 	 */
 	private void checkChangeRemoveAccess(Session3VO vo) throws Exception {
-				autService.checkUserRightToAccessSession(vo);				
+		if (vo == null) return;
+		autService.checkUserRightToAccessSession(vo);				
 	}
 
 
