@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
-package ispyb.server.mx.services.collections;
+package ispyb.server.common.services.sessions;
 
 import javax.ejb.Local;
 

@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
-package ispyb.server.mx.services.collections;
+package ispyb.server.common.services.sessions;
 
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
@@ -112,7 +112,7 @@ public interface Session3Service {
 	 * @throws Exception
 	 */
 	public List<Session3VO> findFiltered(final Integer proposalId, final Integer nbMax, final String beamline,
-			final Date date1, final Date date2, final Date endDate, final boolean usedFlag,
+			final Date date1, final Date date2, final Date endDate, final boolean usedFlag, 
 			final String operatorSiteNumber) throws Exception;
 
 	public List<Session3VO> findFiltered(final Integer nbMax, final String beamline,
