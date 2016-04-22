@@ -19,6 +19,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
+	
 	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/list")

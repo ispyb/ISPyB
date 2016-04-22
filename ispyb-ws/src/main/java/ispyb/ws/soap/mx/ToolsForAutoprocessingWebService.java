@@ -20,6 +20,7 @@ package ispyb.ws.soap.mx;
 
 import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -43,7 +44,6 @@ import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
 import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.autoproc.AutoProc3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegrationWS3VO;

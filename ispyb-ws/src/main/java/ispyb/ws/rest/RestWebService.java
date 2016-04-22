@@ -18,6 +18,7 @@ import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
@@ -28,7 +29,6 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 
 import java.io.File;

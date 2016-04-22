@@ -20,9 +20,9 @@
 package ispyb.ws.soap.common;
 
 import ispyb.server.common.services.admin.AdminVar3Service;
+import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.admin.AdminVar3VO;
-import ispyb.server.mx.services.collections.Session3Service;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 
 import javax.annotation.security.RolesAllowed;
