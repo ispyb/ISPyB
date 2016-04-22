@@ -47,29 +47,6 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	
 	@EJB
 	private Session3ServiceLocal sessionService;
-
-
-	/**
-	 * 
-	 * @param proposalPk
-	 * @param sessionPk
-	 * @return
-	 * @throws AccessDeniedException
-	 *             if the user has no access right
-	 * @throws Exception
-	 */
-	public void checkUserRightToAccessSession(Integer sessionPk )
-			throws Exception{
-		
-		Session3VO vo = sessionService.findByPk(sessionPk, false, false, false);
-		Integer userPk = this.getUserPk();
-		if (vo == null) throw new Exception("no session has been found with this id");
-		if (! vo.getProposalVOId().equals(userPk)){
-			throw new Exception("Access not authorised to session:" + sessionPk + " for user:"+ userPk);
-		}
-		
-		return;
-	}
 	
 	/**
 	 * 
@@ -81,13 +58,13 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
 			throws Exception{
-		Integer userPk = this.getUserPk();
-
-		
-		if (vo == null) throw new Exception("no session has been found");
-		if (! vo.getProposalVOId().equals(userPk)){
-			throw new Exception("Access not authorised to session:" + vo.toString() + " for user:"+ userPk);
-		}
+//		Integer userPk = this.getUserPk();
+//
+//		
+//		if (vo == null) throw new Exception("no session has been found");
+//		if (! vo.getProposalVOId().equals(userPk)){
+//			throw new Exception("Access not authorised to session:" + vo.toString() + " for user:"+ userPk);
+//		}
 		
 		return;
 	}
@@ -97,6 +74,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	public Integer getUserPk() throws Exception {
 		Integer userPk = new Integer(0);
 		try {
+			LOG.debug("Authorisation : getUserPk: context.getCallerPrincipal=" + this.context.getCallerPrincipal().getName());
 			userPk = Integer.valueOf(this.context.getCallerPrincipal().getName());
 		} catch (NumberFormatException e) {
 			if (LOG.isDebugEnabled()) {

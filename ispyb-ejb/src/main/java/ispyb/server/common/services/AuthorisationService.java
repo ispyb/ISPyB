@@ -26,18 +26,6 @@ import ispyb.server.mx.vos.collections.Session3VO;
 
 @Remote
 public interface AuthorisationService {
-
-	/**
-	 * 
-	 * @param sessionPk
-	 * @param proposalPk
-	 * @return
-	 * @throws AccessDeniedException
-	 *             if the user has no access right
-	 * @throws Exception
-	 */
-	 public void checkUserRightToAccessSession(Integer sessionPk )
-			throws AccessDeniedException, Exception;
 	
 	/**
 	 * 
