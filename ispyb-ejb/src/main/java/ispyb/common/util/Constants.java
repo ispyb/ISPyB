@@ -64,6 +64,8 @@ public final class Constants {
 	public static final String ROLE_STORE = "Store";
 
 	public static final String ROLE_MANAGER = "Manager";
+	
+	public static final String ROLE_WS = "WebService";
 
 	// DLS #####
 	public static final String FULLNAME = "fullname";

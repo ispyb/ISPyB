@@ -182,7 +182,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 *            the entity data to update.
 	 * @return the updated entity.
 	 */
-	public Session3VO update(final Session3VO vo) throws Exception {
+	public Session3VO update(final Session3VO vo) throws AccessDeniedException, Exception {
 		checkChangeRemoveAccess(vo);
 		entityManager.persist(vo);
 		return vo;
@@ -194,7 +194,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * @param vo
 	 *            the entity to remove.
 	 */
-	public void deleteByPk(final Integer pk) throws Exception {
+	public void deleteByPk(final Integer pk) throws AccessDeniedException,Exception {
 		Session3VO vo = this.findByPk(pk, false, false, false);
 		checkChangeRemoveAccess(vo);
 		entityManager.remove(vo);
@@ -207,7 +207,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * @param vo
 	 *            the entity to remove.
 	 */
-	public void delete(final Session3VO vo) throws Exception {
+	public void delete(final Session3VO vo) throws AccessDeniedException,Exception {
 		entityManager.remove(vo);
 	}
 
@@ -220,7 +220,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * @param withLink2
 	 * @return the Session3 value object
 	 */
-	public Session3VO findByPk(Integer pk, boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) throws Exception {
+	public Session3VO findByPk(Integer pk, boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) throws AccessDeniedException,Exception {
 		try {
 			Session3VO vo = (Session3VO) entityManager.createQuery(FIND_BY_PK(fetchDataCollectionGroup, fetchEnergyScan, fetchXFESpectrum))
 					.setParameter("pk", pk).getSingleResult();
@@ -234,7 +234,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	public SessionWS3VO findForWSByPk(final Integer pk, final boolean withDataCollectionGroup, final boolean withEnergyScan,
 			final boolean withXFESpectrum) throws Exception {
 		Session3VO found = findByPk(pk, withDataCollectionGroup, withEnergyScan, withXFESpectrum);
-		checkChangeRemoveAccess(found);
 		SessionWS3VO sesLight = getWSSessionVO(found);
 		return sesLight;
 	}
@@ -281,6 +280,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	@WebMethod
 	public List<Session3VO> findFiltered(Integer proposalId, Integer nbMax, String beamline, Date date1, Date date2, Date dateEnd,
 			boolean usedFlag,  String operatorSiteNumber) {
+
 		return findFiltered(proposalId, nbMax, beamline,  date1, date2,  dateEnd,
 				usedFlag, null,  operatorSiteNumber);
 	}
@@ -809,7 +809,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * 
 	 * @throws AccessDeniedException
 	 */
-	private void checkChangeRemoveAccess(Session3VO vo) throws Exception {
+	private void checkChangeRemoveAccess(Session3VO vo) throws AccessDeniedException, Exception {
 		if (vo == null) return;
 		autService.checkUserRightToAccessSession(vo);				
 	}

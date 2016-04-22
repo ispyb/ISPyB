@@ -18,7 +18,6 @@
  ****************************************************************************************************/
 package ispyb.server.common.services;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import ispyb.common.util.Constants;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3ServiceLocal;
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.sessions.Session3ServiceLocal;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -72,7 +72,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 		if (!Constants.isAuthorisationActive() )
 			return;
 					
-		if (isUserAdminOrLc() ) 
+		if (isUserAdminOrLcOrWs() ) 
 			return;
 			
 		boolean hasAccess = false;
@@ -102,11 +102,12 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 		return user;
 	}
 	
-	public boolean isUserAdminOrLc() throws Exception {
+	public boolean isUserAdminOrLcOrWs() throws Exception {
 
 		if (this.context.isCallerInRole(Constants.ALL_MANAGE_ROLE_NAME) 
 				|| this.context.isCallerInRole(Constants.ROLE_MANAGER) 
-						|| this.context.isCallerInRole(Constants.ROLE_BLOM) || this.context.isCallerInRole(Constants.ROLE_LOCALCONTACT))
+						|| this.context.isCallerInRole(Constants.ROLE_BLOM) || this.context.isCallerInRole(Constants.ROLE_LOCALCONTACT)
+						|| this.context.isCallerInRole(Constants.ROLE_WS))
 			return true ;
 		
 		return false;
