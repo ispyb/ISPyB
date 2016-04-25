@@ -3,6 +3,7 @@ package ispyb.ws.rest.mx;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
+import com.google.gson.stream.JsonReader;
 
 @Path("/")
 public class WorkflowRestWebService extends MXRestWebService {
@@ -124,7 +127,8 @@ public class WorkflowRestWebService extends MXRestWebService {
 			if (workflowStep != null){
 				if (workflowStep.getResultFilePath() != null){
 					if (new File(workflowStep.getResultFilePath()).exists()){
-						return this.sendImage(workflowStep.getResultFilePath());
+						byte[] encoded = Files.readAllBytes(Paths.get(workflowStep.getResultFilePath()));
+						return this.sendResponse(new String(encoded));
 					}
 				}
 				throw new Exception("File " + workflowStep.getResultFilePath() + " does not exit");
