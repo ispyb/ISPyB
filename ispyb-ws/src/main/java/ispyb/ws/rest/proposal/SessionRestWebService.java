@@ -1,13 +1,17 @@
 package ispyb.ws.rest.proposal;
 
-import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.common.services.ws.rest.session.SessionService;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.rest.RestWebService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -25,17 +29,14 @@ public class SessionRestWebService extends RestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/session/list")
 	@Produces({ "application/json" })
-	public Response getSessionList(
+	public Response getSessionByProposalId(
 			@PathParam("token") String token, 
-			@PathParam("proposal") String proposal,
-			@QueryParam("startdate") Date startDate,
-			@QueryParam("enddate") Date enddate,
-			@QueryParam("beamline") String beamline) throws Exception {
+			@PathParam("proposal") String proposal) throws Exception {
 		
 		String methodName = "getSessionList";
 		long id = this.logInit(methodName, logger, token, proposal);
 		try{
-			List<Session3VO> result = getSession3Service().findFiltered(this.getProposalId(proposal), null, beamline, null, startDate, enddate, false, null);
+			List<Map<String, Object>> result = getSessionService().getSessionViewByProposalId(this.getProposalId(proposal));
 			this.logFinish(methodName, id, logger);
 			return sendResponse(result );
 		}
@@ -44,33 +45,67 @@ public class SessionRestWebService extends RestWebService {
 		}
 	}
 	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/session/{sessionId}/list")
+	@Produces({ "application/json" })
+	public Response getSessionById(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@QueryParam("sessionId") int sessionId) throws Exception {
+		
+		String methodName = "getSessionById";
+		long id = this.logInit(methodName, logger, token, proposal, sessionId);
+		try{
+			List<Map<String, Object>> result = getSessionService().getSessionViewBySessionId(this.getProposalId(proposal), sessionId);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(result );
+		}
+		catch(Exception e){
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
+	
+	private SessionService getSessionService() throws NamingException {
+		return (SessionService) Ejb3ServiceLocator.getInstance().getLocalService(SessionService.class);
+	}
+	
 	@RolesAllowed({"Manager", "LocalContact"})
 	@GET
-	@Path("{token}/proposal/session/list")
+	@Path("{token}/proposal/session/{startdate}/{enddate}/list")
 	@Produces({ "application/json" })
-	public Response getSessionManagerList(
+	public Response getSessionsByDate(
 			@PathParam("token") String token, 
-			@QueryParam("startdate") String start,
-			@QueryParam("enddate") String end,
+			@PathParam("startdate") String start,
+			@PathParam("enddate") String end,
 			@QueryParam("beamline") String beamline) throws Exception {
 		
-		String methodName = "getSessionList";
+		String methodName = "getSessionsByDate";
 		long id = this.logInit(methodName, logger, token, start, end, beamline);
 		try{
-			Date startDate = null; 
-			Date enddate = null; 
+			List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+			/*Date startDate = null; 
+			Date endDate = null; 
 			if (start != null){
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 				startDate = sdf.parse(start);
 			}
 			if (end != null){
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-				enddate = sdf.parse(end);
-			}
+				endDate = sdf.parse(end);
+			}		
+			List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 			
-			List<Session3VO> result = getSession3Service().findFiltered(null, beamline, null, enddate, startDate, false, null);
+			
+			if (beamline != null){
+				result = getSessionService().getSessionViewByDates(startDate, endDate, beamline);
+			}
+			else{*/
+				result = getSessionService().getSessionViewByDates(start, end);
+//			}
 			this.logFinish(methodName, id, logger);
-			return sendResponse(result );
+			return sendResponse(result);
 		}
 		catch(Exception e){
 			return this.logError(methodName, e, id, logger);

@@ -65,7 +65,7 @@ public class AuthenticationRestWebService extends RestWebService {
 				roles = LoginModule.authenticate(login, password);
 			}
 
-//			roles.add("User");
+			roles.add("User");
 			String token = generateRamdomUUID();
 			
 			HashMap<String, Object> cookie = new HashMap<String, Object>();
@@ -84,7 +84,7 @@ public class AuthenticationRestWebService extends RestWebService {
 			Date expirationTime = calendar.getTime();
 			
 			login3vo.setExpirationTime(expirationTime);
-			System.out.println(this.getGson().toJson(login3vo));
+			logger.info(this.getGson().toJson(login3vo));
 			/** Saving login on database **/
 			this.getLogin3Service().persist(login3vo);
 			return sendResponse(cookie);
