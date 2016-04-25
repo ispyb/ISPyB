@@ -1,4 +1,4 @@
-/*************************************************************************************************
+/*******************************************************************************
  * This file is part of ISPyB.
  * 
  * ISPyB is free software: you can redistribute it and/or modify
@@ -15,16 +15,20 @@
  * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
- ****************************************************************************************************/
+ ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.EnergyScan;
+package ispyb.server.mx.services.ws.rest.xfefluorescencespectrum;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.ejb.Remote;
 
 
+@Remote
+public interface XFEFluorescenSpectrumRestWsService {
+	public List<Map<String, Object>> getViewBySessionId(int proposalId, int sessionId);
 
-import javax.ejb.Local;
+	public List<Map<String, Object>> getViewById(int proposalId, int xrfscanId);
 
-@Local
-public interface EnergyScanServiceLocal extends EnergyScanService {
-	
 }
-

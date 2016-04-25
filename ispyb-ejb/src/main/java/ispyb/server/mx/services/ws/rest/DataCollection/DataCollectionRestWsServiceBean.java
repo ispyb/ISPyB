@@ -32,7 +32,7 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class DataCollectionServiceBean implements DataCollectionService, DataCollectionServiceLocal {
+public class DataCollectionRestWsServiceBean implements DataCollectionRestWsService, DataCollectionRestWsServiceLocal {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

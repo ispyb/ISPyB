@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.xfefluorescencespectrum;
+package ispyb.server.mx.services.ws.rest.EnergyScan;
 
 import java.util.List;
 import java.util.Map;
@@ -32,14 +32,14 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class XFEFluorescenSpectrumServiceBean implements XFEFluorescenSpectrumService, XFEFluorescenSpectrumServiceLocal {
+public class EnergyScanRestWsServiceBean implements EnergyScanRestWsService, EnergyScanRestWsServiceLocal {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
 
-	private String BySessionId = "SELECT * FROM v_xfeFluorescenceSpectrum WHERE sessionId = :sessionId and BLSession_proposalId=:proposalId";
-	private String ById = "SELECT * FROM v_xfeFluorescenceSpectrum WHERE xfeFluorescenceSpectrumId = :xfeFluorescenceSpectrumId and BLSession_proposalId=:proposalId";
+	private String BySessionId = "SELECT * FROM v_energyScan WHERE sessionId = :sessionId and BLSession_proposalId=:proposalId";
+	private String ById = "SELECT * FROM v_energyScan WHERE energyScanId = :energyScanId and BLSession_proposalId=:proposalId";
 	
 	@Override
 	public List<Map<String, Object>> getViewBySessionId(int proposalId, int sessionId) {
@@ -53,23 +53,20 @@ public class XFEFluorescenSpectrumServiceBean implements XFEFluorescenSpectrumSe
 		return executeSQLQuery(query);
 	}
 	
-	@Override
-	public List<Map<String, Object>> getViewById(int proposalId, int xfeFluorescenceSpectrumId) {
-		Session session = (Session) this.entityManager.getDelegate();
-		SQLQuery query = session.createSQLQuery(ById);
-		
-		query.setParameter("proposalId", proposalId);
-		query.setParameter("xfeFluorescenceSpectrumId", xfeFluorescenceSpectrumId);
-		
-		return executeSQLQuery(query);
-	}
-	
-	
 	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		List<Map<String, Object>> aliasToValueMapList = query.list();
 		return aliasToValueMapList;
 	}
 
-	
+	@Override
+	public List<Map<String, Object>> getViewById(int proposalId, int energyScanId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ById);
+		
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("energyScanId", energyScanId);
+		
+		return executeSQLQuery(query);
+	}
 }

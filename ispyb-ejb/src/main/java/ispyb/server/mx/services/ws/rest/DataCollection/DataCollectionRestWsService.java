@@ -26,7 +26,7 @@ import javax.ejb.Remote;
 
 
 @Remote
-public interface DataCollectionService {
+public interface DataCollectionRestWsService {
 
 	public List<Map<String,Object>> getViewDataCollectionBySessionId(int sessionId);
 

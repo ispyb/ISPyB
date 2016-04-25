@@ -32,7 +32,7 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class PhasingServiceBean implements PhasingService, PhasingServiceLocal {
+public class PhasingRestWsServiceBean implements PhasingRestWsService, PhasingRestWsServiceLocal {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

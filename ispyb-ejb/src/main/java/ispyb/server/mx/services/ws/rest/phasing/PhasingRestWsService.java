@@ -26,7 +26,7 @@ import javax.ejb.Remote;
 
 
 @Remote
-public interface PhasingService {
+public interface PhasingRestWsService {
 
 	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId);
 
