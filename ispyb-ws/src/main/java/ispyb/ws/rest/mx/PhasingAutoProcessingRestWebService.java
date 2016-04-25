@@ -1,14 +1,14 @@
 package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.ws.rest.AutoProcessingIntegration.AutoProcessingIntegrationService;
+import ispyb.server.mx.services.ws.rest.phasing.PhasingService;
 import ispyb.server.mx.vos.autoproc.ModelBuilding3VO;
 import ispyb.server.mx.vos.autoproc.Phasing3VO;
 import ispyb.server.mx.vos.autoproc.PhasingHasScaling3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStatistics3VO;
 import ispyb.server.mx.vos.autoproc.PreparePhasingData3VO;
 import ispyb.server.mx.vos.autoproc.SubstructureDetermination3VO;
-import ispyb.server.ws.mx.datacollection.DataCollectionService;
-import ispyb.server.ws.mx.phasing.PhasingService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,26 +84,10 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 		return (PhasingService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingService.class);
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
-	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/datacollection/{dataCollectionIdList}/view")
-	@Produces({ "application/json" })
-	public Response getPhasingByDatacollectionId(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, @PathParam("dataCollectionIdList") String dataCollectionIdList) {
-
-		String methodName = "getPhasingByDatacollectionId";
-		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
-		try {
-			List<Integer> dataCollectionIds = this.parseToInteger(dataCollectionIdList);
-			List<List<Map<String, Object>>> result = new ArrayList<List<Map<String,Object>>>();
-			for (Integer dataCollectionId : dataCollectionIds) {
-				result.add(this.getPhasingService().getPhasingViewByDataCollectionId(dataCollectionId));
-			}
-			this.logFinish(methodName, start, logger);
-			return this.sendResponse(result);
-		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
+	protected AutoProcessingIntegrationService getAutoprocessingService() throws NamingException {
+		return (AutoProcessingIntegrationService) Ejb3ServiceLocator.getInstance().getLocalService(AutoProcessingIntegrationService.class);
 	}
+	
+	
 
 }

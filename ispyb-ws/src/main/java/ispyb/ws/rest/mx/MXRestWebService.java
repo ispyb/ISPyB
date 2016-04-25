@@ -1,22 +1,5 @@
 package ispyb.ws.rest.mx;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.naming.NamingException;
-
-import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
-import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
-import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.services.core.robot.Robot3Service;
-import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
-import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -33,20 +16,21 @@ import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
 import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
 import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
-import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3ServiceBean;
-import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.workflowStep.WorkflowStep3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
+import ispyb.server.mx.services.ws.rest.DataCollection.DataCollectionService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
-import ispyb.server.mx.vos.autoproc.PhasingProgramRun3VO;
-import ispyb.server.mx.vos.autoproc.PhasingStepVO;
-import ispyb.server.ws.mx.datacollection.DataCollectionService;
 import ispyb.ws.rest.RestWebService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.NamingException;
 
 public class MXRestWebService extends RestWebService{
 
@@ -56,11 +40,9 @@ public class MXRestWebService extends RestWebService{
 		List<List<AutoProcessingData>> lists = new ArrayList<List<AutoProcessingData>>();
 		for (Integer id : ids) {
 			AutoProcIntegration3VO autoProcIntegration3VO = this.getAutoProcIntegration3Service().findByPk(id);
-			List<AutoProcProgramAttachment3VO> xscaleAttachmentList = this.getAutoProcProgramAttachment3Service()
-					.findXScale(autoProcIntegration3VO.getAutoProcProgramVOId());
+			List<AutoProcProgramAttachment3VO> xscaleAttachmentList = this.getAutoProcProgramAttachment3Service().findXScale(autoProcIntegration3VO.getAutoProcProgramVOId());
 			for (AutoProcProgramAttachment3VO autoProcProgramAttachment3VO : xscaleAttachmentList) {
-				List<AutoProcessingData> data = AutoProcProgramaAttachmentFileReader
-						.getAutoProcessingDataFromAttachemt(autoProcProgramAttachment3VO);
+				List<AutoProcessingData> data = AutoProcProgramaAttachmentFileReader.getAutoProcessingDataFromAttachemt(autoProcProgramAttachment3VO);
 				lists.add(data);
 			}
 		}

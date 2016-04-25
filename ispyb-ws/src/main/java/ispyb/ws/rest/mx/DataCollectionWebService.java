@@ -49,11 +49,10 @@ public class DataCollectionWebService extends MXRestWebService {
 	@Produces("image/png")
 	public Response getWilsonPlot(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("dataCollectionId") int dataCollectionId,
-			@PathParam("id") int id) {
+			@PathParam("dataCollectionId") int dataCollectionId) {
 
 		String methodName = "getWilsonPlot";
-		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId, id);
+		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
 			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
 			this.logFinish(methodName, start, logger);

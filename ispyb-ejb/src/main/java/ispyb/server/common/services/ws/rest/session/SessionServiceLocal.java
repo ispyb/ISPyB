@@ -17,14 +17,14 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
-package ispyb.server.ws.mx.phasing;
+package ispyb.server.common.services.ws.rest.session;
 
 
 
 import javax.ejb.Local;
 
 @Local
-public interface PhasingServiceLocal extends PhasingService {
+public interface SessionServiceLocal extends SessionService {
 	
 }
 

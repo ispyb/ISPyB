@@ -1,4 +1,4 @@
-/*************************************************************************************************
+/*******************************************************************************
  * This file is part of ISPyB.
  * 
  * ISPyB is free software: you can redistribute it and/or modify
@@ -15,16 +15,28 @@
  * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
- ****************************************************************************************************/
+ ******************************************************************************************************************************/
 
-package ispyb.server.ws.mx.datacollection;
+package ispyb.server.common.services.ws.rest.session;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.ejb.Remote;
 
 
+@Remote
+public interface SessionService {
 
-import javax.ejb.Local;
+	public List<Map<String, Object>> getSessionViewByProposalId(int proposalId);
 
-@Local
-public interface DataCollectionServiceLocal extends DataCollectionService {
+	public List<Map<String, Object>> getSessionViewByDates(String startDate,String endDate);
+
+	public List<Map<String, Object>> getSessionViewByDates(Date startDate,Date endDate, String beamlineName);
+
+	public List<Map<String, Object>> getSessionViewBySessionId(int proposalId, int sessionId);
+
+
 	
 }
-
