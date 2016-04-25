@@ -22,7 +22,7 @@ import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
-import ispyb.server.mx.services.ws.rest.DataCollection.DataCollectionService;
+import ispyb.server.mx.services.ws.rest.DataCollection.DataCollectionRestWsService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.ws.rest.RestWebService;
@@ -74,8 +74,8 @@ public class MXRestWebService extends RestWebService{
 		return (PhasingProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramAttachment3Service.class);
 	}
 	
-	protected DataCollectionService getWebServiceDataCollection3Service() throws NamingException {
-		return (DataCollectionService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionService.class);
+	protected DataCollectionRestWsService getWebServiceDataCollection3Service() throws NamingException {
+		return (DataCollectionRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionRestWsService.class);
 	}
 	
 	

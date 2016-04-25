@@ -17,16 +17,97 @@
 
 package ispyb.ws.rest;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import io.swagger.jaxrs.config.BeanConfig;
+import ispyb.server.biosaxs.services.core.specimen.Specimen3Service;
+import ispyb.server.mx.services.ws.rest.xfefluorescencespectrum.XFEFluorescenSpectrumRestWsService;
+import ispyb.ws.rest.mx.AutoprocintegrationRestWebService;
+import ispyb.ws.rest.mx.CrystalRestWebService;
+import ispyb.ws.rest.mx.EnergyScanRestWebService;
+import ispyb.ws.rest.mx.ImageWebService;
+import ispyb.ws.rest.mx.PhasingAutoProcessingRestWebService;
+import ispyb.ws.rest.mx.PhasingStepRestWebService;
+import ispyb.ws.rest.mx.ProteinRestWebService;
+import ispyb.ws.rest.mx.SampleRestWebService;
+import ispyb.ws.rest.mx.WorkflowRestWebService;
+import ispyb.ws.rest.mx.XFEFluorescenceSpectrumRestWebService;
+import ispyb.ws.rest.proposal.DewarRestWebService;
+import ispyb.ws.rest.proposal.ProposalRestWebService;
+import ispyb.ws.rest.proposal.SessionRestWebService;
+import ispyb.ws.rest.proposal.ShippingRestWebService;
+import ispyb.ws.rest.saxs.BufferRestWebService;
+import ispyb.ws.rest.saxs.DataCollectionRestWebService;
+import ispyb.ws.rest.saxs.ExperimentRestWebService;
+import ispyb.ws.rest.saxs.FrameRestWebService;
+import ispyb.ws.rest.saxs.MacromoleculeRestWebService;
+import ispyb.ws.rest.saxs.MeasurementRestWebService;
+import ispyb.ws.rest.saxs.ModelingRestWebService;
+import ispyb.ws.rest.saxs.SaxsRestWebService;
+import ispyb.ws.rest.saxs.SpecimenRestWebService;
+import ispyb.ws.rest.saxs.StatsRestWebService;
+import ispyb.ws.rest.saxs.StockSolutionRestWebService;
+import ispyb.ws.rest.saxs.SubtractionRestWebService;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * A class extending {@link javax.ws.rs.core.Application} is the portable way to define JAX-RS 2.0 resources, and the {@link javax.ws.rs.ApplicationPath} defines the root path shared by all these resources.
  */
 @ApplicationPath("rest")
 public class RestApplication extends Application {
-	
+	public RestApplication() {
+//        BeanConfig beanConfig = new BeanConfig();
+//        beanConfig.setVersion("1.0.2");
+//        beanConfig.setSchemes(new String[]{"http"});
+//        beanConfig.setHost("localhost:8002");
+//        beanConfig.setBasePath("/api");
+//        beanConfig.setResourcePackage("io.swagger.resources");
+//        beanConfig.setScan(true);
+    }
+
+//    
+//    @Override
+//    public Set<Class<?>> getClasses() {
+//        Set<Class<?>> resources = new HashSet<Class<?>> ();
+//        /** MX **/
+//        resources.add(AutoprocintegrationRestWebService.class);
+//        resources.add(CrystalRestWebService.class);
+//        resources.add(DataCollectionRestWebService.class);
+//        resources.add(EnergyScanRestWebService.class);
+//        resources.add(ImageWebService.class);
+//        resources.add(PhasingAutoProcessingRestWebService.class);
+//        resources.add(PhasingStepRestWebService.class);
+//        resources.add(ProteinRestWebService.class);
+//        resources.add(SampleRestWebService.class);
+//        resources.add(WorkflowRestWebService.class);
+//        resources.add(XFEFluorescenceSpectrumRestWebService.class);
+//        
+//        /** SAXS **/
+//        resources.add(BufferRestWebService.class);
+//        resources.add(DataCollectionRestWebService.class);
+//        resources.add(ExperimentRestWebService.class);
+//        resources.add(FrameRestWebService.class);
+//        resources.add(MacromoleculeRestWebService.class);
+//        resources.add(MeasurementRestWebService.class);
+//        resources.add(ModelingRestWebService.class);
+//        resources.add(SaxsRestWebService.class);
+//        resources.add(SpecimenRestWebService.class);
+//        resources.add(StatsRestWebService.class);
+//        resources.add(StockSolutionRestWebService.class);
+//        resources.add(SubtractionRestWebService.class);
+//        
+//        /** PROPOSAL **/
+//        resources.add(DewarRestWebService.class);
+//        resources.add(ProposalRestWebService.class);
+//        resources.add(SessionRestWebService.class);
+//        resources.add(ShippingRestWebService.class);
+//        
+//        
+//        resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
+//        resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
+//        return resources;
+//    }
 }

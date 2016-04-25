@@ -2,7 +2,7 @@ package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.EnergyScan3Service;
-import ispyb.server.mx.services.ws.rest.EnergyScan.EnergyScanService;
+import ispyb.server.mx.services.ws.rest.EnergyScan.EnergyScanRestWsService;
 import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.ws.rest.RestWebService;
 
@@ -140,8 +140,8 @@ public class EnergyScanRestWebService extends RestWebService {
    	}
 
 	
-	private EnergyScanService getEnergyScanService() throws NamingException {
-		return (EnergyScanService) Ejb3ServiceLocator.getInstance().getLocalService(EnergyScanService.class);
+	private EnergyScanRestWsService getEnergyScanService() throws NamingException {
+		return (EnergyScanRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(EnergyScanRestWsService.class);
 	}
 	
 

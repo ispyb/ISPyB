@@ -3,57 +3,41 @@ package ispyb.ws.security;
 import ispyb.server.common.services.login.Login3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.login.Login3VO;
-import ispyb.ws.rest.saxs.MacromoleculeRestWebService;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.SecureCacheResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
 import org.apache.log4j.Logger;
-import org.hibernate.mapping.Array;
-//
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
-import org.jboss.resteasy.util.Base64;
-
-import com.google.gson.Gson;
 
 /**
- * This interceptor verify the access permissions for a user based on username
- * and passowrd provided in request
+ * This SecurityInterceptor verify the access permissions for a user based on user name and method annotations
+ * 
  * */
 @Provider
 public class SecurityInterceptor implements javax.ws.rs.container.ContainerRequestFilter {
 	private final static Logger logger = Logger.getLogger(SecurityInterceptor.class);
-//	private static final ServerResponse SESSION_EXPIRED = new ServerResponse("Session has expired", 401,new Headers<Object>());
-	private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401,
-			new Headers<Object>());
-	private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403,
-			new Headers<Object>());
-	private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<Object>());
+	
+	private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401,new Headers<Object>());
+	private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403,new Headers<Object>());
 
 	
-	private Response getUnauthorizedResponse(){
-		return Response.status(401) 
-				.header("Access-Control-Allow-Origin", "*")
-				.allow("OPTIONS").build();
-	}
+//	private Response getUnauthorizedResponse(){
+//		return Response.status(401) 
+//				.header("Access-Control-Allow-Origin", "*").build();
+//	}
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) {
@@ -74,7 +58,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		/**  Access denied for all **/
 		if (method.isAnnotationPresent(DenyAll.class)) {
 			logger.info("DenyAll");
-			requestContext.abortWith(ACCESS_FORBIDDEN);
+			requestContext.abortWith(ACCESS_DENIED);
 			return;
 		}
 
@@ -103,15 +87,15 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 						return;
 					} else {
 						logger.info("Expired");
-						requestContext.abortWith(this.getUnauthorizedResponse());
+						requestContext.abortWith(ACCESS_FORBIDDEN);
 					}
 				}
 				else{
 					logger.info("Roles not valid");
-					requestContext.abortWith(this.getUnauthorizedResponse());
+					requestContext.abortWith(ACCESS_FORBIDDEN);
 				}
 			} 
-			requestContext.abortWith(this.getUnauthorizedResponse());
+			requestContext.abortWith(ACCESS_FORBIDDEN);
 		}
 
 	}

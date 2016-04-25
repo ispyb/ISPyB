@@ -134,7 +134,8 @@ public class DataCollectionWebService extends MXRestWebService {
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionIdList}/view")
 	@Produces({ "application/json" })
-	public Response getViewDataCollectionBySessionId(@PathParam("token") String token,
+	public Response getViewDataCollectionBySessionId(
+			@PathParam("token") String token,
 			@PathParam("proposal") String proposal, 
 			@PathParam("sessionIdList") String sessionIdList) {
 

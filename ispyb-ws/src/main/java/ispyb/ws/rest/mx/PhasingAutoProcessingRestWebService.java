@@ -2,7 +2,7 @@ package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.ws.rest.AutoProcessingIntegration.AutoProcessingIntegrationService;
-import ispyb.server.mx.services.ws.rest.phasing.PhasingService;
+import ispyb.server.mx.services.ws.rest.phasing.PhasingRestWsService;
 import ispyb.server.mx.vos.autoproc.ModelBuilding3VO;
 import ispyb.server.mx.vos.autoproc.Phasing3VO;
 import ispyb.server.mx.vos.autoproc.PhasingHasScaling3VO;
@@ -80,8 +80,8 @@ public class PhasingAutoProcessingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	protected PhasingService getPhasingService() throws NamingException {
-		return (PhasingService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingService.class);
+	protected PhasingRestWsService getPhasingService() throws NamingException {
+		return (PhasingRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingRestWsService.class);
 	}
 	
 	protected AutoProcessingIntegrationService getAutoprocessingService() throws NamingException {

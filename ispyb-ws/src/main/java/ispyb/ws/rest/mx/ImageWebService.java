@@ -3,25 +3,30 @@ package ispyb.ws.rest.mx;
 import ispyb.server.mx.vos.collections.Image3VO;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
+import io.swagger.annotations.*;
 
 import org.apache.log4j.Logger;
 
 @Path("/")
 public class ImageWebService extends MXRestWebService {
 
-	private final static Logger logger = Logger.getLogger(ImageWebService.class);
+	private final static Logger logger = Logger
+			.getLogger(ImageWebService.class);
 
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/image/{imageId}/get")
 	@Produces({ "application/json" })
 	public Response getImageById(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, 
+			@PathParam("proposal") String proposal,
 			@PathParam("imageId") int imageId) {
 
 		String methodName = "getImageById";
@@ -34,15 +39,13 @@ public class ImageWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
-	
-	
+
 	@RolesAllowed({ "User", "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/image/{imageId}/thumbnail")
 	@Produces({ "application/json" })
 	public Response getThumbNailImageById(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, 
+			@PathParam("proposal") String proposal,
 			@PathParam("imageId") int imageId) {
 
 		String methodName = "getThumbNailImageById";
@@ -55,9 +58,5 @@ public class ImageWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
-	
-	
-		
 
 }

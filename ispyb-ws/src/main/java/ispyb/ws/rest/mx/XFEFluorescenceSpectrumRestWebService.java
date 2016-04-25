@@ -1,7 +1,7 @@
 package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.ws.rest.xfefluorescencespectrum.XFEFluorescenSpectrumService;
+import ispyb.server.mx.services.ws.rest.xfefluorescencespectrum.XFEFluorescenSpectrumRestWsService;
 import ispyb.ws.rest.RestWebService;
 
 import java.io.File;
@@ -112,8 +112,8 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
    		return null;
    	}
 	
-	private XFEFluorescenSpectrumService getXFEFluorescenSpectrumService() throws NamingException {
-		return (XFEFluorescenSpectrumService) Ejb3ServiceLocator.getInstance().getLocalService(XFEFluorescenSpectrumService.class);
+	private XFEFluorescenSpectrumRestWsService getXFEFluorescenSpectrumService() throws NamingException {
+		return (XFEFluorescenSpectrumRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(XFEFluorescenSpectrumRestWsService.class);
 	}
 	
 
