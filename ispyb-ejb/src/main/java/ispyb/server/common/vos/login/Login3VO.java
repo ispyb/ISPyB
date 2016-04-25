@@ -112,7 +112,7 @@ public class Login3VO implements java.io.Serializable {
 	public boolean checkRoles(Set<String> rolesSet) {
 		for (String role : rolesSet) {
 			for (String loginRole : this.getRoles().split(",")) {
-				System.out.println(loginRole.toUpperCase() + " " + role.toUpperCase() + " " + loginRole.toUpperCase().equals(role.toUpperCase()));
+				System.out.println(loginRole.toUpperCase() + " " + role.toUpperCase() + " " + loginRole.toUpperCase().trim().equals(role.toUpperCase().trim()));
 				if (loginRole.toUpperCase().trim().equals(role.toUpperCase().trim())){
 					return true;
 				}
