@@ -184,7 +184,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 */
 	public Session3VO update(final Session3VO vo) throws AccessDeniedException, Exception {
 		checkChangeRemoveAccess(vo);
-		entityManager.persist(vo);
+		entityManager.merge(vo);
 		return vo;
 	}
 
