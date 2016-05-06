@@ -52,7 +52,7 @@ public class SessionRestWebService extends RestWebService {
 	public Response getSessionById(
 			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal,
-			@QueryParam("sessionId") int sessionId) throws Exception {
+			@PathParam("sessionId") int sessionId) throws Exception {
 		
 		String methodName = "getSessionById";
 		long id = this.logInit(methodName, logger, token, proposal, sessionId);
