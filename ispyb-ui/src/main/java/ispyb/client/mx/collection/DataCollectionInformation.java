@@ -159,6 +159,8 @@ public class DataCollectionInformation {
 	
 	private String autoProcEdnaStatus = "";
 
+	private String autoProcAutoPROCStatus = "";
+
 	// -------------- Strategy Wedge & Strategy SubWedge --------------
 	private List<StrategyWedgeInformation> listStrategyWedgeInformation = new ArrayList<StrategyWedgeInformation>();
 
@@ -766,6 +768,16 @@ public class DataCollectionInformation {
 	public void setAutoProcEdnaStatus(String autoProcEdnaStatus) {
 		this.autoProcEdnaStatus = autoProcEdnaStatus;
 	}
+
+
+	public String getAutoProcAutoPROCStatus() {
+		return autoProcAutoPROCStatus;
+	}
+
+	public void setAutoProcAutoPROCStatus(String autoProcAutoPROCStatus) {
+		this.autoProcAutoPROCStatus = autoProcAutoPROCStatus;
+	}
+
 
 	public Integer getDiffractionImgId1() {
 		return diffractionImgId1;

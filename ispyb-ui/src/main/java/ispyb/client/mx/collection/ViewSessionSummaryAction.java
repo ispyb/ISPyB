@@ -1536,6 +1536,13 @@ public class ViewSessionSummaryAction extends DispatchAction {
 						result += " grenades_parallelproc " + "<img src='" + img + "'  border='0' />";
 					}
 				}
+				
+				if (Constants.SITE_IS_ESRF()) {
+					// Only show autoPROC status if successful
+					if (dcInfo.getAutoProcAutoPROCStatus().contains("Green")) {
+						result += "autoPROC " + "<img src='" + imgSuccess + "'  border='0' />";					
+					}
+				}
 
 				listResults.add(new Param(KEY_SPACE_GROUP, "Space Group", autoProcValue.getSpaceGroup(), false));
 				// completeness, rsymm, processed resolution

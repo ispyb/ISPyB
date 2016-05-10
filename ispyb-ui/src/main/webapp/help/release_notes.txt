@@ -1,4 +1,12 @@
 **************
+* 10.05.2016     *
+**************
+
+- Added autoPROC success "green light" to the summary tab
+  only if autoPROC processing was successful, i.e. there's
+  no autoPROC "red light" displayed.
+
+**************
 * 11.04.2016     *
 **************
 

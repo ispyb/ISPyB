@@ -720,6 +720,7 @@ public class DataCollectionExporter {
 		String autoProcFastStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
 		String autoProcParallelStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
 		String autoProcEdnaStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
+		String autoProcAutoPROCStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
 
 		Boolean hasFastproc = this.autoProcIntegrationService.getAutoProcStatus(dataCollectionVO.getDataCollectionId(),
 				Constants.AUTOPROC_FASTPROC);
@@ -739,9 +740,16 @@ public class DataCollectionExporter {
 			autoProcEdnaStatus = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
 		}
 
+		Boolean hasAutoPROC = this.autoProcIntegrationService.getAutoProcStatus(dataCollectionVO.getDataCollectionId(),
+				Constants.AUTOPROC_AUTOPROC);
+		if (hasAutoPROC) {
+			autoProcAutoPROCStatus = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
+		}
+
 		info.setAutoProcFastStatus(autoProcFastStatus);
 		info.setAutoProcParallelStatus(autoProcParallelStatus);
 		info.setAutoProcEdnaStatus(autoProcEdnaStatus);
+		info.setAutoProcAutoPROCStatus(autoProcAutoPROCStatus);
 
 		info.setScreeningInformation(screeningInfo);
 		info.setSampleRankingVO(sampleRankingVO);
