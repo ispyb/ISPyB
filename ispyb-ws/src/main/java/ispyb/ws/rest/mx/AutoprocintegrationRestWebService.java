@@ -261,17 +261,13 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
 			AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
-		
 			this.logFinish(methodName, start, logger);
 			File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
-			if (file.exists()) {
-				this.logFinish(methodName, start, logger);
-				return this.downloadFile(file.getAbsolutePath());
-			}
+			this.logFinish(methodName, start, logger);
+			return this.downloadFile(file.getAbsolutePath());
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
-		return Response.noContent().build();
 	}
 	
 

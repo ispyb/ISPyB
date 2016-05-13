@@ -17,18 +17,11 @@
 
 package ispyb.ws.rest;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import io.swagger.jaxrs.config.BeanConfig;
-import ispyb.server.biosaxs.services.core.specimen.Specimen3Service;
-import ispyb.server.mx.services.ws.rest.xfefluorescencespectrum.XFEFluorescenSpectrumRestWsService;
 import ispyb.ws.rest.mx.AutoprocintegrationRestWebService;
 import ispyb.ws.rest.mx.CrystalRestWebService;
 import ispyb.ws.rest.mx.EnergyScanRestWebService;
 import ispyb.ws.rest.mx.ImageWebService;
-import ispyb.ws.rest.mx.PhasingAutoProcessingRestWebService;
-import ispyb.ws.rest.mx.PhasingStepRestWebService;
+import ispyb.ws.rest.mx.PhasingRestWebService;
 import ispyb.ws.rest.mx.ProteinRestWebService;
 import ispyb.ws.rest.mx.SampleRestWebService;
 import ispyb.ws.rest.mx.WorkflowRestWebService;
@@ -50,6 +43,9 @@ import ispyb.ws.rest.saxs.StatsRestWebService;
 import ispyb.ws.rest.saxs.StockSolutionRestWebService;
 import ispyb.ws.rest.saxs.SubtractionRestWebService;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -68,7 +64,7 @@ public class RestApplication extends Application {
 //        beanConfig.setScan(true);
     }
 
-//    
+    
 //    @Override
 //    public Set<Class<?>> getClasses() {
 //        Set<Class<?>> resources = new HashSet<Class<?>> ();
@@ -78,8 +74,7 @@ public class RestApplication extends Application {
 //        resources.add(DataCollectionRestWebService.class);
 //        resources.add(EnergyScanRestWebService.class);
 //        resources.add(ImageWebService.class);
-//        resources.add(PhasingAutoProcessingRestWebService.class);
-//        resources.add(PhasingStepRestWebService.class);
+//        resources.add(PhasingRestWebService.class);
 //        resources.add(ProteinRestWebService.class);
 //        resources.add(SampleRestWebService.class);
 //        resources.add(WorkflowRestWebService.class);
