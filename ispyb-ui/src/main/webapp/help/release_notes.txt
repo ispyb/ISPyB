@@ -1,4 +1,11 @@
 **************
+* 25.04.2016     *
+**************
+
+- Refactoring: move the sessions EJBs in the common package
+- Add an Authorisation service to control access to data
+
+**************
 * 10.05.2016     *
 **************
 
