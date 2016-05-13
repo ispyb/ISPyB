@@ -28,8 +28,21 @@ import javax.ejb.Remote;
 @Remote
 public interface PhasingRestWsService {
 
-	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId);
 
+	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId, int proposalId);
 
+	public List<Map<String, Object>> getPhasingViewByAutoProcIntegrationId(int autoprocIntegrationId, int proposalId);
+
+	public List<Map<String, Object>> getPhasingViewByBlSampleId(int blSampleId, int proposalId);
+	
+	public List<Map<String, Object>> getPhasingViewByProteinId(int proteinId, int proposalId);
+
+	public List<Map<String, Object>> getPhasingViewBySessionId(int sessionId, int proposalId);
+
+	public List<Map<String, Object>> getPhasingViewByStepId(int phasingStepId, int proposalId);
+
+	public List<Map<String, Object>> getPhasingFilesViewByStepId(int phasingStepId, int proposalId);
+	
+	public List<Map<String, Object>> getPhasingFilesViewByPhasingProgramAttachmentId(int phasingProgramAttachmentId, int proposalId);
 	
 }

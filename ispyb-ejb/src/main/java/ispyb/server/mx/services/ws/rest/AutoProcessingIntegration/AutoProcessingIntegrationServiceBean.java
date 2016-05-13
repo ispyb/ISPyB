@@ -40,6 +40,13 @@ public class AutoProcessingIntegrationServiceBean implements AutoProcessingInteg
 	
 	private String ByDataCollectionId = getViewTableQuery() + " where v_datacollection_summary_phasing_dataCollectionId = :dataCollectionId and v_datacollection_summary_session_proposalId=:proposalId";
 
+	private String getAutoprocessingStatisticsQuery(String column, String name){
+		return " (  \n" + 
+				"select GROUP_CONCAT(" + column +") from AutoProcScalingStatistics   \n" + 
+				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
+				") as "+ name;
+		
+	}
 	private String getViewTableQuery(){
 		return "select *,\n" + 
 				" (  \n" + 
@@ -56,41 +63,32 @@ public class AutoProcessingIntegrationServiceBean implements AutoProcessingInteg
 				"(select spaceGroupId from PhasingStep   \n" + 
 				"where  v_datacollection_summary_phasing_autoProcScalingId = PhasingStep.autoProcScalingId   ) \n" + 
 				") as spaceGroupShortName,\n" + 
-				"(  \n" + 
+				/** To be checked but it is very slow **/
+				/*"(  \n" + 
 				"select GROUP_CONCAT(PhasingPrograms) from PhasingProgramRun  \n" + 
 				"where phasingProgramRunId  in\n" + 
 				"(select programRunId from PhasingStep where  v_datacollection_summary_phasing_autoProcScalingId = PhasingStep.autoProcScalingId ) \n" + 
-				") as PhasingPrograms,\n" + 
-				" (  \n" + 
-				"select GROUP_CONCAT(scalingStatisticsType) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as scalingStatisticsType,  \n" + 
-				"  \n" + 
-				"(  \n" + 
-				"select GROUP_CONCAT(resolutionLimitLow) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as resolutionLimitLow,  \n" + 
-				"  \n" + 
-				"(  \n" + 
-				"select GROUP_CONCAT(resolutionLimitHigh) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as resolutionLimitHigh,  \n" + 
-				"  \n" + 
-				"(  \n" + 
-				"select GROUP_CONCAT(completeness) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as completeness,  \n" + 
-				"  \n" + 
-				"(  \n" + 
-				"select GROUP_CONCAT(multiplicity) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as multiplicity,  \n" + 
-				"  \n" + 
-				"(  \n" + 
-				"select GROUP_CONCAT(meanIOverSigI) from AutoProcScalingStatistics   \n" + 
-				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
-				") as meanIOverSigI "
-				+ " from v_datacollection_summary_phasing ";
+				") as PhasingPrograms,\n" + */
+				this.getAutoprocessingStatisticsQuery("scalingStatisticsType", "scalingStatisticsType") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("resolutionLimitLow", "resolutionLimitLow") +  ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("resolutionLimitHigh", "resolutionLimitHigh") +  ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("completeness", "completeness") +  ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("multiplicity", "multiplicity") +  ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("ccHalf", "ccHalf") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("meanIOverSigI", "meanIOverSigI") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("anomalousCompleteness", "anomalousCompleteness") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("rMerge", "rMerge") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("rMeasWithinIPlusIMinus", "rMeasWithinIPlusIMinus") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("rMeasAllIPlusIMinus", "rMeasAllIPlusIMinus") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("rPimWithinIPlusIMinus", "rPimWithinIPlusIMinus") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("rPimAllIPlusIMinus", "rPimAllIPlusIMinus") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("fractionalPartialBias", "fractionalPartialBias") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("nTotalObservations", "nTotalObservations") + ",  \n" + 
+				this.getAutoprocessingStatisticsQuery("nTotalUniqueObservations", "nTotalUniqueObservations") + ",  \n" + 
+				
+				this.getAutoprocessingStatisticsQuery("anomalous", "anomalous") +
+				
+				" from v_datacollection_autoprocintegration ";
 	}
 	
 	@Override

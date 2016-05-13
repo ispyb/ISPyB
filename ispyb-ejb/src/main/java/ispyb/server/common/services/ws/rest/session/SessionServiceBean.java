@@ -51,13 +51,12 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 	 */
 	private  String getSessionViewTable(){
 		return "select *,\n" + 
-				"(select count(*) from EnergyScan where EnergyScan.sessionId = v_session.sessionId) as energyScanCount,\n" + 
+				"(select count(*) from EnergyScan where EnergyScan.sessionId = v_session.sessionId) as energyScanCount,\n"
+				+ " (select count(distinct(blSampleId)) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId) as sampleCount,"
+				+ " (select sum(DataCollection.numberOfImages) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId) as imagesCount,"
+				+ "(select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages < 5) as testDataCollectionGroupCount,"
+				+ " (select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages > 4) as dataCollectionGroupCount," + 
 				"(select count(*) from XFEFluorescenceSpectrum where XFEFluorescenceSpectrum.sessionId = v_session.sessionId) as xrfSpectrumCount,\n" + 
-				"(select count(*) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId) as dataCollectionGroupCount,\n" + 
-				"(select count(*) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId and DataCollectionGroup.experimentType='OSC') as OSCdataCollectionGroupCount,\n" + 
-				"(select count(*) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId and DataCollectionGroup.experimentType='Hellical') as HellicaldataCollectionGroupCount,\n" + 
-				"(select count(*) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId and DataCollectionGroup.experimentType='Mesh') as MeshdataCollectionGroupCount,\n" + 
-				"(select count(*) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId and DataCollectionGroup.experimentType='Characterization') as CharacterizationdataCollectionGroupCount,\n" + 
 				"(select experimentType from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastExperimentDataCollectionGroup,\n" + 
 				"(select endTime from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastEndTimeDataCollectionGroup\n" + 
 				"from v_session";
