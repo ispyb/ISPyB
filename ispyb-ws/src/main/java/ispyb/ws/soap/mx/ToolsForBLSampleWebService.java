@@ -18,48 +18,6 @@
 
 package ispyb.ws.soap.mx;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.common.util.beamlines.EMBLBeamlineEnum;
-import ispyb.common.util.beamlines.ESRFBeamlineEnum;
-import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
-import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.collections.MotorPosition3Service;
-import ispyb.server.mx.services.collections.Position3Service;
-import ispyb.server.mx.services.sample.BLSample3Service;
-import ispyb.server.mx.services.sample.BLSubSample3Service;
-import ispyb.server.mx.services.sample.Crystal3Service;
-import ispyb.server.mx.services.sample.DiffractionPlan3Service;
-import ispyb.server.mx.services.sample.XmlDocument3Service;
-import ispyb.server.mx.services.sample.XmlSchema3Service;
-import ispyb.server.mx.vos.collections.Image3VO;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
-import ispyb.server.mx.vos.collections.Position3VO;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.BLSampleWS3VO;
-import ispyb.server.mx.vos.sample.BLSubSample3VO;
-import ispyb.server.mx.vos.sample.BLSubSampleWS3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlanWS3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.server.mx.vos.sample.SampleInfo;
-import ispyb.server.mx.vos.sample.XmlDocument3VO;
-import ispyb.server.mx.vos.sample.XmlSchema3VO;
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -81,7 +39,34 @@ import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
 
-import com.google.gson.Gson;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.common.util.beamlines.EMBLBeamlineEnum;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
+import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.mx.services.collections.MotorPosition3Service;
+import ispyb.server.mx.services.collections.Position3Service;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.BLSubSample3Service;
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.services.sample.DiffractionPlan3Service;
+import ispyb.server.mx.vos.collections.MotorPosition3VO;
+import ispyb.server.mx.vos.collections.Position3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSampleWS3VO;
+import ispyb.server.mx.vos.sample.BLSubSample3VO;
+import ispyb.server.mx.vos.sample.BLSubSampleWS3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlanWS3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.mx.vos.sample.SampleInfo;
 
 /**
  * Web services for BLSample
@@ -125,14 +110,6 @@ public class ToolsForBLSampleWebService {
 			DiffractionPlan3VO diffractionPlanValue = new DiffractionPlan3VO();
 			DiffractionPlan3Service diffractionPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
 					.getLocalService(DiffractionPlan3Service.class);
-			XmlDocument3Service xmlService = (XmlDocument3Service) ejb3ServiceLocator.getLocalService(XmlDocument3Service.class);
-			XmlDocument3VO xmlDocVO = null;
-
-			if (vo.getXmlDocumentId() == null || vo.getXmlDocumentId() == 0) {
-				vo.setXmlDocumentId(null);
-			}
-			if (vo.getXmlDocumentId() != null && vo.getXmlDocumentId() > 0)
-				xmlDocVO = xmlService.findByPk(vo.getXmlDocumentId(), false, false);
 
 			if (vo.getExperimentKind() == null || vo.getExperimentKind().trim().equals("")) {
 				vo.setExperimentKind(Constants.DEFAULT_DIFFRACTION_PLAN_EXPERIMENT_KIND);
@@ -143,7 +120,6 @@ public class ToolsForBLSampleWebService {
 				diffractionPlanValue = diffractionPlanService.findByPk(diffractionPlanId, false, false);
 			}
 			diffractionPlanValue.fillVOFromWS(vo);
-			diffractionPlanValue.setXmlDocumentVO(xmlDocVO);
 
 			if (diffractionPlanId == null || diffractionPlanId == 0) {
 				diffractionPlanValue.setDiffractionPlanId(null);
@@ -164,22 +140,31 @@ public class ToolsForBLSampleWebService {
 	@WebMethod
 	@WebResult(name = "diffractionPlanId")
 	public Integer storeOrUpdateDiffractionPlanNew(java.lang.Integer diffractionPlanId, 
-	@WebParam(name = "xmlDocumentId")
-	Integer xmlDocumentId, @WebParam(name = "experimentKind")
-	String experimentKind, @WebParam(name = "observedResolution")
-	Double observedResolution, @WebParam(name = "minimalResolution")
-	Double minimalResolution, @WebParam(name = "exposureTime")
-	Double exposureTime, @WebParam(name = "oscillationRange")
-	Double oscillationRange, @WebParam(name = "maximalResolution")
-	Double maximalResolution, @WebParam(name = "screeningResolution")
-	Double screeningResolution, @WebParam(name = "radiationSensitivity")
-	Double radiationSensitivity, @WebParam(name = "anomalousScatterer")
-	String anomalousScatterer, @WebParam(name = "preferredBeamSizeX")
-	Double preferredBeamSizeX, @WebParam(name = "preferredBeamSizeY")
+	@WebParam(name = "experimentKind")
+	String experimentKind, 
+	@WebParam(name = "observedResolution")
+	Double observedResolution, 
+	@WebParam(name = "minimalResolution")
+	Double minimalResolution, 
+	@WebParam(name = "exposureTime")
+	Double exposureTime, 
+	@WebParam(name = "oscillationRange")
+	Double oscillationRange, 
+	@WebParam(name = "maximalResolution")
+	Double maximalResolution, 
+	@WebParam(name = "screeningResolution")
+	Double screeningResolution, 
+	@WebParam(name = "radiationSensitivity")
+	Double radiationSensitivity, 
+	@WebParam(name = "anomalousScatterer")
+	String anomalousScatterer, 
+	@WebParam(name = "preferredBeamSizeX")
+	Double preferredBeamSizeX, 
+	@WebParam(name = "preferredBeamSizeY")
 	Double preferredBeamSizeY,
 	@WebParam(name = "preferredBeamDiameter") Double preferredBeamDiameter,
-	@WebParam(name = "comments")
-	String comments, @WebParam(name = "aimedCompleteness")
+	@WebParam(name = "comments") String comments, 
+	@WebParam(name = "aimedCompleteness")
 	Double aimedCompleteness, @WebParam(name = "aimedIOverSigmaAtHighestRes")
 	Double aimedIOverSigmaAtHighestRes, @WebParam(name = "aimedMultiplicity")
 	Double aimedMultiplicity, @WebParam(name = "aimedResolution")
@@ -200,7 +185,7 @@ public class ToolsForBLSampleWebService {
 	@WebParam(name = "radiationSensitivityGamma") Double radiationSensitivityGamma, 
 	@WebParam(name = "minOscWidth") Double minOscWidth
 	) throws Exception {
-		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, xmlDocumentId, experimentKind, observedResolution,
+		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId,  experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
 				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
@@ -212,8 +197,7 @@ public class ToolsForBLSampleWebService {
 
 	@WebMethod
 	@WebResult(name = "diffractionPlanId")
-	public Integer storeOrUpdateDiffractionPlan(java.lang.Integer diffractionPlanId, @WebParam(name = "xmlDocumentId")
-	Integer xmlDocumentId, @WebParam(name = "experimentKind")
+	public Integer storeOrUpdateDiffractionPlan(java.lang.Integer diffractionPlanId, @WebParam(name = "experimentKind")
 	String experimentKind, @WebParam(name = "observedResolution")
 	Double observedResolution, @WebParam(name = "minimalResolution")
 	Double minimalResolution, @WebParam(name = "exposureTime")
@@ -242,86 +226,13 @@ public class ToolsForBLSampleWebService {
 	String strategyOption, @WebParam(name = "kappaStrategyOption")
 	String kappaStrategyOption, @WebParam(name = "numberOfPositions")
 	Integer numberOfPositions) throws Exception {
-		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, xmlDocumentId, experimentKind, observedResolution,
+		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
 				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, null, null, null, null,null);
 		return storeOrUpdateDiffractionPlanValue(vo);
-	}
-
-	private Integer storeOrUpdateXmlDocumentValue(XmlDocument3VO vo) throws Exception {
-		try {
-			LOG.debug("storeOrUpdateXmlDocumentValue");
-			if (vo == null)
-				return null;
-
-			if (vo.getXmlSchemaId() == null) {
-				LOG.debug("WS PB : XmlSchemaId is null , could not create xmlDocument");
-				return errorCodeFK;
-			}
-			XmlDocument3VO xmlDocumentValue = null;
-			XmlDocument3Service xmlDocumentService = (XmlDocument3Service) ejb3ServiceLocator
-					.getLocalService(XmlDocument3Service.class);
-
-			if (vo.getXmlSchemaId() == null || vo.getXmlSchemaId() == 0) {
-				vo.setXmlSchemaId(null);
-			}
-			Integer xmlDocumentId = vo.getXmlDocumentId();
-			if (xmlDocumentId == null || xmlDocumentId == 0) {
-				vo.setXmlDocumentId(null);
-				xmlDocumentValue = xmlDocumentService.create(vo);
-			} else {
-				xmlDocumentValue = xmlDocumentService.update(vo);
-			}
-			return xmlDocumentValue.getXmlDocumentId();
-		} catch (Exception e) {
-			LOG.error("WS ERROR: storeOrUpdateXmlDocumentValue - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
-			throw e;
-		}
-	}
-
-	@WebMethod
-	@WebResult(name = "xmlDocumentId")
-	public Integer storeXmlDocument(java.lang.Integer xmlDocumentId, @WebParam(name = "xmlSchemaId")
-	Integer xmlSchemaId, @WebParam(name = "xmldata")
-	String xmldata) throws Exception {
-		XmlDocument3VO vo = new XmlDocument3VO(xmlDocumentId, xmlSchemaId, xmldata);
-		return storeOrUpdateXmlDocumentValue(vo);
-	}
-
-	private Integer storeOrUpdateXmlSchemaValue(XmlSchema3VO vo) throws Exception {
-		try {
-			LOG.debug("storeOrUpdateXmlSchemaValue");
-			if (vo == null)
-				return null;
-
-			XmlSchema3VO xmlSchemaValue = null;
-			XmlSchema3Service xmlSchemaService = (XmlSchema3Service) ejb3ServiceLocator.getLocalService(XmlSchema3Service.class);
-
-			Integer xmlSchemaId = vo.getXmlSchemaId();
-			if (xmlSchemaId == null || xmlSchemaId == 0) {
-				vo.setXmlSchemaId(null);
-				xmlSchemaValue = xmlSchemaService.create(vo);
-			} else {
-				xmlSchemaValue = xmlSchemaService.update(vo);
-			}
-			LOG.debug("storeOrUpdateXmlSchemaValue " + xmlSchemaValue.getXmlSchemaId());
-			return xmlSchemaValue.getXmlSchemaId();
-		} catch (Exception e) {
-			LOG.error("WS ERROR: storeOrUpdateXmlSchemaValue - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
-			throw e;
-		}
-	}
-
-	@WebMethod
-	@WebResult(name = "xmlSchemaId")
-	public Integer storeXmlSchema(java.lang.Integer xmlSchemaId, @WebParam(name = "description")
-	String description, @WebParam(name = "schemaxml")
-	String schemaxml) throws Exception {
-		XmlSchema3VO vo = new XmlSchema3VO(xmlSchemaId, description, schemaxml);
-		return storeOrUpdateXmlSchemaValue(vo);
 	}
 
 	@WebMethod

@@ -19,6 +19,28 @@
 
 package ispyb.ws.soap.mx;
 
+import java.lang.reflect.Modifier;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import ispyb.common.util.Constants;
 import ispyb.common.util.SendMailUtils;
 import ispyb.common.util.StringUtils;
@@ -43,14 +65,12 @@ import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.MotorPosition3Service;
 import ispyb.server.mx.services.collections.Position3Service;
 import ispyb.server.mx.services.collections.Workflow3Service;
-import ispyb.server.mx.services.collections.WorkflowDehydration3Service;
 import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.services.collections.workflowStep.WorkflowStep3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.BLSubSample3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategySubWedge3Service;
-import ispyb.server.mx.vos.autoproc.PhasingStepVO;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -73,8 +93,6 @@ import ispyb.server.mx.vos.collections.PositionWS3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
-import ispyb.server.mx.vos.collections.WorkflowDehydration3VO;
-import ispyb.server.mx.vos.collections.WorkflowDehydrationWS3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.WorkflowMeshWS3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
@@ -85,28 +103,6 @@ import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.BLSampleWS3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
-
-import java.lang.reflect.Modifier;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateless;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.Style;
-
-import org.apache.log4j.Logger;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ws.api.annotation.WebContext;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * Web services for Collection
@@ -1581,55 +1577,6 @@ public class ToolsForCollectionWebService {
 			return workflowMeshValue.getWorkflowMeshId();
 		} catch (Exception e) {
 			LOG.error("WS ERROR: storeOrUpdateWorkflowMesh - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
-			throw e;
-		}
-	}
-
-	@WebMethod
-	@WebResult(name = "workflowDehydrationId")
-	public Integer storeOrUpdateWorkflowDehydration(@WebParam(name = "workflowDehydration")
-	WorkflowDehydrationWS3VO vo) throws Exception {
-		try {
-			LOG.debug("storeOrUpdateWorkflowDehydration");
-			// if vo is null we return null, no creation
-			if (vo == null)
-				return null;
-			if (vo.getWorkflowId() == null || vo.getWorkflowId() <= 0) {
-				LOG.debug(" WS PB : workflowId is null, workflowDehydration not stored");
-				return errorCodeFK;
-			}
-
-			WorkflowDehydration3VO workflowDehydrationValue = null;
-			Workflow3Service workflowService = (Workflow3Service) ejb3ServiceLocator.getLocalService(Workflow3Service.class);
-			WorkflowDehydration3Service workflowDehydrationService = (WorkflowDehydration3Service) ejb3ServiceLocator
-					.getLocalService(WorkflowDehydration3Service.class);
-
-			Integer workflowDehydrationId = vo.getWorkflowDehydrationId();
-
-			WorkflowDehydration3VO workflowDehydration = new WorkflowDehydration3VO();
-			// load the object elsewhere there is an error with the childs
-			if (workflowDehydrationId != null && workflowDehydrationId > 0) {
-				workflowDehydration = workflowDehydrationService.findByPk(workflowDehydrationId);
-			}
-			Workflow3VO workflowVO = null;
-			if (vo.getWorkflowId() != null && vo.getWorkflowId() > 0)
-				workflowVO = workflowService.findByPk(vo.getWorkflowId());
-
-			workflowDehydration.fillVOFromWS(vo);
-			workflowDehydration.setWorkflowVO(workflowVO);
-
-			if (workflowDehydrationId == null || workflowDehydrationId == 0) {
-				workflowDehydration.setWorkflowDehydrationId(null);
-				workflowDehydrationValue = workflowDehydrationService.create(workflowDehydration);
-				workflowDehydrationId = workflowDehydrationValue.getWorkflowDehydrationId();
-				LOG.debug("WorkflowDehydration created " + workflowDehydrationId);
-			} else {
-				workflowDehydrationValue = workflowDehydrationService.update(workflowDehydration);
-				LOG.debug("WorkflowDehydration updated " + workflowDehydrationId);
-			}
-			return workflowDehydrationValue.getWorkflowDehydrationId();
-		} catch (Exception e) {
-			LOG.error("WS ERROR: storeOrUpdateWorkflowDehydration - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
 			throw e;
 		}
 	}
