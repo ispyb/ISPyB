@@ -97,6 +97,8 @@ public interface Proposal3Service {
 	public List<Proposal3VO> findByCodeAndNumber(final String code, final String number, final boolean fetchSessions,
 			final boolean fetchProteins, final boolean detachLight) throws Exception;
 
+	public List<Proposal3VO> findByLoginName(final String loginName) throws Exception;
+	
 	public ProposalWS3VO findForWSByCodeAndNumber(final String code, final String number) throws Exception;
 
 	/**

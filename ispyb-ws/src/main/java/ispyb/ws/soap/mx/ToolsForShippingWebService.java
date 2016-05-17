@@ -28,11 +28,13 @@ import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.PersonWS3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.proposals.ProposalWS3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -43,6 +45,8 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
+
+import com.google.gson.Gson;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -349,6 +353,40 @@ public class ToolsForShippingWebService {
 			return proposalValue;
 		} catch (Exception e) {
 			LOG.error("WS ERROR: findProposalByLoginAndBeamline - " + StringUtils.getCurrentDate() + " - Login:" + login + " - Beamline:" +beamline);
+			throw e;
+		}
+	}
+	
+	@WebMethod
+	@WebResult(name = "findProposalsByLoginName")
+	public String findProposalsByLoginName(
+			@WebParam(name = "loginName") String loginName
+			) throws Exception {
+
+		/** Logging **/
+		long id = 0;
+		try {
+			/** Logging params **/
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("userName", String.valueOf(loginName));
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			Proposal3Service service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+			List<Proposal3VO> proposals = service.findByLoginName(loginName);
+			
+			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+			
+			for (Proposal3VO proposal3vo : proposals) {
+				HashMap<String, String> entry = new HashMap<String, String>();
+				entry.put("title", proposal3vo.getTitle());
+				entry.put("code", proposal3vo.getCode());
+				entry.put("number", proposal3vo.getNumber());
+				entry.put("type", proposal3vo.getType());
+				entry.put("proposalId", proposal3vo.getProposalId().toString());
+				result.add(entry);
+			}
+			return new Gson().toJson(result);
+		} catch (Exception e) {
+			LOG.error("WS ERROR: findProposalsByLoginName - " + StringUtils.getCurrentDate() + " - Login:" + loginName);
 			throw e;
 		}
 	}

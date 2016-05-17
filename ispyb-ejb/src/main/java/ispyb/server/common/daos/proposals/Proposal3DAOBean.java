@@ -19,7 +19,9 @@
 package ispyb.server.common.daos.proposals;
 
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -193,6 +195,31 @@ public class Proposal3DAOBean implements Proposal3DAO {
 		return vos;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Proposal3VO> findByLoginName(String loginName) {
+		String queryPerson = "SELECT person FROM Person3VO person WHERE login=:loginName";
+		Query EJBQueryPerson = this.entityManager.createQuery(queryPerson);
+		EJBQueryPerson.setParameter("loginName", loginName);
+		@SuppressWarnings("unchecked")
+		List<Person3VO> persons = EJBQueryPerson.getResultList();
+		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+		if (persons != null) {
+			if (persons.size() > 0) {
+				for (Person3VO person3vo : persons) {
+					if (person3vo.getProposalVOs() != null) {
+						if (person3vo.getProposalVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalVOs());
+						}
+						if (person3vo.getProposalDirectVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalDirectVOs());
+						}
+					}
+				}
+			}
+		}
+		return proposals;
+	}
+	
 	/* Private methods ------------------------------------------------------ */
 
 	/**
@@ -278,4 +305,5 @@ public class Proposal3DAOBean implements Proposal3DAO {
 
 		return nbUpdated;
 	}
+	
 }

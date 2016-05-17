@@ -100,7 +100,7 @@ public interface Proposal3DAO {
 
 	public List<Proposal3VO> findByCodeAndNumber(String code, String number, boolean fetchSessions,
 			boolean fetchProteins);
-
+	
 	/**
 	 * Finds a Proposal entity by its code and number and title (if title is null only search by code and number).
 	 * 
@@ -109,6 +109,9 @@ public interface Proposal3DAO {
 	 * @param title
 	 * @return
 	 */
+	
+	public List<Proposal3VO> findByLoginName(String loginName);
+	
 	public List<Proposal3VO> findFiltered(String code, String number, String title);
 
 	/**

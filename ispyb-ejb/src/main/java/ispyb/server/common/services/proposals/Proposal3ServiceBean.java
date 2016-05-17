@@ -211,6 +211,25 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 
 		return ret;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@WebMethod
+	public List<Proposal3VO> findByLoginName(final String loginName) throws Exception {
+
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		EJBAccessCallback callBack = new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Proposal3VO> foundEntities = dao.findByLoginName(loginName);
+				List<Proposal3VO> vos;
+				vos = getProposalVOs(foundEntities);
+				return vos;
+			};
+		};
+		List<Proposal3VO> ret = (List<Proposal3VO>) template.execute(callBack);
+
+		return ret;
+	}
 
 	public ProposalWS3VO findForWSByCodeAndNumber(final String code, final String number) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
