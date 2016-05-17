@@ -686,8 +686,6 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		otherVO.getContainer().setDewarVO(null);
 		otherVO.getCrystal().setProteinVO(null);
 		otherVO.getProtein().setProposalVO(null);
-		if (otherVO.getDiffractionPlan() != null)
-			otherVO.getDiffractionPlan().setXmlDocumentVO(null);
 		return otherVO;
 	}
 

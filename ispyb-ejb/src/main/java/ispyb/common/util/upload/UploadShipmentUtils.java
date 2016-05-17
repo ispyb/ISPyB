@@ -19,28 +19,6 @@
 
 package ispyb.common.util.upload;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.DBTools;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.sample.BLSample3Service;
-import ispyb.server.mx.services.sample.Crystal3Service;
-import ispyb.server.mx.services.sample.DataMatrixInSampleChanger3Service;
-import ispyb.server.mx.services.sample.DiffractionPlan3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DataMatrixInSampleChanger3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-
 import java.io.File;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -59,6 +37,26 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.services.sample.DiffractionPlan3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 public class UploadShipmentUtils {
 
@@ -163,8 +161,6 @@ public class UploadShipmentUtils {
 
 		String populatedTemplatePath = "";
 		try {
-			DataMatrixInSampleChanger3Service dataMatrixInSampleChanger3Service = (DataMatrixInSampleChanger3Service) ejb3ServiceLocator
-					.getLocalService(DataMatrixInSampleChanger3Service.class);
 
 			String xlsPath;
 			String proposalCode;
@@ -246,24 +242,6 @@ public class UploadShipmentUtils {
 			String beamlineName = selectedBeamlineName;
 
 			String[][] dmCodesinSC = null;
-
-			if (populateDMCodes) {
-				dmCodesinSC = new String[Constants.SC_BASKET_CAPACITY + 1][Constants.BASKET_SAMPLE_CAPACITY + 1];
-				Proposal3VO prop = DBTools.getProposal(proposalCode, proposalNumber);
-				if (prop != null) {
-					Integer proposalId = prop.getProposalId();
-					List lstDMCodes = dataMatrixInSampleChanger3Service.findByProposalIdAndBeamlineName(proposalId, beamlineName);
-					for (int i = 0; i < lstDMCodes.size(); i++) {
-						DataMatrixInSampleChanger3VO dmInSC = (DataMatrixInSampleChanger3VO) lstDMCodes.get(i);
-						Integer basketLocation = dmInSC.getContainerLocationInSC();
-						Integer sampleLocation = dmInSC.getLocationInContainer();
-						String dmCode = dmInSC.getDatamatrixCode();
-						if (basketLocation <= Constants.SC_BASKET_CAPACITY && sampleLocation <= Constants.BASKET_SAMPLE_CAPACITY) {
-							dmCodesinSC[basketLocation][sampleLocation] = dmCode;
-						}
-					}
-				}
-			}
 
 			File originalTemplate = new File(xlsPath);
 			File populatedTemplate = new File(populatedTemplateFileName);
