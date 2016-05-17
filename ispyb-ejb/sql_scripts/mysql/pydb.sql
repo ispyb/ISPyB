@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.7deb7
+-- version 3.4.11.1deb2+deb7u2
 -- http://www.phpmyadmin.net
 --
 -- Host: pyarchsrv
--- Generation Time: Jan 14, 2016 at 05:58 PM
+-- Generation Time: Apr 26, 2016 at 02:33 PM
 -- Server version: 5.5.40
--- PHP Version: 5.3.3-7+squeeze18
+-- PHP Version: 5.4.45-0+deb7u2
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `AbInitioModel` (
   KEY `AverageToModel` (`averagedModelId`),
   KEY `AbInitioModelToRapid` (`rapidShapeDeterminationModelId`),
   KEY `SahpeDeterminationToAbiniti` (`shapeDeterminationModelId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24150 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27120 ;
 
 -- --------------------------------------------------------
 
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `AdminActivity` (
   PRIMARY KEY (`adminActivityId`),
   UNIQUE KEY `username` (`username`),
   KEY `AdminActivity_FKAction` (`action`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1857 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1906 ;
 
 -- --------------------------------------------------------
 
@@ -152,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `AutoProc` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`autoProcId`),
   KEY `AutoProc_FKIndex1` (`autoProcProgramId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=909741 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1022981 ;
 
 -- --------------------------------------------------------
 
@@ -186,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcIntegration` (
   PRIMARY KEY (`autoProcIntegrationId`),
   KEY `AutoProcIntegrationIdx1` (`dataCollectionId`),
   KEY `AutoProcIntegration_FKIndex1` (`autoProcProgramId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1009985 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1140005 ;
 
 -- --------------------------------------------------------
 
@@ -205,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcProgram` (
   `processingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`autoProcProgramId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=916006 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1029246 ;
 
 -- --------------------------------------------------------
 
@@ -222,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcProgramAttachment` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`autoProcProgramAttachmentId`),
   KEY `AutoProcProgramAttachmentIdx1` (`autoProcProgramId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9824277 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11042418 ;
 
 -- --------------------------------------------------------
 
@@ -237,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcScaling` (
   PRIMARY KEY (`autoProcScalingId`),
   KEY `AutoProcScalingFk1` (`autoProcId`),
   KEY `AutoProcScalingIdx1` (`autoProcScalingId`,`autoProcId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=909752 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1022992 ;
 
 -- --------------------------------------------------------
 
@@ -271,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcScalingStatistics` (
   PRIMARY KEY (`autoProcScalingStatisticsId`),
   KEY `AutoProcScalingStatisticsIdx1` (`autoProcScalingId`),
   KEY `AutoProcScalingStatistics_FKindexType` (`scalingStatisticsType`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2804299 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3144007 ;
 
 -- --------------------------------------------------------
 
@@ -288,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcScaling_has_Int` (
   KEY `AutoProcScl_has_IntIdx1` (`autoProcScalingId`),
   KEY `AutoProcScal_has_IntIdx2` (`autoProcIntegrationId`),
   KEY `AutoProcScalingHasInt_FKIndex3` (`autoProcScalingId`,`autoProcIntegrationId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=909696 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1022932 ;
 
 -- --------------------------------------------------------
 
@@ -305,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `AutoProcStatus` (
   `bltimeStamp` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`autoProcStatusId`),
   KEY `AutoProcStatus_FKIndex1` (`autoProcIntegrationId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='AutoProcStatus table is linked to AutoProcIntegration' AUTO_INCREMENT=1416474 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='AutoProcStatus table is linked to AutoProcIntegration' AUTO_INCREMENT=1611869 ;
 
 -- --------------------------------------------------------
 
@@ -334,7 +335,7 @@ CREATE TABLE IF NOT EXISTS `BeamLineSetup` (
   `minTransmission` double DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`beamLineSetupId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=909079 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1011008 ;
 
 -- --------------------------------------------------------
 
@@ -371,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `BLSample` (
   KEY `crystalId` (`crystalId`,`containerId`),
   KEY `BLSample_Index1` (`name`) USING BTREE,
   KEY `BLSample_FKIndex_Status` (`blSampleStatus`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=525450 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=540360 ;
 
 -- --------------------------------------------------------
 
@@ -425,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `BLSession` (
   KEY `Session_FKIndexEndDate` (`endDate`),
   KEY `Session_FKIndexBeamLineName` (`beamLineName`),
   KEY `BLSession_FKIndexOperatorSiteNumber` (`operatorSiteNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42993 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45680 ;
 
 -- --------------------------------------------------------
 
@@ -468,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `Buffer` (
   `comments` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`bufferId`),
   KEY `BufferToSafetyLevel` (`safetyLevelId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4196 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4683 ;
 
 -- --------------------------------------------------------
 
@@ -508,7 +509,7 @@ CREATE TABLE IF NOT EXISTS `Container` (
   KEY `Container_FKIndex1` (`dewarId`),
   KEY `Container_FKIndex` (`beamlineLocation`),
   KEY `Container_FKIndexStatus` (`containerStatus`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=330185 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=332641 ;
 
 -- --------------------------------------------------------
 
@@ -541,7 +542,7 @@ CREATE TABLE IF NOT EXISTS `Crystal` (
   PRIMARY KEY (`crystalId`),
   KEY `Crystal_FKIndex1` (`proteinId`),
   KEY `Crystal_FKIndex2` (`diffractionPlanId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=377319 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=443721 ;
 
 -- --------------------------------------------------------
 
@@ -611,6 +612,8 @@ CREATE TABLE IF NOT EXISTS `DataCollection` (
   `detectorDistance` float DEFAULT NULL,
   `xBeam` float DEFAULT NULL,
   `yBeam` float DEFAULT NULL,
+  `xBeamPix` float DEFAULT NULL COMMENT 'Beam size in pixels',
+  `yBeamPix` float DEFAULT NULL COMMENT 'Beam size in pixels',
   `comments` varchar(1024) DEFAULT NULL,
   `printableForReport` tinyint(1) unsigned DEFAULT '1',
   `slitGapVertical` float DEFAULT NULL,
@@ -651,7 +654,7 @@ CREATE TABLE IF NOT EXISTS `DataCollection` (
   KEY `startPositionId` (`startPositionId`),
   KEY `endPositionId` (`endPositionId`),
   KEY `blSubSampleId` (`blSubSampleId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1640372 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1740174 ;
 
 -- --------------------------------------------------------
 
@@ -679,7 +682,7 @@ CREATE TABLE IF NOT EXISTS `DataCollectionGroup` (
   KEY `DataCollectionGroup_FKIndex1` (`blSampleId`),
   KEY `DataCollectionGroup_FKIndex2` (`sessionId`),
   KEY `workflowId` (`workflowId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='a dataCollectionGroup is a group of dataCollection for a spe' AUTO_INCREMENT=1461435 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='a dataCollectionGroup is a group of dataCollection for a spe' AUTO_INCREMENT=1508902 ;
 
 -- --------------------------------------------------------
 
@@ -725,7 +728,7 @@ CREATE TABLE IF NOT EXISTS `Detector` (
   `detectorMode` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`detectorId`),
   KEY `Detector_FKIndex1` (`detectorType`,`detectorManufacturer`,`detectorModel`,`detectorPixelSizeHorizontal`,`detectorPixelSizeVertical`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Detector table is linked to a dataCollection' AUTO_INCREMENT=80 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Detector table is linked to a dataCollection' AUTO_INCREMENT=81 ;
 
 -- --------------------------------------------------------
 
@@ -755,7 +758,7 @@ CREATE TABLE IF NOT EXISTS `Dewar` (
   KEY `Dewar_FKIndex2` (`firstExperimentId`),
   KEY `Dewar_FKIndexStatus` (`dewarStatus`),
   KEY `Dewar_FKIndexCode` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=309425 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=310184 ;
 
 -- --------------------------------------------------------
 
@@ -772,7 +775,7 @@ CREATE TABLE IF NOT EXISTS `DewarLocation` (
   `courierName` varchar(128) DEFAULT NULL COMMENT 'Carrier name who''s shipping back the dewar',
   `courierTrackingNumber` varchar(128) DEFAULT NULL COMMENT 'Tracking number of the shippment',
   PRIMARY KEY (`eventId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='ISPyB Dewar location table' AUTO_INCREMENT=11195 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='ISPyB Dewar location table' AUTO_INCREMENT=11907 ;
 
 -- --------------------------------------------------------
 
@@ -800,7 +803,7 @@ CREATE TABLE IF NOT EXISTS `DewarTransportHistory` (
   `arrivalDate` datetime NOT NULL,
   PRIMARY KEY (`DewarTransportHistoryId`),
   KEY `DewarTransportHistory_FKIndex1` (`dewarId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28017 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30332 ;
 
 -- --------------------------------------------------------
 
@@ -842,10 +845,11 @@ CREATE TABLE IF NOT EXISTS `DiffractionPlan` (
   `maxDimAccrossSpindleAxis` double DEFAULT NULL COMMENT 'maximum dimension accross the spindle axis',
   `radiationSensitivityBeta` double DEFAULT NULL,
   `radiationSensitivityGamma` double DEFAULT NULL,
+  `minOscWidth` float DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`diffractionPlanId`),
   KEY `DiffractionPlan_FKIndex2` (`xmlDocumentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=486418 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=528343 ;
 
 -- --------------------------------------------------------
 
@@ -887,7 +891,7 @@ CREATE TABLE IF NOT EXISTS `EnergyScan` (
   `flux_end` double DEFAULT NULL COMMENT 'flux measured after the energyScan',
   PRIMARY KEY (`energyScanId`),
   KEY `EnergyScan_FKIndex2` (`sessionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13053 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13420 ;
 
 -- --------------------------------------------------------
 
@@ -907,7 +911,7 @@ CREATE TABLE IF NOT EXISTS `Experiment` (
   `status` varchar(45) DEFAULT NULL,
   `comments` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`experimentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9934 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11288 ;
 
 -- --------------------------------------------------------
 
@@ -924,7 +928,7 @@ CREATE TABLE IF NOT EXISTS `ExperimentKindDetails` (
   `wedgeValue` float DEFAULT NULL,
   PRIMARY KEY (`experimentKindId`),
   KEY `ExperimentKindDetails_FKIndex1` (`diffractionPlanId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 -- --------------------------------------------------------
 
@@ -961,7 +965,7 @@ CREATE TABLE IF NOT EXISTS `Frame` (
   `creationDate` datetime DEFAULT NULL,
   PRIMARY KEY (`frameId`),
   KEY `FILE` (`filePath`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1210583 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1313197 ;
 
 -- --------------------------------------------------------
 
@@ -973,7 +977,7 @@ CREATE TABLE IF NOT EXISTS `FrameList` (
   `frameListId` int(10) NOT NULL AUTO_INCREMENT,
   `comments` int(10) DEFAULT NULL,
   PRIMARY KEY (`frameListId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=115018 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=133345 ;
 
 -- --------------------------------------------------------
 
@@ -1005,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS `FrameToList` (
   PRIMARY KEY (`frameToListId`),
   KEY `FrameToLisToFrameList` (`frameListId`),
   KEY `FrameToListToFrame` (`frameId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1570358 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1779035 ;
 
 -- --------------------------------------------------------
 
@@ -1039,7 +1043,7 @@ CREATE TABLE IF NOT EXISTS `GridInfo` (
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`gridInfoId`),
   KEY `workflowMeshId` (`workflowMeshId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=55502 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70646 ;
 
 -- --------------------------------------------------------
 
@@ -1068,7 +1072,7 @@ CREATE TABLE IF NOT EXISTS `Image` (
   KEY `Image_FKIndex2` (`imageNumber`),
   KEY `Image_Index3` (`fileLocation`,`fileName`) USING BTREE,
   KEY `motorPositionId` (`motorPositionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48364447 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49135419 ;
 
 -- --------------------------------------------------------
 
@@ -1096,7 +1100,7 @@ CREATE TABLE IF NOT EXISTS `ImageQualityIndicators` (
   PRIMARY KEY (`imageQualityIndicatorsId`),
   KEY `ImageQualityIndicatorsIdx1` (`imageId`),
   KEY `AutoProcProgramIdx1` (`autoProcProgramId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1588480 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2024529 ;
 
 -- --------------------------------------------------------
 
@@ -1181,9 +1185,9 @@ CREATE TABLE IF NOT EXISTS `IspybReference` (
   `referenceName` varchar(255) DEFAULT NULL COMMENT 'reference name',
   `referenceUrl` varchar(1024) DEFAULT NULL COMMENT 'url of the reference',
   `referenceBibtext` blob COMMENT 'bibtext value of the reference',
-  `beamline` enum('All','ID14-4','ID23-1','ID23-2','ID29','XRF','AllXRF','Mesh') DEFAULT NULL COMMENT 'beamline involved',
+  `beamline` enum('All','ID14-4','ID23-1','ID23-2','ID29','ID30A-1','ID30A-2','XRF','AllXRF','Mesh') DEFAULT NULL COMMENT 'beamline involved',
   PRIMARY KEY (`referenceId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
@@ -1206,7 +1210,7 @@ CREATE TABLE IF NOT EXISTS `LabContact` (
   UNIQUE KEY `personAndProposal` (`personId`,`proposalId`),
   UNIQUE KEY `cardNameAndProposal` (`cardName`,`proposalId`),
   KEY `LabContact_FKIndex1` (`proposalId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13204 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101313 ;
 
 -- --------------------------------------------------------
 
@@ -1225,7 +1229,7 @@ CREATE TABLE IF NOT EXISTS `Laboratory` (
   `organization` varchar(45) DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`laboratoryId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=304696 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=307025 ;
 
 -- --------------------------------------------------------
 
@@ -1257,7 +1261,7 @@ CREATE TABLE IF NOT EXISTS `Login` (
   `expirationTime` datetime NOT NULL,
   PRIMARY KEY (`loginId`),
   KEY `Token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=172 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=340 ;
 
 -- --------------------------------------------------------
 
@@ -1282,7 +1286,7 @@ CREATE TABLE IF NOT EXISTS `Macromolecule` (
   `creationDate` datetime DEFAULT NULL,
   PRIMARY KEY (`macromoleculeId`),
   KEY `MacromoleculeToSafetyLevel` (`safetyLevelId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24586 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31401 ;
 
 -- --------------------------------------------------------
 
@@ -1324,7 +1328,7 @@ CREATE TABLE IF NOT EXISTS `Measurement` (
   PRIMARY KEY (`measurementId`),
   KEY `SpecimenToSamplePlateWell` (`specimenId`),
   KEY `MeasurementToRun` (`runId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=163222 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=184327 ;
 
 -- --------------------------------------------------------
 
@@ -1340,7 +1344,7 @@ CREATE TABLE IF NOT EXISTS `MeasurementToDataCollection` (
   PRIMARY KEY (`measurementToDataCollectionId`),
   KEY `MeasurementToDataCollectionToDataCollection` (`dataCollectionId`),
   KEY `MeasurementToDataCollectionToMeasurement` (`measurementId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=163222 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=184327 ;
 
 -- --------------------------------------------------------
 
@@ -1373,7 +1377,7 @@ CREATE TABLE IF NOT EXISTS `Merge` (
   PRIMARY KEY (`mergeId`),
   KEY `MergeToMeasurement` (`measurementId`),
   KEY `MergeToListOfFrames` (`frameListId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86818 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97339 ;
 
 -- --------------------------------------------------------
 
@@ -1411,7 +1415,7 @@ CREATE TABLE IF NOT EXISTS `Model` (
   `rg` varchar(45) DEFAULT NULL,
   `dMax` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`modelId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=507460 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=518484 ;
 
 -- --------------------------------------------------------
 
@@ -1444,7 +1448,7 @@ CREATE TABLE IF NOT EXISTS `ModelList` (
   `nsdFilePath` varchar(255) DEFAULT NULL,
   `chi2RgFilePath` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`modelListId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26841 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29817 ;
 
 -- --------------------------------------------------------
 
@@ -1459,7 +1463,7 @@ CREATE TABLE IF NOT EXISTS `ModelToList` (
   PRIMARY KEY (`modelToListId`),
   KEY `ModelToListToList` (`modelListId`),
   KEY `ModelToListToModel` (`modelId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=435265 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=437361 ;
 
 -- --------------------------------------------------------
 
@@ -1482,7 +1486,7 @@ CREATE TABLE IF NOT EXISTS `MotorPosition` (
   `gridIndexZ` int(11) DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`motorPositionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3102545 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3903154 ;
 
 -- --------------------------------------------------------
 
@@ -1493,6 +1497,7 @@ CREATE TABLE IF NOT EXISTS `MotorPosition` (
 CREATE TABLE IF NOT EXISTS `Person` (
   `personId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `laboratoryId` int(10) unsigned DEFAULT NULL,
+  `siteId` int(11) DEFAULT NULL,
   `personUUID` varchar(45) DEFAULT NULL,
   `familyName` varchar(100) DEFAULT NULL,
   `givenName` varchar(45) DEFAULT NULL,
@@ -1506,8 +1511,9 @@ CREATE TABLE IF NOT EXISTS `Person` (
   PRIMARY KEY (`personId`),
   KEY `Person_FKIndex1` (`laboratoryId`),
   KEY `Person_FKIndexFamilyName` (`familyName`),
-  KEY `Person_FKIndex_Login` (`login`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=311378 ;
+  KEY `Person_FKIndex_Login` (`login`),
+  KEY `siteId` (`siteId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=347791 ;
 
 -- --------------------------------------------------------
 
@@ -1559,7 +1565,7 @@ CREATE TABLE IF NOT EXISTS `PhasingProgramAttachment` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`phasingProgramAttachmentId`),
   KEY `PhasingProgramAttachment_FKIndex1` (`phasingProgramRunId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57981 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=81503 ;
 
 -- --------------------------------------------------------
 
@@ -1578,7 +1584,7 @@ CREATE TABLE IF NOT EXISTS `PhasingProgramRun` (
   `phasingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`phasingProgramRunId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135302 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=186095 ;
 
 -- --------------------------------------------------------
 
@@ -1588,8 +1594,9 @@ CREATE TABLE IF NOT EXISTS `PhasingProgramRun` (
 
 CREATE TABLE IF NOT EXISTS `PhasingStatistics` (
   `phasingStatisticsId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingHasScalingId1` int(11) unsigned NOT NULL COMMENT 'the dataset in question',
+  `phasingHasScalingId1` int(11) unsigned DEFAULT NULL COMMENT 'the dataset in question',
   `phasingHasScalingId2` int(11) unsigned DEFAULT NULL COMMENT 'if this is MIT or MAD, which scaling are being compared, null otherwise',
+  `phasingStepId` int(10) unsigned DEFAULT NULL,
   `numberOfBins` int(11) DEFAULT NULL COMMENT 'the total number of bins',
   `binNumber` int(11) DEFAULT NULL COMMENT 'binNumber, 999 for overall',
   `lowRes` double DEFAULT NULL COMMENT 'low resolution cutoff of this binfloat',
@@ -1600,8 +1607,36 @@ CREATE TABLE IF NOT EXISTS `PhasingStatistics` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`phasingStatisticsId`),
   KEY `PhasingStatistics_FKIndex1` (`phasingHasScalingId1`),
-  KEY `PhasingStatistics_FKIndex2` (`phasingHasScalingId2`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=468748 ;
+  KEY `PhasingStatistics_FKIndex2` (`phasingHasScalingId2`),
+  KEY `fk_PhasingStatistics_phasingStep_idx` (`phasingStepId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=477547 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingStep`
+--
+
+CREATE TABLE IF NOT EXISTS `PhasingStep` (
+  `phasingStepId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `previousPhasingStepId` int(10) unsigned DEFAULT NULL,
+  `programRunId` int(10) unsigned DEFAULT NULL,
+  `spaceGroupId` int(10) unsigned DEFAULT NULL,
+  `autoProcScalingId` int(10) unsigned DEFAULT NULL,
+  `phasingAnalysisId` int(10) unsigned DEFAULT NULL,
+  `phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING') DEFAULT NULL,
+  `method` varchar(45) DEFAULT NULL,
+  `solventContent` varchar(45) DEFAULT NULL,
+  `enantiomorph` varchar(45) DEFAULT NULL,
+  `lowRes` varchar(45) DEFAULT NULL,
+  `highRes` varchar(45) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`phasingStepId`),
+  KEY `FK_programRun_id` (`programRunId`),
+  KEY `FK_spacegroup_id` (`spaceGroupId`),
+  KEY `FK_autoprocScaling_id` (`autoProcScalingId`),
+  KEY `FK_phasingAnalysis_id` (`phasingAnalysisId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50792 ;
 
 -- --------------------------------------------------------
 
@@ -1631,7 +1666,7 @@ CREATE TABLE IF NOT EXISTS `PlateGroup` (
   `name` varchar(255) DEFAULT NULL,
   `storageTemperature` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`plateGroupId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7926 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8839 ;
 
 -- --------------------------------------------------------
 
@@ -1706,7 +1741,7 @@ CREATE TABLE IF NOT EXISTS `Proposal` (
   PRIMARY KEY (`proposalId`),
   KEY `Proposal_FKIndex1` (`personId`),
   KEY `Proposal_FKIndexCodeNumber` (`proposalCode`,`proposalNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7215 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7455 ;
 
 -- --------------------------------------------------------
 
@@ -1745,7 +1780,7 @@ CREATE TABLE IF NOT EXISTS `Protein` (
   KEY `ProteinAcronym_Index` (`proposalId`,`acronym`),
   KEY `Protein_FKIndex2` (`personId`),
   KEY `Protein_Index2` (`acronym`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=344949 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=352025 ;
 
 -- --------------------------------------------------------
 
@@ -1796,7 +1831,7 @@ CREATE TABLE IF NOT EXISTS `Run` (
   `radiationAbsolute` varchar(45) DEFAULT NULL,
   `normalization` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`runId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=77228 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86403 ;
 
 -- --------------------------------------------------------
 
@@ -1833,7 +1868,7 @@ CREATE TABLE IF NOT EXISTS `SamplePlate` (
   KEY `SamplePlateToType` (`plateTypeId`),
   KEY `SamplePlateToExperiment` (`experimentId`),
   KEY `SamplePlateToInstructionSet` (`instructionSetId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23776 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26515 ;
 
 -- --------------------------------------------------------
 
@@ -1849,7 +1884,7 @@ CREATE TABLE IF NOT EXISTS `SamplePlatePosition` (
   `volume` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`samplePlatePositionId`),
   KEY `PlatePositionToPlate` (`samplePlateId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=65721 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=74041 ;
 
 -- --------------------------------------------------------
 
@@ -1863,7 +1898,7 @@ CREATE TABLE IF NOT EXISTS `SaxsDataCollection` (
   `comments` varchar(5120) DEFAULT NULL,
   PRIMARY KEY (`dataCollectionId`),
   KEY `SaxsDataCollectionToExperiment` (`experimentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=54408 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=61443 ;
 
 -- --------------------------------------------------------
 
@@ -1883,7 +1918,7 @@ CREATE TABLE IF NOT EXISTS `Screening` (
   PRIMARY KEY (`screeningId`),
   KEY `DNAScreening_FKIndex1` (`dataCollectionId`),
   KEY `Screening_FKIndexDiffractionPlanId` (`diffractionPlanId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=317800 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=344416 ;
 
 -- --------------------------------------------------------
 
@@ -1940,7 +1975,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningOutput` (
   `indexingSuccess` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`screeningOutputId`),
   KEY `ScreeningOutput_FKIndex1` (`screeningId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=317741 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=344357 ;
 
 -- --------------------------------------------------------
 
@@ -1973,7 +2008,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningOutputLattice` (
   `labelitIndexing` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`screeningOutputLatticeId`),
   KEY `ScreeningOutputLattice_FKIndex1` (`screeningOutputId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=223201 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=239043 ;
 
 -- --------------------------------------------------------
 
@@ -2028,7 +2063,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningStrategy` (
   `transmission` float DEFAULT NULL COMMENT 'Transmission for the strategy as given by the strategy program.',
   PRIMARY KEY (`screeningStrategyId`),
   KEY `ScreeningStrategy_FKIndex1` (`screeningOutputId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=181819 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=191917 ;
 
 -- --------------------------------------------------------
 
@@ -2053,7 +2088,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningStrategySubWedge` (
   `comments` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`screeningStrategySubWedgeId`),
   KEY `ScreeningStrategySubWedge_FK1` (`screeningStrategyWedgeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=183222 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=193615 ;
 
 -- --------------------------------------------------------
 
@@ -2076,7 +2111,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningStrategyWedge` (
   `wavelength` double DEFAULT NULL,
   PRIMARY KEY (`screeningStrategyWedgeId`),
   KEY `ScreeningStrategyWedge_IBFK_1` (`screeningStrategyId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=176352 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=186554 ;
 
 -- --------------------------------------------------------
 
@@ -2127,7 +2162,7 @@ CREATE TABLE IF NOT EXISTS `Shipping` (
   KEY `Shipping_FKIndexCreationDate` (`creationDate`),
   KEY `Shipping_FKIndexName` (`shippingName`),
   KEY `Shipping_FKIndexStatus` (`shippingStatus`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=306439 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=306909 ;
 
 -- --------------------------------------------------------
 
@@ -2189,7 +2224,7 @@ CREATE TABLE IF NOT EXISTS `Specimen` (
   KEY `SamplePlateWellToSafetyLevel` (`safetyLevelId`),
   KEY `SamplePlateWellToExperiment` (`experimentId`),
   KEY `SampleToStockSolution` (`stockSolutionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=66913 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=75658 ;
 
 -- --------------------------------------------------------
 
@@ -2213,7 +2248,7 @@ CREATE TABLE IF NOT EXISTS `StockSolution` (
   KEY `StockSolutionToBuffer` (`bufferId`),
   KEY `StockSolutionToMacromolecule` (`macromoleculeId`),
   KEY `StockSolutionToInstructionSet` (`instructionSetId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=67 ;
 
 -- --------------------------------------------------------
 
@@ -2251,7 +2286,7 @@ CREATE TABLE IF NOT EXISTS `Structure` (
   `multiplicity` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`structureId`),
   KEY `StructureToMacromolecule` (`macromoleculeId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 -- --------------------------------------------------------
 
@@ -2312,7 +2347,7 @@ CREATE TABLE IF NOT EXISTS `Subtraction` (
   KEY `EdnaAnalysisToMeasurement` (`dataCollectionId`),
   KEY `fk_Subtraction_1` (`sampleOneDimensionalFiles`),
   KEY `fk_Subtraction_2` (`bufferOnedimensionalFiles`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36085 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40454 ;
 
 -- --------------------------------------------------------
 
@@ -2327,7 +2362,7 @@ CREATE TABLE IF NOT EXISTS `SubtractionToAbInitioModel` (
   PRIMARY KEY (`subtractionToAbInitioModelId`),
   KEY `substractionToAbInitioModelToAbinitioModel` (`abInitioId`),
   KEY `ubstractionToSubstraction` (`subtractionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24154 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27124 ;
 
 -- --------------------------------------------------------
 
@@ -2428,6 +2463,205 @@ CREATE TABLE IF NOT EXISTS `V_AnalysisInfo` (
 ,`shapeDeterminationModelId` bigint(11)
 ,`abInitioModelId` bigint(11)
 ,`comments` varchar(512)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary`
+--
+CREATE TABLE IF NOT EXISTS `v_datacollection_summary` (
+`DataCollectionGroup_dataCollectionGroupId` int(11)
+,`DataCollectionGroup_blSampleId` int(10) unsigned
+,`DataCollectionGroup_sessionId` int(10) unsigned
+,`DataCollectionGroup_workflowId` int(11) unsigned
+,`DataCollectionGroup_experimentType` enum('SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_startTime` datetime
+,`DataCollectionGroup_endTime` datetime
+,`DataCollectionGroup_comments` varchar(1024)
+,`DataCollectionGroup_actualSampleBarcode` varchar(45)
+,`DataCollectionGroup_xtalSnapshotFullPath` varchar(255)
+,`BLSample_blSampleId` int(10) unsigned
+,`BLSample_crystalId` int(10) unsigned
+,`BLSample_name` varchar(100)
+,`BLSample_code` varchar(45)
+,`BLSession_sessionId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+,`BLSession_protectedData` varchar(1024)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_name` varchar(255)
+,`Protein_acronym` varchar(45)
+,`DataCollection_dataCollectionId` int(11) unsigned
+,`DataCollection_dataCollectionGroupId` int(11)
+,`DataCollection_startTime` datetime
+,`DataCollection_endTime` datetime
+,`DataCollection_runStatus` varchar(45)
+,`DataCollection_numberOfImages` int(10) unsigned
+,`DataCollection_startImageNumber` int(10) unsigned
+,`DataCollection_numberOfPasses` int(10) unsigned
+,`DataCollection_exposureTime` float
+,`DataCollection_imageDirectory` varchar(255)
+,`DataCollection_wavelength` float
+,`DataCollection_resolution` float
+,`DataCollection_detectorDistance` float
+,`DataCollection_xBeam` float
+,`DataCollection_yBeam` float
+,`DataCollection_imagePrefix` varchar(100)
+,`DataCollection_comments` varchar(1024)
+,`DataCollection_xtalSnapshotFullPath1` varchar(255)
+,`DataCollection_xtalSnapshotFullPath2` varchar(255)
+,`DataCollection_xtalSnapshotFullPath3` varchar(255)
+,`DataCollection_xtalSnapshotFullPath4` varchar(255)
+,`DataCollection_phiStart` float
+,`DataCollection_kappaStart` float
+,`DataCollection_omegaStart` float
+,`DataCollection_flux` double
+,`DataCollection_flux_end` double
+,`DataCollection_resolutionAtCorner` float
+,`DataCollection_bestWilsonPlotPath` varchar(255)
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_axisRange` float
+,`DataCollection_axisStart` float
+,`DataCollection_axisEnd` float
+,`DataCollection_rotationAxis` enum('Omega','Kappa','Phi')
+,`Workflow_workflowTitle` varchar(255)
+,`Workflow_workflowType` enum('Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC')
+,`Workflow_status` varchar(255)
+,`Workflow_workflowId` int(11) unsigned
+,`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`AutoProcProgram_processingPrograms` varchar(255)
+,`AutoProcProgram_processingStatus` tinyint(1)
+,`Screening_screeningId` int(10) unsigned
+,`Screening_dataCollectionId` int(11) unsigned
+,`ScreeningOutput_strategySuccess` tinyint(1)
+,`ScreeningOutput_indexingSuccess` tinyint(1)
+,`ScreeningOutput_rankingResolution` double
+,`ScreeningOutput_mosaicity` float
+,`ScreeningOutputLattice_spaceGroup` varchar(45)
+,`ScreeningOutputLattice_unitCell_a` float
+,`ScreeningOutputLattice_unitCell_b` float
+,`ScreeningOutputLattice_unitCell_c` float
+,`ScreeningOutputLattice_unitCell_alpha` float
+,`ScreeningOutputLattice_unitCell_beta` float
+,`ScreeningOutputLattice_unitCell_gamma` float
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_autoprocintegration`
+--
+CREATE TABLE IF NOT EXISTS `v_datacollection_summary_autoprocintegration` (
+`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`v_datacollection_summary_autoprocintegration_processingPrograms` varchar(255)
+,`v_datacollection_summary_autoprocintegration_processingStatus` tinyint(1)
+,`AutoProcIntegration_phasing_dataCollectionId` int(11) unsigned
+,`PhasingStep_phasing_phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING')
+,`SpaceGroup_spaceGroupShortName` varchar(45)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_datacollectiongroup`
+--
+CREATE TABLE IF NOT EXISTS `v_datacollection_summary_datacollectiongroup` (
+`DataCollectionGroup_dataCollectionGroupId` int(11)
+,`DataCollectionGroup_blSampleId` int(10) unsigned
+,`DataCollectionGroup_sessionId` int(10) unsigned
+,`DataCollectionGroup_workflowId` int(11) unsigned
+,`DataCollectionGroup_experimentType` enum('SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_startTime` datetime
+,`DataCollectionGroup_endTime` datetime
+,`DataCollectionGroup_comments` varchar(1024)
+,`DataCollectionGroup_actualSampleBarcode` varchar(45)
+,`DataCollectionGroup_xtalSnapshotFullPath` varchar(255)
+,`BLSample_blSampleId` int(10) unsigned
+,`BLSample_crystalId` int(10) unsigned
+,`BLSample_name` varchar(100)
+,`BLSample_code` varchar(45)
+,`BLSession_sessionId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+,`BLSession_protectedData` varchar(1024)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_name` varchar(255)
+,`Protein_acronym` varchar(45)
+,`DataCollection_dataCollectionId` int(11) unsigned
+,`DataCollection_dataCollectionGroupId` int(11)
+,`DataCollection_startTime` datetime
+,`DataCollection_endTime` datetime
+,`DataCollection_runStatus` varchar(45)
+,`DataCollection_numberOfImages` int(10) unsigned
+,`DataCollection_startImageNumber` int(10) unsigned
+,`DataCollection_numberOfPasses` int(10) unsigned
+,`DataCollection_exposureTime` float
+,`DataCollection_imageDirectory` varchar(255)
+,`DataCollection_wavelength` float
+,`DataCollection_resolution` float
+,`DataCollection_detectorDistance` float
+,`DataCollection_xBeam` float
+,`DataCollection_yBeam` float
+,`DataCollection_comments` varchar(1024)
+,`DataCollection_xtalSnapshotFullPath1` varchar(255)
+,`DataCollection_xtalSnapshotFullPath2` varchar(255)
+,`DataCollection_xtalSnapshotFullPath3` varchar(255)
+,`DataCollection_xtalSnapshotFullPath4` varchar(255)
+,`DataCollection_phiStart` float
+,`DataCollection_kappaStart` float
+,`DataCollection_omegaStart` float
+,`DataCollection_resolutionAtCorner` float
+,`DataCollection_bestWilsonPlotPath` varchar(255)
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_axisRange` float
+,`DataCollection_axisStart` float
+,`DataCollection_axisEnd` float
+,`Workflow_workflowTitle` varchar(255)
+,`Workflow_workflowType` enum('Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC')
+,`Workflow_status` varchar(255)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_phasing`
+--
+CREATE TABLE IF NOT EXISTS `v_datacollection_summary_phasing` (
+`v_datacollection_summary_phasing_autoProcIntegrationId` int(10) unsigned
+,`v_datacollection_summary_phasing_dataCollectionId` int(11) unsigned
+,`v_datacollection_summary_phasing_cell_a` float
+,`v_datacollection_summary_phasing_cell_b` float
+,`v_datacollection_summary_phasing_cell_c` float
+,`v_datacollection_summary_phasing_cell_alpha` float
+,`v_datacollection_summary_phasing_cell_beta` float
+,`v_datacollection_summary_phasing_cell_gamma` float
+,`v_datacollection_summary_phasing_anomalous` tinyint(1)
+,`v_datacollection_summary_phasing_autoproc_space_group` varchar(45)
+,`v_datacollection_summary_phasing_autoproc_autoprocId` int(10) unsigned
+,`v_datacollection_summary_phasing_autoProcScalingId` int(10) unsigned
+,`v_datacollection_summary_phasing_processingPrograms` varchar(255)
+,`v_datacollection_summary_phasing_autoProcProgramId` int(10) unsigned
+,`v_datacollection_summary_phasing_processingStatus` tinyint(1)
+,`v_datacollection_summary_session_sessionId` int(10) unsigned
+,`v_datacollection_summary_session_proposalId` int(10) unsigned
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_screening`
+--
+CREATE TABLE IF NOT EXISTS `v_datacollection_summary_screening` (
+`Screening_screeningId` int(10) unsigned
+,`Screening_dataCollectionId` int(11) unsigned
+,`ScreeningOutput_strategySuccess` tinyint(1)
+,`ScreeningOutput_indexingSuccess` tinyint(1)
+,`ScreeningOutput_rankingResolution` double
+,`ScreeningOutput_mosaicityEstimated` tinyint(1)
+,`ScreeningOutput_mosaicity` float
+,`ScreeningOutputLattice_spaceGroup` varchar(45)
+,`ScreeningOutputLattice_unitCell_a` float
+,`ScreeningOutputLattice_unitCell_b` float
+,`ScreeningOutputLattice_unitCell_c` float
+,`ScreeningOutputLattice_unitCell_alpha` float
+,`ScreeningOutputLattice_unitCell_beta` float
+,`ScreeningOutputLattice_unitCell_gamma` float
 );
 -- --------------------------------------------------------
 
@@ -2537,6 +2771,46 @@ CREATE TABLE IF NOT EXISTS `v_dewarProposalCodeByWeek` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_energyScan`
+--
+CREATE TABLE IF NOT EXISTS `v_energyScan` (
+`energyScanId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`blSampleId` int(10)
+,`fluorescenceDetector` varchar(255)
+,`scanFileFullPath` varchar(255)
+,`choochFileFullPath` varchar(255)
+,`jpegChoochFileFullPath` varchar(255)
+,`element` varchar(45)
+,`startEnergy` float
+,`endEnergy` float
+,`transmissionFactor` float
+,`exposureTime` float
+,`synchrotronCurrent` float
+,`temperature` float
+,`peakEnergy` float
+,`peakFPrime` float
+,`peakFDoublePrime` float
+,`inflectionEnergy` float
+,`inflectionFPrime` float
+,`inflectionFDoublePrime` float
+,`xrayDose` float
+,`startTime` datetime
+,`endTime` datetime
+,`edgeEnergy` varchar(255)
+,`filename` varchar(255)
+,`beamSizeVertical` float
+,`beamSizeHorizontal` float
+,`crystalClass` varchar(20)
+,`comments` varchar(1024)
+,`flux` double
+,`flux_end` double
+,`BLSample_sampleId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+);
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_hour`
 --
 CREATE TABLE IF NOT EXISTS `v_hour` (
@@ -2633,6 +2907,44 @@ CREATE TABLE IF NOT EXISTS `v_sampleByWeek` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_session`
+--
+CREATE TABLE IF NOT EXISTS `v_session` (
+`sessionId` int(10) unsigned
+,`expSessionPk` int(11) unsigned
+,`beamLineSetupId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`projectCode` varchar(45)
+,`BLSession_startDate` datetime
+,`BLSession_endDate` datetime
+,`beamLineName` varchar(45)
+,`scheduled` tinyint(1)
+,`nbShifts` int(10) unsigned
+,`comments` varchar(2000)
+,`beamLineOperator` varchar(45)
+,`visit_number` int(10) unsigned
+,`bltimeStamp` timestamp
+,`usedFlag` tinyint(1)
+,`sessionTitle` varchar(255)
+,`structureDeterminations` float
+,`dewarTransport` float
+,`databackupFrance` float
+,`databackupEurope` float
+,`operatorSiteNumber` varchar(10)
+,`BLSession_lastUpdate` timestamp
+,`BLSession_protectedData` varchar(1024)
+,`Proposal_title` varchar(200)
+,`Proposal_proposalCode` varchar(45)
+,`Proposal_ProposalNumber` varchar(45)
+,`Proposal_ProposalType` varchar(2)
+,`Person_personId` int(10) unsigned
+,`Person_familyName` varchar(100)
+,`Person_givenName` varchar(45)
+,`Person_emailAddress` varchar(60)
+);
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_week`
 --
 CREATE TABLE IF NOT EXISTS `v_week` (
@@ -2645,6 +2957,34 @@ CREATE TABLE IF NOT EXISTS `v_week` (
 --
 CREATE TABLE IF NOT EXISTS `v_weekDay` (
 `day` varchar(10)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_xfeFluorescenceSpectrum`
+--
+CREATE TABLE IF NOT EXISTS `v_xfeFluorescenceSpectrum` (
+`xfeFluorescenceSpectrumId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`fittedDataFileFullPath` varchar(255)
+,`scanFileFullPath` varchar(255)
+,`jpegScanFileFullPath` varchar(255)
+,`startTime` datetime
+,`endTime` datetime
+,`filename` varchar(255)
+,`energy` float
+,`exposureTime` float
+,`beamTransmission` float
+,`annotatedPymcaXfeSpectrum` varchar(255)
+,`beamSizeVertical` float
+,`beamSizeHorizontal` float
+,`crystalClass` varchar(20)
+,`comments` varchar(1024)
+,`flux` double
+,`flux_end` double
+,`BLSample_sampleId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
 );
 -- --------------------------------------------------------
 
@@ -2664,7 +3004,7 @@ CREATE TABLE IF NOT EXISTS `Workflow` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   PRIMARY KEY (`workflowId`),
   KEY `fk_Workflow_1` (`proposalId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29675 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36106 ;
 
 -- --------------------------------------------------------
 
@@ -2702,7 +3042,32 @@ CREATE TABLE IF NOT EXISTS `WorkflowMesh` (
   KEY `WorkflowMesh_FKIndex1` (`workflowId`),
   KEY `bestPositionId` (`bestPositionId`),
   KEY `bestImageId` (`bestImageId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=55505 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70649 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorkflowStep`
+--
+
+CREATE TABLE IF NOT EXISTS `WorkflowStep` (
+  `workflowStepId` int(11) NOT NULL AUTO_INCREMENT,
+  `workflowId` int(11) unsigned NOT NULL,
+  `workflowStepType` varchar(45) DEFAULT NULL,
+  `status` varchar(45) DEFAULT NULL,
+  `folderPath` varchar(1024) DEFAULT NULL,
+  `imageResultFilePath` varchar(1024) DEFAULT NULL,
+  `htmlResultFilePath` varchar(1024) DEFAULT NULL,
+  `resultFilePath` varchar(1024) DEFAULT NULL,
+  `comments` varchar(2048) DEFAULT NULL,
+  `crystalSizeX` varchar(45) DEFAULT NULL,
+  `crystalSizeY` varchar(45) DEFAULT NULL,
+  `crystalSizeZ` varchar(45) DEFAULT NULL,
+  `maxDozorScore` varchar(45) DEFAULT NULL,
+  `recordTimeStamp` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`workflowStepId`),
+  KEY `step_to_workflow_fk_idx` (`workflowId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10094 ;
 
 -- --------------------------------------------------------
 
@@ -2733,7 +3098,7 @@ CREATE TABLE IF NOT EXISTS `XFEFluorescenceSpectrum` (
   PRIMARY KEY (`xfeFluorescenceSpectrumId`),
   KEY `XFEFluorescnceSpectrum_FKIndex1` (`blSampleId`),
   KEY `XFEFluorescnceSpectrum_FKIndex2` (`sessionId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4472 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4772 ;
 
 -- --------------------------------------------------------
 
@@ -2768,8 +3133,47 @@ CREATE TABLE IF NOT EXISTS `XmlSchema` (
 -- Structure for view `V_AnalysisInfo`
 --
 DROP TABLE IF EXISTS `V_AnalysisInfo`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'V_AnalysisInfo')
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_AnalysisInfo` AS (select `exp`.`creationDate` AS `experimentCreationDate`,(select `r`.`timeStart` from `Run` `r` where (`r`.`runId` = `m`.`runId`)) AS `timeStart`,`dc`.`dataCollectionId` AS `dataCollectionId`,`m`.`measurementId` AS `measurementId`,`p`.`proposalId` AS `proposalId`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`m`.`priorityLevelId` AS `priorityLevelId`,`m`.`code` AS `code`,`m`.`exposureTemperature` AS `exposureTemperature`,`m`.`transmission` AS `transmission`,`m`.`comments` AS `measurementComments`,`exp`.`comments` AS `experimentComments`,`exp`.`experimentId` AS `experimentId`,`exp`.`experimentType` AS `experimentType`,`s`.`concentration` AS `conc`,`bu`.`acronym` AS `bufferAcronym`,`ma`.`acronym` AS `macromoleculeAcronym`,`bu`.`bufferId` AS `bufferId`,`ma`.`macromoleculeId` AS `macromoleculeId`,(select `su`.`substractedFilePath` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractedFilePath`,(select `su`.`rgGuinier` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGuinier`,(select `su`.`firstPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `firstPointUsed`,(select `su`.`lastPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `lastPointUsed`,(select distinct `su`.`I0` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `I0`,(select distinct `su`.`isagregated` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `isagregated`,(select distinct `su`.`subtractionId` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractionId`,(select distinct `su`.`rgGnom` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGnom`,(select distinct `su`.`total` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `total`,(select distinct `su`.`dmax` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `dmax`,(select distinct `su`.`volume` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `volume`,(select `su`.`I0Stdev` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `i0stdev`,(select `su`.`quality` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `quality`,(select `su`.`creationTime` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `substractionCreationTime`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 1))) AS `bufferBeforeMeasurementId`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 3))) AS `bufferAfterMeasurementId`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeAverageFilePath`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 2))) AS `sampleMeasurementId`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `sampleMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `averageFilePath`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `framesMerge`,(select `m2`.`framesCount` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `framesCount`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterAverageFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and `subToAb`.`subtractionId` and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId1`,(select `modelList`.`nsdFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and `subToAb`.`subtractionId` and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `nsdFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and `subToAb`.`subtractionId` and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId2`,(select `modelList`.`chi2RgFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `chi2RgFilePath`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModelId`,(select `ab`.`abInitioModelId` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `abInitioModelId`,(select `ab`.`comments` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `comments` from (((((((`Experiment` `exp` join `Buffer` `bu`) join `SaxsDataCollection` `dc`) join `Macromolecule` `ma`) join `MeasurementToDataCollection` `mtd`) join `Specimen` `s`) join `Measurement` `m`) join `Proposal` `p`) where ((`bu`.`bufferId` = `s`.`bufferId`) and (`exp`.`proposalId` = `p`.`proposalId`) and (`m`.`specimenId` = `s`.`specimenId`) and (`dc`.`dataCollectionId` = `mtd`.`dataCollectionId`) and (`mtd`.`measurementId` = `m`.`measurementId`) and (`s`.`macromoleculeId` = `ma`.`macromoleculeId`) and (`s`.`experimentId` = `exp`.`experimentId`) and (`exp`.`experimentType` <> 'TEMPLATE') and `p`.`proposalId` in (select distinct `prop`.`proposalId` from (`Proposal` `prop` join `Experiment` `exper`) where ((`exper`.`proposalId` = `prop`.`proposalId`) and (`prop`.`proposalId` <> 3374)))));
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_datacollection_summary`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_datacollection_summary')
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_datacollection_summary_autoprocintegration`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_autoprocintegration`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_datacollection_summary_autoprocintegration')
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_datacollection_summary_datacollectiongroup`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_datacollectiongroup`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_datacollection_summary_datacollectiongroup')
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_datacollection_summary_phasing`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_phasing`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_datacollection_summary_phasing')
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_datacollection_summary_screening`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_screening`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_datacollection_summary_screening')
 
 -- --------------------------------------------------------
 
@@ -2777,8 +3181,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_An
 -- Structure for view `v_dewar`
 --
 DROP TABLE IF EXISTS `v_dewar`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar` AS select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if((`bls`.`code` is not null),1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on((`s`.`proposalId` = `p`.`proposalId`))) join `Dewar` `d` on((`d`.`shippingId` = `s`.`shippingId`))) left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSession` `ss` on((`ss`.`sessionId` = `d`.`firstExperimentId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h1` on(((`h1`.`dewarId` = `d`.`dewarId`) and ((`h1`.`dewarStatus` = 'at ESRF') or (`h1`.`dewarStatus` = 'sent to User'))))) left join `DewarTransportHistory` `h2` on(((`h2`.`dewarId` = `d`.`dewarId`) and (`h2`.`storageLocation` = 'STORES-IN')))) where (((`p`.`proposalCode` like 'MX%') or (`p`.`proposalCode` like 'FX%') or (`p`.`proposalCode` like 'IFX%') or (`p`.`proposalCode` like 'IX%') or (`p`.`proposalCode` like 'BM14U%') or (`p`.`proposalCode` like 'bm161%') or (`p`.`proposalCode` like 'bm162%')) and ((`p`.`proposalCode` <> 'FX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'IFX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'MX') or (`p`.`proposalNumber` <> '415')) and (`d`.`type` = 'Dewar') and (`s`.`creationDate` is not null)) group by `d`.`dewarId`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewar')
 
 -- --------------------------------------------------------
 
@@ -2786,8 +3189,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarBeamline`
 --
 DROP TABLE IF EXISTS `v_dewarBeamline`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamline` AS select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where (`d`.`beamLineName` is not null) group by `d`.`beamLineName`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarBeamline')
 
 -- --------------------------------------------------------
 
@@ -2795,8 +3197,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarBeamlineByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarBeamlineByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamlineByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`beamLineName` like 'ID14%'),1,NULL)) AS `ID14`,count(if((`d`.`beamLineName` like 'ID23%'),1,NULL)) AS `ID23`,count(if((`d`.`beamLineName` like 'ID29%'),1,NULL)) AS `ID29`,count(if((`d`.`beamLineName` like 'BM14%'),1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%x-%v')))) group by `w`.`num` order by `w`.`num`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarBeamlineByWeek')
 
 -- --------------------------------------------------------
 
@@ -2804,8 +3205,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by `w`.`num`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarByWeek')
 
 -- --------------------------------------------------------
 
@@ -2813,8 +3213,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarByWeekTotal`
 --
 DROP TABLE IF EXISTS `v_dewarByWeekTotal`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeekTotal` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked`,count(if((`d`.`proposalCode` is not null),1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarByWeekTotal')
 
 -- --------------------------------------------------------
 
@@ -2822,8 +3221,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarList`
 --
 DROP TABLE IF EXISTS `v_dewarList`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarList` AS select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if((`bls`.`blSampleId` is not null),1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h` on((`h`.`dewarId` = `d`.`dewarId`))) group by `d`.`dewarId` order by `d`.`creationDate` desc;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarList')
 
 -- --------------------------------------------------------
 
@@ -2831,8 +3229,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarProposalCode`
 --
 DROP TABLE IF EXISTS `v_dewarProposalCode`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCode` AS select `d`.`proposalCode` AS `proposalCode`,count(0) AS `COUNT(*)` from `v_dewar` `d` group by `d`.`proposalCode`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarProposalCode')
 
 -- --------------------------------------------------------
 
@@ -2840,8 +3237,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarProposalCodeByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarProposalCodeByWeek`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_dewarProposalCodeByWeek')
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCodeByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`proposalCode` = 'MX'),1,NULL)) AS `MX`,count(if((`d`.`proposalCode` = 'FX'),1,NULL)) AS `FX`,count(if((`d`.`proposalCode` = 'BM14U'),1,NULL)) AS `BM14U`,count(if((`d`.`proposalCode` = 'BM161'),1,NULL)) AS `BM161`,count(if((`d`.`proposalCode` = 'BM162'),1,NULL)) AS `BM162`,count(if(((`d`.`proposalCode` <> 'MX') and (`d`.`proposalCode` <> 'FX') and (`d`.`proposalCode` <> 'BM14U') and (`d`.`proposalCode` <> 'BM161') and (`d`.`proposalCode` <> 'BM162')),1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_energyScan`
+--
+DROP TABLE IF EXISTS `v_energyScan`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_energyScan')
 
 -- --------------------------------------------------------
 
@@ -2849,8 +3253,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_hour`
 --
 DROP TABLE IF EXISTS `v_hour`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_hour` AS select date_format((now() - interval 23 hour),_utf8'%Y-%m-%d %H') AS `num` union select date_format((now() - interval 22 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 21 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 20 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 19 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 18 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 17 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 16 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 15 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 14 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 13 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 12 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 11 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 10 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 9 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 8 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 7 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 6 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 5 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 4 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 3 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 2 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 1 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 0 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_hour')
 
 -- --------------------------------------------------------
 
@@ -2858,8 +3261,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_ho
 -- Structure for view `v_Log4Stat`
 --
 DROP TABLE IF EXISTS `v_Log4Stat`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Log4Stat` AS select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (((`s`.`detail` like 'fx%') or (`s`.`detail` like 'ifx%') or (`s`.`detail` like 'mx%') or (`s`.`detail` like 'ix%') or (`s`.`detail` like 'bm14u%') or (`s`.`detail` like 'bm161%') or (`s`.`detail` like 'bm162%')) and (`s`.`detail` <> 'fx999') and (`s`.`detail` <> 'ifx999') and (`s`.`detail` <> 'mx415'));
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_Log4Stat')
 
 -- --------------------------------------------------------
 
@@ -2867,8 +3269,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Lo
 -- Structure for view `v_logonByHour`
 --
 DROP TABLE IF EXISTS `v_logonByHour`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByHour` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%H') order by `w`.`num`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_logonByHour')
 
 -- --------------------------------------------------------
 
@@ -2876,8 +3277,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByMonthDay`
 --
 DROP TABLE IF EXISTS `v_logonByMonthDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByMonthDay` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_logonByMonthDay')
 
 -- --------------------------------------------------------
 
@@ -2885,8 +3285,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByWeek`
 --
 DROP TABLE IF EXISTS `v_logonByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON')))) group by substr(`w`.`num`,6) order by `w`.`num`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_logonByWeek')
 
 -- --------------------------------------------------------
 
@@ -2894,8 +3293,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByWeekDay`
 --
 DROP TABLE IF EXISTS `v_logonByWeekDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeekDay` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by `w`.`day` order by `w`.`day`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_logonByWeekDay')
 
 -- --------------------------------------------------------
 
@@ -2903,8 +3301,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_monthDay`
 --
 DROP TABLE IF EXISTS `v_monthDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_monthDay` AS select date_format((now() - interval 31 day),_utf8'%Y-%m-%d') AS `num` union select date_format((now() - interval 30 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format((now() - interval 29 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format((now() - interval 28 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format((now() - interval 27 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format((now() - interval 26 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format((now() - interval 25 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format((now() - interval 24 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format((now() - interval 23 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format((now() - interval 22 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format((now() - interval 21 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format((now() - interval 20 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format((now() - interval 19 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format((now() - interval 18 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format((now() - interval 17 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format((now() - interval 16 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format((now() - interval 15 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format((now() - interval 14 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format((now() - interval 13 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format((now() - interval 12 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format((now() - interval 11 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format((now() - interval 10 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format((now() - interval 9 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format((now() - interval 8 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format((now() - interval 7 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_monthDay')
 
 -- --------------------------------------------------------
 
@@ -2912,8 +3309,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mo
 -- Structure for view `v_sample`
 --
 DROP TABLE IF EXISTS `v_sample`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sample` AS select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on((`c`.`containerId` = `bls`.`containerId`))) join `v_dewar` `d` on((`d`.`dewarId` = `c`.`dewarId`)));
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_sample')
 
 -- --------------------------------------------------------
 
@@ -2921,8 +3317,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sa
 -- Structure for view `v_sampleByWeek`
 --
 DROP TABLE IF EXISTS `v_sampleByWeek`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_sampleByWeek')
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sampleByWeek` AS select substr(`w`.`num`,6) AS `Week`,if((`w`.`num` <= date_format(now(),'%Y-%v')),count(if((`bls`.`proposalCode` is not null),1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on((`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_session`
+--
+DROP TABLE IF EXISTS `v_session`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_session')
 
 -- --------------------------------------------------------
 
@@ -2930,8 +3333,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sa
 -- Structure for view `v_week`
 --
 DROP TABLE IF EXISTS `v_week`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_week` AS select date_format((now() - interval 52 week),_utf8'%x-%v') AS `num` union select date_format((now() - interval 51 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format((now() - interval 50 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format((now() - interval 49 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format((now() - interval 48 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format((now() - interval 47 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format((now() - interval 46 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format((now() - interval 45 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format((now() - interval 44 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format((now() - interval 43 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format((now() - interval 42 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format((now() - interval 41 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format((now() - interval 40 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format((now() - interval 39 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format((now() - interval 38 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format((now() - interval 37 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format((now() - interval 36 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format((now() - interval 35 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format((now() - interval 34 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format((now() - interval 33 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format((now() - interval 32 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format((now() - interval 31 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format((now() - interval 30 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format((now() - interval 29 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format((now() - interval 28 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format((now() - interval 27 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format((now() - interval 26 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format((now() - interval 25 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format((now() - interval 24 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format((now() - interval 23 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format((now() - interval 22 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format((now() - interval 21 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format((now() - interval 20 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format((now() - interval 19 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format((now() - interval 18 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format((now() - interval 17 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format((now() - interval 16 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format((now() - interval 15 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format((now() - interval 14 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format((now() - interval 13 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format((now() - interval 12 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format((now() - interval 11 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format((now() - interval 10 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format((now() - interval 9 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format((now() - interval 8 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format((now() - interval 7 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format((now() - interval 6 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format((now() - interval 5 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format((now() - interval 4 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format((now() - interval 3 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format((now() - interval 2 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format((now() - interval 1 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format((now() - interval 0 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_week')
 
 -- --------------------------------------------------------
 
@@ -2939,8 +3341,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_we
 -- Structure for view `v_weekDay`
 --
 DROP TABLE IF EXISTS `v_weekDay`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_weekDay')
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_weekDay` AS select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `day` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')`;
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_xfeFluorescenceSpectrum`
+--
+DROP TABLE IF EXISTS `v_xfeFluorescenceSpectrum`;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxreader'@'myadminvm.esrf.fr' for table 'v_xfeFluorescenceSpectrum')
 
 --
 -- Constraints for dumped tables
@@ -3165,7 +3574,8 @@ ALTER TABLE `GridInfo`
 --
 ALTER TABLE `Image`
   ADD CONSTRAINT `Image_ibfk_1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Image_ibfk_2` FOREIGN KEY (`motorPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `Image_ibfk_3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Image_ibfk_4` FOREIGN KEY (`motorPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `ImageQualityIndicators`
@@ -3245,7 +3655,7 @@ ALTER TABLE `ModelToList`
 -- Constraints for table `Person`
 --
 ALTER TABLE `Person`
-  ADD CONSTRAINT `Person_ibfk_1` FOREIGN KEY (`laboratoryId`) REFERENCES `Laboratory` (`laboratoryId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `Person_ibfk_1` FOREIGN KEY (`laboratoryId`) REFERENCES `Laboratory` (`laboratoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Phasing`
@@ -3265,8 +3675,17 @@ ALTER TABLE `PhasingProgramAttachment`
 -- Constraints for table `PhasingStatistics`
 --
 ALTER TABLE `PhasingStatistics`
+  ADD CONSTRAINT `fk_PhasingStatistics_phasingStep` FOREIGN KEY (`phasingStepId`) REFERENCES `PhasingStep` (`phasingStepId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `PhasingStatistics_phasingHasScalingfk_1` FOREIGN KEY (`phasingHasScalingId1`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `PhasingStatistics_phasingHasScalingfk_2` FOREIGN KEY (`phasingHasScalingId2`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `PhasingStep`
+--
+ALTER TABLE `PhasingStep`
+  ADD CONSTRAINT `FK_autoprocScaling` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_program` FOREIGN KEY (`programRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_spacegroup` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Phasing_has_Scaling`
@@ -3482,6 +3901,12 @@ ALTER TABLE `WorkflowMesh`
   ADD CONSTRAINT `WorkflowMesh_workflowfk_1` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `WorkflowStep`
+--
+ALTER TABLE `WorkflowStep`
+  ADD CONSTRAINT `step_to_workflow_fk` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `XFEFluorescenceSpectrum`
 --
 ALTER TABLE `XFEFluorescenceSpectrum`
@@ -3493,3 +3918,7 @@ ALTER TABLE `XFEFluorescenceSpectrum`
 --
 ALTER TABLE `XmlDocument`
   ADD CONSTRAINT `XmlDocument_ibfk_1` FOREIGN KEY (`xmlSchemaId`) REFERENCES `XmlSchema` (`xmlSchemaId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
