@@ -24,27 +24,6 @@
 
 package ispyb.client.common;
 
-import ispyb.common.util.DBTools;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.sample.BLSample3Service;
-import ispyb.server.mx.services.sample.CrystalHasUuid3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.Image3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.Workflow3VO;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.CrystalHasUuid3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.server.mx.vos.screening.Screening3VO;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -54,6 +33,25 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMessages;
+
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.Image3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.mx.vos.screening.Screening3VO;
 
 /**
  * @struts.form name="breadCrumbsForm"
@@ -153,29 +151,12 @@ public class BreadCrumbsForm extends ActionForm implements Serializable {
 		try {
 			BLSample3Service sampleService = (BLSample3Service) ejb3ServiceLocator
 					.getLocalService(BLSample3Service.class);
-			CrystalHasUuid3Service crystalHasUuidService = (CrystalHasUuid3Service) ejb3ServiceLocator
-					.getLocalService(CrystalHasUuid3Service.class);
-			CrystalHasUuid3VO xtalUuid = null;
 			List lstUuids = null;
 
-			if (!isCrystal) // Sample
-			{
+			if (!isCrystal) { // Sample	
 				BLSample3VO targetSample = sampleService.findByPk(new Integer(id), false, false);
-				lstUuids = crystalHasUuidService.findByCrystalIdAndUuid(targetSample.getCrystalVOId(), null); // <--findbyCrystalId
-			} else // Crystal
-			{
-				lstUuids = crystalHasUuidService.findByCrystalIdAndUuid(new Integer(id), null);
-			}
-			// --- Get URL ---
-			if (lstUuids != null && lstUuids.size() > 0) {
-				xtalUuid = (CrystalHasUuid3VO) lstUuids.get(0);
 			}
 
-			if (xtalUuid != null) {
-				if (xtalUuid.getImageURL() != null)
-					if (xtalUuid.getImageURL().trim().compareToIgnoreCase("") != 0)
-						crystalImageUrl = xtalUuid.getImageURL();
-			}
 		} catch (Exception e) {
 			LOG.error("[GetcrystalImageURL]  no URL for " + ((isCrystal) ? "crystalId" : "blSampleId") + " " + id);
 		}

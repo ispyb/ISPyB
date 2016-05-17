@@ -18,6 +18,26 @@
  ******************************************************************************/
 package ispyb.client.mx.collection;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
+
 import ispyb.client.SiteSpecific;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.reference.ViewReferenceAction;
@@ -44,7 +64,6 @@ import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.GridInfo3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.Workflow3Service;
-import ispyb.server.mx.services.collections.WorkflowDehydration3Service;
 import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
@@ -56,28 +75,7 @@ import ispyb.server.mx.vos.collections.IspybReference3VO;
 import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
-import ispyb.server.mx.vos.collections.WorkflowDehydration3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 
 /**
  * 
@@ -108,8 +106,6 @@ public class ViewWorkflowAction extends DispatchAction {
 
 	protected WorkflowMesh3Service workflowMeshService;
 
-	protected WorkflowDehydration3Service workflowDehydrationService;
-
 	protected ImageQualityIndicators3Service imageQualityIndicatorsService;
 
 	/**
@@ -124,7 +120,6 @@ public class ViewWorkflowAction extends DispatchAction {
 		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
 		this.imageQualityIndicatorsService = (ImageQualityIndicators3Service) ejb3ServiceLocator.getLocalService(ImageQualityIndicators3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
-		this.workflowDehydrationService = (WorkflowDehydration3Service) ejb3ServiceLocator.getLocalService(WorkflowDehydration3Service.class);
 		this.workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator.getLocalService(WorkflowMesh3Service.class);
 
 	}
@@ -328,16 +323,10 @@ public class ViewWorkflowAction extends DispatchAction {
 
 			// dehydration 
 			List<DehydrationData> dehydrationDataValuesAll = new ArrayList<DehydrationData>();
-			WorkflowDehydration3VO workflowDehydration = ViewWorkflowAction.getWorkflowDehydration(workflow);
-			FileInformation dataFile = ViewWorkflowAction.getDataFileDehydration(workflowDehydration);
+			FileInformation dataFile = null;
 			int dataFileExists = 0;
 			String dataFileFullPath = "";
 			
-			if (workflowDehydration != null) {
-				dataFileExists = (dataFile.isExistFile() ? 1:0);
-				dataFileFullPath = dataFile.getFileFullPath();
-				workflow.setDataFile(dataFile);
-			}
 			if (displayDehydration == 1 && dataFileExists == 1) {
 				dehydrationDataValuesAll = ViewWorkflowAction.getDehydrationData(dataFileFullPath);
 			}
@@ -437,20 +426,6 @@ public class ViewWorkflowAction extends DispatchAction {
 			listw = workflowMeshService.findByWorkflowId(workflow.getWorkflowId()) ;
 		return listw;
 	}
-	
-	public static WorkflowDehydration3VO getWorkflowDehydration(Workflow workflow) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		WorkflowDehydration3Service workflowDehydrationService = (WorkflowDehydration3Service) ejb3ServiceLocator.getLocalService(WorkflowDehydration3Service.class);
-
-		WorkflowDehydration3VO workflowDehydration = null;
-		if (workflow != null){
-			List<WorkflowDehydration3VO> listw  = workflowDehydrationService.findByWorkflowId(workflow.getWorkflowId()) ;
-			if (listw != null && listw.size() > 0){
-				workflowDehydration  = listw.get(0);
-			}
-		}
-		return workflowDehydration ;
-	}
 
 	public static List<MeshData> getMeshData(List<DataCollection3VO> dataCollectionList, WorkflowMesh3VO workflowMesh) throws Exception{
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
@@ -527,21 +502,6 @@ public class ViewWorkflowAction extends DispatchAction {
 		return meshData;
 
 	}
-	
-	public static FileInformation getDataFileDehydration(WorkflowDehydration3VO workflowDehydration){
-		int dataFileExists = 0;
-		String dataFileFullPath = "";
-		FileInformation dataFile = null;
-		if (workflowDehydration != null){
-			String dataFileName = StringUtils.getFileName(workflowDehydration.getDataFilePath());
-			dataFileExists = PathUtils.fileExists(workflowDehydration.getDataFilePath());
-			dataFileFullPath = PathUtils.FitPathToOS(workflowDehydration.getDataFilePath());
-			String directoryFileName= StringUtils.getDirectoryFilename(dataFileFullPath);
-			dataFile = new FileInformation(dataFileName, dataFileExists == 1, dataFileFullPath, "", directoryFileName);
-		}
-		return dataFile;
-	}
-
 	
 	public  static List<DehydrationData>  getDehydrationData(String dataFileFullPath){
 		List<DehydrationData> dehydrationDataValuesAll = new ArrayList<DehydrationData>();

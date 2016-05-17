@@ -43,7 +43,6 @@ import java.util.Set;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -91,7 +90,6 @@ import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.GridInfo3Service;
-import ispyb.server.mx.services.collections.WorkflowDehydration3Service;
 import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
@@ -108,7 +106,6 @@ import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.WorkflowDehydration3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
@@ -156,8 +153,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 
 	protected WorkflowMesh3Service workflowMeshService;
 
-	protected WorkflowDehydration3Service workflowDehydrationService;
-
 	public static final String SAMPLE_TITLE = "Collection List for Sample";
 
 	private final static Logger LOG = Logger.getLogger(ViewDataCollectionAction.class);
@@ -184,8 +179,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 				.getLocalService(DataCollectionGroup3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
-		this.workflowDehydrationService = (WorkflowDehydration3Service) ejb3ServiceLocator
-				.getLocalService(WorkflowDehydration3Service.class);
 		this.workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator.getLocalService(WorkflowMesh3Service.class);
 		this.appService = (AutoProcProgram3Service) ejb3ServiceLocator.getLocalService(AutoProcProgram3Service.class);
 		this.apService = (AutoProc3Service) ejb3ServiceLocator.getLocalService(AutoProc3Service.class);
@@ -2129,23 +2122,10 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<ImageValueInfo> imageList = FileUtil.getImageListForDataCollectionGroup(dcg.getDataCollectionGroupId(), null, null,
 					null, null, request);
 
-			// dehydration
-			List<DehydrationData> dehydrationDataValuesAll = new ArrayList<DehydrationData>();
-			WorkflowDehydration3VO workflowDehydration = ViewWorkflowAction.getWorkflowDehydration(workflow);
-
-			FileInformation dataFile = ViewWorkflowAction.getDataFileDehydration(workflowDehydration);
+			FileInformation dataFile = null;
 			int dataFileExists = 0;
 			String dataFileFullPath = "";
 
-			if (workflowDehydration != null) {
-				dataFileExists = (dataFile.isExistFile() ? 1 : 0);
-				dataFileFullPath = dataFile.getFileFullPath();
-				if (workflow != null)
-					workflow.setDataFile(dataFile);
-			}
-			if (displayDehydration == 1 && dataFileExists == 1) {
-				dehydrationDataValuesAll = ViewWorkflowAction.getDehydrationData(dataFileFullPath);
-			}
 			// mesh data
 			List<MeshData> meshData = new ArrayList<MeshData>();
 			WorkflowMesh3VO workflowMesh = null;
@@ -2161,7 +2141,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			}
 
 			getDataCollectionForAll(request, response, errors, sessionId, dataCollectionList, displayImage, displayWorkflow,
-					displayMesh, displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData,
+					displayMesh, displayDehydration, workflow, snapshot, imageList, null, meshData,
 					dataCollectionGroupId);
 		} catch (Exception e) {
 			e.printStackTrace();

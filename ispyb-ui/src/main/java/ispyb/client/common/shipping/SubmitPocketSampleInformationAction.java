@@ -26,24 +26,6 @@
 
 package ispyb.client.common.shipping;
 
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.FileUtil;
-import ispyb.client.common.util.log.Log4StatLogger;
-import ispyb.client.mx.sample.AbstractSampleAction;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.DBTools;
-import ispyb.common.util.upload.ISPyBParser;
-import ispyb.common.util.upload.ShippingInformation;
-import ispyb.common.util.upload.UploadShipmentUtils;
-import ispyb.common.util.upload.XlsUploadException;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.sample.DataMatrixInSampleChanger3Service;
-import ispyb.server.mx.vos.sample.DataMatrixInSampleChanger3VO;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -61,6 +43,21 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
+
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.FileUtil;
+import ispyb.client.mx.sample.AbstractSampleAction;
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.upload.ISPyBParser;
+import ispyb.common.util.upload.ShippingInformation;
+import ispyb.common.util.upload.UploadShipmentUtils;
+import ispyb.common.util.upload.XlsUploadException;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
 
 /**
  * @struts.action name="uploadForm" path="/user/submitPocketSampleInformationAction"
@@ -97,8 +94,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 
 	private Shipping3Service shippingService;
 
-	private DataMatrixInSampleChanger3Service dataMatrixInSampleChanger3Service;
-
 	/**
 	 * Initialize the needed services.
 	 * 
@@ -107,8 +102,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 	private void initServices() {
 		try {
 			this.shippingService = (Shipping3Service) ejb3ServiceLocator.getLocalService(Shipping3Service.class);
-			this.dataMatrixInSampleChanger3Service = (DataMatrixInSampleChanger3Service) ejb3ServiceLocator
-					.getLocalService(DataMatrixInSampleChanger3Service.class);
 
 		} catch (Exception e) {
 			LOG.error(e);
@@ -229,9 +222,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 			String proposalNumber = String.valueOf(request.getSession().getAttribute(Constants.PROPOSAL_NUMBER));
 			Proposal3VO proposal = DBTools.getProposal(proposalCode, proposalNumber);
 
-			List<DataMatrixInSampleChanger3VO> listBeamlines = this.dataMatrixInSampleChanger3Service
-					.findByProposalId(proposal.getProposalId());
-			form.setListBeamlines(listBeamlines);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -381,8 +371,6 @@ public class SubmitPocketSampleInformationAction extends AbstractSampleAction {
 					}
 				}
 
-				// Acknowledge action
-				Log4StatLogger.Log4Stat("XLS_UPLOAD", proposalName, uploadedFileName);
 			}
 
 		} catch (Exception e) {

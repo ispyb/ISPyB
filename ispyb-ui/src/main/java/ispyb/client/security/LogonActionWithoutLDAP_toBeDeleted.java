@@ -18,21 +18,6 @@
  ******************************************************************************/
 package ispyb.client.security;
 
-import ispyb.client.common.menu.MenuContext;
-import ispyb.client.common.util.log.Log4StatLogger;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.services.config.MenuGroup3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.config.MenuGroup3VO;
-import ispyb.server.mx.services.autoproc.IspybAutoProcAttachment3Service;
-import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
-import ispyb.server.mx.services.collections.IspybCrystalClass3Service;
-import ispyb.server.mx.vos.autoproc.IspybAutoProcAttachment3VO;
-import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
-import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +33,20 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+
+import ispyb.client.common.menu.MenuContext;
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.services.config.MenuGroup3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.config.MenuGroup3VO;
+import ispyb.server.mx.services.autoproc.IspybAutoProcAttachment3Service;
+import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
+import ispyb.server.mx.services.collections.IspybCrystalClass3Service;
+import ispyb.server.mx.vos.autoproc.IspybAutoProcAttachment3VO;
+import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
+import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 
 /**
  * When this page is called the JBoss Authentification has been successfull
@@ -84,7 +83,6 @@ public class LogonActionWithoutLDAP_toBeDeleted extends Action {
 		try {
 			// --- Log ---
 			String userName = request.getUserPrincipal().toString();
-			Log4StatLogger.Log4Stat("LOGON", userName, "");
 
 			// EmployeeVO employee = LdapConnection.findByUniqueIdentifier(userName);
 			// String userGivenName = employee.getGivenName() == null || employee.getGivenName().trim().equals("") ?

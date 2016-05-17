@@ -18,31 +18,10 @@
  ******************************************************************************/
 package ispyb.client.mx.sample;
 
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.DBConstants;
-import ispyb.common.util.Constants;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.EnergyScan3Service;
-import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
-import ispyb.server.mx.services.sample.BLSample3Service;
-import ispyb.server.mx.services.sample.Crystal3Service;
-import ispyb.server.mx.services.sample.DataMatrixInSampleChanger3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.EnergyScan3VO;
-import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DataMatrixInSampleChanger3VO;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.ejb.CreateException;
 import javax.naming.NamingException;
@@ -56,6 +35,23 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.DBConstants;
+import ispyb.common.util.Constants;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.EnergyScan3Service;
+import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.EnergyScan3VO;
+import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
 
 /*
  * Abstract class AbstractSampleAction
@@ -75,8 +71,6 @@ public abstract class AbstractSampleAction extends DispatchAction {
 	private BLSample3Service sampleService;
 
 	private Crystal3Service crystalService;
-
-	private DataMatrixInSampleChanger3Service dmInSCService;
 	
 	private XFEFluorescenceSpectrum3Service xrfSpectraService;
 	
@@ -93,8 +87,6 @@ public abstract class AbstractSampleAction extends DispatchAction {
 
 		this.sampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 		this.crystalService = (Crystal3Service) ejb3ServiceLocator.getLocalService(Crystal3Service.class);
-		this.dmInSCService = (DataMatrixInSampleChanger3Service) ejb3ServiceLocator
-				.getLocalService(DataMatrixInSampleChanger3Service.class);
 		this.xrfSpectraService = (XFEFluorescenceSpectrum3Service) ejb3ServiceLocator.getLocalService(XFEFluorescenceSpectrum3Service.class);
 		this.energyScanService = (EnergyScan3Service) ejb3ServiceLocator.getLocalService(EnergyScan3Service.class);
 
@@ -549,49 +541,14 @@ public abstract class AbstractSampleAction extends DispatchAction {
 		try {
 			// Retrieve the list of beamlines for the current proposal having datamatrix codes scanned by SC
 
-			listBeamlines = dmInSCService.findBLNamesByProposalId(proposalId);
-			form.setListBeamlines(listBeamlines);
-
-			// Retrieve the list of DMcodes for the beamline just selected
-			// selectedbeamline is read first in form, then in Breadscrumbs.
-
 			if (selectedBeamline == null) {
 				selectedBeamline = BreadCrumbsForm.getIt(request).getSelectedBeamline();
 			}
 
 			if (selectedBeamline != null) {
 				form.setSelectedBeamline(selectedBeamline);
-				listDMCodesFull = dmInSCService.findByBeamLineName(selectedBeamline);
-				if (listDMCodesFull != null & !listDMCodesFull.isEmpty()) {
-					ListIterator lIterator = listDMCodesFull.listIterator();
-					DataMatrixInSampleChanger3VO dmValue;
-
-					while (lIterator.hasNext()) {
-
-						StringBuffer sbDMCode = new StringBuffer();
-						HashMap hashTest = new HashMap();
-
-						dmValue = (DataMatrixInSampleChanger3VO) lIterator.next();
-
-						if (dmValue.getContainerLocationInSC() != null)
-							sbDMCode.append(dmValue.getContainerLocationInSC().toString()).append(":");
-						if (dmValue.getLocationInContainer() != null)
-							sbDMCode.append(dmValue.getLocationInContainer().toString());
-						sbDMCode.append("  ").append(dmValue.getDatamatrixCode());
-
-						// hashTest.put("datamatrixCode", dmValue.getDatamatrixCode());
-						hashTest.put("datamatrixCode", sbDMCode.toString().replace("  ", "#"));
-						hashTest.put("datamatrixCodeFull", sbDMCode.toString());
-						listDMCodes.add(hashTest);
-					}
-				}
 			}
 
-			if (!listDMCodesFull.isEmpty()) {
-				DataMatrixInSampleChanger3VO firstDM = (DataMatrixInSampleChanger3VO) listDMCodesFull.get(0);
-				form.setListDMCodes(listDMCodes);
-				form.setCodeInScDate(firstDM.getBltimeStamp().toString());
-			}
 		} catch (Exception e)
 
 		{

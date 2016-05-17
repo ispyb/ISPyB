@@ -24,15 +24,14 @@
 
 package ispyb.client.common.shipping;
 
-import ispyb.client.mx.sample.ViewCrystalForm;
-import ispyb.server.mx.vos.sample.DataMatrixInSampleChanger3VO;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
+
+import ispyb.client.mx.sample.ViewCrystalForm;
 
 /**
 * @struts.form name="uploadForm"
@@ -47,8 +46,6 @@ public class UploadForm extends ActionForm implements Serializable
 	private String populatedTemplateURL = "";
 	private String populatedForShipmentTemplageURL = "";
 	private int currentShippingId = 0;
-
-	private List<DataMatrixInSampleChanger3VO> listBeamlines = new ArrayList<DataMatrixInSampleChanger3VO>(); // Beamlines having DM codes detectedby the SC
 	
 	private String codeInScDate; // Date when the DM code was entered into the
 									// DB
@@ -79,9 +76,6 @@ public class UploadForm extends ActionForm implements Serializable
 	
 	public int getCurrentShippingId() 														{return currentShippingId;}
 	public void setCurrentShippingId(int currentShippingId) 								{this.currentShippingId = currentShippingId;}
-
-	public List getListBeamlines() 								{return listBeamlines;}
-	public void setListBeamlines(List listBeamlines) 			{this.listBeamlines = listBeamlines;}
 	
 	public String getSelectedBeamline() 						{return selectedBeamline;}
 	public void setSelectedBeamline(String selectedBeamline) 	{this.selectedBeamline = selectedBeamline;}

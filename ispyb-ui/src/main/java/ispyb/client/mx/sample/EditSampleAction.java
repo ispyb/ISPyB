@@ -137,14 +137,12 @@ public class EditSampleAction extends AbstractSampleAction {
 				Integer crystalId = selectedCrystal.getCrystalId();
 
 				// ---------- No XML Diffraction plan try to get one from the Crystal -------------------
-				if (difPlanInfo.getDiffractionPlanId() == null || difPlanInfo.getXmlDocumentVO() == null) {
+				if (difPlanInfo.getDiffractionPlanId() == null ) {
 					if (selectedCrystal.getDiffractionPlanVO() != null) {
 						DiffractionPlan3VO foundDiffPlan = difPlanService.findByPk(
 								selectedCrystal.getDiffractionPlanVOId(), false, false);
 						if (difPlanInfo.getDiffractionPlanId() == null)
 							difPlanInfo = foundDiffPlan;
-						else if (difPlanInfo.getXmlDocumentVO() == null)
-							difPlanInfo.setXmlDocumentVO(foundDiffPlan.getXmlDocumentVO());
 					}
 				}
 
@@ -337,7 +335,6 @@ public class EditSampleAction extends AbstractSampleAction {
 					// --- Keep old things ---
 					DiffractionPlan3VO oldDiffractionPlan = difPlanService.findByPk(form.getDifPlanInfo()
 							.getDiffractionPlanId(), false, false);
-					newDiffractionPlan.setXmlDocumentVO(oldDiffractionPlan.getXmlDocumentVO());
 
 					// --- Update ---
 					difPlanService.update(newDiffractionPlan);

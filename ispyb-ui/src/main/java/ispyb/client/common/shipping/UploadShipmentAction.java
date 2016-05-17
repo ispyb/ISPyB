@@ -27,21 +27,6 @@
 
 package ispyb.client.common.shipping;
 
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.FileUtil;
-import ispyb.common.util.Constants;
-import ispyb.common.util.DBTools;
-import ispyb.common.util.upload.ISPyBParser;
-import ispyb.common.util.upload.ShippingInformation;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.sample.DataMatrixInSampleChanger3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.sample.DataMatrixInSampleChanger3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-
 import java.io.File;
 import java.util.List;
 
@@ -59,6 +44,19 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.FileUtil;
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.upload.ISPyBParser;
+import ispyb.common.util.upload.ShippingInformation;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 /**
  * @struts.action name="uploadForm" path="/user/uploadShipment" type="ispyb.client.common.shipping.UploadShipmentAction"
@@ -82,11 +80,8 @@ public class UploadShipmentAction extends DispatchAction {
 
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
-	private DataMatrixInSampleChanger3Service dataMatrixInSampleChanger3Service;
-
 	private void initServices() throws CreateException, NamingException {
-		this.dataMatrixInSampleChanger3Service = (DataMatrixInSampleChanger3Service) ejb3ServiceLocator
-				.getLocalService(DataMatrixInSampleChanger3Service.class);
+		
 	}
 
 	public static void main(String[] args) {
@@ -217,9 +212,6 @@ public class UploadShipmentAction extends DispatchAction {
 			String proposalNumber = String.valueOf(request.getSession().getAttribute(Constants.PROPOSAL_NUMBER));
 			Proposal3VO proposal = DBTools.getProposal(proposalCode, proposalNumber);
 
-			List<DataMatrixInSampleChanger3VO> listBeamlines = this.dataMatrixInSampleChanger3Service
-					.findByProposalId(proposal.getProposalId());
-			form.setListBeamlines(listBeamlines);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -338,32 +330,6 @@ public class UploadShipmentAction extends DispatchAction {
 			String beamlineName = selectedBeamlineName;
 
 			String[][] dmCodesinSC = null;
-
-			if (populateDMCodes) {
-				dmCodesinSC = new String[Constants.SC_BASKET_CAPACITY + 1][Constants.BASKET_SAMPLE_CAPACITY + 1];
-				Proposal3VO prop = DBTools.getProposal(proposalCode, proposalNumber);
-				if (prop != null) {
-					Integer proposalId = prop.getProposalId();
-
-					Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-					DataMatrixInSampleChanger3Service dataMatrixInSampleChanger3Service = (DataMatrixInSampleChanger3Service) ejb3ServiceLocator
-							.getLocalService(DataMatrixInSampleChanger3Service.class);
-
-					List<DataMatrixInSampleChanger3VO> lstDMCodes = dataMatrixInSampleChanger3Service
-							.findByProposalIdAndBeamlineName(proposalId, beamlineName);
-
-					for (int i = 0; i < lstDMCodes.size(); i++) {
-						DataMatrixInSampleChanger3VO dmInSC = lstDMCodes.get(i);
-						Integer basketLocation = dmInSC.getContainerLocationInSC();
-						Integer sampleLocation = dmInSC.getLocationInContainer();
-						String dmCode = dmInSC.getDatamatrixCode();
-						if (basketLocation <= Constants.SC_BASKET_CAPACITY
-								&& sampleLocation <= Constants.BASKET_SAMPLE_CAPACITY) {
-							dmCodesinSC[basketLocation][sampleLocation] = dmCode;
-						}
-					}
-				}
-			}
 
 			File originalTemplate = new File(xlsPath);
 			File populatedTemplate = new File(populatedTemplateFileName);

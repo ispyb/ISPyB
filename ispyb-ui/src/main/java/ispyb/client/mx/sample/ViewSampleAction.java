@@ -42,7 +42,6 @@ import ispyb.server.mx.services.collections.EnergyScan3Service;
 import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
-import ispyb.server.mx.services.sample.CrystalHasUuid3Service;
 import ispyb.server.mx.services.sample.DiffractionPlan3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
@@ -50,7 +49,6 @@ import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.CrystalHasUuid3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
@@ -1108,24 +1106,6 @@ public class ViewSampleAction extends DispatchAction {
 	 */
 	public static String getCrystalImageURL(Integer crystalId) {
 		String crystalImageURL = null;
-		try {
-			CrystalHasUuid3VO crystalHasUuid = null;
-			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-			Crystal3Service crystalService = (Crystal3Service) ejb3ServiceLocator
-					.getLocalService(Crystal3Service.class);
-			CrystalHasUuid3Service crystalUuidService = (CrystalHasUuid3Service) ejb3ServiceLocator
-					.getLocalService(CrystalHasUuid3Service.class);
-			Crystal3VO crystal = crystalService.findByPk(crystalId, false);
-			List<CrystalHasUuid3VO> uuids = crystalUuidService.findByCrystalIdAndUuid(crystalId,
-					crystal.getCrystalUUID());
-
-			if (uuids.size() > 0) {
-				crystalHasUuid = uuids.get(0);
-				crystalImageURL = crystalHasUuid.getImageURL();
-			}
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
 
 		return crystalImageURL;
 	}
