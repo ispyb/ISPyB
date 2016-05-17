@@ -37,12 +37,9 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 
 	public DiffractionPlanWS3VO(DiffractionPlan3VO vo) {
 		super(vo);
-		if (vo != null){
-			xmlDocumentId = vo.getXmlDocumentVOId();
-		}
 	}
 	
-	public DiffractionPlanWS3VO(Integer diffractionPlanId, Integer xmlDocumentId2, String experimentKind,
+	public DiffractionPlanWS3VO(Integer diffractionPlanId, String experimentKind,
 			Double observedResolution, Double minimalResolution, Double exposureTime, Double oscillationRange,
 			Double maximalResolution, Double screeningResolution, Double radiationSensitivity,
 			String anomalousScatterer, Double preferredBeamSizeX, Double preferredBeamSizeY, Double preferredBeamDiameter,String comments,
@@ -52,7 +49,7 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 			Double requiredResolution, String strategyOption, String kappaStrategyOption, Integer numberOfPositions, 
 			Double minDimAccrossSpindleAxis, Double maxDimAccrossSpindleAxis, Double radiationSensitivityBeta, 
 			Double radiationSensitivityGamma, Double minOscWidth) {
-		super(diffractionPlanId, null, experimentKind,
+		super(diffractionPlanId, experimentKind,
 				observedResolution, minimalResolution, exposureTime, oscillationRange,
 				maximalResolution, screeningResolution, radiationSensitivity,
 				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter,comments,
@@ -61,7 +58,6 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 				forcedSpaceGroup, requiredCompleteness, requiredMultiplicity,
 				requiredResolution, strategyOption, kappaStrategyOption, numberOfPositions, 
 				minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta, radiationSensitivityGamma, minOscWidth);
-		this.xmlDocumentId = xmlDocumentId2;
 	}
 
 	public Integer getXmlDocumentId() {

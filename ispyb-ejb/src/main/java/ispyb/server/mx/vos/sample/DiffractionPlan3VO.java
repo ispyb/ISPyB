@@ -53,10 +53,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "diffractionPlanId")
 	protected Integer diffractionPlanId;
 
-	@ManyToOne
-	@JoinColumn(name = "xmlDocumentId")
-	private XmlDocument3VO xmlDocumentVO;
-
 	@Column(name = "experimentKind")
 	protected String experimentKind;
 
@@ -164,7 +160,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		super();
 	}
 
-	public DiffractionPlan3VO(Integer diffractionPlanId, XmlDocument3VO xmlDocumentVO, String experimentKind,
+	public DiffractionPlan3VO(Integer diffractionPlanId, String experimentKind,
 			Double observedResolution, Double minimalResolution, Double exposureTime, Double oscillationRange,
 			Double maximalResolution, Double screeningResolution, Double radiationSensitivity,
 			String anomalousScatterer, Double preferredBeamSizeX, Double preferredBeamSizeY, Double preferredBeamDiameter,String comments,
@@ -176,7 +172,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 			Double radiationSensitivityGamma, Double minOscWidth) {
 		super();
 		this.diffractionPlanId = diffractionPlanId;
-		this.xmlDocumentVO = xmlDocumentVO;
 		this.experimentKind = experimentKind;
 		this.observedResolution = observedResolution;
 		this.minimalResolution = minimalResolution;
@@ -213,7 +208,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 
 	public DiffractionPlan3VO(DiffractionPlan3VO vo) {
 		this.diffractionPlanId = vo.getDiffractionPlanId();
-		this.xmlDocumentVO = vo.getXmlDocumentVO();
 		this.experimentKind = vo.getExperimentKind();
 		this.observedResolution = vo.getObservedResolution();
 		this.minimalResolution = vo.getMinimalResolution();
@@ -250,7 +244,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 
 	public void fillVOFromWS(DiffractionPlanWS3VO vo) {
 		this.diffractionPlanId = vo.getDiffractionPlanId();
-		this.xmlDocumentVO = null;
 		this.experimentKind = vo.getExperimentKind();
 		this.observedResolution = vo.getObservedResolution();
 		this.minimalResolution = vo.getMinimalResolution();
@@ -305,14 +298,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	 */
 	public void setDiffractionPlanId(Integer diffractionPlanId) {
 		this.diffractionPlanId = diffractionPlanId;
-	}
-
-	public XmlDocument3VO getXmlDocumentVO() {
-		return xmlDocumentVO;
-	}
-
-	public void setXmlDocumentVO(XmlDocument3VO xmlDocumentVO) {
-		this.xmlDocumentVO = xmlDocumentVO;
 	}
 
 	public String getExperimentKind() {
@@ -592,12 +577,6 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@Override
 	public void checkValues(boolean create) throws Exception {
 		// TODO
-	}
-
-	public Integer getXmlDocumentVOId() {
-		if (this.xmlDocumentVO == null)
-			return null;
-		return this.xmlDocumentVO.getXmlDocumentId();
 	}
 	
 	public String toWSString(){
