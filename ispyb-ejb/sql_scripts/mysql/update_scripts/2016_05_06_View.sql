@@ -51,7 +51,7 @@ VIEW `v_datacollection_summary_phasing` AS
         LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)))
         LEFT JOIN `Crystal` ON ((`Crystal`.`crystalId` = `BLSample`.`crystalId`)))
         LEFT JOIN `Protein` ON ((`Crystal`.`proteinId` = `Protein`.`proteinId`)))
-        LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)))
+        LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
         
         
 CREATE 
@@ -98,4 +98,4 @@ VIEW `v_datacollection_phasing_program_run` AS
         LEFT JOIN `Crystal` ON ((`Crystal`.`crystalId` = `BLSample`.`crystalId`)))
         LEFT JOIN `Protein` ON ((`Crystal`.`proteinId` = `Protein`.`proteinId`)))
         LEFT JOIN `PhasingProgramAttachment` ON ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun`.`phasingProgramRunId`)))
-        LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)))
+        LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
