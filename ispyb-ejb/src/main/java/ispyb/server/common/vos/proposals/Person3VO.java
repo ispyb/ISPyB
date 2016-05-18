@@ -89,9 +89,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "login")
 	protected String login;
 
-	@Column(name = "passwd")
-	protected String passwd;
-
 	@Column(name = "faxNumber")
 	protected String faxNumber;
 
@@ -122,7 +119,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.emailAddress = emailAddress;
 		this.phoneNumber = phoneNumber;
 		this.login = login;
-		this.passwd = passwd;
 		this.faxNumber = faxNumber;
 		this.proposalVOs = proposalVOs;
 	}
@@ -139,7 +135,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.emailAddress = vo.getEmailAddress();
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
-		this.passwd = vo.getPasswd();
 		this.faxNumber = vo.getFaxNumber();
 		this.proposalVOs = vo.getProposalVOs();
 	}
@@ -155,7 +150,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.emailAddress = vo.getEmailAddress();
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
-		this.passwd = vo.getPasswd();
 		this.faxNumber = vo.getFaxNumber();
 		this.proposalVOs = null;
 	}
@@ -251,14 +245,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setLogin(String login) {
 		this.login = login;
-	}
-
-	public String getPasswd() {
-		return passwd;
-	}
-
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
 	}
 
 	public String getFaxNumber() {
