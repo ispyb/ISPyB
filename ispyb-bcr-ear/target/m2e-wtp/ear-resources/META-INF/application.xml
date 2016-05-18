@@ -3,6 +3,9 @@
   <display-name>ispyb-bcr-ear</display-name>
   <initialize-in-order>true</initialize-in-order>
   <module>
+    <ejb>ispyb-ejb3.jar</ejb>
+  </module>
+  <module>
     <web>
       <web-uri>ispyb-bcr.war</web-uri>
       <context-root>/bcr/bcr</context-root>
