@@ -10,15 +10,29 @@
 	<packaging>ear</packaging>
 	
 	<dependencies>
-		<!--
+	
+	<!--  
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>dewarAPI</artifactId>
 			<type>ejb</type>
 			<version>1.0</version>
 		</dependency>
-			-->
-			
+		
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.0.0.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+				
+-->			
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
@@ -33,10 +47,16 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
-	
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4</version>
+		</dependency>
+		
 	</dependencies>
 	<build>
-		<finalName>bcr</finalName>
+		<finalName>bcr</finalName>		
 		<resources>
     		<resource>
       		<directory>src/main/resources</directory>
@@ -58,14 +78,15 @@
 						have any modules (EJB-JARs and WARs) use them -->
 					<defaultLibBundleDir>lib</defaultLibBundleDir>
 
-					<modules>
-<!--  					 
+					<modules>	
+					<!--  						--> 						
 						<ejbModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ejb3</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
-	-->											 						 
+		
+						 						 
 						<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-bcr</artifactId>
