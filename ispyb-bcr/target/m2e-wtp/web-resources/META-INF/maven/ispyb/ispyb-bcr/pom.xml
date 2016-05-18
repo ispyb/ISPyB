@@ -13,10 +13,10 @@
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jboss.home.dev>${jboss.home}</jboss.home.dev> 
-	<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>	
+	<xdoclet.home>C:/java/xdoclet-1.2.3</xdoclet.home>	
 	<common.lib.dir>${basedir}/lib</common.lib.dir>
 	<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
-	<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
+	<jboss.modules.base>C:/java/appServers/wildfly-8.2.0.Final/modules/system/layers/base</jboss.modules.base>
   </properties>
   
   <dependencies>
@@ -26,14 +26,22 @@
 			<artifactId>struts</artifactId>
 			<version>1.2.7</version>
 		</dependency>
-
+  
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
+<!--		
+		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>dewarAPI</artifactId>
+			<version>1.0</version>
+		</dependency>	
+		-->
+				
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -274,7 +282,7 @@
     	<echo message="xdoclet.home = ${xdoclet.home}" />
     	
     	<path id="xdoclet.client.path">	
-			<fileset dir="${xdoclet.home}">
+			<fileset dir="${xdoclet.home}/lib">
 				<include name="*.jar" />
 			</fileset>
 			<fileset dir="${common.lib.dir}">
