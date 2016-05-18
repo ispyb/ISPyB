@@ -48,7 +48,7 @@ public class LogonAction extends Action {
 
 		try {
 			String username = request.getUserPrincipal().toString();
-			ClientLogger.Log4Stat("LOGON", username, "");
+			//ClientLogger.Log4Stat("LOGON", username, "");
 			HttpSession session = request.getSession();
 			String userRole = "";
 			;

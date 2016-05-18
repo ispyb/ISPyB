@@ -11,9 +11,6 @@
 package bcr.client.util;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-
-import bcr.common.log.StatTraceLevel;
 
 /**
  * @author Ricardo Leal
@@ -22,8 +19,6 @@ import bcr.common.log.StatTraceLevel;
 public class ClientLogger {
 
 	private static Logger log;
-
-	private static Logger log4Stat;
 
 	private static void initialize() {
 		try {
@@ -42,16 +37,4 @@ public class ClientLogger {
 		return log;
 	}
 
-	public static void Log4Stat(String msg, String detail, String value) {
-		if (log4Stat == null) {
-			initialize();
-		}
-		if (log4Stat != null) {
-			MDC.put("detail", detail);
-			MDC.put("value", value);
-			log4Stat.log(StatTraceLevel.ISPYB_STAT, msg);
-			MDC.remove("detail");
-			MDC.remove("value");
-		}
-	}
 }

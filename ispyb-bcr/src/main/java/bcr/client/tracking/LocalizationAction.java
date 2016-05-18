@@ -6,8 +6,6 @@
 
 package bcr.client.tracking;
 
-import ispyb.server.common.services.shipping.DewarAPIService;
-
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +20,7 @@ import org.apache.struts.actions.DispatchAction;
 
 import bcr.common.util.Constants;
 import bcr.common.util.Ejb3ServiceLocatorBCR;
+import ispyb.server.common.services.shipping.DewarAPIService;
 
 /**
  * @struts.action name="localizationForm" path="/user/localization" type="bcr.client.tracking.LocalizationAction"
