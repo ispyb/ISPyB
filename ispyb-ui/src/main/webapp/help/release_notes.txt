@@ -1,3 +1,15 @@
+**************
+* 23.05.2016     *
+**************
+
+Changes linked to database merging with DLS:
+- removed tables: BLSample_has_EnergyScan`, `Crystal_has_UUID`, `DatamatrixInSampleChanger',
+`UntrustedRegion`, `WorkflowDehydration`,  `Log4Stat`, `WorkflowMesh`, `MotorPosition'.
+- removed fields: in table Person drop passwd;
+
+
+********************************************************************************
+
 New TAG : TAG TAG ISPYB_4.0.3 before changes linked to database merging with DLS
 
 **************
