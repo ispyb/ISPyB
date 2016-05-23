@@ -50,13 +50,11 @@ import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.mx.services.collections.MotorPosition3Service;
 import ispyb.server.mx.services.collections.Position3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.BLSubSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.DiffractionPlan3Service;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Position3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.BLSampleWS3VO;
@@ -550,8 +548,6 @@ public class ToolsForBLSampleWebService {
 			DiffractionPlan3Service diffractionPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
 					.getLocalService(DiffractionPlan3Service.class);
 			Position3Service positionService = (Position3Service) ejb3ServiceLocator.getLocalService(Position3Service.class);
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
 
 			BLSubSample3VO blSubSampleVO = new BLSubSample3VO();
 
@@ -564,9 +560,6 @@ public class ToolsForBLSampleWebService {
 			Position3VO positionVO = null;
 			if (vo.getPositionId() != null && vo.getPositionId() > 0)
 				positionVO = positionService.findByPk(vo.getPositionId());
-			MotorPosition3VO motorPositionVO = null;
-			if (vo.getMotorPositionId() != null && vo.getMotorPositionId() > 0)
-				motorPositionVO = motorPositionService.findByPk(vo.getMotorPositionId());
 			Integer blSubSampleId = vo.getBlSubSampleId();
 			// load the object elsewhere there is an error with the childs
 			if (blSubSampleId != null && blSubSampleId > 0) {
@@ -576,7 +569,6 @@ public class ToolsForBLSampleWebService {
 			blSubSampleVO.setBlSampleVO(sampleVO);
 			blSubSampleVO.setDiffractionPlanVO(diffractionPlanVO);
 			blSubSampleVO.setPositionVO(positionVO);
-			blSubSampleVO.setMotorPositionVO(motorPositionVO);
 
 			if (blSubSampleId == null || blSubSampleId == 0) {
 				vo.setBlSampleId(null);
