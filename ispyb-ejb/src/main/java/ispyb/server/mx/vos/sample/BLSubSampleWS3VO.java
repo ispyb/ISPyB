@@ -44,7 +44,6 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 		super(vo);
 		this.blSampleId = vo.getBlSampleVO().getBlSampleId();
 		this.positionId = (vo.getPositionVO() == null ? null: vo.getPositionVO().getPositionId());
-		this.motorPositionId = (vo.getMotorPositionVO() == null ? null: vo.getMotorPositionVO().getMotorPositionId());
 		this.diffractionPlanId = (vo.getDiffractionPlanVO() == null ? null: vo.getDiffractionPlanVO().getDiffractionPlanId());
 	}
 

@@ -29,12 +29,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.log4j.Logger;
+
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Position3VO;
-
-import org.apache.log4j.Logger;
 
 /**
  * BLSubSample3 value object mapping table BLSubSample
@@ -67,10 +66,6 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "positionId")
 	private Position3VO positionVO;
 	
-	@ManyToOne
-	@JoinColumn(name = "motorPositionId")
-	private MotorPosition3VO motorPositionVO;
-	
 	@Column(name = "blSubSampleUUID")
 	protected String blSubSampleUUID;
 	
@@ -96,7 +91,6 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 
 	public BLSubSample3VO(Integer blSubSampleId, BLSample3VO blSampleVO,
 			DiffractionPlan3VO diffractionPlanVO, Position3VO positionVO,
-			MotorPosition3VO motorPositionVO,
 			String blSubSampleUUID, String imgFileName, String imgFilePath,
 			String comments, Date recordTimeStamp) {
 		super();
@@ -104,7 +98,6 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 		this.blSampleVO = blSampleVO;
 		this.diffractionPlanVO = diffractionPlanVO;
 		this.positionVO = positionVO;
-		this.motorPositionVO = motorPositionVO;
 		this.blSubSampleUUID = blSubSampleUUID;
 		this.imgFileName = imgFileName;
 		this.imgFilePath = imgFilePath;
@@ -118,7 +111,6 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 		this.blSampleVO = vo.getBlSampleVO();
 		this.diffractionPlanVO = vo.getDiffractionPlanVO();
 		this.positionVO = vo.getPositionVO();
-		this.motorPositionVO = vo.getMotorPositionVO();
 		this.blSubSampleUUID = vo.getBlSubSampleUUID();
 		this.imgFileName = vo.getImgFileName();
 		this.imgFilePath = vo.getImgFilePath();
@@ -165,14 +157,6 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setPositionVO(Position3VO positionVO) {
 		this.positionVO = positionVO;
-	}
-
-	public MotorPosition3VO getMotorPositionVO() {
-		return motorPositionVO;
-	}
-
-	public void setMotorPositionVO(MotorPosition3VO motorPositionVO) {
-		this.motorPositionVO = motorPositionVO;
 	}
 
 	public String getBlSubSampleUUID() {

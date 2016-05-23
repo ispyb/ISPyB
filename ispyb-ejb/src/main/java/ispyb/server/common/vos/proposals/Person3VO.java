@@ -106,7 +106,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	public Person3VO(Integer personId, Laboratory3VO laboratoryVO, String siteId, String personUUID, String familyName, String givenName,
-			String title, String emailAddress, String phoneNumber, String login, String passwd, String faxNumber,
+			String title, String emailAddress, String phoneNumber, String login, String faxNumber,
 			Set<Proposal3VO> proposalVOs) {
 		super();
 		this.personId = personId;

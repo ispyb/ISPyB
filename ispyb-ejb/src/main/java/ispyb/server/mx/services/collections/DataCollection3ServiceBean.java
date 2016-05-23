@@ -26,7 +26,6 @@ import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionWS3VO;
 import ispyb.server.mx.vos.collections.Detector3VO;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.XDSInfo;
 
 import java.util.ArrayList;
@@ -233,14 +232,10 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			strategySubWedgeOrigId = otherVO.getStrategySubWedgeOrigVOId();
 			detectorId = otherVO.getDetectorVOId();
 			blSubSampleId = otherVO.getBlSubSampleVOId();
-			startPositionId = otherVO.getStartPositionVOId();
-			endPositionId = otherVO.getEndPositionVOId();
 			otherVO.setDataCollectionGroupVO(null);
 			otherVO.setStrategySubWedgeOrigVO(null);
 			otherVO.setDetectorVO(null);
 			otherVO.setBlSubSampleVO(null);
-			otherVO.setStartPositionVO(null);
-			otherVO.setEndPositionVO(null);
 			DataCollectionWS3VO wsDataCollection = new DataCollectionWS3VO(otherVO);
 			wsDataCollection.setDataCollectionGroupId(dataCollectionGroupId);
 			wsDataCollection.setStrategySubWedgeOrigId(strategySubWedgeOrigId);
@@ -623,16 +618,10 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 				detectorModel = detector.getDetectorModel();
 			}
 
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
-			MotorPosition3VO motorPosition = null;
-			if (motorPositionId != null)
-				motorPosition = motorPositionService.findByPk(motorPositionId);
-
 			xds = new XDSInfo(polarisation, axisRange, axisStart, axisEnd, detectorDistance, fileTemplate,
 					imageDirectory, imageSuffix, numberOfImages, startImageNumber, phiStart, kappaStart, wavelength,
 					xbeam, ybeam, detectorPixelSizeHorizontal, detectorPixelSizeVertical, detectorManufacturer,
-					detectorModel, motorPosition);
+					detectorModel);
 
 		}
 

@@ -43,7 +43,6 @@ public class GridInfoWS3VO extends GridInfo3VO {
 	}
 	public GridInfoWS3VO(GridInfo3VO vo) {
 		super(vo);
-		this.workflowMeshId = vo.getWorkflowMeshVO().getWorkflowMeshId();
 		
 	}
 	@Override
