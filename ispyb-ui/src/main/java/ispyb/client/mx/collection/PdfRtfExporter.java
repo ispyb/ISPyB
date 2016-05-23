@@ -19,29 +19,6 @@
 
 package ispyb.client.mx.collection;
 
-import ispyb.client.common.util.Formatter;
-import ispyb.client.mx.ranking.SampleRankingVO;
-import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.PathUtils;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
-import ispyb.server.mx.services.collections.WorkflowMesh3Service;
-import ispyb.server.mx.vos.autoproc.AutoProc3VO;
-import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.EnergyScan3VO;
-import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.Workflow3VO;
-import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
-import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
-import ispyb.server.mx.vos.screening.Screening3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
-
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -74,6 +51,26 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+
+import ispyb.client.common.util.Formatter;
+import ispyb.client.mx.ranking.SampleRankingVO;
+import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
+import ispyb.common.util.Constants;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
+import ispyb.server.mx.vos.autoproc.AutoProc3VO;
+import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.EnergyScan3VO;
+import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
+import ispyb.server.mx.vos.screening.Screening3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
 
 /**
  * allows creation of PDF or RTF report - general report, available in the
@@ -2532,32 +2529,7 @@ public class PdfRtfExporter {
 				tableWF.addCell(cellCrystalImage);
 				// workflowMesh cartography
 				Workflow3VO mxExpressOWF = dataCollectionGroupVO.getWorkflowVO();
-				List<WorkflowMesh3VO> listWFMesh = new ArrayList<WorkflowMesh3VO>();
 				Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-				WorkflowMesh3Service workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator
-						.getLocalService(WorkflowMesh3Service.class);
-				listWFMesh = workflowMeshService.findByWorkflowId(mxExpressOWF.getWorkflowId());
-
-				if (listWFMesh != null && listWFMesh.size() > 0) {
-					Cell cellImg1 = getMeshMapCell(listWFMesh.get(0));
-					if (cellImg1 == null) {
-						tableWF.addCell(new Paragraph("Image not found", FONT_DOC));
-					} else {
-						tableWF.addCell(cellImg1);
-					}
-					if (listWFMesh.size() > 1) {
-						Cell cellImg2 = getMeshMapCell(listWFMesh.get(1));
-						if (cellImg2 == null) {
-							tableWF.addCell(new Paragraph("Image not found", FONT_DOC));
-						} else {
-							tableWF.addCell(cellImg2);
-						}
-					} else
-						tableWF.addCell(new Paragraph("No Workflow found", FONT_DOC));
-				} else {
-					tableWF.addCell(new Paragraph("No Workflow found", FONT_DOC));
-					tableWF.addCell(new Paragraph("No Workflow found", FONT_DOC));
-				}
 
 				//
 				// third row:
@@ -2687,49 +2659,6 @@ public class PdfRtfExporter {
 				setStrategyTable2(document, dcInfo);
 			}
 		} // end dataCollectionGroup null
-	}
-
-	/**
-	 * returns the cell for the mesh map
-	 * 
-	 * @param wfMesh
-	 * @return
-	 */
-	private Cell getMeshMapCell(WorkflowMesh3VO wfMesh) {
-		String imgMap = null;
-		String cartographyPath = wfMesh.getCartographyPath();
-		if (cartographyPath != null) {
-			imgMap = PathUtils.FitPathToOS(cartographyPath);
-		}
-		try {
-			if (imgMap != null) {
-				Image jpgMap = Image.getInstance(imgMap);
-				// System.out.println(jpgMap.getWidth()+" * "+jpgMap.getHeight());
-				jpgMap.scaleAbsolute(jpgMap.getWidth() * IMAGE_HEIGHT / jpgMap.getHeight(), IMAGE_HEIGHT);
-				Cell cellImage = new Cell(jpgMap);
-				cellImage.setLeading(0);
-				cellImage.setBorderWidth(0);
-				cellImage.setHorizontalAlignment(Element.ALIGN_CENTER);
-				return cellImage;
-			} else {
-				return new Cell(new Paragraph("no map found", FONT_DOC));
-			}
-		} catch (IOException e) {
-			try {
-				return new Cell(new Paragraph(imgMap + " not found", FONT_DOC));
-			} catch (BadElementException e1) {
-				e1.printStackTrace();
-				return null;
-			}
-		} catch (Exception e) {
-			try {
-				return new Cell(new Paragraph(imgMap + " not found", FONT_DOC));
-			} catch (BadElementException e1) {
-				e1.printStackTrace();
-				return null;
-			}
-		}
-
 	}
 
 	/**

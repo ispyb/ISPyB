@@ -90,7 +90,6 @@ import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.GridInfo3Service;
-import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.vos.autoproc.AutoProc3VO;
@@ -106,7 +105,6 @@ import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
@@ -151,8 +149,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 
 	protected GridInfo3Service gridInfoService;
 
-	protected WorkflowMesh3Service workflowMeshService;
-
 	public static final String SAMPLE_TITLE = "Collection List for Sample";
 
 	private final static Logger LOG = Logger.getLogger(ViewDataCollectionAction.class);
@@ -179,7 +175,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 				.getLocalService(DataCollectionGroup3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
-		this.workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator.getLocalService(WorkflowMesh3Service.class);
 		this.appService = (AutoProcProgram3Service) ejb3ServiceLocator.getLocalService(AutoProcProgram3Service.class);
 		this.apService = (AutoProc3Service) ejb3ServiceLocator.getLocalService(AutoProc3Service.class);
 	}
@@ -1843,7 +1838,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 	public void getDataCollectionForAll(HttpServletRequest request, HttpServletResponse response, List<String> errors,
 			Integer sessionId, List<DataCollection3VO> dataCollectionList, int displayImage, int displayWorkflow, int displayMesh,
 			int displayDehydration, Workflow workflow, SnapshotInfo snapshot, List<ImageValueInfo> imageList,
-			List<DehydrationData> dehydrationDataValuesAll, List<MeshData> meshData, Integer dataCollectionGroupId) {
+			List<DehydrationData> dehydrationDataValuesAll, Integer dataCollectionGroupId) {
 
 		try {
 			boolean isManager = Confidentiality.isManager(request);
@@ -1935,8 +1930,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 			data.put("isManager", isManager);
 			// lastCollect
 			data.put("displayLastCollect", false);
-			// mesh data
-			data.put("meshData", meshData);
 			// list of references
 			data.put("listOfReferences", listOfReferences);
 			// referenceText
@@ -2030,7 +2023,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<MeshData> meshData = new ArrayList<MeshData>();
 
 			getDataCollectionForAll(request, response, errors, sessionId, dataCollectionList, displayImage, displayWorkflow,
-					displayMesh, displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData, null);
+					displayMesh, displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll,  null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errors.add(e.toString());
@@ -2126,22 +2119,8 @@ public class ViewDataCollectionAction extends DispatchAction {
 			int dataFileExists = 0;
 			String dataFileFullPath = "";
 
-			// mesh data
-			List<MeshData> meshData = new ArrayList<MeshData>();
-			WorkflowMesh3VO workflowMesh = null;
-			List<WorkflowMesh3VO> listWFM = ViewWorkflowAction.getWorkflowMesh(workflow);
-			if (listWFM != null && listWFM.size() > 0) {
-				workflowMesh = listWFM.get(0);
-			}
-			if (workflow != null)
-				workflow.setWorkflowMesh(workflowMesh);
-
-			if (displayMesh == 1) {
-				meshData = ViewWorkflowAction.getMeshData(dataCollectionList, workflowMesh);
-			}
-
 			getDataCollectionForAll(request, response, errors, sessionId, dataCollectionList, displayImage, displayWorkflow,
-					displayMesh, displayDehydration, workflow, snapshot, imageList, null, meshData,
+					displayMesh, displayDehydration, workflow, snapshot, imageList, null,
 					dataCollectionGroupId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2246,7 +2225,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<MeshData> meshData = new ArrayList<MeshData>();
 
 			getDataCollectionForAll(request, response, errors, null, dataCollectionList, displayImage, displayWorkflow, displayMesh,
-					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData, null);
+					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errors.add(e.toString());
@@ -2329,7 +2308,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<MeshData> meshData = new ArrayList<MeshData>();
 
 			getDataCollectionForAll(request, response, errors, null, dataCollectionList, displayImage, displayWorkflow, displayMesh,
-					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData, null);
+					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errors.add(e.toString());
@@ -2437,7 +2416,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<MeshData> meshData = new ArrayList<MeshData>();
 
 			getDataCollectionForAll(request, response, errors, null, dataCollectionList, displayImage, displayWorkflow, displayMesh,
-					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData, null);
+					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll,  null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errors.add(e.toString());
@@ -2525,7 +2504,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			List<MeshData> meshData = new ArrayList<MeshData>();
 
 			getDataCollectionForAll(request, response, errors, null, dataCollectionList, displayImage, displayWorkflow, displayMesh,
-					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll, meshData, null);
+					displayDehydration, workflow, snapshot, imageList, dehydrationDataValuesAll,  null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errors.add(e.toString());
