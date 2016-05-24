@@ -1924,23 +1924,13 @@ public class ViewResultsAction extends DispatchAction {
 			}
 		}
 
-		// IK testing autoproc attachments with any name containing names in DB
-		if (Constants.SITE_IS_EMBL()) {
-			for (Iterator<IspybAutoProcAttachment3VO> i = listOfAutoProcAttachment.iterator(); i.hasNext();) {
-				IspybAutoProcAttachment3VO att = i.next();
-				if (fileName.contains(att.getFileName())) {
-					return att;
-				}
-			}
-		}
-
-		//TODO : simplify with only containing strings like EMBL
 		for (Iterator<IspybAutoProcAttachment3VO> i = listOfAutoProcAttachment.iterator(); i.hasNext();) {
 			IspybAutoProcAttachment3VO att = i.next();
 			if (fileName.contains(att.getFileName())) {
 				return att;
 			}
 		}
+
 		if (fileName.contains("_run")) {
 			// edna file: remove the prefix (image + run) to add edna
 			int id1 = fileName.indexOf("_run");

@@ -232,6 +232,9 @@ public class UploadPdbFileAction extends DispatchAction {
 
 		// write pdb on pyarch
 		String pdbFilePath = "/data/pyapdb/" + proposalName + "/";
+		if (Constants.SITE_IS_EMBL()) {
+			pdbFilePath = "/data/ispyb/pyapdb/" + proposalName + "/";
+		}	 
 		String pdbFullFilePath = pdbFilePath + uploadedFileName;
 		String realPdbFilePath = PathUtils.FitPathToOS(pdbFullFilePath);
 		try {
