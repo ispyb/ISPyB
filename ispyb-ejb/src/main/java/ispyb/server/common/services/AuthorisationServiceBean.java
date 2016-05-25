@@ -20,6 +20,7 @@ package ispyb.server.common.services;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -65,18 +66,24 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
 			throws Exception{
-		
+				
 		if (vo == null) 
 			throw new Exception("no session has been found");
 		
 		if (!Constants.isAuthorisationActive() )
 			return;
-					
+		
 		if (isUserAdminOrLcOrWs() ) 
 			return;
-			
+								
 		boolean hasAccess = false;
-		String user = this.getLoggedUser();		
+		String user = this.getLoggedUser();
+		
+		//TODO	
+		//find a way to authorise calls from rest webservices here we authorise anonymous !!!
+		if (user.equalsIgnoreCase("anonymous"))
+			return;
+		
 		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(user, Constants.SITE_ESRF);
 		
 		for (Iterator<Proposal3VO> iterator = proposals.iterator(); iterator.hasNext();) {
@@ -84,13 +91,11 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 			if ( vo.getProposalVOId().equals(proposal3vo.getProposalId()))
 				hasAccess = true;
 		}
-		
+				
 		if (hasAccess)
 			return;
-		else {
+		else
 			throw new AccessDeniedException("Access not authorised to session:" + vo.toString() + " for user:"+ user);
-		}	
-
 	}
 	
 	public String getLoggedUser() throws Exception {
@@ -103,7 +108,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	}
 	
 	public boolean isUserAdminOrLcOrWs() throws Exception {
-
+				
 		if (this.context.isCallerInRole(Constants.ALL_MANAGE_ROLE_NAME) 
 				|| this.context.isCallerInRole(Constants.ROLE_MANAGER) 
 						|| this.context.isCallerInRole(Constants.ROLE_BLOM) || this.context.isCallerInRole(Constants.ROLE_LOCALCONTACT)
