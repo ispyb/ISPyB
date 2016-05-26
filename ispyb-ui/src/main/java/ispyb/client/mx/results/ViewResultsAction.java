@@ -630,7 +630,7 @@ public class ViewResultsAction extends DispatchAction {
 							}
 						}
 										
-						String newfilename = info + filename;
+						String newfilename = info + filename + ".zip";
 						byte[] zippedFiles = HashMapToZip.doZip(filesToZip);
 		
 						response.setContentType("application/zip");
