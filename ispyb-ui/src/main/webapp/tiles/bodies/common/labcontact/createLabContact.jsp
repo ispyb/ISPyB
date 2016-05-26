@@ -86,7 +86,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 			<layout:panel key="Contact person info" width="100%" align="left" styleClass="PANEL">
 				<layout:text key="person ID" 	property="person.personId"		styleClass="FIELD"	mode="H,H,H"/>
 				<layout:text key="person login"	property="person.login"			styleClass="FIELD"	mode="H,H,H"/>
-				<layout:text key="person pwd" 	property="person.passwd"		styleClass="FIELD"	mode="H,H,H"/>
 				
 				<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="I,I,I" isRequired="true"/>
 				<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="I,I,I" isRequired="true"/>
