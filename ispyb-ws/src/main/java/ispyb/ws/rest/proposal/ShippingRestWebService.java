@@ -2,21 +2,16 @@ package ispyb.ws.rest.proposal;
 
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import ispyb.common.util.Constants;
-import ispyb.common.util.PropertyLoader;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.smis.ScientistsFromSMIS;
-import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 

@@ -1,6 +1,48 @@
 use pydb;
 
-DROP VIEW `pydb`.`v_datacollection_summary`;
+drop view if exists v_datacollection_autoprocintegration;
+
+CREATE 
+    ALGORITHM = MERGE 
+    DEFINER = `pxadmin`@`%` 
+    SQL SECURITY DEFINER
+VIEW `v_datacollection_autoprocintegration` AS
+    SELECT 
+        `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,
+        `AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,
+        `AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,
+        `AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,
+        `AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,
+        `AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,
+        `AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,
+        `AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,
+        `AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,
+        `AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,
+        `AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,
+        `AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,
+        `AutoProcProgram`.`processingPrograms` AS `v_datacollection_processingPrograms`,
+        `AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,
+        `AutoProcProgram`.`processingStatus` AS `v_datacollection_processingStatus`,
+        `BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,
+        `BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId`,
+        `AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,
+        `AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,
+        `PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,
+        `SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`
+    FROM
+        ((((((((((`AutoProcIntegration`
+        LEFT JOIN `DataCollection` ON ((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`)))
+        LEFT JOIN `DataCollectionGroup` ON ((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))
+        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)))
+        LEFT JOIN `AutoProcScaling_has_Int` ON ((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`)))
+        LEFT JOIN `AutoProcScaling` ON ((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`)))
+        LEFT JOIN `AutoProcProgram` ON ((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`)))
+        LEFT JOIN `Phasing_has_Scaling` ON ((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`)))
+        LEFT JOIN `PhasingStep` ON ((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`)))
+        LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)))
+        LEFT JOIN `AutoProc` ON ((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`)));
+       
+drop view if exists v_datacollection_summary;
 
 CREATE 
     ALGORITHM = UNDEFINED 
@@ -42,6 +84,7 @@ VIEW `v_datacollection_summary` AS
         `DataCollection`.`resolution` AS `DataCollection_resolution`,
         `DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,
         `DataCollection`.`xBeam` AS `DataCollection_xBeam`,
+        `DataCollection`.`transmission` AS `transmission`,
         `DataCollection`.`yBeam` AS `DataCollection_yBeam`,
         `DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,
         `DataCollection`.`comments` AS `DataCollection_comments`,
@@ -99,7 +142,8 @@ VIEW `v_datacollection_summary` AS
         LEFT JOIN `v_datacollection_summary_autoprocintegration` ON ((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`)))
         LEFT JOIN `v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionId` = `DataCollection`.`dataCollectionId`)));
         
-DROP VIEW `pydb`.`v_datacollection_summary_autoprocintegration`;     
+drop view if exists v_datacollection_summary_autoprocintegration;
+
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -121,9 +165,9 @@ VIEW `v_datacollection_summary_autoprocintegration` AS
         LEFT JOIN `Phasing_has_Scaling` ON ((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`)))
         LEFT JOIN `PhasingStep` ON ((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`)))
         LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
-        
-        
-DROP VIEW `pydb`.`v_datacollection_summary_datacollectiongroup`;
+   
+drop view if exists v_datacollection_summary_datacollectiongroup;
+
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -196,9 +240,10 @@ VIEW `v_datacollection_summary_datacollectiongroup` AS
         LEFT JOIN `Crystal` ON ((`Crystal`.`crystalId` = `BLSample`.`crystalId`)))
         LEFT JOIN `Protein` ON ((`Protein`.`proteinId` = `Crystal`.`proteinId`)))
         LEFT JOIN `Workflow` ON ((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`)));
+ 
         
-        
-DROP VIEW `pydb`.`v_datacollection_summary_phasing`;
+drop view if exists v_datacollection_summary_phasing;
+
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -231,10 +276,11 @@ VIEW `v_datacollection_summary_phasing` AS
         LEFT JOIN `AutoProcScaling` ON ((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`)))
         LEFT JOIN `AutoProcProgram` ON ((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`)))
         LEFT JOIN `AutoProc` ON ((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`)));
+   
         
- DROP VIEW `pydb`.`v_datacollection_summary_screening`;       
-        
-  CREATE 
+drop view if exists v_datacollection_summary_screening;
+
+CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
@@ -257,9 +303,10 @@ VIEW `v_datacollection_summary_screening` AS
     FROM
         ((`Screening`
         LEFT JOIN `ScreeningOutput` ON ((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`)))
-        LEFT JOIN `ScreeningOutputLattice` ON ((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`)));      
-        
-    
+        LEFT JOIN `ScreeningOutputLattice` ON ((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`)));
+ 
+drop view if exists v_session;
+
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -301,81 +348,3 @@ VIEW `v_session` AS
         ((`BLSession`
         LEFT JOIN `Proposal` ON ((`Proposal`.`proposalId` = `BLSession`.`proposalId`)))
         LEFT JOIN `Person` ON ((`Person`.`personId` = `Proposal`.`personId`)));
-        
-        
-CREATE 
-    ALGORITHM = MERGE 
-    DEFINER = `pxadmin`@`%` 
-    SQL SECURITY DEFINER
-VIEW `v_energyScan` AS
-    SELECT 
-        `EnergyScan`.`energyScanId` AS `energyScanId`,
-        `EnergyScan`.`sessionId` AS `sessionId`,
-        `EnergyScan`.`blSampleId` AS `blSampleId`,
-        `EnergyScan`.`fluorescenceDetector` AS `fluorescenceDetector`,
-        `EnergyScan`.`scanFileFullPath` AS `scanFileFullPath`,
-        `EnergyScan`.`choochFileFullPath` AS `choochFileFullPath`,
-        `EnergyScan`.`jpegChoochFileFullPath` AS `jpegChoochFileFullPath`,
-        `EnergyScan`.`element` AS `element`,
-        `EnergyScan`.`startEnergy` AS `startEnergy`,
-        `EnergyScan`.`endEnergy` AS `endEnergy`,
-        `EnergyScan`.`transmissionFactor` AS `transmissionFactor`,
-        `EnergyScan`.`exposureTime` AS `exposureTime`,
-        `EnergyScan`.`synchrotronCurrent` AS `synchrotronCurrent`,
-        `EnergyScan`.`temperature` AS `temperature`,
-        `EnergyScan`.`peakEnergy` AS `peakEnergy`,
-        `EnergyScan`.`peakFPrime` AS `peakFPrime`,
-        `EnergyScan`.`peakFDoublePrime` AS `peakFDoublePrime`,
-        `EnergyScan`.`inflectionEnergy` AS `inflectionEnergy`,
-        `EnergyScan`.`inflectionFPrime` AS `inflectionFPrime`,
-        `EnergyScan`.`inflectionFDoublePrime` AS `inflectionFDoublePrime`,
-        `EnergyScan`.`xrayDose` AS `xrayDose`,
-        `EnergyScan`.`startTime` AS `startTime`,
-        `EnergyScan`.`endTime` AS `endTime`,
-        `EnergyScan`.`edgeEnergy` AS `edgeEnergy`,
-        `EnergyScan`.`filename` AS `filename`,
-        `EnergyScan`.`beamSizeVertical` AS `beamSizeVertical`,
-        `EnergyScan`.`beamSizeHorizontal` AS `beamSizeHorizontal`,
-        `EnergyScan`.`crystalClass` AS `crystalClass`,
-        `EnergyScan`.`comments` AS `comments`,
-        `EnergyScan`.`flux` AS `flux`,
-        `EnergyScan`.`flux_end` AS `flux_end`,
-        `BLSample`.`blSampleId` AS `BLSample_sampleId`,
-        `BLSession`.`proposalId` AS `BLSession_proposalId`
-    FROM
-        ((`EnergyScan`
-        LEFT JOIN `BLSample` ON ((`BLSample`.`blSampleId` = `EnergyScan`.`blSampleId`)))
-        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `EnergyScan`.`sessionId`)));
-        
-        
-CREATE 
-    ALGORITHM = MERGE 
-    DEFINER = `pxadmin`@`%` 
-    SQL SECURITY DEFINER
-VIEW `v_xfeFluorescenceSpectrum` AS
-    SELECT 
-        `XFEFluorescenceSpectrum`.`xfeFluorescenceSpectrumId` AS `xfeFluorescenceSpectrumId`,
-        `XFEFluorescenceSpectrum`.`sessionId` AS `sessionId`,
-        `XFEFluorescenceSpectrum`.`blSampleId` AS `blSampleId`,
-        `XFEFluorescenceSpectrum`.`fittedDataFileFullPath` AS `fittedDataFileFullPath`,
-        `XFEFluorescenceSpectrum`.`scanFileFullPath` AS `scanFileFullPath`,
-        `XFEFluorescenceSpectrum`.`jpegScanFileFullPath` AS `jpegScanFileFullPath`,
-        `XFEFluorescenceSpectrum`.`startTime` AS `startTime`,
-        `XFEFluorescenceSpectrum`.`endTime` AS `endTime`,
-        `XFEFluorescenceSpectrum`.`filename` AS `filename`,
-        `XFEFluorescenceSpectrum`.`energy` AS `energy`,
-        `XFEFluorescenceSpectrum`.`exposureTime` AS `exposureTime`,
-        `XFEFluorescenceSpectrum`.`beamTransmission` AS `beamTransmission`,
-        `XFEFluorescenceSpectrum`.`annotatedPymcaXfeSpectrum` AS `annotatedPymcaXfeSpectrum`,
-        `XFEFluorescenceSpectrum`.`beamSizeVertical` AS `beamSizeVertical`,
-        `XFEFluorescenceSpectrum`.`beamSizeHorizontal` AS `beamSizeHorizontal`,
-        `XFEFluorescenceSpectrum`.`crystalClass` AS `crystalClass`,
-        `XFEFluorescenceSpectrum`.`comments` AS `comments`,
-        `XFEFluorescenceSpectrum`.`flux` AS `flux`,
-        `XFEFluorescenceSpectrum`.`flux_end` AS `flux_end`,
-        `BLSample`.`blSampleId` AS `BLSample_sampleId`,
-        `BLSession`.`proposalId` AS `BLSession_proposalId`
-    FROM
-        ((`XFEFluorescenceSpectrum`
-        LEFT JOIN `BLSample` ON ((`BLSample`.`blSampleId` = `XFEFluorescenceSpectrum`.`blSampleId`)))
-        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `XFEFluorescenceSpectrum`.`sessionId`)))

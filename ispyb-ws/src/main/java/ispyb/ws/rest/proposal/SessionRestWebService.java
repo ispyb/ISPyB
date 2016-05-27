@@ -71,7 +71,7 @@ public class SessionRestWebService extends RestWebService {
 		return (SessionService) Ejb3ServiceLocator.getInstance().getLocalService(SessionService.class);
 	}
 	
-	@RolesAllowed({"Manager", "LocalContact"})
+	@RolesAllowed({"Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/session/{startdate}/{enddate}/list")
 	@Produces({ "application/json" })
