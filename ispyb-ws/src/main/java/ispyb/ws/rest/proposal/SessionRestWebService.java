@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 public class SessionRestWebService extends RestWebService {
 	 private final static Logger logger = Logger.getLogger(SessionRestWebService.class);
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/session/list")
 	@Produces({ "application/json" })
@@ -45,7 +45,7 @@ public class SessionRestWebService extends RestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/session/{sessionId}/list")
 	@Produces({ "application/json" })

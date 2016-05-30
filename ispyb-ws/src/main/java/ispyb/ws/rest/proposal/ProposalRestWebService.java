@@ -34,7 +34,7 @@ public class ProposalRestWebService extends MXRestWebService{
 
 	private final static Logger logger = Logger.getLogger(ProposalRestWebService.class);
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/list")
 	@Produces({ "application/json" })
@@ -75,7 +75,7 @@ public class ProposalRestWebService extends MXRestWebService{
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/dewar/list")
 	@Produces({ "application/json" })
@@ -98,7 +98,7 @@ public class ProposalRestWebService extends MXRestWebService{
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/session/{sessionId}/list")
 	@Produces({ "application/json" })
@@ -122,7 +122,7 @@ public class ProposalRestWebService extends MXRestWebService{
 	}
 	
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/technique/{technique}/get")
 	@Produces({ "application/json" })

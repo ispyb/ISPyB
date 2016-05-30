@@ -50,7 +50,7 @@ public class DewarRestWebService extends RestWebService {
 	private final static Logger logger = Logger
 			.getLogger(DewarRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/label")
 	@Produces({ "application/json" })
@@ -62,7 +62,7 @@ public class DewarRestWebService extends RestWebService {
 	}
 	
 	
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/labels")
 	@Produces({ "application/pdf" })
@@ -83,7 +83,7 @@ public class DewarRestWebService extends RestWebService {
 	}
 	
 	@Deprecated
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/list")
 	@Produces({ "application/json" })
@@ -102,7 +102,7 @@ public class DewarRestWebService extends RestWebService {
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/dewar/list")
 	@Produces({ "application/json" })
@@ -121,7 +121,7 @@ public class DewarRestWebService extends RestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/dewar/status/{status}/list")
 	@Produces({ "application/json" })
@@ -152,7 +152,7 @@ public class DewarRestWebService extends RestWebService {
 	
 	
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
 	@Produces({ "application/json" })
@@ -204,7 +204,7 @@ public class DewarRestWebService extends RestWebService {
 		return (new java.sql.Timestamp(today.getTime()));
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/save")
 	@Produces({ "application/json" })
