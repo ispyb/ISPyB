@@ -20,7 +20,7 @@ public class SampleRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(SampleRestWebService.class);
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sample/crystalId/{crystalId}/list")
 	@Produces({ "application/json" })
@@ -38,7 +38,7 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sampleinfo/crystalId/{crystalId}/list")
 	@Produces({ "application/json" })
@@ -58,7 +58,7 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sampleinfo/list")
 	@Produces({ "application/json" })

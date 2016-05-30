@@ -26,7 +26,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		return (PhasingRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingRestWsService.class);
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/autoprocIntegrationId/{autoprocIntegrationId}/list")
 	@Produces({ "application/json" })
@@ -50,7 +50,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/dataCollectionId/{dataCollectionIds}/list")
 	@Produces({ "application/json" })
@@ -75,7 +75,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/sampleId/{sampleIds}/list")
 	@Produces({ "application/json" })
@@ -99,7 +99,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/proteinId/{proteinIds}/list")
 	@Produces({ "application/json" })
@@ -123,7 +123,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/sessionId/{sessionIds}/list")
 	@Produces({ "application/json" })
@@ -147,7 +147,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingStepId/{phasingStepIds}/list")
 	@Produces({ "application/json" })
@@ -172,7 +172,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingStepId/{phasingStepIds}/files")
 	@Produces({ "application/json" })
@@ -196,7 +196,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "LocalContact" })
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingProgramAttachmentId/{phasingProgramAttachmentId}/download")
 	@Produces({ "application/json" })

@@ -27,7 +27,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
 	
 	 
     @Path("{token}/proposal/{proposal}/mx/xrfscan/session/{sessionId}/list")
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Produces({ "application/json" })
 	public Response getEnergyScanBySessionId(
@@ -48,7 +48,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
 	}
 	
     @Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/image/{imageType}/get")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("image/png")
    	public Response getImage(
@@ -82,7 +82,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
    	}
    	
     @Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/file/{imageType}/get")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("text/plain")
    	public Response getFile(
@@ -116,7 +116,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
    	}
     
     @Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/csv")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("text/plain")
    	public Response getCSVFile(
@@ -151,7 +151,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
    	}
     
     @Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/file/list")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("text/plain")
    	public Response getFiles(

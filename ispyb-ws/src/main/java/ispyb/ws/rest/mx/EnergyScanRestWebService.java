@@ -26,7 +26,7 @@ public class EnergyScanRestWebService extends RestWebService {
 	
 	 
     @Path("{token}/proposal/{proposal}/mx/energyscan/session/{sessionId}/list")
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
 	@Produces({ "application/json" })
 	public Response getEnergyScanBySessionId(
@@ -55,7 +55,7 @@ public class EnergyScanRestWebService extends RestWebService {
 		return null;
     }
     @Path("{token}/proposal/{proposal}/mx/energyscan/energyscanId/{energyscanId}/scanfile")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("text/plain")
    	public Response getScanFileFullPath(
@@ -80,7 +80,7 @@ public class EnergyScanRestWebService extends RestWebService {
    	}
     
     @Path("{token}/proposal/{proposal}/mx/energyscan/energyscanId/{energyscanId}/chooch")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
 	@Produces("text/plain")
    	public Response getChooch(
@@ -111,7 +111,7 @@ public class EnergyScanRestWebService extends RestWebService {
    	}
     
     @Path("{token}/proposal/{proposal}/mx/energyscan/energyscanId/{energyscanId}/jpegchooch")
-   	@RolesAllowed({"User", "Manager", "LocalContact"})
+   	@RolesAllowed({"User", "Manager", "Localcontact"})
    	@GET
    	@Produces("image/png")
    	public Response getjpegchooch(
