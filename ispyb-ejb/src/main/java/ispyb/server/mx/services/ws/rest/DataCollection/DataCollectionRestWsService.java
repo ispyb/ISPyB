@@ -19,6 +19,7 @@
 
 package ispyb.server.mx.services.ws.rest.DataCollection;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,10 @@ import javax.ejb.Remote;
 @Remote
 public interface DataCollectionRestWsService {
 
-	public List<Map<String,Object>> getViewDataCollectionBySessionId(int sessionId);
+	public List<Map<String,Object>> getViewDataCollectionBySessionId(int proposalId, int sessionId);
 
 	public List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym);
+
+	public Collection<? extends Map<String, Object>> getViewDataCollectionByDataCollectionId(int proposalId, int dataCollectionId);
 	
 }

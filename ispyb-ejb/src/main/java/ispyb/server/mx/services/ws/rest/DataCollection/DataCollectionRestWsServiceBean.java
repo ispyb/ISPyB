@@ -19,6 +19,7 @@
 
 package ispyb.server.mx.services.ws.rest.DataCollection;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -83,12 +84,13 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 	
 	
 	@Override
-	public List<Map<String, Object>> getViewDataCollectionBySessionId(int sessionId) {
-		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId";
+	public List<Map<String, Object>> getViewDataCollectionBySessionId(int proposalId, int sessionId) {
+		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId and BLSession_proposalId = :proposalId ";
 		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> aliasToValueMapList = query.list();
@@ -103,6 +105,20 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);
 		query.setParameter("proteinAcronym", proteinAcronym);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
+
+	@Override
+	public Collection<? extends Map<String, Object>> getViewDataCollectionByDataCollectionId(int proposalId, int dataCollectionId) {
+		String mySQLQuery = getViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId ";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("dataCollectionId", dataCollectionId);
+		query.setParameter("proposalId", proposalId);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> aliasToValueMapList = query.list();
