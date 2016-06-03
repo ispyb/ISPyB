@@ -20,7 +20,9 @@ package ispyb.client.mx.collection;
 
 import java.util.List;
 
+import ispyb.common.util.Constants;
 import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 
 /**
  * workflow information for displaying 
@@ -39,7 +41,10 @@ public class Workflow extends Workflow3VO{
 	
 	// data file info -- for dehydration
 	protected FileInformation dataFile;
-		
+	
+	// workflowMesh -- for mesh
+	protected WorkflowMesh3VO workflowMesh;
+	
 	public Workflow() {
 		super();
 	}
@@ -71,6 +76,14 @@ public class Workflow extends Workflow3VO{
 
 	public void setDataFile(FileInformation dataFile) {
 		this.dataFile = dataFile;
+	}
+
+	public WorkflowMesh3VO getWorkflowMesh() {
+		return workflowMesh;
+	}
+
+	public void setWorkflowMesh(WorkflowMesh3VO workflowMesh) {
+		this.workflowMesh = workflowMesh;
 	}
 
 }

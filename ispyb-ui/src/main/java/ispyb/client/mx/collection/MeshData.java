@@ -19,6 +19,7 @@
 package ispyb.client.mx.collection;
 
 import ispyb.server.mx.vos.collections.GridInfo3VO;
+import ispyb.server.mx.vos.collections.MotorPosition3VO;
 
 /**
  * data used for the map mesh, from the table of motor positions and image quality indicators.
@@ -34,7 +35,9 @@ public class MeshData {
 	protected boolean imageFilePresent;
 	protected String imagePrefix;
 	protected Integer dataCollectionNumber;
-		
+	
+	protected MotorPosition3VO motorPosition;
+	
 	protected GridInfo3VO gridInfo;
 	
 	protected Integer spotTotal;
@@ -53,7 +56,7 @@ public class MeshData {
 	public MeshData(Integer dataCollectionId, Integer imageId,
 			Integer imageQualityIndicatorsId, String imageFileLocation,
 			boolean imageFilePresent, String imagePrefix, Integer dataCollectionNumber, 
-			GridInfo3VO gridInfo, 
+			MotorPosition3VO motorPosition, GridInfo3VO gridInfo, 
 			Integer spotTotal, Integer goodBraggCandidates, Float method1Res,
 			Float method2Res, Double totalIntegratedSignal, Double dozor_score) {
 		super();
@@ -64,6 +67,7 @@ public class MeshData {
 		this.imageFilePresent = imageFilePresent;
 		this.imagePrefix = imagePrefix;
 		this.dataCollectionNumber = dataCollectionNumber;
+		this.motorPosition = motorPosition;
 		this.gridInfo = gridInfo;
 		this.spotTotal = spotTotal;
 		this.goodBraggCandidates = goodBraggCandidates;
@@ -131,6 +135,14 @@ public class MeshData {
 		this.dataCollectionNumber = dataCollectionNumber;
 	}
 	
+	public MotorPosition3VO getMotorPosition() {
+		return motorPosition;
+	}
+	
+	public void setMotorPosition(MotorPosition3VO motorPosition) {
+		this.motorPosition = motorPosition;
+	}
+
 	public GridInfo3VO getGridInfo() {
 		return gridInfo;
 	}

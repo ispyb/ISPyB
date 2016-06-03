@@ -64,6 +64,7 @@ import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.GridInfo3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.Workflow3Service;
+import ispyb.server.mx.services.collections.WorkflowMesh3Service;
 import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -71,8 +72,10 @@ import ispyb.server.mx.vos.collections.GridInfo3VO;
 import ispyb.server.mx.vos.collections.Image3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
+import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 
 /**
  * 
@@ -101,6 +104,8 @@ public class ViewWorkflowAction extends DispatchAction {
 
 	protected GridInfo3Service gridInfoService;
 
+	protected WorkflowMesh3Service workflowMeshService;
+
 	protected ImageQualityIndicators3Service imageQualityIndicatorsService;
 
 	/**
@@ -115,6 +120,7 @@ public class ViewWorkflowAction extends DispatchAction {
 		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
 		this.imageQualityIndicatorsService = (ImageQualityIndicators3Service) ejb3ServiceLocator.getLocalService(ImageQualityIndicators3Service.class);
 		this.gridInfoService = (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
+		this.workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator.getLocalService(WorkflowMesh3Service.class);
 
 	}
 
@@ -327,11 +333,18 @@ public class ViewWorkflowAction extends DispatchAction {
 			
 			// mesh data
 			List<List<MeshData>> listOfMeshData= new ArrayList<List<MeshData>>();
+			WorkflowMesh3VO workflowMesh = null;
+			List<WorkflowMesh3VO> listWFM = ViewWorkflowAction.getWorkflowMesh(workflow);
+			if(listWFM != null && listWFM.size() > 0){
+				workflowMesh = listWFM.get(0);
+			}
+			
+			workflow.setWorkflowMesh(workflowMesh);
 			if (displayMesh == 1){
 				for(Iterator<List<DataCollection3VO>> it = listOfCollect.iterator(); it.hasNext();){
 					List<MeshData> meshData= new ArrayList<MeshData>();
 					List<DataCollection3VO> dataCollectionList= it.next();
-					meshData = ViewWorkflowAction.getMeshData(dataCollectionList);
+					meshData = ViewWorkflowAction.getMeshData(dataCollectionList, workflowMesh);
 					
 					listOfMeshData.add(meshData);
 				}
@@ -403,7 +416,18 @@ public class ViewWorkflowAction extends DispatchAction {
 		}
 	}
 
-	public static List<MeshData> getMeshData(List<DataCollection3VO> dataCollectionList) throws Exception{
+	public static List<WorkflowMesh3VO> getWorkflowMesh(Workflow workflow) throws Exception{
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		WorkflowMesh3Service workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator.getLocalService(WorkflowMesh3Service.class);
+
+		
+		List<WorkflowMesh3VO> listw  = new ArrayList<WorkflowMesh3VO>();
+		if (workflow != null)
+			listw = workflowMeshService.findByWorkflowId(workflow.getWorkflowId()) ;
+		return listw;
+	}
+
+	public static List<MeshData> getMeshData(List<DataCollection3VO> dataCollectionList, WorkflowMesh3VO workflowMesh) throws Exception{
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		GridInfo3Service gridInfoService =  (GridInfo3Service) ejb3ServiceLocator.getLocalService(GridInfo3Service.class);
 		ImageQualityIndicators3Service imageQualityIndicatorsService = (ImageQualityIndicators3Service) ejb3ServiceLocator.getLocalService(ImageQualityIndicators3Service.class);
@@ -414,11 +438,17 @@ public class ViewWorkflowAction extends DispatchAction {
 		for (Iterator<DataCollection3VO> dcList= dataCollectionList.iterator();dcList.hasNext();){
 			DataCollection3VO dc = dcList.next();
 			Integer dataCollectionId = dc.getDataCollectionId();
-	
+			MotorPosition3VO position = dc.getStartPositionVO();
+
 			GridInfo3VO gridInfo = null;
 			if (dc.getDataCollectionGroupVO().getWorkflowVO() != null){
 
-
+				if (workflowMesh != null){
+					List<GridInfo3VO> list  = gridInfoService.findByWorkflowMeshId(workflowMesh.getWorkflowMeshId()) ;
+					if (list != null && list.size() > 0){
+						gridInfo  = list.get(0);
+					}
+				}
 			}
 			// load  Images & ImageQualityIndicator
 			List<Image3VO> listImage = imageService.findByDataCollectionId(dataCollectionId);
@@ -427,6 +457,11 @@ public class ViewWorkflowAction extends DispatchAction {
 					Image3VO image3vo = (Image3VO) iterator.next();
 					String imageFileLocation = PathUtils.FitPathToOS(image3vo.getJpegFileFullPath());
 					boolean imageFilePresent = (PathUtils.fileExists(image3vo.getJpegFileFullPath()) ==1);
+					MotorPosition3VO imagePosition = image3vo.getMotorPositionVO();
+					MotorPosition3VO finalPosition = imagePosition;
+					if (imagePosition == null){
+						finalPosition = position;
+					}
 					List<ImageQualityIndicators3VO> listImageQI = imageQualityIndicatorsService.findByImageId(image3vo.getImageId());
 						
 					Integer imageQualityIndicatorId = null;
@@ -448,7 +483,18 @@ public class ViewWorkflowAction extends DispatchAction {
 						totalIntegratedSignal =  imgQualityIndic.getTotalIntegratedSignal();
 						dozor_score = imgQualityIndic.getDozor_score();
 					}
-												
+						
+					if (finalPosition != null){
+						MeshData md= new MeshData(dataCollectionId,  image3vo.getImageId(),
+								imageQualityIndicatorId,  imageFileLocation,
+								imageFilePresent,  dc.getImagePrefix(), dc.getDataCollectionNumber(), 
+								finalPosition,  gridInfo, 
+								spotTotal,  goodBraggCandidates,  
+								methodRes1,
+								methodRes2,  totalIntegratedSignal, dozor_score);
+						meshData.add(md);
+					}
+						
 				}
 				
 			}

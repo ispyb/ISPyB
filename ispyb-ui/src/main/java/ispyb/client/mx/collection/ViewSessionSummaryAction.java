@@ -18,30 +18,6 @@
  ******************************************************************************/
 package ispyb.client.mx.collection;
 
-import java.lang.reflect.Type;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import ispyb.client.SiteSpecific;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.GSonUtils;
@@ -65,15 +41,43 @@ import ispyb.server.mx.services.collections.XFEFluorescenceSpectrum3Service;
 import ispyb.server.mx.vos.autoproc.AutoProc3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
+import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.EnergyScan3VO;
+import ispyb.server.mx.vos.collections.GridInfo3VO;
+import ispyb.server.mx.vos.collections.Image3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
+
+import java.lang.reflect.Type;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @struts.action name="viewSessionSummaryForm" path="/user/viewSessionSummary"
@@ -1015,6 +1019,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 		}
 		Workflow wf = ViewWorkflowAction.getWorkflowInfo(workflow);
+		List<WorkflowMesh3VO> listWorkflowMesh = ViewWorkflowAction.getWorkflowMesh(wf);
 		// image prefix and run number comments
 		if (dcInfo != null) {
 			info.setImagePrefix(dcInfo.getImagePrefix());
@@ -1061,6 +1066,16 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			if (workflow.isMeshMXpressM()) {
 				String meshSize = "";
 				// gridinfo dx_mm and dy_mm
+				if (listWorkflowMesh != null && listWorkflowMesh.size() > 0) {
+					WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
+					if (workflowMesh != null) {
+						List<GridInfo3VO> list = gridInfoService.findByWorkflowMeshId(workflowMesh.getWorkflowMeshId());
+						if (list != null && list.size() > 0) {
+							GridInfo3VO gridInfo = list.get(0);
+							meshSize = gridInfo.getDx_mm() + " " + gridInfo.getDy_mm();
+						}
+					}
+				}
 				listParameters.add(new Param(KEY_MESH_SIZE, "Mesh size", meshSize, false));
 			}
 			info.setListParameters(listParameters);
@@ -1077,6 +1092,51 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			info.setCrystalSnapshotExist(crystalSnapshotExist == 1);
 			info.setCrystalSnapshotPath(crystalSnapshotPath);
 
+			// if mesh Best Image: WorkflowMesh.bestImage
+			if (listWorkflowMesh != null && listWorkflowMesh.size() > 0) {
+				// in case of XRayCentring: Line bestImage
+				WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
+				boolean wfWith2Mesh = (workflow.getWorkflowType().equals(Constants.WORKFLOW_XRAYCENTERING) || workflow
+						.isMXPressEOIA()) && listWorkflowMesh.size() > 1;
+
+				if (wfWith2Mesh) {
+					workflowMesh = listWorkflowMesh.get(1);
+				}
+				if (workflowMesh != null) {
+					Image3VO bestImage = workflowMesh.getBestImageVO();
+					// TODO understand why the thumbnail is replaced by the one
+					// of the best image from the mesh ???
+					// because the jpg image is not replaced
+					// for now replace it only if no thumbnail
+					// TODO remove this later because it is disturbing that the
+					// image is not pointing to the same than the thumbnail ?
+					// TODO have more info and examples : bug #2515
+					if (bestImage != null && !info.isImageThumbnailExist()) {
+						String jpgThumbFullPath = bestImage.getJpegThumbnailFileFullPath();
+						jpgThumbFullPath = PathUtils.FitPathToOS(jpgThumbFullPath);
+						imageThumbnailExist = PathUtils.fileExists(jpgThumbFullPath);
+						imageThumbnailPath = jpgThumbFullPath;
+						if (imageThumbnailExist == 1) {
+							info.setImageThumbnailExist(imageThumbnailExist == 1);
+							info.setImageThumbnailPath(imageThumbnailPath);
+						}
+					}
+					workflowMesh = listWorkflowMesh.get(0);
+					// graph
+					int graphExist = PathUtils.fileExists(workflowMesh.getCartographyPath());
+					String graphPath = PathUtils.FitPathToOS(workflowMesh.getCartographyPath());
+					info.setGraphExist(graphExist == 1);
+					info.setGraphPath(graphPath);
+
+					if (wfWith2Mesh) {
+						workflowMesh = listWorkflowMesh.get(1);
+						int graph2Exist = PathUtils.fileExists(workflowMesh.getCartographyPath());
+						String graph2Path = PathUtils.FitPathToOS(workflowMesh.getCartographyPath());
+						info.setGraph2Exist(graph2Exist == 1);
+						info.setGraph2Path(graph2Path);
+					}
+				}
+			}
 			// results
 			String imgFailed = "../images/Sphere_Red_12.png";
 			String imgSuccess = "../images/Sphere_Green_12.png";
@@ -1103,6 +1163,88 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				// autoProcessing Result
 				info = getAutoProcResult(info, lastCollect, dcInfo, dataCollectionList, wrapper, proposalCode,
 						proposalNumber, request, false);
+			} else {
+				// first: Mesh
+				// second :Line
+				if (listWorkflowMesh != null && listWorkflowMesh.size() > 0) {
+					WorkflowMesh3VO workflowMesh = listWorkflowMesh.get(0);
+
+					if (workflowMesh != null) {
+						listResults
+								.add(new Param(KEY_V1, "V1",
+										""
+												+ (workflowMesh.getValue1() == null ? "" : df2.format(workflowMesh
+														.getValue1())), false));
+						listResults
+								.add(new Param(KEY_V2, "V2",
+										""
+												+ (workflowMesh.getValue2() == null ? "" : df2.format(workflowMesh
+														.getValue2())), false));
+						listResults
+								.add(new Param(KEY_N, "N",
+										""
+												+ (workflowMesh.getValue3() == null ? "" : df2.format(workflowMesh
+														.getValue3())), false));
+						// best position
+						if (workflowMesh.getBestImageVO() != null) {
+							Image3VO bestImage = workflowMesh.getBestImageVO();
+							listResults.add(new Param(KEY_BEST_POSITION_MESH, "Mesh Best position image#", ""
+									+ bestImage.getImageNumber(), false));
+							// imageQualityIndicators
+							ImageQualityIndicators3VO quality = null;
+							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService
+									.findByImageId(bestImage.getImageId());
+							if (listIQ != null && listIQ.size() > 0) {
+								quality = listIQ.get(0);
+							}
+							String meshSig1 = "";
+							String meshSig2 = "";
+							if (quality != null) {
+								meshSig1 = "" + (quality.getDozor_score() == null ? "" : quality.getDozor_score());
+								meshSig2 = ""
+										+ (quality.getTotalIntegratedSignal() == null ? "" : quality
+												.getTotalIntegratedSignal());
+							}
+							// listResults.add(new Param("meshSignal1",
+							// "Mesh Signal 1", meshSig1, false));
+							// listResults.add(new Param("meshSignal2",
+							// "Mesh Signal 2", meshSig2, false));
+							listResults.add(new Param(KEY_MESH_SIGNAL, "Mesh Signal 1 / Signal2", meshSig1 + " / "
+									+ meshSig2, false));
+						}
+					}
+					// line
+					if (listWorkflowMesh.size() > 1) {
+						WorkflowMesh3VO workflowMeshLine = listWorkflowMesh.get(1);
+						if (workflowMeshLine.getBestImageVO() != null) {
+							Image3VO bestImageLine = workflowMeshLine.getBestImageVO();
+							listResults.add(new Param(KEY_BEST_POSITION_LINE, "Line Best position image#", ""
+									+ bestImageLine.getImageNumber(), false));
+							// imageQualityIndicators
+							ImageQualityIndicators3VO quality = null;
+							List<ImageQualityIndicators3VO> listIQ = imageQualityIndicatorsService
+									.findByImageId(bestImageLine.getImageId());
+							if (listIQ != null && listIQ.size() > 0) {
+								quality = listIQ.get(0);
+							}
+							String lineSig1 = "";
+							String lineSig2 = "";
+							if (quality != null) {
+								lineSig1 = "" + (quality.getDozor_score() == null ? "" : quality.getDozor_score());
+								lineSig2 = ""
+										+ (quality.getTotalIntegratedSignal() == null ? "" : quality
+												.getTotalIntegratedSignal());
+							}
+							// listResults.add(new Param("lineSigna1",
+							// "Line Signal 1", lineSig1, false));
+							// listResults.add(new Param("lineSignal2",
+							// "Line Signal 2",lineSig2, false));
+							listResults.add(new Param(KEY_LINE_SIGNAL, "Line Signal 1 / Signal 2", lineSig1 + " / "
+									+ lineSig2, false));
+						}
+					}
+				}
+				info.setListResults(listResults);
 			}
 
 		}
