@@ -80,6 +80,14 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "blSubSampleId")
 	private BLSubSample3VO blSubSampleVO;
 
+	@ManyToOne
+	@JoinColumn(name = "startPositionId")
+	protected MotorPosition3VO startPositionVO;
+
+	@ManyToOne
+	@JoinColumn(name = "endPositionId")
+	protected MotorPosition3VO endPositionVO;
+
 	@Column(name = "dataCollectionNumber")
 	protected Integer dataCollectionNumber;
 
@@ -253,7 +261,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	public DataCollection3VO(Integer dataCollectionId, DataCollectionGroup3VO dataCollectionGroupVO,
-			ScreeningStrategySubWedge3VO strategySubWedgeOrigVO, Detector3VO detectorVO, BLSubSample3VO blSubSampleVO, Integer dataCollectionNumber,
+			ScreeningStrategySubWedge3VO strategySubWedgeOrigVO, Detector3VO detectorVO, BLSubSample3VO blSubSampleVO,
+			MotorPosition3VO startPositionVO, MotorPosition3VO endPositionVO, Integer dataCollectionNumber,
 			Date startTime, Date endTime, String runStatus, Double axisStart, Double axisEnd, Double axisRange,
 			Double overlap, Integer numberOfImages, Integer startImageNumber, Integer numberOfPasses,
 			Double exposureTime, String imageDirectory, String imagePrefix, String imageSuffix, String fileTemplate,
@@ -272,6 +281,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.strategySubWedgeOrigVO = strategySubWedgeOrigVO;
 		this.detectorVO = detectorVO;
 		this.blSubSampleVO = blSubSampleVO;
+		this.startPositionVO = startPositionVO;
+		this.endPositionVO = endPositionVO;
 		this.dataCollectionNumber = dataCollectionNumber;
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -333,6 +344,8 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.strategySubWedgeOrigVO = vo.getStrategySubWedgeOrigVO();
 		this.detectorVO = vo.getDetectorVO();
 		this.blSubSampleVO = vo.getBlSubSampleVO();
+		this.startPositionVO = vo.getStartPositionVO();
+		this.endPositionVO = vo.getEndPositionVO();
 		this.dataCollectionNumber = vo.getDataCollectionNumber();
 		this.startTime = vo.getStartTime();
 		this.endTime = vo.getEndTime();
@@ -510,6 +523,30 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 
 	public Integer getBlSubSampleVOId() {
 		return blSubSampleVO == null ? null : blSubSampleVO.getBlSubSampleId();
+	}
+
+	public MotorPosition3VO getStartPositionVO() {
+		return startPositionVO;
+	}
+
+	public Integer getStartPositionVOId() {
+		return startPositionVO == null ? null : startPositionVO.getMotorPositionId();
+	}
+
+	public void setStartPositionVO(MotorPosition3VO startPositionVO) {
+		this.startPositionVO = startPositionVO;
+	}
+
+	public MotorPosition3VO getEndPositionVO() {
+		return endPositionVO;
+	}
+
+	public Integer getEndPositionVOId() {
+		return endPositionVO == null ? null : endPositionVO.getMotorPositionId();
+	}
+
+	public void setEndPositionVO(MotorPosition3VO endPositionVO) {
+		this.endPositionVO = endPositionVO;
 	}
 
 	public Integer getDataCollectionNumber() {

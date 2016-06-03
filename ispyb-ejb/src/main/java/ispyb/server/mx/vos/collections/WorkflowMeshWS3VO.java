@@ -21,35 +21,59 @@ package ispyb.server.mx.vos.collections;
 
 
 /**
-* Session class used for webservices
+* WorkflowMesh class used for webservices
 * @author BODIN
 *
 */
-public class GridInfoWS3VO extends GridInfo3VO {
+public class WorkflowMeshWS3VO extends WorkflowMesh3VO {
 	private static final long serialVersionUID = 1L;
 
-	private Integer workflowMeshId;
+	private Integer workflowId;
+	
+	private Integer bestPositionId;
+	
+	private Integer bestImageId;
 
-	public Integer getWorkflowMeshId() {
-		return workflowMeshId;
+	public Integer getWorkflowId() {
+		return workflowId;
 	}
 
-	public void setWorkflowMeshId(Integer workflowMeshId) {
-		this.workflowMeshId = workflowMeshId;
+	public void setWorkflowId(Integer workflowId) {
+		this.workflowId = workflowId;
 	}
 
-	public GridInfoWS3VO() {
+	public Integer getBestPositionId() {
+		return bestPositionId;
+	}
+
+	public void setBestPositionId(Integer bestPositionId) {
+		this.bestPositionId = bestPositionId;
+	}
+
+	public Integer getBestImageId() {
+		return bestImageId;
+	}
+
+	public void setBestImageId(Integer bestImageId) {
+		this.bestImageId = bestImageId;
+	}
+
+	public WorkflowMeshWS3VO() {
 		super();
 	}
-	public GridInfoWS3VO(GridInfo3VO vo) {
+	public WorkflowMeshWS3VO(WorkflowMesh3VO vo) {
 		super(vo);
-		this.workflowMeshId = vo.getWorkflowMeshVO().getWorkflowMeshId();
+		this.workflowId = vo.getWorkflowVO().getWorkflowId();
+		this.bestPositionId = (vo.getBestPositionVO() == null ? null: vo.getBestPositionVO().getMotorPositionId());
+		this.bestImageId = (vo.getBestImageVO() == null ? null: vo.getBestImageVO().getImageId());
 		
 	}
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();
-		s += ", workflowMeshId="+this.workflowMeshId;
+		s += ", workflowId="+this.workflowId+", "+
+		"bestPositionId="+this.bestPositionId+", "+
+		"bestImageId="+this.bestImageId;
 		return s;
 	}
 	

@@ -29,7 +29,10 @@ public class DataCollectionInfo extends DataCollection3VO{
 	private String localContact;
 	private String localContactEmail;
 	private BLSampleWS3VO blSampleVO;
-		
+	
+	private MotorPosition3VO startPosition;
+	private MotorPosition3VO endPosition;
+	
 	// crystal
 	private String spaceGroup;
 	private Double cellA;
@@ -45,13 +48,15 @@ public class DataCollectionInfo extends DataCollection3VO{
 	
 	
 	public DataCollectionInfo(DataCollection3VO vo, String localContact,
-			String localContactEmail, BLSampleWS3VO blSampleVO, 
+			String localContactEmail, BLSampleWS3VO blSampleVO, MotorPosition3VO startPosition, MotorPosition3VO endPosition, 
 			String spaceGroup, Double cellA, Double cellB, Double cellC, Double cellAlpha, Double cellBeta, 
 			Double cellGamma, String pdbFilePath) {
 		super(vo);
 		this.localContact = localContact;
 		this.localContactEmail = localContactEmail;
 		this.blSampleVO = blSampleVO;
+		this.startPosition = startPosition;
+		this.endPosition = endPosition ;
 		this.spaceGroup = spaceGroup;
 		this.cellA = cellA;
 		this.cellB = cellB ; 
@@ -88,6 +93,22 @@ public class DataCollectionInfo extends DataCollection3VO{
 
 	public void setBlSampleVO(BLSampleWS3VO blSampleVO) {
 		this.blSampleVO = blSampleVO;
+	}
+
+	public MotorPosition3VO getStartPosition() {
+		return startPosition;
+	}
+
+	public void setStartPosition(MotorPosition3VO startPosition) {
+		this.startPosition = startPosition;
+	}
+
+	public MotorPosition3VO getEndPosition() {
+		return endPosition;
+	}
+
+	public void setEndPosition(MotorPosition3VO endPosition) {
+		this.endPosition = endPosition;
 	}
 
 	public String getSpaceGroup() {

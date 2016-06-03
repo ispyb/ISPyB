@@ -53,6 +53,10 @@ public class GridInfo3VO extends ISPyBValueObject implements Cloneable {
 	@GeneratedValue
 	@Column(name = "gridInfoId")
 	protected Integer gridInfoId;
+
+	@ManyToOne
+	@JoinColumn(name = "workflowMeshId")
+	private WorkflowMesh3VO workflowMeshVO;
 	
 	@Column(name = "xOffset")
 	protected Double xOffset;
@@ -81,11 +85,12 @@ public class GridInfo3VO extends ISPyBValueObject implements Cloneable {
 		super();
 	}
 
-	public GridInfo3VO(Integer gridInfoId,
+	public GridInfo3VO(Integer gridInfoId, WorkflowMesh3VO workflowMeshVO,
 			Double xOffset, Double yOffset, Double dx_mm, Double dy_mm,
 			Double steps_x, Double steps_y, Double meshAngle) {
 		super();
 		this.gridInfoId = gridInfoId;
+		this.workflowMeshVO = workflowMeshVO;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 		this.dx_mm = dx_mm;
@@ -98,6 +103,7 @@ public class GridInfo3VO extends ISPyBValueObject implements Cloneable {
 	public GridInfo3VO(GridInfo3VO vo) {
 		super();
 		this.gridInfoId = vo.getGridInfoId();
+		this.workflowMeshVO = vo.getWorkflowMeshVO();
 		this.xOffset = vo.getxOffset();
 		this.yOffset = vo.getyOffset();
 		this.dx_mm = vo.getDx_mm();
@@ -127,6 +133,14 @@ public class GridInfo3VO extends ISPyBValueObject implements Cloneable {
 		this.gridInfoId = gridInfoId;
 	}
 	
+	public WorkflowMesh3VO getWorkflowMeshVO() {
+		return workflowMeshVO;
+	}
+
+	public void setWorkflowMeshVO(WorkflowMesh3VO workflowMeshVO) {
+		this.workflowMeshVO = workflowMeshVO;
+	}
+
 	public Double getxOffset() {
 		return xOffset;
 	}
@@ -190,6 +204,9 @@ public class GridInfo3VO extends ISPyBValueObject implements Cloneable {
 	 * @throws Exception if the data of the value object is not correct
 	 */
 	public void checkValues(boolean create) throws Exception {
+		//workflow
+		if(workflowMeshVO == null)
+			throw new IllegalArgumentException(StringUtils.getMessageRequiredField("GridInfo", "workflowMesh"));
 		
 	}
 

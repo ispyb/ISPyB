@@ -16,41 +16,11 @@
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
+package ispyb.server.mx.services.collections;
 
-package ispyb.server.mx.vos.collections;
+import javax.ejb.Local;
 
+@Local
+public interface MotorPosition3ServiceLocal extends MotorPosition3Service {
 
-/**
-* Session class used for webservices
-* @author BODIN
-*
-*/
-public class GridInfoWS3VO extends GridInfo3VO {
-	private static final long serialVersionUID = 1L;
-
-	private Integer workflowMeshId;
-
-	public Integer getWorkflowMeshId() {
-		return workflowMeshId;
-	}
-
-	public void setWorkflowMeshId(Integer workflowMeshId) {
-		this.workflowMeshId = workflowMeshId;
-	}
-
-	public GridInfoWS3VO() {
-		super();
-	}
-	public GridInfoWS3VO(GridInfo3VO vo) {
-		super(vo);
-		this.workflowMeshId = vo.getWorkflowMeshVO().getWorkflowMeshId();
-		
-	}
-	@Override
-	public String toWSString(){
-		String s= super.toWSString();
-		s += ", workflowMeshId="+this.workflowMeshId;
-		return s;
-	}
-	
 }

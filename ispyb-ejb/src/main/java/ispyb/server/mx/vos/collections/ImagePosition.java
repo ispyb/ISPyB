@@ -29,7 +29,9 @@ public class ImagePosition {
 	private String fileLocation;
 	
 	private String fileName ;
-		
+	
+	private MotorPosition3VO motorPosition;
+	
 	private String jpegFileFullPath;
 	
 	private String jpegThumbnailFileFullPath;
@@ -43,11 +45,12 @@ public class ImagePosition {
 	
 
 	public ImagePosition(String fileLocation, String fileName,
-			 String jpegFileFullPath,
+			MotorPosition3VO motorPosition, String jpegFileFullPath,
 			String jpegThumbnailFileFullPath) {
 		super();
 		this.fileLocation = fileLocation;
 		this.fileName = fileName;
+		this.motorPosition = motorPosition;
 		this.jpegFileFullPath = jpegFileFullPath;
 		this.jpegThumbnailFileFullPath = jpegThumbnailFileFullPath;
 	}
@@ -68,6 +71,14 @@ public class ImagePosition {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public MotorPosition3VO getMotorPosition() {
+		return motorPosition;
+	}
+
+	public void setMotorPosition(MotorPosition3VO motorPosition) {
+		this.motorPosition = motorPosition;
 	}
 
 	public String getJpegFileFullPath() {

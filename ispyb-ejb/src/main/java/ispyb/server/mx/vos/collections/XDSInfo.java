@@ -55,7 +55,10 @@ public class XDSInfo implements Serializable, Cloneable {
 	private Double detectorPixelSizeVertical;
 	private String detectorManufacturer;
 	private String detectorModel;
-		
+	
+	/*motor position*/
+	private MotorPosition3VO motorPosition;
+	
 	public XDSInfo() {
 		super();
 	}
@@ -67,7 +70,7 @@ public class XDSInfo implements Serializable, Cloneable {
 			Double wavelength, Double xbeam, Double ybeam,
 			Double detectorPixelSizeHorizontal,
 			Double detectorPixelSizeVertical, String detectorManufacturer,
-			String detectorModel) {
+			String detectorModel, MotorPosition3VO motorPosition) {
 		super();
 		this.polarisation = polarisation;
 		this.axisRange = axisRange;
@@ -88,6 +91,7 @@ public class XDSInfo implements Serializable, Cloneable {
 		this.detectorPixelSizeVertical = detectorPixelSizeVertical;
 		this.detectorManufacturer = detectorManufacturer;
 		this.detectorModel = detectorModel;
+		this.motorPosition = motorPosition ;
 	}
 
 	public Double getPolarisation() {
@@ -240,6 +244,14 @@ public class XDSInfo implements Serializable, Cloneable {
 
 	public void setDetectorModel(String detectorModel) {
 		this.detectorModel = detectorModel;
+	}
+
+	public MotorPosition3VO getMotorPosition() {
+		return motorPosition;
+	}
+
+	public void setMotorPosition(MotorPosition3VO motorPosition) {
+		this.motorPosition = motorPosition;
 	}
 
 
