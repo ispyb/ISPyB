@@ -146,6 +146,33 @@ public class UpdateFromSMIS {
 		}
 		LOG.info("Update of ISPyB is finished, nbFound for ESRF = " + nbFoundESRF);
 	}
+	
+	public static void updateProposalFromSMIS(String proposalCode, String proposalNumber) throws Exception {
+
+		LOG.debug("update ISPyB database for proposal = " + proposalCode + " " + proposalNumber);
+
+		// Get the service
+		SMISWebService wsInit = SMISWebServiceGenerator.getWs();
+		Long proposalNumberInt = null;
+		LOG.debug("getting SMIS WS");
+
+		try {
+			proposalNumberInt = Long.parseLong(proposalNumber);
+			if (proposalNumberInt != null) {
+				Long pk = null;
+				// retrieve proposal_no in smis : pk
+				pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
+				if (pk != null) {
+					updateThisProposalFromSMISPk(pk);
+					LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
+				}
+			}
+			
+		} catch (NumberFormatException e) {
+			LOG.debug("Update not done because proposalNumber was not a number : " + proposalNumber);
+		}				
+
+	}
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
 		System.out.println("updateThisProposalFromSMISPk " + pk);
