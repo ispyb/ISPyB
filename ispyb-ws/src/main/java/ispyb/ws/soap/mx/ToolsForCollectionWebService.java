@@ -103,6 +103,7 @@ import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.BLSampleWS3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
+import ispyb.server.smis.UpdateFromSMIS;
 
 /**
  * Web services for Collection
@@ -228,6 +229,13 @@ public class ToolsForCollectionWebService {
 
 			SessionWS3VO[] ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
 					beamLineName);
+			if (ret == null || ret.length <1){
+				//no sessions found, try to update DB
+				LOG.debug("findSessionsByProposalAndBeamLine : no sessions found, try to update from SMIS ") ;
+				UpdateFromSMIS.updateProposalFromSMIS(code, number);
+				ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
+						beamLineName);
+			}
 
 			long endTime = System.currentTimeMillis();
 			long duration = endTime - startTime;
