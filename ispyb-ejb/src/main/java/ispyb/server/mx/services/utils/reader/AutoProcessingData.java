@@ -29,7 +29,7 @@ package ispyb.server.mx.services.utils.reader;
  */
 public class AutoProcessingData {
 	
-	protected Integer autoProcProgramAttachmentId;
+	protected String autoProcProgramAttachmentId;
 
 	protected Double resolutionLimit;
 	
@@ -72,11 +72,11 @@ public class AutoProcessingData {
 		return fileName;
 	}
 
-	public AutoProcessingData(Integer integer, double d, double e, double f, double g, double h, double i, int j, Integer autoProcProgramId) {
+	public AutoProcessingData(String integer, double d, double e, double f, double g, double h, double i, int j, Integer autoProcProgramId) {
 		super();
 	}
 
-	public AutoProcessingData(Integer autoProcProgramAttachmentId, Double resolutionLimit, Double completeness,
+	public AutoProcessingData(String autoProcProgramAttachmentId, Double resolutionLimit, Double completeness,
 			Double rFactorObserved, Double iSigma, Double cc2, Double sigAno, Integer anomalCorr, String fileName, Integer autoProcProgramId) {
 		super();
 		this.autoProcProgramAttachmentId = autoProcProgramAttachmentId;
@@ -99,7 +99,7 @@ public class AutoProcessingData {
 	}
 	
 	
-	public AutoProcessingData(Integer autoProcProgramAttachmentId, Double z, Double acent_theor, Double acent_twin,
+	public AutoProcessingData(String autoProcProgramAttachmentId, Double z, Double acent_theor, Double acent_twin,
 			Double acent_obser, Double centric_theor, Double centric_obser, String fileName, Integer autoProcProgramId) {
 		super();
 		this.autoProcProgramAttachmentId = autoProcProgramAttachmentId;
@@ -127,7 +127,7 @@ public class AutoProcessingData {
 	 * @param wilsonPlot
 	 * @param  autoProcProgramId 
 	 */
-	public AutoProcessingData(Integer autoProcProgramAttachmentId, Double resolution, Double wilsonPlot, String fileName, Integer autoProcProgramId) {
+	public AutoProcessingData(String autoProcProgramAttachmentId, Double resolution, Double wilsonPlot, String fileName, Integer autoProcProgramId) {
 		super();
 		this.autoProcProgramAttachmentId = autoProcProgramAttachmentId ;
 		this.resolutionLimit = null;
@@ -269,11 +269,11 @@ public class AutoProcessingData {
 		this.centric_obser = centric_obser;
 	}
 
-	public Integer getAutoProcProgramAttachmentId() {
+	public String getAutoProcProgramAttachmentId() {
 		return autoProcProgramAttachmentId;
 	}
 
-	public void setAutoProcProgramAttachmentId(Integer autoProcProgramAttachmentId) {
+	public void setAutoProcProgramAttachmentId(String autoProcProgramAttachmentId) {
 		this.autoProcProgramAttachmentId = autoProcProgramAttachmentId;
 	}
 	

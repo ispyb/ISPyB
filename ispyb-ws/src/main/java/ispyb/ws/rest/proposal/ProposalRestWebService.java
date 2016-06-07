@@ -75,7 +75,7 @@ public class ProposalRestWebService extends MXRestWebService{
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	/*@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/dewar/list")
 	@Produces({ "application/json" })
@@ -95,7 +95,7 @@ public class ProposalRestWebService extends MXRestWebService{
 		} catch (Exception e) {
 			return this.logError("getDewarsByProposalId", e, id, logger);
 		}
-	}
+	}*/
 	
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})

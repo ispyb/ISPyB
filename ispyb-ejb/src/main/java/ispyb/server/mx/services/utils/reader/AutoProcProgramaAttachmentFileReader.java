@@ -66,20 +66,11 @@ public class AutoProcProgramaAttachmentFileReader {
 										}
 									}
 									try {
-										AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
+//										AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
+										AutoProcessingData d = new AutoProcessingData(attachment.getFileName(),
 												Double.parseDouble(val[0]), Double.parseDouble(val[4]), Double.parseDouble(val[5]),
 												Double.parseDouble(val[8]), Double.parseDouble(val[10]), Double.parseDouble(val[12]),
 												Integer.parseInt(val[11]), fileName, attachment.getAutoProcProgramVO().getAutoProcProgramId());
-										// int index=0;
-										// for (int j=0; j<listAutoProcessingData.size(); j++){
-										// if (d.getResolutionLimit() >=
-										// listAutoProcessingData.get(j).getResolutionLimit() ){
-										// index = j;
-										// break;
-										// }
-										// }
-										//
-										// listAutoProcessingData.add(index, d);
 										listAutoProcessingData.add(d);
 									} catch (Exception e) {
 
@@ -106,7 +97,9 @@ public class AutoProcProgramaAttachmentFileReader {
 										}
 									}
 
-									AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
+									AutoProcessingData d = new AutoProcessingData(
+//											attachment.getAutoProcProgramAttachmentId(),
+											attachment.getFileName(),
 											Double.parseDouble(val[5]), Double.parseDouble(val[7]), fileName, attachment.getAutoProcProgramVO().getAutoProcProgramId());
 									listAutoProcessingData.add(d);
 								} catch (Exception e) {
@@ -128,7 +121,8 @@ public class AutoProcProgramaAttachmentFileReader {
 										}
 									}
 
-									AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
+//									AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
+									AutoProcessingData d = new AutoProcessingData(attachment.getFileName(),
 											Double.parseDouble(val[0]), Double.parseDouble(val[1]), Double.parseDouble(val[2]),
 											Double.parseDouble(val[3]), Double.parseDouble(val[4]), Double.parseDouble(val[5]),
 											fileName, attachment.getAutoProcProgramVO().getAutoProcProgramId());

@@ -4,6 +4,7 @@ import ispyb.common.util.Constants;
 import ispyb.common.util.PDFFormFiller;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
@@ -11,6 +12,9 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.ws.rest.AutoProcessingIntegration.AutoProcessingIntegrationService;
+import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsService;
+import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsServiceBean;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
 
@@ -101,6 +105,39 @@ public class DewarRestWebService extends RestWebService {
 
 	}
 	
+	/*
+	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/dewar/{dewarId}/status/{status}/update")
+	@Produces({ "application/json" })
+	public Response setDewarStatus(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("dewarId") Integer dewarId,
+			@PathParam("status") String status) throws Exception {
+
+		long id = this.logInit("setDewarStatus", logger, token, proposal, dewarId);
+		try {
+			Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, false, false);
+			dewar.setDewarStatus(status);
+			//If processing it blocks the shipment 
+			if (status.equals("processing")){
+				int shippingId = dewar.getShippingVO().getShippingId();
+				Shipping3VO shipment  = this.getShipping3Service().findByPk(shippingId, false);
+				shipment.setShippingStatus(status);
+				this.getShipping3Service().update(shipment);
+			}
+			this.getDewar3Service().update(dewar);
+			this.logFinish("setDewarStatus", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("setShippingStatus", "ok");
+			return sendResponse(response);
+		} catch (Exception e) {
+			return this.logError("setDewarStatus", e, id, logger);
+		}
+
+	}*/
+	
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
@@ -113,7 +150,8 @@ public class DewarRestWebService extends RestWebService {
 
 		long id = this.logInit("getDewars", logger, token, proposal);
 		try {
-			List<Dewar3VO> dewars = this.getDewar3Service().findByProposalId(this.getProposalId(proposal));
+			//List<Dewar3VO> dewars = this.getDewar3Service().findByProposalId(this.getProposalId(proposal));
+			List<Map<String, Object>> dewars = this.getDewarRestWebService().getDewarViewByProposalId(this.getProposalId(proposal));
 			this.logFinish("getDewars", id, logger);
 			return sendResponse(dewars);
 		} catch (Exception e) {
@@ -149,6 +187,28 @@ public class DewarRestWebService extends RestWebService {
 	}
 	
 	
+	protected DewarRestWsService getDewarRestWebService() throws NamingException {
+		return (DewarRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DewarRestWsService.class);
+	}
+	
+	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/dewar/session/{sessionId}/list")
+	@Produces({ "application/json" })
+	public Response getDewarsBySession(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal, 
+			@PathParam("sessionId") int sessionId) throws Exception {
+
+		long id = this.logInit("getDewarsBySession", logger, token, proposal);
+		try {
+			List<Map<String, Object>> dewars = this.getDewarRestWebService().getDewarViewBySessionId(sessionId, this.getProposalId(proposal));
+			this.logFinish("getDewarsBySession", id, logger);
+			return sendResponse(dewars);
+		} catch (Exception e) {
+			return this.logError("getDewarsBySession", e, id, logger);
+		}
+	}
 	
 	
 	

@@ -12,6 +12,7 @@ import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +164,30 @@ public class ShippingRestWebService extends MXRestWebService {
 	}
 
 	
+	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/status/{status}/update")
+	@Produces({ "application/json" })
+	public Response setShippingStatus(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId,
+			@PathParam("status") String status) throws Exception {
+
+		long id = this.logInit("setShippingStatus", logger, token, proposal, shippingId);
+		try {
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, false, false, false);
+			result.setShippingStatus(status);
+			this.getShipping3Service().update(result);
+			this.logFinish("setShippingStatus", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("setShippingStatus", "ok");
+			return sendResponse(response);
+		} catch (Exception e) {
+			return this.logError("setShippingStatus", e, id, logger);
+		}
+
+	}
 	
 	
 	
@@ -229,7 +254,6 @@ public class ShippingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
-//	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/remove")
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/remove")
 	@Produces({ "application/json" })
 	public Response removePuck(@PathParam("token") String token, @PathParam("proposal") String proposal,
