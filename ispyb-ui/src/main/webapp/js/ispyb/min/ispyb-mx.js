@@ -16765,7 +16765,6 @@ function BeamlinePanel(args) {
 	}
 }
 
-
 // builds and returns the main panel
 BeamlinePanel.prototype.getPanel = function(data) {
 	var _this = this;
@@ -16853,8 +16852,7 @@ BeamlinePanel.prototype.getPanel = function(data) {
 				margin: marginBottom
 			}
 	);
-	
-	
+		
 	items.push(
 			{
 				xtype : 'displayfield',
@@ -16879,8 +16877,7 @@ BeamlinePanel.prototype.getPanel = function(data) {
 				margin: marginBottom
 			}
 	);
-	
-	
+		
 	items.push(
 			{
 				xtype : 'displayfield',
