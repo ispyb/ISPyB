@@ -229,12 +229,14 @@ public class ToolsForCollectionWebService {
 
 			SessionWS3VO[] ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
 					beamLineName);
-			if (ret == null || ret.length <1){
-				//no sessions found, try to update DB
-				LOG.debug("findSessionsByProposalAndBeamLine : no sessions found, try to update from SMIS ") ;
-				UpdateFromSMIS.updateProposalFromSMIS(code, number);
-				ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
+			if (Constants.SITE_IS_ESRF()) {
+				if (ret == null || ret.length <1){
+					//no sessions found, try to update DB				
+					LOG.debug("findSessionsByProposalAndBeamLine : no sessions found, try to update from SMIS ") ;
+					UpdateFromSMIS.updateProposalFromSMIS(code, number);
+					ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
 						beamLineName);
+				}
 			}
 
 			long endTime = System.currentTimeMillis();
