@@ -2,10 +2,15 @@
 
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-<web-app >
+<web-app>
 
 
 	<display-name>ISPyB</display-name>
 	<description>ISPyB Web Application</description>
-
+<!-- 	<context-param> -->
+<!-- 		<param-name>resteasy.scan</param-name> -->
+<!-- 		<param-value>true</param-value> -->
+<!-- 	</context-param> -->
+	
+    
 </web-app>

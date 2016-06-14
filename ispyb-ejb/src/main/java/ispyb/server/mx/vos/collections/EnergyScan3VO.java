@@ -146,6 +146,8 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "flux_end")
 	protected Double flux_end;
 	
+	@Column(name = "workingDirectory")
+	protected String workingDirectory;
 	
 	public EnergyScan3VO() {
 		super();
@@ -621,5 +623,17 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		"flux_end="+this.flux_end;
 		
 		return s;
+	}
+
+
+
+	public String getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+
+
+	public void setWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
 	}
 }

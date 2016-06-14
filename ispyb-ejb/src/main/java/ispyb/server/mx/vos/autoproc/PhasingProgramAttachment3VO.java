@@ -152,7 +152,7 @@ public class PhasingProgramAttachment3VO extends ISPyBValueObject implements Clo
 	 * @throws Exception if the data of the value object is not correct
 	 */
 	public void checkValues(boolean create) throws Exception {
-		String[] listFileType = {"Map", "Logfile"};
+		/*String[] listFileType = {"Map", "Logfile"};
 		int maxLengthFileName = 45;
 		int maxLengthFilePath = 255;
 		//phasingProgram
@@ -167,7 +167,7 @@ public class PhasingProgramAttachment3VO extends ISPyBValueObject implements Clo
 		// filePath
 		if(!StringUtils.isStringLengthValid(this.filePath, maxLengthFilePath))
 			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("PhasingProgramAttachment", "filePath", maxLengthFilePath));
-		
+		*/
 	}
 
 	/**

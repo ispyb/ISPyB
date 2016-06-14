@@ -110,7 +110,8 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 	@Column(name = "flux_end")
 	protected Double flux_end;
 
-
+	@Column(name = "workingDirectory")
+	protected String workingDirectory;
 	
 
 	public XFEFluorescenceSpectrum3VO() {
@@ -427,5 +428,17 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 		"flux_end="+this.flux_end;
 		
 		return s;
+	}
+
+
+
+	public String getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+
+
+	public void setWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = workingDirectory;
 	}
 }

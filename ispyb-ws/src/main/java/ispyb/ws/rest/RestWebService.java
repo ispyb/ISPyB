@@ -79,27 +79,30 @@ public class RestWebService {
 				return response.header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
-		return Response.status(Response.Status.NOT_FOUND).build();
+		return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 	private long now;
 
 	private final static Logger log = Logger.getLogger(RestWebService.class);
 
-	protected Response downloadFile(String filePath) {
+	protected Response downloadFile(String filePath) throws Exception {
 		File file = new File(filePath);
 		if (file.exists()) {
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition", "attachment; filename=" + file.getName());
-			return response.build();
+			return response.header("Access-Control-Allow-Origin", "*").build();
 		}
-		return Response.noContent().build();
+		else{
+			throw new Exception("File " + file.getAbsolutePath() + " does not exist");
+		}
+//		return Response.noContent().build();
 	}
 	
 	protected Response downloadFile(byte[] bs, String fileName) {
 		ResponseBuilder response = Response.ok((Object) bs);
 		response.header("Content-Disposition", "attachment; filename=" + fileName);
-		return response.build();
+		return response.header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 	
@@ -164,7 +167,7 @@ public class RestWebService {
 	}
 
 	protected Response unauthorizedResponse() {
-		return Response.status(401).build();
+		return Response.status(401).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	protected External3Service getExternal3Service() throws NamingException {

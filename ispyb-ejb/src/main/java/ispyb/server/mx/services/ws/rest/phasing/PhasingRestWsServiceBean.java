@@ -123,6 +123,8 @@ public class PhasingRestWsServiceBean implements PhasingRestWsService, PhasingRe
 	}
 	
 	private String FilesByPhasingStepId = getPhasingFilesViewTableQuery() + " where phasingStepId = :phasingStepId and proposalId = :proposalId";
+	
+	
 	private String FilesByPhasingProgramAttachmentId = getPhasingFilesViewTableQuery() + " where phasingProgramAttachmentId = :phasingProgramAttachmentId and proposalId = :proposalId";
 	
 	@Override
@@ -138,6 +140,9 @@ public class PhasingRestWsServiceBean implements PhasingRestWsService, PhasingRe
 	public List<Map<String, Object>> getPhasingFilesViewByPhasingProgramAttachmentId(int phasingProgramAttachmentId, int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(FilesByPhasingProgramAttachmentId);
+		System.out.println("SQL ----------------");
+		System.out.println(FilesByPhasingProgramAttachmentId);
+		System.out.println(String.valueOf(phasingProgramAttachmentId));
 		query.setParameter("phasingProgramAttachmentId", phasingProgramAttachmentId);
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);

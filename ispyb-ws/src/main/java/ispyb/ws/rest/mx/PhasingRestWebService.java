@@ -214,6 +214,8 @@ public class PhasingRestWebService extends MXRestWebService {
 				list.add(this.getPhasingWSService().getPhasingFilesViewByPhasingProgramAttachmentId(id, this.getProposalId(proposal)));
 			}
 			
+			System.out.println(this.getGson().toJson(list));
+			
 			/** If single file it returns the file otherwise it returns a zip file **/
 			if (list != null){
 				if (list.size() > 0){
