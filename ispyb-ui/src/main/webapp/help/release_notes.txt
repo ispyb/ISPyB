@@ -1,4 +1,14 @@
 **************
+* 14.06.2016     *
+**************
+
+Revert some Changes linked to database merging with DLS:
+- reverted tables: `WorkflowMesh`, `MotorPosition'.
+- when a list of sessions is retrieved by WS, if no sessions, an automatic update from SMIS is launched
+- new Rest WSs for EXI
+
+
+**************
 * 23.05.2016     *
 **************
 
@@ -10,7 +20,7 @@ Changes linked to database merging with DLS:
 
 ********************************************************************************
 
-New TAG : TAG TAG ISPYB_4.0.3 before changes linked to database merging with DLS
+New TAG : ISPYB_4.0.3 before changes linked to database merging with DLS
 
 **************
 * 25.04.2016     *
