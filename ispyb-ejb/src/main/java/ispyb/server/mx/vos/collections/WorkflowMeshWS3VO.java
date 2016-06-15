@@ -64,7 +64,6 @@ public class WorkflowMeshWS3VO extends WorkflowMesh3VO {
 	public WorkflowMeshWS3VO(WorkflowMesh3VO vo) {
 		super(vo);
 		this.workflowId = vo.getWorkflowVO().getWorkflowId();
-		this.bestPositionId = (vo.getBestPositionVO() == null ? null: vo.getBestPositionVO().getMotorPositionId());
 		this.bestImageId = (vo.getBestImageVO() == null ? null: vo.getBestImageVO().getImageId());
 		
 	}

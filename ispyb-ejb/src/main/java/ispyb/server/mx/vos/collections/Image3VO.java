@@ -58,10 +58,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "dataCollectionId")
 	private DataCollection3VO dataCollectionVO;
 	
-	@ManyToOne
-	@JoinColumn(name = "motorPositionId")
-	private MotorPosition3VO motorPositionVO;
-	
 	@Column(name = "imageNumber")
 	protected Integer imageNumber;
 	
@@ -103,7 +99,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 	
 
 	public Image3VO(Integer imageId, DataCollection3VO dataCollectionVO,
-			MotorPosition3VO motorPositionVO,
 			Integer imageNumber, String fileName, String fileLocation,
 			Float measuredIntensity, String jpegFileFullPath,
 			String jpegThumbnailFileFullPath, Float temperature,
@@ -112,7 +107,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 		super();
 		this.imageId = imageId;
 		this.dataCollectionVO = dataCollectionVO;
-		this.motorPositionVO = motorPositionVO;
 		this.imageNumber = imageNumber;
 		this.fileName = fileName;
 		this.fileLocation = fileLocation;
@@ -129,7 +123,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 	public Image3VO(Image3VO vo) {
 		this.imageId = vo.getImageId();
 		this.dataCollectionVO = vo.getDataCollectionVO();
-		this.motorPositionVO = vo.getMotorPositionVO();
 		this.imageNumber = vo.getImageNumber();
 		this.fileName = vo.getFileName();
 		this.fileLocation = vo.getFileLocation();
@@ -146,7 +139,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 	public  void fillVOFromWS(ImageWS3VO vo) {
 		this.imageId = vo.getImageId();
 		this.dataCollectionVO = null;
-		this.motorPositionVO = null;
 		this.imageNumber = vo.getImageNumber();
 		this.fileName = vo.getFileName();
 		this.fileLocation = vo.getFileLocation();
@@ -192,15 +184,6 @@ public class Image3VO extends ISPyBValueObject implements Cloneable {
 	public void setDataCollectionVO(DataCollection3VO dataCollectionVO) {
 		this.dataCollectionVO = dataCollectionVO;
 	}
-
-	public MotorPosition3VO getMotorPositionVO() {
-		return motorPositionVO;
-	}
-
-	public void setMotorPositionVO(MotorPosition3VO motorPositionVO) {
-		this.motorPositionVO = motorPositionVO;
-	}
-
 
 	public Integer getImageNumber() {
 		return imageNumber;

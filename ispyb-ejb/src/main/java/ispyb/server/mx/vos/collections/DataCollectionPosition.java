@@ -29,24 +29,16 @@ public class DataCollectionPosition {
 	private String fileLocation;
 	
 	private String fileName ;
-	
-	private MotorPosition3VO startPosition;
-	
-	private MotorPosition3VO endPosition;
-
-	
+		
 	
 	public DataCollectionPosition() {
 		super();
 	}
 
-	public DataCollectionPosition(String fileLocation, String fileName,
-			MotorPosition3VO startPosition, MotorPosition3VO endPosition) {
+	public DataCollectionPosition(String fileLocation, String fileName) {
 		super();
 		this.fileLocation = fileLocation;
 		this.fileName = fileName;
-		this.startPosition = startPosition;
-		this.endPosition = endPosition;
 	}
 
 	public String getFileLocation() {
@@ -65,19 +57,4 @@ public class DataCollectionPosition {
 		this.fileName = fileName;
 	}
 
-	public MotorPosition3VO getStartPosition() {
-		return startPosition;
-	}
-	
-	public void setStartPosition(MotorPosition3VO startPosition) {
-		this.startPosition = startPosition;
-	}
-	
-	public MotorPosition3VO getEndPosition() {
-		return endPosition;
-	}
-
-	public void setEndPosition(MotorPosition3VO endPosition) {
-		this.endPosition = endPosition;
-	}
 }

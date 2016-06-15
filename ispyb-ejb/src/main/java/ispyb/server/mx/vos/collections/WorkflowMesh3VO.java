@@ -56,11 +56,7 @@ public class WorkflowMesh3VO extends ISPyBValueObject implements Cloneable {
 	@ManyToOne
 	@JoinColumn(name = "workflowId")
 	private Workflow3VO workflowVO;
-	
-	@ManyToOne
-	@JoinColumn(name = "bestPositionId")
-	private MotorPosition3VO bestPositionVO;
-	
+		
 	@ManyToOne
 	@JoinColumn(name = "bestImageId")
 	private Image3VO bestImageVO;
@@ -88,13 +84,11 @@ public class WorkflowMesh3VO extends ISPyBValueObject implements Cloneable {
 		super();
 	}
 
-	public WorkflowMesh3VO(Integer workflowMeshId, Workflow3VO workflowVO,
-			MotorPosition3VO bestPositionVO, Image3VO bestImageVO, 
+	public WorkflowMesh3VO(Integer workflowMeshId, Workflow3VO workflowVO, Image3VO bestImageVO, 
 			Double value1, Double value2, Double value3, Double value4, String cartographyPath, Date recordTimeStamp) {
 		super();
 		this.workflowMeshId = workflowMeshId;
 		this.workflowVO = workflowVO;
-		this.bestPositionVO = bestPositionVO;
 		this.bestImageVO = bestImageVO;
 		this.value1 = value1;
 		this.value2 = value2;
@@ -108,7 +102,6 @@ public class WorkflowMesh3VO extends ISPyBValueObject implements Cloneable {
 		super();
 		this.workflowMeshId = vo.getWorkflowMeshId();
 		this.workflowVO = vo.getWorkflowVO();
-		this.bestPositionVO = vo.getBestPositionVO();
 		this.bestImageVO = vo.getBestImageVO();
 		this.value1 = vo.getValue1();
 		this.value2 = vo.getValue2();
@@ -121,7 +114,6 @@ public class WorkflowMesh3VO extends ISPyBValueObject implements Cloneable {
 	public void fillVOFromWS(WorkflowMeshWS3VO vo) {
 		this.workflowMeshId = vo.getWorkflowMeshId();
 		this.workflowVO = null;
-		this.bestPositionVO = null;
 		this.bestImageVO = null;
 		this.value1 = vo.getValue1();
 		this.value2 = vo.getValue2();
@@ -146,14 +138,6 @@ public class WorkflowMesh3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setWorkflowVO(Workflow3VO workflowVO) {
 		this.workflowVO = workflowVO;
-	}
-
-	public MotorPosition3VO getBestPositionVO() {
-		return bestPositionVO;
-	}
-
-	public void setBestPositionVO(MotorPosition3VO bestPositionVO) {
-		this.bestPositionVO = bestPositionVO;
 	}
 
 	public Image3VO getBestImageVO() {
