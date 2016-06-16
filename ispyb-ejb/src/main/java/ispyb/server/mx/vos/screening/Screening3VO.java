@@ -59,11 +59,15 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	@Id
 	@GeneratedValue
 	@Column(name = "screeningId")
-	protected java.lang.Integer screeningId;
+	protected Integer screeningId;
 
 	@ManyToOne
 	@JoinColumn(name = "dataCollectionId")
 	private DataCollection3VO dataCollectionVO;
+
+	//TODO later implement ManyToOne relation
+	@Column(name = "dataCollectionGroupId")
+	protected Integer dataCollectionGroupId;
 	
 	@ManyToOne
 	@JoinColumn(name = "diffractionPlanId")
@@ -100,13 +104,14 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	
-	public Screening3VO(Integer screeningId,
+	public Screening3VO(Integer screeningId, Integer dataCollectionGroupId,
 			DataCollection3VO dataCollectionVO,
 			DiffractionPlan3VO diffractionPlanVO, Date timeStamp,
 			String programVersion, String comments, String shortComments,
 			String xmlSampleInformation) {
 		super();
 		this.screeningId = screeningId;
+		this.dataCollectionGroupId = dataCollectionGroupId;
 		this.dataCollectionVO = dataCollectionVO;
 		this.diffractionPlanVO = diffractionPlanVO;
 		this.timeStamp = timeStamp;
@@ -120,6 +125,7 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	public Screening3VO(Screening3VO vo) {
 		super();
 		this.screeningId = vo.getScreeningId();
+		this.dataCollectionGroupId = vo.getDataCollectionGroupId();
 		this.dataCollectionVO = vo.getDataCollectionVO();
 		this.diffractionPlanVO = vo.getDiffractionPlanVO();
 		this.timeStamp = vo.getTimeStamp();
@@ -131,6 +137,7 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 
 	public void fillVOFromWS(ScreeningWS3VO vo) {
 		this.screeningId = vo.getScreeningId();
+		this.dataCollectionGroupId = vo.getDataCollectionGroupId();
 		this.dataCollectionVO = null;
 		this.diffractionPlanVO =null;
 		this.timeStamp = vo.getTimeStamp();
@@ -160,6 +167,15 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	public void setScreeningId(Integer screeningId) {
 		this.screeningId = screeningId;
 	}
+
+	public Integer getDataCollectionGroupId() {
+		return dataCollectionGroupId;
+	}
+
+	public void setDataCollectionGroupId(Integer dataCollectionGroupId) {
+		this.dataCollectionGroupId = dataCollectionGroupId;
+	}
+
 
 	public DataCollection3VO getDataCollectionVO() {
 		return dataCollectionVO;

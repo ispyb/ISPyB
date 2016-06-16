@@ -53,12 +53,13 @@ public class ScreeningWS3VO extends Screening3VO{
 	public ScreeningWS3VO(Screening3VO vo) {
 		super(vo);
 	}
-	public ScreeningWS3VO(Integer screeningId, Integer dataCollectionId,Integer diffractionPlanId,
+	public ScreeningWS3VO(Integer screeningId, Integer dataCollectionGroupId, Integer dataCollectionId,Integer diffractionPlanId,
 			Date timeStamp, String programVersion, String comments,
 			String shortComments, String xmlSampleInformation) {
 		super();
 		this.screeningId = screeningId;
 		this.dataCollectionId = dataCollectionId;
+		this.dataCollectionGroupId = dataCollectionGroupId;
 		this.diffractionPlanId = diffractionPlanId;
 		this.timeStamp = timeStamp;
 		this.programVersion = programVersion;
