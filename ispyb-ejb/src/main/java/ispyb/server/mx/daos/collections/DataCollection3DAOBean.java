@@ -481,7 +481,7 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 	@SuppressWarnings("rawtypes")
 	public List findXDSInfo(Integer dataCollectionId) {
 		Query q = this.entityManager
-				.createNativeQuery("SELECT BLSession.beamLineSetupId, DataCollection.detectorId, DataCollection.startPositionId,   "
+				.createNativeQuery("SELECT BLSession.beamLineSetupId, DataCollection.detectorId,  "
 						+ "DataCollection.axisRange, DataCollection.axisStart, DataCollection.axisEnd, DataCollection.detectorDistance, "
 						+ "DataCollection.fileTemplate, DataCollection.imageDirectory, DataCollection.imageSuffix, "
 						+ "DataCollection.numberOfImages, DataCollection.startImageNumber, "

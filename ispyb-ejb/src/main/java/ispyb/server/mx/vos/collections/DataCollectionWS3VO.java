@@ -33,13 +33,7 @@ public class DataCollectionWS3VO extends DataCollection3VO{
 	
 	private Integer detectorId;
 	
-	private Integer blSubSampleId;
-	
-	private Integer startPositionId;
-	
-	private Integer endPositionId;
-
-	
+	private Integer blSubSampleId;	
 	
 	public DataCollectionWS3VO() {
 		super();
@@ -51,15 +45,12 @@ public class DataCollectionWS3VO extends DataCollection3VO{
 
 
 	public DataCollectionWS3VO(Integer sessionId, 
-			Integer strategySubWedgeOrigId, Integer detectorId, Integer blSubSampleId,
-			Integer startPositionId, Integer endPositionId) {
+			Integer strategySubWedgeOrigId, Integer detectorId, Integer blSubSampleId) {
 		super();
 		this.dataCollectionGroupId = sessionId;
 		this.strategySubWedgeOrigId = strategySubWedgeOrigId;
 		this.detectorId = detectorId;
 		this.blSubSampleId = blSubSampleId;
-		this.startPositionId = startPositionId;
-		this.endPositionId = endPositionId;
 	}
 
 
@@ -96,30 +87,12 @@ public class DataCollectionWS3VO extends DataCollection3VO{
 		this.strategySubWedgeOrigId = strategySubWedgeOrigId;
 	}
 	
-	public Integer getStartPositionId() {
-		return startPositionId;
-	}
-
-	public void setStartPositionId(Integer startPositionId) {
-		this.startPositionId = startPositionId;
-	}
-
-	public Integer getEndPositionId() {
-		return endPositionId;
-	}
-
-	public void setEndPositionId(Integer endPositionId) {
-		this.endPositionId = endPositionId;
-	}
-
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();
 		s += ", dataCollectionGroupId="+this.dataCollectionGroupId+", "+
 		"detectorId="+this.detectorId+", "+
 		"blSubSampleId="+this.blSubSampleId+", "+
-		"startPositionId="+this.startPositionId+", "+
-		"endPositionId="+this.endPositionId+", "+
 		"strategySubWedgeOrigId="+this.strategySubWedgeOrigId;
 		return s;
 	}

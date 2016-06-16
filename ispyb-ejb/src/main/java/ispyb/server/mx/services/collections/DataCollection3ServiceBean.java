@@ -226,8 +226,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			Integer strategySubWedgeOrigId = null;
 			Integer detectorId = null;
 			Integer blSubSampleId = null;
-			Integer startPositionId = null;
-			Integer endPositionId = null;
 			dataCollectionGroupId = otherVO.getDataCollectionGroupVOId();
 			strategySubWedgeOrigId = otherVO.getStrategySubWedgeOrigVOId();
 			detectorId = otherVO.getDetectorVOId();
@@ -241,8 +239,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			wsDataCollection.setStrategySubWedgeOrigId(strategySubWedgeOrigId);
 			wsDataCollection.setDetectorId(detectorId);
 			wsDataCollection.setBlSubSampleId(blSubSampleId);
-			wsDataCollection.setStartPositionId(startPositionId);
-			wsDataCollection.setEndPositionId(endPositionId);
 			return wsDataCollection;
 		} else {
 			return null;

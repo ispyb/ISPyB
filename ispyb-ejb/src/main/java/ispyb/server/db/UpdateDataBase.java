@@ -718,7 +718,7 @@ public class UpdateDataBase {
 
 				String newCom = "old dcgId = " + dataCollectionGroupId;
 				String queryUpdate = "UPDATE DataCollection SET dataCollectionGroupId = 1098614, " + "comments = '" + newCom
-						+ "', startPositionId = " + positionId + " " + "WHERE dataCollectionId = " + dataCollectionId + " ; ";
+						 + "WHERE dataCollectionId = " + dataCollectionId + " ; ";
 				Statement stmtU = con.createStatement();
 				stmtU.executeUpdate(queryUpdate);
 				stmtU.close();

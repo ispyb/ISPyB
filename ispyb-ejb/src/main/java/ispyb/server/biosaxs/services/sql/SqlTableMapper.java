@@ -216,8 +216,6 @@ public class SqlTableMapper {
 				+ "DataCollection.strategySubWedgeOrigId as DataCollection_strategySubWedgeOrigId,\r\n"
 				+ "DataCollection.detectorId as DataCollection_detectorId,\r\n"
 				+ "DataCollection.blSubSampleId as DataCollection_blSubSampleId,\r\n"
-				+ "DataCollection.startPositionId as DataCollection_startPositionId,\r\n"
-				+ "DataCollection.endPositionId as DataCollection_endPositionId,\r\n"
 				+ "DataCollection.dataCollectionNumber as DataCollection_dataCollectionNumber,\r\n"
 				+ "DataCollection.startTime as DataCollection_startTime,\r\n"
 				+ "DataCollection.endTime as DataCollection_endTime,\r\n"
