@@ -72,7 +72,6 @@ import ispyb.server.mx.vos.collections.GridInfo3VO;
 import ispyb.server.mx.vos.collections.Image3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
@@ -438,7 +437,6 @@ public class ViewWorkflowAction extends DispatchAction {
 		for (Iterator<DataCollection3VO> dcList= dataCollectionList.iterator();dcList.hasNext();){
 			DataCollection3VO dc = dcList.next();
 			Integer dataCollectionId = dc.getDataCollectionId();
-			MotorPosition3VO position = dc.getStartPositionVO();
 
 			GridInfo3VO gridInfo = null;
 			if (dc.getDataCollectionGroupVO().getWorkflowVO() != null){
@@ -457,11 +455,6 @@ public class ViewWorkflowAction extends DispatchAction {
 					Image3VO image3vo = (Image3VO) iterator.next();
 					String imageFileLocation = PathUtils.FitPathToOS(image3vo.getJpegFileFullPath());
 					boolean imageFilePresent = (PathUtils.fileExists(image3vo.getJpegFileFullPath()) ==1);
-					MotorPosition3VO imagePosition = image3vo.getMotorPositionVO();
-					MotorPosition3VO finalPosition = imagePosition;
-					if (imagePosition == null){
-						finalPosition = position;
-					}
 					List<ImageQualityIndicators3VO> listImageQI = imageQualityIndicatorsService.findByImageId(image3vo.getImageId());
 						
 					Integer imageQualityIndicatorId = null;
@@ -484,16 +477,16 @@ public class ViewWorkflowAction extends DispatchAction {
 						dozor_score = imgQualityIndic.getDozor_score();
 					}
 						
-					if (finalPosition != null){
+					
 						MeshData md= new MeshData(dataCollectionId,  image3vo.getImageId(),
 								imageQualityIndicatorId,  imageFileLocation,
 								imageFilePresent,  dc.getImagePrefix(), dc.getDataCollectionNumber(), 
-								finalPosition,  gridInfo, 
+								gridInfo, 
 								spotTotal,  goodBraggCandidates,  
 								methodRes1,
 								methodRes2,  totalIntegratedSignal, dozor_score);
 						meshData.add(md);
-					}
+					
 						
 				}
 				
