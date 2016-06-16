@@ -402,10 +402,6 @@ public class ToolsForCollectionWebService {
 				return errorCodeFK;
 
 			}
-			if (vo.getStartPositionId() == null)
-				LOG.debug(" storeOrUpdateDataCollection with null startPosition");
-			else
-				LOG.debug(" storeOrUpdateDataCollection with " + vo.getStartPositionId());
 
 			LOG.debug(" storeOrUpdateDataCollection with gaps " + vo.getUndulatorGap1() + ", " + vo.getUndulatorGap2() + ", "
 					+ vo.getUndulatorGap3());
