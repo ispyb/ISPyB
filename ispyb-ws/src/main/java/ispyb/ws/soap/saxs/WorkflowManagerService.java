@@ -226,9 +226,11 @@ public class WorkflowManagerService {
 		Workflow3Service workflow3Service = (Workflow3Service) ejb3ServiceLocator.getLocalService(Workflow3Service.class);
 		Workflow3VO workflow = workflow3Service.findByPk(workflowId);
 		if (workflow != null){
-			Proposal3Service proposal3Service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
-			Proposal3VO proposal = proposal3Service.findByPk(workflow.getProposalId());
-			String folder = proposal.getCode().toLowerCase() + proposal.getNumber();
+			//TODO extract the correct folder from another possibility because proposalId has been removed
+			// from session for example
+			//Proposal3Service proposal3Service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+			//Proposal3VO proposal = proposal3Service.findByPk(workflow.getProposalId());
+			String folder = "test"; //proposal.getCode().toLowerCase() + proposal.getNumber();
 			return Constants.DATA_PDB_FILEPATH_START +  folder + "/workflows/" + workflow.getWorkflowId().toString();
 		}
 		return null;
