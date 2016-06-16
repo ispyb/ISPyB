@@ -62,7 +62,6 @@ import ispyb.server.mx.services.collections.Detector3Service;
 import ispyb.server.mx.services.collections.EnergyScan3Service;
 import ispyb.server.mx.services.collections.GridInfo3Service;
 import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.collections.MotorPosition3Service;
 import ispyb.server.mx.services.collections.Position3Service;
 import ispyb.server.mx.services.collections.Workflow3Service;
 import ispyb.server.mx.services.collections.WorkflowMesh3Service;
@@ -87,7 +86,6 @@ import ispyb.server.mx.vos.collections.Image3VO;
 import ispyb.server.mx.vos.collections.ImageCreation;
 import ispyb.server.mx.vos.collections.ImagePosition;
 import ispyb.server.mx.vos.collections.ImageWS3VO;
-import ispyb.server.mx.vos.collections.MotorPosition3VO;
 import ispyb.server.mx.vos.collections.Position3VO;
 import ispyb.server.mx.vos.collections.PositionWS3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -430,15 +428,6 @@ public class ToolsForCollectionWebService {
 			if (vo.getStrategySubWedgeOrigId() != null && vo.getStrategySubWedgeOrigId() > 0)
 				strategySubWedgeOrigVO = screeningStrategySubWedgeService.findByPk(vo.getStrategySubWedgeOrigId());
 
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
-			MotorPosition3VO startPositionVO = null;
-			if (vo.getStartPositionId() != null && vo.getStartPositionId() > 0)
-				startPositionVO = motorPositionService.findByPk(vo.getStartPositionId());
-			MotorPosition3VO endPositionVO = null;
-			if (vo.getEndPositionId() != null && vo.getEndPositionId() > 0)
-				endPositionVO = motorPositionService.findByPk(vo.getEndPositionId());
-
 			Detector3Service detectorService = (Detector3Service) ejb3ServiceLocator.getLocalService(Detector3Service.class);
 			Detector3VO detectorVO = null;
 			if (vo.getDetectorId() != null && vo.getDetectorId() > 0)
@@ -462,8 +451,6 @@ public class ToolsForCollectionWebService {
 			dataCollection.setStrategySubWedgeOrigVO(strategySubWedgeOrigVO);
 			dataCollection.setDetectorVO(detectorVO);
 			dataCollection.setBlSubSampleVO(blSubSampleVO);
-			dataCollection.setStartPositionVO(startPositionVO);
-			dataCollection.setEndPositionVO(endPositionVO);
 			// printableForReport default 1
 			if (dataCollection.getPrintableForReport() == null)
 				dataCollection.setPrintableForReport(new Byte("1"));
@@ -990,18 +977,9 @@ public class ToolsForCollectionWebService {
 			DataCollection3VO dataCollectionVO = null;
 			dataCollectionVO = dataCollectionService.findByPk(vo.getDataCollectionId(), false, false, false);
 
-			Integer motorPositionId = vo.getMotorPositionId();
-			MotorPosition3VO motorPositionVO = null;
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
-			if (motorPositionId != null) {
-				motorPositionVO = motorPositionService.findByPk(motorPositionId);
-			}
-
 			Image3VO image = new Image3VO();
 			image.fillVOFromWS(vo);
 			image.setDataCollectionVO(dataCollectionVO);
-			image.setMotorPositionVO(motorPositionVO);
 
 			image.checkValues(imageId == null || imageId == 0);
 			if (imageId == null || imageId == 0) {
@@ -1350,44 +1328,10 @@ public class ToolsForCollectionWebService {
 	}
 
 	@WebMethod
-	@WebResult(name = "motorPositionId")
-	public Integer storeOrUpdateMotorPosition(@WebParam(name = "motorPosition")
-	MotorPosition3VO vo) throws Exception {
-		try {
-			LOG.debug("storeOrUpdateMotorPosition");
-			// if vo is null we return null, no creation
-			if (vo == null)
-				return null;
-
-			MotorPosition3VO motorPositionValue = null;
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
-
-			Integer motorPositionId = vo.getMotorPositionId();
-
-			if (motorPositionId == null || motorPositionId == 0) {
-				vo.setMotorPositionId(null);
-				motorPositionValue = motorPositionService.create(vo);
-				motorPositionId = motorPositionValue.getMotorPositionId();
-				LOG.debug("MotorPosition created " + motorPositionId);
-			} else {
-				motorPositionValue = motorPositionService.update(vo);
-				LOG.debug("MotorPosition updated " + motorPositionId);
-			}
-			return motorPositionValue.getMotorPositionId();
-		} catch (Exception e) {
-			LOG.error("WS ERROR: storeOrUpdateMotorPosition - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
-			throw e;
-		}
-	}
-
-	@WebMethod
 	@WebResult(name = "dataCollectionId")
-	public Integer setDataCollectionPosition(@WebParam(name = "fileLocation")
-	String fileLocation, @WebParam(name = "fileName")
-	String fileName, @WebParam(name = "startPosition")
-	MotorPosition3VO startPosition, @WebParam(name = "endPosition")
-	MotorPosition3VO endPosition) throws Exception {
+	public Integer setDataCollectionPosition(@WebParam(name = "fileLocation") String fileLocation, 
+			@WebParam(name = "fileName")
+	String fileName ) throws Exception {
 		try {
 			LOG.debug("setDataCollectionPosition");
 			// retrieve the datacollection from fileLocation and fileName
@@ -1408,72 +1352,13 @@ public class ToolsForCollectionWebService {
 				}
 			}
 
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
 			DataCollection3VO vodc = null;
 			if (dc != null) {
 				vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false, false);
-				MotorPosition3VO vo = null;
-				if (startPosition != null) {
-					vo = motorPositionService.create(startPosition);
-					LOG.debug("MotorPosition start created " + vo.getMotorPositionId());
-				}
-				dc.setStartPositionVO(vo);
-
-				MotorPosition3VO vo2 = null;
-				if (endPosition != null) {
-					vo2 = motorPositionService.create(endPosition);
-					LOG.debug("MotorPosition end created " + vo2.getMotorPositionId());
-				}
-				dc.setEndPositionVO(vo2);
-				dataCollectionService.update(dc);
 			}
 			return (vodc == null ? null : vodc.getDataCollectionId());
 		} catch (Exception e) {
-			LOG.error("WS ERROR: setDataCollectionPosition - " + StringUtils.getCurrentDate() + " - " + fileLocation + ", " + fileName
-					+ ", " + (startPosition == null ? "null" : startPosition.toWSString()) + ", "
-					+ (endPosition == null ? "null" : endPosition.toWSString()));
-			throw e;
-		}
-	}
-
-	@WebMethod
-	@WebResult(name = "dataCollectionId")
-	public Integer updateDataCollectionPosition(Integer dataCollectionId, @WebParam(name = "startPosition")
-	MotorPosition3VO startPosition, @WebParam(name = "endPosition")
-	MotorPosition3VO endPosition) throws Exception {
-		try {
-			LOG.debug("updateDataCollectionPosition");
-			// retrieve the datacollection from fileLocation and fileName
-			DataCollection3VO dc = null;
-			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
-					.getLocalService(DataCollection3Service.class);
-			dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
-
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
-			if (dc != null) {
-				MotorPosition3VO vo = null;
-				if (startPosition != null) {
-					vo = motorPositionService.create(startPosition);
-					LOG.debug("MotorPosition start created " + vo.getMotorPositionId());
-				}
-				dc.setStartPositionVO(vo);
-
-				MotorPosition3VO vo2 = null;
-				if (endPosition != null) {
-					vo2 = motorPositionService.create(endPosition);
-					LOG.debug("MotorPosition end created " + vo2.getMotorPositionId());
-				}
-				dc.setEndPositionVO(vo2);
-				dataCollectionService.update(dc);
-				LOG.debug("DataCollection updated " + dc.getDataCollectionId());
-			}
-			return (dc == null ? null : dc.getDataCollectionId());
-		} catch (Exception e) {
-			LOG.error("WS ERROR: updateDataCollectionPosition - " + StringUtils.getCurrentDate() + " - " + dataCollectionId + ", "
-					+ (startPosition == null ? "null" : startPosition.toWSString()) + ", "
-					+ (endPosition == null ? "null" : endPosition.toWSString()));
+			LOG.error("WS ERROR: setDataCollectionPosition - " + StringUtils.getCurrentDate() + " - " + fileLocation + ", " + fileName);
 			throw e;
 		}
 	}
@@ -1547,8 +1432,6 @@ public class ToolsForCollectionWebService {
 			Workflow3Service workflowService = (Workflow3Service) ejb3ServiceLocator.getLocalService(Workflow3Service.class);
 			WorkflowMesh3Service workflowMeshService = (WorkflowMesh3Service) ejb3ServiceLocator
 					.getLocalService(WorkflowMesh3Service.class);
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
 			Image3Service imageService = (Image3Service) ejb3ServiceLocator.getLocalService(Image3Service.class);
 
 			Integer workflowMeshId = vo.getWorkflowMeshId();
@@ -1562,17 +1445,12 @@ public class ToolsForCollectionWebService {
 			if (vo.getWorkflowId() != null && vo.getWorkflowId() > 0)
 				workflowVO = workflowService.findByPk(vo.getWorkflowId());
 
-			MotorPosition3VO bestPositionVO = null;
-			if (vo.getBestPositionId() != null && vo.getBestPositionId() > 0)
-				bestPositionVO = motorPositionService.findByPk(vo.getBestPositionId());
-
 			Image3VO bestImageVO = null;
 			if (vo.getBestImageId() != null && vo.getBestImageId() > 0)
 				bestImageVO = imageService.findByPk(vo.getBestImageId());
 
 			workflowMesh.fillVOFromWS(vo);
 			workflowMesh.setWorkflowVO(workflowVO);
-			workflowMesh.setBestPositionVO(bestPositionVO);
 			workflowMesh.setBestImageVO(bestImageVO);
 
 			if (workflowMeshId == null || workflowMeshId == 0) {
@@ -1601,8 +1479,6 @@ public class ToolsForCollectionWebService {
 			int nb = listDataCollectionPosition.size();
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
 			Integer[] listIds = new Integer[nb];
 			for (int i = 0; i < nb; i++) {
 				try {
@@ -1610,8 +1486,6 @@ public class ToolsForCollectionWebService {
 
 					String fileLocation = o.getFileLocation();
 					String fileName = o.getFileName();
-					MotorPosition3VO startPosition = o.getStartPosition();
-					MotorPosition3VO endPosition = o.getEndPosition();
 					// retrieve the datacollection from fileLocation and fileName
 					DataCollection3VO dc = null;
 					dc = dataCollectionService.findForDataCollectionIdFromFileLocationAndFileName(fileLocation, fileName);
@@ -1631,20 +1505,6 @@ public class ToolsForCollectionWebService {
 					DataCollection3VO vodc = null;
 					if (dc != null) {
 						vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false, false);
-						MotorPosition3VO vo = null;
-						if (startPosition != null) {
-							vo = motorPositionService.create(startPosition);
-							LOG.debug("MotorPosition start created " + vo.getMotorPositionId());
-						}
-						dc.setStartPositionVO(vo);
-
-						MotorPosition3VO vo2 = null;
-						if (endPosition != null) {
-							vo2 = motorPositionService.create(endPosition);
-							LOG.debug("MotorPosition end created " + vo2.getMotorPositionId());
-						}
-						dc.setEndPositionVO(vo2);
-						dataCollectionService.update(dc);
 					}
 					listIds[i] = (vodc == null ? null : vodc.getDataCollectionId());
 				} catch (Exception e) {
@@ -1715,7 +1575,7 @@ public class ToolsForCollectionWebService {
 
 				if (dataCollectionValue != null) {
 					DataCollectionInfo info = new DataCollectionInfo(dataCollectionValue, localContact, localContactEmail, blSampleVO,
-							vo.getStartPositionVO(), vo.getEndPositionVO(), spaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta,
+							spaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta,
 							cellGamma, pdbFilePath);
 					return info;
 				} else {
@@ -1740,8 +1600,6 @@ public class ToolsForCollectionWebService {
 			}
 			int nb = listImagePosition.size();
 			Image3Service imageService = (Image3Service) ejb3ServiceLocator.getLocalService(Image3Service.class);
-			MotorPosition3Service motorPositionService = (MotorPosition3Service) ejb3ServiceLocator
-					.getLocalService(MotorPosition3Service.class);
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 			ImageCreation[] listIds = new ImageCreation[nb];
@@ -1757,7 +1615,6 @@ public class ToolsForCollectionWebService {
 					String jpegFileFullPath = o.getJpegFileFullPath();
 					;
 					String jpegThumbnailFileFullPath = o.getJpegThumbnailFileFullPath();
-					MotorPosition3VO motorPosition = o.getMotorPosition();
 					// retrieve the image from fileLocation and fileName
 					Image3VO image = null;
 					Boolean isCreated = false;
@@ -1779,27 +1636,14 @@ public class ToolsForCollectionWebService {
 					if (listImages != null && listImages.size() > 0) {
 						image = listImages.get(0);
 						dataCollectionId = image.getDataCollectionVOId();
-						MotorPosition3VO vo = null;
-						if (motorPosition != null) {
-							vo = motorPositionService.create(motorPosition);
-							LOG.debug("MotorPosition  created " + vo.getMotorPositionId());
-						}
-						image.setMotorPositionVO(vo);
-
-						imageService.update(image);
 						isCreated = false;
 						imageNumber++;
 					} else { // image does not exist: creation
-						MotorPosition3VO vo = null;
-						if (motorPosition != null) {
-							vo = motorPositionService.create(motorPosition);
-							LOG.debug("MotorPosition  created " + vo.getMotorPositionId());
-						}
 						if (dataCollectionId != null) {
 							if (dataCollectionVO == null) {
 								dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, false, false, false);
 							}
-							Image3VO imagevo = new Image3VO(null, dataCollectionVO, vo, imageNumber, fileName, fileLocation, null,
+							Image3VO imagevo = new Image3VO(null, dataCollectionVO, imageNumber, fileName, fileLocation, null,
 									jpegFileFullPath, jpegThumbnailFileFullPath, null, null, null, null, null);
 							image = imageService.create(imagevo);
 							isCreated = true;
