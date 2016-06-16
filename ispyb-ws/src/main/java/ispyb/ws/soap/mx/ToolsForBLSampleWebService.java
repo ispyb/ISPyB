@@ -533,9 +533,9 @@ public class ToolsForBLSampleWebService {
 			if (vo.getPositionId() == null || vo.getPositionId() == 0) {
 				vo.setPositionId(null);
 			}
-			if (vo.getMotorPositionId() == null || vo.getMotorPositionId() == 0) {
-				vo.setMotorPositionId(null);
-			}
+//			if (vo.getMotorPositionId() == null || vo.getMotorPositionId() == 0) {
+//				vo.setMotorPositionId(null);
+//			}
 
 			if (vo.getBlSampleId() == null) {
 				LOG.debug("WS PB : BLSampleId is null , could not create blSubSample");
