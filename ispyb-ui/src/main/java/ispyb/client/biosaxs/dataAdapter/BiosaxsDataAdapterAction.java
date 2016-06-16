@@ -1789,7 +1789,7 @@ public class BiosaxsDataAdapterAction extends org.apache.struts.actions.Dispatch
 
 			Workflow3VO workflow = new Gson().fromJson(workflowString, Workflow3VO.class);
 			workflow.setStatus("PENDING");
-			workflow.setProposalId(this.getProposalBySessionId(request));
+			//workflow.setProposalId(this.getProposalBySessionId(request));
 			workflow.setWorkflowType("BioSAXS Post Processing");
 			Type mapType = new TypeToken<ArrayList<InputParameterWorkflow>>() {
 			}.getType();
