@@ -170,7 +170,6 @@ public class SqlTableMapper {
 	public static String getImageTable() {
 		return "Image.imageId as Image_imageId,\r\n"
 				+ "Image.dataCollectionId as Image_dataCollectionId,\r\n"
-				+ "Image.motorPositionId as Image_motorPositionId,\r\n"
 				+ "Image.imageNumber as Image_imageNumber,\r\n"
 				+ "Image.fileName as Image_fileName,\r\n"
 				+ "Image.fileLocation as Image_fileLocation,\r\n"

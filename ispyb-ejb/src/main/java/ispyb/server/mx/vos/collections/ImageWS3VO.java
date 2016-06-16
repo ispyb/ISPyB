@@ -30,16 +30,13 @@ public class ImageWS3VO extends Image3VO {
 	
 	private Integer dataCollectionId;
 	
-	private Integer motorPositionId;
-
 	public ImageWS3VO() {
 		super();
 	}
 
-	public ImageWS3VO(Integer dataCollectionId, Integer motorPositionId) {
+	public ImageWS3VO(Integer dataCollectionId) {
 		super();
 		this.dataCollectionId = dataCollectionId;
-		this.motorPositionId =  motorPositionId;
 	}
 
 	public Integer getDataCollectionId() {
@@ -50,19 +47,10 @@ public class ImageWS3VO extends Image3VO {
 		this.dataCollectionId = dataCollectionId;
 	}
 	
-	public Integer getMotorPositionId() {
-		return motorPositionId;
-	}
-
-	public void setMotorPositionId(Integer motorPositionId) {
-		this.motorPositionId = motorPositionId;
-	}
-
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();
 		s += ", dataCollectionId="+this.dataCollectionId;
-		s += ", motorPositionId="+this.motorPositionId;
 		return s;
 	}
 	

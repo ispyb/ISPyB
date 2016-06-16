@@ -705,16 +705,16 @@ public class UpdateDataBase {
 				Double posY = pos[0];
 				Double posZ = pos[1];
 				// position
-				String queryInsert = "INSERT INTO MotorPosition (phiZ, phiY) VALUES (" + posZ + ", " + posY + ") ;";
-				Statement stmtW = con.createStatement();
-				stmtW.executeUpdate(queryInsert);
-				Integer positionId = null;
-				ResultSet rs2 = stmtW.getGeneratedKeys();
-				if (rs2.next()) {
-					positionId = rs2.getInt(1);
-				}
-				rs2.close();
-				stmtW.close();
+				//String queryInsert = "INSERT INTO MotorPosition (phiZ, phiY) VALUES (" + posZ + ", " + posY + ") ;";
+				//Statement stmtW = con.createStatement();
+				//stmtW.executeUpdate(queryInsert);
+				//Integer positionId = null;
+				//ResultSet rs2 = stmtW.getGeneratedKeys();
+				//if (rs2.next()) {
+				//	positionId = rs2.getInt(1);
+				//}
+				//rs2.close();
+				//stmtW.close();
 
 				String newCom = "old dcgId = " + dataCollectionGroupId;
 				String queryUpdate = "UPDATE DataCollection SET dataCollectionGroupId = 1098614, " + "comments = '" + newCom

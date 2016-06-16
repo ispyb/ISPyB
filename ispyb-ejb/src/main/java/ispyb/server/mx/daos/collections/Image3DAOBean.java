@@ -58,7 +58,7 @@ public class Image3DAOBean implements Image3DAO {
 		return "from Image3VO vo ";
 	}
 
-	private static String FIND_BY_IMAGE_PROPOSAL = "SELECT DISTINCT i.imageId, i.dataCollectionId, i.motorPositionId, i.imageNumber, " +
+	private static String FIND_BY_IMAGE_PROPOSAL = "SELECT DISTINCT i.imageId, i.dataCollectionId, i.imageNumber, " +
 			"i.fileName, i.fileLocation, i.measuredIntensity, i.jpegFileFullPath, i.jpegThumbnailFileFullPath, " +
 			"i.temperature, i.cumulativeIntensity, i.synchrotronCurrent, i.comments, i.machineMessage " +
 			" FROM Image i, DataCollection dc, DataCollectionGroup dcg, BLSession ses, Proposal pro "

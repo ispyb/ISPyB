@@ -573,7 +573,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			int j = 0;
 			Integer beamLineSetupId = (Integer) o[j++];
 			Integer detectorId = (Integer) o[j++];
-			Integer motorPositionId = (Integer) o[j++];
 			Double axisRange = getDoubleValue((Float) o[j++]);
 			Double axisStart = getDoubleValue((Float) o[j++]);
 			Double axisEnd = getDoubleValue((Float) o[j++]);

@@ -32,8 +32,6 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 
 	private Integer positionId;
 	
-	private Integer motorPositionId;
-
 	private Integer diffractionPlanId;
 
 	public BLSubSampleWS3VO() {
@@ -47,12 +45,11 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 		this.diffractionPlanId = (vo.getDiffractionPlanVO() == null ? null: vo.getDiffractionPlanVO().getDiffractionPlanId());
 	}
 
-	public BLSubSampleWS3VO(Integer blSampleId, Integer positionId,Integer motorPositionId, 
+	public BLSubSampleWS3VO(Integer blSampleId, Integer positionId, 
 			Integer diffractionPlanId) {
 		super();
 		this.blSampleId = blSampleId;
 		this.positionId = positionId;
-		this.motorPositionId = motorPositionId;
 		this.diffractionPlanId = diffractionPlanId;
 	}
 
@@ -70,14 +67,6 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 
 	public void setPositionId(Integer positionId) {
 		this.positionId = positionId;
-	}
-
-	public Integer getMotorPositionId() {
-		return motorPositionId;
-	}
-
-	public void setMotorPositionId(Integer motorPositionId) {
-		this.motorPositionId = motorPositionId;
 	}
 
 	public Integer getDiffractionPlanId() {

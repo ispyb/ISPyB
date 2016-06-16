@@ -29,31 +29,7 @@ public class SQLQueryKeeper {
 		sb.append(" and e.experimentId = :experimentId ");
 		return sb.toString();
 	}
-	
-
-	
-	
-
-//	public static String getImageTable() {
-//		return  "Image.imageId as Image_imageId,\r\n" + 
-//				"Image.dataCollectionId as Image_dataCollectionId,\r\n" + 
-//				"Image.motorPositionId as Image_motorPositionId,\r\n" + 
-//				"Image.imageNumber as Image_imageNumber,\r\n" + 
-//				"Image.fileName as Image_fileName,\r\n" + 
-//				"Image.fileLocation as Image_fileLocation,\r\n" + 
-//				"Image.measuredIntensity as Image_measuredIntensity,\r\n" + 
-//				"Image.jpegFileFullPath as Image_jpegFileFullPath,\r\n" + 
-//				"Image.jpegThumbnailFileFullPath as Image_jpegThumbnailFileFullPath,\r\n" + 
-//				"Image.temperature as Image_temperature,\r\n" + 
-//				"Image.cumulativeIntensity as Image_cumulativeIntensity,\r\n" + 
-//				"Image.synchrotronCurrent as Image_synchrotronCurrent,\r\n" + 
-//				"Image.comments as Image_comments,\r\n" + 
-//				"Image.machineMessage as Image_machineMessage,\r\n" + 
-//				"Image.recordTimeStamp as Image_recordTimeStamp\r\n";
-//	}
-
-
-	
+		
 	public static String getDataCollectionByProposal() {
 		return "select "
 				+ SqlTableMapper.getProposalTable() + ","  
