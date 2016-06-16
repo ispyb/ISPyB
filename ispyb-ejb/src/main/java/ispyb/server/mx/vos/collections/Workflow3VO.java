@@ -78,9 +78,6 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 
-	@Column(name = "proposalId")
-	protected Integer proposalId;
-
 	public Workflow3VO() {
 		super();
 	}
@@ -277,11 +274,4 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 						|| this.workflowType.equals(Constants.WORKFLOW_MESHSCAN));
 	}
 
-	public Integer getProposalId() {
-		return proposalId;
-	}
-
-	public void setProposalId(int proposalId) {
-		this.proposalId = proposalId;
-	}
 }
