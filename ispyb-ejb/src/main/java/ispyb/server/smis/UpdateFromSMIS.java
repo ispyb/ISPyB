@@ -751,7 +751,9 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			Session3VO ispybSession = isSoleil ? sessFromDBs.get(0) : sessFromDB;
 			// update the coming session if needed -
 			Date yesterday = IspybDateUtils.rollDateByDay(new Date(), -1);
-			if (ispybSession != null && ispybSession.getStartDate().after(yesterday)) {
+			if (ispybSession != null && 
+					( ispybSession.getStartDate().after(yesterday) || (startDate != null && startDate.after(yesterday) ) )
+							) {
 				boolean changeSession = false;
 				String changeTxt = "updated session in ISPyB db: ";
 				String ispybBeamLineOperator = ispybSession.getBeamlineOperator();
