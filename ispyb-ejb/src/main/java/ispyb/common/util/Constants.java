@@ -157,8 +157,11 @@ public final class Constants {
 	/**
 	 * MySQL or Oracle query for current date
 	 */
-	public static final String MYSQL_ORACLE_CURENT_DATE = (DATABASE_IS_MYSQL()) ? "NOW()"
+	public static final String MYSQL_ORACLE_CURRENT_DATE = (DATABASE_IS_MYSQL()) ? "NOW()"
 			: (DATABASE_IS_ORACLE()) ? "(select sysdate from dual)" : "";
+	
+	public static final String MYSQL_ORACLE_YESTERDAY = (DATABASE_IS_MYSQL()) ? "ADDDATE( NOW(), -1)"
+			: (DATABASE_IS_ORACLE()) ? "(sysdate -1)" : "";
 
 	/** TODO: open properties on demand instead of always ? **/
 	public static final String SMIS_WS_PWD = getSmisWSAccount()[1];
