@@ -38,6 +38,7 @@ import generated.ws.smis.SMISWebService;
 import generated.ws.smis.SampleSheetInfoLightVO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.Constants.SITE;
+import ispyb.common.util.IspybDateUtils;
 import ispyb.common.util.StringUtils;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
@@ -749,7 +750,8 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			Boolean isSoleil = Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() > 0;
 			Session3VO ispybSession = isSoleil ? sessFromDBs.get(0) : sessFromDB;
 			// update the coming session if needed -
-			if (ispybSession != null && ispybSession.getStartDate().after(new Date())) {
+			Date yesterday = IspybDateUtils.rollDateByDay(new Date(), -1);
+			if (ispybSession != null && ispybSession.getStartDate().after(yesterday)) {
 				boolean changeSession = false;
 				String changeTxt = "updated session in ISPyB db: ";
 				String ispybBeamLineOperator = ispybSession.getBeamlineOperator();

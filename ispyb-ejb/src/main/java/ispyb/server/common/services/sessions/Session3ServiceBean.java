@@ -57,6 +57,7 @@ import org.hibernate.criterion.Restrictions;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import ispyb.common.util.Constants;
+import ispyb.common.util.IspybDateUtils;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.server.common.services.AuthorisationServiceLocal;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -117,8 +118,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	private static String getProposalCodeNumberQuery() {
 		String query = "select * " + " FROM BLSession ses, Proposal pro "
 				+ "WHERE ses.proposalId = pro.proposalId AND pro.proposalCode like :code AND pro.proposalNumber = :number "
-				+ "AND ses.beamLineName like :beamLineName " + "AND ses.endDate >= " + Constants.MYSQL_ORACLE_CURENT_DATE + " "
-				+ "AND DATE(ses.startDate) <= DATE(" + Constants.MYSQL_ORACLE_CURENT_DATE + ")  ORDER BY startDate DESC ";
+				+ "AND ses.beamLineName like :beamLineName " + "AND ses.endDate >= " + Constants.MYSQL_ORACLE_CURRENT_DATE + " "
+				+ "AND DATE(ses.startDate) <= DATE(" + Constants.MYSQL_ORACLE_CURRENT_DATE + ")  ORDER BY startDate DESC ";
 
 		return query;
 	}
@@ -130,8 +131,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 				// +
 				// "AND ses.startDate <= " + now + " AND (ses.endDate >= " + now +
 				// " OR ses.endDate IS NULL) ORDER BY sessionId DESC ";
-				+ "AND ses.endDate >= " + Constants.MYSQL_ORACLE_CURENT_DATE + "  AND ses.startDate <= "
-				+ Constants.MYSQL_ORACLE_CURENT_DATE + "  ORDER BY sessionId DESC ";
+				+ "AND ses.endDate >= " + Constants.MYSQL_ORACLE_CURRENT_DATE + "  AND ses.startDate <= "
+				+ Constants.MYSQL_ORACLE_CURRENT_DATE + "  ORDER BY sessionId DESC ";
 
 		return query;
 	}
@@ -322,9 +323,9 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		if (dateEnd != null)
 			crit.add(Restrictions.ge("endDate", dateEnd));
 
-		// usedFlag =1 or endDate > today
+		// usedFlag =1 or endDate > yesterday
 		if (usedFlag)
-			crit.add(Restrictions.sqlRestriction("(usedFlag = 1 OR endDate >= " + Constants.MYSQL_ORACLE_CURENT_DATE + " )"));
+			crit.add(Restrictions.sqlRestriction("(usedFlag = 1 OR endDate >= " + Constants.MYSQL_ORACLE_YESTERDAY + " )"));
 
 		if (nbMax != null)
 			crit.setMaxResults(nbMax);
@@ -783,9 +784,11 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		if (dateEnd != null)
 			crit.add(Restrictions.ge("endDate", dateEnd));
 
-		// usedFlag =1 or endDate > today
-		if (usedFlag)
-			crit.add(Restrictions.sqlRestriction("(usedFlag = 1 OR endDate >= " + Constants.MYSQL_ORACLE_CURENT_DATE + " )"));
+		// usedFlag =1 or endDate >= yesterday
+		
+		if (usedFlag) {
+			crit.add(Restrictions.sqlRestriction("(usedFlag = 1 OR endDate >= " + Constants.MYSQL_ORACLE_CURRENT_DATE + " )"));
+		}
 
 		if (nbMax != null)
 			crit.setMaxResults(nbMax);
