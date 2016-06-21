@@ -1,3 +1,14 @@
+**************
+* 21.06.2016     *
+**************
+
+2nd step of database merging with DLS:
+- removed entities: `MotorPosition'. (but table still in DB for now, to be removed later)
+- New table WorkflowType
+- DataCollectionGroupId added in Screening
+- new Rest WSs for EXI
+
+
 ********************************************************************************
 
 New TAG : ISPYB_4.0.4 - 1st step of DB Merging with DLS - Before 2nd step.
