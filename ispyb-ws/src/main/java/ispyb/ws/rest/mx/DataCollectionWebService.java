@@ -23,6 +23,7 @@ public class DataCollectionWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionIdList}/list")
 	@Produces({ "application/json" })
 	public Response getDataCollectionById(@PathParam("token") String token,

@@ -22,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 @Path("/")
 public class AutoprocintegrationRestWebService extends MXRestWebService {
@@ -30,6 +31,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/plot")
 	@Produces({ "application/json" })
 	public Response getXScalePlotByAutoProcProgramId(@PathParam("token") String token,
@@ -67,6 +69,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/datacollection/{dataCollectionIdList}/view")
 	@Produces({ "application/json" })
 	public Response getByDatacollectionId(@PathParam("token") String token,
@@ -96,6 +99,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	 **/
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/list")
 	@Produces({ "application/json" })
 	public Response getAttachments(@PathParam("token") String token, @PathParam("proposal") String proposal,
@@ -120,6 +124,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/completeness")
 	@Produces("text/plain")
 	public Response getXScaleCompleteness(@PathParam("token") String token, @PathParam("proposal") String proposal,
@@ -138,6 +143,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/cc2")
 	@Produces("text/plain")
 	public Response getXScaleCC2(@PathParam("token") String token, @PathParam("proposal") String proposal,
@@ -157,6 +163,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/isigma")
 	@Produces("text/plain")
 	public Response getXScaleISigma(@PathParam("token") String token, @PathParam("proposal") String proposal,
@@ -176,6 +183,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/rfactor")
 	@Produces("text/plain")
 	public Response getXScaleRfactor(@PathParam("token") String token, @PathParam("proposal") String proposal,

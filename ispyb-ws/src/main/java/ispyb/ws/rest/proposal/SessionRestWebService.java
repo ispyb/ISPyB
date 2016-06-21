@@ -4,9 +4,7 @@ import ispyb.server.common.services.ws.rest.session.SessionService;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.rest.RestWebService;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 @Path("/")
 public class SessionRestWebService extends RestWebService {
@@ -27,6 +26,7 @@ public class SessionRestWebService extends RestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/session/list")
 	@Produces({ "application/json" })
 	public Response getSessionByProposalId(
@@ -47,6 +47,7 @@ public class SessionRestWebService extends RestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
+	@GZIP
 	@Path("{token}/proposal/{proposal}/session/{sessionId}/list")
 	@Produces({ "application/json" })
 	public Response getSessionById(
@@ -73,6 +74,7 @@ public class SessionRestWebService extends RestWebService {
 	
 	@RolesAllowed({"Manager", "Localcontact"})
 	@GET
+	@GZIP
 	@Path("{token}/proposal/session/{startdate}/{enddate}/list")
 	@Produces({ "application/json" })
 	public Response getSessionsByDate(
