@@ -13,6 +13,8 @@ ADD COLUMN `workingDirectory` VARCHAR(512) NULL AFTER `flux_end`;
 ALTER TABLE `pydb`.`EnergyScan` 
 ADD COLUMN `workingDirectory` VARCHAR(45) NULL AFTER `flux_end`;
 
+DROP VIEW IF EXISTS v_datacollection_phasing;
+
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 

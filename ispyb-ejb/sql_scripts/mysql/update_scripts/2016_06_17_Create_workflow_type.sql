@@ -1,4 +1,5 @@
 DROP TABLE `pydb`.`WorkflowType`;
+
 CREATE TABLE `pydb`.`WorkflowType` (
   `workflowTypeId` INT NOT NULL AUTO_INCREMENT,
   `workflowTypeName` VARCHAR(45) NULL,
@@ -6,11 +7,6 @@ CREATE TABLE `pydb`.`WorkflowType` (
   `recordTimeStamp` TIMESTAMP NULL,
   PRIMARY KEY (`workflowTypeId`));
 
-
-  
-  --'Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering',
-  -- 'DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore',
-  -- 'MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC'
   
 INSERT INTO `pydb`.`WorkflowType` (`workflowTypeId`, `workflowTypeName`, `comments`, `recordTimeStamp`) 
  VALUES 
