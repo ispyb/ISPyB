@@ -137,6 +137,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	public Response listShipping(@PathParam("token") String token, @PathParam("proposal") String proposal) {
 		long id = this.logInit("listShipping", logger, token, proposal);
 		try {
+			// TODO: This query has to be replaced by a view!!
 			List<Map<String, Object>> result = this.getShipping3Service().getShippingByProposalId(this.getProposalId(proposal));
 			this.logFinish("listShipping", id, logger);
 			return sendResponse(result);
@@ -363,6 +364,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			}
 			
 			/** Sessions **/
+			System.out.println(shipping3VO.getSessions());
 			if (shipping3VO.getSessions() != null){
 				shipping3VO.getSessions().clear();
 			}
@@ -371,7 +373,8 @@ public class ShippingRestWebService extends MXRestWebService {
 			String regex = "\\d+";
 			if (sessionId.matches(regex)){
 				/** It is a number **/
-				shipping3VO.getSessions().add(this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false));	
+				//shipping3VO.getSessions().add(this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false));	
+				shipping3VO.addSession(this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false));
 			}
 
 			if (shipping3VO.getShippingId() != null) {

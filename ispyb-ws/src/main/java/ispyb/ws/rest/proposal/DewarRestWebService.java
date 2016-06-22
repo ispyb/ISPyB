@@ -298,8 +298,13 @@ public class DewarRestWebService extends RestWebService {
 			Dewar3VO dewar3vo = new Dewar3VO();
 			if (dewarId == null) {
 				dewar3vo.setType("Dewar");
-				dewar3vo.setShippingVO(this.getShipping3Service().findByPk(
-						shippingId, true));
+				Shipping3VO shipping = this.getShipping3Service().findByPk(shippingId, true);
+				dewar3vo.setShippingVO(shipping);
+				if (shipping.getSessions() != null){
+					if (shipping.getSessions().size() > 0){
+						dewar3vo.setSessionVO(shipping.getSessions().iterator().next());
+					}
+				}
 				dewar3vo = getDewar3Service().create(dewar3vo);
 			} else {
 				dewar3vo = getDewar3Service().findByPk(dewarId, false, false);
