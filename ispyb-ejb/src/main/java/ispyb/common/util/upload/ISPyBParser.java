@@ -204,7 +204,9 @@ public class ISPyBParser extends XLSParser {
 	// private static final short archivedCol = 35;
 	// private static final short spreadsheetCol = 36;
 
-	private static final short proteinAcronymRow = 49;
+	//private static final short proteinAcronymRow = 49;
+	
+	private static final short proteinAcronymRow = 57;
 
 	/**
 	 * export
