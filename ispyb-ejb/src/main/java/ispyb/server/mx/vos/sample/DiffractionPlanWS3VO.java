@@ -29,8 +29,6 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer xmlDocumentId;
-
 	public DiffractionPlanWS3VO() {
 		super();
 	}
@@ -60,18 +58,10 @@ public class DiffractionPlanWS3VO extends DiffractionPlan3VO {
 				minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta, radiationSensitivityGamma, minOscWidth);
 	}
 
-	public Integer getXmlDocumentId() {
-		return xmlDocumentId;
-	}
-
-	public void setXmlDocumentId(Integer xmlDocumentId) {
-		this.xmlDocumentId = xmlDocumentId;
-	}
 
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();
-		s += ", xmlDocumentId="+this.xmlDocumentId;
 		return s;
 	}
 	
