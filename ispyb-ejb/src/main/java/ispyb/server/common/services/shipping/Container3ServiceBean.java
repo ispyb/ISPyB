@@ -29,7 +29,10 @@ import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -257,21 +260,29 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		Container3VO containerDB = this.findByPk(container.getContainerId(), true);
 		
 		/** Removing all samples **/
-		for (BLSample3VO sample : containerDB.getSampleVOs()) {
+		/** Never do this, it removes the data collections **/
+		/*for (BLSample3VO sample : containerDB.getSampleVOs()) {
 			entityManager.remove(sample);
-		}
+		}*/
 		
 		containerDB.setCapacity(container.getCapacity());
 		containerDB.setCode(container.getCode());
 		
+		Set<String> locations = new HashSet<String>();
 		/** Adding Sample **/
 		for (BLSample3VO sample : container.getSampleVOs()) {
+			System.out.println("-------------------------");
+			System.out.println("Storing sample: " + sample.getCode() + " " + sample.getName());
+			System.out.println("sampleId: " + sample.getBlSampleId());
+			System.out.println("location: " + sample.getLocation());
+			locations.add(sample.getLocation());
 			/** We create a new sample **/
-			sample.setBlSampleId(null);
+			//sample.setBlSampleId(null);
 			
 			System.out.println("\t\t\t Creating new diffraction plan ");
 			DiffractionPlan3VO diff = sample.getDiffractionPlanVO();
-			diff.setDiffractionPlanId(null);
+			System.out.println("Diffraction: " + diff.toString());
+			//diff.setDiffractionPlanId(null);
 			diff = entityManager.merge(diff);
 			
 			Crystal3VO crystal = sample.getCrystalVO();
@@ -294,13 +305,33 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 			
 			sample.setDiffractionPlanVO(diff);
 
-			sample.setBlSampleId(null);
+//			sample.setBlSampleId(null);
 			sample.setContainerVO(containerDB);
 			sample = entityManager.merge(sample);
 		}
 		/** Retrieving container **/
 		containerDB = this.findByPk(container.getContainerId(), true);
-		return containerDB;
+		
+		System.out.println("sample locations: " + locations.toString());
+		List<BLSample3VO> toBeRemoved = new ArrayList<BLSample3VO>();
+		
+		/** Locations of potentially removed samples **/
+		Set<String> totalLocations = new HashSet<String>();
+		for (BLSample3VO sample : containerDB.getSampleVOs()) {
+			if (!locations.contains(sample.getLocation())){
+				toBeRemoved.add(sample);
+			}
+			totalLocations.add(sample.getLocation());
+		}
+		System.out.println("total locations: " + totalLocations.toString());
+		
+		System.out.println("to be removed: " + toBeRemoved.size());
+		for (BLSample3VO sample : toBeRemoved) {
+			System.out.println("Removing" + sample.getLocation());
+			entityManager.remove(sample);
+		}
+		
+		return this.findByPk(container.getContainerId(), true);
 	}
 
 }

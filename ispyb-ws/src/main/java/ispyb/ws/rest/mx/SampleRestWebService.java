@@ -19,13 +19,13 @@ import ispyb.server.mx.vos.sample.SampleInfo;
 public class SampleRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(SampleRestWebService.class);
-	
+
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sample/crystalId/{crystalId}/list")
 	@Produces({ "application/json" })
-	public Response getSamplesByCrystalId(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, @PathParam("crystalId") String crystalId) {
+	public Response getSamplesByCrystalId(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("crystalId") String crystalId) {
 
 		String methodName = "getSamplesByCrystalId";
 		long start = this.logInit(methodName, logger, token, proposal);
@@ -37,34 +37,34 @@ public class SampleRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
+
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sampleinfo/crystalId/{crystalId}/list")
 	@Produces({ "application/json" })
-	public Response getSampleInfoByCrystalId(@PathParam("token") String token,
-			@PathParam("proposal") String proposal, @PathParam("crystalId") String crystalId) {
+	public Response getSampleInfoByCrystalId(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("crystalId") String crystalId) {
 
 		String methodName = "getSampleInfoByCrystalId";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			
+
 			SampleInfo[] samples = this.getBLSample3Service().findForWSSampleInfoLight(null, new Integer(crystalId), null, null);
 			this.logFinish(methodName, start, logger);
 			List<SampleInfo> sampleinfo = Arrays.asList(samples);
 			return this.sendResponse(sampleinfo);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
+
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sampleinfo/list")
 	@Produces({ "application/json" })
-	public Response getSampleInfoByProposalId(@PathParam("token") String token,
-			@PathParam("proposal") String proposal) {
-
+	public Response getSampleInfoByProposalId(@PathParam("token") String token, @PathParam("proposal") String proposal) {
+		
 		String methodName = "getSampleInfoByProposalId";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {

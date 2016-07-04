@@ -74,6 +74,13 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 				+ " GROUP_CONCAT(`AutoProcProgram_processingPrograms` SEPARATOR ', ') AS `processingPrograms`, "
 				+ " GROUP_CONCAT(`AutoProcProgram_processingStatus` SEPARATOR ', ') AS `processingStatus`,"
 				+ " GROUP_CONCAT(`AutoProcIntegration_autoProcIntegrationId` SEPARATOR ', ') AS `autoProcIntegrationId`, "
+				+ "GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,\n" + 
+					"GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`,\n" + 
+					"GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,\n" + 
+					"GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`,\n" + 
+					"GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,\n" + 
+					"GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,\n" + 
+					"GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,"
 				+ this.getPhasingSpaceGroupQuery()
 				+ this.getPhasingStepQuery()
 				+ " (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,"
