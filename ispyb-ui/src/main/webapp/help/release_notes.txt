@@ -8,9 +8,9 @@ New TAG : ISPYB_4.0.5 - 2nd step of DB Merging with DLS - Before 3rd step.
 **************
 
 2nd step of database merging with DLS:
-- removed entities: `MotorPosition'. (but table still in DB for now, to be removed later)
-- New table WorkflowType
-- DataCollectionGroupId added in Screening
+- removed entities: `MotorPosition'.
+- New table WorkflowType and workflowTypeId added in Workflow table - not used yet as FK
+- DataCollectionGroupId added in Screening - not used yet as FK
 - new Rest WSs for EXI
 
 
