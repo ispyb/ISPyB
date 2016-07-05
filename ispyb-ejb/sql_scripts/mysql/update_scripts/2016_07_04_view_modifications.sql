@@ -1,4 +1,5 @@
 USE `pydb`;
+drop view v_datacollection_summary_autoprocintegration;
 CREATE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -30,7 +31,7 @@ VIEW `v_datacollection_summary_autoprocintegration` AS
         LEFT JOIN `PhasingStep` ON ((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`)))
         LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
 
-  
+ drop view v_datacollection_summary; 
  CREATE 
     ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
