@@ -84,6 +84,9 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 	@Column(name = "kappa")
 	protected Double kappa;
 	
+	@Column(name = "chi")
+	protected Double chi;
+
 	@Column(name = "comments")
 	protected String comments;
 	
@@ -104,7 +107,7 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 			ScreeningStrategy3VO screeningStrategyVO, Integer wedgeNumber,
 			Double resolution, Double completeness, Double multiplicity,
 			Double doseTotal, Integer numberOfImages, Double phi, Double kappa, 
-			String comments, Double wavelength) {
+			Double chi, String comments, Double wavelength) {
 		super();
 		this.screeningStrategyWedgeId = screeningStrategyWedgeId;
 		this.screeningStrategyVO = screeningStrategyVO;
@@ -116,6 +119,7 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 		this.numberOfImages = numberOfImages;
 		this.phi = phi;
 		this.kappa = kappa;
+		this.chi = chi;
 		this.comments = comments ;
 		this.wavelength = wavelength ;
 	}
@@ -132,6 +136,7 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 		this.numberOfImages = vo.getNumberOfImages();
 		this.phi = vo.getPhi();
 		this.kappa = vo.getKappa();
+		this.chi = vo.getChi();
 		this.comments = vo.getComments() ;
 		this.wavelength = vo.getWavelength() ;
 	}
@@ -147,6 +152,7 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 		this.numberOfImages = vo.getNumberOfImages();
 		this.phi = vo.getPhi();
 		this.kappa = vo.getKappa();
+		this.chi = vo.getChi();
 		this.comments = vo.getComments() ;
 		this.wavelength = vo.getWavelength() ;
 	}
@@ -252,6 +258,16 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 	
 	
 
+	public Double getChi() {
+		return chi;
+	}
+
+
+	public void setChi(Double chi) {
+		this.chi = chi;
+	}
+
+
 	public String getComments() {
 		return comments;
 	}
@@ -310,6 +326,7 @@ public class ScreeningStrategyWedge3VO extends ISPyBValueObject implements Clone
 		"numberOfImages="+this.numberOfImages+", "+
 		"phi="+this.phi+", "+
 		"kappa="+this.kappa+", "+
+		"chi="+this.chi+", "+
 		"comments="+this.comments+", "+
 		"wavelength="+this.wavelength;
 		

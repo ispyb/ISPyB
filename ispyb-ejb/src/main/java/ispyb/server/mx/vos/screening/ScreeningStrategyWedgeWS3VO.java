@@ -43,7 +43,7 @@ public class ScreeningStrategyWedgeWS3VO extends ScreeningStrategyWedge3VO{
 			Integer screeningStrategyId, Integer wedgeNumber,
 			Double resolution, Double completeness, Double multiplicity,
 			Double doseTotal, Integer numberOfImages, Double phi, Double kappa,
-			String comments, Double wavelength) {
+			Double chi, String comments, Double wavelength) {
 		super();
 		this.screeningStrategyWedgeId = screeningStrategyWedgeId;
 		this.screeningStrategyId = screeningStrategyId;
@@ -55,6 +55,7 @@ public class ScreeningStrategyWedgeWS3VO extends ScreeningStrategyWedge3VO{
 		this.numberOfImages = numberOfImages;
 		this.phi = phi;
 		this.kappa = kappa;
+		this.chi = chi;
 		this.comments = comments ;
 		this.wavelength = wavelength ;
 	}
