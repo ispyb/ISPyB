@@ -555,11 +555,11 @@ public class ToolsForScreeningEDNAWebService {
 			@WebParam(name = "wedgeNumber") Integer wedgeNumber, @WebParam(name = "resolution") Double resolution,
 			@WebParam(name = "completeness") Double completeness, @WebParam(name = "multiplicity") Double multiplicity,
 			@WebParam(name = "doseTotal") Double doseTotal, @WebParam(name = "numberOfImages") Integer numberOfImages,
-			@WebParam(name = "phi") Double phi, @WebParam(name = "kappa") Double kappa,
+			@WebParam(name = "phi") Double phi, @WebParam(name = "kappa") Double kappa, @WebParam(name = "chi") Double chi,
 			@WebParam(name = "comments") String comments, @WebParam(name = "wavelength") Double wavelength)
 			throws Exception {
 		ScreeningStrategyWedgeWS3VO vo = new ScreeningStrategyWedgeWS3VO(screeningStrategyWedgeId, screeningStrategyId,
-				wedgeNumber, resolution, completeness, multiplicity, doseTotal, numberOfImages, phi, kappa, comments,
+				wedgeNumber, resolution, completeness, multiplicity, doseTotal, numberOfImages, phi, kappa, chi, comments,
 				wavelength);
 		return storeOrUpdateScreeningStrategyWedgeValue(vo);
 	}
