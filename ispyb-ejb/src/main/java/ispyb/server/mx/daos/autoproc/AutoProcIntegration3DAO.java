@@ -107,5 +107,13 @@ public interface AutoProcIntegration3DAO {
 	 * @return
 	 */
 	public Boolean getAutoProcStatus(Integer dataCollectionId, String processingProgram);
+
+	/**
+	 * get the autoProcStatus for XIA2_DIALS
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 */
+	public Boolean getAutoProcXia2DialsStatus(Integer dataCollectionId, String processingProgram);
 }
 

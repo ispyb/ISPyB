@@ -88,4 +88,13 @@ public interface AutoProcIntegration3Service {
 	 * @throws Exception
 	 */
 	public Boolean getAutoProcStatus(final Integer dataCollectionId, final String processingProgram) throws Exception;
+
+	/**
+	 * get the autoProcStatus for XIA2_DIALS
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean getAutoProcXia2DialsStatus(final Integer dataCollectionId, final String processingProgram) throws Exception;
 }

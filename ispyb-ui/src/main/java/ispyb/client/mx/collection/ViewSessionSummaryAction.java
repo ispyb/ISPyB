@@ -1540,7 +1540,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				if (Constants.SITE_IS_ESRF()) {
 					// Only show autoPROC status if successful
 					if (dcInfo.getAutoProcAutoPROCStatus().contains("Green")) {
-						result += "autoPROC " + "<img src='" + imgSuccess + "'  border='0' />";					
+						result += " autoPROC " + "<img src='" + imgSuccess + "'  border='0' />";					
+					}
+					// Only show XIA2_DIALS status if successful
+					if (dcInfo.getAutoProcXia2DialsStatus().contains("Green")) {
+						result += " XIA2_DIALS " + "<img src='" + imgSuccess + "'  border='0' />";					
 					}
 				}
 

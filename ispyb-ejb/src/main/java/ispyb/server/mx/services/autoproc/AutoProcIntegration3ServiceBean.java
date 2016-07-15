@@ -225,5 +225,23 @@ public class AutoProcIntegration3ServiceBean implements AutoProcIntegration3Serv
 		});
 	}
 
+	/**
+	 * get the autoProcStatus for a XIA2_DIALS
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean getAutoProcXia2DialsStatus(final Integer dataCollectionId, final String processingProgram) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Boolean) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				Boolean foundEntities = dao.getAutoProcXia2DialsStatus(dataCollectionId, processingProgram);
+				return foundEntities;
+			}
+
+		});
+	}
 
 }

@@ -1207,6 +1207,8 @@ public final class Constants {
 
 	public static final String AUTOPROC_AUTOPROC = "autoPROC";
 
+	public static final String AUTOPROC_XIA2_DIALS = "XIA2_DIALS";
+
 	public static final String EXPERIMENT_TYPE_CHARACTERIZATION = "Characterization";
 
 	public final static String REFERENCE_ALL_BEAMLINE = "All";

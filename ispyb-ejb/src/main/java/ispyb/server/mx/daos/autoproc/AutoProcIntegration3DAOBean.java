@@ -68,6 +68,17 @@ public class AutoProcIntegration3DAOBean implements AutoProcIntegration3DAO {
 			"apppa.autoProcProgramId = app.autoProcProgramId AND " +
 			"apppa.fileName like '%XSCALE%' ";
 
+	/* XIA2_DIALS don't create any XSCALE files so here we look for
+	 * a file with the prefix 'di' and the suffix '.mtz'.
+	 */
+	private static final String FIND_XIA2_DIALS_STATUS = "SELECT app.processingPrograms, api.autoProcIntegrationId, apppa.fileName " +
+			"FROM `AutoProcIntegration` api, AutoProcProgram app, AutoProcProgramAttachment apppa " +
+			"WHERE api.dataCollectionId = :dataCollectionId AND " +
+			"api.autoProcProgramId = app.autoProcProgramId AND " +
+			"app.processingPrograms like :processingProgram AND  " +
+			"apppa.autoProcProgramId = app.autoProcProgramId AND " +
+			"apppa.fileName like 'di%.mtz' ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -206,6 +217,31 @@ public class AutoProcIntegration3DAOBean implements AutoProcIntegration3DAO {
 	 */
 	public Boolean getAutoProcStatus(Integer dataCollectionId, String processingProgram) {
 		String query = FIND_AUTOPROC_STATUS ;
+		try{
+			List res = this.entityManager.createNativeQuery(query)
+					.setParameter("dataCollectionId", dataCollectionId)
+					.setParameter("processingProgram", processingProgram)
+					.getResultList();
+			if (res == null || res.isEmpty()){
+				return false;
+			}
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
+
+	@SuppressWarnings("rawtypes")
+	/**
+	 * get the autoProcStatus for a given dataCollectionId and a given processingProgram (fastProc or parallelProc or edna-fastproc)
+	 * true if we can find at least one autoProc with XSCALE file
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 */
+	public Boolean getAutoProcXia2DialsStatus(Integer dataCollectionId, String processingProgram) {
+		String query = FIND_XIA2_DIALS_STATUS ;
 		try{
 			List res = this.entityManager.createNativeQuery(query)
 					.setParameter("dataCollectionId", dataCollectionId)

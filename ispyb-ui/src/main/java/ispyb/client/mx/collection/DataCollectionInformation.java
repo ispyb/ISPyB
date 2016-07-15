@@ -161,6 +161,8 @@ public class DataCollectionInformation {
 
 	private String autoProcAutoPROCStatus = "";
 
+	private String autoProcXia2DialsStatus = "";
+	
 	// -------------- Strategy Wedge & Strategy SubWedge --------------
 	private List<StrategyWedgeInformation> listStrategyWedgeInformation = new ArrayList<StrategyWedgeInformation>();
 
@@ -778,6 +780,13 @@ public class DataCollectionInformation {
 		this.autoProcAutoPROCStatus = autoProcAutoPROCStatus;
 	}
 
+	public String getAutoProcXia2DialsStatus() {
+		return autoProcXia2DialsStatus;
+	}
+
+	public void setAutoProcXia2DialsStatus(String autoProcXia2DialsStatus) {
+		this.autoProcXia2DialsStatus = autoProcXia2DialsStatus;
+	}
 
 	public Integer getDiffractionImgId1() {
 		return diffractionImgId1;
