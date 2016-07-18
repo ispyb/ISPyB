@@ -109,13 +109,6 @@ public class TrackingEmail {
 					LOG.debug("Local contact is empty (email will not be sent to Local contact).");
 				}
 
-				// Email addresses on testing
-				if (inTest) {
-
-					emailLocalContact = Constants.getProperty("mail.labContact.to.test");
-					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
-				}
-
 				// Customize email depending on proposal type
 				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
 					// FX proposals
@@ -134,6 +127,14 @@ public class TrackingEmail {
 					emailReply = emailStores;
 					emailSignature = "The ESRF stores";
 				}
+				
+				// Email addresses on testing
+				if (inTest) {
+					emailTo = Constants.getProperty("mail.dewarTracking.to.test");
+					emailLocalContact = Constants.getProperty("mail.labContact.to.test");
+					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
+				}
+
 
 				// Email subject
 				String emailSubject = "ESRF - Parcel received - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
@@ -218,11 +219,6 @@ public class TrackingEmail {
 				if (startDateStr == null)
 					startDateStr = "unknown";
 
-				// Email addresses on testing
-				if (inTest) {
-
-					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
-				}
 
 				// Customize email depending on proposal type
 				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
@@ -238,6 +234,14 @@ public class TrackingEmail {
 					emailReply = emailStores;
 					emailSignature = "The ESRF stores";
 				}
+				
+				// Email addresses on testing
+				if (inTest) {
+					emailTo =  Constants.getProperty("mail.labContact.to.test");
+					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
+					emailCc = "";
+				}
+
 
 				// Email subject
 				String emailSubject = "ESRF - Parcel dispatched to beamline - " + proposalName + " / " + startDateStr + " / "
@@ -321,11 +325,6 @@ public class TrackingEmail {
 				if (startDateStr == null)
 					startDateStr = "unknown";
 
-				// Email addresses on testing
-				if (inTest) {
-					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
-				}
-
 				// Customize email depending on proposal type
 				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
 					// FX proposals
@@ -340,6 +339,14 @@ public class TrackingEmail {
 					emailReply = emailStores;
 					emailSignature = "The ESRF stores";
 				}
+				
+				// Email addresses on testing
+				if (inTest) {
+					emailBcc = Constants.getProperty("mail.dewarTracking.bcc.test");
+					emailTo =  Constants.getProperty("mail.labContact.to.test");
+					emailCc = "";
+				}
+
 
 				// Format tracking url
 				String courierLink = "";

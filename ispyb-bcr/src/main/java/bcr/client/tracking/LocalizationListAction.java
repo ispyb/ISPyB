@@ -259,8 +259,8 @@ public class LocalizationListAction extends DispatchAction {
 	 */
 	public static boolean inTest(String serverName) {
 		boolean inTest = false;
-		if (serverName.equals(Constants.getProperty("ISPyB.server.name.test"))
-				|| serverName.equals(Constants.getProperty("ISPyB.server.name.localhost")))
+		if (serverName.equals(Constants.getProperty("ISPyB.server.shortname.test"))
+				|| serverName.equals(Constants.getProperty("ISPyB.server.shortname.localhost")))
 			inTest = true;
 
 		LOG.debug("Dewar Tracking: server name = " + serverName + " => in test = " + inTest);
