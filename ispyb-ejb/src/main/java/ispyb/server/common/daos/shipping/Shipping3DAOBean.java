@@ -19,14 +19,8 @@
 
 package ispyb.server.common.daos.shipping;
 
-//import ispyb.common.util.ServerConstants;
-import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-
 import java.math.BigInteger;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +37,11 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+//import ispyb.common.util.ServerConstants;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
 
 /**
  * <p>
@@ -328,12 +327,17 @@ public class Shipping3DAOBean implements Shipping3DAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Shipping3VO> findByStatus(String status, boolean fetchDewars) {
+	public List<Shipping3VO> findByStatus(String status, java.util.Date dateStart, boolean fetchDewars) {
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(Shipping3VO.class);
 		if (status != null && !status.isEmpty()) {
 			criteria.add(Restrictions.like("shippingStatus", status));
 		}
+		
+		if (dateStart != null) {
+			criteria.add(Restrictions.ge("creationDate", dateStart));
+		}
+
 		if (fetchDewars) {
 			criteria.setFetchMode("dewarVOs", FetchMode.JOIN);
 		}

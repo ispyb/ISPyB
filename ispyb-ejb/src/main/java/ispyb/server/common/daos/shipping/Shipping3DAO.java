@@ -19,13 +19,13 @@
 
 package ispyb.server.common.daos.shipping;
 
-import ispyb.server.common.vos.shipping.Shipping3VO;
-
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Local;
+
+import ispyb.server.common.vos.shipping.Shipping3VO;
 
 /**
  * <p>
@@ -100,7 +100,7 @@ public interface Shipping3DAO {
 
 	public List<Shipping3VO> findFiltered(Integer proposalId, String type);
 
-	public List<Shipping3VO> findByStatus(String type, boolean withDewars);
+	public List<Shipping3VO> findByStatus(String type, java.util.Date dateStart, boolean withDewars);
 
 	public List<Shipping3VO> findByBeamLineOperator(String beamlineOperatorSiteNumber, boolean withDewars);
 

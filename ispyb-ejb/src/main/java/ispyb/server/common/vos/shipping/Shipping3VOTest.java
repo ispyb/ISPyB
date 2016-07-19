@@ -108,7 +108,7 @@ public class Shipping3VOTest extends EJB3Test {
 	@Test
 	public void findByStatus() throws Exception {
 		String status = "opened";
-		this.shippings = shipping3Service.findByStatus(status, false);
+		this.shippings = shipping3Service.findByStatus(status, null, false);
 		for (Shipping3VO Shipping3VO : shippings) {
 			assertTrue(Shipping3VO.getShippingStatus().equals(status));
 		}

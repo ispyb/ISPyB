@@ -88,7 +88,7 @@ public interface Shipping3Service {
 
 	public List<Shipping3VO> findFiltered(final Integer proposalId, final String type) throws Exception;
 
-	public List<Shipping3VO> findByStatus(final String status, final boolean withDewars) throws Exception;
+	public List<Shipping3VO> findByStatus(final String status, final java.util.Date dateStart, final boolean withDewars) throws Exception;
 
 	public List<Shipping3VO> findByProposal(final Integer userProposalId, final boolean withDewars) throws Exception;
 

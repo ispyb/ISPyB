@@ -259,11 +259,11 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Shipping3VO> findByStatus(final String status, final boolean withDewars) throws Exception {
+	public List<Shipping3VO> findByStatus(final String status, final java.util.Date dateStart,final boolean withDewars) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<Shipping3VO>) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				return dao.findByStatus(status, withDewars);
+				return dao.findByStatus(status, dateStart, withDewars);
 			}
 
 		});
