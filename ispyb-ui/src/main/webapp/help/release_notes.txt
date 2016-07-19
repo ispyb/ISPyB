@@ -1,4 +1,11 @@
 **************
+* 19.07.2016     *
+**************
+
+- Changed the default filter for STORE role and 
+- Allow STORE to view all the sessions
+
+**************
 * 15.07.2016     *
 **************
 
