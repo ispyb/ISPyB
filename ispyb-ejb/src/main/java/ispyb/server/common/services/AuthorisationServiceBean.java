@@ -112,7 +112,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 		if (this.context.isCallerInRole(Constants.ALL_MANAGE_ROLE_NAME) 
 				|| this.context.isCallerInRole(Constants.ROLE_MANAGER) 
 						|| this.context.isCallerInRole(Constants.ROLE_BLOM) || this.context.isCallerInRole(Constants.ROLE_LOCALCONTACT)
-						|| this.context.isCallerInRole(Constants.ROLE_WS))
+						|| this.context.isCallerInRole(Constants.ROLE_WS) || this.context.isCallerInRole(Constants.ROLE_STORE))
 			return true ;
 		
 		return false;
