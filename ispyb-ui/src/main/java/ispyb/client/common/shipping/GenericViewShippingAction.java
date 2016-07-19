@@ -25,6 +25,7 @@ package ispyb.client.common.shipping;
 import ispyb.client.security.roles.RoleDO;
 import ispyb.client.common.util.QueryBuilder;
 import ispyb.common.util.Constants;
+import ispyb.common.util.IspybDateUtils;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -32,6 +33,7 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -125,18 +127,20 @@ public class GenericViewShippingAction extends DispatchAction {
 			LOG.info("Role: " + role);
 
 			String shipmentMsg = "";
+			// All of them (last 30 days only)
 
 			if (role.equals(Constants.ROLE_STORE)) {
+				Date today = new Date();
+				Date queryDate = IspybDateUtils.rollDateByDay(today, -30);
 				// status = send to esrf
-				listShippings = this.shipping3Service.findByStatus(Constants.SHIPPING_STATUS_SENT_TO_ESRF, true);
-
+				listShippings = this.shipping3Service.findByStatus(Constants.SHIPPING_STATUS_SENT_TO_ESRF, queryDate, true);
 				// + status = at esrf
-				listShippings.addAll(this.shipping3Service.findByStatus(Constants.SHIPPING_STATUS_AT_ESRF, true));
+				listShippings.addAll(this.shipping3Service.findByStatus(Constants.SHIPPING_STATUS_AT_ESRF, queryDate, true));
 				shipmentMsg = "Shipments with the status '" + Constants.SHIPPING_STATUS_SENT_TO_ESRF + "' or '"
 						+ Constants.SHIPPING_STATUS_AT_ESRF + "'";
 			} else if (role.equals(Constants.ROLE_BLOM) || role.equals(Constants.FXMANAGE_ROLE_NAME)
 					|| role.equals(Constants.ROLE_MANAGER)) {
-				// All of them (last 30 days only)
+				
 				GregorianCalendar cal = new GregorianCalendar();
 				cal.add(Calendar.DATE, -30);
 				java.sql.Date firstDate = new java.sql.Date(cal.getTimeInMillis());

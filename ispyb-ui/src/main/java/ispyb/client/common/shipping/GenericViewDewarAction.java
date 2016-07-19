@@ -24,6 +24,7 @@ package ispyb.client.common.shipping;
 
 import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.IspybDateUtils;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.shipping.Dewar3VO;
@@ -118,10 +119,15 @@ public class GenericViewDewarAction extends DispatchAction {
 			String dewarMsg = "";
 
 			if (role.equals(Constants.ROLE_STORE)) {
+				// dates = last 2 months
+				SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+				Date today = new Date();
+				Date date1 = IspybDateUtils.rollDateByDay(today, -60);
+
 				// status = send to esrf + status = at esrf
-				listDewars = dewarService.findFiltered(null, null, null, null, null, null, null,
+				listDewars = dewarService.findFiltered(null, null, null, null, null, date1, null,
 						Constants.SHIPPING_STATUS_SENT_TO_ESRF, null, true, false);
-				List<Dewar3VO> dewarTab2 = dewarService.findFiltered(null, null, null, null, null, null, null,
+				List<Dewar3VO> dewarTab2 = dewarService.findFiltered(null, null, null, null, null, date1, null,
 						Constants.SHIPPING_STATUS_AT_ESRF, null, true, false);
 				dewarMsg = "Dewars with the status '" + Constants.SHIPPING_STATUS_SENT_TO_ESRF + "' or '"
 						+ Constants.SHIPPING_STATUS_AT_ESRF + "'";
@@ -282,10 +288,12 @@ public class GenericViewDewarAction extends DispatchAction {
 				LOG.debug("Get shipments for LocalContact '" + operatorSiteNumber + "'");
 
 			}
-			// Integer proposalId, Integer shippingId, String type, String code,
-			// String comments, Date date1, Date date2, String dewarStatus, String storageLocation
+
 			SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
-			Date date1 = null;
+			Date today = new Date();
+			Date queryDate = IspybDateUtils.rollDateByDay(today, -30);
+
+			Date date1 = queryDate;
 			if (form.getExperimentDateStart() != null && !form.getExperimentDateStart().isEmpty())
 				date1 = df.parse(form.getExperimentDateStart());
 			Date date2 = null;
@@ -355,8 +363,9 @@ public class GenericViewDewarAction extends DispatchAction {
 			// Query
 			SimpleDateFormat dateStandard = new SimpleDateFormat(Constants.DATE_TIME_FORMAT);
 			Date today = new Date();
-			String todayStr = dateStandard.format(today);
-			form.setExperimentDateStart(todayStr);
+			Date querydate = IspybDateUtils.rollDateByDay(today, -30);
+			String dateStr = dateStandard.format(querydate);
+			form.setExperimentDateStart(dateStr);
 
 			form.setDewarStatus(Constants.SHIPPING_STATUS_SENT_TO_ESRF);
 			form.setStorageLocation(Constants.LOCATION_EMPTY);
@@ -391,16 +400,12 @@ public class GenericViewDewarAction extends DispatchAction {
 			RoleDO roleObject = (RoleDO) request.getSession().getAttribute(Constants.CURRENT_ROLE);
 			String role = roleObject.getName();
 			form.setRole(role);
+			SimpleDateFormat dateStandard = new SimpleDateFormat(Constants.DATE_TIME_FORMAT);
+			Date today = new Date();
+			Date last2Months = IspybDateUtils.rollDateByDay(today, -60);
+			String dateStr = dateStandard.format(last2Months);
 
-			// Query
-			// SimpleDateFormat dateStandard = new SimpleDateFormat(Constants.DATE_TIME_FORMAT);
-			// Date today = new Date();
-			// String todayStr = dateStandard.format(today);
-			// form.setExperimentDateStart(todayStr);
-			//
-			// form.setExperimentDateEnd(todayStr);
-			//
-			// form.setDewarStatus(Constants.SHIPPING_STATUS_AT_ESRF);
+			form.setExperimentDateStart(dateStr);
 
 			form.setStorageLocation(Constants.DEWAR_STORES_IN);
 
@@ -478,6 +483,11 @@ public class GenericViewDewarAction extends DispatchAction {
 			form.setRole(role);
 
 			// Query
+			SimpleDateFormat dateStandard = new SimpleDateFormat(Constants.DATE_TIME_FORMAT);
+			Date today = new Date();
+			String dateStr = dateStandard.format(today);
+			form.setExperimentDateEnd(dateStr);
+
 			form.setDewarStatus(Constants.SHIPPING_STATUS_SENT_TO_USER);
 
 			// Search
