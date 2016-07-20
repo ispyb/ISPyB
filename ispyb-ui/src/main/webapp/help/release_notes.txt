@@ -1,4 +1,11 @@
 **************
+* 20.07.2016     *
+**************
+
+3rd step of database merging with DLS:
+- add parameter facilityCode in Dewar
+
+**************
 * 19.07.2016     *
 **************
 
