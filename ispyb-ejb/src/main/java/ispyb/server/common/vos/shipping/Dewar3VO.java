@@ -101,6 +101,9 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "trackingNumberFromSynchrotron")
 	protected String trackingNumberFromSynchrotron;
+	
+	@Column(name = "facilityCode")
+	protected String facilityCode;
 
 	@Column(name = "type")
 	protected String type;
@@ -131,7 +134,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 			String dewarStatus, Date timeStamp, Boolean isStorageDewar, String barCode,
 //			Integer firstExperimentId,
 			Integer customsValue, Integer transportValue, String trackingNumberToSynchrotron,
-			String trackingNumberFromSynchrotron, String type) {
+			String trackingNumberFromSynchrotron, String facilityCode, String type) {
 		super();
 		this.dewarId = dewarId;
 		this.shippingVO = shippingVO;
@@ -147,6 +150,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 		this.transportValue = transportValue;
 		this.trackingNumberToSynchrotron = trackingNumberToSynchrotron;
 		this.trackingNumberFromSynchrotron = trackingNumberFromSynchrotron;
+		this.facilityCode = facilityCode;
 		this.type = type;
 	}
 	
@@ -165,6 +169,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 		this.transportValue = vo.getTransportValue();
 		this.trackingNumberToSynchrotron = vo.getTrackingNumberToSynchrotron();
 		this.trackingNumberFromSynchrotron = vo.getTrackingNumberFromSynchrotron();
+		this.facilityCode = vo.getFacilityCode();
 		this.type = vo.getType();
 	}
 
@@ -291,6 +296,14 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setTrackingNumberFromSynchrotron(String trackingNumberFromSynchrotron) {
 		this.trackingNumberFromSynchrotron = trackingNumberFromSynchrotron;
+	}
+
+	public String getFacilityCode() {
+		return facilityCode;
+	}
+
+	public void setFacilityCode(String facilityCode) {
+		this.facilityCode = facilityCode;
 	}
 
 	public String getType() {
