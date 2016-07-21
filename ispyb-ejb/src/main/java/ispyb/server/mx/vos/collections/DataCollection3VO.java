@@ -236,6 +236,12 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "bestWilsonPlotPath")
 	protected String bestWilsonPlotPath;
 
+	@Column(name = "imageQualityIndicatorsPlotPath")
+	protected String imageQualityIndicatorsPlotPath;
+	
+	@Column(name = "imageQualityIndicatorsCSVPath")
+	protected String imageQualityIndicatorsCSVPath;
+	
 	@OneToMany
 	@JoinColumn(name = "dataCollectionId")
 	private Set<Image3VO> imageVOs;
@@ -1138,5 +1144,21 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 			samplePosition += this.dataCollectionGroupVO.getActualContainerSlotInSC() + " - " + s;
 		}
 		return samplePosition;
+	}
+
+	public String getImageQualityIndicatorsPlotPath() {
+		return imageQualityIndicatorsPlotPath;
+	}
+
+	public void setImageQualityIndicatorsPlotPath(String imageQualityIndicatorsPlotPath) {
+		this.imageQualityIndicatorsPlotPath = imageQualityIndicatorsPlotPath;
+	}
+
+	public String getImageQualityIndicatorsCSVPath() {
+		return imageQualityIndicatorsCSVPath;
+	}
+
+	public void setImageQualityIndicatorsCSVPath(String imageQualityIndicatorsCSVPath) {
+		this.imageQualityIndicatorsCSVPath = imageQualityIndicatorsCSVPath;
 	}
 }

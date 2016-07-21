@@ -1700,8 +1700,7 @@ public class ToolsForCollectionWebService {
 			LOG.debug("setBestWilsonPlotPath for dataCollectionId = " + dataCollectionId);
 			// retrieve the datacollection
 			DataCollection3VO dc = null;
-			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
-					.getLocalService(DataCollection3Service.class);
+			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
 			dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
 
 			if (dc != null) {
@@ -1715,5 +1714,33 @@ public class ToolsForCollectionWebService {
 			throw e;
 		}
 	}
+	
+	
+	@WebMethod
+	@WebResult(name = "dataCollectionId")
+	public Integer setImageQualityIndicatorsPlot(
+			Integer dataCollectionId, 
+			@WebParam(name = "imageQualityIndicatorsPlotPath")	String imageQualityIndicatorsPlotPath,
+			@WebParam(name = "imageQualityIndicatorsCSVPath")	String imageQualityIndicatorsCSVPath) throws Exception {
+		try {
+			LOG.debug("setImageQualityIndicatorsPlot for dataCollectionId = " + dataCollectionId);
+			// retrieve the datacollection
+			DataCollection3VO dc = null;
+			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+			dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+
+			if (dc != null) {
+				dc.setImageQualityIndicatorsPlotPath(imageQualityIndicatorsPlotPath);
+				dc.setImageQualityIndicatorsCSVPath(imageQualityIndicatorsCSVPath);
+				dataCollectionService.update(dc);
+			}
+			return (dc == null ? null : dc.getDataCollectionId());
+		} catch (Exception e) {
+			LOG.error("WS ERROR: setBestWilsonPlotPath - " + StringUtils.getCurrentDate() + " - dcId=" + dataCollectionId
+					+ ", imageQualityIndicatorsPlotPath=" + imageQualityIndicatorsPlotPath);
+			throw e;
+		}
+	}
+	
 
 }
