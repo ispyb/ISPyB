@@ -28,10 +28,6 @@
  */
 package ispyb.client.common.menu;
 
-import ispyb.server.common.services.config.Menu3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.config.Menu3VO;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +36,11 @@ import javax.ejb.CreateException;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
+
+import ispyb.common.util.Constants;
+import ispyb.server.common.services.config.Menu3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.config.Menu3VO;
 
 /**
  * This class has everything related to TOP and LEFT Menus.
@@ -86,7 +87,15 @@ public class MenuContext {
 	 * @param proposalCode
 	 */
 	public MenuContext(int groupId, String proposalType) {
-		this.proposalType = proposalType;
+		
+		if (proposalType != null && proposalType.equals(Constants.PROPOSAL_OTHER)) {
+			// for now for other techniques no new menus exist so take the one of MX
+			// TODO change later or go to EXI
+			this.setProposalType(Constants.PROPOSAL_MX);
+		}
+		else {
+			this.proposalType = proposalType;
+		}
 		this.groupId = groupId;
 		initServices();
 		createTopMenu();
