@@ -195,9 +195,14 @@ public final class Constants {
 	
 	public static final int PROPOSAL_INDUSTRIAL_EXPGROUP = 106;
 
-	public static final int PROPOSAL_BIOSAXS_TYPE = 3;
+	public static final int PROPOSAL_ROLLING_TYPE = 3;
+	
+	public static final int PROPOSAL_BAG_TYPE = 2;
 
 	public static final String PROPOSAL_BIOSAXS = "BX";
+	
+	public static final String PROPOSAL_OTHER = "OT";
+
 
 	/*
 	 * ldap attributes values

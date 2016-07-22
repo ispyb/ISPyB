@@ -902,7 +902,7 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 		propv.setTitle(mainProp.getProposalTitle());
 		propv.setPersonVO(persv);
 
-		// Proposal Type: MX, BX, MB (both: MX with sessions on BM29)
+		// Proposal Type: MX, BX, MB (both: MX with sessions on BM29), OT (others for testing other techniques)
 		switch (Constants.getSite()) {
 		case EMBL:
 			if ((mainProp.getCategoryCode() != null) && ((mainProp.getCategoryCode().toUpperCase().equals("SAXS")))) {
@@ -912,9 +912,34 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			}
 			break;
 
+		case ESRF:
+			if (isMXorBX(mainProp) ) {	
+				// Default is MX
+				String propType = Constants.PROPOSAL_MX;
+				
+				if (mainProp.getProposalType() != null && mainProp.getProposalGroup() != null) {
+					if (mainProp.getProposalType().intValue() == Constants.PROPOSAL_ROLLING_TYPE
+							&& mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_BIOSAXS_EXPGROUP) {
+						propType = Constants.PROPOSAL_BIOSAXS;
+						
+					} else if (mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_INDUSTRIAL_EXPGROUP) {
+						// industrial can be MX or BX
+						propType =  Constants.PROPOSAL_MX_BX;						
+					} 
+				}
+				LOG.debug("proposal is of type : "+ propType);
+				propv.setType(propType);
+
+			} else {
+				// other technique than BioSaxs or MX
+				LOG.debug("proposal is another technique");
+				propv.setType(Constants.PROPOSAL_OTHER);
+			}
+			break;
+			
 		default:
 			if (mainProp.getProposalType() != null && mainProp.getProposalGroup() != null) {
-				if (mainProp.getProposalType().intValue() == Constants.PROPOSAL_BIOSAXS_TYPE
+				if (mainProp.getProposalType().intValue() == Constants.PROPOSAL_ROLLING_TYPE
 						&& mainProp.getProposalGroup().intValue() == Constants.PROPOSAL_BIOSAXS_EXPGROUP) {
 					LOG.debug("proposal is BioSaxs");
 					propv.setType(Constants.PROPOSAL_BIOSAXS);
@@ -984,6 +1009,21 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 
 		LOG.debug("Generated card name is : " + cardName);
 		return cardName;
+	}
+	
+	private static boolean isMXorBX(ProposalParticipantInfoLightVO mainProposer) {
+		boolean isSB = false;
+		if (mainProposer.getProposalType() != null) {
+			int type = mainProposer.getProposalType().intValue();
+			if (type == 3 || type== 2 || type== 7 || type== 101) 
+				return true;
+		}
+		if (mainProposer.getProposalGroup() != null) {
+			int groupe = mainProposer.getProposalType().intValue();
+			if (groupe == 5 || groupe == 105 || groupe == 106 || groupe == 102 || groupe == 101) 
+				return true;
+		}
+		return isSB;
 	}
 
 }
