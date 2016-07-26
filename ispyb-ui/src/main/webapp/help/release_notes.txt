@@ -1,7 +1,20 @@
+********************************************************************************
+
+New TAG : ISPYB_4.0.6
+
+
+**************
+* 26.07.2016     *
+**************
+
+New Services that are used for ispyb-ws but that does not provide EJB objects are arranged in ws package
+These services use the MySQL views and native SQL
+
 **************
 * 20.07.2016     *
 **************
 
+- New fields in DataCollection table to display ImageQualityIndicatorPlot
 3rd step of database merging with DLS:
 - add parameter facilityCode in Dewar
 
