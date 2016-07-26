@@ -45,7 +45,6 @@ public class AutoProcessingIntegrationServiceBean implements AutoProcessingInteg
 				"select GROUP_CONCAT(" + column +") from AutoProcScalingStatistics   \n" + 
 				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
 				") as "+ name;
-		
 	}
 	private String getViewTableQuery(){
 		return "select *,\n" + 

@@ -71,16 +71,40 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 				" where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId order by  WorkflowStep.workflowStepId DESC) as WorkflowStep_workflowStepId,"
 				+ "(select GROUP_CONCAT(workflowStepType) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_workflowStepType,"  
 				+ "(select GROUP_CONCAT(status) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_status,"
+				
+				
 				+ " GROUP_CONCAT(`AutoProcProgram_processingPrograms` SEPARATOR ', ') AS `processingPrograms`, "
 				+ " GROUP_CONCAT(`AutoProcProgram_processingStatus` SEPARATOR ', ') AS `processingStatus`,"
 				+ " GROUP_CONCAT(`AutoProcIntegration_autoProcIntegrationId` SEPARATOR ', ') AS `autoProcIntegrationId`, "
-				+ "GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,\n" + 
-					"GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`,\n" + 
-					"GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,\n" + 
-					"GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`,\n" + 
-					"GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,\n" + 
-					"GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,\n" + 
-					"GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,"
+				
+				+ " GROUP_CONCAT(`cell_a` SEPARATOR ', ') AS `Autoprocessing_cell_a`, "
+				+ " GROUP_CONCAT(`cell_b` SEPARATOR ', ') AS `Autoprocessing_cell_b`, "
+				+ " GROUP_CONCAT(`cell_c` SEPARATOR ', ') AS `Autoprocessing_cell_c`, "
+				+ " GROUP_CONCAT(`cell_alpha` SEPARATOR ', ') AS `Autoprocessing_cell_alpha`, "
+				+ " GROUP_CONCAT(`cell_beta` SEPARATOR ', ') AS `Autoprocessing_cell_beta`, "
+				+ " GROUP_CONCAT(`cell_gamma` SEPARATOR ', ') AS `Autoprocessing_cell_gamma`, "
+				+ " (  \n"
+				+ " select GROUP_CONCAT(phasingStepType) from PhasingStep   \n"  
+				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId  \n"  
+				+ " ) as phasingStepType,\n"  
+				+ " (  \n"  
+				+ " select GROUP_CONCAT(spaceGroupId) from PhasingStep   \n"  
+				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId  \n"  
+				+ " ) as spaceGroupIds,\n"  
+				+ " (  \n"  
+				+ " select GROUP_CONCAT(spaceGroupShortName) from SpaceGroup   \n"  
+				+ " where  spaceGroupId in\n"  
+				+ " (select spaceGroupId from PhasingStep   \n"  
+				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId   ) \n"  
+				+ " ) as spaceGroupShortName,\n"
+				
+				+ "GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,\n"  
+				+ "GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`,\n"  
+				+ "GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,\n"  
+				+ "GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`,\n"  
+				+ "GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,\n" 
+				+ "GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,\n"  
+				+ "GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,"
 				+ this.getPhasingSpaceGroupQuery()
 				+ this.getPhasingStepQuery()
 				+ " (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,"
