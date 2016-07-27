@@ -365,9 +365,6 @@ public class DataCollectionExporter {
 				}
 
 				// --- Screening Success / Failure ---
-				if (screeningOutputLight.getScreeningVO().getDataCollectionVOId() == 1300074) {
-					int i = 0;
-				}
 				mStrategySuccess = screeningOutputLight.getStrategySuccess();
 				mIndexingSuccess = screeningOutputLight.getIndexingSuccess();
 				mStatusDescription = screeningOutputLight.getStatusDescription();
