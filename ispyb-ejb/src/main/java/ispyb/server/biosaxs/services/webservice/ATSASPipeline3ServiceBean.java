@@ -756,7 +756,7 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 
 	@Override
 	public List<Macromolecule3VO>  getMacromoleculeByAcronym(String proposal, String acronym) {
-		List<Proposal3VO> proposal3VOs = this.saxsProposal3Service.findProposalByLoginName(proposal);
+		List<Proposal3VO> proposal3VOs = this.proposalService.findProposalByLoginName(proposal);
 		if (proposal3VOs != null){
 			if (proposal3VOs.size() > 0){
 				Proposal3VO proposal3VO = proposal3VOs.get(0);
