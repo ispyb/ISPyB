@@ -129,7 +129,7 @@ public class ViewScreeningStrategyAction extends DispatchAction {
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
 			form.setDataCollectionId(dataCollectionId);
 			// DataCollectionLightValue dclv = dataCollection.findByPrimaryKeyLight(dataCollectionId);
-			DataCollection3VO dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, false, true, false);
+			DataCollection3VO dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, false, true);
 
 			// screeningStrategy
 			ScreeningStrategy3VO sslv = screeningStrategyService.findByPk(screeningStrategyId, true);

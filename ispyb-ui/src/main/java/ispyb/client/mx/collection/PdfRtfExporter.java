@@ -529,6 +529,8 @@ public class PdfRtfExporter {
 			AutoProcScalingStatistics3VO[] autoProcsOuter = wrapper.getScalingStatsOuter();
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator
 					.getLocalService(Session3Service.class);
+			DataCollectionGroup3Service dcgService = (DataCollectionGroup3Service) ejb3ServiceLocator
+					.getLocalService(DataCollectionGroup3Service.class);
 
 			Iterator<DataCollection3VO> it = dataCollectionList.iterator();
 			int i = 0;
@@ -536,7 +538,8 @@ public class PdfRtfExporter {
 				DataCollection3VO col = it.next();
 				ScreeningOutput3VO screeningOutput = null;
 				ScreeningOutputLattice3VO screeningOutputLattice = null;
-				Screening3VO[] tabScreening = col.getScreeningsTab();
+				DataCollectionGroup3VO colGroup = dcgService.findByPk(col.getDataCollectionGroupVOId(), false, true);
+				Screening3VO[] tabScreening = colGroup.getScreeningsTab();
 				if (tabScreening != null && tabScreening.length > 0) {
 					Screening3VO screeningVO = tabScreening[0];
 					ScreeningOutput3VO[] screeningOutputTab = screeningVO.getScreeningOutputsTab();
@@ -782,7 +785,7 @@ public class PdfRtfExporter {
 			// else table.addCell("");
 			DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 					.getLocalService(DataCollectionGroup3Service.class);
-			DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(col.getDataCollectionGroupVOId(), true);
+			DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(col.getDataCollectionGroupVOId(), true, true);
 			boolean firstCollect = group.isFirstCollect(col);
 			if (dcGroup.getCrystalClass() != null) {
 				int idCC = getCrystalClassIndex(listOfCrystalClass, dcGroup.getCrystalClass().trim().toUpperCase());
@@ -3045,6 +3048,8 @@ public class PdfRtfExporter {
 			AutoProcScalingStatistics3VO[] autoProcsOuter = wrapper.getScalingStatsOuter();
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator
 					.getLocalService(Session3Service.class);
+			DataCollectionGroup3Service dcgService = (DataCollectionGroup3Service) ejb3ServiceLocator
+					.getLocalService(DataCollectionGroup3Service.class);
 
 			Iterator<SessionDataObjectInformation> it = sessionDataObjectList.iterator();
 			while (it.hasNext()) {
@@ -3071,7 +3076,8 @@ public class PdfRtfExporter {
 					collect = dataCollectionList.get(index);
 
 					if (collect != null) {
-						Screening3VO[] tabScreening = collect.getScreeningsTab();
+						DataCollectionGroup3VO colGroup = dcgService.findByPk(collect.getDataCollectionGroupVOId(), false, true);
+						Screening3VO[] tabScreening = colGroup.getScreeningsTab();
 						if (tabScreening != null && tabScreening.length > 0) {
 							Screening3VO screeningVO = tabScreening[0];
 							ScreeningOutput3VO[] screeningOutputTab = screeningVO.getScreeningOutputsTab();
@@ -3227,7 +3233,7 @@ public class PdfRtfExporter {
 			// else table.addCell("");
 			DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 					.getLocalService(DataCollectionGroup3Service.class);
-			DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(col.getDataCollectionGroupVOId(), true);
+			DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(col.getDataCollectionGroupVOId(), true, true);
 			boolean firstCollect = group.isFirstCollect(col);
 			if (dcGroup.getCrystalClass() != null) {
 				int idCC = getCrystalClassIndex(listOfCrystalClass, dcGroup.getCrystalClass().trim().toUpperCase());

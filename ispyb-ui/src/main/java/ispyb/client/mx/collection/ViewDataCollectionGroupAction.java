@@ -478,7 +478,7 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 			// Get localContact email
 			String beamLineOperatorEmail = slv.getBeamLineOperatorEmail();
 			// Get data collection groups
-			dataCollectionGroupList = dataCollectionGroupService.findFiltered(sessionId, true);
+			dataCollectionGroupList = dataCollectionGroupService.findFiltered(sessionId, true, false);
 			List<DataCollectionGroup3VO> aListTmp = new ArrayList<DataCollectionGroup3VO>();
 			for (Iterator<DataCollectionGroup3VO> myDataCollectionGroups = dataCollectionGroupList.iterator(); myDataCollectionGroups
 					.hasNext();) {
@@ -569,7 +569,7 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 			Proposal3VO pv = proposalService.findByPk(proposalId);
 			// session information
 			// Get data collection groups
-			dataCollectionGroupList = dataCollectionGroupService.findBySampleId(sampleId, true);
+			dataCollectionGroupList = dataCollectionGroupService.findBySampleId(sampleId, true, false);
 			List<DataCollectionGroup3VO> aListTmp = new ArrayList<DataCollectionGroup3VO>();
 			for (Iterator<DataCollectionGroup3VO> myDataCollectionGroups = dataCollectionGroupList.iterator(); myDataCollectionGroups
 					.hasNext();) {
@@ -907,7 +907,7 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 				for (int i = 0; i < nb; i++) {
 					dataCollectionGroupId = dataCollectionGroups.get(i).getDataCollectionGroupId();
 					DataCollectionGroup3VO dclgvFromDB = dataCollectionGroupService.findByPk(dataCollectionGroupId,
-							false);
+							false, false);
 
 					comments = dataCollectionGroups.get(i).getComments();
 					dclgvFromDB.setComments(comments);

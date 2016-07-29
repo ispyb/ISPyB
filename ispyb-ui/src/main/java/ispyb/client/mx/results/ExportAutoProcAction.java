@@ -185,7 +185,7 @@ public class ExportAutoProcAction extends DispatchAction {
 		dc = null;
 		if (bar.getSelectedDataCollection() != null) {
 			dataCollectionId = bar.getSelectedDataCollection().getDataCollectionId();
-			dc = dataCollectionService.findByPk(dataCollectionId, false,  false, false);
+			dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
 			bar.setSelectedDataCollection(dc);
 			dataCollectionImagePrefix = dc.getImagePrefix();
 		}

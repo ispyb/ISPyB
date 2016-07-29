@@ -111,7 +111,7 @@ public class AutoProcRankingAction  extends DispatchAction {
 			Iterator<Integer> iter = rankList.iterator();
 			while (iter.hasNext()) {
 				int dataCollectionId = iter.next();
-				DataCollection3VO dc = this.dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				DataCollection3VO dc = this.dataCollectionService.findByPk(dataCollectionId, false, false);
 				dcList.add(dc);
 			}
 			
@@ -127,7 +127,7 @@ public class AutoProcRankingAction  extends DispatchAction {
 			for (int i = 0; i < autoProcRankingValues.size(); i++) {
 				AutoProcRankingVO autoProcRankingVO = autoProcRankingValues.get(i);
 				DataCollection3VO dataCollectionDb = dataCollectionService.findByPk(
-						autoProcRankingVO.getDataCollectionId(), false,  false, false);
+						autoProcRankingVO.getDataCollectionId(), false,  false);
 				autoProcRankingVO.setImagePrefix(dataCollectionDb.getImagePrefix());
 				autoProcRankingVO.setDataCollectionNumber(dataCollectionDb.getDataCollectionNumber());
 				autoProcRankingVO.setStartTime(StringUtils.dateToTimestamp(dataCollectionDb.getStartTime()));

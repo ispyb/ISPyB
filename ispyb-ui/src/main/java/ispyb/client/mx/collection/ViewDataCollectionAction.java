@@ -725,7 +725,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			// .getDataCollectionId());
 
 			DataCollection3VO dclvFromDB = dataCollectionService.findByPk(form.getSelectedDataCollection().getDataCollectionId(),
-					false, false, false);
+					false, false);
 
 			String DCcomments = form.getSelectedDataCollection().getComments();
 
@@ -781,7 +781,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			Integer dataCollectionId = new Integer(request.getParameter(Constants.DATA_COLLECTION_ID));
 
 			// DataCollectionLightValue dclv = dataCollection.findByPrimaryKeyLight(dataCollectionId);
-			DataCollection3VO dclv = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dclv = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			ViewDataCollectionForm form = (ViewDataCollectionForm) actForm;
 			form.setSelectedDataCollection(dclv);
@@ -824,7 +824,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			String comments = form.getComments();
 
 			// retrieve the object, change the fields and save it again
-			DataCollection3VO dclvFromDB = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dclvFromDB = dataCollectionService.findByPk(dataCollectionId, false, false);
 			if (skip == Boolean.TRUE) {
 				dclvFromDB.setPrintableForReport(Byte.valueOf("0"));
 			} else {
@@ -1046,7 +1046,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			for (int i = 0; i < idList.length; i++) {
 
 				dataCollectionId = new Integer(idList[i]);
-				DataCollection3VO dclvFromDB = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				DataCollection3VO dclvFromDB = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 				comments = commentsList[i];
 				comments = ViewDataCollectionAction.getDataCollectionComment(dclvFromDB, comments);
@@ -1549,7 +1549,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			else
 				dataCollectionGroupId = BreadCrumbsForm.getIt(request).getSelectedDataCollectionGroup().getDataCollectionGroupId();
 
-			DataCollectionGroup3VO dcg = dataCollectionGroupService.findByPk(dataCollectionGroupId, false);
+			DataCollectionGroup3VO dcg = dataCollectionGroupService.findByPk(dataCollectionGroupId, false, false);
 			Session3VO slv = dcg.getSessionVO();
 			Integer sessionId = slv.getSessionId();
 			form.setDataCollectionGroupId(dataCollectionGroupId);
@@ -1732,7 +1732,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			}
 			// load last collect
 			List<DataCollection3VO> listLastCollectVO = dataCollectionService
-					.findLastCollect(startDate, endDate, beamLineSearch, true);
+					.findLastCollect(startDate, endDate, beamLineSearch);
 			// autoproc
 			AutoProcShellWrapper wrapper = getAutoProcStatistics(listLastCollectVO, 10, 1);
 			int dcIndex = 0;
@@ -1771,8 +1771,9 @@ public class ViewDataCollectionAction extends DispatchAction {
 				autoProcStatisticsOverall = wrapper.getScalingStatsOverall()[dcIndex];
 				autoProcStatisticsInner = wrapper.getScalingStatsInner()[dcIndex];
 				autoProcStatisticsOuter = wrapper.getScalingStatsOuter()[dcIndex];
-
-				Screening3VO[] tabScreening = dataCollection3VO.getScreeningsTab();
+				
+				DataCollectionGroup3VO colGroup = dataCollectionGroupService.findByPk(dataCollection3VO.getDataCollectionGroupVOId(), false, true);
+				Screening3VO[] tabScreening = colGroup.getScreeningsTab();
 
 				if (tabScreening != null && tabScreening.length > 0) {
 					Screening3VO screeningVO = tabScreening[0];
@@ -2006,10 +2007,10 @@ public class ViewDataCollectionAction extends DispatchAction {
 			if (isIndus)
 				// dataCollectionList = (ArrayList) dataCollectionFull.findBySessionIdAndPrintable(sessionId,
 				// new Byte("1"));
-				dataCollectionList = dataCollectionService.findFiltered(null, null, null, sessionId, new Byte("1"), true, null);
+				dataCollectionList = dataCollectionService.findFiltered(null, null, null, sessionId, new Byte("1"), null);
 			else
 				// dataCollectionList = (ArrayList) dataCollectionFull.findBySessionId(sessionId);
-				dataCollectionList = dataCollectionService.findFiltered(null, null, null, sessionId, null, true, null);
+				dataCollectionList = dataCollectionService.findFiltered(null, null, null, sessionId, null, null);
 			LOG.debug("ViewDataCollection:findBySessionId finished");
 
 			int displayImage = 0;
@@ -2070,7 +2071,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 				GSonUtils.sendToJs(response, data, "dd-MM-yyyy HH:mm:ss");
 				return;
 			}
-			DataCollectionGroup3VO dcg = dataCollectionGroupService.findByPk(dataCollectionGroupId, false);
+			DataCollectionGroup3VO dcg = dataCollectionGroupService.findByPk(dataCollectionGroupId, false, false);
 			Session3VO slv = dcg.getSessionVO();
 			Integer sessionId = slv.getSessionId();
 
@@ -2093,10 +2094,10 @@ public class ViewDataCollectionAction extends DispatchAction {
 
 			// Get data collections
 			if (isIndus) {
-				dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, new Byte("1"), true,
+				dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, new Byte("1"), 
 						dcg.getDataCollectionGroupId());
 			} else {
-				dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, null, true,
+				dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, null, 
 						dcg.getDataCollectionGroupId());
 			}
 			LOG.debug("ViewDataCollection:findByDataCollectionGroupId finished");
@@ -2209,9 +2210,9 @@ public class ViewDataCollectionAction extends DispatchAction {
 
 			if (isIndus)
 				dataCollectionList = dataCollectionService
-						.findBySample(null, sampleName, new Byte((byte) 0x1), proposalId, true /* withScreenings */);
+						.findBySample(null, sampleName, new Byte((byte) 0x1), proposalId);
 			else
-				dataCollectionList = dataCollectionService.findBySample(null, sampleName, null, proposalId, true /* withScreenings */);
+				dataCollectionList = dataCollectionService.findBySample(null, sampleName, null, proposalId);
 
 			List<EnergyScan3VO> energyScanList = new ArrayList<EnergyScan3VO>();
 			List<XFEFluorescenceSpectrum3VO> xfeList = new ArrayList<XFEFluorescenceSpectrum3VO>();
@@ -2292,9 +2293,9 @@ public class ViewDataCollectionAction extends DispatchAction {
 			// Get DataCollections
 			if (isIndus)
 				dataCollectionList = dataCollectionService
-						.findBySample(sampleId, null, new Byte((byte) 0x1), proposalId, true /* withScreenings */);
+						.findBySample(sampleId, null, new Byte((byte) 0x1), proposalId);
 			else
-				dataCollectionList = dataCollectionService.findBySample(sampleId, null, null, proposalId, true /* withScreenings */);
+				dataCollectionList = dataCollectionService.findBySample(sampleId, null, null, proposalId);
 
 			List<EnergyScan3VO> energyScanList = new ArrayList<EnergyScan3VO>();
 			List<XFEFluorescenceSpectrum3VO> xfeList = new ArrayList<XFEFluorescenceSpectrum3VO>();
@@ -2397,9 +2398,9 @@ public class ViewDataCollectionAction extends DispatchAction {
 			long startTime = System.currentTimeMillis();
 			if (isIndus)
 				dataCollectionList = dataCollectionService
-						.findByProtein(proteinAcronym, new Byte((byte) 0x1), proposalId, true /* withScreenings */);
+						.findByProtein(proteinAcronym, new Byte((byte) 0x1), proposalId);
 			else
-				dataCollectionList = dataCollectionService.findByProtein(proteinAcronym, null, proposalId, true /* withScreenings */);
+				dataCollectionList = dataCollectionService.findByProtein(proteinAcronym, null, proposalId);
 
 			long endTime = System.currentTimeMillis();
 			LOG.debug("Getting data: " + (endTime - startTime) + " ms");
@@ -2489,7 +2490,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			// Get DataCollections
 			dataCollectionList = dataCollectionService.findByCustomQuery(proposalId, sampleName, proteinAcronym, beamline,
 					StringUtils.toDate(experimentDateStart), StringUtils.toDate(experimentDateEnd), minNumberOfImages,
-					maxNumberOfImages, imagePrefix, new Byte("1"), Integer.valueOf(maxRecords), true /* withScreenings */);
+					maxNumberOfImages, imagePrefix, new Byte("1"), Integer.valueOf(maxRecords));
 
 			List<EnergyScan3VO> energyScanList = new ArrayList<EnergyScan3VO>();
 			List<XFEFluorescenceSpectrum3VO> xfeList = new ArrayList<XFEFluorescenceSpectrum3VO>();
@@ -2552,7 +2553,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 				int nb = dataCollections.size();
 				for (int i = 0; i < nb; i++) {
 					dcId = dataCollections.get(i).getDataCollectionId();
-					DataCollection3VO dcFromDB = dataCollectionService.findByPk(dcId, false, false, false);
+					DataCollection3VO dcFromDB = dataCollectionService.findByPk(dcId, false, false);
 					comments = dataCollections.get(i).getComments();
 					comments = ViewDataCollectionAction.getDataCollectionComment(dcFromDB, comments);
 					dcFromDB.setComments(comments);
@@ -2750,7 +2751,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 					}
 				}
 				// create zip
-				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 				//String s = "";
 				String info = "";
 				if (dc != null) {
@@ -2831,21 +2832,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 			autoProcStatisticsOverall = wrapper.getScalingStatsOverall()[dcIndex];
 			autoProcStatisticsInner = wrapper.getScalingStatsInner()[dcIndex];
 			autoProcStatisticsOuter = wrapper.getScalingStatsOuter()[dcIndex];
-
-			Screening3VO[] tabScreening = dataCollection3VO.getScreeningsTab();
-
-			if (tabScreening != null && tabScreening.length > 0) {
-				Screening3VO screeningVO = tabScreening[0];
-				ScreeningOutput3VO[] screeningOutputTab = screeningVO.getScreeningOutputsTab();
-				if (screeningOutputTab != null && screeningOutputTab.length > 0) {
-					if (screeningOutputTab[0].getScreeningOutputLatticesTab() != null
-							&& screeningOutputTab[0].getScreeningOutputLatticesTab().length > 0) {
-						lattice = screeningOutputTab[0].getScreeningOutputLatticesTab()[0];
-					}
-					screeningOutput = screeningOutputTab[0];
-				}
-			}
-
+			
 			boolean hasAutoProcAttachment = ViewDataCollectionAction.hasAutoProcAttachment(dataCollection3VO.getDataCollectionId());
 
 			String autoprocessingStatus = "";

@@ -52,7 +52,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.biosaxs.dataAdapter.BiosaxsDataAdapterCommon;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.DataAdapterCommon;
 import ispyb.client.common.util.Confidentiality;
@@ -78,6 +77,7 @@ import ispyb.server.mx.services.autoproc.AutoProcProgramAttachment3Service;
 import ispyb.server.mx.services.autoproc.AutoProcScalingStatistics3Service;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.screening.ScreeningRankSet3Service;
@@ -186,6 +186,8 @@ public class ViewResultsAction extends DispatchAction {
 	private BeamLineSetup3Service beamLineSetupService;
 
 	private DataCollection3Service dataCollectionService;
+	
+	private DataCollectionGroup3Service dataCollectionGroupService;
 
 	private Image3Service imageService;
 
@@ -208,6 +210,8 @@ public class ViewResultsAction extends DispatchAction {
 		this.sampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 		this.beamLineSetupService = (BeamLineSetup3Service) ejb3ServiceLocator.getLocalService(BeamLineSetup3Service.class);
 		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+		this.dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator.getLocalService(DataCollectionGroup3Service.class);
+
 		this.imageService = (Image3Service) ejb3ServiceLocator.getLocalService(Image3Service.class);
 		this.screeningRankSetService = (ScreeningRankSet3Service) ejb3ServiceLocator.getLocalService(ScreeningRankSet3Service.class);
 		this.screeningStrategyService = (ScreeningStrategy3Service) ejb3ServiceLocator
@@ -267,10 +271,11 @@ public class ViewResultsAction extends DispatchAction {
 			ViewResultsForm form = (ViewResultsForm) actForm;
 			form.setDataCollectionId(dataCollectionId);
 
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, true, true);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, true);
 			DataCollectionGroup3VO dataCollectionGroup = null;
-			if (dc != null)
-				dataCollectionGroup = dc.getDataCollectionGroupVO();
+			if (dc != null) {
+				dataCollectionGroup = dataCollectionGroupService.findByPk(dc.getDataCollectionGroupVOId(), false, true);
+			}
 
 			Screening3VO[] screeningList = null;
 
@@ -307,8 +312,7 @@ public class ViewResultsAction extends DispatchAction {
 			request.getSession().setAttribute(Constants.RSYMM, rMerge);
 			request.getSession().setAttribute(Constants.ISIGMA, iSigma);
 
-			Set<Screening3VO> setScreening = dc.getScreeningVOs();
-			Screening3VO[] screenings = setScreening.toArray(new Screening3VO[setScreening.size()]);
+			Screening3VO[] screenings = dataCollectionGroup.getScreeningsTab(); 
 
 			if (screenings.length > 0) {
 
@@ -623,7 +627,7 @@ public class ViewResultsAction extends DispatchAction {
 								dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 							}
 							if (dataCollectionId != null) {
-								DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+								DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 								if (dc != null) {
 									info = dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber() + "_";
 								}
@@ -678,7 +682,7 @@ public class ViewResultsAction extends DispatchAction {
 				dataCollectionId = new Integer(request.getParameter(Constants.SESSION_ID));
 			}
 			if (dataCollectionId != null) {
-				DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false);
 				String beamLineName = dataCollection.getDataCollectionGroupVO().getSessionVO().getBeamlineName();
 				String[] correctionFiles = ESRFBeamlineEnum.retrieveCorrectionFilesNameWithName(beamLineName);
 				if (correctionFiles != null) {
@@ -751,7 +755,7 @@ public class ViewResultsAction extends DispatchAction {
 			ViewResultsForm form = (ViewResultsForm) actForm;
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			String fullDNAPath = PathUtils.getFullDNAPath(dc);
 			String fullDNAIndexPath = fullDNAPath + "index.html";
@@ -864,7 +868,7 @@ public class ViewResultsAction extends DispatchAction {
 			ViewResultsForm form = (ViewResultsForm) actForm;
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			String fileName = form.getDNASelectedFile();
 			String fullLogPath = PathUtils.GetFullLogPath(dc) + fileName;
@@ -914,7 +918,7 @@ public class ViewResultsAction extends DispatchAction {
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
 
-			DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, true, true, true);
+			DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, true, true);
 
 			String fullDenzoPath = FileUtil.GetFullDenzoPath(dcValue);
 			String fullDenzoFilePath = fullDenzoPath + DENZO_HTML_INDEX;
@@ -982,7 +986,7 @@ public class ViewResultsAction extends DispatchAction {
 			Image3VO refImage = imageService.findByPk(imageId);
 			Integer dataCollectionId = refImage.getDataCollectionVOId();
 
-			DataCollection3VO refDataCollection = dataCollectionService.findByPk(refImage.getDataCollectionVOId(), true, true, true);
+			DataCollection3VO refDataCollection = dataCollectionService.findByPk(refImage.getDataCollectionVOId(), true, true);
 			DataCollectionGroup3VO refDataCollectionGroup = refDataCollection.getDataCollectionGroupVO();
 			Session3VO refSession = sessionService.findByPk(refDataCollectionGroup.getSessionVOId(), false, false, false);
 
@@ -1222,7 +1226,7 @@ public class ViewResultsAction extends DispatchAction {
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			String selectedFile = request.getParameter(Constants.DNA_SELECTED_FILE);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			String htmlFilePath;
 			String htmlFullFilePath;
@@ -1367,7 +1371,7 @@ public class ViewResultsAction extends DispatchAction {
 			ViewResultsForm form = (ViewResultsForm) actForm;
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 			String programLogPath = PathUtils.GetFullLogPath(dc);
 			String programLogFilePath = programLogPath + Constants.DNA_FILES_BEST_FILE;
 
@@ -1419,7 +1423,7 @@ public class ViewResultsAction extends DispatchAction {
 
 		dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 		Integer dataCollectionId = new Integer(dataCollectionIdst);
-		DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+		DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
 		String archivePath = Constants.SITE_IS_DLS() ? PathUtils.getFullEDNAPath(dc) : PathUtils.getFullDNAPath(dc);
 		// String fullEDNAPath = archivePath + Constants.EDNA_FILES_SUFIX;
 		if (Constants.SITE_IS_EMBL()) {
@@ -1499,7 +1503,7 @@ public class ViewResultsAction extends DispatchAction {
 		try {
 			// Integer dataCollectionId = new Integer(dataCollectionIdst);
 			Integer dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
 			String archivePath = Constants.SITE_IS_DLS() ? PathUtils.getFullEDNAPath(dc) : PathUtils.getFullDNAPath(dc);
 			// String fullEDNAPath = archivePath + Constants.EDNA_FILES_SUFIX;
 
@@ -1559,7 +1563,7 @@ public class ViewResultsAction extends DispatchAction {
 			ViewResultsForm form = (ViewResultsForm) actForm;
 			dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
 			Integer dataCollectionId = new Integer(dataCollectionIdst);
-			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
 			String archivePath = Constants.SITE_IS_DLS() ? PathUtils.getFullEDNAPath(dc) : PathUtils.getFullDNAPath(dc);
 			// String fullEDNAPath = archivePath + Constants.EDNA_FILES_SUFIX;
 			boolean isFileExist = new File(archivePath + Constants.EDNA_FILES_SUFIX).exists();
@@ -1842,7 +1846,7 @@ public class ViewResultsAction extends DispatchAction {
 				if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null)
 					dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 				if (dataCollectionId != null) {
-					DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+					DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false);
 					String beamLineName = dataCollection.getDataCollectionGroupVO().getSessionVO().getBeamlineName();
 					String[] correctionFiles = ESRFBeamlineEnum.retrieveCorrectionFilesNameWithName(beamLineName);
 					if (correctionFiles != null) {
@@ -1883,7 +1887,7 @@ public class ViewResultsAction extends DispatchAction {
 			Integer dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 			if (dataCollectionId != null) {
 				try {
-					DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+					DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 					if (dc != null) {
 						info = dc.getImagePrefix() + "_run" + dc.getDataCollectionNumber() + "_";
 					}
@@ -2237,7 +2241,7 @@ public class ViewResultsAction extends DispatchAction {
 					}
 				}
 				// interrupted autoProc
-				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false, true);
+				DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 				if (dc != null) {
 					List<AutoProcIntegration3VO> autoProcIntegrationList = dc.getAutoProcIntegrationsList();
 					if (autoProcIntegrationList != null) {
@@ -2410,7 +2414,7 @@ public class ViewResultsAction extends DispatchAction {
 					if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null)
 						dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 					if (dataCollectionId != null) {
-						DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+						DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false);
 						String beamLineName = dataCollection.getDataCollectionGroupVO().getSessionVO().getBeamlineName();
 						String[] correctionFiles = ESRFBeamlineEnum.retrieveCorrectionFilesNameWithName(beamLineName);
 						if (correctionFiles != null) {
@@ -2560,7 +2564,7 @@ public class ViewResultsAction extends DispatchAction {
 				GSonUtils.sendToJs(response, data, "dd-MM-yyyy HH:mm:ss");
 				return;
 			}
-			dc = dataCollectionService.findByPk(dataCollectionId, false, true, true);
+			dc = dataCollectionService.findByPk(dataCollectionId, false, true);
 
 			// interrupted autoProc
 			if (dc != null) {
@@ -2694,8 +2698,8 @@ public class ViewResultsAction extends DispatchAction {
 				autoProcStatisticsOverall = wrapper.getScalingStatsOverall()[dcIndex];
 				autoProcStatisticsInner = wrapper.getScalingStatsInner()[dcIndex];
 				autoProcStatisticsOuter = wrapper.getScalingStatsOuter()[dcIndex];
-
-				tabScreening = dc.getScreeningsTab();
+				DataCollectionGroup3VO dcGroup = dataCollectionGroupService.findByPk(dc.getDataCollectionGroupVOId(), false, true);
+				tabScreening = dcGroup.getScreeningsTab();
 			}
 
 			if (tabScreening != null && tabScreening.length > 0) {

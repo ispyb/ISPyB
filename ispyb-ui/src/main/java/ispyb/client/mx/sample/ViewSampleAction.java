@@ -178,7 +178,7 @@ public class ViewSampleAction extends DispatchAction {
 				// Get sample
 				BLSample3VO mySample = mySamples.next();
 				List<DataCollection3VO> dataCollectionList = dataCollectionService.findBySample(
-						mySample.getBlSampleId(), null, null, proposalId, true);
+						mySample.getBlSampleId(), null, null, proposalId);
 				// Browse dataCollections
 				boolean snapShotFound = false;
 				for (Iterator<DataCollection3VO> myDataCollections = dataCollectionList.iterator(); myDataCollections
@@ -693,7 +693,7 @@ public class ViewSampleAction extends DispatchAction {
 				// Get sample
 				BLSample3VO mySample = mySamples.next();
 				List<DataCollection3VO> dataCollectionList = dataCollectionService.findBySample(
-						mySample.getBlSampleId(), null, null, proposalId, true);
+						mySample.getBlSampleId(), null, null, proposalId);
 				// Browse dataCollections
 				boolean snapShotFound = false;
 				for (Iterator<DataCollection3VO> myDataCollections = dataCollectionList.iterator(); myDataCollections
@@ -915,7 +915,7 @@ public class ViewSampleAction extends DispatchAction {
 					// Get sample
 					BLSample3VO mySample = mySamples.next();
 					List<DataCollection3VO> dataCollectionList = dataCollectionService.findBySample(
-							mySample.getBlSampleId(), null, null, proposalId, true);
+							mySample.getBlSampleId(), null, null, proposalId);
 					// Browse dataCollections
 					boolean snapShotFound = false;
 					for (Iterator<DataCollection3VO> myDataCollections = dataCollectionList.iterator(); myDataCollections

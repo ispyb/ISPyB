@@ -148,7 +148,7 @@ public class SampleRankingAction extends DispatchAction {
 				// DataCollection3VO dataCollectionDb =
 				// dataCollections.findByPrimaryKey(sampleRankingVO.getDataCollectionId());
 				DataCollection3VO dataCollectionDb = dataCollectionService.findByPk(sampleRankingVO.getDataCollectionId(), false,
-						false, false);
+						false);
 				sampleRankingVO.setImagePrefix(dataCollectionDb.getImagePrefix());
 				sampleRankingVO.setDataCollectionNumber(dataCollectionDb.getDataCollectionNumber());
 				sampleRankingVO.setStartTime(StringUtils.dateToTimestamp(dataCollectionDb.getStartTime()));

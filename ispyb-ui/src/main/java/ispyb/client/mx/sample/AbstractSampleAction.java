@@ -475,7 +475,7 @@ public abstract class AbstractSampleAction extends DispatchAction {
 				// Get sample
 				BLSample3VO mySample = mySamples.next();
 				List<DataCollection3VO> dataCollectionList = dataCollectionService.findBySample(
-						mySample.getBlSampleId(), null, null, proposalId, false);
+						mySample.getBlSampleId(), null, null, proposalId);
 				// Browse dataCollections
 				boolean snapShotFound = false;
 				for (Iterator<DataCollection3VO> myDataCollections = dataCollectionList.iterator(); myDataCollections

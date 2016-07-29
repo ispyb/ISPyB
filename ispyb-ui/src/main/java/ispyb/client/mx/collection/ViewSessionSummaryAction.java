@@ -409,7 +409,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			String beamLineOperatorEmail = slv.getBeamLineOperatorEmail();
 
 			// we load only the last items which have got datacollections linked
-			dataCollectionGroupList = dataCollectionGroupService.findFiltered(sessionId, true);
+			dataCollectionGroupList = dataCollectionGroupService.findFiltered(sessionId, true, false);
 			List<DataCollectionGroup3VO> aListTmp = new ArrayList<DataCollectionGroup3VO>();
 			for (Iterator<DataCollectionGroup3VO> myDataCollectionGroups = dataCollectionGroupList.iterator(); myDataCollectionGroups
 					.hasNext();) {
@@ -446,7 +446,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			for (Iterator<DataCollection3VO> iterator = dataCollectionList.iterator(); iterator.hasNext();) {
 				DataCollection3VO dataCollection3VO = iterator.next();
 				DataCollection3VO collect = dataCollectionService.findByPk(dataCollection3VO.getDataCollectionId(),
-						false, true, false);
+						false, false);
 				tmpDataCollectionList.add(collect);
 			}
 			dataCollectionList = tmpDataCollectionList;
@@ -1650,7 +1650,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 								+ "   COMMENTS=" + comments);
 					} else if (o.isDataCollection()) {
 						DataCollection3VO oFromDB = dataCollectionService.findByPk(o.getDataCollection()
-								.getDataCollectionId(), false, false, false);
+								.getDataCollectionId(), false, false);
 						comments = o.getComments();
 						if (comments != null) {
 							oFromDB.setComments(comments);
@@ -1667,7 +1667,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 								+ o.getDataCollection().getDataCollectionGroupVOId() + "   COMMENTS=" + comments);
 					} else if (o.isDataCollectionGroup()) {
 						DataCollectionGroup3VO oFromDB = dataCollectionGroupService.findByPk(o.getDataCollectionGroup()
-								.getDataCollectionGroupId(), true);
+								.getDataCollectionGroupId(), true, false);
 						comments = o.getComments();
 						if (comments == null) {
 							comments = "";

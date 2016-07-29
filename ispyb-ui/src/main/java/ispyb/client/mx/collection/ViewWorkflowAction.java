@@ -255,9 +255,9 @@ public class ViewWorkflowAction extends DispatchAction {
 				DataCollectionGroup3VO dcg = group.next();
 				List<DataCollection3VO> dataCollectionList = new ArrayList<DataCollection3VO>();
 				if (isIndus)
-					dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, new Byte("1"), true,dcg.getDataCollectionGroupId());
+					dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, new Byte("1"), dcg.getDataCollectionGroupId());
 				else
-					dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, null, true,dcg.getDataCollectionGroupId());
+					dataCollectionList = dataCollectionService.findFiltered(null, null, null, null, null, dcg.getDataCollectionGroupId());
 				listOfCollect.add(dataCollectionList);
 				// iamgeList
 				List<ImageValueInfo> imageList = FileUtil.getImageListForDataCollectionGroup(dcg.getDataCollectionGroupId(), null, null, null, null, request);

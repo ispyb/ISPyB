@@ -240,7 +240,7 @@ public class Confidentiality extends DispatchAction {
 
 		DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 				.getLocalService(DataCollection3Service.class);
-		DataCollection3VO dclv = dataCollectionService.findByPk(collectionId, false, false, false);
+		DataCollection3VO dclv = dataCollectionService.findByPk(collectionId, false, false);
 		DataCollectionGroup3VO dcg = dclv.getDataCollectionGroupVO();
 		// Integer sessionId = new Integer(dclv.getSessionId());
 		// Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);

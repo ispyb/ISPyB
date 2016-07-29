@@ -22,16 +22,29 @@
  */
 package ispyb.client.mx.results;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.FileUtil;
 import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PathUtils;
-import ispyb.common.util.PropertyLoader;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.screening.Screening3Service;
 import ispyb.server.mx.services.screening.ScreeningOutput3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategy3Service;
@@ -52,20 +65,6 @@ import ispyb.server.mx.vos.screening.ScreeningRankSet3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategy3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 
 /**
  * Clss to handle results from beamline datacollections
@@ -109,6 +108,8 @@ public class ViewImageWallAction extends ViewResultsAction {
 	
 	private DataCollection3Service dataCollectionService;
 	
+	private DataCollectionGroup3Service dataCollectionGroupService;
+	
 	private Screening3Service screeningService;
 	
 	private ScreeningOutput3Service screeningOutputService;
@@ -129,6 +130,7 @@ public class ViewImageWallAction extends ViewResultsAction {
 
 		this.beamLineSetupService = (BeamLineSetup3Service)ejb3ServiceLocator.getLocalService(BeamLineSetup3Service.class);
 		this.dataCollectionService = (DataCollection3Service)ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+		this.dataCollectionGroupService = (DataCollectionGroup3Service)ejb3ServiceLocator.getLocalService(DataCollectionGroup3Service.class);
 		this.screeningService = (Screening3Service) ejb3ServiceLocator.getLocalService(Screening3Service.class);
 		this.screeningOutputService = (ScreeningOutput3Service) ejb3ServiceLocator.getLocalService(ScreeningOutput3Service.class);
 		this.screeningStrategyService = (ScreeningStrategy3Service) ejb3ServiceLocator.getLocalService(ScreeningStrategy3Service.class);
@@ -189,20 +191,12 @@ public class ViewImageWallAction extends ViewResultsAction {
 			String rankingProjectFileName = null;
 			String rankingSummaryFileName = null;
 
-			//DataCollectionLightValue dclv = dataCollection.findByPrimaryKeyLight(dataCollectionId);
-			DataCollection3VO  dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, true,  true, true);
-
-			//DataCollectionValue dcv = dataCollection.findByPrimaryKey(dataCollectionId);
-			//if (dataCollectionVO.getImagePrefix().startsWith("ref-")) {
-			//	displayOutputParam = true;
-			//}
-			
+			DataCollection3VO  dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, true, true);
 
 			Screening3VO[] screeningList = null;
 
-			//Integer sessionId = new Integer(dataCollectionVO.getSessionId());
-			//Session3VO sessionlv = sessionService.findByPk(sessionId, false, false, false);
-			DataCollectionGroup3VO dataCollectionGroup = dataCollectionVO.getDataCollectionGroupVO();
+			DataCollectionGroup3VO dataCollectionGroup = dataCollectionGroupService.findByPk(dataCollectionVO.getDataCollectionGroupVOId(), false, true);
+			
 			Session3VO sessionlv = dataCollectionGroup.getSessionVO();
 			form.setSession(sessionlv);
 
@@ -213,7 +207,7 @@ public class ViewImageWallAction extends ViewResultsAction {
 				form.setUndulatorTypes(beamLinelv.getUndulatorType1(), beamLinelv.getUndulatorType2(),
 						beamLinelv.getUndulatorType3());
 			}
-			Screening3VO[] screenings = dataCollectionVO.getScreeningsTab();
+			Screening3VO[] screenings = dataCollectionGroup.getScreeningsTab();
 			if (screenings.length > 0) {
 				displayOutputParam = true;// there is at least 1 screening so we display the output params
 

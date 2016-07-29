@@ -300,7 +300,7 @@ public class GetAutoProcsAction extends DispatchAction {
 				if (BreadCrumbsForm.getIt(request).getSelectedDataCollection() != null)
 					dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 				if (dataCollectionId != null) {
-					DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false,
+					DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false,
 							false);
 					String beamLineName = dataCollection.getDataCollectionGroupVO().getSessionVO().getBeamlineName();
 					String[] correctionFiles = ESRFBeamlineEnum.retrieveCorrectionFilesNameWithName(beamLineName);

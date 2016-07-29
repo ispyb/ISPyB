@@ -18,35 +18,6 @@
  ******************************************************************************/
 package ispyb.client.mx.collection;
 
-import ispyb.client.common.util.FileUtil;
-import ispyb.client.common.util.Formatter;
-import ispyb.client.mx.ranking.SampleRankingVO;
-import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
-import ispyb.client.mx.results.ScreeningStrategySubWedgeValueInfo;
-import ispyb.client.mx.results.ScreeningStrategyValueInfo;
-import ispyb.client.mx.results.ScreeningStrategyWedgeValueInfo;
-import ispyb.client.mx.results.SnapshotInfo;
-import ispyb.common.util.Constants;
-import ispyb.common.util.PathUtils;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
-import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.screening.Screening3Service;
-import ispyb.server.mx.services.screening.ScreeningOutput3Service;
-import ispyb.server.mx.services.screening.ScreeningStrategy3Service;
-import ispyb.server.mx.services.screening.ScreeningStrategyWedge3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.Image3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.screening.Screening3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
-import ispyb.server.mx.vos.screening.ScreeningStrategy3VO;
-import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
-import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
-
 import java.io.File;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -60,6 +31,36 @@ import java.util.Locale;
 import javax.ejb.CreateException;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
+
+import ispyb.client.common.util.FileUtil;
+import ispyb.client.common.util.Formatter;
+import ispyb.client.mx.ranking.SampleRankingVO;
+import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
+import ispyb.client.mx.results.ScreeningStrategySubWedgeValueInfo;
+import ispyb.client.mx.results.ScreeningStrategyValueInfo;
+import ispyb.client.mx.results.ScreeningStrategyWedgeValueInfo;
+import ispyb.client.mx.results.SnapshotInfo;
+import ispyb.common.util.Constants;
+import ispyb.common.util.PathUtils;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
+import ispyb.server.mx.services.collections.Image3Service;
+import ispyb.server.mx.services.screening.Screening3Service;
+import ispyb.server.mx.services.screening.ScreeningOutput3Service;
+import ispyb.server.mx.services.screening.ScreeningStrategy3Service;
+import ispyb.server.mx.services.screening.ScreeningStrategyWedge3Service;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.Image3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.screening.Screening3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
+import ispyb.server.mx.vos.screening.ScreeningStrategy3VO;
+import ispyb.server.mx.vos.screening.ScreeningStrategySubWedge3VO;
+import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
 
 /**
  * loads the dataCollection information for the reports - builds a DataCollectionInformation object
@@ -88,6 +89,8 @@ public class DataCollectionExporter {
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private DataCollection3Service dataCollectionService;
+	
+	private DataCollectionGroup3Service dataCollectionGroupService;
 
 	private Screening3Service screeningService;
 
@@ -252,6 +255,7 @@ public class DataCollectionExporter {
 		decimalFormat2.applyPattern("0.00");
 
 		this.dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+		this.dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator.getLocalService(DataCollectionGroup3Service.class);
 		this.screeningService = (Screening3Service) ejb3ServiceLocator.getLocalService(Screening3Service.class);
 		this.screeningOutputService = (ScreeningOutput3Service) ejb3ServiceLocator.getLocalService(ScreeningOutput3Service.class);
 		this.screeningStrategyService = (ScreeningStrategy3Service) ejb3ServiceLocator
@@ -330,11 +334,12 @@ public class DataCollectionExporter {
 		// ---------------------------------------------- DNA indexing result
 		// ---------------------------------------------
 
-		DataCollection3VO dataCollectionVO = dataCollectionService.findByPk(dcValue.getDataCollectionId(), true, true, true);
+		DataCollection3VO dataCollectionVO = dataCollectionService.findByPk(dcValue.getDataCollectionId(), true, true);
+		DataCollectionGroup3VO dataCollectionGroupVO = dataCollectionGroupService.findByPk(dataCollectionVO.getDataCollectionGroupVOId(), true, true);
 		// DataCollectionValue dataCollection = _dataCollection.findByPrimaryKey(dcValue.getDataCollectionId());
 		// DataCollectionLightValue dataCollectionLight = _dataCollection.findByPrimaryKeyLight(dcValue
 		// .getDataCollectionId());
-		Screening3VO[] mLstScreenings = dataCollectionVO.getScreeningsTab();
+		Screening3VO[] mLstScreenings = dataCollectionGroupVO.getScreeningsTab();
 
 		// ------------------------------------ DataCollection Date and Time -----------------------------------
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

@@ -76,7 +76,7 @@ public class SampleScreeningUtils {
 				.getLocalService(ScreeningStrategyWedge3Service.class);
 
 		// DataCollection
-		DataCollection3VO dataCollectionDb = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+		DataCollection3VO dataCollectionDb = dataCollectionService.findByPk(dataCollectionId, false, false);
 		if (dataCollectionDb == null) {
 			LOG.debug("SampleRanking: there is no dataCollectionId=" + dataCollectionId);
 			return null;
