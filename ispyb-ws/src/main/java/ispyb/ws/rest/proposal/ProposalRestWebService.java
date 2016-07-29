@@ -1,21 +1,8 @@
 package ispyb.ws.rest.proposal;
 
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
-import ispyb.server.common.vos.login.Login3VO;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.ws.rest.RestWebService;
-import ispyb.ws.rest.mx.MXRestWebService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +15,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
+import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.ws.rest.mx.MXRestWebService;
 
 @Path("/")
 public class ProposalRestWebService extends MXRestWebService{
@@ -52,11 +51,11 @@ public class ProposalRestWebService extends MXRestWebService{
 				if (login3VO.isValid()){
 					List<Map<String, Object>> proposals = new ArrayList<Map<String,Object>>(); 
 					if (login3VO.isLocalContact() || login3VO.isManager()){
-						proposals = this.getSaxsProposal3Service().findProposals();
+						proposals = this.getProposal3Service().findProposals();
 						
 					}
 					else{
-						proposals = this.getSaxsProposal3Service().findProposals(login3VO.getUsername());
+						proposals = this.getProposal3Service().findProposals(login3VO.getUsername());
 					}
 					
 					long third = System.currentTimeMillis();
@@ -109,8 +108,8 @@ public class ProposalRestWebService extends MXRestWebService{
 		long id = this.logInit(methodName, logger, token);
 		try {
 			
-			Session3VO sessions = this.getSession3Service().findByPk(sessionId, false, false, false);
-			List<Map<String, Object>> proposal = this.getSaxsProposal3Service().findProposalById(sessions.getProposalVOId());
+			Session3VO session = this.getSession3Service().findByPk(sessionId, false, false, false);
+			List<Map<String, Object>> proposal = this.getProposal3Service().findProposalById(session.getProposalVOId());
 			
 			
 			
@@ -141,7 +140,7 @@ public class ProposalRestWebService extends MXRestWebService{
 					proposalId);
 			List<Platetype3VO> plateTypes = this.getPlateType3Service().findAll();
 			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
-			proposals.add(this.getSaxsProposal3Service().findProposalById(proposalId));
+			proposals.add(this.getProposal3Service().findProposalById(proposalId));
 			
 			List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
 			List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
@@ -165,5 +164,4 @@ public class ProposalRestWebService extends MXRestWebService{
 			return this.logError("listProposal", e, id, logger);
 		}
 	}
-
 }

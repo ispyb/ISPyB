@@ -2,9 +2,12 @@ package ispyb.ws.rest.proposal;
 
 import ispyb.server.common.services.ws.rest.session.SessionService;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +61,12 @@ public class SessionRestWebService extends RestWebService {
 		String methodName = "getSessionById";
 		long id = this.logInit(methodName, logger, token, proposal, sessionId);
 		try{
-			List<Map<String, Object>> result = getSessionService().getSessionViewBySessionId(this.getProposalId(proposal), sessionId);
+			List<Map<String, Object>> result = null;
+			if (isProposalnameMatchingToken(token, proposal)) {
+				result = getSessionService().getSessionViewBySessionId(this.getProposalId(proposal), sessionId);			
+			} else {
+				unauthorizedResponse();
+			}
 			this.logFinish(methodName, id, logger);
 			return sendResponse(result );
 		}
@@ -113,6 +121,5 @@ public class SessionRestWebService extends RestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
-
 	
 }
