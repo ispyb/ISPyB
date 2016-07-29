@@ -75,7 +75,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	private final static Logger LOG = Logger.getLogger(Session3ServiceBean.class);
 	
 	// Generic HQL request to find instances of Session3 by pk
-	// TODO choose between left/inner join
 	private static final String FIND_BY_PK(boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) {
 		return "from Session3VO vo " + (fetchDataCollectionGroup ? "left join fetch vo.dataCollectionGroupVOs " : "")
 				+ (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
@@ -83,7 +82,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	}
 
 	// Generic HQL request to find all instances of Session3
-	// TODO choose between left/inner join
 	private static final String FIND_ALL(boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) {
 		return "from Session3VO vo " + (fetchDataCollectionGroup ? "left join fetch vo.dataCollectionGroupVOs " : "")
 				+ (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
