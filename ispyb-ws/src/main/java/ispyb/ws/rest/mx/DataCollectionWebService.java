@@ -59,7 +59,7 @@ public class DataCollectionWebService extends MXRestWebService {
 		String methodName = "getWilsonPlot";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
-			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
 			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				return this.sendImage(dataCollection.getBestWilsonPlotPath());
@@ -81,7 +81,7 @@ public class DataCollectionWebService extends MXRestWebService {
 		String methodName = "getQualityIndicatorsPlot";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
-			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
 			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				return this.sendImage(dataCollection.getImageQualityIndicatorsPlotPath());
@@ -103,7 +103,7 @@ public class DataCollectionWebService extends MXRestWebService {
 		String methodName = "getQualityIndicatorsCSV";
 		long id = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
-			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
 			if (dataCollection != null) {
 				if (dataCollection.getImageQualityIndicatorsCSVPath() != null) {
 					/** Converting to csv **/
@@ -133,7 +133,7 @@ public class DataCollectionWebService extends MXRestWebService {
 		String methodName = "getCrystalSnapshot";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId, id);
 		try {
-			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
 			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				if (id == 1) {
