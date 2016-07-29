@@ -19,23 +19,9 @@
 
 package ispyb.server.biosaxs.services.core.proposal;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
-import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
-import ispyb.server.biosaxs.vos.assembly.AssemblyHasMacromolecule3VO;
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -46,9 +32,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
+import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
+import ispyb.server.biosaxs.vos.assembly.AssemblyHasMacromolecule3VO;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 
 @Stateless
 public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsProposal3ServiceLocal {
@@ -173,144 +162,6 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		Query EJBQuery = this.entityManager.createQuery(query);
 		return EJBQuery.getResultList();
 
-	}
-
-	@Override
-	public Proposal3VO findProposalById(int proposalId) {
-		return entityManager.find(Proposal3VO.class, proposalId);
-	}
-	
-	@Override
-	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) {
-
-		String userName = loginName;
-		if (site != null){
-			if (site.equals(Constants.SITE_ESRF) || site.equals(Constants.SITE_MAXIV)) {
-				/**
-				 * Contains a number then we assume is a proposal and for ESRF if the login name is "IFX xxx" then the username should be
-				 * "fx xxx"
-				 */
-				if (loginName.matches("(.*)[0-9](.*)")) {
-					ArrayList<String> authentitionInfo;
-					authentitionInfo = StringUtils.GetProposalNumberAndCode(loginName);
-					userName = authentitionInfo.get(0) + authentitionInfo.get(2);
-				}
-			}
-		}
-
-		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
-		/**
-		 * If user is a proposal it is linked by proposalCode and proposalNumber in the proposal table
-		 */
-		proposals.addAll(this.findProposalByCodeAndNumber(userName));
-
-		/**
-		 * In case login name is a user we look for it on Persons though proposalHasPerson
-		 */
-		proposals.addAll(this.findProposalByPerson(loginName));
-
-		/**
-		 * Removing duplicated proposals
-		 */
-		List<Proposal3VO> result = new ArrayList<Proposal3VO>();
-		HashSet<Integer> proposalsId = new HashSet<Integer>();
-		for (Proposal3VO proposal : proposals) {
-			if (!proposalsId.contains(proposal.getProposalId())) {
-				result.add(proposal);
-				proposalsId.add(proposal.getProposalId());
-			}
-		}
-		
-		return result;
-	
-
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Proposal3VO> findProposalByCodeAndNumber(String loginName) {
-		String query = "SELECT proposal FROM Proposal3VO proposal WHERE concat(proposalCode, proposalNumber)=:loginName";
-		Query EJBQuery = this.entityManager.createQuery(query);
-		EJBQuery.setParameter("loginName", loginName);
-		return EJBQuery.getResultList();
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Proposal3VO> findProposalByPerson(String loginName) {
-		String queryPerson = "SELECT person FROM Person3VO person WHERE login=:loginName";
-		Query EJBQueryPerson = this.entityManager.createQuery(queryPerson);
-		EJBQueryPerson.setParameter("loginName", loginName);
-		@SuppressWarnings("unchecked")
-		List<Person3VO> persons = EJBQueryPerson.getResultList();
-		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
-		if (persons != null) {
-			if (persons.size() > 0) {
-				for (Person3VO person3vo : persons) {
-					if (person3vo.getProposalVOs() != null) {
-						if (person3vo.getProposalVOs().size() > 0) {
-							proposals.addAll(person3vo.getProposalVOs());
-						}
-						if (person3vo.getProposalDirectVOs().size() > 0) {
-							proposals.addAll(person3vo.getProposalDirectVOs());
-						}
-					}
-				}
-			}
-		}
-		return proposals;
-	}
-
-	/**
-	 * It looks for proposal based on the login name It looks for proposal in: - Proposal table concatenating proposalCode and
-	 * proposalNumber - Person table y the column login Then both systems, by proposal and by user are allowed
-	 */
-	public List<Proposal3VO> findProposalByLoginName(String loginName) {
-		return this.findProposalByLoginName(loginName, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Proposal3VO> findAllProposals() {
-		String query = "SELECT proposal FROM Proposal3VO proposal";
-		Query EJBQuery = this.entityManager.createQuery(query);
-		return EJBQuery.getResultList();
-	}
-	
-	@Override
-	public List<Map<String, Object>> findProposals() {
-		Session session = (Session) this.entityManager.getDelegate();
-		SQLQuery query = session.createSQLQuery("select " + SqlTableMapper.getProposalTable() + " from Proposal");
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String,Object>> aliasToValueMapList= query.list();
-		return 	aliasToValueMapList;
-	}
-	
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Map<String, Object>> findProposals(String loginName) {
-		List<Proposal3VO> proposals = this.findProposalByLoginName(loginName);
-		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		for (Proposal3VO proposal : proposals) {
-			result.addAll(findProposalByProposalId(proposal.getProposalId()));
-		}
-		return 	result;
-	}
-	
-	private List findProposalByProposalId(Integer proposalId){
-		Session session = (Session) this.entityManager.getDelegate();
-		SQLQuery query = session.createSQLQuery("select " + SqlTableMapper.getProposalTable() + " from Proposal where proposalId= :proposalId");
-		query.setParameter("proposalId", proposalId);
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		return query.list();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Map<String, Object>> findProposalById(Integer proposalId) {
-		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
-		result.addAll(findProposalByProposalId(proposalId));
-		return 	result;
 	}
 	
 }
