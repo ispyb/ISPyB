@@ -1,43 +1,12 @@
 package ispyb.ws.rest;
 
-import file.FileUploadForm;
-import ispyb.common.util.Constants;
-import ispyb.common.util.PropertyLoader;
-import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
-import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
-import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.services.core.robot.Robot3Service;
-import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
-import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
-import ispyb.server.common.services.config.MenuGroup3Service;
-import ispyb.server.common.services.login.Login3Service;
-import ispyb.server.common.services.proposals.LabContact3Service;
-import ispyb.server.common.services.proposals.Laboratory3Service;
-import ispyb.server.common.services.proposals.Person3Service;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -56,6 +25,32 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import file.FileUploadForm;
+import ispyb.common.util.Constants;
+import ispyb.common.util.PropertyLoader;
+import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
+import ispyb.server.common.services.config.MenuGroup3Service;
+import ispyb.server.common.services.login.Login3Service;
+import ispyb.server.common.services.proposals.LabContact3Service;
+import ispyb.server.common.services.proposals.Laboratory3Service;
+import ispyb.server.common.services.proposals.Person3Service;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.services.shipping.external.External3Service;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.Image3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
 
 @Path("/")
 public class RestWebService {
@@ -114,7 +109,7 @@ public class RestWebService {
 	
 	/** Folder where the pdb and all the other apriori information files will be uploaded **/
 	protected String getTargetFolder(int proposalId) throws Exception {
-		Proposal3VO proposal = this.getSaxsProposal3Service().findProposalById(proposalId);
+		Proposal3VO proposal = this.getProposal3Service().findProposalById(proposalId);
 		String proposalName = proposal.getCode().toLowerCase() + proposal.getNumber();
 		if (Constants.SITE_IS_EMBL()) {
 			proposalName = proposal.getNumber();
@@ -185,11 +180,7 @@ public class RestWebService {
 	protected Container3Service getContainer3Service() throws NamingException {
 		return (Container3Service) Ejb3ServiceLocator.getInstance().getLocalService(Container3Service.class);
 	}
-	
-	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
-		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
-	}
-	
+		
 	protected Sampleplate3Service getSamplePlate3Service() throws NamingException {
 		return (Sampleplate3Service) Ejb3ServiceLocator.getInstance().getLocalService(Sampleplate3Service.class);
 	}
@@ -236,6 +227,9 @@ public class RestWebService {
 		return (Shipping3Service) Ejb3ServiceLocator.getInstance().getLocalService(Shipping3Service.class);
 	}
 
+	protected SaxsProposal3Service getSaxsProposal3Service() throws NamingException {
+		return (SaxsProposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(SaxsProposal3Service.class);
+	}
 	
 	protected Proposal3Service getProposal3Service() throws NamingException {
 		return (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Proposal3Service.class);
@@ -252,10 +246,7 @@ public class RestWebService {
 	 * @throws Exception
 	 */
 	protected int getProposalId(String proposal) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		SaxsProposal3Service saxsProposalService = (SaxsProposal3Service) ejb3ServiceLocator
-				.getLocalService(SaxsProposal3Service.class);
-		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
+		List<Proposal3VO> proposals = this.getProposal3Service().findProposalByLoginName(proposal);
 		if (proposals != null) {
 			if (proposals.size() > 0) {
 				return proposals.get(0).getProposalId();
@@ -381,6 +372,46 @@ public class RestWebService {
 		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API_ERROR, methodName, start,
 				System.currentTimeMillis(), e.getMessage(), e);
 		return this.sendResponse(e.getMessage());
+	}
+	
+	protected boolean isProposalAllowedforToken (String token, int proposalId  ) throws NamingException {
+		
+		Login3VO login3VO;
+			login3VO = this.getLogin3Service().findByToken(token);
+			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+			if (login3VO != null){
+				if (login3VO.isValid()){
+					if (login3VO.isLocalContact() || login3VO.isManager() ){
+						return true;				
+					}
+					if (login3VO.isUser()) {
+						proposals = this.getProposal3Service().findProposalByLoginName(login3VO.getUsername());
+						if (proposals == null || proposals.size()<1) 
+							return false;
+						for (Iterator<Proposal3VO> iterator = proposals.iterator(); iterator.hasNext();) {
+							Proposal3VO proposal3vo = (Proposal3VO) iterator.next();
+							if (proposal3vo.getProposalId().intValue() == proposalId)
+								return true;
+						}
+					}
+				}
+			}
+				
+		return false;		
+	}
+
+	protected boolean isProposalnameMatchingToken (String token, String proposalname  ) throws NamingException {
+		
+		Login3VO login3VO = this.getLogin3Service().findByToken(token);
+		if (login3VO != null && login3VO.isValid()) {
+			if (login3VO.isLocalContact() || login3VO.isManager() ){
+				return true;				
+			}
+			if (login3VO.isUser() && login3VO.getUsername().equals(proposalname)) {
+					return true;
+			}
+		}
+		return false;		
 	}
 
 }
