@@ -35,12 +35,18 @@ public class DataCollectionWebService extends MXRestWebService {
 		String methodName = "getDataCollectionById";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
 		try {
+			
+			if (!isProposalnameMatchingToken(token, proposal)) {
+				return this.unauthorizedResponse();
+			}
+			
 			List<Integer> ids = this.parseToInteger(dataCollectionIdList);
 			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
 
 			for (Integer id : ids) {
+				int propId = this.getProposalId(proposal);
 				dataCollections.addAll(this.getWebServiceDataCollection3Service().getViewDataCollectionByDataCollectionId(
-						this.getProposalId(proposal), id));
+						propId, id));
 			}
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(dataCollections, false);
