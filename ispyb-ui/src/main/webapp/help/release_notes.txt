@@ -1,3 +1,17 @@
+**************
+* 29.07.2016     *
+**************
+
+3rd step of database merging with DLS:
+- add foreign key on dataCollectionGroupId between DataCollectionGroup and Screening tables
+- remove the foreign key between DataCollection and Screening tables
+- change the java EJBs + all dependent code
+
+Code refactoring of ProposalService and SaxsProposalService, put all common methods in ProposalService
+
+Add an authorisation check in RestWS coming from user to check if the token corresponds to the proposal
+
+
 ********************************************************************************
 
 New TAG : ISPYB_4.0.6
