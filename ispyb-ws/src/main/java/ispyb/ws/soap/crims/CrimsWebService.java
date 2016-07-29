@@ -117,7 +117,7 @@ public class CrimsWebService {
 			params.put("userName", String.valueOf(userName));
 			id = this.logInit("findProteinAcronyms", new Gson().toJson(params));
 			
-			List<Proposal3VO> proposals = getSaxsProposal3Service().findProposalByLoginName(userName);
+			List<Proposal3VO> proposals = getProposal3Service().findProposalByLoginName(userName);
 			HashMap<String, List<String>> listProteinAcronyms = new HashMap<String, List<String>>();
 			
 			for (Proposal3VO proposal3vo : proposals) {
@@ -393,7 +393,7 @@ public class CrimsWebService {
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			DataCollection3Service dataCollection3Service = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
 			try {
-				DataCollection3VO dc = dataCollection3Service.findByPk(Integer.parseInt(dataCollectionId), false, false, false);
+				DataCollection3VO dc = dataCollection3Service.findByPk(Integer.parseInt(dataCollectionId), false, false);
 				if (dc != null) {
 					String filePath = null;
 					switch (index) {
