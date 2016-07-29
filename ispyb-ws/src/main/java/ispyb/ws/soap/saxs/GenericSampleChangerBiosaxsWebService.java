@@ -18,25 +18,6 @@
 
 package ispyb.ws.soap.saxs;
 
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.BiosaxsServices;
-import ispyb.server.biosaxs.services.ExperimentSerializer;
-import ispyb.server.biosaxs.services.core.ExperimentScope;
-import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.core.measurement.Measurement3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.biosaxs.vos.assembly.Structure3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
-import ispyb.server.biosaxs.vos.datacollection.Model3VO;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +41,26 @@ import org.jboss.ws.api.annotation.WebContext;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.BiosaxsServices;
+import ispyb.server.biosaxs.services.ExperimentSerializer;
+import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.core.measurement.Measurement3Service;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
+import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 
 @WebService(name = "GenericSampleChangerBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
@@ -1027,7 +1028,7 @@ public class GenericSampleChangerBiosaxsWebService {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("userName", String.valueOf(userName));
 			id = this.logInit("getProposalsByLoginName", new Gson().toJson(params));
-			SaxsProposal3Service service = (SaxsProposal3Service) ejb3ServiceLocator.getLocalService(SaxsProposal3Service.class);
+			Proposal3Service service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			List<Proposal3VO> proposals = service.findProposalByLoginName(userName);
 			
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
@@ -1069,8 +1070,8 @@ public class GenericSampleChangerBiosaxsWebService {
 			
 			String loginname = code + number;
 			
-			SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator.getLocalService(SaxsProposal3Service.class);
-			List<Proposal3VO> proposals = saxsProposal3Service.findProposalByLoginName(loginname);
+			Proposal3Service proposal3Service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+			List<Proposal3VO> proposals = proposal3Service.findProposalByLoginName(loginname);
 			
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
 			if (proposals.size() > 0){
