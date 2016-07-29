@@ -22,6 +22,7 @@ package ispyb.server.mx.vos.collections;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
 import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.screening.Screening3VO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,6 +111,10 @@ public class DataCollectionGroup3VO extends ISPyBValueObject implements Cloneabl
 	@OneToMany
 	@JoinColumn(name = "dataCollectionGroupId")
 	protected Set<DataCollection3VO> dataCollectionVOs;
+	
+	@OneToMany
+	@JoinColumn(name = "dataCollectionGroupId")
+	private Set<Screening3VO> screeningVOs;
 	
 
 	public DataCollectionGroup3VO() {
@@ -349,8 +354,21 @@ public class DataCollectionGroup3VO extends ISPyBValueObject implements Cloneabl
 		return this.dataCollectionVOs == null ? null : new ArrayList<DataCollection3VO>(Arrays.asList(getDataCollectionsTab()));
 	}
 
+	public Set<Screening3VO> getScreeningVOs() {
+		return screeningVOs;
+	}
 
+	public void setScreeningVOs(Set<Screening3VO> screeningVOs) {
+		this.screeningVOs = screeningVOs;
+	}
 
+	public Screening3VO[] getScreeningsTab(){
+		return this.screeningVOs == null ? null : screeningVOs.toArray(new Screening3VO[this.screeningVOs.size()]);
+	}
+	
+	public ArrayList<Screening3VO> getScreeningsList(){
+		return this.screeningVOs == null ? null : new ArrayList<Screening3VO>(Arrays.asList(getScreeningsTab()));
+	}
 
 	/**
 	 * Checks the values of this value object for correctness and

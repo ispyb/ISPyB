@@ -105,7 +105,7 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
-				DataCollectionGroup3VO vo = findByPk(pk, false);
+				DataCollectionGroup3VO vo = findByPk(pk, false, false);
 				// TODO Edit this business code
 				delete(vo);
 				return vo;
@@ -144,14 +144,14 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @param withLink2
 	 * @return the DataCollectionGroup3 value object
 	 */
-	public DataCollectionGroup3VO findByPk(final Integer pk, final boolean withDataCollection) throws Exception {
+	public DataCollectionGroup3VO findByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (DataCollectionGroup3VO) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				// TODO Edit this business code
-				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection);
+				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection, withScreening);
 				return found;
 			}
 
@@ -167,14 +167,14 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionGroupWS3VO findForWSByPk(final Integer pk, final boolean withDataCollection) throws Exception {
+	public DataCollectionGroupWS3VO findForWSByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (DataCollectionGroupWS3VO) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				// TODO Edit this business code
-				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection);
+				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection, withScreening);
 				DataCollectionGroupWS3VO sesLight = getWSDataCollectionGroupVO(found);
 				return sesLight;
 			}
@@ -193,6 +193,7 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 			throws CloneNotSupportedException {
 		DataCollectionGroup3VO otherVO = (DataCollectionGroup3VO) vo.clone();
 		otherVO.setDataCollectionVOs(null);
+		otherVO.setScreeningVOs(null);
 		return otherVO;
 	}
 
@@ -260,19 +261,19 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @throws Exception
 	 */
 	public DataCollectionGroup3VO loadEager(DataCollectionGroup3VO vo) throws Exception {
-		DataCollectionGroup3VO newVO = this.findByPk(vo.getDataCollectionGroupId(), true);
+		DataCollectionGroup3VO newVO = this.findByPk(vo.getDataCollectionGroupId(), true, true);
 		return newVO;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DataCollectionGroup3VO> findFiltered(final Integer sessionId, final boolean withDataCollection)
+	public List<DataCollectionGroup3VO> findFiltered(final Integer sessionId, final boolean withDataCollection, final boolean withScreenings)
 			throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollectionGroup3VO> foundEntities = dao
-						.findFiltered(sessionId, withDataCollection, null, null);
+						.findFiltered(sessionId, withDataCollection, withScreenings, null, null);
 				return foundEntities;
 			}
 
@@ -292,7 +293,7 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null, true, workflowId, null);
+				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null,  true, true, workflowId, null);
 				return foundEntities;
 			}
 
@@ -307,13 +308,13 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollectionGroup3VO> findBySampleId(final Integer sampleId, final boolean withDataCollection)
+	public List<DataCollectionGroup3VO> findBySampleId(final Integer sampleId, final boolean withDataCollection, final boolean withScreenings)
 			throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null, withDataCollection, null, sampleId);
+				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null, withDataCollection, withScreenings, null, sampleId);
 				return foundEntities;
 			}
 

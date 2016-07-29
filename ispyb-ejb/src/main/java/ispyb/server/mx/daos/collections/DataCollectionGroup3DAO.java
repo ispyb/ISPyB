@@ -82,7 +82,7 @@ public interface DataCollectionGroup3DAO {
 	 * @param fetchRelation2
 	 *            if true, the linked instances by the relation "relation2" will be set.
 	 */
-	public DataCollectionGroup3VO findByPk(Integer pk, boolean fetchDataCollection);
+	public DataCollectionGroup3VO findByPk(Integer pk, boolean fetchDataCollection, boolean fetchScreening);
 
 	/**
 	 * <p>
@@ -100,7 +100,7 @@ public interface DataCollectionGroup3DAO {
 	 */
 	public List<DataCollectionGroup3VO> findAll(boolean fetchDataCollection);
 
-	public List<DataCollectionGroup3VO> findFiltered(Integer sessionId, boolean fetchDataCollection,
+	public List<DataCollectionGroup3VO> findFiltered(Integer sessionId, boolean fetchDataCollection, boolean fetchScreening,
 			Integer workflowId, Integer blSampleId);
 
 }

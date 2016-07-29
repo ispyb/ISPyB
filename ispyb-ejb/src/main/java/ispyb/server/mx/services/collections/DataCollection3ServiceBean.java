@@ -112,7 +112,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
-				DataCollection3VO vo = findByPk(pk, false, false, false);
+				DataCollection3VO vo = findByPk(pk, false, false);
 				// TODO Edit this business code
 				delete(vo);
 				return vo;
@@ -151,7 +151,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @param withLink2
 	 * @return the DataCollection3 value object
 	 */
-	public DataCollection3VO findByPk(final Integer pk, final boolean withImage, final boolean withScreening,
+	public DataCollection3VO findByPk(final Integer pk, final boolean withImage,
 			final boolean withAutoProcIntegration) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (DataCollection3VO) template.execute(new EJBAccessCallback() {
@@ -159,7 +159,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				// TODO Edit this business code
-				DataCollection3VO found = dao.findByPk(pk, withImage, withScreening, withAutoProcIntegration);
+				DataCollection3VO found = dao.findByPk(pk, withImage, withAutoProcIntegration);
 				return found;
 			}
 
@@ -175,14 +175,14 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage, final boolean withScreening,
+	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage, 
 			final boolean withAutoProcIntegration) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (DataCollectionWS3VO) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
-				DataCollection3VO found = dao.findByPk(pk, withImage, withScreening, withAutoProcIntegration);
+				DataCollection3VO found = dao.findByPk(pk, withImage, withAutoProcIntegration);
 				DataCollectionWS3VO sesLight = getWSDataCollectionVO(found);
 				return sesLight;
 			}
@@ -349,7 +349,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	private DataCollection3VO getLightDataCollectionVO(DataCollection3VO vo) throws CloneNotSupportedException {
 		DataCollection3VO otherVO = (DataCollection3VO) vo.clone();
 		otherVO.setImageVOs(null);
-		otherVO.setScreeningVOs(null);
 		otherVO.setAutoProcIntegrationVOs(null);
 		return otherVO;
 	}
@@ -370,7 +369,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollection3VO> foundEntities = dao.findFiltered(imageDirectory, imagePrefix,
-						dataCollectionNumber, null, null, false, null);
+						dataCollectionNumber, null, null, null);
 				DataCollectionWS3VO[] vos = getWSDataCollectionVOs(foundEntities);
 				if (vos == null || vos.length == 0)
 					return null;
@@ -442,14 +441,13 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findFiltered(final String imageDirectory, final String imagePrefix,
-			final Integer dataCollectionNumber, final Integer sessionId, final Byte printableForReport,
-			final boolean withScreenings, final Integer dataCollectionGroupId) throws Exception {
+			final Integer dataCollectionNumber, final Integer sessionId, final Byte printableForReport, final Integer dataCollectionGroupId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollection3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollection3VO> foundEntities = dao.findFiltered(imageDirectory, imagePrefix,
-						dataCollectionNumber, sessionId, printableForReport, withScreenings, dataCollectionGroupId);
+						dataCollectionNumber, sessionId, printableForReport, dataCollectionGroupId);
 				return foundEntities;
 			}
 
@@ -475,15 +473,14 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	public List<DataCollection3VO> findByCustomQuery(final Integer proposalId, final String sampleName,
 			final String proteinAcronym, final String beamlineName, final Date experimentDateStart,
 			final Date experimentDateEnd, final Integer minNumberOfImages, final Integer maxNumberOfImages,
-			final String imagePrefix, final Byte onlyPrintableForReport, final Integer maxRecords,
-			final boolean withScreenings) throws Exception {
+			final String imagePrefix, final Byte onlyPrintableForReport, final Integer maxRecords) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollection3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollection3VO> foundEntities = dao.findByCustomQuery(proposalId, sampleName, proteinAcronym,
 						beamlineName, experimentDateStart, experimentDateEnd, minNumberOfImages, maxNumberOfImages,
-						imagePrefix, onlyPrintableForReport, maxRecords, withScreenings);
+						imagePrefix, onlyPrintableForReport, maxRecords);
 				return foundEntities;
 			}
 
@@ -499,13 +496,13 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findByProtein(final String proteinAcronym, final Byte printableForReport,
-			final Integer proposalId, final boolean withScreenings) throws Exception {
+			final Integer proposalId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollection3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollection3VO> foundEntities = dao.findByProtein(proteinAcronym, printableForReport,
-						proposalId, withScreenings);
+						proposalId);
 				return foundEntities;
 			}
 
@@ -521,13 +518,13 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findBySample(final Integer blSampleId, final String sampleName,
-			final Byte printableForReport, final Integer proposalId, final boolean withScreenings) throws Exception {
+			final Byte printableForReport, final Integer proposalId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollection3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
 				List<DataCollection3VO> foundEntities = dao.findBySample(blSampleId, sampleName, printableForReport,
-						proposalId, withScreenings);
+						proposalId);
 				return foundEntities;
 			}
 
@@ -535,7 +532,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	}
 
 	public DataCollection3VO loadEager(DataCollection3VO vo) throws Exception {
-		DataCollection3VO newVO = this.findByPk(vo.getDataCollectionId(), true, true, true);
+		DataCollection3VO newVO = this.findByPk(vo.getDataCollectionId(), true, true);
 		return newVO;
 	}
 
@@ -650,14 +647,13 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findLastCollect(final Date startDate, final Date endDate, final String[] beamline,
-			final boolean withScreenings) throws Exception {
+	public List<DataCollection3VO> findLastCollect(final Date startDate, final Date endDate, final String[] beamline) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<DataCollection3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollection3VO> foundEntities = dao.findLastCollect(startDate, endDate, beamline,
-						withScreenings);
+				List<DataCollection3VO> foundEntities = dao.findLastCollect(startDate, endDate, beamline
+						);
 				return foundEntities;
 			}
 

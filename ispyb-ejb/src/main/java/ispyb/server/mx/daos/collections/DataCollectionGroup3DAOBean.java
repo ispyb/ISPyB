@@ -48,8 +48,9 @@ public class DataCollectionGroup3DAOBean implements DataCollectionGroup3DAO {
 	private final static Logger LOG = Logger.getLogger(DataCollectionGroup3DAOBean.class);
 
 	// Generic HQL request to find instances of DataCollectionGroup3 by pk
-	private static final String FIND_BY_PK(boolean fetchDataCollection) {
+	private static final String FIND_BY_PK(boolean fetchDataCollection, boolean fetchScreening) {
 		return "from DataCollectionGroup3VO vo " + (fetchDataCollection ? "left join fetch vo.dataCollectionVOs " : "")
+				+ (fetchScreening ? "left join fetch vo.screeningVOs " : "")
 				+ "where vo.dataCollectionGroupId = :pk";
 	}
 
@@ -115,9 +116,9 @@ public class DataCollectionGroup3DAOBean implements DataCollectionGroup3DAO {
 	 * @param fetchRelation2
 	 *            if true, the linked instances by the relation "relation2" will be set.
 	 */
-	public DataCollectionGroup3VO findByPk(Integer pk, boolean fetchDataCollection) {
+	public DataCollectionGroup3VO findByPk(Integer pk, boolean fetchDataCollection, boolean fetchScreening) {
 		try {
-			return (DataCollectionGroup3VO) entityManager.createQuery(FIND_BY_PK(fetchDataCollection))
+			return (DataCollectionGroup3VO) entityManager.createQuery(FIND_BY_PK(fetchDataCollection, fetchScreening))
 					.setParameter("pk", pk).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -174,7 +175,7 @@ public class DataCollectionGroup3DAOBean implements DataCollectionGroup3DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DataCollectionGroup3VO> findFiltered(Integer sessionId, boolean fetchDataCollection,
+	public List<DataCollectionGroup3VO> findFiltered(Integer sessionId, boolean fetchDataCollection, boolean fetchScreening,
 			Integer workflowId, Integer blSampleId) {
 
 		List<DataCollectionGroup3VO> resultList;
@@ -189,6 +190,10 @@ public class DataCollectionGroup3DAOBean implements DataCollectionGroup3DAO {
 		if (fetchDataCollection) {
 			crit.setFetchMode("dataCollectionVOs", FetchMode.JOIN);
 		}
+		if (fetchScreening) {
+			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
+		}
+
 		if (workflowId != null) {
 			Criteria subCritWorkflow = crit.createCriteria("workflowVO");
 			subCritWorkflow.add(Restrictions.eq("workflowId", workflowId));

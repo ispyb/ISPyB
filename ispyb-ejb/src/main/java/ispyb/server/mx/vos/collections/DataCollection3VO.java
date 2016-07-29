@@ -246,9 +246,9 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "dataCollectionId")
 	private Set<Image3VO> imageVOs;
 
-	@OneToMany
-	@JoinColumn(name = "dataCollectionId")
-	private Set<Screening3VO> screeningVOs;
+//	@OneToMany
+//	@JoinColumn(name = "dataCollectionId")
+//	private Set<Screening3VO> screeningVOs;
 
 	@OneToMany
 	@JoinColumn(name = "dataCollectionId")
@@ -943,21 +943,21 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 		this.imageVOs = imageVOs;
 	}
 
-	public Set<Screening3VO> getScreeningVOs() {
-		return screeningVOs;
-	}
-
-	public void setScreeningVOs(Set<Screening3VO> screeningVOs) {
-		this.screeningVOs = screeningVOs;
-	}
-
-	public Screening3VO[] getScreeningsTab() {
-		return this.screeningVOs == null ? null : screeningVOs.toArray(new Screening3VO[this.screeningVOs.size()]);
-	}
-
-	public ArrayList<Screening3VO> getScreeningsList() {
-		return this.screeningVOs == null ? null : new ArrayList<Screening3VO>(Arrays.asList(getScreeningsTab()));
-	}
+//	public Set<Screening3VO> getScreeningVOs() {
+//		return screeningVOs;
+//	}
+//
+//	public void setScreeningVOs(Set<Screening3VO> screeningVOs) {
+//		this.screeningVOs = screeningVOs;
+//	}
+//
+//	public Screening3VO[] getScreeningsTab() {
+//		return this.screeningVOs == null ? null : screeningVOs.toArray(new Screening3VO[this.screeningVOs.size()]);
+//	}
+//
+//	public ArrayList<Screening3VO> getScreeningsList() {
+//		return this.screeningVOs == null ? null : new ArrayList<Screening3VO>(Arrays.asList(getScreeningsTab()));
+//	}
 
 	public Set<AutoProcIntegration3VO> getAutoProcIntegrationVOs() {
 		return autoProcIntegrationVOs;

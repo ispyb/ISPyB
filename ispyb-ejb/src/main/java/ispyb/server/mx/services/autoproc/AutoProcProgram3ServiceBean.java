@@ -217,7 +217,7 @@ public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
 			for (int i = 0; i < nb; i++) {
 				Integer dataCollectionId = (Integer) foundEntities.get(i);
 				if (dataCollectionId != null){
-					DataCollection3VO vo = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+					DataCollection3VO vo = dataCollectionService.findByPk(dataCollectionId, false, false);
 					listVOs.add(vo);
 				}
 			}

@@ -61,14 +61,14 @@ public class DataCollectionGroup3VOTest extends EJB3Test {
 	@Test
 	public void findFiltered() throws Exception {
 		Integer sessionId = 31380;
-		this.dataCollectionGroups = dataCollectionGroupService.findFiltered(sessionId, true);
+		this.dataCollectionGroups = dataCollectionGroupService.findFiltered(sessionId, true, true);
 		assertTrue(this.dataCollectionGroups.size() > 1);
 	}
 
 	@Test
 	public void findByPk() throws Exception {
 		Integer dataCollectionGroupId = 976562;
-		DataCollectionGroup3VO dataCollectionGroup = dataCollectionGroupService.findByPk(dataCollectionGroupId, true);
+		DataCollectionGroup3VO dataCollectionGroup = dataCollectionGroupService.findByPk(dataCollectionGroupId, true, true);
 		assertFalse(976562 != dataCollectionGroup.getDataCollectionGroupId());
 	}
 

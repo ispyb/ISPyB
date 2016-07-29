@@ -80,10 +80,8 @@ public interface DataCollection3DAO {
 	 *            the primary key of the object to load.
 	 * @param fetchRelation1
 	 *            if true, the linked instances by the relation "relation1" will be set.
-	 * @param fetchRelation2
-	 *            if true, the linked instances by the relation "relation2" will be set.
 	 */
-	public DataCollection3VO findByPk(Integer pk, boolean fetchImage, boolean fetchScreening,
+	public DataCollection3VO findByPk(Integer pk, boolean fetchImage,
 			boolean fetchAutoProcIntegration);
 
 	/**
@@ -113,7 +111,7 @@ public interface DataCollection3DAO {
 	public List<DataCollection3VO> findLastDataCollectionBySample(Integer blSampleId);
 
 	public List<DataCollection3VO> findFiltered(String imageDirectory, String imagePrefix,
-			Integer dataCollectionNumber, Integer sessionId, Byte printableForReport, boolean withScreenings,
+			Integer dataCollectionNumber, Integer sessionId, Byte printableForReport,
 			Integer dataCollectionId);
 
 	/**
@@ -141,8 +139,7 @@ public interface DataCollection3DAO {
 	 */
 	public List<DataCollection3VO> findByCustomQuery(Integer proposalId, String sampleName, String proteinAcronym,
 			String beamlineName, Date experimentDateStart, Date experimentDateEnd, Integer minNumberOfImages,
-			Integer maxNumberOfImages, String imagePrefix, Byte onlyPrintableForReport, Integer maxRecords,
-			boolean withScreenings);
+			Integer maxNumberOfImages, String imagePrefix, Byte onlyPrintableForReport, Integer maxRecords);
 
 	/**
 	 * 
@@ -151,8 +148,7 @@ public interface DataCollection3DAO {
 	 * @param proposalId
 	 * @return
 	 */
-	public List<DataCollection3VO> findByProtein(String proteinAcronym, Byte printableForReport, Integer proposalId,
-			boolean withScreenings);
+	public List<DataCollection3VO> findByProtein(String proteinAcronym, Byte printableForReport, Integer proposalId);
 
 	/**
 	 * 
@@ -162,7 +158,7 @@ public interface DataCollection3DAO {
 	 * @return
 	 */
 	public List<DataCollection3VO> findBySample(Integer blSampleId, String sampleName, Byte printableForReport,
-			Integer proposalId, boolean withScreenings);
+			Integer proposalId);
 
 	/**
 	 * returns a XDSInfo for a given dataCollectionId
@@ -189,8 +185,7 @@ public interface DataCollection3DAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DataCollection3VO> findLastCollect(Date startDate, Date endDate, String[] beamline,
-			boolean withScreenings);
+	public List<DataCollection3VO> findLastCollect(Date startDate, Date endDate, String[] beamline);
 
 	public Integer getNbOfCollects(Integer dcgId) throws Exception;
 

@@ -19,10 +19,6 @@
 
 package ispyb.server.mx.vos.screening;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,6 +37,11 @@ import javax.persistence.Table;
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 
 /**
  * Screening3 value object mapping table Screening
@@ -62,12 +63,8 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	protected Integer screeningId;
 
 	@ManyToOne
-	@JoinColumn(name = "dataCollectionId")
-	private DataCollection3VO dataCollectionVO;
-
-	//TODO later implement ManyToOne relation
-	@Column(name = "dataCollectionGroupId")
-	protected Integer dataCollectionGroupId;
+	@JoinColumn(name = "dataCollectionGroupId")
+	protected DataCollectionGroup3VO dataCollectionGroupVO;
 	
 	@ManyToOne
 	@JoinColumn(name = "diffractionPlanId")
@@ -104,15 +101,14 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	
-	public Screening3VO(Integer screeningId, Integer dataCollectionGroupId,
-			DataCollection3VO dataCollectionVO,
+	public Screening3VO(Integer screeningId,
+			DataCollectionGroup3VO dataCollectionGroupVO,
 			DiffractionPlan3VO diffractionPlanVO, Date timeStamp,
 			String programVersion, String comments, String shortComments,
 			String xmlSampleInformation) {
 		super();
 		this.screeningId = screeningId;
-		this.dataCollectionGroupId = dataCollectionGroupId;
-		this.dataCollectionVO = dataCollectionVO;
+		this.dataCollectionGroupVO = dataCollectionGroupVO;
 		this.diffractionPlanVO = diffractionPlanVO;
 		this.timeStamp = timeStamp;
 		this.programVersion = programVersion;
@@ -125,8 +121,7 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 	public Screening3VO(Screening3VO vo) {
 		super();
 		this.screeningId = vo.getScreeningId();
-		this.dataCollectionGroupId = vo.getDataCollectionGroupId();
-		this.dataCollectionVO = vo.getDataCollectionVO();
+		this.dataCollectionGroupVO = vo.getDataCollectionGroupVO();
 		this.diffractionPlanVO = vo.getDiffractionPlanVO();
 		this.timeStamp = vo.getTimeStamp();
 		this.programVersion = vo.getProgramVersion();
@@ -137,8 +132,7 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 
 	public void fillVOFromWS(ScreeningWS3VO vo) {
 		this.screeningId = vo.getScreeningId();
-		this.dataCollectionGroupId = vo.getDataCollectionGroupId();
-		this.dataCollectionVO = null;
+		this.dataCollectionGroupVO = null;
 		this.diffractionPlanVO =null;
 		this.timeStamp = vo.getTimeStamp();
 		this.programVersion = vo.getProgramVersion();
@@ -168,25 +162,19 @@ public class Screening3VO extends ISPyBValueObject implements Cloneable {
 		this.screeningId = screeningId;
 	}
 
-	public Integer getDataCollectionGroupId() {
-		return dataCollectionGroupId;
-	}
 
-	public void setDataCollectionGroupId(Integer dataCollectionGroupId) {
-		this.dataCollectionGroupId = dataCollectionGroupId;
+	public DataCollectionGroup3VO getDataCollectionGroupVO() {
+		return dataCollectionGroupVO;
 	}
 
 
-	public DataCollection3VO getDataCollectionVO() {
-		return dataCollectionVO;
+	public void setDataCollectionGroupVO(DataCollectionGroup3VO dataCollectionGroupVO) {
+		this.dataCollectionGroupVO = dataCollectionGroupVO;
 	}
 
-	public void setDataCollectionVO(DataCollection3VO dataCollectionVO) {
-		this.dataCollectionVO = dataCollectionVO;
-	}
 
-	public Integer getDataCollectionVOId() {
-		return dataCollectionVO == null ? null : dataCollectionVO.getDataCollectionId();
+	public Integer getDataCollectionGroupVOId() {
+		return dataCollectionGroupVO == null ? null : dataCollectionGroupVO.getDataCollectionGroupId();
 	}
 
 	public Date getTimeStamp() {

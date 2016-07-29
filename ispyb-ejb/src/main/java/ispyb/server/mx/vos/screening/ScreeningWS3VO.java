@@ -31,7 +31,7 @@ import java.util.Date;
 public class ScreeningWS3VO extends Screening3VO{
 	private static final long serialVersionUID = 5342032809035398856L;
 	
-	private Integer dataCollectionId;
+	private Integer dataCollectionGroupId;
 	
 	private Integer diffractionPlanId;
 
@@ -42,9 +42,9 @@ public class ScreeningWS3VO extends Screening3VO{
 	
 	
 	
-	public ScreeningWS3VO(Integer dataCollectionId, Integer diffractionPlanId) {
+	public ScreeningWS3VO(Integer dataCollectionGroupId, Integer diffractionPlanId) {
 		super();
-		this.dataCollectionId = dataCollectionId;
+		this.dataCollectionGroupId = dataCollectionGroupId;
 		this.diffractionPlanId = diffractionPlanId;
 	}
 
@@ -53,12 +53,11 @@ public class ScreeningWS3VO extends Screening3VO{
 	public ScreeningWS3VO(Screening3VO vo) {
 		super(vo);
 	}
-	public ScreeningWS3VO(Integer screeningId, Integer dataCollectionGroupId, Integer dataCollectionId,Integer diffractionPlanId,
+	public ScreeningWS3VO(Integer screeningId, Integer dataCollectionGroupId, Integer diffractionPlanId,
 			Date timeStamp, String programVersion, String comments,
 			String shortComments, String xmlSampleInformation) {
 		super();
 		this.screeningId = screeningId;
-		this.dataCollectionId = dataCollectionId;
 		this.dataCollectionGroupId = dataCollectionGroupId;
 		this.diffractionPlanId = diffractionPlanId;
 		this.timeStamp = timeStamp;
@@ -78,20 +77,19 @@ public class ScreeningWS3VO extends Screening3VO{
 		this.diffractionPlanId = diffractionPlanId;
 	}
 
-	public Integer getDataCollectionId() {
-		return dataCollectionId;
+	public Integer getDataCollectionGroupId() {
+		return dataCollectionGroupId;
 	}
-
-	public void setDataCollectionId(Integer dataCollectionId) {
-		this.dataCollectionId = dataCollectionId;
-	}
-
 	
+	public void setDataCollectionGroupId(Integer dataCollectionGroupId) {
+		this.dataCollectionGroupId = dataCollectionGroupId;
+	}
+
 	@Override
 	public String toWSString(){
 		String s= super.toWSString();
 		s += ", diffractionPlanId="+this.diffractionPlanId+", "+
-		"dataCollectionId="+this.dataCollectionId;
+		"dataCollectionGroupId="+this.dataCollectionGroupId;
 		return s;
 	}
 	

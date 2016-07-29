@@ -132,7 +132,7 @@ public class PathUtils {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 				.getLocalService(DataCollection3Service.class);
-		DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+		DataCollection3VO dcValue = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 		String imageDir = mapFilePath(dcValue.getImageDirectory());
 		if (imageDir != null && imageDir.charAt(imageDir.length() - 1) != '/')

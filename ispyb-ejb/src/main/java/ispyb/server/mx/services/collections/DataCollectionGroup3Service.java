@@ -72,7 +72,7 @@ public interface DataCollectionGroup3Service {
 	 * @param withLink2
 	 * @return the Scientist value object
 	 */
-	public DataCollectionGroup3VO findByPk(final Integer pk, final boolean withDataCollection) throws Exception;
+	public DataCollectionGroup3VO findByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception;
 
 	/**
 	 * Find a dataCollectionGroup by its primary key -- webservices object
@@ -83,7 +83,7 @@ public interface DataCollectionGroup3Service {
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionGroupWS3VO findForWSByPk(final Integer pk, final boolean withDataCollection) throws Exception;
+	public DataCollectionGroupWS3VO findForWSByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception;
 
 	/**
 	 * Find all DataCollectionGroup3 and set linked value objects if necessary.
@@ -101,7 +101,7 @@ public interface DataCollectionGroup3Service {
 	 */
 	public DataCollectionGroup3VO loadEager(DataCollectionGroup3VO vo) throws Exception;
 
-	public List<DataCollectionGroup3VO> findFiltered(final Integer sessionId, final boolean withDataCollection)
+	public List<DataCollectionGroup3VO> findFiltered(final Integer sessionId, final boolean withDataCollection, final boolean withScreening)
 			throws Exception;
 
 	/**
@@ -120,7 +120,7 @@ public interface DataCollectionGroup3Service {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DataCollectionGroup3VO> findBySampleId(final Integer sampleId, final boolean withDataCollection)
+	public List<DataCollectionGroup3VO> findBySampleId(final Integer sampleId, final boolean withDataCollection, final boolean withScreening)
 			throws Exception;
 
 }

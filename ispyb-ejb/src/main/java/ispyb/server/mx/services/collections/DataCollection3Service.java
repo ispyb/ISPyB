@@ -74,7 +74,7 @@ public interface DataCollection3Service {
 	 * @param withLink2
 	 * @return the Scientist value object
 	 */
-	public DataCollection3VO findByPk(final Integer pk, final boolean withImage, final boolean withScreening,
+	public DataCollection3VO findByPk(final Integer pk, final boolean withImage,
 			final boolean withAutoProcIntegration) throws Exception;
 
 	/**
@@ -86,7 +86,7 @@ public interface DataCollection3Service {
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage, final boolean withScreening,
+	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage,
 			final boolean withAutoProcIntegration) throws Exception;
 
 	/**
@@ -144,7 +144,7 @@ public interface DataCollection3Service {
 	 */
 	public List<DataCollection3VO> findFiltered(final String imageDirectory, final String imagePrefix,
 			final Integer dataCollectionNumber, final Integer sessionId, final Byte printableForReport,
-			final boolean withScreenings, final Integer dataCollectionGroupId) throws Exception;
+			final Integer dataCollectionGroupId) throws Exception;
 
 	/**
 	 * 
@@ -163,8 +163,7 @@ public interface DataCollection3Service {
 	public List<DataCollection3VO> findByCustomQuery(final Integer proposalId, final String sampleName,
 			final String proteinAcronym, final String beamlineName, final Date experimentDateStart,
 			final Date experimentDateEnd, final Integer minNumberOfImages, final Integer maxNumberOfImages,
-			final String imagePrefix, final Byte onlyPrintableForReport, final Integer maxRecords,
-			final boolean withScreenings) throws Exception;
+			final String imagePrefix, final Byte onlyPrintableForReport, final Integer maxRecords) throws Exception;
 
 	/**
 	 * 
@@ -174,7 +173,7 @@ public interface DataCollection3Service {
 	 * @return
 	 */
 	public List<DataCollection3VO> findByProtein(final String proteinAcronym, final Byte printableForReport,
-			final Integer proposalId, final boolean withScreenings) throws Exception;
+			final Integer proposalId) throws Exception;
 
 	/**
 	 * 
@@ -184,7 +183,7 @@ public interface DataCollection3Service {
 	 * @return
 	 */
 	public List<DataCollection3VO> findBySample(final Integer blSampleId, final String sampleName,
-			final Byte printableForReport, final Integer proposalId, final boolean withScreenings) throws Exception;
+			final Byte printableForReport, final Integer proposalId) throws Exception;
 
 	public DataCollection3VO loadEager(DataCollection3VO vo) throws Exception;
 
@@ -213,8 +212,7 @@ public interface DataCollection3Service {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DataCollection3VO> findLastCollect(final Date startDate, final Date endDate, final String[] beamline,
-			final boolean withScreenings) throws Exception;
+	public List<DataCollection3VO> findLastCollect(final Date startDate, final Date endDate, final String[] beamline) throws Exception;
 
 	public DataCollection3VO findForDataCollectionIdFromFileLocationAndFileName(final String fileLocation,
 			final String fileName) throws Exception;

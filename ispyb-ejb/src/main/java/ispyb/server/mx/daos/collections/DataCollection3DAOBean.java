@@ -53,9 +53,9 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 	private final static Logger LOG = Logger.getLogger(DataCollection3DAOBean.class);
 
 	// Generic HQL request to find instances of DataCollection3 by pk
-	private static final String FIND_BY_PK(boolean fetchImage, boolean fetchScreening, boolean fetchAutoProcIntegration) {
+	private static final String FIND_BY_PK(boolean fetchImage,  boolean fetchAutoProcIntegration) {
 		return "from DataCollection3VO vo " + (fetchImage ? "left join fetch vo.imageVOs " : "")
-				+ (fetchScreening ? "left join fetch vo.screeningVOs " : "")
+				
 				+ (fetchAutoProcIntegration ? "left join fetch vo.autoProcIntegrationVOs " : "") + "where vo.dataCollectionId = :pk";
 	}
 
@@ -144,12 +144,10 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 	 *            the primary key of the object to load.
 	 * @param fetchRelation1
 	 *            if true, the linked instances by the relation "relation1" will be set.
-	 * @param fetchRelation2
-	 *            if true, the linked instances by the relation "relation2" will be set.
 	 */
-	public DataCollection3VO findByPk(Integer pk, boolean fetchImage, boolean fetchScreening, boolean fetchAutoProcIntegration) {
+	public DataCollection3VO findByPk(Integer pk, boolean fetchImage, boolean fetchAutoProcIntegration) {
 		try {
-			return (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(fetchImage, fetchScreening, fetchAutoProcIntegration))
+			return (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(fetchImage, fetchAutoProcIntegration))
 					.setParameter("pk", pk).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -231,7 +229,7 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findFiltered(String imageDirectory, String imagePrefix, Integer dataCollectionNumber,
-			Integer sessionId, Byte printableForReport, boolean withScreenings, Integer dataCollectionGroupId) {
+			Integer sessionId, Byte printableForReport, Integer dataCollectionGroupId) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 
@@ -262,10 +260,6 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 			crit.add(Restrictions.eq("printableForReport", printableForReport));
 		}
 
-		if (withScreenings) {
-			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
-		}
-
 		crit.addOrder(Order.desc("startTime"));
 
 		return crit.list();
@@ -291,7 +285,7 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findByCustomQuery(Integer proposalId, String sampleName, String proteinAcronym,
 			String beamlineName, Date experimentDateStart, Date experimentDateEnd, Integer minNumberOfImages,
-			Integer maxNumberOfImages, String imagePrefix, Byte onlyPrintableForReport, Integer maxRecords, boolean withScreenings) {
+			Integer maxNumberOfImages, String imagePrefix, Byte onlyPrintableForReport, Integer maxRecords) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 
@@ -384,18 +378,13 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 			crit.setMaxResults(maxRecords);
 		}
 
-		if (withScreenings) {
-			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
-		}
-
 		crit.addOrder(Order.desc("startTime"));
 
 		return crit.list();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findByProtein(String proteinAcronym, Byte printableForReport, Integer proposalId,
-			boolean withScreenings) {
+	public List<DataCollection3VO> findByProtein(String proteinAcronym, Byte printableForReport, Integer proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
@@ -423,18 +412,13 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 			crit.add(Restrictions.eq("printableForReport", printableForReport));
 		}
 
-		if (withScreenings) {
-			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
-		}
-
 		crit.addOrder(Order.desc("startTime"));
 
 		return crit.list();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findBySample(Integer blSampleId, String sampleName, Byte printableForReport, Integer proposalId,
-			boolean withScreenings) {
+	public List<DataCollection3VO> findBySample(Integer blSampleId, String sampleName, Byte printableForReport, Integer proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
@@ -461,10 +445,6 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 
 		if (printableForReport != null) {
 			crit.add(Restrictions.eq("printableForReport", printableForReport));
-		}
-
-		if (withScreenings) {
-			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
 		}
 
 		crit.addOrder(Order.desc("startTime"));
@@ -530,7 +510,7 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findLastCollect(Date startDate, Date endDate, String[] beamlineName, boolean withScreenings) {
+	public List<DataCollection3VO> findLastCollect(Date startDate, Date endDate, String[] beamlineName) {
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
@@ -546,10 +526,6 @@ public class DataCollection3DAOBean implements DataCollection3DAO {
 			Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
 			Criteria subCritSession = subCritgroup.createCriteria("sessionVO");
 			subCritSession.add(Restrictions.in("beamlineName", beamlineName));
-		}
-
-		if (withScreenings) {
-			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
 		}
 		crit.addOrder(Order.desc("startTime"));
 
