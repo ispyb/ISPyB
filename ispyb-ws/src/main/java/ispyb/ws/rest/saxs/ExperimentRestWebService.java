@@ -7,6 +7,7 @@ import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
 import ispyb.server.common.hdf5.HDF5FileReader;
+import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
@@ -41,9 +42,8 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 
 	private List<Map<String, Object>> getExperimentListByProposal(String proposal) throws NamingException {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		SaxsProposal3Service saxsProposalService = (SaxsProposal3Service) ejb3ServiceLocator
-				.getLocalService(SaxsProposal3Service.class);
-		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
+		Proposal3Service proposalService = this.getProposal3Service();
+		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(proposal);
 
 		Analysis3Service analysis3Service = (Analysis3Service) ejb3ServiceLocator
 				.getLocalService(Analysis3Service.class);
@@ -59,9 +59,9 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 	private List<Map<String, Object>> getExperimentListBySessionId(String proposal, int sessionId)
 			throws NamingException {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		SaxsProposal3Service saxsProposalService = (SaxsProposal3Service) ejb3ServiceLocator
-				.getLocalService(SaxsProposal3Service.class);
-		List<Proposal3VO> proposals = saxsProposalService.findProposalByLoginName(proposal);
+		
+		Proposal3Service proposalService = this.getProposal3Service();
+		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(proposal);
 
 		Analysis3Service analysis3Service = (Analysis3Service) ejb3ServiceLocator
 				.getLocalService(Analysis3Service.class);
