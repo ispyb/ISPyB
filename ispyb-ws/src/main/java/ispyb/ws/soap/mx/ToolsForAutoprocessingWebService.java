@@ -412,7 +412,7 @@ public class ToolsForAutoprocessingWebService {
 					.getLocalService(DataCollection3Service.class);
 			DataCollection3VO dataCollectionVO = null;
 			if (vo.getDataCollectionId() != null && vo.getDataCollectionId() > 0)
-				dataCollectionVO = dataCollectionService.findByPk(vo.getDataCollectionId(), false, false, false);
+				dataCollectionVO = dataCollectionService.findByPk(vo.getDataCollectionId(), false, false);
 			// load the object elsewhere there is an error with the childs
 			if (vo.getAutoProcIntegrationId() != null && vo.getAutoProcIntegrationId() > 0) {
 				autoProcIntegrationVO = autoProcIntegrationService.findByPk(vo.getAutoProcIntegrationId());

@@ -18,9 +18,24 @@
 
 package ispyb.ws.soap.mx;
 
+import java.util.Date;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
+
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.sample.DiffractionPlan3Service;
 import ispyb.server.mx.services.screening.Screening3Service;
 import ispyb.server.mx.services.screening.ScreeningInput3Service;
@@ -31,7 +46,7 @@ import ispyb.server.mx.services.screening.ScreeningRankSet3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategy3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategySubWedge3Service;
 import ispyb.server.mx.services.screening.ScreeningStrategyWedge3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 import ispyb.server.mx.vos.screening.Screening3VO;
 import ispyb.server.mx.vos.screening.ScreeningInput3VO;
@@ -50,21 +65,6 @@ import ispyb.server.mx.vos.screening.ScreeningStrategyWS3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
 import ispyb.server.mx.vos.screening.ScreeningStrategyWedgeWS3VO;
 import ispyb.server.mx.vos.screening.ScreeningWS3VO;
-
-import java.util.Date;
-
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateless;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.Style;
-
-import org.apache.log4j.Logger;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ws.api.annotation.WebContext;
 
 /**
  * Web services for Screening
@@ -98,7 +98,7 @@ public class ToolsForScreeningEDNAWebService {
 			if (vo == null)
 				return null;
 
-			if (vo.getDataCollectionId() == null) {
+			if (vo.getDataCollectionGroupId() == null) {
 				LOG.debug("WS PB : DataCollectionId is null , could not update/create Screening");
 				return errorCodeFK;
 			}
@@ -107,14 +107,14 @@ public class ToolsForScreeningEDNAWebService {
 			Screening3Service screeningService = (Screening3Service) ejb3ServiceLocator
 					.getLocalService(Screening3Service.class);
 
-			if (vo.getDataCollectionId() == null || vo.getDataCollectionId() == 0)
-				vo.setDataCollectionId(null);
+			if (vo.getDataCollectionGroupId() == null || vo.getDataCollectionGroupId() == 0)
+				vo.setDataCollectionGroupId(null);
 			Screening3VO screeningVO = new Screening3VO();
-			DataCollection3Service DataCollectionService = (DataCollection3Service) ejb3ServiceLocator
-					.getLocalService(DataCollection3Service.class);
-			DataCollection3VO DataCollectionVO = null;
-			if (vo.getDataCollectionId() != null && vo.getDataCollectionId() > 0)
-				DataCollectionVO = DataCollectionService.findByPk(vo.getDataCollectionId(), false, false, false);
+			DataCollectionGroup3Service DataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
+					.getLocalService(DataCollectionGroup3Service.class);
+			DataCollectionGroup3VO DataCollectionGroupVO = null;
+			if (vo.getDataCollectionGroupId() != null && vo.getDataCollectionGroupId() > 0)
+				DataCollectionGroupVO = DataCollectionGroupService.findByPk(vo.getDataCollectionGroupId(), false,false) ;
 			DiffractionPlan3Service diffractionPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
 					.getLocalService(DiffractionPlan3Service.class);
 			DiffractionPlan3VO diffractionPlanVO = null;
@@ -127,7 +127,7 @@ public class ToolsForScreeningEDNAWebService {
 				screeningVO = screeningService.findByPk(screeningId, false, false);
 			}
 			screeningVO.fillVOFromWS(vo);
-			screeningVO.setDataCollectionVO(DataCollectionVO);
+			screeningVO.setDataCollectionGroupVO(DataCollectionGroupVO);
 			screeningVO.setDiffractionPlanVO(diffractionPlanVO);
 			screeningVO.setTimeStamp(StringUtils.getCurrentTimeStamp());
 
@@ -150,14 +150,13 @@ public class ToolsForScreeningEDNAWebService {
 	@WebResult(name = "screeningId")
 	public Integer storeOrUpdateScreening(java.lang.Integer screeningId,
 			@WebParam(name = "dataCollectionGroupId") java.lang.Integer dataCollectionGroupId,
-			@WebParam(name = "dataCollectionId") java.lang.Integer dataCollectionId,
 			@WebParam(name = "diffractionPlanId") java.lang.Integer diffractionPlanId,
 			@WebParam(name = "recordTimeStamp") Date recordTimeStamp,
 			@WebParam(name = "programVersion") java.lang.String programVersion,
 			@WebParam(name = "comments") java.lang.String comments,
 			@WebParam(name = "shortComments") java.lang.String shortComments,
 			@WebParam(name = "xmlSampleInformation") java.lang.String xmlSampleInformation) throws Exception {
-		ScreeningWS3VO vo = new ScreeningWS3VO(screeningId, dataCollectionGroupId, dataCollectionId, diffractionPlanId, recordTimeStamp,
+		ScreeningWS3VO vo = new ScreeningWS3VO(screeningId, dataCollectionGroupId, diffractionPlanId, recordTimeStamp,
 				programVersion, comments, shortComments, xmlSampleInformation);
 		return storeOrUpdateScreeningValue(vo);
 	}

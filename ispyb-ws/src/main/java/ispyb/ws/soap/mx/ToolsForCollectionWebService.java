@@ -416,7 +416,7 @@ public class ToolsForCollectionWebService {
 					.getLocalService(DataCollectionGroup3Service.class);
 			DataCollectionGroup3VO dataCollectionGroupVO = null;
 			if (vo.getDataCollectionGroupId() != null && vo.getDataCollectionGroupId() > 0)
-				dataCollectionGroupVO = dataCollectionGroupService.findByPk(vo.getDataCollectionGroupId(), false);
+				dataCollectionGroupVO = dataCollectionGroupService.findByPk(vo.getDataCollectionGroupId(), false, false);
 
 			ScreeningStrategySubWedge3Service screeningStrategySubWedgeService = (ScreeningStrategySubWedge3Service) ejb3ServiceLocator
 					.getLocalService(ScreeningStrategySubWedge3Service.class);
@@ -440,7 +440,7 @@ public class ToolsForCollectionWebService {
 			if (dataCollectionId != null && dataCollectionId > 0) {
 
 				// load the object elsewhere there is an error with the childs
-				dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false);
 			}
 			dataCollection.fillVOFromWS(vo);
 			dataCollection.setDataCollectionGroupVO(dataCollectionGroupVO);
@@ -495,7 +495,7 @@ public class ToolsForCollectionWebService {
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 			if (dataCollectionId != null && dataCollectionId > 0) {
-				DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+				DataCollection3VO dataCollection = dataCollectionService.findByPk(dataCollectionId, false, false);
 				if (dataCollection != null) {
 					dataCollection.setRunStatus(runStatus);
 					dataCollection.setEndTime(StringUtils.getCurrentTimeStamp());
@@ -583,7 +583,7 @@ public class ToolsForCollectionWebService {
 			DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 					.getLocalService(DataCollectionGroup3Service.class);
 
-			dataCollectionGroupValue = dataCollectionGroupService.findForWSByPk(dataCollectionGroupId, false);
+			dataCollectionGroupValue = dataCollectionGroupService.findForWSByPk(dataCollectionGroupId, false, false);
 			if (dataCollectionGroupValue != null)
 				LOG.debug("findDataCollectionGroup found :" + dataCollectionGroupId);
 			return dataCollectionGroupValue;
@@ -638,7 +638,7 @@ public class ToolsForCollectionWebService {
 			Workflow3VO oldWorkflow = null;
 			// load the object elsewhere there is an error with the childs
 			if (dataCollectionGroupId != null && dataCollectionGroupId > 0) {
-				dataCollectionGroup = dataCollectionGroupService.findByPk(dataCollectionGroupId, false);
+				dataCollectionGroup = dataCollectionGroupService.findByPk(dataCollectionGroupId, false, false);
 				oldComments = dataCollectionGroup.getComments();
 				oldWorkflow = dataCollectionGroup.getWorkflowVO();
 			}
@@ -785,7 +785,7 @@ public class ToolsForCollectionWebService {
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 
-			dataCollectionValue = dataCollectionService.findForWSByPk(dataCollectionId, false, false, false);
+			dataCollectionValue = dataCollectionService.findForWSByPk(dataCollectionId, false, false);
 			if (dataCollectionValue != null)
 				LOG.debug("findDataCollection found :" + dataCollectionId);
 			return dataCollectionValue;
@@ -971,7 +971,7 @@ public class ToolsForCollectionWebService {
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 			DataCollection3VO dataCollectionVO = null;
-			dataCollectionVO = dataCollectionService.findByPk(vo.getDataCollectionId(), false, false, false);
+			dataCollectionVO = dataCollectionService.findByPk(vo.getDataCollectionId(), false, false);
 
 			Image3VO image = new Image3VO();
 			image.fillVOFromWS(vo);
@@ -1223,7 +1223,7 @@ public class ToolsForCollectionWebService {
 			if (dataCollectionGroupId != null) {
 				DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 						.getLocalService(DataCollectionGroup3Service.class);
-				DataCollectionGroup3VO dataCollectionGroupVO = dataCollectionGroupService.findByPk(dataCollectionGroupId, false);
+				DataCollectionGroup3VO dataCollectionGroupVO = dataCollectionGroupService.findByPk(dataCollectionGroupId, false, false);
 				Workflow3Service workflowService = (Workflow3Service) ejb3ServiceLocator.getLocalService(Workflow3Service.class);
 				Workflow3VO workflowVO = null;
 				if (workflowId != null && workflowId > 0)
@@ -1263,7 +1263,7 @@ public class ToolsForCollectionWebService {
 			// get the dataCollectionGroup
 			DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 					.getLocalService(DataCollectionGroup3Service.class);
-			DataCollectionGroup3VO dataCollectionGroupVO = dataCollectionGroupService.findByPk(dataCollectionGroupId, false);
+			DataCollectionGroup3VO dataCollectionGroupVO = dataCollectionGroupService.findByPk(dataCollectionGroupId, false, false);
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 			// for each collect
@@ -1350,7 +1350,7 @@ public class ToolsForCollectionWebService {
 
 			DataCollection3VO vodc = null;
 			if (dc != null) {
-				vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false, false);
+				vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false);
 			}
 			return (vodc == null ? null : vodc.getDataCollectionId());
 		} catch (Exception e) {
@@ -1500,7 +1500,7 @@ public class ToolsForCollectionWebService {
 					}
 					DataCollection3VO vodc = null;
 					if (dc != null) {
-						vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false, false);
+						vodc = dataCollectionService.findByPk(dc.getDataCollectionId(), false, false);
 					}
 					listIds[i] = (vodc == null ? null : vodc.getDataCollectionId());
 				} catch (Exception e) {
@@ -1526,14 +1526,14 @@ public class ToolsForCollectionWebService {
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
 
-			dataCollectionValue = dataCollectionService.findForWSByPk(dataCollectionId, false, false, false);
+			dataCollectionValue = dataCollectionService.findForWSByPk(dataCollectionId, false, false);
 			if (dataCollectionValue != null)
 				LOG.debug("getDataCollectionInfo found :" + dataCollectionId);
-			DataCollection3VO vo = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			DataCollection3VO vo = dataCollectionService.findByPk(dataCollectionId, false, false);
 			if (vo != null) {
 				DataCollectionGroup3Service dataCollectionGroupService = (DataCollectionGroup3Service) ejb3ServiceLocator
 						.getLocalService(DataCollectionGroup3Service.class);
-				DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(vo.getDataCollectionGroupVOId(), false);
+				DataCollectionGroup3VO group = dataCollectionGroupService.findByPk(vo.getDataCollectionGroupVOId(), false, false);
 				Session3VO sessionVO = group.getSessionVO();
 				String localContact = "";
 				if (sessionVO != null && sessionVO.getBeamlineOperator() != null)
@@ -1637,7 +1637,7 @@ public class ToolsForCollectionWebService {
 					} else { // image does not exist: creation
 						if (dataCollectionId != null) {
 							if (dataCollectionVO == null) {
-								dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+								dataCollectionVO = dataCollectionService.findByPk(dataCollectionId, false, false);
 							}
 							Image3VO imagevo = new Image3VO(null, dataCollectionVO, imageNumber, fileName, fileLocation, null,
 									jpegFileFullPath, jpegThumbnailFileFullPath, null, null, null, null, null);
@@ -1701,7 +1701,7 @@ public class ToolsForCollectionWebService {
 			// retrieve the datacollection
 			DataCollection3VO dc = null;
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-			dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			if (dc != null) {
 				dc.setBestWilsonPlotPath(bestWilsonPlotPath);
@@ -1727,7 +1727,7 @@ public class ToolsForCollectionWebService {
 			// retrieve the datacollection
 			DataCollection3VO dc = null;
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-			dc = dataCollectionService.findByPk(dataCollectionId, false, false, false);
+			dc = dataCollectionService.findByPk(dataCollectionId, false, false);
 
 			if (dc != null) {
 				dc.setImageQualityIndicatorsPlotPath(imageQualityIndicatorsPlotPath);
