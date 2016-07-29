@@ -376,6 +376,9 @@ public class RestWebService {
 	
 	protected boolean isProposalAllowedforToken (String token, int proposalId  ) throws NamingException {
 		
+		if ( token == null) 
+			return false;
+		
 		Login3VO login3VO;
 			login3VO = this.getLogin3Service().findByToken(token);
 			List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
@@ -402,7 +405,11 @@ public class RestWebService {
 
 	protected boolean isProposalnameMatchingToken (String token, String proposalname  ) throws NamingException {
 		
+		if ( proposalname == null || token == null) 
+			return false;
+		
 		Login3VO login3VO = this.getLogin3Service().findByToken(token);
+		
 		if (login3VO != null && login3VO.isValid()) {
 			if (login3VO.isLocalContact() || login3VO.isManager() ){
 				return true;				
