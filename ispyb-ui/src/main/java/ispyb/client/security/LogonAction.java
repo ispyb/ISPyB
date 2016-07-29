@@ -40,6 +40,7 @@ import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.common.services.config.MenuGroup3Service;
+import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.config.MenuGroup3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
@@ -75,7 +76,7 @@ public class LogonAction extends Action {
 
 	private IspybAutoProcAttachment3Service ispybAutoProcAttachmentService;
 
-	private SaxsProposal3Service proposalService;
+	private Proposal3Service proposalService;
 
 	private IspybCrystalClass3Service ispybCrystalClassService;
 
@@ -147,7 +148,7 @@ public class LogonAction extends Action {
 				site = Constants.SITE_SOLEIL;
 			}
 			
-			this.proposalService = (SaxsProposal3Service) ejb3ServiceLocator.getLocalService(SaxsProposal3Service.class);
+			this.proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			List<Proposal3VO> proposals = this.proposalService.findProposalByLoginName(userName, site);
 
 			if (proposals == null || proposals.isEmpty()) {
