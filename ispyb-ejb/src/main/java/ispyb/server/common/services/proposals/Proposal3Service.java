@@ -23,6 +23,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.proposals.ProposalWS3VO;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 import javax.jws.WebMethod;
@@ -124,5 +125,22 @@ public interface Proposal3Service {
 	@WebMethod
 	public List<Proposal3VO> findFiltered(final String code, final String number, final String title) throws Exception;
 
+	/****** coming from SaxsProposalService   ****/
+
+	public List<Proposal3VO> findProposalByLoginName(String loginName, String site);
+
+	public List<Proposal3VO> findProposalByLoginName(String loginName);
+	
+	public Proposal3VO findProposalById(int proposalId);
+	
+	public List<Proposal3VO> findAllProposals();
+	
+	public List<Map<String, Object>> findProposals();
+	
+	public List<Map<String, Object>> findProposals(String loginName);
+
+	public List<Map<String, Object>> findProposalById(Integer proposalId);
+
+	/****** end of coming from SaxsProposalService   ****/
 
 }
