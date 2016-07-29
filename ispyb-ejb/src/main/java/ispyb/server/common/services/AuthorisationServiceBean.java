@@ -20,7 +20,6 @@ package ispyb.server.common.services;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -30,8 +29,8 @@ import javax.ejb.Stateless;
 import org.apache.log4j.Logger;
 
 import ispyb.common.util.Constants;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3ServiceLocal;
 import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.proposals.Proposal3ServiceLocal;
 import ispyb.server.common.services.sessions.Session3ServiceLocal;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -54,7 +53,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	private Session3ServiceLocal sessionService;
 	
 	@EJB
-	private SaxsProposal3ServiceLocal proposalService;
+	private Proposal3ServiceLocal proposalService;
 	
 	/**
 	 * 
