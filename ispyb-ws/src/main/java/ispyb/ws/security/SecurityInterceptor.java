@@ -84,7 +84,26 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 				if (login.checkRoles(rolesSet)){
 					logger.info("Valid: " + login.isValid());
 					if (login.isValid()) {
-						return;
+						// if role manager or localcontact ok
+						// TODO: later the localcontact should have access only to the sessions on her/his beamlines
+						// so that a check has to be done among the proposals attached to the beamlines of the local contact.
+						if (login.isManager() || login.isLocalContact()) {
+							return;
+						}
+						// if role user have to check in request the proposal name to match the username
+						// TODO: now it is ok because the username is the proposalname, 
+						// but later the username will give access to several proposals so that a check has to be done among the proposals belonging to the user.
+						
+						if (login.isUser()){
+							String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
+							if (proposalname == null || login.getUsername().equals(proposalname)) {
+								return;
+							}
+							else {
+								logger.info("Proposal not allowed for this user");
+								requestContext.abortWith(ACCESS_DENIED);
+							}
+						}
 					} else {
 						logger.info("Expired");
 						requestContext.abortWith(ACCESS_FORBIDDEN);
