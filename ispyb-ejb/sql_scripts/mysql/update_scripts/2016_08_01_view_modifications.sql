@@ -30,10 +30,12 @@ VIEW `v_datacollection_summary_screening` AS
         ((`Screening`
         LEFT JOIN `ScreeningOutput` ON ((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`)))
         LEFT JOIN `ScreeningOutputLattice` ON ((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`)));
+        
+        
+drop view v_datacollection_summary; 
 
- drop view v_datacollection_summary; 
- CREATE 
-    ALGORITHM = UNDEFINED 
+CREATE 
+     OR REPLACE ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
 VIEW `v_datacollection_summary` AS
@@ -96,7 +98,15 @@ VIEW `v_datacollection_summary` AS
         `Workflow`.`workflowType` AS `Workflow_workflowType`,
         `Workflow`.`status` AS `Workflow_status`,
         `Workflow`.`workflowId` AS `Workflow_workflowId`,
+        
         `v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,
+        `v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,
+        `v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,
+        `v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,
+        `v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,
+        `v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,
+        `v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,
+        `v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,
         `v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,
         `v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,
         `v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,
@@ -141,3 +151,4 @@ VIEW `v_datacollection_summary` AS
         LEFT JOIN `Workflow` ON ((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`)))
         LEFT JOIN `v_datacollection_summary_autoprocintegration` ON ((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`)))
         LEFT JOIN `v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionId` = `DataCollection`.`dataCollectionId`)));
+        
