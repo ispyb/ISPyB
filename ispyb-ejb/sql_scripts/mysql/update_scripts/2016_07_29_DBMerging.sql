@@ -18,3 +18,9 @@ ALTER TABLE `Screening` ADD FOREIGN KEY (`dataCollectionGroupId`)
 	ON DELETE NO ACTION ON UPDATE NO ACTION;
 --
 
+-- indexes not dropped previously	
+SET foreign_key_checks = 0;
+ALTER TABLE DiffractionPlan DROP INDEX DiffractionPlan_FKIndex2;
+ALTER TABLE DataAcquisition DROP INDEX DataAcquisitionToCapillary;
+SET foreign_key_checks = 1;
+
