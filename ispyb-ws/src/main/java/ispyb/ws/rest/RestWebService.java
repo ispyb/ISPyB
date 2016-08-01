@@ -374,6 +374,14 @@ public class RestWebService {
 		return this.sendResponse(e.getMessage());
 	}
 	
+	/**
+	 * Check if the logged user has the right to see the given proposal data
+	 * this is complementary to the SecurityInterceptor
+	 * @param token
+	 * @param proposalId
+	 * @return
+	 * @throws NamingException
+	 */
 	protected boolean isProposalAllowedforToken (String token, int proposalId  ) throws NamingException {
 		
 		if ( token == null) 
@@ -385,6 +393,7 @@ public class RestWebService {
 			if (login3VO != null){
 				if (login3VO.isValid()){
 					if (login3VO.isLocalContact() || login3VO.isManager() ){
+						// later add a test for localcontact to give access only to sessions attached to their beamlines
 						return true;				
 					}
 					if (login3VO.isUser()) {
@@ -403,6 +412,14 @@ public class RestWebService {
 		return false;		
 	}
 
+	/**
+	 * Check if the logged user has the right to see the given proposal data
+	 * this is complementary to the SecurityInterceptor
+	 * @param token
+	 * @param proposalname
+	 * @return
+	 * @throws NamingException
+	 */
 	protected boolean isProposalnameMatchingToken (String token, String proposalname  ) throws NamingException {
 		
 		if ( proposalname == null || token == null) 
@@ -412,6 +429,7 @@ public class RestWebService {
 		
 		if (login3VO != null && login3VO.isValid()) {
 			if (login3VO.isLocalContact() || login3VO.isManager() ){
+				// later add a test for localcontact to give access only to sessions attached to their beamlines
 				return true;				
 			}
 			if (login3VO.isUser() && login3VO.getUsername().equals(proposalname)) {

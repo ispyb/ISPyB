@@ -62,6 +62,7 @@ public class SessionRestWebService extends RestWebService {
 				if (isProposalnameMatchingToken(token, proposal)) {
 					result = getSessionService().getSessionViewBySessionId(this.getProposalId(proposal), sessionId);			
 				} else {
+					logger.info(" Proposalname NOT matching token" );
 					unauthorizedResponse();
 				}
 				this.logFinish(methodName, id, logger);
