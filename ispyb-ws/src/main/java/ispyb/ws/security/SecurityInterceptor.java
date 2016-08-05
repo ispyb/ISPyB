@@ -95,8 +95,12 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 						// but later the username will give access to several proposals so that a check has to be done among the proposals belonging to the user.
 						
 						if (login.isUser()){
+							// special case to display the list of proposal, with no proposalname present in the url
+							if (requestContext.getUriInfo().getPathParameters().get("proposal") == null )
+								return;
+							
 							String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
-							if (proposalname == null || login.getUsername().equals(proposalname)) {
+							if (proposalname == null || proposalname.isEmpty() || login.getUsername().equals(proposalname)) {
 								return;
 							}
 							else {
