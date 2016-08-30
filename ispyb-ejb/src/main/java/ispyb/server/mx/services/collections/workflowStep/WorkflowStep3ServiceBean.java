@@ -31,7 +31,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 import ispyb.server.biosaxs.services.core.measurement.Measurement3ServiceLocal;
-import ispyb.server.mx.services.ws.rest.dataCollection.DataCollectionRestWsServiceLocal;
+import ispyb.server.mx.services.ws.rest.datacollectiongroup.DataCollectionGroupRestWsServiceLocal;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
@@ -43,7 +43,7 @@ public class WorkflowStep3ServiceBean implements WorkflowStep3Service, WorkflowS
 	private EntityManager entityManager;
 	
 	@EJB
-	private DataCollectionRestWsServiceLocal dataCollectionRestWsServiceLocal;
+	private DataCollectionGroupRestWsServiceLocal dataCollectionRestWsServiceLocal;
 	
 	@Override
 	public void merge(WorkflowStep3VO workflowStep3VO) {
