@@ -34,5 +34,9 @@ public interface DataCollectionRestWsService {
 	public List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym);
 
 	public Collection<? extends Map<String, Object>> getViewDataCollectionByDataCollectionId(int proposalId, int dataCollectionId);
+
+	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(
+			int proposalId, Integer id);
+	
 	
 }

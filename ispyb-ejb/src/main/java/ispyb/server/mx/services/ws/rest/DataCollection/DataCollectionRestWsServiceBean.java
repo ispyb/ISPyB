@@ -156,5 +156,23 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		return aliasToValueMapList;
 	}
 
+	@Override
+	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(
+			int proposalId, Integer workflowId) {
+		
+		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and workflowId = :workflowId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("workflowId", workflowId);
+		
+		return executeSQLQuery(query);
+	}
+
+	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		List<Map<String, Object>> aliasToValueMapList = query.list();
+		return aliasToValueMapList;
+	}
 	
 }
