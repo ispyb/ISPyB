@@ -19,10 +19,20 @@
 
 package ispyb.server.mx.services.collections.workflowStep;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+import ispyb.server.biosaxs.services.core.measurement.Measurement3ServiceLocal;
+import ispyb.server.mx.services.ws.rest.dataCollection.DataCollectionRestWsServiceLocal;
+import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
 
@@ -31,6 +41,9 @@ public class WorkflowStep3ServiceBean implements WorkflowStep3Service, WorkflowS
 	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
+	
+	@EJB
+	private DataCollectionRestWsServiceLocal dataCollectionRestWsServiceLocal;
 	
 	@Override
 	public void merge(WorkflowStep3VO workflowStep3VO) {
@@ -44,12 +57,24 @@ public class WorkflowStep3ServiceBean implements WorkflowStep3Service, WorkflowS
 	
 
 	@Override
-	public WorkflowStep3VO findById(Integer workflowStepId) {
+	public WorkflowStep3VO findById(Integer workflowStepId, Integer proposalId) throws Exception {
 		try {
-			return entityManager.find(WorkflowStep3VO.class, workflowStepId);
-		} catch (RuntimeException re) {
+
+			if (proposalId != null){
+				WorkflowStep3VO wfs =  entityManager.find(WorkflowStep3VO.class, workflowStepId);
+				/** Check that this workflowStepId belongs to such proposal **/
+				List<Map<String, Object>> datacollections = dataCollectionRestWsServiceLocal.getViewDataCollectionByWorkflowId(proposalId, wfs.getWorkflowId());
+				if (datacollections.size() > 0){
+					return wfs;
+				}
+				else{
+					throw new Exception("Workflow step " + workflowStepId +" does not correspond to proposalId " + proposalId);
+				}
+			}
+		} catch (Exception re) {
 			throw re;
 		}
+		return null;
 		
 	}
 
