@@ -2,7 +2,7 @@ package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
-import ispyb.server.mx.services.ws.rest.autoProcessingIntegration.AutoProcessingIntegrationService;
+import ispyb.server.mx.services.ws.rest.autoprocessingintegration.AutoProcessingIntegrationService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
