@@ -1299,7 +1299,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 				if (innerBestStatistic == null)
 					continue;
 				if ((innerBestStatistic.getRmerge() != null && innerBestStatistic.getRmerge() > rSymmCutoff)
-						|| innerBestStatistic.getMeanIoverSigI() < iSigmaCutoff)
+						|| (innerBestStatistic.getMeanIoverSigI() != null && innerBestStatistic.getMeanIoverSigI() < iSigmaCutoff))
 					continue;
 
 				SpaceGroup3VO sglv = spaceGroupValues.iterator().next(); // first
