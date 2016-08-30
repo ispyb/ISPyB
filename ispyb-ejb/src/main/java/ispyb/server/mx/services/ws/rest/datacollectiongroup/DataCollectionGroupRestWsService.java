@@ -37,5 +37,4 @@ public interface DataCollectionGroupRestWsService {
 	
 	public List<Map<String, Object>>  getViewDataCollectionByWorkflowId(Integer proposalId, Integer workflowId);
 	
-	
 } 
