@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.EnergyScan;
+package ispyb.server.mx.services.ws.rest.energyScan;
 
 import java.util.List;
 import java.util.Map;

@@ -17,14 +17,16 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.EnergyScan;
+package ispyb.server.mx.services.ws.rest.dataCollection;
 
 
 
 import javax.ejb.Local;
 
 @Local
-public interface EnergyScanRestWsServiceLocal extends EnergyScanRestWsService {
+public interface DataCollectionRestWsServiceLocal extends DataCollectionRestWsService {
+
+	
 	
 }
 

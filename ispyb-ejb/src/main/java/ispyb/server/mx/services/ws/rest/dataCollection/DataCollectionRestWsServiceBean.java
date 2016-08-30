@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.DataCollection;
+package ispyb.server.mx.services.ws.rest.dataCollection;
 
 import java.util.Collection;
 import java.util.List;
@@ -83,6 +83,7 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 				+ " GROUP_CONCAT(`cell_alpha` SEPARATOR ', ') AS `Autoprocessing_cell_alpha`, "
 				+ " GROUP_CONCAT(`cell_beta` SEPARATOR ', ') AS `Autoprocessing_cell_beta`, "
 				+ " GROUP_CONCAT(`cell_gamma` SEPARATOR ', ') AS `Autoprocessing_cell_gamma`, "
+				
 				+ " (  \n"
 				+ " select GROUP_CONCAT(phasingStepType) from PhasingStep   \n"  
 				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId  \n"  
@@ -122,10 +123,7 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
 		query.setParameter("proposalId", proposalId);
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
+		return executeSQLQuery(query);
 	}
 	
 	@Override
@@ -137,9 +135,7 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		query.setParameter("proposalId", proposalId);
 		query.setParameter("proteinAcronym", proteinAcronym);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
+		return executeSQLQuery(query);
 	}
 
 	@Override
@@ -151,26 +147,34 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		query.setParameter("dataCollectionId", dataCollectionId);
 		query.setParameter("proposalId", proposalId);
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
+		return executeSQLQuery(query);
 	}
 
 	@Override
-	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(
-			int proposalId, Integer workflowId) {
-		
+	public List<Map<String, Object>> getViewDataCollectionByWorkflowId(Integer proposalId, Integer workflowId) {
+		String mySQLQuery = getViewTableQuery() + " where Workflow_workflowId = :Workflow_workflowId and BLSession_proposalId = :proposalId ";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("Workflow_workflowId", workflowId);
+		query.setParameter("proposalId", proposalId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(int proposalId, Integer workflowId) {
 		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and workflowId = :workflowId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);
 		query.setParameter("workflowId", workflowId);
-		
 		return executeSQLQuery(query);
 	}
-
+	
 	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> aliasToValueMapList = query.list();
 		return aliasToValueMapList;
 	}

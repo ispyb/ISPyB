@@ -17,9 +17,8 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.mx.services.ws.rest.DataCollection;
+package ispyb.server.mx.services.ws.rest.autoProcessingIntegration;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,16 +26,10 @@ import javax.ejb.Remote;
 
 
 @Remote
-public interface DataCollectionRestWsService {
+public interface AutoProcessingIntegrationService {
 
-	public List<Map<String,Object>> getViewDataCollectionBySessionId(int proposalId, int sessionId);
+	public List<Map<String, Object>> getViewByDataCollectionId(int proposalId, int dataCollectionId);
 
-	public List<Map<String, Object>> getViewDataCollectionByProteinAcronym(int proposalId, String proteinAcronym);
 
-	public Collection<? extends Map<String, Object>> getViewDataCollectionByDataCollectionId(int proposalId, int dataCollectionId);
-
-	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(
-			int proposalId, Integer id);
-	
 	
 }
