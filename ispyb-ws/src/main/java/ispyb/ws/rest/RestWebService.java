@@ -1,31 +1,5 @@
 package ispyb.ws.rest;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.annotation.security.PermitAll;
-import javax.naming.NamingException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import file.FileUploadForm;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PropertyLoader;
@@ -52,27 +26,45 @@ import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.naming.NamingException;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 @Path("/")
 public class RestWebService {
 	
-	@PermitAll
-	@GET
-	@Path("configuration")
-	@Produces({ "application/json" })
-	public Response configuration() {
-		String path = this.getFolderForUploads();
-		return this.sendResponse(Constants.getAllProperties());
-	}
-	
-	
 	protected Response sendImage(String filePath) {
 		if (filePath != null) {
-			if (new File(filePath).exists()) {
-				File file = new File(filePath);
-				ResponseBuilder response = Response.ok((Object) file);
-				response.header("Content-Disposition", "attachment; filename=" + new File(filePath).getName());
-				return response.header("Access-Control-Allow-Origin", "*").build();
-			}
+			if (new File(filePath).exists())
+				try {
+					{
+						File file = new File(filePath);
+						ResponseBuilder response = Response.ok((Object) file);
+						response.header("Content-Disposition", "attachment; filename=" + new File(filePath).getName());
+						return response.header("Access-Control-Allow-Origin", "*").build();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
 		return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*").build();
 	}
@@ -155,6 +147,10 @@ public class RestWebService {
 
 	protected Response sendResponse(Object response) {
 		return Response.ok(getGson().toJson(response)).header("Access-Control-Allow-Origin", "*").build();
+	}
+	
+	protected Response sendError(String message) {
+		return Response.serverError().entity(message).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 	protected Response sendResponse(Object response, boolean serializeNulls) {

@@ -3,7 +3,6 @@ package ispyb.ws.rest.mx;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
 import java.io.File;
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,10 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-
-import com.google.gson.stream.JsonReader;
 
 @Path("/")
 public class WorkflowRestWebService extends MXRestWebService {
@@ -42,7 +38,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 			List<Integer> ids = this.parseToInteger(workflowStepIds);
 			List<WorkflowStep3VO> workflowStepList = new ArrayList<WorkflowStep3VO>();
 			for (Integer id : ids) {
-				workflowStepList.add(this.getWorkflowStep3Service().findById(id));
+				workflowStepList.add(this.getWorkflowStep3Service().findById(id, this.getProposalId(proposal)));
 			}
 			return this.sendResponse(workflowStepList);
 
@@ -64,7 +60,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 		String methodName = "getWorkflowStepImageById";
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
-			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId);
+			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
 			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getImageResultFilePath() != null){
@@ -93,7 +89,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 		String methodName = "getWorkflowStepHTMLById";
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
-			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId);
+			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
 			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getHtmlResultFilePath() != null){
@@ -122,7 +118,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 		String methodName = "getWorkflowStepResultById";
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
-			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId);
+			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
 			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getResultFilePath() != null){

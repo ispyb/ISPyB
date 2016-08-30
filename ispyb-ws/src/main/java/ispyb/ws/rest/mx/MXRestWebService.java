@@ -22,7 +22,7 @@ import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
-import ispyb.server.mx.services.ws.rest.DataCollection.DataCollectionRestWsService;
+import ispyb.server.mx.services.ws.rest.dataCollection.DataCollectionRestWsService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.ws.rest.RestWebService;

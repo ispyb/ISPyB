@@ -33,8 +33,8 @@ public interface SessionService {
 
 	public List<Map<String, Object>> getSessionViewByDates(String startDate,String endDate);
 
-	public List<Map<String, Object>> getSessionViewByDates(Date startDate,Date endDate, String beamlineName);
-
+	public List<Map<String, Object>> getSessionViewByProposalAndDates(int proposalId, String startDate,String endDate);
+	
 	public List<Map<String, Object>> getSessionViewBySessionId(int proposalId, int sessionId);
 
 

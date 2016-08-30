@@ -100,7 +100,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 								return;
 							
 							String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
-							if (proposalname == null || proposalname.isEmpty() || login.getUsername().equals(proposalname)) {
+							if (login.getUsername().toUpperCase().equals(proposalname.toUpperCase())) {
 								return;
 							}
 							else {

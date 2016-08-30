@@ -19,7 +19,6 @@
 
 package ispyb.server.common.services.ws.rest.session;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +37,21 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
-	
+	/** SQL common clauses **/
+	private String dateClause = "((BLSession_startDate >= :startDate and BLSession_startDate <= :endDate) "
+			+ "or "
+			+ " (BLSession_endDate >= :startDate and BLSession_endDate <= :endDate)"
+			+ "or "
+			+ " (BLSession_endDate >= :endDate and BLSession_startDate <= :startDate)"
+			+ "or "
+			+ " (BLSession_endDate <= :endDate and BLSession_startDate >= :startDate))";
+	                            
 	/** SQL QUERIES **/
 	private  String BySessionId = getSessionViewTable() + " where v_session.sessionId = :sessionId and proposalId = :proposalId order by v_session.sessionId DESC"; 
 	private  String ByProposalId = getSessionViewTable() + " where v_session.proposalId = :proposalId order by v_session.sessionId DESC";
-	private  String ByDates = getSessionViewTable() + " where (BLSession_startDate >= :startDate and BLSession_startDate <= :endDate) or (BLSession_endDate >= :startDate and BLSession_endDate <= :endDate) order by v_session.sessionId DESC";
-	private  String ByDatesBeamline = getSessionViewTable() + " where ((BLSession_startDate >= :startDate and BLSession_startDate <= :endDate) or (BLSession_endDate >= :startDate and BLSession_endDate <= :endDate)) and beamlineName = :beamlineName order by v_session.sessionId DESC";
+	private  String ByDates = getSessionViewTable() + " where " + dateClause + " order by v_session.sessionId DESC";
+	private  String ByProposalAndDates = getSessionViewTable() + " where v_session.proposalId = :proposalId and " + dateClause + " order by v_session.sessionId DESC";
+	
 
 	/**
 	 * Query from the view v_session
@@ -91,18 +99,6 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 		SQLQuery query = session.createSQLQuery(ByDates);
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
-		
-		return executeSQLQuery(query);
-	}
-	
-	@Override
-	public List<Map<String, Object>> getSessionViewByDates(Date startDate, Date endDate, String beamlineName) {
-		Session session = (Session) this.entityManager.getDelegate();
-		SQLQuery query = session.createSQLQuery(ByDatesBeamline);
-		query.setParameter("startDate", startDate);
-		query.setParameter("endDate", endDate);
-		query.setParameter("beamlineName", beamlineName);
-		
 		return executeSQLQuery(query);
 	}
 	
@@ -111,4 +107,16 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 		List<Map<String, Object>> aliasToValueMapList = query.list();
 		return aliasToValueMapList;
 	}
+
+	@Override
+	public List<Map<String, Object>> getSessionViewByProposalAndDates(int proposalId, String startDate, String endDate) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByProposalAndDates);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		query.setParameter("proposalId", proposalId);
+		System.out.println(query.getQueryString());
+		return executeSQLQuery(query);
+	}
+
 }

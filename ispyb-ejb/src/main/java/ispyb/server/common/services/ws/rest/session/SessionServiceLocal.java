@@ -27,4 +27,3 @@ import javax.ejb.Local;
 public interface SessionServiceLocal extends SessionService {
 	
 }
-

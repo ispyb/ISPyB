@@ -2,7 +2,7 @@ package ispyb.ws.rest.mx;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.EnergyScan3Service;
-import ispyb.server.mx.services.ws.rest.EnergyScan.EnergyScanRestWsService;
+import ispyb.server.mx.services.ws.rest.energyScan.EnergyScanRestWsService;
 import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.ws.rest.RestWebService;
 

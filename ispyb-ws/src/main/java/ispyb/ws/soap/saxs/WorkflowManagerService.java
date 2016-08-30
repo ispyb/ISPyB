@@ -18,6 +18,18 @@
 
 package ispyb.ws.soap.saxs;
 
+import ispyb.common.util.Constants;
+import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
+import ispyb.server.biosaxs.services.core.analysis.advanced.AdvancedAnalysis3Service;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.vos.advanced.FitStructureToExperimentalData3VO;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.collections.Workflow3Service;
+import ispyb.server.mx.vos.collections.InputParameterWorkflow;
+import ispyb.server.mx.vos.collections.Workflow3VO;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,21 +42,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ispyb.common.util.Constants;
-import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
-import ispyb.server.biosaxs.services.core.analysis.advanced.AdvancedAnalysis3Service;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.vos.advanced.FitStructureToExperimentalData3VO;
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.collections.Workflow3Service;
-import ispyb.server.mx.vos.collections.InputParameterWorkflow;
-import ispyb.server.mx.vos.collections.Workflow3VO;
 
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;

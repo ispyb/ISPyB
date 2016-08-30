@@ -213,6 +213,32 @@ public class DataCollectionWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/datacollection/workflowstep/{workflowstepId}/list")
+	@Produces({ "application/json" })
+	public Response getViewDataCollectionByWorkflowStepId(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("workflowstepId") String workflowstepId) {
+
+		String methodName = "getViewDataCollectionByWorkflowStepId";
+		long start = this.logInit(methodName, logger, token, proposal, workflowstepId);
+		try {
+			List<Integer> ids = this.parseToInteger(workflowstepId);
+			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
+
+			for (Integer id : ids) {
+				dataCollections.addAll(this.getWebServiceDataCollection3Service().getViewDataCollectionByWorkflowId(
+						this.getProposalId(proposal), id));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(dataCollections, false);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET

@@ -3,15 +3,11 @@ package ispyb.ws.rest.mx;
 import ispyb.server.mx.vos.collections.Image3VO;
 
 import javax.annotation.security.RolesAllowed;
-import javax.naming.NamingException;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import io.swagger.annotations.*;
 
 import org.apache.log4j.Logger;
 

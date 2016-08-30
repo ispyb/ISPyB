@@ -1,5 +1,10 @@
 package ispyb.ws.rest.saxs;
 
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.vos.proposals.Proposal3VO;
 
 @Path("/")
 public class BufferRestWebService extends SaxsRestWebService {
