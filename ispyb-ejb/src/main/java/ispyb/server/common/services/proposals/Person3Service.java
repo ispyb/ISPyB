@@ -83,9 +83,22 @@ public interface Person3Service {
 	
 	public Person3VO findBySiteId(final String siteId) throws Exception;
 	
+	public Person3VO findPersonByProteinAcronym(Integer proposalId, String acronym) throws Exception;
+	
 	public PersonWS3VO findForWSPersonByLastNameAndFirstNameLetter(final String lastName, final String firstNameLetter) throws Exception;
 
 	public PersonWS3VO findForWSPersonByLogin(String lowerCase) throws Exception;
+	
+	/**
+	 * Find a Person for a specified protein acronym
+	 * 
+	 * @param proposalId
+	 * @param acronym
+	 * @return
+	 * @throws Exception
+	 */
+	public PersonWS3VO findForWSPersonByProteinAcronym(final Integer proposalId, final String acronym) throws Exception;
+
 	
 
 }

@@ -72,6 +72,9 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	private static String FIND_BY_LOGIN = SELECT_PERSON + " FROM Person p "
 			+ "WHERE p.login = :login ";
 	
+	private static String FIND_BY_PROTEIN = SELECT_PERSON + " FROM Person p, Protein prot "
+			+ "WHERE p.personId = prot.personId AND prot.proposalId = :proposalId AND prot.acronym = :acronym ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 	
@@ -170,6 +173,18 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		return (Person3VO) listVOs.toArray()[0];
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	public Person3VO findPersonByProteinAcronym(Integer proposalId, String acronym) {
+		String query = FIND_BY_PROTEIN;
+		List<Person3VO> listVOs = this.entityManager.createNativeQuery(query, "personNativeQuery")
+				.setParameter("proposalId", proposalId).setParameter("acronym", acronym).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		return (Person3VO) listVOs.toArray()[0];
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	public List<Person3VO> findFiltered(String familyName, String givenName, String login) {
 		Session session = (Session) this.entityManager.getDelegate();
@@ -241,6 +256,20 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	public PersonWS3VO findForWSPersonBySessionId(final Integer sessionId) throws Exception {
 		Person3VO foundEntities = findPersonBySessionId(sessionId);
+				PersonWS3VO personWS = getWSPersonVO(foundEntities);
+				return personWS;
+	}
+	
+	/**
+	 * Find a Person for a specified protein acronym
+	 * 
+	 * @param proposalId
+	 * @param acronym
+	 * @return
+	 * @throws Exception
+	 */
+	public PersonWS3VO findForWSPersonByProteinAcronym(final Integer proposalId, final String acronym) throws Exception {
+		Person3VO foundEntities = findPersonByProteinAcronym(proposalId, acronym);
 				PersonWS3VO personWS = getWSPersonVO(foundEntities);
 				return personWS;
 	}
