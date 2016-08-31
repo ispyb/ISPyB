@@ -216,6 +216,28 @@ public class ToolsForShippingWebService {
 			throw e;
 		}
 	}
+	
+	@WebMethod
+	@WebResult(name = "person")
+	public PersonWS3VO findPersonByProteinAcronym(Integer proposalId, String acronym) throws Exception {
+		try {
+			LOG.debug("findPersonByProteinAcronym");
+			PersonWS3VO personValue = null;
+
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			Person3Service personService = (Person3Service) ejb3ServiceLocator.getLocalService(Person3Service.class);
+
+			personValue = personService.findForWSPersonByProteinAcronym(proposalId,
+					acronym);
+			if (personValue != null)
+				LOG.debug("findPersonByProteinAcronym " + personValue.getFamilyName());
+			return personValue;
+		} catch (Exception e) {
+			LOG.error("WS ERROR: findPersonByProteinAcronym - " + StringUtils.getCurrentDate() + " - for proposalId:" + proposalId + ", acronym:"
+					+ acronym);
+			throw e;
+		}
+	}
 
 	@WebMethod
 	@WebResult(name = "laboratory")
