@@ -26,7 +26,6 @@
 				</configuration>
 			</plugin>
 			
- 
 	<plugin>
 		
 		<groupId>org.codehaus.mojo</groupId>
@@ -105,7 +104,7 @@
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
 			as the API is included in JBoss WildFly -->
 		<!-- <dependency> -->
@@ -239,6 +238,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>ispyb</groupId>
+			<artifactId>ispyb-WSclient-SMIS-gen-prod</artifactId>
+			<version>1.0</version>
 		</dependency>
 		
 		
