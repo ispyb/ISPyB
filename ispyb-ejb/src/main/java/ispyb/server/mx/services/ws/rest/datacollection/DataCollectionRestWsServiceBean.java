@@ -56,12 +56,12 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 	}
 
 	@Override
-	public Collection<? extends Map<String, Object>> getDataCollectionByDataCollectionId(int proposalId, Integer dataCollectionId) {
-		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and dataCollectionId = :dataCollectionId";
+	public Collection<? extends Map<String, Object>> getDataCollectionByDataCollectionGroupId(int proposalId, Integer dataCollectionGroupId) {
+		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and dataCollectionGroupId = :dataCollectionGroupId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);
-		query.setParameter("dataCollectionId", dataCollectionId);
+		query.setParameter("dataCollectionGroupId", dataCollectionGroupId);
 		return executeSQLQuery(query);
 	}
 	

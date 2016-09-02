@@ -109,6 +109,7 @@ public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroup
 				+ this.getPhasingSpaceGroupQuery()
 				+ this.getPhasingStepQuery()
 				+ " (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,"
+				+ " (select count(*) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfDataCollections,"
 				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,"
 				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId"
 				+ " from v_datacollection_summary";

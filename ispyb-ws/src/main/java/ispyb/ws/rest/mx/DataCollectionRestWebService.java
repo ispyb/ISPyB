@@ -217,19 +217,19 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@GZIP
-	@Path("{token}/proposal/{proposal}/mx/datacollection/datacollectionid/{datacollectionids}/list")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/datacollectiongroupid/{datacollectiongroupids}/list")
 	@Produces({ "application/json" })
 	public Response getViewDataCollectionByDataCollectionId(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("datacollectionids") String datacollectionids) {
+			@PathParam("datacollectiongroupids") String datacollectiongroupids) {
 
 		String methodName = "getViewDataCollectionByWorkflowStepId";
-		long start = this.logInit(methodName, logger, token, proposal, datacollectionids);
+		long start = this.logInit(methodName, logger, token, proposal, datacollectiongroupids);
 		try {
-			List<Integer> ids = this.parseToInteger(datacollectionids);
+			List<Integer> ids = this.parseToInteger(datacollectiongroupids);
 			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
 
 			for (Integer id : ids) {
-				dataCollections.addAll(this.getWebServiceDataCollection3Service().getDataCollectionByDataCollectionId(this.getProposalId(proposal), id));
+				dataCollections.addAll(this.getWebServiceDataCollection3Service().getDataCollectionByDataCollectionGroupId(this.getProposalId(proposal), id));
 			}
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(dataCollections, false);
