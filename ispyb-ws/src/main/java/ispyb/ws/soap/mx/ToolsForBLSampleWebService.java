@@ -137,7 +137,7 @@ public class ToolsForBLSampleWebService {
 
 	@WebMethod
 	@WebResult(name = "diffractionPlanId")
-	public Integer storeOrUpdateDiffractionPlanNew(java.lang.Integer diffractionPlanId, 
+	public Integer storeOrUpdateDiffractionPlan(java.lang.Integer diffractionPlanId, 
 	@WebParam(name = "experimentKind")
 	String experimentKind, 
 	@WebParam(name = "observedResolution")
@@ -190,46 +190,6 @@ public class ToolsForBLSampleWebService {
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta,
 				radiationSensitivityGamma,minOscWidth);
-		return storeOrUpdateDiffractionPlanValue(vo);
-	}
-
-	@WebMethod
-	@WebResult(name = "diffractionPlanId")
-	public Integer storeOrUpdateDiffractionPlan(java.lang.Integer diffractionPlanId, @WebParam(name = "experimentKind")
-	String experimentKind, @WebParam(name = "observedResolution")
-	Double observedResolution, @WebParam(name = "minimalResolution")
-	Double minimalResolution, @WebParam(name = "exposureTime")
-	Double exposureTime, @WebParam(name = "oscillationRange")
-	Double oscillationRange, @WebParam(name = "maximalResolution")
-	Double maximalResolution, @WebParam(name = "screeningResolution")
-	Double screeningResolution, @WebParam(name = "radiationSensitivity")
-	Double radiationSensitivity, @WebParam(name = "anomalousScatterer")
-	String anomalousScatterer, @WebParam(name = "preferredBeamSizeX")
-	Double preferredBeamSizeX, @WebParam(name = "preferredBeamSizeY")
-	Double preferredBeamSizeY, 
-	@WebParam(name = "preferredBeamDiameter") Double preferredBeamDiameter,
-	@WebParam(name = "comments")
-	String comments, @WebParam(name = "aimedCompleteness")
-	Double aimedCompleteness, @WebParam(name = "aimedIOverSigmaAtHighestRes")
-	Double aimedIOverSigmaAtHighestRes, @WebParam(name = "aimedMultiplicity")
-	Double aimedMultiplicity, @WebParam(name = "aimedResolution")
-	Double aimedResolution, @WebParam(name = "anomalousData")
-	Boolean anomalousData, @WebParam(name = "complexity")
-	String complexity, @WebParam(name = "estimateRadiationDamage")
-	Boolean estimateRadiationDamage, @WebParam(name = "forcedSpaceGroup")
-	String forcedSpaceGroup, @WebParam(name = "requiredCompleteness")
-	Double requiredCompleteness, @WebParam(name = "requiredMultiplicity")
-	Double requiredMultiplicity, @WebParam(name = "requiredResolution")
-	Double requiredResolution, @WebParam(name = "strategyOption")
-	String strategyOption, @WebParam(name = "kappaStrategyOption")
-	String kappaStrategyOption, @WebParam(name = "numberOfPositions")
-	Integer numberOfPositions) throws Exception {
-		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId, experimentKind, observedResolution,
-				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
-				anomalousScatterer, preferredBeamSizeX, preferredBeamSizeY, preferredBeamDiameter, comments, aimedCompleteness, aimedIOverSigmaAtHighestRes,
-				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
-				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
-				numberOfPositions, null, null, null, null,null);
 		return storeOrUpdateDiffractionPlanValue(vo);
 	}
 
