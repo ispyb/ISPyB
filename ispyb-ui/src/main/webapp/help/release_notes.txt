@@ -2,6 +2,8 @@
 * 31.08.2016     *
 **************
 New webservice to retrieve the person responsible for a protein
+storeOrUpdateDiffractionPlanNew is renamed storeOrUpdateDiffractionPlan and replace it
+
 
 **************
 * 29.07.2016     *
