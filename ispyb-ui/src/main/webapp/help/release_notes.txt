@@ -1,3 +1,16 @@
+********************************************************************************
+
+New TAG : ISPYB_4.0.7
+
+
+**************
+* 03.09.2016     *
+**************
+New dependency on a jar for WEB services client generation used to link with the User Portal,
+to avoid the "online" regeneration of classes
+
+Improvement of documentation
+
 **************
 * 31.08.2016     *
 **************
