@@ -31,33 +31,7 @@
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>jaxws-maven-plugin</artifactId>
 		<version>1.12</version>
-		
-<!--  to be uncommented to regenerate classes for WS client
-		<executions>
-  		
-		<execution>
-			<id>smis</id>
-				<goals>
-					<goal>wsimport</goal>
-				</goals>
-		
-				<configuration>
-				<bindingDirectory>src/main/resources</bindingDirectory>
-					<bindingFiles>
-                    	<bindingFile>
-                        		${basedir}/src/main/resources/bindings.xml
-                    	</bindingFile>
-                 	</bindingFiles>
-				
-					<wsdlUrls>
-              			<wsdlUrl>${userportal.webservices.url}</wsdlUrl>
-           			</wsdlUrls>
-					<packageName>generated.ws.smis</packageName>
-				</configuration>
-		</execution>
-		
-		</executions>		
--->			
+			
 		</plugin>
 		
  <!--  	for dewar tracking
