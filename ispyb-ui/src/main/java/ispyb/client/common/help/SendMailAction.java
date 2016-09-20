@@ -139,8 +139,17 @@ public class SendMailAction extends org.apache.struts.actions.DispatchAction {
 			// Define message
 			MimeMessage message = new MimeMessage(session);
 
+			/** From is the Sender of the email so it is the user otherwise JIRA gets crazy */
+			if (Constants.SITE_IS_ESRF()){
+				from = senderEmail;
+			}
+			
+			
+			LOG.info("Feedback sent from: " + from);
+			LOG.info("Feedback sent to: " + to);
+			LOG.info("Feedback cc senderEmail: " + senderEmail);
+			
 			message.setFrom(new InternetAddress(from));
-
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 			message.addRecipient(Message.RecipientType.CC, new InternetAddress(senderEmail));
 			String subject = " ";
