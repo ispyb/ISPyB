@@ -187,21 +187,21 @@ public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 		int maxLengthStatus = 255;
 		int maxLengthResultFilePath = 255;
 		int maxLengthLogFilePath = 255;
-
-		String[] listWorkflowType = { "BioSAXS Post Processing", "Undefined", "EnhancedCharacterisation", "LineScan",
-				"MeshScan", "XrayCentering", "DiffractionTomography", "Dehydration", "BurnStrategy",
-				"KappaReorientation", "TroubleShooting", "VisualReorientation", "Massif1", "Massif2",
-				"HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore",
-				"MXPressI","MXPressM","MXPressA","CollectAndSpectra","LowDoseDC"};
+//
+//		String[] listWorkflowType = { "BioSAXS Post Processing", "Undefined", "EnhancedCharacterisation", "LineScan",
+//				"MeshScan", "XrayCentering", "DiffractionTomography", "Dehydration", "BurnStrategy",
+//				"KappaReorientation", "TroubleShooting", "VisualReorientation", "Massif1", "Massif2",
+//				"HelicalCharacterisation", "GroupedProcessing", "MXPressE", "MXPressO", "MXPressL", "MXScore",
+//				"MXPressI","MXPressM","MXPressA","CollectAndSpectra","LowDoseDC"};
 
 		// workflowTitle
 		if (!StringUtils.isStringLengthValid(this.workflowTitle, maxLengthWorkflowTitle))
 			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "workflowTitle",
 					maxLengthWorkflowTitle));
 		// workflowType
-		if (!StringUtils.isStringInPredefinedList(this.workflowType, listWorkflowType, true))
-			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("Workflow", "workflowType",
-					listWorkflowType));
+//		if (!StringUtils.isStringInPredefinedList(this.workflowType, listWorkflowType, true))
+//			throw new IllegalArgumentException(StringUtils.getMessageErrorPredefinedList("Workflow", "workflowType",
+//					listWorkflowType));
 		// comments
 		if (!StringUtils.isStringLengthValid(this.comments, maxLengthComments))
 			throw new IllegalArgumentException(StringUtils.getMessageErrorMaxLength("Workflow", "comments",

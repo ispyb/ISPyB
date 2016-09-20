@@ -1,0 +1,2 @@
+ALTER TABLE `pydb`.`Workflow` 
+CHANGE COLUMN `workflowType` `workflowType` ENUM('Characterisation','Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC') NULL DEFAULT NULL ;
