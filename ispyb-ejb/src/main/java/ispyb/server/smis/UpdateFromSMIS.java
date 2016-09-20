@@ -221,6 +221,11 @@ public class UpdateFromSMIS {
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		LOG.info("Nb of sessions found : " + smisSessions.length);
 		LOG.info("Nb of samplesheets found : " + smisSamples.length);
+		
+		if ( mainProposers.length <1 ) {
+			LOG.info("Problem because no proposers found, could not extract proposal correctly");
+			return;
+		}
 
 		initServices();
 
@@ -400,6 +405,8 @@ public class UpdateFromSMIS {
 	private static void loadProposers(ProposalParticipantInfoLightVO[] mainProposers) throws Exception {
 		String proposalNumber = null;
 		
+		
+		
 		if (mainProposers != null && mainProposers.length > 0) {
 
 			ProposalParticipantInfoLightVO mainProp = mainProposers[0];
@@ -524,8 +531,10 @@ System.out.println("UpdateFromSMS proposalCode = " + proposalCode + " | proposal
 
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 System.out.println("UpdateFromSMS existingProposalList.size = " + existingProposalList + " | existingProposalList = " + existingProposalList);
+			
 			if (existingProposalList.size() > 1)
-				LOG.debug("error ! duplicate code and number in ISPyB database");
+				LOG.debug("error ! duplicate code and number in ISPyB database");	
+			
 			Proposal3VO proplv = existingProposalList.get(0);
 			Integer proposalId = proplv.getProposalId();
 			LOG.debug("proposal is not new, proposalId = " + proposalId);
