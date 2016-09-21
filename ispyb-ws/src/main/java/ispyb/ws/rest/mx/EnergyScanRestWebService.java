@@ -64,17 +64,18 @@ public class EnergyScanRestWebService extends RestWebService {
    			@PathParam("energyscanId") int energyscanId) throws Exception {
    		
    		String methodName = "getScanFileFullPath";
-   		long id = this.logInit(methodName, logger, token, proposal, energyscanId);
+   		long start = this.logInit(methodName, logger, token, proposal, energyscanId);
    		try{
    			EnergyScan3VO energyScan = this.getEnergyById(energyscanId, proposal);
    			if (energyScan != null){
 	   			if (new File(energyScan.getScanFileFullPath()).exists()){
+	   				this.logFinish(methodName, start, logger);
 	   				return this.downloadFile(energyScan.getScanFileFullPath());
 				}
    			}
    		}
    		catch(Exception e){
-   			return this.logError(methodName, e, id, logger);
+   			return this.logError(methodName, e, start, logger);
    		}
 		return null;
    	}
@@ -99,6 +100,7 @@ public class EnergyScanRestWebService extends RestWebService {
 	   					logger.info("Energy scan found " + energyScan.getEnergyScanId());
 	   	   				logger.info("File: " + energyScan.getScanFileFullPath());
 	   	   			    logger.info("Downloading: " + energyScan.getChoochFileFullPath());
+	   	   			    this.logFinish(methodName, id, logger);
 	   					return this.downloadFile(energyScan.getChoochFileFullPath());
 	   				}
    				}
@@ -129,6 +131,7 @@ public class EnergyScanRestWebService extends RestWebService {
    					logger.info("Energy scan found " + energyScan.getEnergyScanId());
    	   				logger.info("File: " + energyScan.getJpegChoochFileFullPath());
    	   			    logger.info("Downloading: " + energyScan.getJpegChoochFileFullPath());
+   	   			    this.logFinish(methodName, id, logger);
    					return this.sendImage(energyScan.getJpegChoochFileFullPath());
    				}
    			}

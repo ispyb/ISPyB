@@ -44,14 +44,11 @@ public class ImageWebService extends MXRestWebService {
 			@PathParam("proposal") String proposal,
 			@PathParam("imageId") int imageId) {
 
-		String methodName = "getThumbNailImageById";
-		long start = this.logInit(methodName, logger, token, proposal, imageId);
 		try {
 			Image3VO image = this.getImage3Service().findByPk(imageId);
-			this.logFinish(methodName, start, logger);
 			return this.sendImage(image.getJpegThumbnailFileFullPath());
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
+			return null;
 		}
 	}
 

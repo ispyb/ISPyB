@@ -87,17 +87,18 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	public Response getQualityIndicatorsPlot(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("dataCollectionId") int dataCollectionId) {
 
-		String methodName = "getQualityIndicatorsPlot";
-		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
+//		String methodName = "getQualityIndicatorsPlot";
+//		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
 			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
-			this.logFinish(methodName, start, logger);
+//			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				return this.sendImage(dataCollection.getImageQualityIndicatorsPlotPath());
 			}
 
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
+//			return this.logError(methodName, e, start, logger);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -139,11 +140,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	public Response getCrystalSnapshot(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("dataCollectionId") int dataCollectionId, @PathParam("id") int id) {
 
-		String methodName = "getCrystalSnapshot";
-		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId, id);
+//		String methodName = "getCrystalSnapshot";
+//		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId, id);
 		try {
 			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
-			this.logFinish(methodName, start, logger);
+//			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				if (id == 1) {
 					return this.sendImage(dataCollection.getXtalSnapshotFullPath1());
@@ -160,7 +161,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			}
 
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
+//			return this.logError(methodName, e, start, logger);
+			e.printStackTrace();
 		}
 		return null;
 	}

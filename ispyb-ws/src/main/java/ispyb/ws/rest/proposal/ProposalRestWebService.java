@@ -36,7 +36,8 @@ public class ProposalRestWebService extends MXRestWebService{
 	@Path("{token}/proposal/list")
 	@Produces({ "application/json" })
 	public Response getProposals(@PathParam("token") String token) throws Exception {
-		long id = this.logInit("getProposals", logger, token);
+		String methodName = "getProposals";
+		long id = this.logInit(methodName, logger, token);
 		try {
 			Login3VO login3VO = this.getLogin3Service().findByToken(token);
 			if (login3VO != null){
@@ -48,6 +49,7 @@ public class ProposalRestWebService extends MXRestWebService{
 					else{
 						proposals = this.getProposal3Service().findProposals(login3VO.getUsername());
 					}
+					this.logFinish(methodName, id, logger);
 					return this.sendResponse(proposals);
 				}
 			}
