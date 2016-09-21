@@ -89,7 +89,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" proposalCode:\t '" + proposalCode + "'");
 		LOGGER.info(" proposalNumber:\t" + proposalNumber);
 		LOGGER.info(" name:\t" + name);
-		this.logFinish("createHPLC", start);
 		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -120,7 +119,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" experimentId:\t '" + experimentId + "'");
 		LOGGER.info(" h5FilePath:\t" + h5FilePath);
 		LOGGER.info(" jsonFilePath:\t" + jsonFilePath);
-		this.logFinish("storeHPLC", start);
 		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -227,7 +225,6 @@ public class ToolsForAssemblyWebService {
 		params.put("samples", String.valueOf(samples));
 		long start = this.logInit("storeHPLCDataAnalysisResult", new Gson().toJson(params));
 		
-		long start_ = this.logInit("storeHPLCDataAnalysisResult");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" storeHPLCDataAnalysisResult");
@@ -259,7 +256,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" kratkyFilePath:\t" + kratkyFilePath);
 		LOGGER.info(" densityPlot:\t" + densityPlot);
 		LOGGER.info(" samples:\t '" + samples + "'");
-		this.logFinish("storeHPLCDataAnalysisResult", start_);
 		
 		try {
 			/**
@@ -315,7 +311,6 @@ public class ToolsForAssemblyWebService {
 		params.put("nsdPlot", String.valueOf(nsdPlot));
 		params.put("chi2plot", String.valueOf(chi2plot));
 		
-		long start_ = this.logInit("storeAbInitioModels");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" storeAbInitioModels");
@@ -326,8 +321,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" dammin:\t '" + dammin + "'");
 		LOGGER.info(" nsdPlot:\t '" + nsdPlot + "'");
 		LOGGER.info(" chi2plot:\t '" + chi2plot + "'");
-		
-		this.logFinish("storeAbInitioModels", start_);
 		
 		long start = this.logInit("storeAbInitioModels", new Gson().toJson(params));
 		try {
@@ -378,7 +371,6 @@ public class ToolsForAssemblyWebService {
 			params.put("discarded", String.valueOf(discarded));
 			params.put("averageFile", String.valueOf(averageFile));
 			
-			long start_ = this.logInit("addAveraged");
 			
 			LOGGER.info("-----------------------");
 			LOGGER.info(" addAveraged");
@@ -386,7 +378,6 @@ public class ToolsForAssemblyWebService {
 			LOGGER.info(" averaged:\t '" + averaged + "'");
 			LOGGER.info(" discarded:\t '" + discarded + "'");
 			LOGGER.info(" averageFile:\t '" + averageFile + "'");
-			this.logFinish("addAveraged", start_);
 			
 			id = this.logInit("addAveraged", new Gson().toJson(params));
 		} catch (Exception exp) {
@@ -460,8 +451,6 @@ public class ToolsForAssemblyWebService {
 			params.put("kratkyPlotFilePath", String.valueOf(kratkyPlotFilePath));
 			params.put("gnomOutputFilePath", String.valueOf(gnomOutputFilePath));
 			
-			long start_ = this.logInit("addSubtraction");
-			
 			LOGGER.info("-----------------------");
 			LOGGER.info(" addSubtraction");
 			LOGGER.info(" measurementId:\t '" + measurementId + "'");
@@ -487,7 +476,6 @@ public class ToolsForAssemblyWebService {
 			LOGGER.info(" guinierPlotFilePath:\t '" + guinierPlotFilePath + "'");
 			LOGGER.info(" kratkyPlotFilePath:\t '" + kratkyPlotFilePath + "'");
 			LOGGER.info(" gnomOutputFilePath:\t '" + gnomOutputFilePath + "'");
-			this.logFinish("addSubtraction", start_);
 			
 			id = this.logInit("addSubtraction", new Gson().toJson(params));
 		} catch (Exception exp) {
@@ -581,7 +569,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" guinierFilePath:\t" + guinierFilePath);
 		LOGGER.info(" kratkyFilePath:\t" + kratkyFilePath);
 		LOGGER.info(" densityPlot:\t" + densityPlot);
-		this.logFinish("storeDataAnalysisResultByMeasurementId", id);
 		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
@@ -630,13 +617,11 @@ public class ToolsForAssemblyWebService {
 		params.put("code", String.valueOf(code));
 		params.put("number", String.valueOf(number));
 		
-		long start_ = this.logInit("addAveraged");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" addAveraged");
 		LOGGER.info(" code:\t '" + code + "'");
 		LOGGER.info(" number:\t '" + number + "'");
-		this.logFinish("addAveraged", start_);
 		
 		long id = this.logInit("findExperimentByProposalCode", new Gson().toJson(params));
 		try {
@@ -658,12 +643,10 @@ public class ToolsForAssemblyWebService {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
 		
-		long start_ = this.logInit("addAveraged");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" addAveraged");
 		LOGGER.info(" experimmentId:\t '" + experimentId + "'");
-		this.logFinish("addAveraged", start_);
 		
 		long id = this.logInit("getRobotByExperimentId", new Gson().toJson(params));
 		try {
@@ -720,7 +703,6 @@ public class ToolsForAssemblyWebService {
 		params.put("normalization", String.valueOf(normalization));
 		params.put("transmission", String.valueOf(transmission));
 		
-		long start_ = this.logInit("saveFrame");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" saveFrame");
@@ -749,7 +731,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" normalization:\t '" + normalization + "'");
 		LOGGER.info(" transmission:\t '" + transmission + "'");
 		
-		this.logFinish("saveFrame", start_);
 
 		long id = this.logInit("saveFrame", new Gson().toJson(params));
 
@@ -807,7 +788,6 @@ public class ToolsForAssemblyWebService {
 		params.put("sourceFilePath", String.valueOf(sourceFilePath));
 		params.put("name", String.valueOf(name));
 		
-		long start_ = this.logInit("createExperiment");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" createExperiment");
@@ -820,8 +800,6 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" type:\t '" + type + "'");
 		LOGGER.info(" sourceFilePath:\t '" + sourceFilePath + "'");
 		LOGGER.info(" name:\t '" + name + "'");
-		this.logFinish("createExperiment", start_);
-		//
 
 		long id = this.logInit("createExperiment", new Gson().toJson(params));
 		try {
@@ -853,12 +831,10 @@ public class ToolsForAssemblyWebService {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
 		
-		long start_ = this.logInit("getExperimentById");
 		
 		LOGGER.info("-----------------------");
 		LOGGER.info(" getExperimentById");
 		LOGGER.info(" experimentId:\t '" + experimentId + "'");
-		this.logFinish("getExperimentById", start_);
 		
 		long id = this.logInit("getExperimentById", new Gson().toJson(params));
 		try {
