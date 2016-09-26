@@ -85,7 +85,7 @@ public interface Container3Service {
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess)
 			throws Exception;
 
-	public List<Container3VO> findByBarCode(final Integer dewarId, final String code)throws Exception;
+	public List<Container3VO> findByCode(final Integer dewarId, final String code)throws Exception;
 
 	public Container3VO savePuck(Container3VO fromJson) throws Exception;
 	

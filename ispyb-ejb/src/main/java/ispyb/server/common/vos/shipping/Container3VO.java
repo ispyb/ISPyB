@@ -19,9 +19,6 @@
 
 package ispyb.server.common.vos.shipping;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-
 import java.util.Date;
 import java.util.Set;
 
@@ -39,6 +36,11 @@ import javax.persistence.Table;
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
 
 /**
  * Container3 value object mapping table Container
@@ -83,6 +85,17 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "bltimeStamp")
 	protected Date timeStamp;
+	
+	@Column(name = "barcode")
+	protected String barcode;
+
+	@ManyToOne
+	@JoinColumn(name = "sessionId")
+	private Session3VO sessionVO;
+
+	@ManyToOne
+	@JoinColumn(name = "ownerId")
+	private Person3VO personVO;
 
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
@@ -94,7 +107,7 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	public Container3VO(Integer containerId, Dewar3VO dewarVO, String code, String containerType, Integer capacity,
-			String beamlineLocation, String sampleChangerLocation, String containerStatus, Date timeStamp) {
+			String beamlineLocation, String sampleChangerLocation, String containerStatus, Date timeStamp, String barcode, Session3VO sessionVO, Person3VO personVO) {
 		super();
 		this.containerId = containerId;
 		this.dewarVO = dewarVO;
@@ -105,6 +118,9 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 		this.sampleChangerLocation = sampleChangerLocation;
 		this.containerStatus = containerStatus;
 		this.timeStamp = timeStamp;
+		this.barcode = barcode;
+		this.sessionVO = sessionVO;
+		this.personVO = personVO;
 	}
 
 	public Container3VO(Container3VO vo) {
@@ -116,7 +132,9 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 		this.beamlineLocation = vo.beamlineLocation;
 		this.sampleChangerLocation = vo.sampleChangerLocation;
 		this.containerStatus = vo.containerStatus;
-
+		this.barcode = vo.barcode;
+		this.sessionVO = vo.sessionVO;
+		this.personVO = vo.personVO;
 	}
 
 	@Override
@@ -221,6 +239,39 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 
 	public Integer getDewarVOId() {
 		return dewarVO == null ? null : dewarVO.getDewarId();
+	}
+
+	
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
+	public Session3VO getSessionVO() {
+		return sessionVO;
+	}
+
+	public Integer getSessionVOId() {
+		return sessionVO == null ? null : sessionVO.getSessionId();
+	}
+	
+	public void setSessionVO(Session3VO sessionVO) {
+		this.sessionVO = sessionVO;
+	}
+
+	public Person3VO getPersonVO() {
+		return personVO;
+	}
+	
+	public Integer getPersonVOId() {
+		return personVO == null ? null : personVO.getPersonId();
+	}
+
+	public void setPersonVO(Person3VO personVO) {
+		this.personVO = personVO;
 	}
 
 	/**

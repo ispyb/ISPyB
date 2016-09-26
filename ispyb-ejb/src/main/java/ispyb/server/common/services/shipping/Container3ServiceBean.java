@@ -243,7 +243,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Container3VO> findByBarCode(final Integer dewarId, final String code)throws Exception{
+	public List<Container3VO> findByCode(final Integer dewarId, final String code)throws Exception{
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<Container3VO>) template.execute(new EJBAccessCallback() {
 

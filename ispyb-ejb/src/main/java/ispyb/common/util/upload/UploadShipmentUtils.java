@@ -397,7 +397,7 @@ public class UploadShipmentUtils {
 							break;
 						}
 					}
-					List<Container3VO> listContainerFromDB = containerService.findByBarCode(dewar.getDewarId(), container.getCode());
+					List<Container3VO> listContainerFromDB = containerService.findByCode(dewar.getDewarId(), container.getCode());
 					if (listContainerFromDB != null && listContainerFromDB.size() > 0 && !sheetEmpty) { // delete it in
 																										// order to be
 																										// replaced by
