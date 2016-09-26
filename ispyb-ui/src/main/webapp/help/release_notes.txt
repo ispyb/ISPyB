@@ -1,3 +1,15 @@
+**************
+* 26.09.2016     *
+**************
+New jar for WEB services client generation used to link with the User Portal
+
+3rd step of database merging with DLS:
+- Add new fields in Container table + ejbs + methods
+
+ DBmerging for new fields:
+ - externalId in Proposal, Protein, Person, BLSession + ejbs + methods
+ - position2Id in BLSubsample + ejbs + methods
+
 ********************************************************************************
 
 New TAG : ISPYB_4.0.7
