@@ -66,6 +66,10 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "positionId")
 	private Position3VO positionVO;
 	
+	@ManyToOne
+	@JoinColumn(name = "position2Id")
+	private Position3VO position2VO;
+	
 	@Column(name = "blSubSampleUUID")
 	protected String blSubSampleUUID;
 	
@@ -80,17 +84,13 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
-	
-	
-	
-	
-	
+		
 	public BLSubSample3VO() {
 		super();
 	}
 
 	public BLSubSample3VO(Integer blSubSampleId, BLSample3VO blSampleVO,
-			DiffractionPlan3VO diffractionPlanVO, Position3VO positionVO,
+			DiffractionPlan3VO diffractionPlanVO, Position3VO positionVO, Position3VO position2VO,
 			String blSubSampleUUID, String imgFileName, String imgFilePath,
 			String comments, Date recordTimeStamp) {
 		super();
@@ -98,6 +98,7 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 		this.blSampleVO = blSampleVO;
 		this.diffractionPlanVO = diffractionPlanVO;
 		this.positionVO = positionVO;
+		this.position2VO = position2VO;
 		this.blSubSampleUUID = blSubSampleUUID;
 		this.imgFileName = imgFileName;
 		this.imgFilePath = imgFilePath;
@@ -111,6 +112,7 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 		this.blSampleVO = vo.getBlSampleVO();
 		this.diffractionPlanVO = vo.getDiffractionPlanVO();
 		this.positionVO = vo.getPositionVO();
+		this.position2VO = vo.getPosition2VO();
 		this.blSubSampleUUID = vo.getBlSubSampleUUID();
 		this.imgFileName = vo.getImgFileName();
 		this.imgFilePath = vo.getImgFilePath();
@@ -157,6 +159,14 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setPositionVO(Position3VO positionVO) {
 		this.positionVO = positionVO;
+	}
+
+	public Position3VO getPosition2VO() {
+		return position2VO;
+	}
+
+	public void setPosition2VO(Position3VO position2vo) {
+		position2VO = position2vo;
 	}
 
 	public String getBlSubSampleUUID() {

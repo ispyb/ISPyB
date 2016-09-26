@@ -101,13 +101,16 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") }, inverseJoinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") })
 	private Set<Proposal3VO> proposalVOs;
 
+	@Column(name = "externalId")
+	protected Integer externalId;
+
 	public Person3VO() {
 		super();
 	}
 
 	public Person3VO(Integer personId, Laboratory3VO laboratoryVO, String siteId, String personUUID, String familyName, String givenName,
 			String title, String emailAddress, String phoneNumber, String login, String faxNumber,
-			Set<Proposal3VO> proposalVOs) {
+			Set<Proposal3VO> proposalVOs, Integer externalId) {
 		super();
 		this.personId = personId;
 		this.laboratoryVO = laboratoryVO;
@@ -121,6 +124,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.login = login;
 		this.faxNumber = faxNumber;
 		this.proposalVOs = proposalVOs;
+		this.externalId = externalId;
 	}
 
 	public Person3VO(Person3VO vo) {
@@ -137,6 +141,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
 		this.proposalVOs = vo.getProposalVOs();
+		this.externalId = vo.getExternalId();
 	}
 
 	public void fillVOFromLight(PersonWS3VO vo) {
@@ -152,6 +157,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
 		this.proposalVOs = null;
+		this.externalId = vo.getExternalId();
 	}
 
 	@Override
@@ -273,6 +279,15 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	public Integer getLaboratoryVOId() {
 		return laboratoryVO == null ? null : laboratoryVO.getLaboratoryId();
+	}
+
+	
+	public Integer getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(Integer externalId) {
+		this.externalId = externalId;
 	}
 
 	/**

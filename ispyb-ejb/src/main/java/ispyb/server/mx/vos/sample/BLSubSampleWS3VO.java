@@ -32,6 +32,8 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 
 	private Integer positionId;
 	
+	private Integer position2Id;
+	
 	private Integer diffractionPlanId;
 
 	public BLSubSampleWS3VO() {
@@ -42,14 +44,16 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 		super(vo);
 		this.blSampleId = vo.getBlSampleVO().getBlSampleId();
 		this.positionId = (vo.getPositionVO() == null ? null: vo.getPositionVO().getPositionId());
+		this.position2Id = (vo.getPosition2VO() == null ? null: vo.getPosition2VO().getPositionId());
 		this.diffractionPlanId = (vo.getDiffractionPlanVO() == null ? null: vo.getDiffractionPlanVO().getDiffractionPlanId());
 	}
 
-	public BLSubSampleWS3VO(Integer blSampleId, Integer positionId, 
+	public BLSubSampleWS3VO(Integer blSampleId, Integer positionId, Integer position2Id, 
 			Integer diffractionPlanId) {
 		super();
 		this.blSampleId = blSampleId;
 		this.positionId = positionId;
+		this.position2Id = position2Id;
 		this.diffractionPlanId = diffractionPlanId;
 	}
 
@@ -67,6 +71,14 @@ public class BLSubSampleWS3VO extends BLSubSample3VO{
 
 	public void setPositionId(Integer positionId) {
 		this.positionId = positionId;
+	}
+
+	public Integer getPosition2Id() {
+		return position2Id;
+	}
+
+	public void setPosition2Id(Integer position2Id) {
+		this.position2Id = position2Id;
 	}
 
 	public Integer getDiffractionPlanId() {

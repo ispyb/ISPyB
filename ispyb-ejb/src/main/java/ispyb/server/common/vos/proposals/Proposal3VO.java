@@ -80,16 +80,18 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@OneToMany
 	@JoinColumn(name = "proposalId")
 	private Set<Shipping3VO> shippingVOs;
+	
+	@Column(name = "externalId")
+	protected Integer externalId;
 
 	public Proposal3VO() {
 		super();
 	}
-
 	
 	public Proposal3VO(Integer proposalId, Person3VO personVO, String title,
 			String code, String number, String type,
 			Set<Session3VO> sessionVOs, Set<Protein3VO> proteinVOs,
-			Set<Shipping3VO> shippingVOs) {
+			Set<Shipping3VO> shippingVOs, Integer externalId) {
 		super();
 		this.proposalId = proposalId;
 		this.personVO = personVO;
@@ -100,6 +102,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.sessionVOs = sessionVOs;
 		this.proteinVOs = proteinVOs;
 		this.shippingVOs = shippingVOs;
+		this.externalId = externalId;
 	}
 	
 	public Proposal3VO(Proposal3VO vo) {
@@ -113,6 +116,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.sessionVOs = vo.getSessionVOs();
 		this.proteinVOs = vo.getProteinVOs();
 		this.shippingVOs = vo.getShippingVOs();
+		this.externalId = vo.getExternalId();
 	}
 	
 	public void fillVOFromLight(ProposalWS3VO vo) {
@@ -125,6 +129,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.sessionVOs =  null;
 		this.proteinVOs =  null;
 		this.shippingVOs =  null;
+		this.externalId = vo.getExternalId();
 	}
 
 
@@ -208,6 +213,16 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	
 	public Integer getPersonVOId() {
 		return personVO == null ? null : personVO.getPersonId();
+	}
+
+
+	public Integer getExternalId() {
+		return externalId;
+	}
+
+
+	public void setExternalId(Integer externalId) {
+		this.externalId = externalId;
 	}
 
 

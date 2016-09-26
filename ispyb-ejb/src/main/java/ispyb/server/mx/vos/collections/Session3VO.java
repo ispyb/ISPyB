@@ -144,6 +144,10 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "sessionId")
 	@OrderBy(clause = "startTime DESC")
 	private Set<EnergyScan3VO> energyScanVOs;
+	
+	@Column(name = "externalId")
+	protected Integer externalId;
+
 
 	// this link is not bidirectional so the following should not be declared
 	// @ManyToMany
@@ -158,7 +162,7 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 			String projectCode, Date startDate, Date endDate, String beamlineName, Byte scheduled, Integer nbShifts,
 			String comments, String beamlineOperator, Byte usedFlag, String sessionTitle,
 			Float structureDeterminations, Float dewarTransport, Float databackupFrance, Float databackupEurope,
-			Integer visit_number, String operatorSiteNumber, Date timeStamp, Date lastUpdate, String protectedData) {
+			Integer visit_number, String operatorSiteNumber, Date timeStamp, Date lastUpdate, String protectedData, Integer externalId) {
 		super();
 		this.sessionId = sessionId;
 		this.expSessionPk = expSessionPk;
@@ -183,6 +187,7 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 		this.operatorSiteNumber = operatorSiteNumber;
 		this.lastUpdate = lastUpdate;
 		this.protectedData = protectedData;
+		this.externalId = externalId;
 	}
 
 	public Session3VO(Session3VO vo) {
@@ -209,6 +214,7 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 		this.timeStamp = vo.getTimeStamp();
 		this.lastUpdate = vo.getLastUpdate();
 		this.protectedData = vo.getProtectedData();
+		this.externalId = vo.getExternalId();
 	}
 
 	public void fillVOFromWS(SessionWS3VO vo) {
@@ -233,6 +239,7 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 		this.operatorSiteNumber = vo.getOperatorSiteNumber();
 		this.lastUpdate = vo.getLastUpdate();
 		this.protectedData = vo.getProtectedData();
+		this.externalId = vo.getExternalId();
 	}
 
 	@Override
@@ -483,6 +490,14 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 
 	public ArrayList<EnergyScan3VO> getEnergyScansList() {
 		return this.energyScanVOs == null ? null : new ArrayList<EnergyScan3VO>(Arrays.asList(getEnergyScanTab()));
+	}
+
+	public Integer getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(Integer externalId) {
+		this.externalId = externalId;
 	}
 
 	/**

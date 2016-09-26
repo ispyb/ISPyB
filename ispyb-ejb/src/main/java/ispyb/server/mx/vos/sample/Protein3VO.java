@@ -84,12 +84,15 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "proteinId")
 	private Set<Crystal3VO> crystalVOs;
 
+	@Column(name = "externalId")
+	protected Integer externalId;
+
 	public Protein3VO() {
 		super();
 	}
 
 	public Protein3VO(Integer proteinId, Proposal3VO proposalVO, String name, String acronym, Double molecularMass,
-			String proteinType, String sequence, Integer personId, Date timeStamp, Byte isCreatedBySampleSheet) {
+			String proteinType, String sequence, Integer personId, Date timeStamp, Byte isCreatedBySampleSheet, Integer externalId) {
 		super();
 		this.proteinId = proteinId;
 		this.proposalVO = proposalVO;
@@ -101,6 +104,7 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 		this.personId = personId;
 		this.timeStamp = timeStamp;
 		this.isCreatedBySampleSheet = isCreatedBySampleSheet;
+		this.externalId = externalId;
 	}
 
 	@Override
@@ -213,6 +217,14 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 		int len = set.size();
 		Crystal3VO[] tab = set.toArray(new Crystal3VO[len]);
 		return tab;
+	}
+
+	public Integer getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(Integer externalId) {
+		this.externalId = externalId;
 	}
 
 	/**
