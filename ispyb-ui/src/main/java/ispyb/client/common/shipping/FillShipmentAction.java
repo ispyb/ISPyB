@@ -489,7 +489,7 @@ public class FillShipmentAction   extends DispatchAction{
 				dewarId = Integer.parseInt(dewarIdSt);
 				Dewar3VO dewarVO = this.dewarService.findByPk(dewarId, false, false);
 				
-				List<Container3VO> containers = this.containerService.findByBarCode(dewarId, puckName);
+				List<Container3VO> containers = this.containerService.findByCode(dewarId, puckName);
 				if (containers.size() > 0) {
 					errors.add("Label or Bar Code "+puckName+" already exists for this dewar");
 					HashMap<String, Object> data = new HashMap<String, Object>();
@@ -536,7 +536,7 @@ public class FillShipmentAction   extends DispatchAction{
 			try{
 				containerId = Integer.parseInt(containerIdSt);
 				Container3VO containerVO = this.containerService.findByPk(containerId, false);
-				List<Container3VO> containers = this.containerService.findByBarCode(containerVO.getDewarVOId(), puckName.trim());
+				List<Container3VO> containers = this.containerService.findByCode(containerVO.getDewarVOId(), puckName.trim());
 				if (containers.size() > 0) {
 					errors.add("Label  "+puckName+" already exists for this dewar");
 					HashMap<String, Object> data = new HashMap<String, Object>();
