@@ -40,6 +40,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 			for (Integer id : ids) {
 				workflowStepList.add(this.getWorkflowStep3Service().findById(id, this.getProposalId(proposal)));
 			}
+			this.logFinish(methodName, start, logger);
 			return this.sendResponse(workflowStepList);
 
 		} catch (Exception e) {
@@ -61,10 +62,10 @@ public class WorkflowRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
-			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getImageResultFilePath() != null){
 					if (new File(workflowStep.getImageResultFilePath()).exists()){
+						this.logFinish(methodName, start, logger);
 						return this.sendImage(workflowStep.getImageResultFilePath());
 					}
 				}
@@ -90,10 +91,10 @@ public class WorkflowRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
-			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getHtmlResultFilePath() != null){
 					if (new File(workflowStep.getHtmlResultFilePath()).exists()){
+						this.logFinish(methodName, start, logger);
 						return new String(Files.readAllBytes(Paths.get(workflowStep.getHtmlResultFilePath())));
 					}
 				}
@@ -119,11 +120,11 @@ public class WorkflowRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
-			this.logFinish(methodName, start, logger);
 			if (workflowStep != null){
 				if (workflowStep.getResultFilePath() != null){
 					if (new File(workflowStep.getResultFilePath()).exists()){
 						byte[] encoded = Files.readAllBytes(Paths.get(workflowStep.getResultFilePath()));
+						this.logFinish(methodName, start, logger);
 						return this.sendResponse(new String(encoded));
 					}
 				}
