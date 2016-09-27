@@ -1,6 +1,15 @@
+********************************************************************************
+
+New TAG : ISPYB_4.0.8
+Tag before merge with SOLEIL developement on BioSaxs webservices
+
+
 **************
 * 26.09.2016     *
 **************
+
+Improve logging on workflow webservices
+
 New jar for WEB services client generation used to link with the User Portal
 
 3rd step of database merging with DLS:
@@ -9,6 +18,7 @@ New jar for WEB services client generation used to link with the User Portal
  DBmerging for new fields:
  - externalId in Proposal, Protein, Person, BLSession + ejbs + methods
  - position2Id in BLSubsample + ejbs + methods
+ 
 
 ********************************************************************************
 
@@ -22,6 +32,9 @@ New dependency on a jar for WEB services client generation used to link with the
 to avoid the "online" regeneration of classes
 
 Improvement of documentation
+
+Added enunciate to generate documentation of the Restful API when building the project
+Documentation is accessible from /ispyb/ispyb-ws/ui/index.html
 
 **************
 * 31.08.2016     *
