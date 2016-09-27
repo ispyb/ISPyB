@@ -1,7 +1,7 @@
 ********************************************************************************
 
 New TAG : ISPYB_4.0.8
-Tag before merge with SOLEIL developement on BioSaxs webservices
+Tag before merge with SOLEIL developments on BioSaxs webservices
 
 
 **************
