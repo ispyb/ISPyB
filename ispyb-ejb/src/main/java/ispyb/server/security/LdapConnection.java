@@ -185,7 +185,6 @@ public class LdapConnection {
 			InitialContext iniCtx = new InitialContext();
 			ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
 			String people = LDAP_people;
-			lastName = "*" + lastName + "*";
 			String filter = "(&(sn=" + lastName + ")(givenName=" + firstName + "))";
 			NamingEnumeration answer = ldapCtx.search(people, filter, null);
 			EmployeeVO emp = null;
@@ -202,9 +201,29 @@ public class LdapConnection {
 				}
 			} else {
 				// Not found
-				LOG.error("findOneEmployeeByNames employee " + lastName + "/" + firstName + " not found.");
-				emp = null;
+				LOG.error("findOneEmployeeByNames employee " + lastName + "/" + firstName + " not found.");	
+				// try with wildcards *
+				lastName = "*" + lastName + "*";
+				filter = "(&(sn=" + lastName + ")(givenName=" + firstName + "))";
+				answer = ldapCtx.search(people, filter, null);
+				if (answer.hasMoreElements()) {
+					SearchResult result = (SearchResult) answer.next();
+					if (answer.hasMoreElements()) {
+						// Not unique answer
+						LOG.error("findOneEmployeeByNames: employee " + lastName + "/" + firstName + " is not unique.");
+						emp = null;
+					} else {
+						// Ok
+						Map attributesMap = getAttributesMap(result);
+						emp = new EmployeeVO(attributesMap);
+					}
+				} else {
+					// Not found
+					LOG.error("findOneEmployeeByNames employee " + lastName + "/" + firstName + " not found.");
+					emp = null;
+				}
 			}
+
 			answer.close();
 			ldapCtx.close();
 			iniCtx.close();
@@ -244,7 +263,7 @@ public class LdapConnection {
 				// }
 			} else {
 
-				LOG.error("Cannot find user in ldap " + lastName + "/" + firstName);
+				LOG.error("Cannot find user in ldap with lastname= " + lastName + " and firstname= " + firstName);
 			}
 		} catch (Exception e) {
 			LOG.error("Cannot access to LDAP");
