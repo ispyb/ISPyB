@@ -61,7 +61,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	}
 
 	private static String SELECT_PERSON = "SELECT p.personId, p.laboratoryId, p.siteId, p.personUUID, "
-			+ "p.familyName, p.givenName, p.title, p.emailAddress, p.phoneNumber, p.login, p.faxNumber ";
+			+ "p.familyName, p.givenName, p.title, p.emailAddress, p.phoneNumber, p.login, p.faxNumber, p.externalId ";
 
 	private static String FIND_BY_SESSION = SELECT_PERSON + " FROM Person p, Proposal pro, BLSession ses "
 			+ "WHERE p.personId = pro.personId AND pro.proposalId = ses.proposalId AND ses.sessionId = :sessionId ";
