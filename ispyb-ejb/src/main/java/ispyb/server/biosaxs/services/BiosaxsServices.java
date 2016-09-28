@@ -408,6 +408,9 @@ public class BiosaxsServices {
 	 */
 	public String toRobotXML(Integer experimentId) {
 		Experiment3VO experiment = this.experiment3Service.findById(experimentId, ExperimentScope.MINIMAL);
+		if (experiment == null) {
+			return null;
+		}
 		return this.experiment3Service.toRobotXML(experimentId, experiment.getProposalId(),
 				SaxsDataCollectionComparator.defaultComparator);
 

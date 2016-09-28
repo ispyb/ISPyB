@@ -20,14 +20,6 @@
 package ispyb.server.biosaxs.services.core.analysis.abInitioModelling;
 
 
-import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
-import ispyb.server.biosaxs.vos.datacollection.AbInitioModel3VO;
-import ispyb.server.biosaxs.vos.datacollection.Model3VO;
-import ispyb.server.biosaxs.vos.datacollection.ModelList3VO;
-import ispyb.server.biosaxs.vos.datacollection.ModelToList3VO;
-import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
-import ispyb.server.biosaxs.vos.datacollection.SubtractiontoAbInitioModel3VO;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -46,6 +38,15 @@ import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
+import ispyb.server.biosaxs.vos.datacollection.AbInitioModel3VO;
+import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.biosaxs.vos.datacollection.ModelList3VO;
+import ispyb.server.biosaxs.vos.datacollection.ModelToList3VO;
+import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
+import ispyb.server.biosaxs.vos.datacollection.SubtractiontoAbInitioModel3VO;
+import ispyb.server.common.util.ISPyBRuntimeException;
 
 
 
@@ -150,7 +151,6 @@ public class AbInitioModelling3ServiceBean implements AbInitioModelling3Service,
 	 * 
 	 * AbInitio Modeling method to store all the data coming from the abInitio analysis
 	 ******************************************************************************************/
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addAbinitioModeling(ArrayList<Integer> measurementIds,ArrayList<Model3VO> models3vo, Model3VO dammaverModel,
 			Model3VO dammifModel, Model3VO damminModel, String nsdPlot,String chi2plot) {
@@ -182,6 +182,8 @@ public class AbInitioModelling3ServiceBean implements AbInitioModelling3Service,
 				abInitioModel3VO.setShapeDeterminationModel(this.entityManager.merge(damminModel));
 			}
 			abInitioModel3VO = this.merge(abInitioModel3VO);
+		} else {
+			throw new ISPyBRuntimeException("At least one substraction should be available but none found.");
 		}
 	}
 	
