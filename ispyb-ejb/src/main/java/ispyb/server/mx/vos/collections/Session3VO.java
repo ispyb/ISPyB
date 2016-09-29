@@ -597,23 +597,21 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 	public  String getBeamLineOperatorEmail(){
 		String beamLineOperatorEmail = "";
 		if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_MAXIV()) { // connection to ldap only for the esrf
+			
 			if (this.getBeamlineOperator() != null && !this.getBeamlineOperator().equals("")) {
-				// Get first letter of firstName + *
+				
+				String lastName = this.getBeamlineOperator();				
 				String firstNameLetter = "*";
 				if (this.getBeamlineOperator()
-						.substring(this.getBeamlineOperator().length() - 2, this.getBeamlineOperator().length() - 1)
-						.equals(" "))
-					firstNameLetter = this.getBeamlineOperator().substring(this.getBeamlineOperator().length() - 1,
-							this.getBeamlineOperator().length())
-							+ "*";
-
-				String lastName = this.getBeamlineOperator();
-				if (firstNameLetter.length() == 2) {
+						.substring(this.getBeamlineOperator().length() - 2, this.getBeamlineOperator().length() - 1).equals(" ")) {
+					// Get first letter of firstName + *
+					firstNameLetter = this.getBeamlineOperator().substring(this.getBeamlineOperator().length() - 1, this.getBeamlineOperator().length()) + "*";
 					// Get lastName without first letter of firstName in case there was a firstname letter
 					lastName = this.getBeamlineOperator().substring(0, this.getBeamlineOperator().length() - 2);
 					if (lastName.endsWith(" "))
 						lastName = lastName.substring(0, lastName.length() - 1);
 				}
+				
 				lastName = lastName.replace(' ', '*');
 				if(lastName.toLowerCase().startsWith("mc")){
 					lastName = "mc*"+lastName.substring(2);

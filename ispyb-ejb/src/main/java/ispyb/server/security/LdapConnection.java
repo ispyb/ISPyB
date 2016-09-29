@@ -178,6 +178,33 @@ public class LdapConnection {
 	 * @throws Exception
 	 */
 	public static EmployeeVO findOneEmployeeByNames(String lastName, String firstName) throws Exception {
+		String origName = lastName;
+
+		EmployeeVO emp = findOneEmployeeByNameAndFirstname(lastName,firstName);
+		if (emp != null){
+			return emp;
+		} else {
+			// try with wildcards *
+			lastName = origName + "*";
+			emp = findOneEmployeeByNameAndFirstname(lastName,firstName);
+			if (emp != null){
+				return emp;
+			} else {
+				// try with wildcards *
+				lastName = "*" + origName;
+				emp = findOneEmployeeByNameAndFirstname(lastName,firstName);
+			}
+		}
+		return emp;
+	}
+	
+	/**
+	 * @param lastName
+	 * @param fisrtName
+	 * @return
+	 * @throws Exception
+	 */
+	private static EmployeeVO findOneEmployeeByNameAndFirstname(String lastName, String firstName) throws Exception {
 
 		String ldapEmployeeDirectory = LDAP_Employee_Resource;
 		LdapContext ldapCtx;
@@ -202,28 +229,8 @@ public class LdapConnection {
 			} else {
 				// Not found
 				LOG.error("findOneEmployeeByNames employee " + lastName + "/" + firstName + " not found.");	
-				// try with wildcards *
-				lastName = "*" + lastName + "*";
-				filter = "(&(sn=" + lastName + ")(givenName=" + firstName + "))";
-				answer = ldapCtx.search(people, filter, null);
-				if (answer.hasMoreElements()) {
-					SearchResult result = (SearchResult) answer.next();
-					if (answer.hasMoreElements()) {
-						// Not unique answer
-						LOG.error("findOneEmployeeByNames: employee " + lastName + "/" + firstName + " is not unique.");
-						emp = null;
-					} else {
-						// Ok
-						Map attributesMap = getAttributesMap(result);
-						emp = new EmployeeVO(attributesMap);
-					}
-				} else {
-					// Not found
-					LOG.error("findOneEmployeeByNames employee " + lastName + "/" + firstName + " not found.");
 					emp = null;
-				}
 			}
-
 			answer.close();
 			ldapCtx.close();
 			iniCtx.close();
