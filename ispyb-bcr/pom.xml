@@ -13,10 +13,11 @@
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jboss.home.dev>${jboss.home}</jboss.home.dev> 
-	<xdoclet.home>C:/java/xdoclet-1.2.3</xdoclet.home>	
+	<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>	
 	<common.lib.dir>${basedir}/lib</common.lib.dir>
 	<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
-	<jboss.modules.base>C:/java/appServers/wildfly-8.2.0.Final/modules/system/layers/base</jboss.modules.base>
+	<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
+	
   </properties>
   
   <dependencies>
@@ -266,59 +267,57 @@
 				<configuration>
 					<skip>false</skip>
 				</configuration>
-			</plugin>
+			</plugin>			
 			
 <!-- to generate struts xml config files --> 
-<plugin>   
-                                                        
-<artifactId>maven-antrun-plugin</artifactId> 
 
-                       
-<executions>                                                       
- <execution>                                                       
-  <phase>generate-sources</phase>                                  
-   <configuration>                                                 
-    <tasks>  
-    	<echo message="xdoclet.home = ${xdoclet.home}" />
-    	
-    	<path id="xdoclet.client.path">	
-			<fileset dir="${xdoclet.home}/lib">
-				<include name="*.jar" />
-			</fileset>
-			<fileset dir="${common.lib.dir}">
-				<include name="*.jar" />
-			</fileset>
-			<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
-		</path>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<echo message="xdoclet.home = ${xdoclet.home}" />
+								<path id="xdoclet.client.path">
+									<fileset dir="${xdoclet.home}">
+										<include name="*.jar" />
+									</fileset>
+									<fileset dir="${common.lib.dir}">
+										<include name="*.jar" />
+									</fileset>
+ 									<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" /> 
+								</path>
+								<echo message="user.home: ${xdoclet.client.path}" />
+								<echo message="java src:  ${basedir}/src/main/java}" />
+								<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask"
+									classpathref="xdoclet.client.path" />
 
-    	<echo message="user.home: ${xdoclet.client.path}" />
-    	<echo message="java src:  ${basedir}/src/main/java}" />
-    				
-		<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask" classpathref="xdoclet.client.path"/>
+								<webdoclet destdir="${webinf.dir}"
+									mergeDir="${basedir}/src/main/webapp/mergedir" verbose="true"
+									excludedtags="@version,@author">
+									<fileset dir="${basedir}/src/main/java">
+										<include name="**/*.java" />
+									</fileset>
 
-		<webdoclet destdir="${webinf.dir}" mergeDir="${basedir}/src/main/webapp/mergedir" verbose="true" excludedtags="@version,@author">
-			<fileset dir="${basedir}/src/main/java">
-				<include name="**/*.java" />
-				<exclude name="**/uk/ac/ehtpx/**" />
-			</fileset>
-			
-			<deploymentdescriptor servletspec="2.3" validatexml="true" destdir="${webinf.dir}" distributable="false" />
-			
-			<strutsconfigxml version="1.2" destdir="${webinf.dir}" />
-			<strutsvalidationxml destdir="${webinf.dir}" />
-			<jbosswebxml destdir="${webinf.dir}" />			
+									<deploymentdescriptor servletspec="2.3"
+										validatexml="true" destdir="${webinf.dir}" distributable="false" />
 
-		</webdoclet>
-		                                                  
-      </tasks>                                                     
-    </configuration>                                               
-    <goals>                                                        
-      <goal>run</goal>                                             
-    </goals>                                                       
-  </execution>                                                     
-</executions>                                                      
-</plugin>
- 		
+									<strutsconfigxml version="1.2" destdir="${webinf.dir}" />
+									<strutsvalidationxml destdir="${webinf.dir}" />
+									<jbosswebxml destdir="${webinf.dir}" />
+
+								</webdoclet>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 </plugins>
 	</build>
 	
