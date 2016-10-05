@@ -1,5 +1,7 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.common.util.HashMapToZip;
+import ispyb.server.common.test.services.ZipperTest;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.utils.reader.AutoProcProgramaAttachmentFileReader;
 import ispyb.server.mx.services.ws.rest.autoprocessingintegration.AutoProcessingIntegrationService;
@@ -120,6 +122,54 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
+	
+	/**
+	 * AutoProcProgramAttachment has not AutoProcProgramId mapped in the EJB object
+	 * so it is necessary to keep separately the possible list of ids in order
+	 * to identify in the client the list of files linked to a sinble autoProcProgram
+	 * 
+	 * So, if autoprocattachmentids contains n different ids then the response will be an n-array with the list of files for each id
+	 **/
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/download")
+	@Produces("text/plain")
+	public Response downloadAttachments(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("autoprocattachmentids") String autoprocattachmentids) {
+
+		String methodName = "downloadAttachments";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Integer> ids = this.parseToInteger(autoprocattachmentids);
+			List<List<AutoProcProgramAttachment3VO>> list = new ArrayList<List<AutoProcProgramAttachment3VO>>();
+			HashMap<String, String> filePaths = new HashMap<String, String>();
+			String filename = "download.zip";
+			for (Integer id : ids) {
+				AutoProcProgram3VO autoProcProgram3VO = this.getAutoProcProgram3Service().findByPk(id, true);
+				list.add(autoProcProgram3VO.getAttachmentListVOs());
+				ArrayList<AutoProcProgramAttachment3VO> listAttachments = autoProcProgram3VO.getAttachmentListVOs();
+				for (AutoProcProgramAttachment3VO auto : listAttachments) {
+					System.out.println("------------");
+					System.out.println(auto.getFileName());
+					System.out.println(auto.getFilePath());
+					String filePah = auto.getFilePath() + "/" + auto.getFileName();
+					if (new File(filePah).exists()){
+						if (new File(filePah).isFile()){
+							filePaths.put(auto.getFileName(), filePah);
+						}
+					}
+				}
+				filename = autoProcProgram3VO.getProcessingPrograms() + "_" +autoProcProgram3VO.getAutoProcProgramId() +".zip";
+			}
+			this.logFinish(methodName, start, logger);
+			return this.downloadFile(HashMapToZip.doZip(filePaths), filename);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 	
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
