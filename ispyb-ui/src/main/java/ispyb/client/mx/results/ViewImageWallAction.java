@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
@@ -87,7 +88,7 @@ import ispyb.server.mx.vos.screening.ScreeningStrategyWedge3VO;
  * @struts.action-forward name="managerviewJpegImage" path="manager.results.viewJpegImage.page"
  * @struts.action-forward name="viewImageThumbnails" path="user.results.viewImageThumbnails.page"
  */
-public class ViewImageWallAction extends ViewResultsAction {
+public class ViewImageWallAction extends DispatchAction {
 
 	private String dataCollectionIdst;
 
@@ -156,7 +157,6 @@ public class ViewImageWallAction extends ViewResultsAction {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	public ActionForward display(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
 			HttpServletResponse in_reponse) {
 		ActionMessages errors = new ActionMessages();
@@ -386,7 +386,7 @@ public class ViewImageWallAction extends ViewResultsAction {
 			//DataCollectionLightValue dcValue = dataCollection.findByPrimaryKey(dataCollectionId);
 			String fullDenzoPath = FileUtil.GetFullDenzoPath(dataCollectionVO);
 			DenzonContentPresent = (new File(fullDenzoPath)).exists();
-			displayDenzoContent = DisplayDenzoContent(dataCollectionVO);
+			displayDenzoContent = ViewResultsAction.DisplayDenzoContent(dataCollectionVO);
 
 			// Snapshot Image present ?
 			ArrayList<SnapshotInfo> listSnapshots = FileUtil.GetFullSnapshotPath(dataCollectionVO);
@@ -455,6 +455,66 @@ public class ViewImageWallAction extends ViewResultsAction {
 			}else
 				return mapping.findForward("successImageWall");
 		}
+	}
+	
+	/**
+	 * Display EDNA results content on the page
+	 * 
+	 * @param mapping
+	 * @param actForm
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ActionForward displayEDNA(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse response, ActionMessages errors) throws Exception {
+
+		ViewResultsForm form = (ViewResultsForm) actForm;
+		dataCollectionIdst = request.getParameter(Constants.DATA_COLLECTION_ID);
+		try {
+			// Integer dataCollectionId = new Integer(dataCollectionIdst);
+			Integer dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
+			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
+			String archivePath = Constants.SITE_IS_DLS() ? PathUtils.getFullEDNAPath(dc) : PathUtils.getFullDNAPath(dc);
+			// String fullEDNAPath = archivePath + Constants.EDNA_FILES_SUFIX;
+
+			boolean isFileExist = new File(archivePath + Constants.EDNA_FILES_SUFIX).exists();
+			String fullEDNAPath = archivePath;
+			if (Constants.SITE_IS_DLS() || (isFileExist)) {
+				fullEDNAPath += Constants.EDNA_FILES_SUFIX;
+			}
+
+			String indexPath = Constants.SITE_IS_DLS() ? archivePath + ViewResultsAction.EDNA_FILES_INDEX_FILE : archivePath + ViewResultsAction.getEdna_index_file(dc);
+
+			boolean isFileExist2 = new File(indexPath).exists();
+			String fileContent = "";
+			if (isFileExist2)
+				fileContent = FileUtil.fileToString(indexPath);
+
+			// Case where the file is not found
+			if (fileContent == null) {
+				// errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.results.viewDNA"));
+				form.setDNAContent("Sorry, but no EDNA files can be retrieved for this data collection.");
+				return null;
+			}
+			//
+			// String fullDNAFileContent = FileUtil.fileToString(indexPath);
+
+			// Populate form
+			form.setDataCollectionId(dataCollectionId);
+			form.setDNAContent("<iframe scrolling='yes' frameborder='0' width='790' height='600' src='" + request.getContextPath()
+					+ "/user/viewResults.do?reqCode=displayEDNAPagesContent&dataCollectionId=" + dataCollectionId.toString() + "'>"
+					+ fileContent + "</iframe>");
+			FormUtils.setFormDisplayMode(request, actForm, FormUtils.INSPECT_MODE);
+
+			return null;
+		} catch (NumberFormatException e) {
+			form.setDNAContent("Sorry, an error occurs while retrieving the EDNA file:" + dataCollectionIdst);
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 }

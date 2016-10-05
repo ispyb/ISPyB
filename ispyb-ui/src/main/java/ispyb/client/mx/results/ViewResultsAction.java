@@ -147,7 +147,7 @@ public class ViewResultsAction extends DispatchAction {
 
 	private static final int SNAPSHOT_EXPECTED_NUMBER = 4;
 
-	private static final String EDNA_FILES_INDEX_FILE = Constants.SITE_IS_DLS() ? "summary.html" : "index_edna.html";
+	protected static final String EDNA_FILES_INDEX_FILE = Constants.SITE_IS_DLS() ? "summary.html" : "index_edna.html";
 
 	private final static Logger LOG = Logger.getLogger(ViewResultsAction.class);
 	
@@ -158,7 +158,7 @@ public class ViewResultsAction extends DispatchAction {
 	private final double DEFAULT_ISIGMA = 1.0;
 
 	// TODO erase this method when DNA no more used, only EDNA and index file name is changed
-	private String getEdna_index_file(DataCollection3VO dataCollectionVO) throws Exception {
+	protected static String getEdna_index_file(DataCollection3VO dataCollectionVO) throws Exception {
 		String fullDNAPath = PathUtils.getFullDNAPath(dataCollectionVO);
 
 		if (new File(fullDNAPath + EDNA_FILES_INDEX_FILE).exists())
@@ -1728,7 +1728,7 @@ public class ViewResultsAction extends DispatchAction {
 
 	// -----------------------------------------------------------------------
 
-	public boolean DisplayDenzoContent(DataCollection3VO dataCollectionVO) throws Exception {
+	public static boolean DisplayDenzoContent(DataCollection3VO dataCollectionVO) throws Exception {
 		boolean displayDenzoContent = false;
 
 		try {
