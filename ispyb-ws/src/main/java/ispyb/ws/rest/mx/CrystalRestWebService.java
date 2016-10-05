@@ -65,8 +65,7 @@ public class CrystalRestWebService extends MXRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/crystal/list")
 	@Produces({ "application/json" })
-	public Response getCrystalById(@PathParam("token") String token,
-			@PathParam("proposal") String proposal) {
+	public Response getCrystalList(@PathParam("token") String token,@PathParam("proposal") String proposal) {
 
 		String methodName = "getCrystalById";
 		long start = this.logInit(methodName, logger, token, proposal);
