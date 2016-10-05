@@ -42,6 +42,34 @@ VIEW `v_datacollection_summary_autoprocintegration` AS
         LEFT JOIN `SpaceGroup` ON ((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
 
         
+drop view v_datacollection_summary_screening;
+
+CREATE 
+    ALGORITHM = MERGE 
+    DEFINER = `pxadmin`@`%` 
+    SQL SECURITY DEFINER
+VIEW `v_datacollection_summary_screening` AS
+    SELECT 
+        `Screening`.`screeningId` AS `Screening_screeningId`,
+        `Screening`.`dataCollectionId` AS `Screening_dataCollectionId`,
+        `Screening`.`dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,
+        `ScreeningOutput`.`strategySuccess` AS `ScreeningOutput_strategySuccess`,
+        `ScreeningOutput`.`indexingSuccess` AS `ScreeningOutput_indexingSuccess`,
+        `ScreeningOutput`.`rankingResolution` AS `ScreeningOutput_rankingResolution`,
+        `ScreeningOutput`.`mosaicityEstimated` AS `ScreeningOutput_mosaicityEstimated`,
+        `ScreeningOutput`.`mosaicity` AS `ScreeningOutput_mosaicity`,
+        `ScreeningOutputLattice`.`spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,
+        `ScreeningOutputLattice`.`unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,
+        `ScreeningOutputLattice`.`unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,
+        `ScreeningOutputLattice`.`unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,
+        `ScreeningOutputLattice`.`unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,
+        `ScreeningOutputLattice`.`unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,
+        `ScreeningOutputLattice`.`unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`
+    FROM
+        ((`Screening`
+        LEFT JOIN `ScreeningOutput` ON ((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`)))
+        LEFT JOIN `ScreeningOutputLattice` ON ((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`)));
+        
         
 drop view v_datacollection_summary;
 
@@ -195,4 +223,6 @@ VIEW `v_datacollection_summary` AS
         LEFT JOIN `Protein` ON ((`Protein`.`proteinId` = `Crystal`.`proteinId`)))
         LEFT JOIN `Workflow` ON ((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`)))
         LEFT JOIN `v_datacollection_summary_autoprocintegration` ON ((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`)))
-        LEFT JOIN `v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionId` = `DataCollection`.`dataCollectionId`)));
+        LEFT JOIN `v_datacollection_summary_screening` ON ((`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)));
+      
+        
