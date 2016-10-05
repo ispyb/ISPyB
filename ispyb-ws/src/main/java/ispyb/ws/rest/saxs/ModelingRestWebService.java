@@ -1,7 +1,6 @@
 package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.utils.reader.pdb.PDBFactoryProducer;
-import ispyb.ws.rest.RestWebService;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
