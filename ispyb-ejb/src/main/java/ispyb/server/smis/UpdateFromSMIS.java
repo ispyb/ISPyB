@@ -33,6 +33,7 @@ import javax.naming.NamingException;
 import org.apache.log4j.Logger;
 
 import generated.ws.smis.ExpSessionInfoLightVO;
+import generated.ws.smis.InnerScientistVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import generated.ws.smis.SampleSheetInfoLightVO;
@@ -656,19 +657,21 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 
 	private static void retrieveSession(Proposal3VO proplv, ExpSessionInfoLightVO sessionVO) throws Exception {
 		// local contact name + 1st letter of firstname is retrieved
-
 		initServices();
 
 		Integer proposalId = proplv.getProposalId();
-
-		String beamLineO = "";
-		if (sessionVO.getLocalContactName() != null) {
-			beamLineO = sessionVO.getLocalContactName() + "  " + sessionVO.getLocalContactFirstName().substring(0, 1);
-		}
-		// site number is retrieved
 		String siteNumber = null;
-		if (sessionVO.getLocalContactSiteNumber() != null) {
-			siteNumber = sessionVO.getLocalContactSiteNumber().toString();
+		String beamLineO = "";
+		
+		if (sessionVO.getFirstLocalContact() != null) {
+			// we take only the first local contact
+			InnerScientistVO lcVO = sessionVO.getFirstLocalContact();			
+			beamLineO = lcVO.getName() + "  " + lcVO.getFirstName().substring(0, 1);
+
+			// site number is retrieved
+			if (lcVO.getSiteId() != null) {
+				siteNumber = lcVO.getSiteId().toString();
+			}
 		}
 		Calendar startDateCal = Calendar.getInstance();
 		startDateCal.setTime(sessionVO.getStartDate().getTime());
