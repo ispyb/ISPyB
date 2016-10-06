@@ -1,5 +1,29 @@
 ********************************************************************************
 
+New TAG : ISPYB_4.1
+
+**************
+* 07.10.2016     *
+**************
+fix bug of struts-config.xml generation leading to autoproc results not displayed
+New jar for SMIS webservices and code modifications:
+	the ExpSessionInfoLightVO is now using an inner object (InnerScientistVO) 
+	for all scientist data (local contact, main proposer and participants)
+Documentation updated with comments from MAX IV
+
+********************************************************************************
+
+New TAG : ISPYB_4.0.9
+
+**************
+* 03.10.2016     *
+**************
+New developments from SOLEIL
+Fix problems linked to foreign key still alive
+New tables from DLS schema
+
+********************************************************************************
+
 New TAG : ISPYB_4.0.8
 Tag before merge with SOLEIL developments on BioSaxs webservices
 
