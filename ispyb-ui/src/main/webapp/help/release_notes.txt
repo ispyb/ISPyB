@@ -10,6 +10,7 @@ New jar for SMIS webservices and code modifications:
 	the ExpSessionInfoLightVO is now using an inner object (InnerScientistVO) 
 	for all scientist data (local contact, main proposer and participants)
 Documentation updated with comments from MAX IV
+Modifications linked to BioSaxs EXI
 
 ********************************************************************************
 
