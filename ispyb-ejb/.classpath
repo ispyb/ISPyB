@@ -28,6 +28,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/ispyb-WSclient-SMIS-gen-prod-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/ispyb-WSclient-SMIS-gen-2.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
