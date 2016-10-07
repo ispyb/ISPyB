@@ -2,8 +2,10 @@ package ispyb.ws.rest.mx;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,6 +14,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.ws.rest.sample.SampleRestWsService;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.SampleInfo;
 
@@ -59,6 +64,7 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 
+	@Deprecated
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sampleinfo/list")
@@ -76,5 +82,29 @@ public class SampleRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
+	
+	protected SampleRestWsService getSampleRestWsService() throws NamingException {
+		return (SampleRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(SampleRestWsService.class);
+	}
+	
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/list")
+	@Produces({ "application/json" })
+	public Response getSampleByProposalId(@PathParam("token") String token, @PathParam("proposal") String proposal) {
+		
+		String methodName = "getSampleByProposalId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Map<String, Object>> samples = this.getSampleRestWsService().getSamplesByProposalId(this.getProposalId(proposal));
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(samples);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 
 }
