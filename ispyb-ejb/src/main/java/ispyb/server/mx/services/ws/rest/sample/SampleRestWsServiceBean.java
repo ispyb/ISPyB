@@ -39,9 +39,23 @@ public class SampleRestWsServiceBean implements SampleRestWsService, SampleRestW
 
 	
 	private String ByProposalId = getDewarViewTableQuery() + " where v_mx_sample.Protein_proposalId = :proposalId";
+	private String BySessionId = getDewarViewTableQuery() + " where v_mx_sample.DataCollectionGroup_sessionId = :sessionId and v_mx_sample.Protein_proposalId = :proposalId";
+	private String ByContainerId = getDewarViewTableQuery() + " where v_mx_sample.Container_containerId = :containerId and v_mx_sample.Protein_proposalId = :proposalId";
+	private String ByShippingId = getDewarViewTableQuery() + " where v_mx_sample.Shipping_shippingId = :shipingId and v_mx_sample.Protein_proposalId = :proposalId";
+	private String ByDewarId = getDewarViewTableQuery() + " where v_mx_sample.Dewar_dewarId = :dewarId and v_mx_sample.Protein_proposalId = :proposalId";
 	
+	private String getDataCollectionIdQuery(){
+		return  "  (SELECT \n" + 
+				"            MAX(`DataCollectionGroup`.`dataCollectionGroupId`)\n" + 
+				"        FROM\n" + 
+				"            `DataCollectionGroup`\n" + 
+				"        WHERE\n" + 
+				"            (`DataCollectionGroup`.`blSampleId` = `v_mx_sample`.`BLSample_blSampleId`)) AS `DataCollectionGroup_dataCollectionGroupId`";
+	}
+  
+            
 	private String getDewarViewTableQuery(){
-		return "select * from v_mx_sample";
+		return "select *, " + getDataCollectionIdQuery() + " from v_mx_sample";
 	}
 
 	
@@ -53,13 +67,48 @@ public class SampleRestWsServiceBean implements SampleRestWsService, SampleRestW
 	}
 
 
-
+	@Override
 	public List<Map<String, Object>> getSamplesByProposalId(int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByProposalId);
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getSamplesBySessionId(int proposalId,int sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(BySessionId);
+		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getSamplesByContainerId(int proposalId,int containerId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByContainerId);
+		query.setParameter("containerId", containerId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
 
+	@Override
+	public List<Map<String, Object>> getSamplesByShipmentId(int proposalId,int shipingId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByShippingId);
+		query.setParameter("shipingId", shipingId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getSamplesByDewarId(int proposalId, int dewarId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByDewarId);
+		query.setParameter("dewarId", dewarId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
 
 }

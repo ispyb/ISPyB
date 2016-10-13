@@ -31,5 +31,13 @@ public interface SampleRestWsService {
 
 	public List<Map<String, Object>> getSamplesByProposalId(int proposalId);
 
+	public List<Map<String, Object>> getSamplesByDewarId(int proposalId, int dewarId);
+
+	public List<Map<String, Object>> getSamplesByShipmentId(int proposalId, int shipingId);
+
+	public List<Map<String, Object>> getSamplesByContainerId(int proposalId, int containerId);
+
+	public List<Map<String, Object>> getSamplesBySessionId(int proposalId, int sessionId);
+
 	
 }

@@ -68,7 +68,7 @@ public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroup
 	private String getViewTableQuery(){
 		return "select *, "
 				+ "(select GROUP_CONCAT(workflowStepId) from WorkflowStep \n" + 
-				" where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId order by  WorkflowStep.workflowStepId DESC) as WorkflowStep_workflowStepId,"
+				"  where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId order by  WorkflowStep.workflowStepId DESC) as WorkflowStep_workflowStepId,"
 				+ "(select GROUP_CONCAT(workflowStepType) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_workflowStepType,"  
 				+ "(select GROUP_CONCAT(status) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_status,"
 				
@@ -83,21 +83,6 @@ public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroup
 				+ " GROUP_CONCAT(`cell_alpha` SEPARATOR ', ') AS `Autoprocessing_cell_alpha`, "
 				+ " GROUP_CONCAT(`cell_beta` SEPARATOR ', ') AS `Autoprocessing_cell_beta`, "
 				+ " GROUP_CONCAT(`cell_gamma` SEPARATOR ', ') AS `Autoprocessing_cell_gamma`, "
-				
-				+ " (  \n"
-				+ " select GROUP_CONCAT(phasingStepType) from PhasingStep   \n"  
-				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId  \n"  
-				+ " ) as phasingStepType,\n"  
-				+ " (  \n"  
-				+ " select GROUP_CONCAT(spaceGroupId) from PhasingStep   \n"  
-				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId  \n"  
-				+ " ) as spaceGroupIds,\n"  
-				+ " (  \n"  
-				+ " select GROUP_CONCAT(spaceGroupShortName) from SpaceGroup   \n"  
-				+ " where  spaceGroupId in\n"  
-				+ " (select spaceGroupId from PhasingStep   \n"  
-				+ " where  autoProcScalingId = PhasingStep.autoProcScalingId   ) \n"  
-				+ " ) as spaceGroupShortName,\n"
 				
 				+ "GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,\n"  
 				+ "GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`,\n"  
@@ -119,11 +104,13 @@ public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroup
 	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySessionId(int proposalId, int sessionId) {
 		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId and BLSession_proposalId = :proposalId ";
-		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId ";		                                     
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
 		query.setParameter("proposalId", proposalId);
+		
+		System.out.println(mySQLQuery);
 		return executeSQLQuery(query);
 	}
 	

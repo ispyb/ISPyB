@@ -64,16 +64,6 @@ public class LoggerFormatter {
 
 	
 	private static void log(Logger log, Package pack, String methodName, Type type, long id, long time, long duration, String params, String comments){
-//		List<String> message = new ArrayList<String>();
-//		message.add(pack.toString());
-//		message.add(methodName);
-//		message.add(type.toString());
-//		message.add(String.valueOf(id));
-//		message.add(String.valueOf(duration));
-//		message.add(params);
-//		message.add(comments);
-//		log.info(message);
-		
 		HashMap<String, String> message = new HashMap<String, String>();
 		message.put("PACKAGE", pack.toString());
 		message.put("METHOD", methodName);
@@ -98,11 +88,6 @@ public class LoggerFormatter {
 	}
 	
 	public static void log(Logger log, Package pack, String methodName,  long id, long time, String cause, Exception error){
-//		StringBuilder sb = new StringBuilder();
-//	    for (StackTraceElement element : error.getStackTrace()) {
-//	        sb.append(element.toString());
-//	        sb.append("\n");
-//	    }
 		LoggerFormatter.log(log, pack, methodName, Type.ERROR, id, time, -1, cause, Arrays.toString(error.getStackTrace()).toString());
 	}
 	
@@ -113,6 +98,4 @@ public class LoggerFormatter {
 		message.add(text);
 		log.info(message);
 	}
-	
-	
 }

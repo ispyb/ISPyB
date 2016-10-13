@@ -90,7 +90,7 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 	public List<Map<String, Object>> getSessionViewByProposalId(int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByProposalId);
-		
+		System.out.println(query.getQueryString());
 		/** Setting the parameters **/
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
