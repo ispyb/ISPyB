@@ -49,7 +49,6 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		header.add("*");
 		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
 		
-		logger.info("-------SecurityInterceptor----");
 		if (method.isAnnotationPresent(PermitAll.class)) {
 			logger.info("PermitAll");
 			return;
@@ -57,7 +56,6 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
 		/**  Access denied for all **/
 		if (method.isAnnotationPresent(DenyAll.class)) {
-			logger.info("DenyAll");
 			requestContext.abortWith(ACCESS_DENIED);
 			return;
 		}
@@ -71,18 +69,12 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 //			rolesSet.add("Manager");
 //			rolesSet.add("Localcontact");
 						
-			logger.info("---- ROLES allowed -----");
 			String token = requestContext.getUriInfo().getPathParameters().get("token").get(0);
-			logger.info(token);
-			logger.info(rolesSet);
 
 			Login3VO login = this.getLogin(token);
-			logger.info("User roles: " + login.getRoles());
-			logger.info("Roles allowed: " + rolesSet);
 			
 			if (login != null) {
 				if (login.checkRoles(rolesSet)){
-					logger.info("Valid: " + login.isValid());
 					if (login.isValid()) {
 						// if role manager or localcontact ok
 						// TODO: later the localcontact should have access only to the sessions on her/his beamlines
@@ -109,7 +101,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 							}
 						}
 					} else {
-						logger.info("Expired");
+						logger.info("Token Expired");
 						requestContext.abortWith(ACCESS_FORBIDDEN);
 					}
 				}
