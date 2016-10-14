@@ -21,6 +21,7 @@ package ispyb.ws.soap.mx;
 import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -101,6 +102,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 import javax.naming.NamingException;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -128,6 +130,8 @@ public class ToolsForAutoprocessingWebService {
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private final Integer errorCodeFK = null;
+
+	private long now;
 
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
@@ -1522,18 +1526,49 @@ public class ToolsForAutoprocessingWebService {
 		return (PhasingProgramAttachment3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingProgramAttachment3Service.class);
 	}
 	
+	protected long logInit(String methodName, Logger logger, Object... args) {
+		logger.info("-----------------------");
+		this.now = System.currentTimeMillis();
+		ArrayList<String> params = new ArrayList<String>();
+		for (Object object : args) {
+			if (object != null){
+				params.add(object.toString());
+			}
+			else{
+				params.add("null");
+			}
+		}
+		logger.info(methodName.toUpperCase());
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_MX_AUTOPROCESSING, methodName, System.currentTimeMillis(),
+				System.currentTimeMillis(), this.getGson().toJson(params));
+		return this.now;
+	}
+	
+	
+
+	protected void logFinish(String methodName, long start, Logger logger) {
+		logger.debug("### [" + methodName.toUpperCase() + "] Execution time was "
+				+ (System.currentTimeMillis() - this.now) + " ms.");
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_MX_AUTOPROCESSING, methodName, start, System.currentTimeMillis(),
+				System.currentTimeMillis() - this.now);
+
+	}
+
+	protected void logError(String methodName, Exception e, long start, Logger logger) {
+		e.printStackTrace();
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_MX_AUTOPROCESSING_ERROR, methodName, start,
+				System.currentTimeMillis(), e.getMessage(), e);
+		
+	}
+	
 	@WebMethod
 	@WebResult(name = "storePhasingAnalysis")
 	public String storePhasingAnalysis(String phasingStep, String spaceGroup, String run, String attachments, String phasingStatistics){
-		String methodName = "PhasingStep";
 		
-		LOG.info("testing phasing Step");
-		LOG.info("STOREPHASING");
-		LOG.info("STOREPHASING phasingStep: " + phasingStep);
-		LOG.info("STOREPHASING spaceGroup: " + spaceGroup);
-		LOG.info("STOREPHASING run: " + run);
-		LOG.info("STOREPHASING attachments: " + attachments);
-		LOG.info("STOREPHASING phasingStatistics: " + phasingStatistics);
+		
+		String methodName = "storePhasingAnalysis";
+		long start = this.logInit(methodName, LOG, phasingStep, spaceGroup, run, attachments, phasingStatistics);
+		
 		try {
 			
 			
@@ -1583,11 +1618,11 @@ public class ToolsForAutoprocessingWebService {
 					phasingStatisticsService.create(phasingStatistics3VO);
 				}
 			}
-			
+			this.logFinish(methodName, start, LOG);
 			return this.getGson().toJson(phasingStepVO);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			this.logError(methodName, e, start, LOG);
 			return e.getMessage();
 		}
 		
