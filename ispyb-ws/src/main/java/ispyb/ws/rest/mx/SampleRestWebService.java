@@ -1,5 +1,6 @@
 package ispyb.ws.rest.mx;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,76 @@ public class SampleRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
 			List<Map<String, Object>> samples = this.getSampleRestWsService().getSamplesByProposalId(this.getProposalId(proposal));
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(samples);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/dewarid/{dewarid}/list")
+	@Produces({ "application/json" })
+	public Response getSamplesByDewarId(@PathParam("token") String token, @PathParam("proposal") String proposal, @PathParam("dewarId") int dewarId) {
+		String methodName = "getSamplesByDewarId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Map<String, Object>> samples = this.getSampleRestWsService().getSamplesByDewarId(this.getProposalId(proposal), dewarId);
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(samples);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/containerid/{containerid}/list")
+	@Produces({ "application/json" })
+	public Response getSamplesByContainerId(@PathParam("token") String token, @PathParam("proposal") String proposal, @PathParam("containerid") String containerid) {
+		String methodName = "getSamplesByContainerId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Integer> ids = this.parseToInteger(containerid);
+			List<Map<String, Object>> samples = new ArrayList<Map<String,Object>>();
+			for (Integer id : ids) {
+				samples.addAll(this.getSampleRestWsService().getSamplesByContainerId(this.getProposalId(proposal), id));	
+			}
+			
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(samples);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/sessionid/{sessionid}/list")
+	@Produces({ "application/json" })
+	public Response getSamplesBySessionId(@PathParam("token") String token, @PathParam("proposal") String proposal, @PathParam("sessionid") int sessionid) {
+		String methodName = "getSamplesBySessionId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Map<String, Object>> samples = this.getSampleRestWsService().getSamplesBySessionId(this.getProposalId(proposal), sessionid);
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(samples);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/shipmentid/{shipmentid}/list")
+	@Produces({ "application/json" })
+	public Response getSamplesByShipmentId(@PathParam("token") String token, @PathParam("proposal") String proposal, @PathParam("shipmentid") int shipmentid) {
+		String methodName = "getSamplesByShipmentId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Map<String, Object>> samples = this.getSampleRestWsService().getSamplesByShipmentId(this.getProposalId(proposal), shipmentid);
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(samples);
 		} catch (Exception e) {
