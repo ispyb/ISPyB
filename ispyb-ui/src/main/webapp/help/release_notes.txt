@@ -1,5 +1,17 @@
 ********************************************************************************
 
+New TAG : ISPYB_4.1.1
+
+**************
+* 17.10.2016     *
+**************
+
+New jar for SMIS webservices and code modifications:
+New webservices for autoproc
+DBMerging : new fields in GridInfo.
+
+********************************************************************************
+
 New TAG : ISPYB_4.1
 
 **************
