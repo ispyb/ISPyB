@@ -54,7 +54,7 @@ import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.ResultCode;
 
-@WebService(name = "ToolsForBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
+@WebService(name = "ToolsForAssemblyWithResultCodeWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
 @RolesAllowed({ "WebService", "User", "Industrial" })
