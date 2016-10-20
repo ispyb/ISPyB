@@ -32,7 +32,11 @@ public enum ResultCode {
 	/**
 	 * Parameters: Proposal Code, Proposal Number
 	 */
-	NO_EXPERIMENTS_FOUND("ISPYB-0004", "No experiments found for proposal: {0}{1}")
+	NO_EXPERIMENTS_FOUND("ISPYB-0004", "No experiments found for proposal: {0}{1}"),
+	/**
+	 * Parameters: 
+	 */
+	NOT_USED("ISPYB-0000", "ResultCode not used")
 	;
 	
 	private String code;
