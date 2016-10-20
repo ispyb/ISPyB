@@ -58,8 +58,16 @@ public class LoggerFormatter {
 	    BIOSAXS_WORKFLOW_ERROR, 
 	    BIOSAXS_WORKFLOW, 
 	    
+	    ISPyB_API, 
 	    ISPyB_API_ERROR,
-	    ISPyB_API
+	    
+	    
+	    ISPyB_MX_AUTOPROCESSING,
+	    ISPyB_MX_AUTOPROCESSING_ERROR, 
+	    
+	    ISPyB_API_LOGIN,
+	    ISPyB_API_LOGIN_ERROR,
+	    
 	}
 
 	
