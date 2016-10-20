@@ -18,16 +18,6 @@
 
 package ispyb.ws.soap.saxs;
 
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.BiosaxsServices;
-import ispyb.server.biosaxs.services.core.ExperimentScope;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
-import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
-import ispyb.server.biosaxs.vos.datacollection.Model3VO;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +32,8 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.ws.Holder;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -50,6 +42,18 @@ import org.jboss.ws.api.annotation.WebContext;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.BiosaxsServices;
+import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.common.util.ISPyBRuntimeException;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.ws.ResultCode;
+
 @WebService(name = "ToolsForBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
@@ -57,10 +61,10 @@ import com.google.gson.reflect.TypeToken;
 // allow special access roles
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
-public class ToolsForAssemblyWebService {
+public class ToolsForAssemblyWithResultCodeWebService {
 
-	private final static Logger LOGGER = Logger.getLogger(ToolsForAssemblyWebService.class);
-
+	private final static Logger LOGGER = Logger.getLogger(ToolsForAssemblyWithResultCodeWebService.class);
+	
 	protected final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private long now;
@@ -77,7 +81,9 @@ public class ToolsForAssemblyWebService {
 	@WebMethod(operationName = "createHPLC")
 	@WebResult(name = "experimentId")
 	public Integer createHPLC(@WebParam(name = "proposalCode") String proposalCode,
-			@WebParam(name = "proposalNumber") String proposalNumber, @WebParam(name = "name") String name) {
+			@WebParam(name = "proposalNumber") String proposalNumber, @WebParam(name = "name") String name, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 		/** Logging params **/
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("proposalCode", String.valueOf(proposalCode));
@@ -92,21 +98,30 @@ public class ToolsForAssemblyWebService {
 		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
-			int experimentId = biosaxsWebServiceActions.createHPLC(proposalCode, proposalNumber, name);
+			Integer experimentId = biosaxsWebServiceActions.createHPLC(proposalCode, proposalNumber, name);
+			if (experimentId == null) {
+				resultCode.value = ResultCode.UNKNOWN_PROPOSAL.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_PROPOSAL.getDescription(proposalCode, proposalNumber);
+			}
 			this.logFinish("createHPLC", start);
 			return experimentId;
 		} catch (Exception e) {
 			e.printStackTrace();
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "createHPLC", start, System.currentTimeMillis(),
 					e.getMessage(), e);
 		}
+		
 		return null;
 	}
 
 	@WebMethod(operationName = "storeHPLC")
 	@WebResult(name = "experimentId")
-	public Integer storeHPLC(@WebParam(name = "experimentId") String experimentId,
-			@WebParam(name = "sourceFilePath") String h5FilePath, @WebParam(name = "json") String jsonFilePath) {
+	public Integer storeHPLC(@XmlElement(required=true) @WebParam(name = "experimentId") String experimentId,
+			@WebParam(name = "sourceFilePath") String h5FilePath, @WebParam(name = "json") String jsonFilePath, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 
 		/** Logging params **/
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -123,10 +138,16 @@ public class ToolsForAssemblyWebService {
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Integer id = biosaxsWebServiceActions.storeHPLC(experimentId, h5FilePath, jsonFilePath);
+			if (id == null) {
+				resultCode.value = ResultCode.UNKNOWN_EXPERIMENT.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_EXPERIMENT.getDescription(experimentId);
+			}
 			this.logFinish("storeHPLC", start);
 			return id;
 		} catch (Exception e) {
 			e.printStackTrace();
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeHPLC", start, System.currentTimeMillis(),
 					e.getMessage(), e);
 		}
@@ -170,7 +191,7 @@ public class ToolsForAssemblyWebService {
 	@WebMethod(operationName = "storeHPLCDataAnalysisResult")
 	@WebResult(name = "measurementId")
 	public Integer storeHPLCDataAnalysisResult(
-			@WebParam(name = "experimentId") String experimentId,
+			@XmlElement(required=true) @WebParam(name = "experimentId") String experimentId,
 			/** XSDataAutoRg **/
 			@WebParam(name = "filename") String filename, // Deprecated
 			@WebParam(name = "rg") String rg, @WebParam(name = "rgStdev") String rgStdev, @WebParam(name = "i0") String i0,
@@ -192,7 +213,9 @@ public class ToolsForAssemblyWebService {
 			@WebParam(name = "bestBufferFilePath") String bestBufferFilePath,
 			@WebParam(name = "scatterFilePath") String scatteringFilePath, @WebParam(name = "guinierFilePath") String guinierFilePath,
 			@WebParam(name = "kratkyFilePath") String kratkyFilePath, @WebParam(name = "densityPlot") String densityPlot,
-			@WebParam(name = "samples") String samples) {
+			@WebParam(name = "samples") String samples, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 
 		/** Logging params **/
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -279,6 +302,8 @@ public class ToolsForAssemblyWebService {
 			e.printStackTrace();
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeHPLCDataAnalysisResult", start,
 					System.currentTimeMillis(), e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 		return null;
 	}
@@ -299,7 +324,9 @@ public class ToolsForAssemblyWebService {
 	public void storeAbInitioModels(@WebParam(name = "measurementId") String measurementId, @WebParam(name = "models") String models,
 			@WebParam(name = "dammaver") String dammaver, @WebParam(name = "dammif") String dammif,
 			@WebParam(name = "dammin") String dammin, @WebParam(name = "nsdPlot") String nsdPlot,
-			@WebParam(name = "chi2plot") String chi2plot) {
+			@WebParam(name = "chi2plot") String chi2plot, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 
 		/** Logging params **/
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -350,6 +377,13 @@ public class ToolsForAssemblyWebService {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			if (e instanceof ISPyBRuntimeException) {
+				resultCode.value = ResultCode.RUNTIME_ERROR.getCode();
+				resultDescription.value = ResultCode.RUNTIME_ERROR.getDescription(e.getMessage());
+			} else {
+				resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
+			}
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "storeAbInitioModels", start,
 					System.currentTimeMillis(), e.getMessage(), e);
 		}
@@ -358,7 +392,9 @@ public class ToolsForAssemblyWebService {
 	@WebResult(name = "addAveraged")
 	public void addAveraged(@WebParam(name = "measurementId") String measurementId,
 			@WebParam(name = "dataCollectionOrder") String dataCollectionOrder, @WebParam(name = "averaged") String averaged,
-			@WebParam(name = "discarded") String discarded, @WebParam(name = "averageFile") String averageFile) throws Exception {
+			@WebParam(name = "discarded") String discarded, @WebParam(name = "averageFile") String averageFile, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) throws Exception {
 
 		/** Logging **/
 		long id = 0;
@@ -394,12 +430,13 @@ public class ToolsForAssemblyWebService {
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addAveraged", id, System.currentTimeMillis(),
 					e.getMessage(), e);
 			e.printStackTrace();
-			throw e;
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 	}
 
 	@WebMethod(operationName = "addSubtraction")
-	public void addSubtraction(@WebParam(name = "measurementId") String measurementId,
+	public void addSubtraction(@XmlElement(required=true) @WebParam(name = "measurementId") String measurementId,
 			/** XSDataAutoRg **/
 			@WebParam(name = "rgGuinier") String rgGuinier, @WebParam(name = "rgStdev") String rgStdev, @WebParam(name = "i0") String i0,
 			@WebParam(name = "i0Stdev") String i0Stdev,
@@ -419,7 +456,9 @@ public class ToolsForAssemblyWebService {
 			@WebParam(name = "densityPlotFilePath") String densityPlotFilePath,
 			@WebParam(name = "guinierPlotFilePath") String guinierPlotFilePath,
 			@WebParam(name = "kratkyPlotFilePath") String kratkyPlotFilePath,
-			@WebParam(name = "gnomOutputFilePath") String gnomOutputFilePath)
+			@WebParam(name = "gnomOutputFilePath") String gnomOutputFilePath, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription)
 	throws Exception {
 
 		/** Logging **/
@@ -496,7 +535,8 @@ public class ToolsForAssemblyWebService {
 			e.printStackTrace();
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addSubtraction", id, System.currentTimeMillis(),
 					e.getMessage(), e);
-			throw e;
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 	}
 
@@ -572,7 +612,7 @@ public class ToolsForAssemblyWebService {
 		
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
-			Integer measId = 241; //measurementId != null && measurementId.length() > 0 ? Integer.valueOf(measurementId) : 0;
+			Integer measId = measurementId != null && measurementId.length() > 0 ? Integer.valueOf(measurementId) : 0;
 			Integer dataCol = dataCollectionOrderParam != null && dataCollectionOrderParam.length() > 0 ? Integer.valueOf(dataCollectionOrderParam) : 0;
 			int framesAv = framesAverage != null && framesAverage.length() > 0 ? Integer.parseInt(framesAverage) : 0;
 			int framesCount_ = framesCount != null && framesCount.length() > 0 ?Integer.valueOf(framesCount) : 0;
@@ -610,7 +650,9 @@ public class ToolsForAssemblyWebService {
 	/** FIND ALL THE EXPERIMENT BY PROPOSAL CODE AND NUMBER for example: MX 1453 **/
 	@WebMethod(operationName = "findExperimentByProposalCode")
 	@WebResult(name = "Experiment")
-	public String findExperimentByProposalCode(@WebParam(name = "code") String code, @WebParam(name = "number") String number)
+	public String findExperimentByProposalCode(@XmlElement(required=true) @WebParam(name = "code") String code, @XmlElement(required=true) @WebParam(name = "number") String number, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription)
 			throws Exception {
 
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -627,19 +669,30 @@ public class ToolsForAssemblyWebService {
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			List<Map<String, Object>> result = biosaxsWebServiceActions.findExperimentInformationByProposal(StringUtils.getProposalCode(code), number, "TEMPLATE");
+			if (result == null) {
+				resultCode.value = ResultCode.UNKNOWN_PROPOSAL.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_PROPOSAL.getDescription(code, number);
+			} else if (result.isEmpty()) {
+				resultCode.value = ResultCode.NO_EXPERIMENTS_FOUND.getCode();
+				resultDescription.value = ResultCode.NO_EXPERIMENTS_FOUND.getDescription(code, number);
+			}
 			this.logFinish("findExperimentByProposalCode", id);
 			return new Gson().toJson(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "findExperimentByProposalCode", id,
 					System.currentTimeMillis(), e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 		return null;
 	}
 
 	@WebMethod(operationName = "getRobotByExperimentId")
 	@WebResult(name = "Experiment")
-	public String getRobotByExperimentId(@WebParam(name = "experimentId") Integer experimentId) throws Exception {
+	public String getRobotByExperimentId(@XmlElement(required=true) @WebParam(name = "experimentId") Integer experimentId, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) throws Exception {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
 		
@@ -652,19 +705,25 @@ public class ToolsForAssemblyWebService {
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			String robotXML = biosaxsWebServiceActions.toRobotXML(experimentId);
+			if (robotXML == null) {
+				resultCode.value = ResultCode.UNKNOWN_EXPERIMENT.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_EXPERIMENT.getDescription(experimentId);
+			}
 			this.logFinish("getRobotByExperimentId", id);
 			return robotXML;
 		} catch (Exception e) {
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getRobotByExperimentId", id,
 					System.currentTimeMillis(), e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 		return null;
 	}
 
 	@WebMethod(operationName = "saveFrame")
 	@WebResult(name = "Experiment")
-	public void saveFrame(@WebParam(name = "mode") String mode, @WebParam(name = "experimentId") int experimentId,
-			@WebParam(name = "measurementId") String measurementId, @WebParam(name = "runNumber") String runNumber,
+	public void saveFrame(@XmlElement(required=true) @WebParam(name = "mode") String mode, @XmlElement(required=true) @WebParam(name = "experimentId") int experimentId,
+			@XmlElement(required=true) @WebParam(name = "measurementId") String measurementId, @XmlElement(required=true) @WebParam(name = "runNumber") String runNumber,
 			@WebParam(name = "exposureTemperature") String exposureTemperature,
 			@WebParam(name = "storageTemperature") String storageTemperature, @WebParam(name = "timePerFrame") String timePerFrame,
 			@WebParam(name = "timeStart") String timeStart, @WebParam(name = "timeEnd") String timeEnd,
@@ -675,7 +734,9 @@ public class ToolsForAssemblyWebService {
 			@WebParam(name = "beamCenterY") String beamCenterY, @WebParam(name = "radiationRelative") String radiationRelative,
 			@WebParam(name = "radiationAbsolute") String radiationAbsolute, @WebParam(name = "pixelSizeX") String pixelSizeX,
 			@WebParam(name = "pixelSizeY") String pixelSizeY, @WebParam(name = "normalization") String normalization,
-			@WebParam(name = "transmission") String transmission) throws Exception {
+			@WebParam(name = "transmission") String transmission, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) throws Exception {
 
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("mode", String.valueOf(mode));
@@ -745,6 +806,8 @@ public class ToolsForAssemblyWebService {
 		} catch (Exception e) {
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "saveFrame", id, System.currentTimeMillis(),
 					e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 	}
 
@@ -771,11 +834,13 @@ public class ToolsForAssemblyWebService {
 	 * **/
 	@WebMethod(operationName = "createExperiment")
 	@WebResult(name = "experiment")
-	public Experiment3VO createExperiment(@WebParam(name = "code") String code, @WebParam(name = "number") String number,
+	public Experiment3VO createExperiment(@XmlElement(required=true) @WebParam(name = "code") String code, @XmlElement(required=true) @WebParam(name = "number") String number,
 			@WebParam(name = "samples") String samples, @WebParam(name = "storageTemperature") String storageTemperature,
 			@WebParam(name = "mode") String mode, @WebParam(name = "extraFlowTime") String extraFlowTime,
 			@WebParam(name = "type") String type, @WebParam(name = "sourceFilePath") String sourceFilePath,
-			@WebParam(name = "name") String name) {
+			@WebParam(name = "name") String name, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("code", String.valueOf(code));
@@ -815,19 +880,27 @@ public class ToolsForAssemblyWebService {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Experiment3VO experiment = biosaxsWebServiceActions.createExperiment(StringUtils.getProposalCode(code), number, json,
 					mode, storageTemperature, extraFlowTime, type, sourceFilePath, name, comments);
+			if (experiment == null) {
+				resultCode.value = ResultCode.UNKNOWN_PROPOSAL.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_PROPOSAL.getDescription(code, number);
+			}
 			logFinish("createExperiment", id);
 			return experiment;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "createExperiment", id, System.currentTimeMillis(),
 					e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 		return null;
 	}
 
 	@WebMethod(operationName = "getExperimentById")
 	@WebResult(name = "experiment")
-	public Experiment3VO getExperimentById(@WebParam(name = "experimentId") int experimentId) {
+	public Experiment3VO getExperimentById(@XmlElement(required=true) @WebParam(name = "experimentId") int experimentId, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription) {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
 		
@@ -841,12 +914,18 @@ public class ToolsForAssemblyWebService {
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			Experiment3Service experiment3Service = (Experiment3Service) ejb3ServiceLocator.getLocalService(Experiment3Service.class);
 			Experiment3VO experiment = experiment3Service.findById(experimentId, ExperimentScope.MEDIUM);
+			if (experiment == null) {
+				resultCode.value = ResultCode.UNKNOWN_EXPERIMENT.getCode();
+				resultDescription.value = ResultCode.UNKNOWN_EXPERIMENT.getDescription(experimentId);
+			}
 			logFinish("getExperimentById", id);
 			return experiment;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LoggerFormatter.log(LOGGER, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getExperimentById", id, System.currentTimeMillis(),
 					e.getMessage(), e);
+			resultCode.value = ResultCode.UNKNOWN_ERROR.getCode();
+			resultDescription.value = ResultCode.UNKNOWN_ERROR.getDescription(e.getMessage());
 		}
 		return null;
 	}
@@ -864,12 +943,14 @@ public class ToolsForAssemblyWebService {
 	@WebMethod(operationName = "setExperimentAborted")
 	public void setExperimentAborted(@WebParam(name = "experimentId") Integer experimentId) throws Exception {
 		long id = this.logInit("setExperimentAborted");
-		this.updateStatus(experimentId, "ABORTED");
+		this.updateStatus(experimentId, "ABORTED", new Holder<String>(), new Holder<String>());
 		this.logFinish("setExperimentAborted", id);
 	}
 
 	@WebMethod(operationName = "updateStatus")
-	public void updateStatus(@WebParam(name = "experimentId") Integer experimentId, @WebParam(name = "status") String status)
+	public void updateStatus(@WebParam(name = "experimentId") Integer experimentId, @WebParam(name = "status") String status, 
+			@WebParam(name = "resultCode", mode = WebParam.Mode.OUT) Holder<String> resultCode,
+			@WebParam(name = "resultDescription", mode = WebParam.Mode.OUT) Holder<String> resultDescription)
 			throws Exception {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("experimentId", String.valueOf(experimentId));
