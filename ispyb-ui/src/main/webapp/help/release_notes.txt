@@ -1,5 +1,17 @@
 ********************************************************************************
 
+New TAG : ISPYB_4.1.2
+
+**************
+* 25.10.2016     *
+**************
+
+New webservices for autoproc
+DBMerging : new table CourierTermsAccepted, new links to BLSubSample
+WebServices renamed for SOLEIl because of signatures issues, have to be merged back later
+
+********************************************************************************
+
 New TAG : ISPYB_4.1.1
 
 **************
