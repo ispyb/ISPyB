@@ -156,6 +156,10 @@ public class ViewWorkflowAction extends DispatchAction {
 				form.setWorkflowId(workflowId);
 				request.getSession().setAttribute(Constants.WORKFLOW_ID, workflowId);
 				Workflow3VO workflowVO = workflowService.findByPk(workflowId);
+				if (dataCollectionGroupService.findByWorkflow(workflowId) != null) {
+					Session3VO ses = dataCollectionGroupService.findByWorkflow(workflowId).get(0).getSessionVO();
+					BreadCrumbsForm.getIt(request).setSelectedSession(ses);
+				}
 				BreadCrumbsForm.getIt(request).setSelectedWorkflow(workflowVO);
 				RoleDO roleObject = (RoleDO) request.getSession().getAttribute(Constants.CURRENT_ROLE);
 				String role = roleObject.getName();
