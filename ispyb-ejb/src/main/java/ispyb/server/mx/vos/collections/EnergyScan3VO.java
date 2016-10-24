@@ -19,10 +19,6 @@
 
 package ispyb.server.mx.vos.collections;
 
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,6 +30,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSubSample3VO;
 
 /**
  * EnergyScan3 value object mapping table EnergyScan
@@ -149,13 +150,15 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "workingDirectory")
 	protected String workingDirectory;
 	
+	@ManyToOne
+	@JoinColumn(name = "blSubSampleId")
+	private BLSubSample3VO blSubSampleVO;
+	
 	public EnergyScan3VO() {
 		super();
-	}
+	}	
 
-	
-
-	public EnergyScan3VO(Integer energyScanId, Session3VO sessionVO,
+	public EnergyScan3VO(Integer energyScanId, Session3VO sessionVO, BLSample3VO sampleVO,
 			String fluorescenceDetector, String scanFileFullPath,
 			String choochFileFullPath, String jpegChoochFileFullPath,
 			String element, Double startEnergy, Double endEnergy,
@@ -170,6 +173,7 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		super();
 		this.energyScanId = energyScanId;
 		this.sessionVO = sessionVO;
+		this.blSampleVO = sampleVO;
 		this.fluorescenceDetector = fluorescenceDetector;
 		this.scanFileFullPath = scanFileFullPath;
 		this.choochFileFullPath = choochFileFullPath;
@@ -205,6 +209,7 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	public EnergyScan3VO(EnergyScan3VO vo) {
 		this.energyScanId = vo.getEnergyScanId();
 		this.sessionVO = vo.getSessionVO();
+		this.blSampleVO = vo.getBlSampleVO();
 		this.fluorescenceDetector = vo.getFluorescenceDetector();
 		this.scanFileFullPath = vo.getScanFileFullPath();
 		this.choochFileFullPath = vo.getChoochFileFullPath();
@@ -240,6 +245,7 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	public void fillVOFromLight(EnergyScanWS3VO vo) {
 		this.energyScanId = vo.getEnergyScanId();
 		this.sessionVO = null;
+		this.blSampleVO = null;
 		this.fluorescenceDetector = vo.getFluorescenceDetector();
 		this.scanFileFullPath = vo.getScanFileFullPath();
 		this.choochFileFullPath = vo.getChoochFileFullPath();
@@ -316,6 +322,17 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setBlSampleVO(BLSample3VO blSampleVO) {
 		this.blSampleVO = blSampleVO;
+	}
+
+	public Integer getBlSubSampleVOId(){
+		return blSubSampleVO == null ? null : blSubSampleVO.getBlSubSampleId();
+	}
+	public BLSubSample3VO getBlSubSampleVO() {
+		return blSubSampleVO;
+	}
+
+	public void setBlSubSampleVO(BLSubSample3VO blSubSampleVO) {
+		this.blSubSampleVO = blSubSampleVO;
 	}
 
 	public String getFluorescenceDetector() {

@@ -119,11 +119,10 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Column(name = "SMILES")
 	protected String smiles;
+	
+	@Column(name = "lastImageURL")
+	protected String lastImageURL;
 
-//	@Fetch(value = FetchMode.SELECT)
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "BLSample_has_EnergyScan", joinColumns = { @JoinColumn(name = "blSampleId", referencedColumnName = "blSampleId") }, inverseJoinColumns = { @JoinColumn(name = "energyScanId", referencedColumnName = "energyScanId") })
-//	private Set<EnergyScan3VO> energyScanVOs;
 	@OneToMany
 	@JoinColumn(name = "blSampleId")
 	private Set<EnergyScan3VO> energyScanVOs;
@@ -140,7 +139,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 			Container3VO containerVO, String name, String code, String location, Double holderLength,
 			Double loopLength, String loopType, Double wireWidth, String comments, String completionStage,
 			String structureStage, String publicationStage, String publicationComments, String blSampleStatus,
-			Byte isInSampleChanger, String lastKnownCenteringPosition, String SMILES) {
+			Byte isInSampleChanger, String lastKnownCenteringPosition, String SMILES,String lastImageURL) {
 		super();
 		this.blSampleId = blSampleId;
 		this.diffractionPlanVO = diffractionPlanVO;
@@ -162,6 +161,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		this.isInSampleChanger = isInSampleChanger;
 		this.lastKnownCenteringPosition = lastKnownCenteringPosition;
 		this.smiles = SMILES;
+		this.lastImageURL = lastImageURL;
 	}
 
 	public BLSample3VO(BLSample3VO vo) {
@@ -185,6 +185,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		this.isInSampleChanger = vo.getIsInSampleChanger();
 		this.lastKnownCenteringPosition = vo.getLastKnownCenteringPosition();
 		this.smiles = vo.getSmiles();
+		this.lastImageURL = vo.getLastImageURL();
 	}
 
 	public void fillVOFromWS(BLSampleWS3VO vo) {
@@ -208,6 +209,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		this.isInSampleChanger = vo.getIsInSampleChanger();
 		this.lastKnownCenteringPosition = vo.getLastKnownCenteringPosition();
 		this.smiles = vo.getSmiles();
+		this.lastImageURL = vo.getLastImageURL();
 	}
 
 	@Override
@@ -389,6 +391,14 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		this.smiles = smiles;
 	}
 
+	public String getLastImageURL() {
+		return lastImageURL;
+	}
+
+	public void setLastImageURL(String lastImageURL) {
+		this.lastImageURL = lastImageURL;
+	}
+
 	public Integer getCrystalVOId() {
 		return crystalVO == null ? null : crystalVO.getCrystalId();
 	}
@@ -464,7 +474,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 		"blSampleStatus="+this.blSampleStatus+", "+
 		"isInSampleChanger="+this.isInSampleChanger+", "+
 		"lastKnownCenteringPosition="+this.lastKnownCenteringPosition+", "+
-		"smiles="+this.smiles;
+		"smiles="+this.smiles + ", "+ "lastImageURL="+this.lastImageURL;
 		
 		return s;
 	}

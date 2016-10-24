@@ -19,10 +19,6 @@
 
 package ispyb.server.mx.vos.collections;
 
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,6 +30,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSubSample3VO;
 
 /**
  * XFEFluorescenceSpectrum3 value object mapping table XFEFluorescenceSpectrum
@@ -112,6 +113,10 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 
 	@Column(name = "workingDirectory")
 	protected String workingDirectory;
+	
+	@ManyToOne
+	@JoinColumn(name = "blSubSampleId")
+	private BLSubSample3VO blSubSampleVO;
 	
 
 	public XFEFluorescenceSpectrum3VO() {
@@ -217,33 +222,22 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 	public void setXfeFluorescenceSpectrumId(Integer xfeFluorescenceSpectrumId) {
 		this.xfeFluorescenceSpectrumId = xfeFluorescenceSpectrumId;
 	}
-	
-	
-	
-	
+			
 	public Session3VO getSessionVO() {
 		return sessionVO;
 	}
-
-
 
 	public void setSessionVO(Session3VO sessionVO) {
 		this.sessionVO = sessionVO;
 	}
 
-
-
 	public BLSample3VO getBlSampleVO() {
 		return blSampleVO;
 	}
 
-
-
 	public void setBlSampleVO(BLSample3VO blSampleVO) {
 		this.blSampleVO = blSampleVO;
 	}
-
-
 
 	public String getFittedDataFileFullPath() {
 		return fittedDataFileFullPath;
@@ -364,6 +358,18 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 
 	public void setFlux_end(Double flux_end) {
 		this.flux_end = flux_end;
+	}
+
+	public BLSubSample3VO getBlSubSampleVO() {
+		return blSubSampleVO;
+	}
+
+	public void setBlSubSampleVO(BLSubSample3VO blSubSampleVO) {
+		this.blSubSampleVO = blSubSampleVO;
+	}
+
+	public Integer getBlSubSampleVOId(){
+		return blSubSampleVO == null ? null : blSubSampleVO.getBlSubSampleId();
 	}
 
 
