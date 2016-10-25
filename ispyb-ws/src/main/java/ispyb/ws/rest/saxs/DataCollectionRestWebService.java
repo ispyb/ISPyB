@@ -62,7 +62,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/{key}/{value}/list")
 	@Produces({ "application/json" })
-	public Response list(@PathParam("token") String token, @PathParam("proposal") String proposal,
+	public Response listByKey(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("key") String key, @PathParam("value") String value) throws Exception {
 
 		String methodName = "getDataCollections";
