@@ -19,6 +19,8 @@
 
 package ispyb.server.mx.services.ws.rest.datacollectiongroup;
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,84 +35,24 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroupRestWsService, DataCollectionGroupRestWsServiceLocal {
+public class DataCollectionGroupRestWsServiceBean extends WsServiceBean implements DataCollectionGroupRestWsService, DataCollectionGroupRestWsServiceLocal  {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
 
-	private String getPhasingSpaceGroupQuery(){
-		return "  (SELECT GROUP_CONCAT(distinct(`pydb`.`SpaceGroup`.`spaceGroupShortName`)) AS `v_datacollection_summary_phasing_spaceGroupShortName`\n" + 
-				"    FROM `pydb`.`AutoProcIntegration` " + 
-				"        LEFT JOIN `pydb`.`AutoProcScaling_has_Int` ON `pydb`.`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `pydb`.`AutoProcIntegration`.`autoProcIntegrationId` " + 
-				"        LEFT JOIN `pydb`.`AutoProcScaling` ON `pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`Phasing_has_Scaling` ON `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`PhasingStep` ON `pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`SpaceGroup` ON `pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId` " +
-				"		where `pydb`.`AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId " +  
-				") as Phasing_spaceGroup, ";
-		
-	}
-	
-	private String getPhasingStepQuery(){
-		return "  (SELECT GROUP_CONCAT(distinct(`pydb`.`PhasingStep`.`phasingStepType`)) AS `v_datacollection_summary_phasing_spaceGroupShortName`\n" + 
-				"    FROM `pydb`.`AutoProcIntegration` " + 
-				"        LEFT JOIN `pydb`.`AutoProcScaling_has_Int` ON `pydb`.`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `pydb`.`AutoProcIntegration`.`autoProcIntegrationId` " + 
-				"        LEFT JOIN `pydb`.`AutoProcScaling` ON `pydb`.`AutoProcScaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling_has_Int`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`Phasing_has_Scaling` ON `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` = `pydb`.`AutoProcScaling`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`PhasingStep` ON `pydb`.`PhasingStep`.`autoProcScalingId` = `pydb`.`Phasing_has_Scaling`.`autoProcScalingId` " + 
-				"        LEFT JOIN `pydb`.`SpaceGroup` ON `pydb`.`SpaceGroup`.`spaceGroupId` = `pydb`.`PhasingStep`.`spaceGroupId` " +
-				"		where `pydb`.`AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId " +  
-				") as Phasing_phasingStepType, ";
-		
-	}
-	
 	private String getViewTableQuery(){
-		return "select *, "
-				+ "(select GROUP_CONCAT(workflowStepId) from WorkflowStep \n" + 
-				"  where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId order by  WorkflowStep.workflowStepId DESC) as WorkflowStep_workflowStepId,"
-				+ "(select GROUP_CONCAT(workflowStepType) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_workflowStepType,"  
-				+ "(select GROUP_CONCAT(status) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId) as WorkflowStep_status,"
-				
-				
-				+ " GROUP_CONCAT(`AutoProcProgram_processingPrograms` SEPARATOR ', ') AS `processingPrograms`, "
-				+ " GROUP_CONCAT(`AutoProcProgram_processingStatus` SEPARATOR ', ') AS `processingStatus`,"
-				+ " GROUP_CONCAT(`AutoProcIntegration_autoProcIntegrationId` SEPARATOR ', ') AS `autoProcIntegrationId`, "
-				
-				+ " GROUP_CONCAT(`cell_a` SEPARATOR ', ') AS `Autoprocessing_cell_a`, "
-				+ " GROUP_CONCAT(`cell_b` SEPARATOR ', ') AS `Autoprocessing_cell_b`, "
-				+ " GROUP_CONCAT(`cell_c` SEPARATOR ', ') AS `Autoprocessing_cell_c`, "
-				+ " GROUP_CONCAT(`cell_alpha` SEPARATOR ', ') AS `Autoprocessing_cell_alpha`, "
-				+ " GROUP_CONCAT(`cell_beta` SEPARATOR ', ') AS `Autoprocessing_cell_beta`, "
-				+ " GROUP_CONCAT(`cell_gamma` SEPARATOR ', ') AS `Autoprocessing_cell_gamma`, "
-				
-				+ "GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,\n"  
-				+ "GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`,\n"  
-				+ "GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,\n"  
-				+ "GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`,\n"  
-				+ "GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,\n" 
-				+ "GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,\n"  
-				+ "GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,"
-				+ this.getPhasingSpaceGroupQuery()
-				+ this.getPhasingStepQuery()
-				+ " (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,"
-				+ " (select count(*) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfDataCollections,"
-				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,"
-				+ " (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId"
-				+ " from v_datacollection_summary";
+		return this.getQueryFromResourceFile("/queries/DataCollectionGroupRestWsServiceBean/getViewTableQuery.sql");
 	}
-	
 	
 	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySessionId(int proposalId, int sessionId) {
 		String mySQLQuery = getViewTableQuery() + " where DataCollectionGroup_sessionId = :sessionId and BLSession_proposalId = :proposalId ";
-		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId ";		                                     
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId ";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("sessionId", sessionId);
 		query.setParameter("proposalId", proposalId);
-		
-		System.out.println(mySQLQuery);
 		return executeSQLQuery(query);
 	}
 	
@@ -151,13 +93,7 @@ public class DataCollectionGroupRestWsServiceBean implements DataCollectionGroup
 	}
 
 	
-	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
-	}
-
+	
 
 	
 }

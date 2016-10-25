@@ -40,7 +40,10 @@ public class AutoProcessingIntegrationServiceBean implements AutoProcessingInteg
 	
 	private String ByDataCollectionId = getViewTableQuery() + " where v_datacollection_summary_phasing_dataCollectionId = :dataCollectionId and v_datacollection_summary_session_proposalId=:proposalId";
 
+	
+	
 	private String getAutoprocessingStatisticsQuery(String column, String name){
+	
 		return " (  \n" + 
 				"select GROUP_CONCAT(" + column +") from AutoProcScalingStatistics   \n" + 
 				"where v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId  \n" + 
