@@ -381,7 +381,7 @@
 				<ispyb.site>SOLEIL</ispyb.site>
 				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
 				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
-				<ispyb.dbJndiName.direct>java:/mysql/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
 				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
 				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
 				
@@ -389,7 +389,7 @@
 	  			<ldap.people></ldap.people>
 
 				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-				<ispyb.uploaded.root.folder>/data/pyapdb/</ispyb.uploaded.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
 				
 				<ispyb.server.name.prod>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod>
 				<ispyb.server.name.prod.alias>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod.alias>
@@ -413,9 +413,14 @@
 				<mail.report.industry.cc>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc>
 				<mail.report.industry.cc.fx12>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc.fx12>
 
+				<database.driver>oracle.jdbc.driver.OracleDriver.fr</database.driver>
+				<database.url>jdbc:oracle:thin:@localhost:1521:xe</database.url>
+				<database.user>sun2</database.user>
+				<database.password>sun2</database.password>
+
 				<dictionary.site>SOLEIL</dictionary.site>
 				<dictionary.bcm>mxCuBE</dictionary.bcm>
-				
+
 				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 				<userportal.url>http://suntest.synchrotron-soleil.fr:8084/sunset/main?function=proposal_personal</userportal.url>
 				

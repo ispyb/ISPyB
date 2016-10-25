@@ -436,6 +436,11 @@ public final class Constants {
 
 	/* debug database connection. */
 	public static String DB_DEBUG = "debug";
+	
+	public static final String DB_DRIVER_NAME_VALUE = getProperty("database.driver");
+	public static final String DB_CONNECTION_URL_VALUE = getProperty("database.url");
+	public static final String DB_USER_NAME_VALUE = getProperty("database.user");
+	public static final String DB_USER_PASSWORD_VALUE = getProperty("database.password");
 
 	/* *************************************************************
 	 * file paths

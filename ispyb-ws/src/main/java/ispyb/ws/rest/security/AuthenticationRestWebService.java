@@ -4,6 +4,7 @@ import ispyb.server.common.vos.login.Login3VO;
 import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.LoginModule;
+import ispyb.ws.rest.security.login.SOLEILLLoginModule;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,6 +59,9 @@ public class AuthenticationRestWebService extends RestWebService {
 				}
 				if (site.equals("ESRF")){
 					roles = LoginModule.authenticate(login, password);
+				}
+				if (site.equals("SOLEIL")){
+					roles = SOLEILLLoginModule.authenticate(login, password);
 				}
 			}
 			else{
