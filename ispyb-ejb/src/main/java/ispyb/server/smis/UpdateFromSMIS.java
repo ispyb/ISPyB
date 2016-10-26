@@ -62,9 +62,6 @@ import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
-
-
-
 public class UpdateFromSMIS {
 
 	private static final Logger LOG = Logger.getLogger(UpdateFromSMIS.class);
