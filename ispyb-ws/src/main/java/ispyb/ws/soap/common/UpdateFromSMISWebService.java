@@ -67,7 +67,7 @@ public class UpdateFromSMISWebService extends RestWebService{
 	 * @throws Exception
 	 */
 	@WebMethod
-	@TransactionTimeout(1500)
+	@TransactionTimeout(3000)
 	public void updateFromSMIS() throws Exception {
 		String methodName = "updateFromSMIS";
 		long id = this.logInit(methodName, logger);
