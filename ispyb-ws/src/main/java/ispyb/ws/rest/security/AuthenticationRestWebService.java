@@ -1,9 +1,10 @@
 package ispyb.ws.rest.security;
 
+import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.login.Login3VO;
 import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.security.login.EMBLLoginModule;
-import ispyb.ws.rest.security.login.LoginModule;
+import ispyb.ws.rest.security.login.ESRFLoginModule;
 import ispyb.ws.rest.security.login.SOLEILLLoginModule;
 
 import java.io.UnsupportedEncodingException;
@@ -38,6 +39,25 @@ public class AuthenticationRestWebService extends RestWebService {
 		return byteToHex(crypt.digest());
 	}
 	
+	@Override
+	protected long logInit(String methodName, Logger logger, Object... args) {
+		logger.info("-----------------------");
+		this.now = System.currentTimeMillis();
+		ArrayList<String> params = new ArrayList<String>();
+		for (Object object : args) {
+			if (object != null){
+				params.add(object.toString());
+			}
+			else{
+				params.add("null");
+			}
+		}
+		logger.info(methodName.toUpperCase());
+		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API_LOGIN, methodName, System.currentTimeMillis(),
+				System.currentTimeMillis(), this.getGson().toJson(params));
+		return this.now;
+	}
+	
 	@PermitAll
 	@POST
 	@Path("/authenticate")
@@ -50,49 +70,56 @@ public class AuthenticationRestWebService extends RestWebService {
 		long id = this.logInit(methodName, logger, login, site);
 		try {
 			List<String> roles = new ArrayList<String>();
-			
-			if (site != null){
-				if (site.equals("EMBL")){
-					logger.info("Logging as EMBL");
-					roles = EMBLLoginModule.authenticate(login, password);
-					logger.info(roles);
-				}
-				if (site.equals("ESRF")){
-					roles = LoginModule.authenticate(login, password);
-				}
-				if (site.equals("SOLEIL")){
-					roles = SOLEILLLoginModule.authenticate(login, password);
+			if (!password.isEmpty()){
+				if (site != null){
+					switch (site) {
+					case "EMBL":
+						roles = EMBLLoginModule.authenticate(login, password);
+						break;
+					case "ESRF":
+						roles = ESRFLoginModule.authenticate(login, password);
+						break;
+					case "SOLEIL":
+						roles = SOLEILLLoginModule.authenticate(login, password);
+						break;
+					default:
+						throw new Exception("Site is not defined");
+					}
 				}
 			}
 			else{
-				roles = LoginModule.authenticate(login, password);
+				throw new Exception("Empty passwords are not allowed");
 			}
 
-			roles.add("User");
-			String token = generateRamdomUUID();
-			
-			HashMap<String, Object> cookie = new HashMap<String, Object>();
-			cookie.put("token", token);
-			cookie.put("roles", roles);
-			
-			/** Creating the login token on database **/
-			Login3VO login3vo = new Login3VO();
-			login3vo.setToken(token);
-			login3vo.setUsername(login);
-			login3vo.setRoles(roles.toString());
-			
-			/** Calculating expiration time **/
-			Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
-			calendar.add(Calendar.HOUR, 3);
-			Date expirationTime = calendar.getTime();
-			
-			login3vo.setExpirationTime(expirationTime);
-			logger.info(this.getGson().toJson(login3vo));
-			/** Saving login on database **/
-			this.getLogin3Service().persist(login3vo);
-			return sendResponse(cookie);
+			if (roles.size() > 0){
+				String token = generateRamdomUUID();
+				
+				HashMap<String, Object> cookie = new HashMap<String, Object>();
+				cookie.put("token", token);
+				cookie.put("roles", roles);
+				
+				/** Creating the login token on database **/
+				Login3VO login3vo = new Login3VO();
+				login3vo.setToken(token);
+				login3vo.setUsername(login);
+				login3vo.setRoles(roles.toString());
+				
+				/** Calculating expiration time **/
+				Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
+				calendar.add(Calendar.HOUR, 3);
+				Date expirationTime = calendar.getTime();
+				
+				login3vo.setExpirationTime(expirationTime);
+
+				/** Saving login on database **/
+				this.getLogin3Service().persist(login3vo);
+				return sendResponse(cookie);
+			}
+			else{
+				throw new Exception("User is not allowed");
+			}
 		} catch (Exception e) {
-			return this.logError(methodName, e, id, logger);
+			return this.logError(methodName, e, id, logger, LoggerFormatter.Package.ISPyB_API_LOGIN_ERROR);
 		}
 	}
 
