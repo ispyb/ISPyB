@@ -22,27 +22,23 @@ GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,
 GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,  
 GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 				
-(SELECT GROUP_CONCAT(distinct(`SpaceGroup`.`spaceGroupShortName`)) AS `v_datacollection_summary_phasing_spaceGroupShortName` 
-	FROM `AutoProcIntegration` 
-	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`  
-	LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId` 
-	LEFT JOIN `Phasing_has_Scaling` ON `Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
-	LEFT JOIN `PhasingStep` ON `PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId` 
-	LEFT JOIN `SpaceGroup` ON `SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId` 
+(SELECT count(*) 
+	FROM `PhasingStep`    
+    LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
+	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
+    LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
 	where `AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId   
-) as Phasing_spaceGroup,
+) as hasPhasing,
 
-
-
-(SELECT GROUP_CONCAT(distinct(`PhasingStep`.`phasingStepType`)) AS `v_datacollection_summary_phasing_spaceGroupShortName`
-    FROM `AutoProcIntegration` 
-        LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`  
-        LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId` 
-        LEFT JOIN `Phasing_has_Scaling` ON `Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
-        LEFT JOIN `PhasingStep` ON `PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId` 
-        LEFT JOIN `SpaceGroup` ON `SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId` 
-		where `AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId   
-) as Phasing_phasingStepType, 
+(SELECT GROUP_CONCAT(DISTINCT(spaceGroupShortName))
+	FROM `PhasingStep`  
+	LEFT JOIN `SpaceGroup` ON `PhasingStep`.`spaceGroupId` = `SpaceGroup`.`spaceGroupId`     
+    LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
+	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
+    LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
+	where `AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId   
+    and PhasingStep.phasingStepType = 'MODELBUILDING'
+) as SpaceGroupModelResolvedByPhasing,
 				
 				 
 (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,

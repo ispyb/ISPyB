@@ -51,6 +51,9 @@ import com.google.gson.GsonBuilder;
 
 @Path("/")
 public class RestWebService {
+	protected long now;
+	private final static Logger log = Logger.getLogger(RestWebService.class);
+	
 	
 	protected Response sendImage(String filePath) {
 		if (filePath != null) {
@@ -69,9 +72,7 @@ public class RestWebService {
 		return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
-	private long now;
 
-	private final static Logger log = Logger.getLogger(RestWebService.class);
 
 	protected Response downloadFile(String filePath) throws Exception {
 		File file = new File(filePath);
@@ -86,6 +87,12 @@ public class RestWebService {
 //		return Response.noContent().build();
 	}
 	
+	/**
+	 * File name can not contain commas!!!
+	 * @param bs
+	 * @param fileName
+	 * @return
+	 */
 	protected Response downloadFile(byte[] bs, String fileName) {
 		ResponseBuilder response = Response.ok((Object) bs);
 		response.header("Content-Disposition", "attachment; filename=" + fileName);
@@ -364,11 +371,15 @@ public class RestWebService {
 	}
 
 	protected Response logError(String methodName, Exception e, long start, Logger logger) {
+		return this.logError( methodName,  e,  start,  logger, LoggerFormatter.Package.ISPyB_API_ERROR);
+	}
+	
+	protected Response logError(String methodName, Exception e, long start, Logger logger,  LoggerFormatter.Package myPackage) {
 		e.printStackTrace();
-		LoggerFormatter.log(logger, LoggerFormatter.Package.ISPyB_API_ERROR, methodName, start,
-				System.currentTimeMillis(), e.getMessage(), e);
+		LoggerFormatter.log(logger, myPackage, methodName, start,System.currentTimeMillis(), e.getMessage(), e);
 		return this.sendResponse(e.getMessage());
 	}
+	
 	
 	/**
 	 * Check if the logged user has the right to see the given proposal data

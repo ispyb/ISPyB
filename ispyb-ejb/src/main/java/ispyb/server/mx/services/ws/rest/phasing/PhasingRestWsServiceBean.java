@@ -19,6 +19,8 @@
 
 package ispyb.server.mx.services.ws.rest.phasing;
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,30 +34,25 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class PhasingRestWsServiceBean implements PhasingRestWsService, PhasingRestWsServiceLocal {
+public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingRestWsService, PhasingRestWsServiceLocal {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
-	
-	private String ByDataCollectionId = getPhasingViewTableQuery() + " where dataCollectionId = :dataCollectionId and proposalId = :proposalId";
-	private String ByAutoProcIntegrationId = getPhasingViewTableQuery() + " where autoprocIntegrationId = :autoprocIntegrationId and proposalId = :proposalId";
-	private String ByPhasingStepId = getPhasingViewTableQuery() + " where phasingStepId = :phasingStepId and proposalId = :proposalId";
-	
-	
-	private String BySampleId = getPhasingViewTableQuery()  + " where blSampleId = :blSampleId and proposalId = :proposalId";
-	private String ByProteinId = getPhasingViewTableQuery() + " where proteinId = :proteinId and proposalId = :proposalId";
-	private String BySessionId = getPhasingViewTableQuery() + " where sessionId = :sessionId and proposalId = :proposalId";
-	
 	private String getPhasingViewTableQuery(){
-		return "select *,\n" + 
-				"(select GROUP_CONCAT(metric) from PhasingStatistics where phasingStepId = v_datacollection_phasing.phasingStepId) as metric,\n" + 
-				"(select GROUP_CONCAT(statisticsValue) from PhasingStatistics where phasingStepId = v_datacollection_phasing.phasingStepId) as statisticsValue\n" + 
-				//"(select GROUP_CONCAT(binNumber) from PhasingStatistics where phasingStepId = v_datacollection_phasing.phasingStepId) as binNumber,\n" + 
-				//"(select GROUP_CONCAT(nReflections) from PhasingStatistics where phasingStepId = v_datacollection_phasing.phasingStepId) as nReflections,\n" + 
-				//"(select GROUP_CONCAT(numberOfBins) from PhasingStatistics where phasingStepId = v_datacollection_phasing.phasingStepId) as numberOfBins\n" + 
-				"from v_datacollection_phasing";
+		return this.getQueryFromResourceFile("/queries/PhasingRestWsServiceBean/getViewTableQuery.sql");
 	}
+	
+	
+	private String ByDataCollectionId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId";
+	private String ByAutoProcIntegrationId = getPhasingViewTableQuery() + " where AutoProcIntegration_autoProcIntegrationId = :autoprocIntegrationId and BLSession_proposalId = :proposalId";
+	private String ByPhasingStepId = getPhasingViewTableQuery() + " where PhasingStep_phasingStepId = :phasingStepId and BLSession_proposalId = :proposalId";
+	
+	
+	private String BySampleId = getPhasingViewTableQuery()  + " where BLSample_blSampleId = :blSampleId and BLSession_proposalId = :proposalId";
+	private String ByProteinId = getPhasingViewTableQuery() + " where Protein_proteinId = :Protein_proteinId and BLSession_proposalId = :proposalId";
+	private String BySessionId = getPhasingViewTableQuery() + " where BLSession_sessionId = :sessionId and BLSession_proposalId = :proposalId";
+	
 
 	@Override
 	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId, int proposalId) {
@@ -148,12 +145,6 @@ public class PhasingRestWsServiceBean implements PhasingRestWsService, PhasingRe
 		return executeSQLQuery(query);
 	}
 	
-	
-	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
-	}
 
 
 }

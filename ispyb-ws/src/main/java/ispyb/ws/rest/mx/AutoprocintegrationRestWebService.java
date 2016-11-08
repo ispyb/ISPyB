@@ -134,8 +134,8 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
 	@GZIP
-	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/download")
 	@Produces("text/plain")
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/download")
 	public Response downloadAttachments(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoprocattachmentids") String autoprocattachmentids) {
 

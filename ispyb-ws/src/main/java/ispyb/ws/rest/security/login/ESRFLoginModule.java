@@ -74,6 +74,10 @@ public class ESRFLoginModule {
 					}
 				}
 			}
+			/** Any validated user is a role User */
+			if (myRoles.size() == 0){
+				myRoles.add("User");
+			}
 		}
 		else{
 			throw new Exception("Empty passwords are not allowed");

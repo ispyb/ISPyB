@@ -1,9 +1,14 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.common.util.HashMapToZip;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.ws.rest.phasing.PhasingRestWsService;
+import ispyb.server.mx.vos.autoproc.PhasingProgramAttachment3VO;
+import ispyb.server.mx.vos.autoproc.PhasingStepVO;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +20,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.compress.archivers.zip.ZipMethod;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 @Path("/")
 public class PhasingRestWebService extends MXRestWebService {
@@ -28,7 +35,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/autoprocIntegrationId/{autoprocIntegrationId}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/autoprocintegrationid/{autoprocIntegrationId}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewByAutoProcIntegrationId(
 			@PathParam("token") String token, 
@@ -52,7 +59,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/dataCollectionId/{dataCollectionIds}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/datacollectionid/{dataCollectionIds}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewByDataCollectionId(
 			@PathParam("token") String token, 
@@ -77,7 +84,7 @@ public class PhasingRestWebService extends MXRestWebService {
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/sampleId/{sampleIds}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/sampleid/{sampleIds}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewBySampleId(
 			@PathParam("token") String token, 
@@ -101,7 +108,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/proteinId/{proteinIds}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/proteinid/{proteinIds}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewByProteinId(
 			@PathParam("token") String token, 
@@ -125,7 +132,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/sessionId/{sessionIds}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/sessionid/{sessionIds}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewBySessionId(
 			@PathParam("token") String token, 
@@ -149,7 +156,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/phasingStepId/{phasingStepIds}/list")
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/list")
 	@Produces({ "application/json" })
 	public Response getPhasingViewByPhasingStepId(
 			@PathParam("token") String token, 
@@ -174,7 +181,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/phasingStepId/{phasingStepIds}/files")
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/files")
 	@Produces({ "application/json" })
 	public Response getPhasingFilesByPhasingStepId(
 			@PathParam("token") String token, 
@@ -198,7 +205,55 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/phasing/phasingProgramAttachmentId/{phasingProgramAttachmentId}/download")
+	@Produces("text/plain")
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/download")
+	public Response downloadPhasingFilesByPhasingStepId(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("phasingStepIds") String phasingStepIds) {
+
+		String methodName = "downloadPhasingFilesByPhasingStepId";
+		long start = this.logInit(methodName, logger, token, proposal, phasingStepIds);
+		try {
+			List<Integer> ids = this.parseToInteger(phasingStepIds);
+			HashMap<String, String> files = new HashMap<String, String>();
+			
+			String firstId = "phasing";
+			for (Integer id : ids) {
+				firstId = id.toString();
+				List<Map<String, Object>> phasingFiles = this.getPhasingWSService().getPhasingFilesViewByStepId(id, this.getProposalId(proposal));
+				PhasingStepVO phasing = this.getPhasingStep3Service().findById(id);
+				if (phasing != null){
+					if (phasingFiles != null){
+						if (phasingFiles.size() > 0){
+							for (Map<String, Object> map : phasingFiles) {
+								if (map.get("fileName") != null){
+									String fileName = map.get("fileName").toString();
+									if (map.get("filePath") != null){
+										String filePath = map.get("filePath").toString();
+										files.put(phasing.getSpaceGroupVO().getSpaceGroupShortName() + "/" + phasing.getPhasingStepType() + "_" + phasing.getPhasingStepId() + "/" +  fileName, filePath);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			byte[] bytes = HashMapToZip.doZip(files);
+			this.logFinish(methodName, start, logger);
+			return this.downloadFile(bytes, firstId + ".zip");
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	
+	
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/download")
 	@Produces({ "application/json" })
 	public Response getPhasingFilesByPhasingProgramAttachmentId(
 			@PathParam("token") String token, 
@@ -224,7 +279,9 @@ public class PhasingRestWebService extends MXRestWebService {
 						System.out.println("Do zip");
 						for (List<Map<String, Object>> record : list) {
 							System.out.println(record.get(0).get("filePath"));
+							
 						}
+						
 					}
 					else{
 						/** Returns file **/
@@ -240,6 +297,37 @@ public class PhasingRestWebService extends MXRestWebService {
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
+	}
+	
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/csv")
+ 	@Produces("text/plain")
+	public Response getCSVPhasingFileByPhasingProgramAttachmentId(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("phasingProgramAttachmentId") int phasingProgramAttachmentId) {
+
+		String methodName = "getCSVPhasingFileByPhasingProgramAttachmentId";
+		long start = this.logInit(methodName, logger, token, proposal, phasingProgramAttachmentId);
+		try {
+			PhasingProgramAttachment3VO attachment = this.getPhasingProgramAttachment3Service().findByPk(phasingProgramAttachmentId);
+			if (attachment != null){
+				if (attachment.getFilePath() != null){
+					if (new File(attachment.getFilePath()).exists()){
+						this.logFinish(methodName, start, logger);
+						return this.downloadFile(attachment.getFilePath());
+					}
+					else{
+						throw new Exception("File " +  attachment.getFilePath() + " does not exist");
+					}
+				}
+			}
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+		return null;
 	}
 	
 	

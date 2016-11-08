@@ -117,7 +117,6 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
 	private Login3VO getLogin(String token) {
 		try {
-			logger.info("authenticateToken " + token);
 			Login3Service service = (Login3Service) Ejb3ServiceLocator.getInstance().getLocalService(Login3Service.class);
 			return service.findByToken(token);
 		} catch (NamingException e) {
