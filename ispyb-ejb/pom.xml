@@ -216,8 +216,8 @@
 		
 		<dependency>
 			<groupId>ispyb</groupId>
-			<artifactId>ispyb-WSclient-SMIS-gen</artifactId>
-			<version>2.1</version>
+			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
+			<version>1.0</version>
 		</dependency>
 		
 		
