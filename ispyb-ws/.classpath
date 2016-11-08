@@ -19,6 +19,6 @@
 			<attribute name="owner.project.facets" value="jboss.m2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/ispyb-ejb3/lib/ispyb-WSclient-SMIS-gen-2.1.jar"/>
+	<classpathentry kind="lib" path="/ispyb-ejb3/lib/ispyb-WSclient-userportal-gen-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
