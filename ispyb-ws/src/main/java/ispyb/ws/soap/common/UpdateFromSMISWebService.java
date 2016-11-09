@@ -74,7 +74,7 @@ public class UpdateFromSMISWebService extends RestWebService{
 		try {
 			Date today = Calendar.getInstance().getTime();
 			Calendar start = Calendar.getInstance();
-			start.add(Calendar.DAY_OF_MONTH, -30);
+			start.add(Calendar.DAY_OF_MONTH, -10);
 			Date startDate = start.getTime();
 			SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
 			UpdateFromSMIS.updateFromSMIS(simple.format(startDate), simple.format(today));
