@@ -167,25 +167,20 @@ public class UrlUtils {
 		// reformat href tag
 		// href='best_log.html'
 		// href='viewResults.do?reqCode=displayEDNAFile&EDNAFilePath=/data/pyarch/id14eh4/opid144/20111130/RAW_DATA/bPGM_BeF_G1P_1_2_dnafiles/index/best_log.html'
-		// String href_pattern_log = "<a href=.*_log.html";
+		// String href_pattern_log = "<a href=.*_log*.html";
 		String tmp6 = tmp5;
 
-		//String image_pattern_linkImg = "<A HREF=\"(.*[^_])\\.html\">";
-		//Pattern pattern3 = Pattern.compile(image_pattern_linkImg, Pattern.CASE_INSENSITIVE);
-		//String image_pattern_subs3 = "<A HREF='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath
-		//		+ "$1" + ".jpg'>";
-
-		String href_pattern_html = "<A HREF=\"(.*)\\.HTML\">";
+		String href_pattern_html = "<A HREF=\"(.*)LOG(.*)\\.HTML\">";
 		Pattern pattern3 = Pattern.compile(href_pattern_html, Pattern.CASE_INSENSITIVE);
 		String href_pattern_subs3 = "<A HREF='" + pathHrefFile + "&" + Constants.EDNA_FILE_PATH + "=" + fullEDNAPath
-				+ "$1" + ".html'>";
+				+ "$1" + "log" + "$2" + ".html'>";
 
 		Matcher matches3 = pattern3.matcher(tmp5);
 		if (matches3.find()) {
 			//tmp6 = matches3.replaceAll(image_pattern_subs3);
 			tmp6 = matches3.replaceAll(href_pattern_subs3);
 		}
-
+		
 		// reformat img tags
 		// <img SRC=abb_27_Jan_2014_01.png ALT
 		// <img
@@ -222,7 +217,19 @@ public class UrlUtils {
 			tmp8 = matches8.replaceAll(image_pattern_subs8);
 		}
 
-		return tmp8;
+		String tmp9 = tmp8;
+		
+		String image_pattern_linkImg = "<A HREF=\"(.*[^_])\\.html\">";
+		Pattern pattern9 = Pattern.compile(image_pattern_linkImg, Pattern.CASE_INSENSITIVE);
+		String image_pattern_subs9 = "<A HREF='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath
+				+ "$1" + ".jpg'>";
+
+		Matcher matches9 = pattern9.matcher(tmp9);
+		if (matches9.find()) {
+			tmp9 = matches9.replaceAll(image_pattern_subs9);
+		}
+
+		return tmp9;
 
 	}
 
