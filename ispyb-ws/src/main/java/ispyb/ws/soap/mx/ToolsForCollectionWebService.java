@@ -126,7 +126,7 @@ public class ToolsForCollectionWebService {
 
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
-	public String echo() {
+	public String echo()  {
 		return "echo from server...";
 	}
 
@@ -488,8 +488,8 @@ public class ToolsForCollectionWebService {
 
 	@WebMethod
 	@WebResult(name = "dataCollectionId")
-	public Integer updateDataCollectionStatus(java.lang.Integer dataCollectionId, @WebParam(name = "runStatus")
-	java.lang.String runStatus) throws Exception {
+	public Integer updateDataCollectionStatus(@WebParam(name = "dataCollectionId") Integer dataCollectionId, 
+			@WebParam(name = "runStatus") String runStatus) throws Exception {
 		try {
 			LOG.debug("updateDataCollectionStatus");
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
@@ -1130,23 +1130,27 @@ public class ToolsForCollectionWebService {
 		}
 	}
 	
-	protected Gson getGson() {
+	protected Gson getGson(String ignore) {
+		// put a fake parameter to avoid the Undertow request failed HttpServerExchange{ POST  .. error
 		return new GsonBuilder().serializeNulls().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeSpecialFloatingPointValues()
 				.create();
 	}
 	
 	@WebMethod
 	@WebResult(name = "workflowId")
-	public void storeWorkflowStep(
+	public Integer storeWorkflowStep(
 			@WebParam(name = "workflowStep") String workflowStep) throws Exception {
 		try {
 			LOG.info("storeWorkflowStep");
 			LOG.info("workflowStep");
 			LOG.info(workflowStep);
 			
-			WorkflowStep3VO workflowStep3VO = this.getGson().fromJson(workflowStep, WorkflowStep3VO.class);
+			WorkflowStep3VO workflowStep3VO = this.getGson("ignore").fromJson(workflowStep, WorkflowStep3VO.class);
 			WorkflowStep3Service workflowStep3Service = (WorkflowStep3Service) ejb3ServiceLocator.getLocalService(WorkflowStep3Service.class);
-			workflowStep3Service.merge(workflowStep3VO);
+			workflowStep3VO = workflowStep3Service.merge(workflowStep3VO);
+			
+			return workflowStep3VO.getWorkflowStepId();
+			
 		} catch (Exception e) {
 			LOG.error("WS ERROR: storeWorkflowStep - " + StringUtils.getCurrentDate());
 			throw e;
