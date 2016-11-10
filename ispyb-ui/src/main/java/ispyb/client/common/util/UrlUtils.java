@@ -136,8 +136,6 @@ public class UrlUtils {
 		Matcher matcher = pattern.matcher(tmp2);
 		String tmp3 = matcher.replaceAll(image_pattern_subs);
 
-		// return tmp3;
-
 		// reformat img tags
 		// <img src='ref-bPGM_BeF_G1P_1_2_0001.img'
 		// <img
@@ -172,14 +170,20 @@ public class UrlUtils {
 		// String href_pattern_log = "<a href=.*_log.html";
 		String tmp6 = tmp5;
 
-		String image_pattern_linkImg = "<A HREF=\"(.*[^_])\\.html\">";
-		Pattern pattern3 = Pattern.compile(image_pattern_linkImg, Pattern.CASE_INSENSITIVE);
-		String image_pattern_subs3 = "<A HREF='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath
-				+ "$1" + ".jpg'>";
+		//String image_pattern_linkImg = "<A HREF=\"(.*[^_])\\.html\">";
+		//Pattern pattern3 = Pattern.compile(image_pattern_linkImg, Pattern.CASE_INSENSITIVE);
+		//String image_pattern_subs3 = "<A HREF='" + pathImg + "&" + Constants.EDNA_IMAGE_PATH + "=" + fullEDNAPath
+		//		+ "$1" + ".jpg'>";
+
+		String href_pattern_html = "<A HREF=\"(.*)\\.HTML\">";
+		Pattern pattern3 = Pattern.compile(href_pattern_html, Pattern.CASE_INSENSITIVE);
+		String href_pattern_subs3 = "<A HREF='" + pathHrefFile + "&" + Constants.EDNA_FILE_PATH + "=" + fullEDNAPath
+				+ "$1" + ".html'>";
 
 		Matcher matches3 = pattern3.matcher(tmp5);
 		if (matches3.find()) {
-			tmp6 = matches3.replaceAll(image_pattern_subs3);
+			//tmp6 = matches3.replaceAll(image_pattern_subs3);
+			tmp6 = matches3.replaceAll(href_pattern_subs3);
 		}
 
 		// reformat img tags
