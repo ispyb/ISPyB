@@ -46,9 +46,10 @@ public class WorkflowStep3ServiceBean implements WorkflowStep3Service, WorkflowS
 	private DataCollectionGroupRestWsServiceLocal dataCollectionRestWsServiceLocal;
 	
 	@Override
-	public void merge(WorkflowStep3VO workflowStep3VO) {
+	public WorkflowStep3VO merge(WorkflowStep3VO workflowStep3VO) {
 		try {
-			entityManager.merge(workflowStep3VO);
+			WorkflowStep3VO newVO = entityManager.merge(workflowStep3VO);
+			return newVO;
 		} catch (RuntimeException re) {
 			throw re;
 		}

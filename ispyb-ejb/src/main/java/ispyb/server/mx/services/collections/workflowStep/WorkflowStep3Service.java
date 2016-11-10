@@ -27,7 +27,7 @@ import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 @Remote
 public interface WorkflowStep3Service {
 
-	void merge(WorkflowStep3VO workflowStep3VO);
+	WorkflowStep3VO merge(WorkflowStep3VO workflowStep3VO);
 
 	public WorkflowStep3VO findById(Integer workflowStepId, Integer proposalId) throws Exception;
 
