@@ -869,10 +869,10 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				(energyScan.getTransmissionFactor() == null ? "" : ("" + energyScan.getTransmissionFactor() + " %")),
 				false));
 		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
-				(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " μm")),
+				(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " Î¼m")),
 				false));
 		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " μm")),
+				(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " Î¼m")),
 				false));
 		info.setListParameters(listParameters);
 		// comments
@@ -931,9 +931,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				: ("" + xrfSpectrum.getExposureTime() + " s")), false));
 		listParameters
 				.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
-						: ("" + xrfSpectrum.getBeamSizeHorizontal() + " μm")), false));
+						: ("" + xrfSpectrum.getBeamSizeHorizontal() + " Î¼m")), false));
 		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " μm")),
+				(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " Î¼m")),
 				false));
 		info.setListParameters(listParameters);
 		// comments
@@ -1554,9 +1554,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				String rSymmString = new String();
 				String resolutionString = new String();
 				if (autoProcOverall != null && autoProcInner != null && autoProcOuter != null) {
-					completenessString += df2.format(autoProcInner.getCompleteness()) + ","
-							+ df2.format(autoProcOuter.getCompleteness()) + ","
-							+ df2.format(autoProcOverall.getCompleteness());
+					completenessString += (autoProcInner.getCompleteness() == null ? "" : df2.format(autoProcInner.getCompleteness())) + ","
+							+ (autoProcOuter.getCompleteness() == null ? "" : df2.format(autoProcOuter.getCompleteness())) + ","
+							+ (autoProcOverall.getCompleteness() == null ? "" : df2.format(autoProcOverall.getCompleteness()));
 					rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner.getRmerge()))
 							+ "<br/>"
 							+ (autoProcOuter.getRmerge() == null ? "" : df2.format(autoProcOuter.getRmerge()))
