@@ -18,9 +18,6 @@
  ****************************************************************************************************/
 package ispyb.ws.soap.common;
 
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.ws.rest.RestWebService;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +35,9 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
+import ispyb.server.smis.UpdateFromSMIS;
+import ispyb.ws.ParentWebService;
+
 /**
  * Web services for update from SMIS
  * 
@@ -52,7 +52,7 @@ import org.jboss.ws.api.annotation.WebContext;
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
 
-public class UpdateFromSMISWebService extends RestWebService{
+public class UpdateFromSMISWebService extends ParentWebService{
 	private final static Logger logger = Logger.getLogger(UpdateFromSMISWebService.class);
 
 	@WebMethod(operationName = "echo")
@@ -67,7 +67,7 @@ public class UpdateFromSMISWebService extends RestWebService{
 	 * @throws Exception
 	 */
 	@WebMethod
-	@TransactionTimeout(3000)
+	@TransactionTimeout(5000)
 	public void updateFromSMIS() throws Exception {
 		String methodName = "updateFromSMIS";
 		long id = this.logInit(methodName, logger);
