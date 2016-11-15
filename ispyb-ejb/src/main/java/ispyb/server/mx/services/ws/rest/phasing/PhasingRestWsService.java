@@ -44,5 +44,7 @@ public interface PhasingRestWsService {
 	public List<Map<String, Object>> getPhasingFilesViewByStepId(int phasingStepId, int proposalId);
 	
 	public List<Map<String, Object>> getPhasingFilesViewByPhasingProgramAttachmentId(int phasingProgramAttachmentId, int proposalId);
+
+	public List<Map<String, Object>> getPhasingViewByDataCollectionGroupId(int dataCollectionGroupId, int proposalId);
 	
 }

@@ -19,6 +19,8 @@
 
 package ispyb.server.mx.services.ws.rest.datacollection;
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +35,18 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class DataCollectionRestWsServiceBean implements DataCollectionRestWsService, DataCollectionRestWsServiceLocal {
+public class DataCollectionRestWsServiceBean extends WsServiceBean implements DataCollectionRestWsService, DataCollectionRestWsServiceLocal {
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
+	private String getViewTableQuery(){
+		return this.getQueryFromResourceFile("/queries/DataCollectionRestWsServiceBean/getViewTableQuery.sql");
+	}
+	
 	@Override
 	public Collection<? extends Map<String, Object>> getViewDataCollectionsByWorkflowId(int proposalId, Integer workflowId) {
-		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and workflowId = :workflowId";
+		String mySQLQuery = this.getViewTableQuery() + " where proposalId = :proposalId and workflowId = :workflowId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);
@@ -48,16 +54,10 @@ public class DataCollectionRestWsServiceBean implements DataCollectionRestWsServ
 		return executeSQLQuery(query);
 	}
 	
-	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
-	}
 
 	@Override
 	public Collection<? extends Map<String, Object>> getDataCollectionByDataCollectionGroupId(int proposalId, Integer dataCollectionGroupId) {
-		String mySQLQuery = "SELECT * from v_datacollection where proposalId = :proposalId and dataCollectionGroupId = :dataCollectionGroupId";
+		String mySQLQuery = this.getViewTableQuery() + " where proposalId = :proposalId and dataCollectionGroupId = :dataCollectionGroupId";
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);

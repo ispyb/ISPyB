@@ -27,7 +27,9 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
     LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
 	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
     LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
-	where `AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId   
+	LEFT JOIN `DataCollection` ON `DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId` 
+    LEFT JOIN `DataCollectionGroup` ON `DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId` 
+	where `DataCollectionGroup`.`dataCollectionGroupId` = v_datacollection_summary.DataCollection_dataCollectionGroupId   
 ) as hasPhasing,
 
 (SELECT GROUP_CONCAT(DISTINCT(spaceGroupShortName))
@@ -36,10 +38,11 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
     LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
 	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
     LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
-	where `AutoProcIntegration`.`dataCollectionId` = v_datacollection_summary.DataCollection_dataCollectionId   
+	LEFT JOIN `DataCollection` ON `DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId` 
+    LEFT JOIN `DataCollectionGroup` ON `DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId` 
+	where `DataCollectionGroup`.`dataCollectionGroupId` = v_datacollection_summary.DataCollection_dataCollectionGroupId     
     and PhasingStep.phasingStepType = 'MODELBUILDING'
 ) as SpaceGroupModelResolvedByPhasing,
-				
 				 
 (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,
 (select count(*) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfDataCollections,

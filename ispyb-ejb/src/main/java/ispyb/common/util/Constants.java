@@ -42,7 +42,7 @@ public final class Constants {
 	private static Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	public enum SITE {
-		SOLEIL, EMBL, ESRF, GENERIC
+		SOLEIL, EMBL, ESRF, GENERIC	
 
 	}
 

@@ -43,7 +43,7 @@ public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingR
 		return this.getQueryFromResourceFile("/queries/PhasingRestWsServiceBean/getViewTableQuery.sql");
 	}
 	
-	
+	private String ByDataCollectionGroupId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionGroupId = :dataCollectionGroupId and BLSession_proposalId = :proposalId";
 	private String ByDataCollectionId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId";
 	private String ByAutoProcIntegrationId = getPhasingViewTableQuery() + " where AutoProcIntegration_autoProcIntegrationId = :autoprocIntegrationId and BLSession_proposalId = :proposalId";
 	private String ByPhasingStepId = getPhasingViewTableQuery() + " where PhasingStep_phasingStepId = :phasingStepId and BLSession_proposalId = :proposalId";
@@ -54,6 +54,15 @@ public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingR
 	private String BySessionId = getPhasingViewTableQuery() + " where BLSession_sessionId = :sessionId and BLSession_proposalId = :proposalId";
 	
 
+	@Override
+	public List<Map<String, Object>> getPhasingViewByDataCollectionGroupId(int dataCollectionGroupId, int proposalId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByDataCollectionGroupId);
+		query.setParameter("dataCollectionId", dataCollectionGroupId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
+	
 	@Override
 	public List<Map<String, Object>> getPhasingViewByDataCollectionId(int dataCollectionId, int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
