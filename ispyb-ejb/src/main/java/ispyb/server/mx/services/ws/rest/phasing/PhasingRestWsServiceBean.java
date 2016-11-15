@@ -60,6 +60,7 @@ public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingR
 		SQLQuery query = session.createSQLQuery(ByDataCollectionGroupId);
 		query.setParameter("dataCollectionId", dataCollectionGroupId);
 		query.setParameter("proposalId", proposalId);
+		System.out.println(query.getQueryString());
 		return executeSQLQuery(query);
 	}
 	
@@ -69,6 +70,7 @@ public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingR
 		SQLQuery query = session.createSQLQuery(ByDataCollectionId);
 		query.setParameter("dataCollectionId", dataCollectionId);
 		query.setParameter("proposalId", proposalId);
+		System.out.println(query.getQueryString());
 		return executeSQLQuery(query);
 	}
 	
