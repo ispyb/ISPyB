@@ -81,6 +81,30 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/phasing/datacollectiongroupid/{dataCollectionGroupIds}/list")
+	@Produces({ "application/json" })
+	public Response getPhasingViewByDataCollectionGroupId(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("dataCollectionGroupIds") String dataCollectionGroupIds) {
+
+		String methodName = "getPhasingViewByDataCollectionGroupId";
+		long start = this.logInit(methodName, logger, token, proposal, dataCollectionGroupIds);
+		try {
+			List<Integer> ids = this.parseToInteger(dataCollectionGroupIds);
+			List<List<Map<String, Object>>> list = new ArrayList<List<Map<String,Object>>>();
+			for (Integer id : ids) {
+				list.add(this.getPhasingWSService().getPhasingViewByDataCollectionGroupId(id, this.getProposalId(proposal)));
+			}
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(list);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
 	@GET

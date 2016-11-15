@@ -26,7 +26,6 @@ public class DataCollectionRestWebServiceUnitTest extends WebServiceUnitTest{
 //
 	public void listWebMethod() {
 //		this.run("/{token}/proposal/{proposal}/saxs/datacollection/list", DataCollectionRestWebService.class);
-		System.out.println("asda");
 	}
 	
 //	@Test
