@@ -9,6 +9,7 @@ New TAG : ISPYB_4.1.3
 New webservices for phasing
 Time-out changes for Update from SMIS WS
 DBMerging: default is NULL for dataCollectionId in Screening
+Change the way links are rewritten from EDNA characterisation html page.
 Bug fixed: null pointer in autoprocessing results
 
 ********************************************************************************
