@@ -524,11 +524,11 @@ public class UpdateFromSMIS {
 			String uoCode = smisSamples[0].getCategoryCode();
 			proposalNumber = smisSamples[0].getCategoryCounter() != null ? smisSamples[0].getCategoryCounter().toString() : "";
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
-System.out.println("UpdateFromSMS proposalCode = " + proposalCode + " | proposalNumber = " + proposalNumber);
+			System.out.println("UpdateFromSMS proposalCode = " + proposalCode + " | proposalNumber = " + proposalNumber);
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
-System.out.println("UpdateFromSMS existingProposalList.size = " + existingProposalList + " | existingProposalList = " + existingProposalList);
+			System.out.println("UpdateFromSMS existingProposalList.size = " + existingProposalList + " | existingProposalList = " + existingProposalList);
 			
 			if (existingProposalList.size() > 1)
 				LOG.debug("error ! duplicate code and number in ISPyB database");	
@@ -546,15 +546,16 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			 * don't exist yet
 			 **/
 			if (proplv.getType().equals("MB") || proplv.getType().equals("BX")) {
+				SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
+						.getLocalService(SaxsProposal3Service.class);
+
 				for (SampleSheetInfoLightVO sampleSheetInfoLightVO : smisSamples) {
 					try {
-						SaxsProposal3Service saxsProposal3Service = (SaxsProposal3Service) ejb3ServiceLocator
-								.getLocalService(SaxsProposal3Service.class);
 						/**
 						 * If there is not any macromolecule with that acronym
 						 * and proposalId it will be created
 						 **/
-						if (saxsProposal3Service.findMacromoleculesBy(sampleSheetInfoLightVO.getAcronym(), proposalId)
+						if (isSampleSheetApproved(sampleSheetInfoLightVO) && saxsProposal3Service.findMacromoleculesBy(sampleSheetInfoLightVO.getAcronym(), proposalId)
 								.size() == 0) {
 							saxsProposal3Service.merge(new Macromolecule3VO(proposalId, sampleSheetInfoLightVO
 									.getAcronym(), sampleSheetInfoLightVO.getAcronym(), sampleSheetInfoLightVO
@@ -571,7 +572,12 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 			for (int j = 0; j < smisSamples.length; j++) {
 
 				SampleSheetInfoLightVO value = smisSamples[j];
-				retrieveSampleSheet(proplv, value);
+				if (isSampleSheetApproved(value)){
+					retrieveSampleSheet(proplv, value);
+				} else {
+					LOG.debug(" sample: "+  value.getAcronym() +  " not retrieved because not validated by Safety");
+				}
+				
 
 			}
 		} else {
@@ -650,6 +656,15 @@ System.out.println("UpdateFromSMS existingProposalList.size = " + existingPropos
 
 			}
 		}
+	}
+	
+	private static boolean isSampleSheetApproved(SampleSheetInfoLightVO value){
+		return true;
+		// TODO check with Safety if OK before put in prod : may have problems with CRIMS
+//		if (value.getOpmodePk() != null && value.getOpmodePk().longValue() < 4)
+//			return true;
+//		else 
+//			return false;
 	}
 
 	private static void retrieveSession(Proposal3VO proplv, ExpSessionInfoLightVO sessionVO) throws Exception {
