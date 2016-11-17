@@ -3,6 +3,12 @@
 New TAG : ISPYB_4.1.3
 
 **************
+* 17.11.2016     *
+**************
+
+Fixed problem with characterization results missing from summary panel
+
+**************
 * 15.11.2016     *
 **************
 
