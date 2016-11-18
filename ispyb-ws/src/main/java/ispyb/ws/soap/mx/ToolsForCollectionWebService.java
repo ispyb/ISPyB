@@ -48,11 +48,14 @@ import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.robot.RobotAction3Service;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.services.shipping.Dewar3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.robot.RobotAction3VO;
+import ispyb.server.common.vos.robot.RobotActionWS3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
@@ -1746,5 +1749,59 @@ public class ToolsForCollectionWebService {
 		}
 	}
 	
+	@WebMethod
+	@WebResult(name = "robotActionId")
+	public Integer storeRobotAction(@WebParam(name = "robotAction")
+	RobotActionWS3VO vo) throws Exception {
+		try {
+			LOG.debug("storeRobotAction");
+			// if vo is null we return null, no creation
+			if (vo == null)
+				return null;
 
+			// if robotActionId is not null we return null, no creation there is a problem we don't plan to update a robotAction
+			if (vo.getRobotActionId() != null ) {
+				LOG.debug(" WS PB : vo.getRobotActionId()Id is not null, robotAction not stored");
+				return null;
+			}
+
+			// if sessionId is null we return null, no creation 
+			if (vo.getSessionId() == null || vo.getSessionId() <= 0) {
+
+				LOG.debug(" WS PB : sessionId is null, robotAction not stored");
+				return null;
+
+			}
+			
+			LOG.debug("...with sampleId = " + vo.getBlSampleId());			
+			RobotAction3VO value = new RobotAction3VO();
+			RobotAction3Service robotActionService = (RobotAction3Service) ejb3ServiceLocator
+					.getLocalService(RobotAction3Service.class);
+
+
+			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
+			BLSample3VO blSampleVO = null;
+			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+
+			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
+			Session3VO sessionVO = null;
+			if (vo.getSessionId() != null && vo.getSessionId() > 0)
+				sessionVO = sessionService.findByPk(vo.getSessionId(), true, false, false);
+
+			value.fillVOFromWS(vo);
+			value.setBlSampleVO(blSampleVO);
+			value.setSessionVO(sessionVO);
+			
+			RobotAction3VO newValue = robotActionService.merge(value);
+
+			// TODO: update session and blSample if oneToMany links active
+
+			return newValue.getRobotActionId();
+
+		} catch (Exception e) {
+			LOG.error("WS ERROR: storeRobotAction - " + StringUtils.getCurrentDate() + " - " + vo.toString());
+			throw e;
+		}
+	}
 }
