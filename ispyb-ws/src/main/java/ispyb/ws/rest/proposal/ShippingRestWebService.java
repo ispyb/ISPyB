@@ -213,8 +213,31 @@ public class ShippingRestWebService extends MXRestWebService {
 			return this.logError("addPuck", e, id, logger);
 		}
 
-	}
+	}	
 	
+	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/container/add")
+	@Produces({ "application/json" })
+	public Response addContainer(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId, @PathParam("dewarId") Integer dewarId, @PathParam("containerType") String type, @PathParam("capacity") Integer capacity) throws Exception {
+
+		long id = this.logInit("addPuck", logger, token, proposal, shippingId, type, capacity);
+		try {
+			Container3VO container = new Container3VO();
+			container.setDewarVO(this.getDewar3Service().findByPk(dewarId, false, false));
+			container.setContainerType(type);
+			container.setCapacity(capacity);			
+			
+			container.setTimeStamp(StringUtils.getCurrentTimeStamp());
+			container = this.getContainer3Service().create(container);
+			this.logFinish("addContainer", id, logger);
+			return sendResponse(container);
+		} catch (Exception e) {
+			return this.logError("addContainer", e, id, logger);
+		}
+
+	}
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
