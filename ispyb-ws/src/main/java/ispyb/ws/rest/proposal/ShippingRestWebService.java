@@ -217,7 +217,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/container/add")
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/containerType/{containerType}/capacity/{capacity}/container/add")
 	@Produces({ "application/json" })
 	public Response addContainer(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("shippingId") Integer shippingId, @PathParam("dewarId") Integer dewarId, @PathParam("containerType") String type, @PathParam("capacity") Integer capacity) throws Exception {
