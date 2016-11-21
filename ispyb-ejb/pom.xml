@@ -417,6 +417,52 @@
   		</properties>
   	</profile> 
   	
+  	<profile>
+  		<id>NEWSITE</id>
+  		  <activation>
+        	<activeByDefault>false</activeByDefault>
+        </activation>
+  		
+  		<properties>
+  			<ispyb.site>NEWSITE</ispyb.site>
+  			
+  			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+  			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+  			<ispyb.authentication.method>JBOSS</ispyb.authentication.method>
+  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+  			  			
+  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+  			
+  			<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
+  			<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
+  			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
+  			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+  			
+  			<shipping.container.capacity>16</shipping.container.capacity>
+			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				
+  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+  			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+  			<ispyb.bcm>mxcube</ispyb.bcm>
+  			
+  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			
+  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
+			
+			<dictionary.site>The ESRF</dictionary.site> 
+			<dictionary.bcm>mxCuBE</dictionary.bcm>
+			
+			<ispyb.authorisation.active>false</ispyb.authorisation.active>
+  				
+  		</properties>
+  	</profile> 
+  	
   </profiles>
 	
 
