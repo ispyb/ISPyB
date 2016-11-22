@@ -267,6 +267,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		
 		containerDB.setCapacity(container.getCapacity());
 		containerDB.setCode(container.getCode());
+		containerDB.setContainerType(container.getContainerType());
 		
 		Set<String> locations = new HashSet<String>();
 		/** Adding Sample **/

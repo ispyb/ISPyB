@@ -1,22 +1,18 @@
 select 
-*,
-(SELECT GROUP_CONCAT(`PhasingStatistics`.`metric` SEPARATOR ',')
-    FROM
-        `PhasingStatistics`
-    WHERE
-        (`PhasingStatistics`.`phasingStepId` = `PhasingStep_phasingStepId`)) AS `metric`,
-(SELECT 
-        GROUP_CONCAT(`PhasingStatistics`.`statisticsValue` SEPARATOR ',')
-    FROM
-        `PhasingStatistics`
-    WHERE
-        (`PhasingStatistics`.`phasingStepId` = `PhasingStep_phasingStepId`)) AS `statisticsValue`,
-(SELECT 
-        `PhasingProgramAttachment`.`phasingProgramAttachmentId`
-    FROM
-        `PhasingProgramAttachment`
-    WHERE
-        ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`)
-            AND (`PhasingProgramAttachment`.`fileName` LIKE '%csv%'))
-    ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `csv`
-from v_phasing
+* ,
+GROUP_CONCAT(`PhasingStatistics_phasingStatisticsId` SEPARATOR ', ') AS `PhasingStatistics_phasingStatisticsIds`,
+GROUP_CONCAT(`PhasingStatistics_metric` SEPARATOR ', ') AS `metric`,
+GROUP_CONCAT(`PhasingStatistics_statisticsValue` SEPARATOR ', ') AS `statisticsValue`,
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.csv%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `csv`,
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.map%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `map` , 
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.pdb%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `pdb`
+from v_phasing 

@@ -43,22 +43,22 @@ public class PhasingRestWsServiceBean  extends WsServiceBean implements PhasingR
 		return this.getQueryFromResourceFile("/queries/PhasingRestWsServiceBean/getViewTableQuery.sql");
 	}
 	
-	private String ByDataCollectionGroupId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionGroupId = :dataCollectionGroupId and BLSession_proposalId = :proposalId";
-	private String ByDataCollectionId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId";
-	private String ByAutoProcIntegrationId = getPhasingViewTableQuery() + " where AutoProcIntegration_autoProcIntegrationId = :autoprocIntegrationId and BLSession_proposalId = :proposalId";
-	private String ByPhasingStepId = getPhasingViewTableQuery() + " where PhasingStep_phasingStepId = :phasingStepId and BLSession_proposalId = :proposalId";
+	private String ByDataCollectionGroupId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionGroupId = :dataCollectionGroupId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
+	private String ByDataCollectionId = getPhasingViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
+	private String ByAutoProcIntegrationId = getPhasingViewTableQuery() + " where AutoProcIntegration_autoProcIntegrationId = :autoprocIntegrationId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
+	private String ByPhasingStepId = getPhasingViewTableQuery() + " where PhasingStep_phasingStepId = :phasingStepId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
 	
 	
-	private String BySampleId = getPhasingViewTableQuery()  + " where BLSample_blSampleId = :blSampleId and BLSession_proposalId = :proposalId";
-	private String ByProteinId = getPhasingViewTableQuery() + " where Protein_proteinId = :Protein_proteinId and BLSession_proposalId = :proposalId";
-	private String BySessionId = getPhasingViewTableQuery() + " where BLSession_sessionId = :sessionId and BLSession_proposalId = :proposalId";
+	private String BySampleId = getPhasingViewTableQuery()  + " where BLSample_blSampleId = :blSampleId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
+	private String ByProteinId = getPhasingViewTableQuery() + " where Protein_proteinId = :Protein_proteinId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
+	private String BySessionId = getPhasingViewTableQuery() + " where BLSession_sessionId = :sessionId and BLSession_proposalId = :proposalId group by PhasingStep_phasingStepId";
 	
 
 	@Override
 	public List<Map<String, Object>> getPhasingViewByDataCollectionGroupId(int dataCollectionGroupId, int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByDataCollectionGroupId);
-		query.setParameter("dataCollectionId", dataCollectionGroupId);
+		query.setParameter("dataCollectionGroupId", dataCollectionGroupId);
 		query.setParameter("proposalId", proposalId);
 		System.out.println(query.getQueryString());
 		return executeSQLQuery(query);

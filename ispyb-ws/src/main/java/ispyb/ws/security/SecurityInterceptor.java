@@ -50,7 +50,8 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
 		
 		if (method.isAnnotationPresent(PermitAll.class)) {
-			logger.info("PermitAll");
+			
+			logger.info("PermitAll " + method.getName() + " "+ method.getDeclaredAnnotations() + " " + method.getAnnotations() + " " + method.getParameterAnnotations());
 			return;
 		}
 
