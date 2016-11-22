@@ -1,4 +1,3 @@
-DROP TABLE `pydb`.`SchemaStatus`;
 CREATE TABLE `pydb`.`SchemaStatus` (
   `schemaStatusId` INT NOT NULL AUTO_INCREMENT,
   `scriptName` VARCHAR(100) UNIQUE NOT NULL,

@@ -1,3 +1,7 @@
+-- first line of script
+insert into SchemaStatus (scriptName, schemaStatus) values ('2016_11_22_phasing_view.sql','ONGOING');
+
+-- body of the script 
 
 drop view v_phasing;
 
@@ -140,4 +144,7 @@ VIEW `v_phasing` AS
         LEFT JOIN `BLSample` ON ((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`)))
         LEFT JOIN `Crystal` ON ((`Crystal`.`crystalId` = `BLSample`.`crystalId`)))
         LEFT JOIN `Protein` ON ((`Crystal`.`proteinId` = `Protein`.`proteinId`)))
-        LEFT JOIN `PhasingProgramRun` ON ((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`)))
+        LEFT JOIN `PhasingProgramRun` ON ((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`)));
+        
+-- last line of script
+update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2016_11_22_phasing_view.sql';
