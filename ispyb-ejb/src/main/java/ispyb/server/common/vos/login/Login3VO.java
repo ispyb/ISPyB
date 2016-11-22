@@ -26,6 +26,7 @@ public class Login3VO implements java.io.Serializable {
 	protected String token;
 	protected String username;
 	protected String roles;
+	protected String authorized;
 	protected Date expirationTime;
 	
 	public Login3VO(){}
@@ -69,6 +70,15 @@ public class Login3VO implements java.io.Serializable {
 		this.roles = roles;
 	}
 
+	@Column(name = "authorized")
+	public String getAuthorized() {
+		return authorized;
+	}
+
+	public void setAuthorized(String authorized) {
+		this.authorized = authorized;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "expirationTime", length = 0)
 	public Date getExpirationTime() {
@@ -103,7 +113,7 @@ public class Login3VO implements java.io.Serializable {
 	public boolean isLocalContact(){
 	    return  this.getRoles().toUpperCase().contains("LOCALCONTACT");
 	}
-
+	
 	/**
 	 * This method checks if this login contains at least one role of the roles list
 	 * @param rolesSet
