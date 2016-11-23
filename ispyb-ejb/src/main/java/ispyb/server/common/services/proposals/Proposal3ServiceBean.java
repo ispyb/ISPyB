@@ -30,6 +30,7 @@ import ispyb.server.common.vos.proposals.ProposalWS3VO;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -399,11 +400,14 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				result.add(proposal);
 				proposalsId.add(proposal.getProposalId());
 			}
-		}
-		
+		}		
 		return result;
-	
+	}
 
+	@Override
+	public List<String> findProposalNamesByLoginName(String loginName, String site) {
+		List<Proposal3VO> proposals = this.findProposalByLoginName(loginName, site);
+		return this.getProposalAccounts(proposals);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -479,8 +483,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		}
 		return 	result;
 	}
-	
-	
+		
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map<String, Object>> findProposalById(Integer proposalId) {
@@ -488,6 +491,18 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		result.addAll(findProposalByProposalId(proposalId));
 		return 	result;
 	}
+	
+	private List<String> getProposalAccounts(List<Proposal3VO> proposals) {		
+		List<String> proposalsStr = new ArrayList<String>();
+		if (proposals != null) {
+			for (Iterator<Proposal3VO> iterator = proposals.iterator(); iterator.hasNext();) {
+				Proposal3VO proposal3vo = (Proposal3VO) iterator.next();
+				proposalsStr.add(proposal3vo.getProposalAccount());
+			}
+		}
+		return proposalsStr;
+	}
+
 	
 	private List findProposalByProposalId(Integer proposalId){
 		Session session = (Session) this.entityManager.getDelegate();

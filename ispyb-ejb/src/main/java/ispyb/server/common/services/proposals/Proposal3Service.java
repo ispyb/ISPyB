@@ -125,11 +125,11 @@ public interface Proposal3Service {
 	@WebMethod
 	public List<Proposal3VO> findFiltered(final String code, final String number, final String title) throws Exception;
 
-	/****** coming from SaxsProposalService   ****/
-
 	public List<Proposal3VO> findProposalByLoginName(String loginName, String site);
 
 	public List<Proposal3VO> findProposalByLoginName(String loginName);
+	
+	public List<String> findProposalNamesByLoginName(String loginName, String site);
 	
 	public Proposal3VO findProposalById(int proposalId);
 	
@@ -140,7 +140,5 @@ public interface Proposal3Service {
 	public List<Map<String, Object>> findProposals(String loginName);
 
 	public List<Map<String, Object>> findProposalById(Integer proposalId);
-
-	/****** end of coming from SaxsProposalService   ****/
 
 }
