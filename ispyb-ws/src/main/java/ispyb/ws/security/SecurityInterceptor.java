@@ -93,10 +93,13 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 								return;
 							
 							String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
-							if (login.getUsername().toUpperCase().equals(proposalname.toUpperCase())) {
+							if (login.getUsername().toUpperCase().equals(proposalname.toUpperCase())) {							
 								return;
 							}
-							else {
+							else if (login.getAuthorized().toUpperCase().contains(proposalname.toUpperCase())) {
+								logger.debug("Proposal "+ proposalname + " allowed for this user");
+								return;
+							} else {
 								logger.info("Proposal not allowed for this user");
 								requestContext.abortWith(ACCESS_DENIED);
 							}

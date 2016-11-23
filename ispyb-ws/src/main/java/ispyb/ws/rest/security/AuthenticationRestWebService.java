@@ -2,6 +2,7 @@ package ispyb.ws.rest.security;
 
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.ESRFLoginModule;
@@ -15,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,6 +106,10 @@ public class AuthenticationRestWebService extends RestWebService {
 				login3vo.setUsername(login);
 				login3vo.setRoles(roles.toString());
 				
+				/** Retrieving the proposals attached to a User **/
+				List<String> proposalsAuthorized =  this.getProposal3Service().findProposalNamesByLoginName(login, site);
+				login3vo.setAuthorized(proposalsAuthorized.toString());
+							
 				/** Calculating expiration time **/
 				Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
 				calendar.add(Calendar.HOUR, 3);

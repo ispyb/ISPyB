@@ -74,7 +74,7 @@ public class ESRFLoginModule {
 					}
 				}
 			}
-			/** Any validated user is a role User */
+			/** Any validated user is in role User */
 			if (myRoles.size() == 0){
 				myRoles.add("User");
 			}
