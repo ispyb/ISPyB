@@ -59,26 +59,30 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		<ul>
 			<li><strong><font color="red">proposalCode</font></strong>: required</li>
 			<li><strong><font color="red">proposalNumber</font></strong>: required</li>
-			<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-				<li><strong>visitNumber</strong>: note required for Max IV Laboratory</li>
-			</c:if>
-			<c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
-				<li><strong>visitNumber</strong>: optional, information not integrated in ISPyB at the ESRF</li>
-			</c:if>
+			<c:choose>
+				<c:when test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+					<li><strong>visitNumber</strong>: not required for Max IV Laboratory</li>
+				</c:when>
+				<c:otherwise>
+					<li><strong>visitNumber</strong>: optional, information not integrated in ISPyB at the ESRF</li>
+				</c:otherwise>
+			</c:choose>
 			<li><strong><font color="red">shippingName</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong><font color="red">dewarCode</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong><font color="red">containerCode</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong>preObsResolution</strong>: number, optional but highly recommended</li>
 			<li><strong>neededResolution</strong>: number, optional but highly recommended</li>
 			<li><strong>oscillationRange</strong>: number, optional but highly recommended</li>
-			<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-				<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 45 characters</li>
-				<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters</li>
-			</c:if>
-			<c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
-				<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 8 characters, has to correspond to an acronym already existing in your account (coming from your sample sheets described in the DUO for that proposal)</li>
-				<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters, has to correspond to a protein name already existing in your account associated with the proteinAcronym above (coming from your sample sheets described in the SMIS for that proposal)</li>
-			</c:if>
+			<c:choose>
+				<c:when test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+					<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 45 characters</li>
+					<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters</li>
+				</c:when>
+				<c:otherwise>
+					<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 8 characters, has to correspond to an acronym already existing in your account (coming from your sample sheets described in the DUO for that proposal)</li>
+					<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters, has to correspond to a protein name already existing in your account associated with the proteinAcronym above (coming from your sample sheets described in the SMIS for that proposal)</li>
+				</c:otherwise>
+			</c:choose>
 			
 			<li><strong>spaceGroup</strong>: optional but highly recommended, &lt; 20 characters</li>
 			<li><strong>sampleBarcode</strong>: optional , &lt; 45 charac.</li>
