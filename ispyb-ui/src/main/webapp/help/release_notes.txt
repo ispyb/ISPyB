@@ -5,6 +5,11 @@ SMIS WS: add a new field in proposalParticipant to retrieve the labo_no of the U
 see ISPYB-46@ESRF
 new jar for WS
 
+EJBs refactoring: remove DAO layer for Laboratory
+
+Changes for EXI: 
+- Added /image in order to download the image attached to a phasing step
+- Added SigAno and ccAno into autoProcessing Statistics
 
 ********************************************************************************
 
