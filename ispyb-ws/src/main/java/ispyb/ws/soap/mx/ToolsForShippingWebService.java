@@ -251,7 +251,7 @@ public class ToolsForShippingWebService {
 					.getLocalService(Laboratory3Service.class);
 
 			laboratoryValue = laboratoryService.findLaboratoryByProposalCodeAndNumber(
-					StringUtils.getProposalCode(code), number+"", true);
+					StringUtils.getProposalCode(code), number+"");
 			if (laboratoryValue != null)
 				LOG.debug("findLaboratoryByCodeAndNumber " + laboratoryValue.getName());
 
@@ -275,7 +275,7 @@ public class ToolsForShippingWebService {
 					.getLocalService(Laboratory3Service.class);
 
 			laboratoryValue = laboratoryService.findLaboratoryByProposalCodeAndNumber(
-					StringUtils.getProposalCode(code), number, true);
+					StringUtils.getProposalCode(code), number);
 			if (laboratoryValue != null)
 				LOG.debug("findLaboratoryByProposal " + laboratoryValue.getName());
 
