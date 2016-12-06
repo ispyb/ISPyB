@@ -18,19 +18,21 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.proposals;
 
-import ispyb.server.common.daos.proposals.Laboratory3DAO;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.proposals.Laboratory3VO;
-
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.proposals.Laboratory3VO;
 
 /**
  * <p>
@@ -42,15 +44,36 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 
 	private final static Logger LOG = Logger.getLogger(Laboratory3ServiceBean.class);
 
-	@EJB
-	private Laboratory3DAO dao;
+	private static String SELECT_LABORATORY = "SELECT l.laboratoryId, l.laboratoryUUID, l.name, l.address, "
+			+ "l.city, l.country, l.url, l.organization  ";
 
-	@Resource
-	private SessionContext context;
+	private static String FIND_BY_PROPOSAL_CODE_NUMBER = SELECT_LABORATORY
+			+ " FROM Laboratory l, Person p, Proposal pro "
+			+ "WHERE l.laboratoryId = p.laboratoryId AND p.personId = pro.personId AND pro.proposalCode like :code AND pro.proposalNumber = :number ";
+
+	// Generic HQL request to find instances of Laboratory3 by pk
+	private static final String FIND_BY_PK() {
+		return "from Laboratory3VO vo  where vo.laboratoryId = :pk";
+	}
+
+	private static final String FIND_BY_LABORATORY_EXT_PK() {
+		return "from Laboratory3VO vo  where vo.laboratoryExtPk = :labExtPk order by vo.laboratoryId desc";
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	public Laboratory3ServiceBean() {
 	};
 
+	public Laboratory3VO merge(Laboratory3VO detachedInstance) {
+		try {
+			Laboratory3VO result = entityManager.merge(detachedInstance);
+			return result;
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
 	/**
 	 * Create new Laboratory3.
 	 * 
@@ -59,17 +82,7 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	 * @return the persisted entity.
 	 */
 	public Laboratory3VO create(final Laboratory3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Laboratory3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		return this.merge(vo);
 	}
 
 	/**
@@ -80,16 +93,7 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	 * @return the updated entity.
 	 */
 	public Laboratory3VO update(final Laboratory3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Laboratory3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		return this.merge(vo);
 	}
 
 	/**
@@ -99,19 +103,9 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Laboratory3VO vo = findByPk(pk);
-				// TODO Edit this business code
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		Laboratory3VO vo = findByPk(pk);
+		checkCreateChangeRemoveAccess();
+		delete(vo);
 	}
 
 	/**
@@ -121,124 +115,77 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	 *            the entity to remove.
 	 */
 	public void delete(final Laboratory3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
+	 * Finds a labo entity by its primary key 
 	 * 
 	 * @param pk
 	 *            the primary key
-	 * @param withLink1
-	 * @param withLink2
 	 * @return the Laboratory3 value object
 	 */
 	public Laboratory3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Laboratory3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				Laboratory3VO found = dao.findByPk(pk, false, false);
-				return found;
-			}
-
-		});
+		try {
+			return (Laboratory3VO) entityManager.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
-	// TODO remove following method if not adequate
 	/**
-	 * Find all Laboratory3s and set linked value objects if necessary
-	 * 
-	 * @param withLink1
-	 * @param withLink2
+	 * Finds a labo entity by its extLabPk
+	 * @param laboExtPk  the ext labo key
+	 * @return the Laboratory3 value object
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Laboratory3VO> findAll(final boolean withLink1, final boolean withLink2) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Laboratory3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Laboratory3VO> foundEntities = dao.findAll(withLink1, withLink2);
-				return foundEntities;
-			}
-
-		});
-	}
-
-	/**
-	 * Check if user has access rights to create, change and remove Laboratory3 entities. If not set rollback only and
-	 * throw AccessDeniedException
-	 * 
-	 * @throws AccessDeniedException
-	 */
-	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-				// to the one checking the needed access rights
-				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
-	}
-
-	/**
-	 * Find a Laboratory for a specified code and proposal number
-	 * 
-	 * @param code
-	 * @param number
-	 * @param detachLight
-	 * @return
-	 * @throws Exception
-	 */
-	public Laboratory3VO findLaboratoryByProposalCodeAndNumber(final String code, final String number,
-			final boolean detachLight) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		EJBAccessCallback callBack = new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Laboratory3VO foundEntities = dao.findLaboratoryByProposalCodeAndNumber(code, number);
-				Laboratory3VO vos;
-				if (detachLight)
-					vos = getLightLaboratoryVO(foundEntities);
-				else
-					vos = getLaboratoryVO(foundEntities);
-				return vos;
-			};
-		};
-		Laboratory3VO ret = (Laboratory3VO) template.execute(callBack);
-
-		return ret;
+	public Laboratory3VO findByLaboratoryExtPk(final Integer laboExtPk) {
+		List<Laboratory3VO> listVOs =  this.entityManager.createQuery(FIND_BY_LABORATORY_EXT_PK())
+					.setParameter("labExtPk", laboExtPk).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+			
+		return (Laboratory3VO) listVOs.toArray()[0];
+		
 	}
 
 	@SuppressWarnings("unchecked")
+	public Laboratory3VO findLaboratoryByProposalCodeAndNumber(String code, String number) {
+		
+		String query = FIND_BY_PROPOSAL_CODE_NUMBER;
+		List<Laboratory3VO> listVOs = this.entityManager.createNativeQuery(query, "laboratoryNativeQuery")
+				.setParameter("code", code).setParameter("number", number).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		
+		return (Laboratory3VO) listVOs.toArray()[0];
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Laboratory3VO> findFiltered(String laboratoryName, String city, String country) {
+
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria crit = session.createCriteria(Laboratory3VO.class);
+
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+
+		if (!StringUtils.isEmpty(laboratoryName))
+			crit.add(Restrictions.like("name", laboratoryName));
+		if (!StringUtils.isEmpty(city))
+			crit.add(Restrictions.like("city", city));
+		if (!StringUtils.isEmpty(country))
+			crit.add(Restrictions.like("country", country));
+
+		return crit.list();
+
+	}
+
 	public List<Laboratory3VO> findByNameAndCityAndCountry(final String laboratoryName, final String city,
 			final String country) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Laboratory3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Laboratory3VO> foundEntities = dao.findFiltered(laboratoryName, city, country);
-				return foundEntities;
-			}
-
-		});
+		
+		return this.findFiltered(laboratoryName, city, country);
 	}
 
 	/**
@@ -264,5 +211,17 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	private Laboratory3VO getLaboratoryVO(Laboratory3VO vo) {
 		return vo;
 	}
+
+	/**
+	 * Check if user has access rights to create, change and remove Laboratory3 entities. If not set rollback only and
+	 * throw AccessDeniedException
+	 * 
+	 * @throws AccessDeniedException
+	 */
+	private void checkCreateChangeRemoveAccess() throws Exception {
+		//TODO
+		return;
+	}
+
 
 }

@@ -367,6 +367,11 @@ public class UpdateFromSMIS {
 				}
 				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
 
+				
+				// fill the laboratory
+				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
+				LOG.debug("current labo is : " + currentLabo.getAddress());
+
 				List<LabContact3VO> labContactsList = null;
 				if (currentPerson != null)
 					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
@@ -374,12 +379,33 @@ public class UpdateFromSMIS {
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
 					labContactExists = true;
+					for (Iterator<LabContact3VO> iterator = labContactsList.iterator(); iterator.hasNext();) {
+						LabContact3VO labContact3VO = (LabContact3VO) iterator.next();
+						Person3VO person3VO = labContact3VO.getPersonVO();
+						Laboratory3VO previousLab = person3VO.getLaboratoryVO();
+						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
+								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
+							LOG.debug("laboratory already exists");
+							continue;
+						}
+						else {
+							// update the laboratory
+							// search if labo with this externalId exists, if not create it
+							Laboratory3VO existingLab = lab.findByLaboratoryExtPk(currentLabo.getLaboratoryExtPk());
+							if (existingLab == null){
+								existingLab = lab.create(currentLabo);
+								LOG.debug("new laboratory created for labContact");
+							}
+							person3VO.setLaboratoryVO(existingLab);
+							person.merge(person3VO);
+							labContact3VO.setPersonVO(person3VO);
+							labContactService.update(labContact3VO);
+							LOG.debug("labContact updated with existing laboratory");
+						}
+					}
 					continue;
 				}
-
-				// fill the laboratory
-				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
-				LOG.debug("current labo is : " + currentLabo.getAddress());
+				
 				//
 				LabContact3VO labContact3VO = new LabContact3VO();
 				

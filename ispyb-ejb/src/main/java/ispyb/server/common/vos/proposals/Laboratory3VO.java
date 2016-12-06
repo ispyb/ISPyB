@@ -72,11 +72,13 @@ public class Laboratory3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "organization")
 	private String organization;
 
-	
+	@Column(name = "laboratoryExtPk")
+	private Integer laboratoryExtPk;
+
 
 	public Laboratory3VO(Integer laboratoryId, String laboratoryUUID,
 			String name, String address, String city, String country,
-			String url, String organization) {
+			String url, String organization, Integer laboratoryExtPk) {
 		super();
 		this.laboratoryId = laboratoryId;
 		this.laboratoryUUID = laboratoryUUID;
@@ -86,6 +88,7 @@ public class Laboratory3VO extends ISPyBValueObject implements Cloneable {
 		this.country = country;
 		this.url = url;
 		this.organization = organization;
+		this.laboratoryExtPk = laboratoryExtPk;
 	}
 	
 	
@@ -172,9 +175,16 @@ public class Laboratory3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setOrganization(String organization) {
 		this.organization = organization;
+	}	
+
+	public Integer getLaboratoryExtPk() {
+		return laboratoryExtPk;
 	}
-	
-	
+
+	public void setLaboratoryExtPk(Integer laboratoryExtPk) {
+		this.laboratoryExtPk = laboratoryExtPk;
+	}
+
 
 
 	/**

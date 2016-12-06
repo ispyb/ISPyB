@@ -18,17 +18,17 @@
  ****************************************************************************************************/
 package ispyb.server.smis;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
-
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.log4j.Logger;
 
 
 public class ScientistsFromSMIS {
@@ -151,6 +151,8 @@ public class ScientistsFromSMIS {
 		laboratory.setCity(scientist.getLabCity());
 		// country
 		laboratory.setCountry(scientist.getLabCountryCode());
+		
+		laboratory.setLaboratoryExtPk(scientist.getLaboratoryPk());
 		// address
 		String address = "";
 		List<String> labs = scientist.getLabAddress();

@@ -36,6 +36,9 @@ public interface Laboratory3Service {
 	 * @return the persisted entity
 	 */
 	public Laboratory3VO create(final Laboratory3VO vo) throws Exception;
+	
+	public Laboratory3VO merge(Laboratory3VO detachedInstance);
+
 
 	/**
 	 * Update the Laboratory3 data.
@@ -67,31 +70,23 @@ public interface Laboratory3Service {
 	 * 
 	 * @param pk
 	 *            the primary key
-	 * @return the Scientist value object
+	 * @return the value object
 	 */
 	public Laboratory3VO findByPk(final Integer pk) throws Exception;
-
-	/**
-	 * Find all Laboratory3 and set linked value objects if necessary.
-	 * 
-	 * @param withLink1
-	 * @param withLink2
-	 */
-	public List<Laboratory3VO> findAll(final boolean withLink1, final boolean withLink2) throws Exception;
 
 	/**
 	 * Find a Laboratory for a specified code and proposal number
 	 * 
 	 * @param code
 	 * @param number
-	 * @param detachLight
 	 * @return
 	 * @throws Exception
 	 */
-	public Laboratory3VO findLaboratoryByProposalCodeAndNumber(final String code, final String number,
-			final boolean detachLight) throws Exception;
+	public Laboratory3VO findLaboratoryByProposalCodeAndNumber(final String code, final String number) throws Exception;
 
 	public List<Laboratory3VO> findByNameAndCityAndCountry(final String laboratoryName, final String city,
 			final String country) throws Exception;
+	
+	public Laboratory3VO findByLaboratoryExtPk(final Integer laboExtPk);
 
 }
