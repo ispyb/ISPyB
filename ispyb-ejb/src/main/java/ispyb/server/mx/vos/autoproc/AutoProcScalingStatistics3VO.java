@@ -116,6 +116,13 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 	@Column(name = "ccHalf")
 	protected Float ccHalf;
 
+	@Column(name = "ccAno")
+	protected Float ccAno;
+	
+	@Column(name = "sigAno")
+	protected Float sigAno;
+	
+	
 	public AutoProcScalingStatistics3VO(){
 		super();
 	}
@@ -443,6 +450,30 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		"ccHalf="+this.ccHalf;
 		
 		return s;
+	}
+
+
+
+	public Float getCcAno() {
+		return ccAno;
+	}
+
+
+
+	public void setCcAno(Float ccAno) {
+		this.ccAno = ccAno;
+	}
+
+
+
+	public Float getSigAno() {
+		return sigAno;
+	}
+
+
+
+	public void setSigAno(Float sigAno) {
+		this.sigAno = sigAno;
 	}
 	
 }
