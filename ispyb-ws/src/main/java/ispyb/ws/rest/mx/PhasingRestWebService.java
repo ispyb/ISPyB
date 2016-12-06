@@ -5,6 +5,7 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.ws.rest.phasing.PhasingRestWsService;
 import ispyb.server.mx.vos.autoproc.PhasingProgramAttachment3VO;
 import ispyb.server.mx.vos.autoproc.PhasingStepVO;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -273,6 +274,54 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 	
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/image")
+	@Produces("image/png")
+	public Response getPhasingFilesByPhasingProgramAttachmentIdAsImage(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("phasingProgramAttachmentId") String phasingProgramAttachmentId) {
+
+		String methodName = "getPhasingFilesByPhasingProgramAttachmentIdAsImage";
+		long start = this.logInit(methodName, logger, token, proposal, phasingProgramAttachmentId);
+		try {
+			List<Integer> ids = this.parseToInteger(phasingProgramAttachmentId);
+			List<List<Map<String, Object>>> list = new ArrayList<List<Map<String,Object>>>();
+			for (Integer id : ids) {
+				list.add(this.getPhasingWSService().getPhasingFilesViewByPhasingProgramAttachmentId(id, this.getProposalId(proposal)));
+			}
+			
+			System.out.println(this.getGson().toJson(list));
+			
+			/** If single file it returns the file otherwise it returns a zip file **/
+			if (list != null){
+				if (list.size() > 0){
+					if (list.size() > 1){
+						/** Do zip **/
+						System.out.println("Do zip");
+						for (List<Map<String, Object>> record : list) {
+							System.out.println(record.get(0).get("filePath"));
+							
+						}
+						
+					}
+					else{
+						/** Returns file **/
+						System.out.println("Single file");
+						System.out.println(list.get(0).get(0).get("filePath"));
+						return this.downloadFile(list.get(0).get(0).get("filePath").toString());
+					}
+				}
+			}
+			
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(list);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 	
 	
 	@RolesAllowed({ "User", "Manager", "Localcontact" })
