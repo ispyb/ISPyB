@@ -335,6 +335,7 @@ public class UpdateFromSMIS {
 		// -----------------------------------------------------------------------------------
 		if (labContacts != null && labContacts.length > 0) {
 			for (int i = 0; i < labContacts.length; i++) {
+				boolean labContactExists = false;
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
 				labContact.getCategoryCode();
 				String uoCode = labContact.getCategoryCode();
@@ -372,6 +373,7 @@ public class UpdateFromSMIS {
 							currentProposal.getProposalId());
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
+					labContactExists = true;
 					continue;
 				}
 
