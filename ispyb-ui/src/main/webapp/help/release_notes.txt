@@ -1,3 +1,11 @@
+**************
+* 06.12.2016     *
+**************
+SMIS WS: add a new field in proposalParticipant to retrieve the labo_no of the User Portal to be able to track changes
+see ISPYB-46@ESRF
+new jar for WS
+
+
 ********************************************************************************
 
 New TAG : ISPYB_4.1.4

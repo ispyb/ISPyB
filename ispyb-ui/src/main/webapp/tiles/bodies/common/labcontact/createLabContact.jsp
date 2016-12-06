@@ -71,6 +71,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <layout:grid cols="1"  borderSpacing="5">
 <%-- LabContact --%>
 <layout:panel key="New/Edit LabContact" align="left" styleClass="PANEL">
+<h3><font color=orange>Note that your changes in the lab contact name and address may be updated by the labcontact details as entered in the User Portal.<br>
+If you want to make them permanent, then update the User Portal account. </font></h3>
 	<layout:form action="/user/createLabContactAction.do" reqCode="save">
 	<layout:text key="shippingId"	name="viewLabContactForm" property="shippingId"  mode="H,H,H"/>	
 		<layout:grid cols="1" styleClass="SEARCH_GRID">	
