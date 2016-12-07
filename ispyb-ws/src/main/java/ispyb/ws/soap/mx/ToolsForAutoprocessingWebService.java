@@ -315,12 +315,12 @@ public class ToolsForAutoprocessingWebService {
 
 	private Integer storeOrUpdateAutoProcScalingStatisticValue(AutoProcScalingStatisticsWS3VO vo) throws Exception {
 		try {
-			LOG.debug("storeOrUpdateAutoProcScalingStatisticValue");
+			LOG.info("storeOrUpdateAutoProcScalingStatisticValue");
 			if (vo == null)
 				return null;
 
 			if (vo.getAutoProcScalingId() == null) {
-				LOG.debug("WS PB : AutoProcScalingId is null , could not create autoProcScalingStatistics");
+				LOG.info("WS PB : AutoProcScalingId is null , could not create autoProcScalingStatistics");
 				return errorCodeFK;
 			}
 
@@ -346,7 +346,7 @@ public class ToolsForAutoprocessingWebService {
 			} else {
 				autoProcScalingStatisticValue = autoProcScalingStatisticsService.update(autoProcScalingStatisticVO);
 			}
-			LOG.debug("storeOrUpdateAutoProcScalingStatisticValue "
+			LOG.info("storeOrUpdateAutoProcScalingStatisticValue "
 					+ autoProcScalingStatisticValue.getAutoProcScalingStatisticsId());
 			return autoProcScalingStatisticValue.getAutoProcScalingStatisticsId();
 		} catch (Exception e) {
@@ -375,13 +375,19 @@ public class ToolsForAutoprocessingWebService {
 			@WebParam(name = "anomalousCompleteness") Float anomalousCompleteness,
 			@WebParam(name = "anomalousMultiplicity") Float anomalousMultiplicity,
 			@WebParam(name = "recordTimeStamp") Date recordTimeStamp, @WebParam(name = "anomalous") Boolean anomalous,
-			@WebParam(name = "autoProcScalingId") Integer autoProcScalingId, @WebParam(name = "ccHalf") Float ccHalf)
+			@WebParam(name = "autoProcScalingId") Integer autoProcScalingId, 
+			@WebParam(name = "ccHalf") Float ccHalf,
+			@WebParam(name = "sigAno") Float sigAno,
+			@WebParam(name = "ccAno") Float ccAno)
 			throws Exception {
+		LOG.info("storeOrUpdateAutoProcScalingStatistics");
+		LOG.info(String.valueOf(sigAno));
+		LOG.info(String.valueOf(ccAno));
 		AutoProcScalingStatisticsWS3VO vo = new AutoProcScalingStatisticsWS3VO(null, autoProcScalingId,
 				scalingStatisticsType, comments, resolutionLimitLow, resolutionLimitHigh, rmerge,
 				rmeasWithinIplusIminus, rmeasAllIplusIminus, rpimWithinIplusIminus, rpimAllIplusIminus,
 				fractionalPartialBias, nTotalObservations, nTotalUniqueObservations, meanIoverSigI, completeness,
-				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf);
+				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf, sigAno, ccAno);
 		return storeOrUpdateAutoProcScalingStatisticValue(vo);
 	}
 

@@ -214,6 +214,8 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.recordTimeStamp = vo.getRecordTimeStamp();
 		this.anomalous = vo.getAnomalous();
 		this.ccHalf = vo.getCcHalf();
+		this.ccAno = vo.getCcAno();
+		this.sigAno = vo.getSigAno();
 	}
 
 
