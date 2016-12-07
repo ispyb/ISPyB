@@ -11,6 +11,8 @@ Changes for EXI:
 - Added /image in order to download the image attached to a phasing step
 - Added SigAno and ccAno into autoProcessing Statistics
 
+Add new parameters in AutoProcScalingStatistics
+
 ********************************************************************************
 
 New TAG : ISPYB_4.1.4
