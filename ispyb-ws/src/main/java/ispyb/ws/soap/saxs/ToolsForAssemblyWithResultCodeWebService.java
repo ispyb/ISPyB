@@ -167,13 +167,12 @@ public class ToolsForAssemblyWithResultCodeWebService {
 	 */
 	@WebMethod(operationName = "storeHPLCAbInitioModelsByPeakNumber")
 	@WebResult(name = "storeHPLCAbInitioModelsByPeakNumber")
-	@Deprecated
 	public void storeHPLCAbInitioModelsByPeakNumber(@WebParam(name = "id") String experimentId,
 			@WebParam(name = "peakNumber") String peakNumber, @WebParam(name = "models") String models,
 			@WebParam(name = "dammaver") String dammaver, @WebParam(name = "dammif") String dammif,
 			@WebParam(name = "damming") String damming, @WebParam(name = "nsdPlot") String nsdPlot,
 			@WebParam(name = "chi2plot") String chi2plot) {
-		long start = this.logInit("storeAbInitioModels");
+		long start = this.logInit("storeHPLCAbInitioModelsByPeakNumber");
 		LOGGER.info("-----------------------");
 		LOGGER.info(" storeAbInitioModels");
 		LOGGER.info(" experimentId:\t" + experimentId);
@@ -184,7 +183,9 @@ public class ToolsForAssemblyWithResultCodeWebService {
 		LOGGER.info(" damming:\t" + damming);
 		LOGGER.info(" nsdPlot:\t" + nsdPlot);
 		LOGGER.info(" chi2plot:\t" + chi2plot);
-		this.logFinish("storeAbInitioModels", start);
+
+		storeAbInitioModels(experimentId, models, dammaver, dammif, damming, nsdPlot, chi2plot, new Holder<String>(), new Holder<String>());
+		this.logFinish("storeHPLCAbInitioModelsByPeakNumber", start);
 	}
 
 	/** STORE RESULTS FROM EDNA PIPELINE **/
