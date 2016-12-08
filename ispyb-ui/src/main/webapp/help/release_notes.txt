@@ -1,4 +1,10 @@
 **************
+* 07.12.2016     *
+**************
+
+Add code for storeAbInitioModels for HPLC like sampleChanger
+
+**************
 * 06.12.2016     *
 **************
 SMIS WS: add a new field in proposalParticipant to retrieve the labo_no of the User Portal to be able to track changes
