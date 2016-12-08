@@ -2,7 +2,7 @@
 * 07.12.2016     *
 **************
 
-Add code for storeAbInitioModels for HPLC like sampleChanger.
+Add code for storeAbInitioModels for HPLC like sampleChanger
 
 **************
 * 06.12.2016     *
