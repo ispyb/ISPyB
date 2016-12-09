@@ -227,6 +227,14 @@ public class LocalizationListAction extends DispatchAction {
 							TrackingEmail.sendErrorCannotEmail(emailAddressStores, "", dewarId, dateTime);
 						}
 					}
+					// STORES-OUT: Send email to lab contact
+					else if (location.equals(Constants.RETURN_LOCATION)) {
+						if (!TrackingEmail.sendReadyToBePickedEmailToLabContact(inTest, emailAddressStores, emailAddressMxInd, dewarId,
+								dateTime, location)) {
+							// Send email to stores on error
+							TrackingEmail.sendErrorCannotEmail(emailAddressStores, "", dewarId, dateTime);
+						}
+					}
 					// BEAMLINE: Send email to lab contact
 					else if (!location.equals(Constants.ARRIVAL_LOCATION) && !location.equals(Constants.RETURN_LOCATION)) {
 						if (!TrackingEmail.sendBeamlineEmailToLabContact(inTest, emailAddressStores, emailAddressMxInd, dewarId,
