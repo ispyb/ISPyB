@@ -18,16 +18,6 @@
 
 package ispyb.ws.soap.saxs;
 
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.BiosaxsServices;
-import ispyb.server.biosaxs.services.core.ExperimentScope;
-import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
-import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
-import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
-import ispyb.server.biosaxs.vos.datacollection.Model3VO;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +39,18 @@ import org.jboss.ws.api.annotation.WebContext;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.BiosaxsServices;
+import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
+import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 
 @WebService(name = "ToolsForBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
@@ -163,8 +165,18 @@ public class ToolsForAssemblyWebService {
 		LOGGER.info(" damming:\t" + damming);
 		LOGGER.info(" nsdPlot:\t" + nsdPlot);
 		LOGGER.info(" chi2plot:\t" + chi2plot);
+		
+		Experiment3VO experiment = getExperimentById(Integer.valueOf(experimentId));
 
-		storeAbInitioModels(experimentId, models, dammaver, dammif, damming, nsdPlot, chi2plot);
+		StringBuffer measurementIds = new StringBuffer();
+		measurementIds.append("[");
+		for (SaxsDataCollection3VO data : experiment.getDataCollections()) {
+			for (MeasurementTodataCollection3VO measurement : data.getMeasurementtodatacollection3VOs()) {
+				measurementIds.append((measurementIds.length() == 1 ? "\"" : "\",\"") + measurement.getMeasurementId());
+			}
+		}		
+		measurementIds.append("\"]");
+		storeAbInitioModels(measurementIds.toString(), models, dammaver, dammif, damming, nsdPlot, chi2plot);
 		this.logFinish("storeHPLCAbInitioModelsByPeakNumber", start);
 	}
 

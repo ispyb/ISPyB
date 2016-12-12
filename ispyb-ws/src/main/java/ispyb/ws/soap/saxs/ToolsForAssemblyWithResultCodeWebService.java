@@ -48,7 +48,9 @@ import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
 import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
 import ispyb.server.biosaxs.vos.datacollection.Model3VO;
+import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 import ispyb.server.common.util.ISPyBRuntimeException;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -183,8 +185,18 @@ public class ToolsForAssemblyWithResultCodeWebService {
 		LOGGER.info(" damming:\t" + damming);
 		LOGGER.info(" nsdPlot:\t" + nsdPlot);
 		LOGGER.info(" chi2plot:\t" + chi2plot);
+		
+		Experiment3VO experiment = getExperimentById(Integer.valueOf(experimentId), new Holder<String>(), new Holder<String>());
 
-		storeAbInitioModels(experimentId, models, dammaver, dammif, damming, nsdPlot, chi2plot, new Holder<String>(), new Holder<String>());
+		StringBuffer measurementIds = new StringBuffer();
+		measurementIds.append("[");
+		for (SaxsDataCollection3VO data : experiment.getDataCollections()) {
+			for (MeasurementTodataCollection3VO measurement : data.getMeasurementtodatacollection3VOs()) {
+				measurementIds.append((measurementIds.length() == 1 ? "\"" : "\",\"") + measurement.getMeasurementId());
+			}
+		}		
+		measurementIds.append("\"]");
+		storeAbInitioModels(measurementIds.toString(), models, dammaver, dammif, damming, nsdPlot, chi2plot, new Holder<String>(), new Holder<String>());
 		this.logFinish("storeHPLCAbInitioModelsByPeakNumber", start);
 	}
 
