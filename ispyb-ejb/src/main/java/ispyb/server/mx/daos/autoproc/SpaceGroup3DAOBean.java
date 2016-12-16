@@ -149,8 +149,9 @@ public class SpaceGroup3DAOBean implements SpaceGroup3DAO {
 
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
-		if (currSpaceGroup != null)
+		if (currSpaceGroup != null){
 			crit.add(Restrictions.like("spaceGroupShortName", currSpaceGroup));
+		}
 
 		return crit.list();
 	}

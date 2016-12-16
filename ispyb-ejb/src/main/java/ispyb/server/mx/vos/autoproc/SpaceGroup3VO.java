@@ -23,6 +23,7 @@ import ispyb.server.common.vos.ISPyBValueObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -50,9 +51,9 @@ public class SpaceGroup3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "spaceGroupId")
 	protected Integer spaceGroupId;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "geometryClassnameId")
-	private GeometryClassname3VO geometryClassnameVO;
+	protected GeometryClassname3VO geometryClassnameVO;
 
 	@Column(name = "spaceGroupNumber")
 	protected Integer spaceGroupNumber;
