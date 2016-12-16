@@ -83,9 +83,9 @@ public class CrystalRestWebService extends MXRestWebService {
 	@Path("{token}/mx/geometryclass/{spacegroup}/get")
 	@Produces({ "application/json" })
 	public Response getGeometryClassBySpaceGroup(@PathParam("token") String token,
-			@PathParam("spaceGroup") String spaceGroup) {
+			@PathParam("spacegroup") String spaceGroup) {
 
-		String methodName = "getCrystalById";
+		String methodName = "getGeometryClassBySpaceGroup";
 		long start = this.logInit(methodName, logger, token, spaceGroup);
 		try {
 			List<SpaceGroup3VO> res = this.getSpaceGroup3Service().findBySpaceGroupShortName(spaceGroup);
