@@ -53,13 +53,13 @@ public class GeometryClassname3VO extends ISPyBValueObject implements Cloneable 
 	@Id
 	@GeneratedValue
 	@Column(name = "geometryClassnameId")
-	private Integer geometryClassnameId;
+	protected Integer geometryClassnameId;
 
 	@Column(name = "geometryClassname")
-	private String geometryClassname;
+	protected String geometryClassname;
 
 	@Column(name = "geometryOrder")
-	private Integer geometryOrder;
+	protected Integer geometryOrder;
 	
 	@OneToMany
 	@JoinColumn(name = "geometryClassnameId")
