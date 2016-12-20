@@ -62,7 +62,7 @@ public class SendMailUtils {
 		if (baos!=null ) {		
 			sendMail(from, to, cc, bcc, subject, body, attachName, fileTemp, mimeType, isHtml);
 		} else {
-			sendMail(from, to, cc, bcc, subject, body, isHtml);
+			sendMail(from, to, cc, bcc, null, subject, body, isHtml);
 		}
 		
 	}	
@@ -106,8 +106,13 @@ public class SendMailUtils {
 	 * @throws MessagingException
 	 *             if the mail cannot be sent
 	 */
-	final static public void sendMail(String from, String to, String cc, String bcc, String subject, String body,
+	final static public void sendMail(String from, String to, String cc, String bcc, String replyTo, String subject, String body,
 			boolean isHtml) throws MessagingException {
+		
+		if (replyTo == null)
+			replyTo = "dewar-stores@esrf.fr";
+				
+				
 		if (from == null)
 			from = "ispyb@esrf.fr";
 
@@ -139,6 +144,8 @@ public class SendMailUtils {
 		emailMessage.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc, false));
 
 		emailMessage.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(bcc, false));
+		
+		emailMessage.setReplyTo(InternetAddress.parse(replyTo, false));
 
 		// Actually send the e-mail
 		if (isHtml) {
@@ -164,7 +171,7 @@ public class SendMailUtils {
 	 */
 	final static public void sendMail(String from, String to, String cc, String bcc, String subject, String body)
 			throws MessagingException {
-		sendMail(from, to, cc, bcc, subject, body, false);
+		sendMail(from, to, cc, bcc, null, subject, body, false);
 	}
 
 	/**
@@ -211,7 +218,7 @@ public class SendMailUtils {
 	 */
 	final static public void sendHtmlMail(String from, String to, String cc, String bcc, String subject,
 			String htmlText) throws MessagingException {
-		sendMail(from, to, cc, bcc, subject, htmlText, true);
+		sendMail(from, to, cc, bcc, null, subject, htmlText, true);
 	}
 
 	/**
@@ -232,7 +239,7 @@ public class SendMailUtils {
 	 */
 	final static public void sendHtmlMail(String from, String to, String cc, String subject, String htmlText)
 			throws MessagingException {
-		sendMail(from, to, cc, null, subject, htmlText, true);
+		sendMail(from, to, cc, null, null, subject, htmlText, true);
 	}
 
 	/**
@@ -248,7 +255,7 @@ public class SendMailUtils {
 	 */
 	final static public void sendHtmlMail(String from, String to, String subject, String htmlText)
 			throws MessagingException {
-		sendMail(from, to, null, null, subject, htmlText, true);
+		sendMail(from, to, null, null, null, subject, htmlText, true);
 	}
 
 	/**
