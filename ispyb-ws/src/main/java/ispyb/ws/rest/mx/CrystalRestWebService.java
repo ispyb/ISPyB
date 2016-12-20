@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
 import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 
@@ -95,7 +96,9 @@ public class CrystalRestWebService extends MXRestWebService {
 				logger.debug("more than 1 space group has been found");
 				return null;
 			} else {
-				return this.sendResponse(res.get(0).getGeometryClassnameVO());
+				GeometryClassname3VO geoClass = res.get(0).getGeometryClassnameVO();
+				logger.debug("res="+ geoClass.getGeometryClassname());
+				return this.sendResponse(geoClass);
 			}
 			
 		} catch (Exception e) {
