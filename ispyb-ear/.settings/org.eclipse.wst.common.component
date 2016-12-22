@@ -335,6 +335,9 @@
         <dependent-module archiveName="commons-io.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/commons-io/commons-io/2.4/commons-io-2.4.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="ispyb-WSclient-userportal-gen.jar" deploy-path="/lib" handle="module:/resource/ispyb-WSclient-userportal-gen/ispyb-WSclient-userportal-gen">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="jaxws-maven-plugin.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/org/codehaus/mojo/jaxws-maven-plugin/1.12/jaxws-maven-plugin-1.12.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
