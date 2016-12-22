@@ -73,7 +73,7 @@ public class RestWebService extends ParentWebService {
 				// later add a test for localcontact to give access only to sessions attached to their beamlines
 				return true;				
 			}
-			if (login3VO.isUser() && login3VO.getUsername().equals(proposalname)) {
+			if (login3VO.isUser() && login3VO.getUsername().toUpperCase().equals(proposalname.toUpperCase())) {
 					return true;
 			}
 		}

@@ -156,20 +156,6 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 	
 	
 	/**
-	 * Sets the specimens list priorities.
-	 *
-	 * @param experiment the experiment
-	 * @param dataCollectionList the data collection list
-	 * @param priority the priority
-	 * @return the int
-	 */
-//	@Override
-//	public int optimizeAndPrioritize(Experiment3VO experiment, List<SaxsDataCollection3VO> dataCollectionList, int priority) {
-//		dataCollectionList = this.resetAllPriorities(experiment, dataCollectionList);
-//		return this.optimizeDatacollectionByRemovingDuplicatedBuffers(experiment, dataCollectionList, priority);
-//	}
-	
-	/**
 	 * Optimize datacollection by removing duplicated buffers. Set priorities starting from the priority integer passed as parameter
 	 * 
 	 * @param experiment
@@ -196,14 +182,7 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 			Collections.sort(measurementsList, MeasurementTodataCollectionComparatorOrder);
 			
 			for (MeasurementTodataCollection3VO measurementTodataCollection3VO : measurementsList) {
-				log.debug(measurementTodataCollection3VO);
 				Measurement3VO measurement = experiment.getMeasurementById(measurementTodataCollection3VO.getMeasurementId());
-				log.debug(measurement);
-//				if (measurement == null){
-//					System.out.println("MEASUREMENT NOT FOUND IN THE EXPERIMENT OR MEASUREMENT NULL" );
-//					continue;
-//				}
-				
 				if (measurement.getPriority() != null){
 					log.debug("\t\t|--> This specimens has been already used, so it has been optimized");
 					log.debug("\t\t|--> Duplicated: " + previousMeasurement.getMeasurementId());
@@ -238,13 +217,11 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 				}
 				if (previousMeasurement != null){
 					if (this.compare(measurement, previousMeasurement, experiment, specimenDistinction)){
-//					if (currentSpecimen.compare(previousSpecimen)){
 						log.debug("\t\t|--> This specimens could be optimized");
 						log.debug("\t\t|--> Previous Specimen Id: " + previousMeasurement.getMeasurementId());
 						log.debug("\t\t|--> Current Specimen Id: " + measurement.getMeasurementId());
 						log.debug("\t\t|--> Updating Measurement: " + previousMeasurement.getMeasurementId());
 						measurementTodataCollection3VO.setMeasurementId(previousMeasurement.getMeasurementId());
-						
 						/** --- **/
 						measurementTodataCollection3VO = measurementToDataCollection3Service.merge(measurementTodataCollection3VO);
 							log.debug("\t\t|--> Removing Specimen Id: " + measurement.getMeasurementId());
@@ -355,10 +332,6 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 			return false;
 		} 
 		
-//		if (!specimen.getConcentration().equals(specimenAfter.getConcentration())){
-//			return false;
-//		} 
-		
 		if (!specimen.getVolumeToLoad().equals(specimenAfter.getVolumeToLoad())){
 			return false;
 		} 
@@ -382,17 +355,8 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 	 * @return true, if successful
 	 */
 	private boolean compare(Measurement3VO measurement, Measurement3VO measurementPrevious, Experiment3VO experiment){
-//		log.debug("------- COMPARING --");
-//		log.debug("Previous " + measurementPrevious+ "\t " + experiment.getSampleById(measurementPrevious.getSpecimenId()));
-//		log.debug("Current " +measurement + " \t" + experiment.getSampleById(measurement.getSpecimenId()));
-		
 		Specimen3VO previousSpecimen = experiment.getSampleById(measurementPrevious.getSpecimenId());
 		Specimen3VO current = experiment.getSampleById(measurement.getSpecimenId());
-		
-//		if (measurement.getSampleId() != measurementPrevious.getSampleId()){
-//			return false;
-//		}
-		
 		
 		if (previousSpecimen.getBufferId().intValue() != current.getBufferId().intValue()){
 			return false;
@@ -412,35 +376,10 @@ public class Measurement3ServiceBean implements Measurement3Service, Measurement
 			}
 		}
 		
-//		if (!measurement.getTransmission().equals(measurementPrevious.getTransmission())){
-//			return false;
-//		} 
-//		if (!measurement.getViscosity().equals(measurementPrevious.getViscosity())){
-//			return false;
-//		} 
-		/** IT seems that flow is not taken as different
-		if (!measurement.getFlow().equals(measurementPrevious.getFlow())){
-			return false;
-		} 
-		 **/
-		
-//		if (!measurement.getExtraFlowTime().equals(measurementPrevious.getExtraFlowTime())){
-//			return false;
-//		} 
-		
 		if (!measurement.getExposureTemperature().equals(measurementPrevious.getExposureTemperature())){
 			return false;
 		} 
 		
-		
-//		if (!measurement.getVolumeToLoad().equals(measurementPrevious.getVolumeToLoad())){
-//			return false;
-//		} 
-//		
-//		if (!measurement.getWaitTime().equals(measurementPrevious.getWaitTime())){
-//			return false;
-//		} 
-		log.debug("TRUE");
 		return true;
 	}
 

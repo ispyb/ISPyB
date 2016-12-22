@@ -13,7 +13,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
@@ -97,7 +96,9 @@ public class SessionRestWebService extends RestWebService {
 	@GZIP
 	@Path("{token}/proposal/session/date/{startdate}/{enddate}/list")
 	@Produces({ "application/json" })
-	public Response getSessionsByDate(@PathParam("token") String token, @PathParam("startdate") String start,
+	public Response getSessionsByDate(
+			@PathParam("token") String token, 
+			@PathParam("startdate") String start,
 			@PathParam("enddate") String end) throws Exception {
 		String methodName = "getSessionsByDate";
 		long id = this.logInit(methodName, logger, token, start, end);
@@ -109,4 +110,25 @@ public class SessionRestWebService extends RestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
+	
+	
+	@RolesAllowed({ "Manager", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/session/beamlineoperator/{beamlineOperator}/list")
+	@Produces({ "application/json" })
+	public Response getSessionsByBeamlineOperator(
+			@PathParam("token") String token, 
+			@PathParam("beamlineOperator") String beamlineOperator) throws Exception {
+		String methodName = "getSessionsByBeamlineOperator";
+		long id = this.logInit(methodName, logger, token, beamlineOperator);
+		try {
+			List<Map<String, Object>> result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+			this.logFinish(methodName, id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+	}
+	
 }

@@ -17,27 +17,24 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************************************************************/
 
-package ispyb.server.common.services.ws.rest.session;
+package ispyb.server.biosaxs.services.ws.rest.datacollection;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.ejb.Remote;
 
 
 @Remote
-public interface SessionService {
+public interface SaxsDataCollectionRestWsService {
 
-	public List<Map<String, Object>> getSessionViewByProposalId(int proposalId);
+	public Collection<? extends Map<String, Object>> getDataCollectionByExperimentId(int proposalId, Integer experimentId);
 
-	public List<Map<String, Object>> getSessionViewByDates(String startDate,String endDate);
+	public Collection<? extends Map<String, Object>> getDataCollectionBySessionId(int proposalId, Integer sessionId);
 
-	public List<Map<String, Object>> getSessionViewByProposalAndDates(int proposalId, String startDate,String endDate);
-	
-	public List<Map<String, Object>> getSessionViewBySessionId(int proposalId, int sessionId);
+	public Collection<? extends Map<String, Object>> getDataCollectionByMacromoleculeId(int proposalId, Integer macromoleculeId);
 
-	public List<Map<String, Object>> getSessionViewByBeamlineOperator(String beamlineOperator);
+	public Collection<? extends Map<String, Object>> getDataCollectionByDataCollectionId(int proposalId, Integer dataCollectionId);
 
-
-	
-}
+	                                  
+}	

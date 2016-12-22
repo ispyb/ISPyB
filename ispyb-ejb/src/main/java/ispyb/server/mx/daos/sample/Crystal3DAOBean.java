@@ -247,16 +247,16 @@ public class Crystal3DAOBean implements Crystal3DAO {
 	 */
 	private void checkAndCompleteData(Crystal3VO vo, boolean create) throws Exception {
 
-		if (create) {
-			if (vo.getCrystalId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getCrystalId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
+//		if (create) {
+//			if (vo.getCrystalId() != null) {
+//				throw new IllegalArgumentException(
+//						"Primary key is already set! This must be done automatically. Please, set it to null!");
+//			}
+//		} else {
+//			if (vo.getCrystalId() == null) {
+//				throw new IllegalArgumentException("Primary key is not set for update!");
+//			}
+//		}
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB

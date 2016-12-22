@@ -322,15 +322,6 @@ public class PrimaryDataProcessing3ServiceBean implements PrimaryDataProcessing3
 		
 		run = this.entityManager.merge(run);
 		
-		/** TODO: Here we should check if measurement contains already a list of frames **/
-		/*		
- 		Framelist3VO frameList = this.addFrameList(curves);
-		FrameSet3VO frameSet = new FrameSet3VO();
-		frameSet.setRun3VO(run);
-		frameSet.setFramelist3VO(frameList);
-		this.entityManager.merge(frameSet);
-		*/
-
 		measurement.setRun3VO(run);
 		measurement = this.entityManager.merge(measurement);
 	}
@@ -492,22 +483,10 @@ public class PrimaryDataProcessing3ServiceBean implements PrimaryDataProcessing3
 		run.setCreationDate(getNow());
 		run = this.entityManager.merge(run);
 		
-		
-		
-		
-		
-		/** TODO: Here we should check if measurement contains already a list of frames **/
-		/*		
- 		Framelist3VO frameList = this.addFrameList(curves);
-		FrameSet3VO frameSet = new FrameSet3VO();
-		frameSet.setRun3VO(run);
-		frameSet.setFramelist3VO(frameList);
-		this.entityManager.merge(frameSet);
-		*/
 		/** Update runNumber **/
 		measurement.setCode(runNumber);
 		measurement.setRun3VO(run);
-		measurement = this.entityManager.merge(measurement);
+		measurement = this.entityManager.merge(measurement);			
 		
 	}
 

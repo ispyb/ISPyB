@@ -264,10 +264,11 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		/*for (BLSample3VO sample : containerDB.getSampleVOs()) {
 			entityManager.remove(sample);
 		}*/
-		
+		containerDB.setSampleChangerLocation(container.getSampleChangerLocation());
 		containerDB.setCapacity(container.getCapacity());
 		containerDB.setCode(container.getCode());
 		containerDB.setContainerType(container.getContainerType());
+		containerDB.setBeamlineLocation(container.getBeamlineLocation());
 		
 		Set<String> locations = new HashSet<String>();
 		/** Adding Sample **/

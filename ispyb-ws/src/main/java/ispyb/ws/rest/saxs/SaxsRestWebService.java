@@ -1,27 +1,24 @@
 package ispyb.ws.rest.saxs;
 
-import javax.naming.NamingException;
-
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.core.measurement.Measurement3Service;
 import ispyb.server.biosaxs.services.core.measurementToDataCollection.MeasurementToDataCollection3Service;
-import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.services.core.robot.Robot3Service;
-import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
 import ispyb.server.biosaxs.services.stats.Stats3Service;
 import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
+import ispyb.server.biosaxs.services.ws.rest.datacollection.SaxsDataCollectionRestWsService;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.ws.rest.RestWebService;
+
+import javax.naming.NamingException;
 
 public class SaxsRestWebService extends RestWebService{
 
-	
+	protected SaxsDataCollectionRestWsService getDataCollectionRestWsService() throws NamingException {
+		return (SaxsDataCollectionRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(SaxsDataCollectionRestWsService.class);
+	}
 	
 	protected Stats3Service getStats3Service() throws NamingException {
 		return (Stats3Service) Ejb3ServiceLocator.getInstance().getLocalService(Stats3Service.class);
@@ -39,6 +36,11 @@ public class SaxsRestWebService extends RestWebService{
 		return (MeasurementToDataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(
 				MeasurementToDataCollection3Service.class);
 	}
+	
+	protected Measurement3Service getMeasurementService() throws NamingException {
+		return (Measurement3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+				Measurement3Service.class);
+	}
 
 	protected Robot3Service getRobot3Service() throws NamingException {
 		return (Robot3Service) Ejb3ServiceLocator.getInstance().getLocalService(Robot3Service.class);
@@ -52,7 +54,7 @@ public class SaxsRestWebService extends RestWebService{
 	}
 	
 	
-
+	
 	protected WebUserInterfaceService getWebUserInterfaceService() throws NamingException {
 		return (WebUserInterfaceService) Ejb3ServiceLocator.getInstance()
 				.getLocalService(WebUserInterfaceService.class);

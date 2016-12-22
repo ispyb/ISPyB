@@ -151,7 +151,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 					subtractions.add(sub);
 				}
 			}
-
+			
 			byte[] bytes = SAXSZipper.zip(new ArrayList<Merge3VO>(), subtractions);
 			this.logFinish(methodName, start, logger);
 			ResponseBuilder response = Response.ok((Object) bytes);

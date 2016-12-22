@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -62,6 +61,30 @@ public class ContainerRestWebService extends RestWebService {
 			return sendResponse(response);
 		} catch (Exception e) {
 			return this.logError("updateSampleLocation", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@POST
+	@Path("{token}/proposal/{proposal}/container/{containerIds}/samplechangerlocation/empty")
+	@Produces({ "application/json" })
+	public Response emptySampleLocation(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("containerIds") String containerIds
+			) throws NamingException {
+		
+		long id = this.logInit("emptySampleLocation", logger, token, proposal, containerIds);
+		try {
+			List<Integer> containerIdList = this.parseToInteger(containerIds);
+			for (int i = 0; i < containerIdList.size(); i++) {
+				Container3VO container = this.getContainer3Service().findByPk(containerIdList.get(i), false);
+				container.setSampleChangerLocation(null);
+				this.getContainer3Service().update(container);
+			}			
+			this.logFinish("emptySampleLocation", id, logger);
+			return sendResponse(Response.ok());
+		} catch (Exception e) {
+			return this.logError("emptySampleLocation", e, id, logger);
 		}
 	}
 	

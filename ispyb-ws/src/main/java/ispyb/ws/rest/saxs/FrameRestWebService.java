@@ -1,18 +1,19 @@
 package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
-import ispyb.server.biosaxs.services.core.measurement.Measurement3Service;
 import ispyb.server.biosaxs.services.utils.reader.dat.DatFile;
 import ispyb.server.biosaxs.services.utils.reader.dat.DatFilePlotter;
 import ispyb.server.biosaxs.services.utils.reader.dat.FactoryProducer;
 import ispyb.server.biosaxs.services.utils.reader.dat.MergeDatFilePlotter;
+import ispyb.server.biosaxs.services.utils.reader.zip.SAXSZipper;
+import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.datacollection.Frame3VO;
+import ispyb.server.biosaxs.vos.datacollection.FrameSet3VO;
 import ispyb.server.biosaxs.vos.datacollection.Framelist3VO;
 import ispyb.server.biosaxs.vos.datacollection.Frametolist3VO;
 import ispyb.server.biosaxs.vos.datacollection.Merge3VO;
 import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.ws.rest.RestWebService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,8 +23,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -204,119 +207,6 @@ public class FrameRestWebService extends SaxsRestWebService {
 
 	}
 
-//	@PermitAll
-//	@GET
-//	@Path("{token}/proposal/{proposal}/saxs/frame/get")
-//	@Produces({ "application/json" })
-//	public Response get(@PathParam("token") String token, @PathParam("proposal") String proposal,
-//			@QueryParam("frame") String frame, 
-//			@QueryParam("average") String average,
-//			@QueryParam("subtraction") String subtraction, 
-//			@QueryParam("sampleaverage") String sampleaverage,
-//			@QueryParam("bufferaverage") String bufferaverage) {
-//
-//		String methodName = "get";
-//		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtraction, sampleaverage,
-//				bufferaverage);
-//		try {
-//
-//			HashMap<String, String> result = new HashMap<String, String>();
-//
-//			List<Integer> frames = new ArrayList<Integer>();
-//			List<Integer> averages = new ArrayList<Integer>();
-//			List<Integer> subtractions = new ArrayList<Integer>();
-//			List<Integer> models = new ArrayList<Integer>();
-//			List<Integer> fits = new ArrayList<Integer>();
-//			List<Integer> rigids = new ArrayList<Integer>();
-//
-//			if (frame != null) {
-//				result.put("frame", parseToInteger(frame).toString());
-//				frames = parseToInteger(frame);
-//			}
-//			if (average != null) {
-//				result.put("average", parseToInteger(average).toString());
-//				averages = parseToInteger(average);
-//			}
-//			if (subtraction != null) {
-//				result.put("subtraction", parseToInteger(subtraction).toString());
-//				subtractions = parseToInteger(subtraction);
-//			}
-//			if (sampleaverage != null) {
-//				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
-//				List<Integer> sampleaverages = parseToInteger(sampleaverage);
-//			}
-//
-//			if (bufferaverage != null) {
-//				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
-//				List<Integer> bufferaverages = parseToInteger(bufferaverage);
-//			}
-//			String json = FactoryProducer.getJSON(frames, averages, subtractions, models, fits, rigids);
-//			this.logFinish(methodName, start, logger);
-//			return sendResponse(json);
-//
-//		} catch (Exception e) {
-//			return this.logError(methodName, e, start, logger);
-//		}
-//
-//	}
-
-//	@PermitAll
-//	@GET
-//	@Path("{token}/saxs/{proposal}/frame/plot")
-//	@Produces({ "application/json" })
-//	public Response plot(@PathParam("token") String token, @PathParam("proposal") String proposal,
-//			@QueryParam("frame") String frame, @QueryParam("average") String average,
-//			@QueryParam("subtracted") String subtracted, @QueryParam("sampleaverage") String sampleaverage,
-//			@QueryParam("bufferaverage") String bufferaverage) {
-//
-//		String methodName = "plot";
-//		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtracted, sampleaverage,
-//				bufferaverage);
-//		try {
-//			HashMap<String, String> result = new HashMap<String, String>();
-//			List<Integer> frames = new ArrayList<Integer>();
-//			List<Integer> averages = new ArrayList<Integer>();
-//			List<Integer> subtracteds = new ArrayList<Integer>();
-//			List<Integer> sampleaverages = new ArrayList<Integer>();
-//			List<Integer> bufferaverages = new ArrayList<Integer>();
-//
-//			if (frame != null) {
-//				result.put("frame", parseToInteger(frame).toString());
-//				frames = parseToInteger(frame);
-//			}
-//			if (average != null) {
-//				result.put("average", parseToInteger(average).toString());
-//				averages = parseToInteger(average);
-//			}
-//			if (subtracted != null) {
-//				result.put("subtracted", parseToInteger(subtracted).toString());
-//				subtracteds = parseToInteger(subtracted);
-//			}
-//			if (sampleaverage != null) {
-//				result.put("sampleaverage", parseToInteger(sampleaverage).toString());
-//				sampleaverages = parseToInteger(sampleaverage);
-//			}
-//
-//			if (bufferaverage != null) {
-//				result.put("bufferaverage", parseToInteger(bufferaverage).toString());
-//				bufferaverages = parseToInteger(bufferaverage);
-//			}
-//
-//			List<Integer> subtractions = new ArrayList<Integer>();
-//			List<Integer> models = new ArrayList<Integer>();
-//			List<Integer> fits = new ArrayList<Integer>();
-//			List<Integer> rigids = new ArrayList<Integer>();
-//
-//			String json = FactoryProducer.getPlot(frames, averages, subtractions, models, fits, rigids, subtracteds,
-//					sampleaverages, bufferaverages);
-//			this.logFinish(methodName, start, logger);
-//			return sendResponse(json);
-//
-//		} catch (Exception e) {
-//			return this.logError(methodName, e, start, logger);
-//		}
-//
-//	}
 
 	@PermitAll
 	@GET
@@ -480,21 +370,57 @@ public class FrameRestWebService extends SaxsRestWebService {
 		}
 	}
 
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/saxs/frame/{mergeIds}/zip")
+	@Produces("application/x-octet-stream")
+	public Response zip(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("mergeIds") String mergeIds) throws Exception {
+
+		String methodName = "zip";
+		long start = this.logInit(methodName, logger, token, mergeIds);
+		try {
+			List<Integer> ids = this.parseToInteger(mergeIds);
+			byte[] bytes = SAXSZipper.zip(getPrimaryDataProcessing3Service().getMergesByIdsList(ids), new ArrayList<Subtraction3VO>() );
+			this.logFinish(methodName, start, logger);
+			ResponseBuilder response = Response.ok((Object) bytes);
+			response.header("Content-Disposition", "attachment; filename=" + UUID.randomUUID().toString().substring(0, 10) +".zip");
+			return response.build();
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/saxs/frame/average/{mergeIds}/bean")
+	@Produces("text/plain")
+	public Response getListByAveragedId(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("mergeIds") String mergeIds) throws Exception {
+
+		String methodName = "zip";
+		long start = this.logInit(methodName, logger, token, mergeIds);
+		try {
+			List<Integer> ids = this.parseToInteger(mergeIds);
+			List<Merge3VO> merges = getPrimaryDataProcessing3Service().getMergesByIdsList(ids);
+			this.logFinish(methodName, start, logger);
+			return sendResponse(merges);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	
 	@PermitAll
 	@GET
 	@Path("{token}/saxs/{proposal}/frame/{frameId}/download")
 	@Produces("text/plain")
 	public Response downloadFrame(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("frameId") String frameId) throws Exception {
-
 		String methodName = "downloadFrame";
 		long start = this.logInit(methodName, logger, token, frameId);
 		try {
-			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-			PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
-					.getLocalService(PrimaryDataProcessing3Service.class);
-	
-			List<Frame3VO> frames = primaryDataProcessing3Service.getFramesByIdList(parseToInteger(frameId));
+			List<Frame3VO> frames = this.getPrimaryDataProcessing3Service().getFramesByIdList(parseToInteger(frameId));
 			if (frames != null) {
 				if (frames.size() > 0) {
 					String filePath = frames.get(0).getFilePath();
@@ -512,5 +438,4 @@ public class FrameRestWebService extends SaxsRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-
 }
