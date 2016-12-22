@@ -1,38 +1,11 @@
 package ispyb.ws;
 
-import file.FileUploadForm;
-import ispyb.common.util.Constants;
-import ispyb.common.util.PropertyLoader;
-import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
-import ispyb.server.common.services.config.MenuGroup3Service;
-import ispyb.server.common.services.login.Login3Service;
-import ispyb.server.common.services.proposals.LabContact3Service;
-import ispyb.server.common.services.proposals.Laboratory3Service;
-import ispyb.server.common.services.proposals.Person3Service;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.login.Login3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -48,6 +21,32 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import file.FileUploadForm;
+import ispyb.common.util.Constants;
+import ispyb.common.util.PropertyLoader;
+import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.biosaxs.services.core.samplePlate.Sampleplate3Service;
+import ispyb.server.common.services.admin.SchemaStatusService;
+import ispyb.server.common.services.config.MenuGroup3Service;
+import ispyb.server.common.services.login.Login3Service;
+import ispyb.server.common.services.proposals.LabContact3Service;
+import ispyb.server.common.services.proposals.Laboratory3Service;
+import ispyb.server.common.services.proposals.Person3Service;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.services.shipping.external.External3Service;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.Image3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
 
 @Path("/")
 public  class ParentWebService {
@@ -237,6 +236,11 @@ public  class ParentWebService {
 	protected Dewar3Service getDewar3Service() throws NamingException {
 		return (Dewar3Service) Ejb3ServiceLocator.getInstance().getLocalService(Dewar3Service.class);
 	}
+	
+	protected SchemaStatusService getSchemaStatusService() throws NamingException {
+		return (SchemaStatusService) Ejb3ServiceLocator.getInstance().getLocalService(SchemaStatusService.class);
+	}
+
 	/**
 	 * Gets proposal Id by login name
 	 * 
