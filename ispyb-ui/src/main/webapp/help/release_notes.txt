@@ -1,3 +1,18 @@
+********************************************************************************
+
+New TAG : ISPYB_4.1.5
+
+**************
+* 22.12.2016     *
+**************
+- New EJB/methods/RestWS to list the already executed update scripts, and the scripts to be executed
+- new method to retrieve the geometryclass from the spacegroup
+- Added sigAno and ccAno on AutoprocScalingStatistics
+- New Rest methods for saving crystal form
+- New Rest methods for HPLC
+- New Rest methods for saxs data collection that uses view v_saxs_datacollection
+- Enhanced the storeHPLCAbInitioModelsByPeakNumber so that we can pass an Experiment ID for which the Measurement IDs are retrieved afterwards.
+
 **************
 * 07.12.2016     *
 **************
