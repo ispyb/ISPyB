@@ -32,6 +32,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.proposals.ProposalWS3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
+import ispyb.ws.soap.common.WSUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,6 +136,11 @@ public class ToolsForShippingWebService {
 			LOG.debug("findProposalByCodeAndNumber");
 			ProposalWS3VO proposalValue = null;
 
+			// Update proposal from SUN set or SMIS
+			if (Constants.SITE_IS_SOLEIL()) {
+				WSUtils.UpdateProposal(code, String.valueOf(number));
+			}
+			
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator
 					.getLocalService(Proposal3Service.class);
@@ -157,6 +163,11 @@ public class ToolsForShippingWebService {
 			LOG.debug("findProposal");
 			ProposalWS3VO proposalValue = null;
 
+			// Update proposal from SUN set or SMIS
+			if (Constants.SITE_IS_SOLEIL()) {
+				WSUtils.UpdateProposal(code, number);
+			}
+			
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator
 					.getLocalService(Proposal3Service.class);
@@ -386,6 +397,7 @@ public class ToolsForShippingWebService {
 			) throws Exception {
 
 		/** Logging **/
+		@SuppressWarnings("unused")
 		long id = 0;
 		try {
 			/** Logging params **/

@@ -18,6 +18,7 @@
  ****************************************************************************************************/
 package ispyb.ws.soap.common;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +56,8 @@ import ispyb.ws.ParentWebService;
 public class UpdateFromSMISWebService extends ParentWebService{
 	private final static Logger logger = Logger.getLogger(UpdateFromSMISWebService.class);
 
+	static String DATE_FORMAT = "dd/MM/yyyy";
+	
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
 	public String echo() {
@@ -88,9 +91,12 @@ public class UpdateFromSMISWebService extends ParentWebService{
 	public void updateFromSMISByDate(String start, String end) throws Exception {
 		String methodName = "updateFromSMISByDate";
 		long id = this.logInit(methodName, logger, start, end);
-		try {
-			UpdateFromSMIS.updateFromSMIS(new SimpleDateFormat("dd/MM/yyyy").format(start), new SimpleDateFormat("dd/MM/yyyy").format(end));
-		} catch (Exception e) {
+		 try {
+			Date startDate = new SimpleDateFormat(DATE_FORMAT).parse(start);
+			Date endDate = new SimpleDateFormat(DATE_FORMAT).parse(end);
+			UpdateFromSMIS.updateFromSMIS(new SimpleDateFormat(DATE_FORMAT).format(startDate), new SimpleDateFormat(DATE_FORMAT).format(endDate));
+			
+		} catch (ParseException e) {
 			this.logError(methodName, e, id, logger);
 		}
 	}

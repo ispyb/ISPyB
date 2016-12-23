@@ -42,6 +42,7 @@ import org.jboss.ws.api.annotation.WebContext;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
 import ispyb.server.biosaxs.services.BiosaxsServices;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
@@ -55,6 +56,7 @@ import ispyb.server.common.util.ISPyBRuntimeException;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.ResultCode;
+import ispyb.ws.soap.common.WSUtils;
 
 @WebService(name = "ToolsForAssemblyWithResultCodeWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
@@ -99,6 +101,11 @@ public class ToolsForAssemblyWithResultCodeWebService {
 		LOGGER.info(" name:\t" + name);
 		
 		try {
+			// Retrieve proposals from SUN set or SMIS
+			if (Constants.SITE_IS_SOLEIL()) {
+				WSUtils.UpdateProposal(proposalCode, proposalNumber);
+			}
+			
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
 			Integer experimentId = biosaxsWebServiceActions.createHPLC(proposalCode, proposalNumber, name);
 			if (experimentId == null) {
@@ -881,6 +888,11 @@ public class ToolsForAssemblyWithResultCodeWebService {
 
 		long id = this.logInit("createExperiment", new Gson().toJson(params));
 		try {
+			// Update proposal from SUN set or SMIS
+			if (Constants.SITE_IS_SOLEIL()) {
+				WSUtils.UpdateProposal(code, number);
+			}
+			
 			/**
 			 * Parsing samples in json format to ArrayList<HashMap<String, String>>
 			 **/

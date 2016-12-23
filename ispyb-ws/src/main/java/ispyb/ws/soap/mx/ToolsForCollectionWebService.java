@@ -230,7 +230,7 @@ public class ToolsForCollectionWebService {
 
 			SessionWS3VO[] ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code), number,
 					beamLineName);
-			if (Constants.SITE_IS_ESRF()) {
+			if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_SOLEIL()) {
 				if (ret == null || ret.length <1){
 					//no sessions found, try to update DB				
 					LOG.debug("findSessionsByProposalAndBeamLine : no sessions found, try to update from SMIS ") ;
