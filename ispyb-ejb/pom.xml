@@ -313,7 +313,7 @@
 <!-- 		<userportal.webservices.url>http://localhost:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?WSDL</userportal.webservices.url>	-->		  			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
   			
-  			<ispyb.db.updatescripts.folder>R:%2Fworkspaces_neon%2Fwks_ispyb%2Fispyb-ejb3%2Fsql_scripts%2Fmysql%2Fupdate_scripts%2F2016%2F</ispyb.db.updatescripts.folder>
+  			<ispyb.db.updatescripts.folder>R:/workspaces_neon/wks_ispyb/ispyb-ejb3/sql_scripts/mysql/update_scripts/2016</ispyb.db.updatescripts.folder>
   		</properties>
   	</profile>
   	<profile>

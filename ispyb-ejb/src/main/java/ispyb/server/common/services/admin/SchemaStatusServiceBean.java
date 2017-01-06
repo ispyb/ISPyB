@@ -71,7 +71,6 @@ public class SchemaStatusServiceBean implements SchemaStatusService, SchemaStatu
 		List<String> doneInDB = this.getScriptNames(this.findAll());
 		List<String> foundInFolder = this.findUpdateScripts();
 		if (foundInFolder == null) {
-			LOG.info(" Path to scripts = " + Constants.PATH_TO_SCRIPTS );
 			results.add("No script found ??? may be wrong folder path");
 		}
 		else {			
@@ -83,6 +82,7 @@ public class SchemaStatusServiceBean implements SchemaStatusService, SchemaStatu
 	
 	private List<String> findUpdateScripts() {
 		
+		LOG.info(" Path to scripts = " + Constants.PATH_TO_SCRIPTS );
 		List<String> results = new ArrayList<String>();
 		if (Constants.PATH_TO_SCRIPTS == null) 
 			return null;
