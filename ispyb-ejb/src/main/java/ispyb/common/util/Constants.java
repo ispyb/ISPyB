@@ -1159,6 +1159,7 @@ public final class Constants {
 	/**
 	 * If ISPyB needs a restoration, it will create a file .RESTORE-PLEASE in the directory
 	 */
+	//TODO remove the following after January 2017 : no restore needed any more
 	public static final String DATA_PLEASE_RESTORE_FILENAME = ".RESTORE-PLEASE";
 
 	// no archived data
@@ -1169,6 +1170,13 @@ public final class Constants {
 
 	// restoration data in progress
 	public static final String PYARCH_ARCHIVED_INPROGRESS = "2";
+	
+	
+	/**
+	 * path to the folder where the update scripts are stored
+	 */
+	public final static String PATH_TO_SCRIPTS = getProperty("ispyb.db.updatescripts.folder");
+
 
 	/**
 	 * returns true if the specified server is the server in the production environment
@@ -1288,8 +1296,7 @@ public final class Constants {
 	public final static String getUserSmisPassword() {
 		return PropertyLoader.loadProperties("ISPyB").getProperty("smis.ws.password");
 	}
-	
-
+		
 	public final static List<HashMap<String, String>> getAllProperties() {
 		List<HashMap<String, String>> properties = new ArrayList<HashMap<String, String>>();
 		
@@ -1323,6 +1330,7 @@ public final class Constants {
 		ClassLoader classLoader = getClass().getClassLoader();
 		return classLoader.getResourceAsStream("pdf/ParcelLabelsTemplate-WithWorldCourierCL.pdf");
 	}
+
 	
 	public static Properties getProperties() {		
 		return mProp;
