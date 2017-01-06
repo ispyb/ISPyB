@@ -14,6 +14,12 @@
    				<directory>src/main/resources</directory>
    				<filtering>true</filtering>
  			</resource>
+ 			<resource>
+   				<directory>sql_scripts/mysql</directory>
+				<includes>
+					<include>update_scripts/**/*.sql</include>
+				</includes>
+ 			</resource>
  		</resources>
  		<plugins>
 			<!-- WildFly plugin to deploy war -->
@@ -307,6 +313,7 @@
 <!-- 		<userportal.webservices.url>http://localhost:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?WSDL</userportal.webservices.url>	-->		  			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
   			
+  			<ispyb.db.updatescripts.folder>R:%2Fworkspaces_neon%2Fwks_ispyb%2Fispyb-ejb3%2Fsql_scripts%2Fmysql%2Fupdate_scripts%2F2016%2F</ispyb.db.updatescripts.folder>
   		</properties>
   	</profile>
   	<profile>
