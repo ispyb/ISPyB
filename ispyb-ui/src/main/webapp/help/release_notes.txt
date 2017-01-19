@@ -1,8 +1,11 @@
+New TAG : ISPYB_4.1.6
+
 **************
 * 20.01.2017     *
 **************
 - New field safetyLevel in Protein table, coming from User Portal
 - Changes in User Portal WS
+- Statistics for inner shell
 
 ********************************************************************************
 
