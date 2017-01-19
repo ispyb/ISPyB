@@ -176,7 +176,6 @@ public class UpdateFromSMIS {
 	}
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
-		System.out.println("updateThisProposalFromSMISPk " + pk);
 
 		Integer nbDays = 365;
 
@@ -188,7 +187,7 @@ public class UpdateFromSMIS {
 
 		// Get the service
 		SMISWebService sws = SMISWebServiceGenerator.getWs();
-		System.out.println("JSON serialization of SMIS objects needed to fill ISPyB");
+		
 		switch (Constants.getSite()) {
 		case ESRF:
 			// only sessions WITH local contacts are retrieved
@@ -207,7 +206,6 @@ public class UpdateFromSMIS {
 		List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
 		mainProposers = mainProposers_.toArray(mainProposers);
-		System.out.println(new Gson().toJson(mainProposers_));
 
 		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
 		smisSessions = smisSessions_.toArray(smisSessions);
@@ -223,8 +221,23 @@ public class UpdateFromSMIS {
 		System.out.println(new Gson().toJson(labContacts_));
 
 		LOG.info("Nb of proposers found : " + mainProposers.length);
+		
 		LOG.info("Nb of sessions found : " + smisSessions.length);
+
 		LOG.info("Nb of samplesheets found : " + smisSamples.length);
+		
+		LOG.info("Nb of labcontacts found : " + labContacts.length);
+		
+		LOG.debug("JSON serialization of SMIS objects needed to fill ISPyB");
+		LOG.debug("Json proposers: ");
+		LOG.debug(new Gson().toJson(mainProposers_));
+		LOG.debug("Json smisSessions: ");
+		LOG.debug(new Gson().toJson(smisSessions));
+		LOG.debug("Json smisSamples: ");
+		LOG.debug(new Gson().toJson(smisSamples_));
+		LOG.debug("Json labContacts: ");
+		LOG.debug(new Gson().toJson(labContacts));
+		
 		
 		if ( mainProposers.length <1 ) {
 			LOG.info("Problem because no proposers found, could not extract proposal correctly");
