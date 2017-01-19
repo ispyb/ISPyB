@@ -61,6 +61,9 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "acronym")
 	protected String acronym;
+	
+	@Column(name = "safetyLevel")
+	protected String safetyLevel;
 
 	@Column(name = "molecularMass")
 	protected Double molecularMass;
@@ -91,13 +94,14 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 		super();
 	}
 
-	public Protein3VO(Integer proteinId, Proposal3VO proposalVO, String name, String acronym, Double molecularMass,
+	public Protein3VO(Integer proteinId, Proposal3VO proposalVO, String name, String acronym, String safetyLevel, Double molecularMass,
 			String proteinType, String sequence, Integer personId, Date timeStamp, Byte isCreatedBySampleSheet, Integer externalId) {
 		super();
 		this.proteinId = proteinId;
 		this.proposalVO = proposalVO;
 		this.name = name;
 		this.acronym = acronym;
+		this.safetyLevel  = safetyLevel;
 		this.molecularMass = molecularMass;
 		this.proteinType = proteinType;
 		this.sequence = sequence;
@@ -150,6 +154,14 @@ public class Protein3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setAcronym(String acronym) {
 		this.acronym = acronym;
+	}
+
+	public String getSafetyLevel() {
+		return safetyLevel;
+	}
+
+	public void setSafetyLevel(String safetyLevel) {
+		this.safetyLevel = safetyLevel;
 	}
 
 	public Double getMolecularMass() {

@@ -32,6 +32,8 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.InnerScientistVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
@@ -186,11 +188,12 @@ public class UpdateFromSMIS {
 
 		// Get the service
 		SMISWebService sws = SMISWebServiceGenerator.getWs();
-
+		System.out.println("JSON serialization of SMIS objects needed to fill ISPyB");
 		switch (Constants.getSite()) {
 		case ESRF:
 			// only sessions WITH local contacts are retrieved
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+			System.out.println(new Gson().toJson(smisSessions_));
 			break;
 		case EMBL:
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
@@ -204,6 +207,7 @@ public class UpdateFromSMIS {
 		List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
 		mainProposers = mainProposers_.toArray(mainProposers);
+		System.out.println(new Gson().toJson(mainProposers_));
 
 		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
 		smisSessions = smisSessions_.toArray(smisSessions);
@@ -211,10 +215,12 @@ public class UpdateFromSMIS {
 		List<SampleSheetInfoLightVO> smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
 		smisSamples = smisSamples_.toArray(smisSamples);
+		System.out.println(new Gson().toJson(smisSamples_));
 
 		List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
 		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
 		labContacts = labContacts_.toArray(labContacts);
+		System.out.println(new Gson().toJson(labContacts_));
 
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		LOG.info("Nb of sessions found : " + smisSessions.length);
@@ -625,6 +631,7 @@ public class UpdateFromSMIS {
 		if (protlist.isEmpty()) {
 
 			plv.setAcronym(value.getAcronym());
+			plv.setSafetyLevel(getSafetyLevelFromUserPortal(value));
 			plv.setProposalVO(proplv);
 			// SV
 			Person3VO persv = new Person3VO();
@@ -687,12 +694,43 @@ public class UpdateFromSMIS {
 	}
 	
 	private static boolean isSampleSheetApproved(SampleSheetInfoLightVO value){
+		// TODO check with other Sites if OK before put in prod : may have problems with CRIMS
+		if (Constants.SITE_IS_ESRF()) {
+			if (value.getOpmodePk() != null && value.getOpmodePk().longValue() < 4) {
+				LOG.debug("Samplesheet safety OK for:" + value.getAcronym());
+				return true;
+			} else {
+				LOG.debug("Samplesheet safety NOT OK for:" + value.getAcronym());
+				return false;	
+			}
+		}
 		return true;
-		// TODO check with Safety if OK before put in prod : may have problems with CRIMS
-//		if (value.getOpmodePk() != null && value.getOpmodePk().longValue() < 4)
-//			return true;
-//		else 
-//			return false;
+	}
+	
+	private static String getSafetyLevelFromUserPortal(SampleSheetInfoLightVO value){
+		
+		Long userPortalSafety = value.getOpmodePk();
+		String safetyLevel = null;
+		
+		if (userPortalSafety == null ) 
+			return null;
+		
+		switch (userPortalSafety.intValue()) {
+		case 1:
+			safetyLevel= "GREEN";
+			break;	
+		case 2:
+			safetyLevel= "YELLOW";
+			break;	
+		case 3:
+			safetyLevel= "RED";
+			break;
+		default:
+			safetyLevel= null;
+			break;	
+		}
+		
+		return safetyLevel;
 	}
 
 	private static void retrieveSession(Proposal3VO proplv, ExpSessionInfoLightVO sessionVO) throws Exception {
