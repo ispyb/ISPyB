@@ -39,7 +39,7 @@ import ispyb.ws.rest.saxs.MeasurementRestWebService;
 import ispyb.ws.rest.saxs.ModelingRestWebService;
 import ispyb.ws.rest.saxs.SaxsRestWebService;
 import ispyb.ws.rest.saxs.SpecimenRestWebService;
-import ispyb.ws.rest.saxs.StatsRestWebService;
+import ispyb.ws.rest.saxs.SaxsStatsRestWebService;
 import ispyb.ws.rest.saxs.StockSolutionRestWebService;
 import ispyb.ws.rest.saxs.SubtractionRestWebService;
 

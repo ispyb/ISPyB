@@ -42,7 +42,6 @@ public class Substraction3VO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	protected Integer substractionId;
-//	protected SaxsDataCollection3VO SaxsDataCollection3VO;
 	protected int dataCollectionId;
 	protected String rg;
 	protected String rgStdev;
@@ -83,18 +82,6 @@ public class Substraction3VO implements java.io.Serializable {
 		this.substractionId = substractionId;
 	}
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "dataCollectionId", nullable = false)
-//	public SaxsDataCollection3VO getSaxsDataCollection3VO() {
-//		return this.SaxsDataCollection3VO;
-//	}
-//
-//	public void setSaxsDataCollection3VO(
-//			SaxsDataCollection3VO SaxsDataCollection3VO) {
-//		this.SaxsDataCollection3VO = SaxsDataCollection3VO;
-//	}
-	
-	
 	
 	@Column(name = "dataCollectionId")
 	public int getDataCollectionId() {

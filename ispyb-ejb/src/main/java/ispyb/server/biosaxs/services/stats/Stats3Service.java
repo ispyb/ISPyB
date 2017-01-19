@@ -19,6 +19,7 @@
 
 package ispyb.server.biosaxs.services.stats;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public interface Stats3Service {
 	List getSamplesBy(String start, String end);
 
 	List getSessionsBy(String start, String end);
+
+	List<Map<String, Object>> getAutoprocStatsByDate(String autoprocStatisticsType, Date startDate, Date endDate);
 
 
 

@@ -85,7 +85,6 @@ public class Experiment3VO implements java.io.Serializable {
 
 	protected Set<Specimen3VO> samples3VOs = new HashSet<Specimen3VO>(0);
 
-	// @XmlTransient
 	protected Set<SaxsDataCollection3VO> dataCollections = new HashSet<SaxsDataCollection3VO>(0);
 
 	/** Services for filling up plate types **/
@@ -150,17 +149,6 @@ public class Experiment3VO implements java.io.Serializable {
 		this.comments = comments;
 	}
 
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "experimentId")
-	// @OrderBy
-	// public Set<Buffer3VO> getBuffer3VOs() {
-	// return this.buffer3VOs;
-	// }
-	//
-	// public void setBuffer3VOs(Set<Buffer3VO> buffer3VOs) {
-	// this.buffer3VOs = buffer3VOs;
-	// }
-
 	@Column(name = "proposalId")
 	public int getProposalId() {
 		return this.proposalId;
@@ -189,7 +177,6 @@ public class Experiment3VO implements java.io.Serializable {
 	}
 
 	@Transient
-	// public List<Measurement3VO> getSpecimen3VOs() {
 	public List<Measurement3VO> getMeasurements() {
 		List<Measurement3VO> specimen3VOs = new ArrayList<Measurement3VO>();
 		for (Specimen3VO sample : this.getSamples()) {
@@ -233,16 +220,6 @@ public class Experiment3VO implements java.io.Serializable {
 		return this.platetype3VOs;
 	}
 
-	// @Transient
-	// public Buffer3VO getBufferById(int bufferId) {
-	// for (Buffer3VO buffer : this.getBuffer3VOs()) {
-	// if (buffer.getBufferId().equals(bufferId)){
-	// return buffer;
-	// }
-	// }
-	// return null;
-	// }
-
 	@Transient
 	public Measurement3VO getMeasurementById(Integer measurementId) {
 		List<Measurement3VO> measurements = this.getMeasurements();
@@ -284,15 +261,6 @@ public class Experiment3VO implements java.io.Serializable {
 
 	}
 
-	// @Transient
-	// public StockSolution3VO getStockSolutionById(int stockSolutionId) {
-	// for (StockSolution3VO stock : this.getStockSolution3VOs()) {
-	// if (stock.getStockSolutionId().equals(stockSolutionId)){
-	// return stock;
-	// }
-	// }
-	// return null;
-	// }
 
 	@Transient
 	public String getCodeSample(Specimen3VO sample) {
@@ -307,10 +275,6 @@ public class Experiment3VO implements java.io.Serializable {
 			if (count > 0) {
 				name = name + "-" + count;
 			}
-			// if (sample.getStockSolutionId() != null){
-			//
-			// name = name + "_" + this.getStockSolutionById(sample.getStockSolutionId()).getName();
-			// }
 			count++;
 		} while (this.isSpecimenCodeUsed(name, sample));
 		return name;
@@ -336,7 +300,6 @@ public class Experiment3VO implements java.io.Serializable {
 		return false;
 	}
 
-	// @XmlTransient
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "experimentId")
 	public Set<SaxsDataCollection3VO> getDataCollections() {
@@ -356,18 +319,6 @@ public class Experiment3VO implements java.io.Serializable {
 		}
 		return list;
 	}
-
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "experimentId")
-	// @OrderBy
-	// public Set<StockSolution3VO> getStockSolution3VOs() {
-	// return stockSolution3VOs;
-	// }
-	//
-	//
-	// public void setStockSolution3VOs(Set<StockSolution3VO> stockSolution3VOs) {
-	// this.stockSolution3VOs = stockSolution3VOs;
-	// }
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "experimentId")
@@ -400,9 +351,6 @@ public class Experiment3VO implements java.io.Serializable {
 		if (sample3vo.getMacromolecule3VO() == null) {
 			return code + "_" + specimen.getExposureTemperature();
 		} else {
-			// Double p = Double.parseDouble(sample3vo.getConcentration());
-			// DecimalFormat df = new DecimalFormat("#.00");
-			// return code + "_" + specimen.getExposureTemperature() + "_" + df.format(p);
 			return code + "_" + specimen.getExposureTemperature() + "_" + sample3vo.getConcentration();
 		}
 	}
@@ -462,11 +410,6 @@ public class Experiment3VO implements java.io.Serializable {
 		for (MeasurementTodataCollection3VO iterable_element : dc.getMeasurementtodatacollection3VOs()) {
 			list.add(iterable_element);
 		}
-		// Collections.sort(list, MeasurementTodataCollectionComparatorOrder);
-		// List<Specimen3VO> listSpecimens = new ArrayList<Specimen3VO>();
-		// for (MeasurementTodataCollection3VO iterable_element : list) {
-		// listSpecimens.add(this.getSpecimenById(iterable_element.getSpecimenId()));
-		// }
 		return list;
 	}
 
@@ -558,10 +501,5 @@ public class Experiment3VO implements java.io.Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	// public Set<Specimen3VO> getSpecimens() {
-	// return this.getSamples();
-	//
-	// }
 
 }

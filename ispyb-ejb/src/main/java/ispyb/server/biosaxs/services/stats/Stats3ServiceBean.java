@@ -20,9 +20,9 @@
 package ispyb.server.biosaxs.services.stats;
 
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +32,11 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 
 @Stateless
-public class Stats3ServiceBean implements Stats3Service, Stats3ServiceLocal {
+public class Stats3ServiceBean extends WsServiceBean implements Stats3Service, Stats3ServiceLocal {
 	
 	private String GET_EXPERIMENT_COUNT_BY_DATE = " select count(*) from Experiment "
 			+ "										where experimentType = :TYPE and creationDate > :START and creationDate < :END";
@@ -50,10 +49,17 @@ public class Stats3ServiceBean implements Stats3Service, Stats3ServiceLocal {
 	
 	private String GET_SESSIONS = "select count(distinct(sessionId)) from Experiment where  creationDate > :START and creationDate < :END";
 	
+	
+	private String AUTOPROCSTATS_QUERY = "select * from v_mx_autoprocessing_stats where startTime >= START and startTime <= :END and scalingStatisticsType = :TYPE";
+	
+	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
 
+	
+	
+	
 	@Override
 	public List getSamplesBy(String start, String end) {
 		Session session = (Session) this.entityManager.getDelegate();
@@ -91,4 +97,14 @@ public class Stats3ServiceBean implements Stats3Service, Stats3ServiceLocal {
 		return 	query.list();
 	}
 		
+	@Override
+	public List<Map<String, Object>> getAutoprocStatsByDate(String autoprocStatisticsType, Date startDate, Date endDate) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(AUTOPROCSTATS_QUERY);
+		
+		query.setParameter("START", startDate);
+		query.setParameter("END", endDate);
+		query.setParameter("TYPE", autoprocStatisticsType);
+		return executeSQLQuery(query);
+	}
 }

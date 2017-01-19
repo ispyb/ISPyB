@@ -1,12 +1,10 @@
 package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.analysis.abInitioModelling.AbInitioModelling3Service;
-import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
 import ispyb.server.biosaxs.services.utils.reader.zip.SAXSZipper;
 import ispyb.server.biosaxs.vos.datacollection.Merge3VO;
 import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.ws.rest.RestWebService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,10 +29,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(SubtractionRestWebService.class);
 
 	private Subtraction3VO getSubtraction(String subtractionId) throws Exception {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		PrimaryDataProcessing3Service primaryDataProcessing3Service = (PrimaryDataProcessing3Service) ejb3ServiceLocator
-				.getLocalService(PrimaryDataProcessing3Service.class);
-		return primaryDataProcessing3Service.getSubstractionById(Integer.parseInt(subtractionId));
+		return getPrimaryDataProcessing3Service().getSubstractionById(Integer.parseInt(subtractionId));
 	}
 
 	private List<Subtraction3VO> getAbinitioModelsBySubtractionId(String proposal, String subtractionIdList)

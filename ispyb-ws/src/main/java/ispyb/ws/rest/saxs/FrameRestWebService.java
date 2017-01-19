@@ -411,7 +411,7 @@ public class FrameRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "LocalContact"})
 	@GET
 	@Path("{token}/saxs/{proposal}/frame/{frameId}/download")
 	@Produces("text/plain")

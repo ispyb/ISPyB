@@ -39,8 +39,12 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "FitStructureToExperimentalData")
-public class FitStructureToExperimentalData3VO {
+public class FitStructureToExperimentalData3VO implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Integer fitStructureToExperimentalDataId;
 	protected Integer structureId;
 	protected Integer subtractionId;

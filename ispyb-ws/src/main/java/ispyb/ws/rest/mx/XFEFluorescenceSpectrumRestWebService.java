@@ -176,7 +176,7 @@ public class XFEFluorescenceSpectrumRestWebService extends RestWebService {
    									System.out.println(parent);
    									files = new File(parent).listFiles();
    								}
-   								/** Covnerting abstract file to filePaths **/
+   								/** Cenverting abstract file to filePaths **/
    								List<String> filePaths = new ArrayList<String>();
    								for (File file : files) {
 									filePaths.add(file.getName());

@@ -29,12 +29,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "MixtureToStructure")
-public class MixtureToStructure {
+public class MixtureToStructure implements java.io.Serializable{
 
 	protected Integer fitToStructureId;
 	protected Integer structureId;
