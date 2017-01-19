@@ -19,6 +19,8 @@
 
 package ispyb.server.mx.services.ws.rest.xfefluorescencespectrum;
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +30,10 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class XFEFluorescenSpectrumRestWsServiceBean implements XFEFluorescenSpectrumRestWsService, XFEFluorescenSpectrumRestWsServiceLocal {
+public class XFEFluorescenSpectrumRestWsServiceBean extends WsServiceBean implements XFEFluorescenSpectrumRestWsService, XFEFluorescenSpectrumRestWsServiceLocal{
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -64,12 +65,6 @@ public class XFEFluorescenSpectrumRestWsServiceBean implements XFEFluorescenSpec
 		return executeSQLQuery(query);
 	}
 	
-	
-	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
-	}
 
 	
 }

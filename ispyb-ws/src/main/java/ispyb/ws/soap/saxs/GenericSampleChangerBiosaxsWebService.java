@@ -271,8 +271,10 @@ public class GenericSampleChangerBiosaxsWebService {
 			@WebParam(name = "storageTemperature") String storageTemperature, @WebParam(name = "timePerFrame") String timePerFrame,
 			@WebParam(name = "timeStart") String timeStart, @WebParam(name = "timeEnd") String timeEnd,
 			@WebParam(name = "energy") String energy, @WebParam(name = "detectorDistance") String detectorDistance,
-			@WebParam(name = "snapshotCapillary") String snapshotCapillary, @WebParam(name = "currentMachine") String currentMachine,
-			@WebParam(name = "beamCenterX") String beamCenterX, @WebParam(name = "beamCenterY") String beamCenterY,
+			@WebParam(name = "snapshotCapillary") String snapshotCapillary, 
+			@WebParam(name = "currentMachine") String currentMachine,
+			@WebParam(name = "beamCenterX") String beamCenterX, 
+			@WebParam(name = "beamCenterY") String beamCenterY,
 			@WebParam(name = "radiationRelative") String radiationRelative,
 			@WebParam(name = "radiationAbsolute") String radiationAbsolute, @WebParam(name = "pixelSizeX") String pixelSizeX,
 			@WebParam(name = "pixelSizeY") String pixelSizeY, @WebParam(name = "normalization") String normalization,
@@ -906,7 +908,8 @@ public class GenericSampleChangerBiosaxsWebService {
 	}
 
 	@WebResult(name = "addMixtureAnalysis")
-	public void addMixtureAnalysis(@WebParam(name = "experimentId") String experimentId,
+	public void addMixtureAnalysis(
+			@WebParam(name = "experimentId") String experimentId,
 			@WebParam(name = "runNumber") String runNumber,
 			@WebParam(name = "fitFilePath") String fitFilePath,/* {filePath:'/data1.pdb'}*/
 			@WebParam(name = "aprioriPdbFilePath") String pdb /* {filePath: "dimer.pdb", volumeFraction: "0.2"} */
