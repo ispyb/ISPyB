@@ -23,6 +23,7 @@ package ispyb.server.biosaxs.services.stats;
 import ispyb.server.mx.services.ws.rest.WsServiceBean;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service, S
 	private String GET_SESSIONS = "select count(distinct(sessionId)) from Experiment where  creationDate > :START and creationDate < :END";
 	
 	
-	private String AUTOPROCSTATS_QUERY = "select * from v_mx_autoprocessing_stats where startTime >= START and startTime <= :END and scalingStatisticsType = :TYPE";
+	private String AUTOPROCSTATS_QUERY = "select * from v_mx_autoprocessing_stats where startTime >= :START and startTime <= :END and scalingStatisticsType = :TYPE";
 	
 	
 	@PersistenceContext(unitName = "ispyb_db")
@@ -102,9 +103,16 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service, S
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(AUTOPROCSTATS_QUERY);
 		
-		query.setParameter("START", startDate);
-		query.setParameter("END", endDate);
+		 SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		 
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
 		query.setParameter("TYPE", autoprocStatisticsType);
+		
+		System.out.println(dt1.format(startDate));
+		System.out.println(dt1.format(endDate));
+		System.out.println(autoprocStatisticsType);
+		System.out.println(query.toString());
 		return executeSQLQuery(query);
 	}
 }

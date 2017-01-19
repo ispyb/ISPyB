@@ -254,6 +254,8 @@ public class BiosaxsDataAdapterAction extends org.apache.struts.actions.Dispatch
 			String json = "";
 			if (experiment != null)
 				json = ExperimentSerializer.serializeExperiment(experiment, experimentScope);
+			
+			System.out.println(json);
 			BiosaxsDataAdapterCommon.sendResponseToclient(response, json);
 			this.logEnd("getExperiment", start);
 		} catch (Exception exp) {
