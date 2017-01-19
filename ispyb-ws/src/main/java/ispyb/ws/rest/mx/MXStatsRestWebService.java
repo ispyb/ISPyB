@@ -1,8 +1,5 @@
 package ispyb.ws.rest.mx;
 
-import ispyb.server.biosaxs.services.stats.Stats3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-
 import java.sql.Date;
 
 import javax.annotation.security.RolesAllowed;
@@ -14,6 +11,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.biosaxs.services.stats.Stats3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 
 
 @Path("/")
