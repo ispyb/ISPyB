@@ -45,7 +45,7 @@ public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3Se
 	private final static Logger LOG = Logger.getLogger(Laboratory3ServiceBean.class);
 
 	private static String SELECT_LABORATORY = "SELECT l.laboratoryId, l.laboratoryUUID, l.name, l.address, "
-			+ "l.city, l.country, l.url, l.organization  ";
+			+ "l.city, l.country, l.url, l.organization, l.laboratoryExtPk  ";
 
 	private static String FIND_BY_PROPOSAL_CODE_NUMBER = SELECT_LABORATORY
 			+ " FROM Laboratory l, Person p, Proposal pro "
