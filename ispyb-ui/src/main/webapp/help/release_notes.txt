@@ -1,4 +1,5 @@
 New TAG : ISPYB_4.1.6
+before switch to GitHub
 
 **************
 * 20.01.2017     *
