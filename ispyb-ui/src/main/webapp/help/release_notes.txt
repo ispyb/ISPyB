@@ -8,6 +8,7 @@ before switch to GitHub
 - Changes in User Portal WS
 - Scripts for Biosaxs, Ranking resolution and inner shell stats
 - New service for stats
+- Add ISA parameter to AutoprocScalingStatistics
 
 ********************************************************************************
 
