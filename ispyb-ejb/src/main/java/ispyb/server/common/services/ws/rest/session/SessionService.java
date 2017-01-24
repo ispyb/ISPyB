@@ -38,6 +38,8 @@ public interface SessionService {
 
 	public List<Map<String, Object>> getSessionViewByBeamlineOperator(String beamlineOperator);
 
+	public List<Map<String, Object>> getSessionViewByDates(String start, String end, String siteId);
+
 
 	
 }

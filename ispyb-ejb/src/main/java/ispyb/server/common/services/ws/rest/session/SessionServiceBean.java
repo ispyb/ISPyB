@@ -50,6 +50,9 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 	private  String BySessionId = getSessionViewTable() + " where v_session.sessionId = :sessionId and proposalId = :proposalId order by v_session.sessionId DESC"; 
 	private  String ByProposalId = getSessionViewTable() + " where v_session.proposalId = :proposalId order by v_session.sessionId DESC";
 	private  String ByDates = getSessionViewTable() + " where " + dateClause + " order by v_session.sessionId DESC";
+	
+	private  String ByDatesAndSiteId = getSessionViewTable() + " where " + dateClause + " and v_session.operatorSiteNumber=:siteId order by v_session.sessionId DESC";
+	
 	private  String ByProposalAndDates = getSessionViewTable() + " where v_session.proposalId = :proposalId and " + dateClause + " order by v_session.sessionId DESC";
 	
 	
@@ -129,6 +132,16 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 		SQLQuery query = session.createSQLQuery(ByBeamlineOperator);
 		query.setParameter("beamlineOperator", "%" +  beamlineOperator + "%");
 		System.out.println(query.getQueryString());
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getSessionViewByDates(String startDate, String endDate, String siteId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByDatesAndSiteId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		query.setParameter("siteId", siteId);
 		return executeSQLQuery(query);
 	}
 

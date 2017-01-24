@@ -2,7 +2,7 @@ package ispyb.ws.rest.security;
 
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.login.Login3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.security.LdapConnection;
 import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.ESRFLoginModule;
@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +69,9 @@ public class AuthenticationRestWebService extends RestWebService {
 			@QueryParam("site") String site) throws Exception {
 		String methodName = "authenticate";
 		long id = this.logInit(methodName, logger, login, site);
+		
+		/** siteId is need in some cases to get the sessions when, for instance, user is local contact **/
+		String siteId = "";
 		try {
 			List<String> roles = new ArrayList<String>();
 			if (!password.isEmpty()){
@@ -80,6 +82,8 @@ public class AuthenticationRestWebService extends RestWebService {
 						break;
 					case "ESRF":
 						roles = ESRFLoginModule.authenticate(login, password);
+						siteId = LdapConnection.findByUniqueIdentifier(login).getSiteNumber();
+						logger.info(String.format("Login: %s siteId: %s", login, siteId));
 						break;
 					case "SOLEIL":
 						roles = SOLEILLLoginModule.authenticate(login, password);
@@ -105,7 +109,7 @@ public class AuthenticationRestWebService extends RestWebService {
 				login3vo.setToken(token);
 				login3vo.setUsername(login);
 				login3vo.setRoles(roles.toString());
-				
+				login3vo.setSiteId(siteId);
 				/** Retrieving the proposals attached to a User **/
 				List<String> proposalsAuthorized =  this.getProposal3Service().findProposalNamesByLoginName(login, site);
 				login3vo.setAuthorized(proposalsAuthorized.toString());

@@ -2,8 +2,10 @@ package ispyb.ws.rest.proposal;
 
 import ispyb.server.common.services.ws.rest.session.SessionService;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.ws.rest.RestWebService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +105,15 @@ public class SessionRestWebService extends RestWebService {
 		String methodName = "getSessionsByDate";
 		long id = this.logInit(methodName, logger, token, start, end);
 		try {
-			List<Map<String, Object>> result = getSessionService().getSessionViewByDates(start, end);
+			List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+			Login3VO login = this.getLogin3Service().findByToken(token);
+			if (login.isManager()){
+				result = getSessionService().getSessionViewByDates(start, end);
+			}
+			else{
+				result = getSessionService().getSessionViewByDates(start, end, login.getSiteId());
+				
+			}
 			this.logFinish(methodName, id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {

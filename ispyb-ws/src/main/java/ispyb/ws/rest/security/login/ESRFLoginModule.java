@@ -1,8 +1,13 @@
 package ispyb.ws.rest.security.login;
 
+import ispyb.server.security.EmployeeVO;
+import ispyb.server.security.LdapConnection;
+
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
@@ -10,6 +15,10 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
+import javax.security.auth.Subject;
+import javax.security.jacc.PolicyContext;
+
+import org.jboss.security.SubjectSecurityManager;
 
 public class ESRFLoginModule {
 	  private	static String groupUniqueMemberName = "uniqueMember";
@@ -42,27 +51,34 @@ public class ESRFLoginModule {
 		String userDN = principalDNPrefix + username + principalDNSuffix;
 		return new StringBuffer().append("(&")
 				.append("(objectClass=groupOfUniqueNames)")
-				.append("(" + groupUniqueMemberName + "=").append(userDN)
+				.append("(" + groupUniqueMemberName + "=")
+				.append(userDN)
 				.append(")").append(")").toString();
 	}
+	
+	
 	
 	public static List<String> authenticate(String username, String password)
 			throws Exception {
 		
 		List<String> myRoles = new ArrayList<String>();
-		
+							
 		if (!password.isEmpty()){
 			InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
+			
 			
 			// Set up search constraints
 			SearchControls cons = new SearchControls();
 			cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
 			// Search
 			NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, getFilter(username),cons);
+			
+			System.out.println(answer);
+			
 			while (answer.hasMore()) {
 				SearchResult sr = answer.next();
+				System.out.println(sr);
 				Attributes attrs = sr.getAttributes();
-				System.out.println(attrs.toString());
 				Attribute roles = attrs.get(groupAttributeID);
 				for (int r = 0; r < roles.size(); r++) {
 					Object value = roles.get(r);

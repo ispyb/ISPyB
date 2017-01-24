@@ -27,6 +27,7 @@ public class Login3VO implements java.io.Serializable {
 	protected String username;
 	protected String roles;
 	protected String authorized;
+	protected String siteId;
 	protected Date expirationTime;
 	
 	public Login3VO(){}
@@ -124,15 +125,21 @@ public class Login3VO implements java.io.Serializable {
 			if (this.getRoles().toUpperCase().contains(role.toUpperCase())){
 				return true;
 			}
-//			for (String loginRole : this.getRoles().split(",")) {
-//				System.out.println(loginRole.toUpperCase() + " " + role.toUpperCase() + " " + loginRole.toUpperCase().trim().equals(role.toUpperCase().trim()));
-//				if (loginRole.toUpperCase().trim().equals(role.toUpperCase().trim())){
-//					return true;
-//				}
-//			}
 		}
 		return false;
 	}
+
+	@Column(name = "siteId")
+	public String getSiteId() {
+		return siteId;
+	}
+
+
+	public void setSiteId(String siteId) {
+		this.siteId = siteId;
+	}
+
+
 
 
 	
