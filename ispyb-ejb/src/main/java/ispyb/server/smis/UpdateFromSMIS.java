@@ -192,7 +192,7 @@ public class UpdateFromSMIS {
 		case ESRF:
 			// only sessions WITH local contacts are retrieved
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			System.out.println(new Gson().toJson(smisSessions_));
+			//System.out.println(new Gson().toJson(smisSessions_));
 			break;
 		case EMBL:
 			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
@@ -213,12 +213,10 @@ public class UpdateFromSMIS {
 		List<SampleSheetInfoLightVO> smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
 		smisSamples = smisSamples_.toArray(smisSamples);
-		System.out.println(new Gson().toJson(smisSamples_));
 
 		List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
 		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
 		labContacts = labContacts_.toArray(labContacts);
-		System.out.println(new Gson().toJson(labContacts_));
 
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		
@@ -228,16 +226,16 @@ public class UpdateFromSMIS {
 		
 		LOG.info("Nb of labcontacts found : " + labContacts.length);
 		
-		LOG.debug("JSON serialization of SMIS objects needed to fill ISPyB");
-		LOG.debug("Json proposers: ");
-		LOG.debug(new Gson().toJson(mainProposers_));
-		LOG.debug("Json smisSessions: ");
-		LOG.debug(new Gson().toJson(smisSessions));
-		LOG.debug("Json smisSamples: ");
-		LOG.debug(new Gson().toJson(smisSamples_));
-		LOG.debug("Json labContacts: ");
-		LOG.debug(new Gson().toJson(labContacts));
-		
+//		LOG.debug("JSON serialization of SMIS objects needed to fill ISPyB");
+//		LOG.debug("Json proposers: ");
+//		LOG.debug(new Gson().toJson(mainProposers_));
+//		LOG.debug("Json smisSessions: ");
+//		LOG.debug(new Gson().toJson(smisSessions));
+//		LOG.debug("Json smisSamples: ");
+//		LOG.debug(new Gson().toJson(smisSamples_));
+//		LOG.debug("Json labContacts: ");
+//		LOG.debug(new Gson().toJson(labContacts));
+//		
 		
 		if ( mainProposers.length <1 ) {
 			LOG.info("Problem because no proposers found, could not extract proposal correctly");
