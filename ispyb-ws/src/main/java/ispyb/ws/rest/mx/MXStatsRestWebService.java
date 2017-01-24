@@ -1,5 +1,8 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.server.biosaxs.services.stats.Stats3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+
 import java.io.StringWriter;
 import java.sql.Date;
 import java.util.List;

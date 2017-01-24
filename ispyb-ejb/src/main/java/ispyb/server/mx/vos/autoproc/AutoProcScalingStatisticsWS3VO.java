@@ -49,7 +49,7 @@ public class AutoProcScalingStatisticsWS3VO extends AutoProcScalingStatistics3VO
 			Integer nTotalUniqueObservations, Float meanIoverSigI,
 			Float completeness, Float multiplicity,
 			Float anomalousCompleteness, Float anomalousMultiplicity,
-			Date recordTimeStamp, Boolean anomalous, Float ccHalf, Float sigAno, Float ccAno) {
+			Date recordTimeStamp, Boolean anomalous, Float ccHalf, Float sigAno, Float ccAno, Float ISa) {
 		super();
 		this.autoProcScalingStatisticsId = autoProcScalingStatisticsId;
 		this.autoProcScalingId = autoProcScalingId;
@@ -77,6 +77,7 @@ public class AutoProcScalingStatisticsWS3VO extends AutoProcScalingStatistics3VO
 		this.ccHalf = ccHalf;
 		this.ccAno = ccAno;
 		this.sigAno = sigAno;
+		this.ISa = ISa;
 	}
 
 	public Integer getAutoProcScalingId() {

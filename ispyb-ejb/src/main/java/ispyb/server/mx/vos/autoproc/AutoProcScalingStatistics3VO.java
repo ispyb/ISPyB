@@ -122,6 +122,9 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 	@Column(name = "sigAno")
 	protected Float sigAno;
 	
+	@Column(name = "isa")
+	protected Float ISa;
+	
 	
 	public AutoProcScalingStatistics3VO(){
 		super();
@@ -189,6 +192,7 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.recordTimeStamp = vo.getRecordTimeStamp();
 		this.anomalous = vo.getAnomalous();
 		this.ccHalf = vo.getCcHalf();
+		this.ISa = vo.getISa();
 	}
 	
 	public void fillVOFromWS(AutoProcScalingStatisticsWS3VO vo) {
@@ -216,6 +220,7 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.ccHalf = vo.getCcHalf();
 		this.ccAno = vo.getCcAno();
 		this.sigAno = vo.getSigAno();
+		this.ISa = vo.getISa();
 	}
 
 
@@ -476,6 +481,18 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 
 	public void setSigAno(Float sigAno) {
 		this.sigAno = sigAno;
+	}
+
+
+
+	public Float getISa() {
+		return ISa;
+	}
+
+
+
+	public void setISa(Float iSa) {
+		ISa = iSa;
 	}
 	
 }

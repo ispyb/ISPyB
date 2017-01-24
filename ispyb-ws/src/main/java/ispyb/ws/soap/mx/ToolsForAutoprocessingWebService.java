@@ -378,16 +378,16 @@ public class ToolsForAutoprocessingWebService {
 			@WebParam(name = "autoProcScalingId") Integer autoProcScalingId, 
 			@WebParam(name = "ccHalf") Float ccHalf,
 			@WebParam(name = "sigAno") Float sigAno,
-			@WebParam(name = "ccAno") Float ccAno)
+			@WebParam(name = "ccAno") Float ccAno,
+			@WebParam(name = "isa") Float isa)
 			throws Exception {
 		LOG.info("storeOrUpdateAutoProcScalingStatistics");
-		LOG.info(String.valueOf(sigAno));
-		LOG.info(String.valueOf(ccAno));
+		
 		AutoProcScalingStatisticsWS3VO vo = new AutoProcScalingStatisticsWS3VO(null, autoProcScalingId,
 				scalingStatisticsType, comments, resolutionLimitLow, resolutionLimitHigh, rmerge,
 				rmeasWithinIplusIminus, rmeasAllIplusIminus, rpimWithinIplusIminus, rpimAllIplusIminus,
 				fractionalPartialBias, nTotalObservations, nTotalUniqueObservations, meanIoverSigI, completeness,
-				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf, sigAno, ccAno);
+				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf, sigAno, ccAno, isa);
 		return storeOrUpdateAutoProcScalingStatisticValue(vo);
 	}
 
