@@ -40,39 +40,7 @@
 			
 		</plugin>
 		
- <!--  	for dewar tracking
- 
-		<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-		<execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <finalName>dewarAPI</finalName>
-                <includes>
-              	<include>**/src/main/resources/META-INF/persistence.xml</include>
-                <include>ispyb/server/common/services/shipping/DewarAPI*.*</include>
-                <include>**/vos/ISPyB*.*</include>
-                <include>**/vos/shipping/*.*</include>
-                <include>**/common/util/ejb/*.*</include>
-                <include>ispyb/server/common/services/proposals/Proposal3Service*.*</include>
-                <include>ispyb/server/mx/services/collections/Session3Service*.*</include>
-                <include>ispyb/server/common/daos/proposals/Proposal*.*</include>
-                <include>ispyb/server/mx/daos/collections/Session*.*</include>
-                <include>ispyb/server/mx/vos/collections/Session*.*</include>
-                <include>ispyb/server/common/vos/proposals/Proposal*.*</include>
-              </includes>
-            </configuration>
-          </execution>
-		
-        </executions>
-      </plugin> 
--->       
+  
 		</plugins>
 
 	</build>
@@ -114,13 +82,6 @@
 			</exclusions>
 		</dependency>
 
-
-		<!-- To be reconsidered -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.hibernate</groupId> -->
-		<!-- <artifactId>hibernate-entitymanager</artifactId> -->
-		<!-- <version>4.3.8.Final</version> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -223,17 +184,10 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-			<version>1.2</version>
+			<version>1.3</version>
 		</dependency>
 		
-		
-<!-- commented because jaxb and ... already exist in wildfly server
-	<dependency>
-		<groupId>org.codehaus.mojo</groupId>
-		<artifactId>jaxws-maven-plugin</artifactId>
-		<version>1.12</version>
-	</dependency>
- -->
+	
 	</dependencies>
 	
 	  <!--  profiles to separate dev to prod properties -->
