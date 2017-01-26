@@ -25,6 +25,9 @@ local.properties
 
 # Eclipse Core
 .project
+ispyb-ejb/.project
+ispyb-ws/.project
+ispyb-ui/.project
 
 # External tool builders
 .externalToolBuilders/
@@ -39,7 +42,10 @@ local.properties
 .cproject
 
 # JDT-specific (Eclipse Java Development Tools)
-**/**/.classpath
+.classpath
+ispyb-ejb/.classpath
+ispyb-ws/.classpath
+ispyb-ui/.classpath
 
 # Java annotation processor (APT)
 .factorypath
