@@ -279,18 +279,24 @@
                         <ispyb.authentication.method>LDAP</ispyb.authentication.method>
                         <ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
                         <ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
+
                         <ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
-                        <ispyb.uploaded.root.folder>/data/ispyb/db/</ispyb.uploaded.root.folder>
+                        <ispyb.uploaded.root.folder>/data/ispyb/pyapdb/</ispyb.uploaded.root.folder>
 
                         <ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
                         <ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
                         <ispyb.dataprocessing.denzo>false</ispyb.dataprocessing.denzo>
                         <ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
                         <ispyb.bcm>mxcube</ispyb.bcm>
+                        <ispyb.news.url>http://www.esrf.fr/UsersAndScience/Experiments/MX/How_to_use_our_beamlines/ISPYB/ISPYBnews/</ispyb.news.url>
 
                         <protein.allowedToCreate>true</protein.allowedToCreate>
                         <shipping.container.capacity>16</shipping.container.capacity>
                         <samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+                        <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
+                        <shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
+                        <shipment.upload.populatedTemplate>ispyb-template_shipment_EMBL.xls</shipment.upload.populatedTemplate>
 
                         <mail.smtp.host>160.103.2.175</mail.smtp.host>
                         <mail.admin>ispyb@embl-hamburg.de</mail.admin>
@@ -304,11 +310,8 @@
                         <dictionary.site>The EMBL</dictionary.site>
                         <dictionary.bcm>mxCuBE</dictionary.bcm>
   
-                        <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
-                        <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-                
+                        <!-- <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> -->
                 	<ispyb.authorisation.active>false</ispyb.authorisation.active>
-                	
                 </properties>
   	</profile>
   	<profile>
