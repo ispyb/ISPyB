@@ -48,6 +48,7 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,
 (select count(*) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfDataCollections,
 (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,
-(select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId,
+(select MIN(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId,
+(select GROUP_CONCAT(synchrotronCurrent) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as synchrotronCurrent,
 (select GROUP_CONCAT(workflowStepId) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId and WorkflowStep.WorkflowStepType = 'Characterisation') as characterisationWorkflowStepIds
 from v_datacollection_summary
