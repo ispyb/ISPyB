@@ -13,8 +13,7 @@ GROUP_CONCAT(`cell_c` SEPARATOR ', ') AS `Autoprocessing_cell_c`,
 GROUP_CONCAT(`cell_alpha` SEPARATOR ', ') AS `Autoprocessing_cell_alpha`, 
 GROUP_CONCAT(`cell_beta` SEPARATOR ', ') AS `Autoprocessing_cell_beta`, 
 GROUP_CONCAT(`cell_gamma` SEPARATOR ', ') AS `Autoprocessing_cell_gamma`,
-
-
+GROUP_CONCAT(`anomalous` SEPARATOR ', ') AS `Autoprocessing_anomalous`,
 
 GROUP_CONCAT(`autoProcId` SEPARATOR ', ') AS `autoProcIds`,
 GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`, 
