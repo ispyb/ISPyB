@@ -23,7 +23,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 public class StockSolutionRestWebService extends SaxsRestWebService {
 	
 	private final static Logger logger = Logger.getLogger(StockSolutionRestWebService.class);
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/list")
 	@Produces({ "application/json" })
@@ -49,7 +49,7 @@ public class StockSolutionRestWebService extends SaxsRestWebService {
 	}
 	
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposalId}/saxs/stocksolution/save")
 	@Produces({ "application/json" })

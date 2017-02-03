@@ -22,7 +22,7 @@ public class ContainerRestWebService extends RestWebService {
 	private final static Logger logger = Logger
 			.getLogger(ContainerRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/container/{containerIds}/beamline/{beamlines}/samplechangerlocation/update")
 	@Produces({ "application/json" })
@@ -64,7 +64,7 @@ public class ContainerRestWebService extends RestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/container/{containerIds}/samplechangerlocation/empty")
 	@Produces({ "application/json" })

@@ -24,7 +24,7 @@ import org.jboss.resteasy.annotations.GZIP;
 public class SessionRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(SessionRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial","Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/session/list")
@@ -41,7 +41,7 @@ public class SessionRestWebService extends RestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial","Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/session/sessionId/{sessionId}/list")
@@ -69,7 +69,7 @@ public class SessionRestWebService extends RestWebService {
 	 * @return
 	 * @throws Exception
 	 */
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial","Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/session/date/{startdate}/{enddate}/list")

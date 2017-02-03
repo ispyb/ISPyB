@@ -137,7 +137,16 @@ SELECT
         FROM
             AutoProcScalingStatistics
         WHERE
-            v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId) AS ccAno
+            v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId) AS ccAno,
+            
+            
+               (SELECT 
+            GROUP_CONCAT(isa)
+        FROM
+            AutoProcScalingStatistics
+        WHERE
+            v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId) AS isa
+            
 FROM
     v_datacollection_autoprocintegration
 

@@ -31,7 +31,7 @@ public class HPLCRestWebService extends SaxsRestWebService {
 
 
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/overview")
 	@Produces("text/plain")
@@ -133,7 +133,7 @@ public class HPLCRestWebService extends SaxsRestWebService {
 		return reader.getH5ZipFileByteArrayByFrameRange(startFrame, endFrame);
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{experimentId}/hplc/frame/{start}/{end}/zip")
 	@Produces("application/x-octet-stream")
@@ -160,7 +160,7 @@ public class HPLCRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{experimentId}/hplc/download")
 	@Produces("application/x-octet-stream")
@@ -181,7 +181,7 @@ public class HPLCRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/hplc/frame/{frameId}/get")
 	@Produces("text/plain")
