@@ -28,4 +28,4 @@ Today ISPyB is actively supported by the following partners: ESRF, Soleil, DLS, 
 
 ## Support or Contact
 
-You want more information about ISPyB, please contact: <ispyb@esrf.fr>.
+You want more information about ISPyB, please contact: <ispyb.contact@gmail.com>.
