@@ -256,6 +256,26 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/history")
+	@Produces({ "application/json" })
+	public Response getShipmentHistory(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+		long id = this.logInit("getShipmentHistory", logger, token, proposal, shippingId);
+		try {
+			
+			List<Map<String, Object>> result = this.getShipmentWsService().getShipmentHistoryByShipmentId(this.getProposalId(proposal), shippingId);
+			this.logFinish("getShipmentHistory", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getShipmentHistory", e, id, logger);
+		}
+	}
+	
+	
+	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/save")
