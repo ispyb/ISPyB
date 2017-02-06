@@ -30,6 +30,12 @@ ispyb-ejb/.project
 ispyb-ws/.project
 ispyb-ui/.project
 
+# Eclipse Core
+ispyb-ejb/.settings
+ispyb-ws/.settings
+ispyb-ui/.settings
+
+
 # External tool builders
 .externalToolBuilders/
 
