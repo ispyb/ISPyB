@@ -106,8 +106,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			/** Update Person **/
 			
 			Person3VO person = this.getPerson3Service().findByPk(labContact.getPersonVO().getPersonId(), false);
-			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());
-			
+			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());			
 			person.setFamilyName(labContact.getPersonVO().getFamilyName());
 			person.setFaxNumber(labContact.getPersonVO().getFaxNumber());
 			person.setGivenName(labContact.getPersonVO().getGivenName());
@@ -115,10 +114,16 @@ public class ShippingRestWebService extends MXRestWebService {
 			person.setTitle(labContact.getPersonVO().getTitle());
 			person = this.getPerson3Service().merge(person);
 			
+			person.getLaboratoryVO().setAddress(labContact.getPersonVO().getLaboratoryVO().getAddress());
+			person.getLaboratoryVO().setName(labContact.getPersonVO().getLaboratoryVO().getName());
+			this.getLaboratory3Service().merge(person.getLaboratoryVO());
 			
 			labContact.setPersonVO(person);
 			/** Update LabContact **/
 			labContact.setProposalVO(this.getProposal3Service().findByPk(this.getProposalId(proposal)));
+			
+			
+			
 			labContact = this.getLabContact3Service().update(labContact);
 			this.logFinish(methodName, id, logger);
 			return sendResponse(labContact);
