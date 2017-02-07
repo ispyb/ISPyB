@@ -35,7 +35,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	
 	
 
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/labcontact/smis/list")
 	@Produces({ "application/json" })
@@ -55,7 +55,7 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/labcontact/list")
 	@Produces({ "application/json" })
@@ -74,7 +74,7 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/labcontact/{labcontactId}/get")
 	@Produces({ "application/json" })
@@ -91,7 +91,7 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/labcontact/save")
 	@Produces({ "application/json" })
@@ -106,8 +106,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			/** Update Person **/
 			
 			Person3VO person = this.getPerson3Service().findByPk(labContact.getPersonVO().getPersonId(), false);
-			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());
-			
+			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());			
 			person.setFamilyName(labContact.getPersonVO().getFamilyName());
 			person.setFaxNumber(labContact.getPersonVO().getFaxNumber());
 			person.setGivenName(labContact.getPersonVO().getGivenName());
@@ -115,10 +114,16 @@ public class ShippingRestWebService extends MXRestWebService {
 			person.setTitle(labContact.getPersonVO().getTitle());
 			person = this.getPerson3Service().merge(person);
 			
+			person.getLaboratoryVO().setAddress(labContact.getPersonVO().getLaboratoryVO().getAddress());
+			person.getLaboratoryVO().setName(labContact.getPersonVO().getLaboratoryVO().getName());
+			this.getLaboratory3Service().merge(person.getLaboratoryVO());
 			
 			labContact.setPersonVO(person);
 			/** Update LabContact **/
 			labContact.setProposalVO(this.getProposal3Service().findByPk(this.getProposalId(proposal)));
+			
+			
+			
 			labContact = this.getLabContact3Service().update(labContact);
 			this.logFinish(methodName, id, logger);
 			return sendResponse(labContact);
@@ -130,7 +135,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	
 	
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/list")
 	@Produces({ "application/json" })
@@ -146,7 +151,7 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/get")
 	@Produces({ "application/json" })
@@ -165,7 +170,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	}
 
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/status/{status}/update")
 	@Produces({ "application/json" })
@@ -192,7 +197,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	
 	
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/add")
 	@Produces({ "application/json" })
@@ -215,7 +220,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 	}	
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/containerType/{containerType}/capacity/{capacity}/container/add")
 	@Produces({ "application/json" })
@@ -239,7 +244,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/get")
 	@Produces({ "application/json" })
@@ -256,7 +261,27 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/history")
+	@Produces({ "application/json" })
+	public Response getShipmentHistory(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+		long id = this.logInit("getShipmentHistory", logger, token, proposal, shippingId);
+		try {
+			
+			List<Map<String, Object>> result = this.getShipmentWsService().getShipmentHistoryByShipmentId(this.getProposalId(proposal), shippingId);
+			this.logFinish("getShipmentHistory", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getShipmentHistory", e, id, logger);
+		}
+	}
+	
+	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/save")
 	@Produces({ "application/json" })
@@ -276,7 +301,7 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/remove")
 	@Produces({ "application/json" })
@@ -316,7 +341,7 @@ public class ShippingRestWebService extends MXRestWebService {
 	 * 							 value = -1 if receiver and sender are the same person
 	 * @return
 	 */
-	@RolesAllowed({"User", "Manager", "Localcontact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/shipping/save")
 	@Produces({ "application/json" })

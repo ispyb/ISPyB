@@ -34,7 +34,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 public class MacromoleculeRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(MacromoleculeRestWebService.class);
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/list")
 	@Produces({ "application/json" })
@@ -56,7 +56,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/save")
 	@Produces({ "application/json" })
@@ -79,7 +79,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 	
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/contactfile/upload")
 	@Consumes("multipart/form-data")
@@ -118,7 +118,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/contactfile/remove")
 	@Produces({ "application/json" })
@@ -146,7 +146,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/upload")
 	@Consumes("multipart/form-data")
@@ -181,7 +181,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/{structureId}/remove")
 	public Response removeStructure(
@@ -203,7 +203,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 		return this.sendResponse("ok");
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/pdb/{structureId}/save")
 	public Response saveStructure(

@@ -115,6 +115,13 @@ public class Login3VO implements java.io.Serializable {
 	    return  this.getRoles().toUpperCase().contains("LOCALCONTACT");
 	}
 	
+	@Transient
+	public boolean isIndustrial(){
+	    return  this.getRoles().toUpperCase().contains("INDUSTRIAL");
+	}
+	
+	
+	
 	/**
 	 * This method checks if this login contains at least one role of the roles list
 	 * @param rolesSet

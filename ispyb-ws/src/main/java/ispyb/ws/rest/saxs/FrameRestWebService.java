@@ -370,7 +370,7 @@ public class FrameRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/frame/{mergeIds}/zip")
 	@Produces("application/x-octet-stream")
@@ -391,7 +391,7 @@ public class FrameRestWebService extends SaxsRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/frame/average/{mergeIds}/bean")
 	@Produces("text/plain")
@@ -411,7 +411,7 @@ public class FrameRestWebService extends SaxsRestWebService {
 	}
 	
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/saxs/{proposal}/frame/{frameId}/download")
 	@Produces("text/plain")

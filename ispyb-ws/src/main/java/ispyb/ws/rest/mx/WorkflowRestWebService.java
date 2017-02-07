@@ -22,7 +22,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(WorkflowRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepIds}/list")
 	@Produces("text/plain")
@@ -49,7 +49,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/image")
 	@Produces("image/png")
@@ -78,7 +78,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/html")
 	@Produces({ "text/html" })
@@ -107,7 +107,7 @@ public class WorkflowRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepId}/result")
 	@Produces({ "text/html" })

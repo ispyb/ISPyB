@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class SpecimenRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(SpecimenRestWebService.class);
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/specimen/save")
 	@Produces({ "application/json" })
@@ -39,7 +39,7 @@ public class SpecimenRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/specimen/merge")
 	@Produces({ "application/json" })

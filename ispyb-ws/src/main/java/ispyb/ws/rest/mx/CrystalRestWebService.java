@@ -25,7 +25,7 @@ public class CrystalRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(CrystalRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/crystal/datacollection/{dataCollectionId}/pdb/download")
 	@Produces("text/plain")
@@ -50,7 +50,7 @@ public class CrystalRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/crystal/{crystalId}/get")
 	@Produces({ "application/json" })
@@ -67,7 +67,7 @@ public class CrystalRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/crystal/list")
 	@Produces({ "application/json" })
@@ -83,7 +83,7 @@ public class CrystalRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/crystal/geometryclass/{spacegroup}/list")
 	@Produces({ "application/json" })
@@ -101,7 +101,7 @@ public class CrystalRestWebService extends MXRestWebService {
 		}
 	}	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@POST
 	@Path("{token}/proposal/{proposal}/mx/crystal/proteinid/{proteinId}/save")
 	@Produces({ "application/json" })

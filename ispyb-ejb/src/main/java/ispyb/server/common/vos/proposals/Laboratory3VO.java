@@ -49,31 +49,31 @@ public class Laboratory3VO extends ISPyBValueObject implements Cloneable {
 	@Id
 	@GeneratedValue
 	@Column(name = "laboratoryId")
-	private Integer laboratoryId;
+	protected Integer laboratoryId;
 	
 	@Column(name = "laboratoryUUID")
-	private String laboratoryUUID;
+	protected String laboratoryUUID;
 	
 	@Column(name = "name")
-	private String name;
+	protected String name;
 	
 	@Column(name = "address")
-	private String address;
+	protected String address;
 	
 	@Column(name = "city")
-	private String city;
+	protected String city;
 	
 	@Column(name = "country")
-	private String country;
+	protected String country;
 	
 	@Column(name = "url")
-	private String url;
+	protected String url;
 	
 	@Column(name = "organization")
-	private String organization;
+	protected String organization;
 
 	@Column(name = "laboratoryExtPk")
-	private Integer laboratoryExtPk;
+	protected Integer laboratoryExtPk;
 
 
 	public Laboratory3VO(Integer laboratoryId, String laboratoryUUID,

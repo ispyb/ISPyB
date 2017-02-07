@@ -22,7 +22,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/list")
 	@Produces({ "application/json" })
@@ -40,7 +40,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/dataCollectionId/{datacollectionIdList}/bean")
 	@Produces({ "application/json" })
@@ -59,7 +59,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/{key}/{value}/list")
 	@Produces({ "application/json" })
@@ -81,7 +81,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/experiment/{experimentId}/list")
 	@Produces({ "application/json" })
@@ -102,7 +102,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/macromolecule/{macromoleculeId}/list")
 	@Produces({ "application/json" })
@@ -123,7 +123,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/session/{sessionId}/list")
 	@Produces({ "application/json" })
@@ -145,7 +145,7 @@ public class DataCollectionRestWebService extends SaxsRestWebService {
 	}
 	
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/datacollection/{datacollectionId}/list")
 	@Produces({ "application/json" })

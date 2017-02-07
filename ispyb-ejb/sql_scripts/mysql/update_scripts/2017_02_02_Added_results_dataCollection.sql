@@ -1,13 +1,7 @@
-
-
--- first line of script
-insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_24_Removed_ranking_from_view.sql','ONGOING');
-USE `pydb`;
-
-drop view v_datacollection;
+insert into SchemaStatus (scriptName, schemaStatus) values ('2017_02_02_Added_results_dataCollection.sql','ONGOING');
 
 CREATE 
-     OR REPLACE ALGORITHM = MERGE 
+    ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
 VIEW `v_datacollection` AS
@@ -73,15 +67,32 @@ VIEW `v_datacollection` AS
         `DataCollection`.`imageQualityIndicatorsCSVPath` AS `imageQualityIndicatorsCSVPath`,
         `BLSession`.`sessionId` AS `sessionId`,
         `BLSession`.`proposalId` AS `proposalId`,
-        `DataCollectionGroup`.`workflowId` AS `workflowId`
+        `DataCollectionGroup`.`workflowId` AS `workflowId`,
+        `v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,
+        `v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,
+        `v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,
+        `v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,
+        `v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,
+        `v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,
+        `v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,
+        `v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,
+        `v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,
+        `v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,
+        `v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,
+        `v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,
+        `v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,
+        `v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,
+        `v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,
+        `v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,
+        `v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,
+        `v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,
+        `v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,
+        `v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`
     FROM
-        (((`DataCollection`
+        ((((`DataCollection`
         LEFT JOIN `DataCollectionGroup` ON ((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`)))
         LEFT JOIN `Workflow` ON ((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`)))
-        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)));
+        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)))
+        LEFT JOIN `v_datacollection_summary_autoprocintegration` ON ((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`)));
         
-          -- last line of script  
-  update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_01_24_Removed_ranking_from_view.sql'; 
-  
-  
- 
+          update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_02_02_Added_results_dataCollection.sql';

@@ -31,7 +31,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(AutoprocintegrationRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/plot")
@@ -69,7 +69,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		return (AutoProcessingIntegrationService) Ejb3ServiceLocator.getInstance().getLocalService(AutoProcessingIntegrationService.class);
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/datacollection/{dataCollectionIdList}/view")
@@ -99,7 +99,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	 * 
 	 * So, if autoprocattachmentids contains n different ids then the response will be an n-array with the list of files for each id
 	 **/
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/list")
@@ -131,7 +131,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	 * 
 	 * So, if autoprocattachmentids contains n different ids then the response will be an n-array with the list of files for each id
 	 **/
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Produces("text/plain")
@@ -172,7 +172,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	
 	
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/completeness")
@@ -191,7 +191,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/cc2")
@@ -211,7 +211,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/isigma")
@@ -231,7 +231,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/rfactor")
@@ -251,7 +251,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/sigmaano")
 	@Produces("text/plain")
@@ -270,7 +270,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/anomcorr")
 	@Produces("text/plain")
@@ -289,7 +289,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/xscale/wilson")
 	@Produces("text/plain")
@@ -308,7 +308,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/autoprocattachmentid/{autoProcAttachmentId}/download")
 	@Produces({ "application/json" })

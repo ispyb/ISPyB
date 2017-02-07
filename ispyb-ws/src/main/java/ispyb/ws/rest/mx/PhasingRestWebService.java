@@ -34,7 +34,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		return (PhasingRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(PhasingRestWsService.class);
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/autoprocintegrationid/{autoprocIntegrationId}/list")
 	@Produces({ "application/json" })
@@ -58,7 +58,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/datacollectionid/{dataCollectionIds}/list")
 	@Produces({ "application/json" })
@@ -82,7 +82,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/datacollectiongroupid/{dataCollectionGroupIds}/list")
 	@Produces({ "application/json" })
@@ -107,7 +107,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/sampleid/{sampleIds}/list")
 	@Produces({ "application/json" })
@@ -131,7 +131,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/proteinid/{proteinIds}/list")
 	@Produces({ "application/json" })
@@ -155,7 +155,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/sessionid/{sessionIds}/list")
 	@Produces({ "application/json" })
@@ -179,7 +179,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/list")
 	@Produces({ "application/json" })
@@ -204,7 +204,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/files")
 	@Produces({ "application/json" })
@@ -228,7 +228,7 @@ public class PhasingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Produces("text/plain")
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingstepid/{phasingStepIds}/download")
@@ -275,7 +275,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/image")
 	@Produces("image/png")
@@ -324,7 +324,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/download")
 	@Produces({ "application/json" })
@@ -373,7 +373,7 @@ public class PhasingRestWebService extends MXRestWebService {
 	}
 	
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/phasing/phasingprogramattachmentid/{phasingProgramAttachmentId}/csv")
  	@Produces("text/plain")
