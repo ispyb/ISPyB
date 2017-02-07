@@ -31,7 +31,7 @@ VIEW `v_tracking_shipment_history` AS
     FROM
         ((`Shipping`
         LEFT JOIN `Dewar` ON ((`Dewar`.`shippingId` = `Shipping`.`shippingId`)))
-        LEFT JOIN `DewarTransportHistory` ON ((`DewarTransportHistory`.`dewarId` = `Dewar`.`dewarId`)))
+        LEFT JOIN `DewarTransportHistory` ON ((`DewarTransportHistory`.`dewarId` = `Dewar`.`dewarId`)));
         
 
 update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_02_06_v_tracking_transport_history.sql';

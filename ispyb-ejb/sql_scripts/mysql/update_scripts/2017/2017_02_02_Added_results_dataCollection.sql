@@ -1,6 +1,6 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_02_02_Added_results_dataCollection.sql','ONGOING');
 
-CREATE 
+CREATE or replace
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
