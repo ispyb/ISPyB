@@ -25,7 +25,7 @@ public class ModelingRestWebService extends SaxsRestWebService {
 	
 	private final static Logger logger = Logger.getLogger(ModelingRestWebService.class);
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/modeling/pdb/get")
 	@Produces({ "application/json" })

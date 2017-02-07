@@ -73,7 +73,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		return experiments;
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"}) 
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"}) 
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/list")
 	@Produces({ "application/json" })
@@ -92,7 +92,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/get")
 	@Produces({ "application/json" })
@@ -113,7 +113,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/samplechanger/type/{type}/template")
 	@Produces({ "application/json" })
@@ -145,7 +145,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 				SaxsDataCollectionComparator.defaultComparator);
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/experiment/save")
 	@Produces({ "application/json" })
@@ -183,7 +183,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{experimentId}/save")
 	@Produces({ "application/json" })
@@ -210,7 +210,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/session/{sessionId}/list")
 	@Produces({ "application/json" })
@@ -231,7 +231,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/experiment/{key}/{value}/list")
 	@Produces({ "application/json" })

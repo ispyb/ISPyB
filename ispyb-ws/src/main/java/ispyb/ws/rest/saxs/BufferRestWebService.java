@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 public class BufferRestWebService extends SaxsRestWebService {
 	
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/buffer/list")
 	@Produces({ "application/json" })
@@ -49,7 +49,7 @@ public class BufferRestWebService extends SaxsRestWebService {
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/buffer/save")
 	@Produces({ "application/json" })

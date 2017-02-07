@@ -24,7 +24,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@Deprecated
 	@GET
 	@GZIP
@@ -58,7 +58,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/wilson")
 	@Produces("image/png")
@@ -80,7 +80,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		return null;
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/qualityindicatorplot")
 	@Produces("image/png")
@@ -104,7 +104,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	}
 
 	@Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/qualityindicatorcsv")
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Produces("text/plain")
 	public Response getCSVFile(@PathParam("token") String token, @PathParam("proposal") String proposal,
@@ -133,7 +133,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/crystalsnaphot/{id}/get")
 	@Produces("image/png")
@@ -167,7 +167,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		return null;
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionIdList}/list")
@@ -192,7 +192,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/workflowstep/{workflowstepId}/list")
@@ -216,7 +216,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/datacollectiongroupid/{datacollectiongroupids}/list")
@@ -240,7 +240,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/workflow/{workflowIdList}/list")
@@ -266,7 +266,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	}
 	
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/protein_acronym/{protein_acronyms}/list")

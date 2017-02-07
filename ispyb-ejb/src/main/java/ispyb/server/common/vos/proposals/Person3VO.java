@@ -63,7 +63,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	@ManyToOne
 	@JoinColumn(name = "laboratoryId")
-	private Laboratory3VO laboratoryVO;
+	protected Laboratory3VO laboratoryVO;
 
 	@Column(name = "siteId")
 	protected String siteId;

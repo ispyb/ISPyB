@@ -17,7 +17,7 @@ public class ImageWebService extends MXRestWebService {
 	private final static Logger logger = Logger
 			.getLogger(ImageWebService.class);
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/image/{imageId}/get")
 	@Produces({ "application/json" })
@@ -36,7 +36,7 @@ public class ImageWebService extends MXRestWebService {
 		}
 	}
 
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/image/{imageId}/thumbnail")
 	@Produces({ "application/json" })

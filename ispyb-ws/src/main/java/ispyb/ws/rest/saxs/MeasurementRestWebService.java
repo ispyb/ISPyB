@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 public class MeasurementRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(MeasurementRestWebService.class);
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/measurement/{measurementId}/remove")
 	@Produces()
@@ -64,7 +64,7 @@ public class MeasurementRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
 	@Path("{token}/proposal/{proposal}/saxs/measurement/save")
 	@Produces({ "application/json" })
@@ -83,7 +83,7 @@ public class MeasurementRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@RolesAllowed({"User", "Manager", "LocalContact"})
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposalId}/saxs/measurement/experiment/{experimentId}/type/{type}/sort")
 	@Produces({ "application/json" })

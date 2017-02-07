@@ -19,7 +19,7 @@ public class ProteinRestWebService extends MXRestWebService {
 	private final static Logger logger = Logger.getLogger(ProteinRestWebService.class);
 
 	
-	@RolesAllowed({ "User", "Manager", "Localcontact" })
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/protein/list")
 	@Produces({ "application/json" })

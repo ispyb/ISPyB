@@ -3,12 +3,12 @@
 
 ## Installing
 
-1. Clone or fork the ISPyB repository
+1. Clone or fork the ISPyB repository and then clone it by typing:
 ```
 git clone https://github.com/ispyb/ISPyB.git
 ```
 
-2. As ISPyB uses some local libraries located on dependencies some jars should be added to your local maven repository
+2. ISPyB uses some local libraries located on /dependencies then some jars should be added to your local maven repository
 
 ```
 cd dependencies
