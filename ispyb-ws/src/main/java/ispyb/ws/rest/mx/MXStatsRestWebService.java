@@ -5,6 +5,7 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 
 import java.io.StringWriter;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
@@ -31,35 +33,66 @@ public class MXStatsRestWebService extends MXRestWebService {
 		return (Stats3Service) Ejb3ServiceLocator.getInstance().getLocalService(Stats3Service.class);
 	}
 
+
 	@RolesAllowed({ "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/stats/autoprocstatistics/{type}/{start}/{end}/json")
 	@Produces({ "application/json" })
-	public Response getAutoprocessingStatisticsByDate(@PathParam("type") String autoprocStatisticsType, @PathParam("start") Date startDate,
-			@PathParam("end") Date endDate) {
+	public Response getAutoprocessingStatisticsByDate(@PathParam("type") String autoprocStatisticsType,
+			@PathParam("start") Date startDate, @PathParam("end") Date endDate, @QueryParam("beamlinenames") String beamlinesName) {
 
-		String methodName = "getAutoprocessingStatisticsByDate";
-
+		String methodName = "getCSVAutoprocessingStatisticsByDate";
 		long id = this.logInit(methodName, logger, autoprocStatisticsType, startDate, endDate);
 		try {
+			
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+			
+			if (beamlinesName != null){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate));
+			}
+			
+			return this.sendResponse(list);
 
-			return this.sendResponse(this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate));
 		} catch (Exception e) {
-			return this.logError(methodName, e, id, logger);
+			this.logError(methodName, e, id, logger);
 		}
+		return null;
 	}
-
+	
+	
 	@RolesAllowed({ "Manager", "LocalContact" })
 	@GET
 	@Path("{token}/stats/autoprocstatistics/{type}/{start}/{end}/csv")
 	@Produces({ "application/csv" })
 	public Response getCSVAutoprocessingStatisticsByDate(@PathParam("type") String autoprocStatisticsType,
-			@PathParam("start") Date startDate, @PathParam("end") Date endDate) {
+			@PathParam("start") Date startDate, @PathParam("end") Date endDate, @QueryParam("beamlinenames") String beamlinesName) {
 
 		String methodName = "getCSVAutoprocessingStatisticsByDate";
 		long id = this.logInit(methodName, logger, autoprocStatisticsType, startDate, endDate);
 		try {
-			List<Map<String, Object>> list = this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate);
+			
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+			
+			if (beamlinesName != null){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getAutoprocStatsByDate(autoprocStatisticsType, startDate, endDate));
+			}
+			
 			return this.sendResponse(this.parseListToCSV(list));
 
 		} catch (Exception e) {
@@ -67,6 +100,8 @@ public class MXStatsRestWebService extends MXRestWebService {
 		}
 		return null;
 	}
+	
+	
 
 	
 	public String parseListToCSV(List<Map<String, Object>> list) {
