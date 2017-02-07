@@ -1,25 +1,7 @@
 package ispyb.ws.rest.proposal;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.PDFFormFiller;
-import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Laboratory3VO;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsService;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.ws.rest.RestWebService;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +21,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.PDFFormFiller;
+import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Laboratory3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsService;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.ws.rest.RestWebService;
 
 @Path("/")
 public class DewarRestWebService extends RestWebService {
@@ -383,24 +381,17 @@ public class DewarRestWebService extends RestWebService {
 		// PDF Labels generation
 		PDFFormFiller pdfFormFiller = new PDFFormFiller();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		// try {
+				
+		//TODO put in properties or find a way to read correctly the pdf
 		
-		String path= "/tmp/ParcelLabelsTemplate.pdf";
-		if (!new File(path).exists()){
-			Files.copy(new Constants().getTemplatePDFParcelLabelsWorldCourier(), Paths.get(path));
-		}
-		
+		String path= Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_PYARCH_PATH;
 		
 		if (returnLabContact.getDefaultCourrierCompany() != null && returnLabContact.getDefaultCourrierCompany().equals(Constants.SHIPPING_DELIVERY_AGENT_NAME_WORLDCOURIER)) {
-			pdfFormFiller.init(path,outputStream);
-			
+			path= Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_PYARCH_PATH;
 		} else {
-			pdfFormFiller.init(path,outputStream);
+			path= Constants.TEMPLATE_PDF_PARCEL_LABELS_PYARCH_PATH;
 		}
-
-		// } catch (Exception e) {
-		// System.out.println("Erreur pendant 'init' : "+e.getMessage());
-		// }
+		pdfFormFiller.init(path,outputStream);
 
 		// Date format
 		SimpleDateFormat dateStandard = new SimpleDateFormat(

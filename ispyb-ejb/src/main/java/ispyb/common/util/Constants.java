@@ -1005,6 +1005,9 @@ public final class Constants {
 	 * PDF template used for parcel labels
 	 */
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_FILENAME = getProperty("dewar.label.template");
+	
+	public static final String TEMPLATE_PDF_PARCEL_LABELS_PYARCH_PATH = DATA_PDB_FILEPATH_START + "pdf/"
+			+ TEMPLATE_PDF_PARCEL_LABELS_FILENAME;
 
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH = TEMPLATE_RELATIVE_DIRECTORY_PATH
 			+ TEMPLATE_PDF_PARCEL_LABELS_FILENAME;
@@ -1012,10 +1015,15 @@ public final class Constants {
 	/**
 	 * PDF template used for parcel labels, with the World Courier checklist
 	 */
-	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME = "ParcelLabelsTemplate-WithWorldCourierCL.pdf";
+	
+	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME = getProperty("dewar.label.template.worldCourier");
 
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH = TEMPLATE_RELATIVE_DIRECTORY_PATH
 			+ TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME;
+	
+	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_PYARCH_PATH = DATA_PDB_FILEPATH_START + "pdf/"
+			+ TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME;
+
 
 	/*
 	 * Default Images
@@ -1296,20 +1304,7 @@ public final class Constants {
 	public final static String getUserSmisPassword() {
 		return PropertyLoader.loadProperties("ISPyB").getProperty("smis.ws.password");
 	}
-		
-	public final static List<HashMap<String, String>> getAllProperties() {
-		List<HashMap<String, String>> properties = new ArrayList<HashMap<String, String>>();
-		
-		HashMap<String, String> prop = new HashMap<String, String>();
-		Properties mProp3 = PropertyLoader.loadProperties("ISPyB");
-		for (Object key : mProp3.keySet()) {
-			prop.put((String)key, mProp3.getProperty((String)key));
-		}
-		prop.put("TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH", Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH);
-		properties.add(prop);
-		return properties;
-	}
-	
+			
 	public static String getProperty(String propertyName) {
 		return mProp.getProperty(propertyName);
 	}
@@ -1317,18 +1312,6 @@ public final class Constants {
 	public static String getProperty(String propertyName, String defaultValue) {
 		String val = getProperty(propertyName);
 		return (val == null) ? defaultValue : val;
-	}
-
-
-	public byte[] getTemplatePDFParcelLabelsWorldCourierFile() throws IOException {
-		InputStream inputStream = this.getTemplatePDFParcelLabelsWorldCourier();
-	    return IOUtils.toByteArray(inputStream);
-	}
-	
-	
-	public InputStream getTemplatePDFParcelLabelsWorldCourier() {
-		ClassLoader classLoader = getClass().getClassLoader();
-		return classLoader.getResourceAsStream("pdf/ParcelLabelsTemplate-WithWorldCourierCL.pdf");
 	}
 
 	
