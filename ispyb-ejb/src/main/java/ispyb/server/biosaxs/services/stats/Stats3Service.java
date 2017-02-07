@@ -39,6 +39,8 @@ public interface Stats3Service {
 
 	List<Map<String, Object>> getAutoprocStatsByDate(String autoprocStatisticsType, Date startDate, Date endDate);
 
+	List<Map<String, Object>> getAutoprocStatsByDate(String autoprocStatisticsType, Date startDate, Date endDate,String beamline);
+
 
 
 }

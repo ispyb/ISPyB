@@ -19,7 +19,6 @@
 
 package ispyb.server.biosaxs.services.stats;
 
-
 import ispyb.server.mx.services.ws.rest.WsServiceBean;
 
 import java.sql.Date;
@@ -34,51 +33,43 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
-
-
 @Stateless
-public class Stats3ServiceBean extends WsServiceBean implements Stats3Service, Stats3ServiceLocal {
-	
+public class Stats3ServiceBean extends WsServiceBean implements Stats3Service,
+		Stats3ServiceLocal {
+
 	private String GET_EXPERIMENT_COUNT_BY_DATE = " select count(*) from Experiment "
 			+ "										where experimentType = :TYPE and creationDate > :START and creationDate < :END";
-	
+
 	private String GET_FRAMES_COUNT_BY_DATE = " select count(*) from Frame "
 			+ "										where creationDate > :START and creationDate < :END";
-	
-	
+
 	private String GET_SAMPLES_COUNT_BY_DATE = "select count(*) from Specimen spe, Experiment exp where exp.experimentId = spe.experimentId and exp.creationDate > :START and exp.creationDate < :END";
-	
+
 	private String GET_SESSIONS = "select count(distinct(sessionId)) from Experiment where  creationDate > :START and creationDate < :END";
-	
-	
+
 	private String AUTOPROCSTATS_QUERY = "select * from v_mx_autoprocessing_stats where startTime >= :START and startTime <= :END and scalingStatisticsType = :TYPE";
-	
-	
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
-
-	
-	
-	
 	@Override
 	public List getSamplesBy(String start, String end) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(GET_SAMPLES_COUNT_BY_DATE);
 		query.setParameter("START", start);
 		query.setParameter("END", end);
-		return 	query.list();
+		return query.list();
 	}
-	
+
 	@Override
 	public List getSessionsBy(String start, String end) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(GET_SESSIONS);
 		query.setParameter("START", start);
 		query.setParameter("END", end);
-		return 	query.list();
+		return query.list();
 	}
-	
+
 	@Override
 	public List getExperimentsBy(String type, String start, String end) {
 		Session session = (Session) this.entityManager.getDelegate();
@@ -86,33 +77,40 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service, S
 		query.setParameter("TYPE", type);
 		query.setParameter("START", start);
 		query.setParameter("END", end);
-		return 	query.list();
+		return query.list();
 	}
-	
+
 	@Override
-	public List getFramesBy( String start, String end) {
+	public List getFramesBy(String start, String end) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(GET_FRAMES_COUNT_BY_DATE);
 		query.setParameter("START", start);
 		query.setParameter("END", end);
-		return 	query.list();
+		return query.list();
 	}
-		
+
 	@Override
-	public List<Map<String, Object>> getAutoprocStatsByDate(String autoprocStatisticsType, Date startDate, Date endDate) {
+	public List<Map<String, Object>> getAutoprocStatsByDate(
+			String autoprocStatisticsType, Date startDate, Date endDate) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(AUTOPROCSTATS_QUERY);
-		
-		 SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
-		 
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 		query.setParameter("START", dt1.format(startDate));
 		query.setParameter("END", dt1.format(endDate));
 		query.setParameter("TYPE", autoprocStatisticsType);
-		
-		System.out.println(dt1.format(startDate));
-		System.out.println(dt1.format(endDate));
-		System.out.println(autoprocStatisticsType);
-		System.out.println(query.toString());
+		return executeSQLQuery(query);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getAutoprocStatsByDate(
+			String autoprocStatisticsType, Date startDate, Date endDate, String beamline) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(AUTOPROCSTATS_QUERY + "  and beamLineName = :BEAMLINENAME ");
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
+		query.setParameter("TYPE", autoprocStatisticsType);
+		query.setParameter("BEAMLINENAME",beamline);
 		return executeSQLQuery(query);
 	}
 }
