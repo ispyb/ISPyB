@@ -19,6 +19,19 @@
 
 package ispyb.client.biosaxs.dataAdapter;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.naming.NamingException;
+
 import generated.ws.smis.SMISWebService;
 import ispyb.client.biosaxs.pdf.IPDFReport;
 import ispyb.client.biosaxs.pdf.PDFReportType;
@@ -80,19 +93,6 @@ import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.naming.NamingException;
 
 public class BiosaxsActions {
 
