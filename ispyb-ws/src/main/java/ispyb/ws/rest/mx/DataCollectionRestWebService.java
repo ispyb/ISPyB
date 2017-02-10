@@ -112,7 +112,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			@FormParam("comments") String comments) {
 		
 		String methodName = "saveDataCollectionComments";
-		long id = this.logInit(methodName, logger, token, proposal, dataCollectionId);
+		long id = this.logInit(methodName, logger, token, proposal, dataCollectionId, comments);
 		
 		try {
 			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
@@ -120,9 +120,10 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			this.getDataCollection3Service().update(dataCollection);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return this.logError(methodName, e, id, logger);
 		}
-		return null;
+		return this.sendResponse(true);
 	}
 	
 	

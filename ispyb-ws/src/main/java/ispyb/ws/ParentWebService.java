@@ -24,6 +24,7 @@ import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 
@@ -190,6 +191,10 @@ public  class ParentWebService {
 	
 	protected DataCollection3Service getDataCollection3Service() throws NamingException {
 		return (DataCollection3Service) Ejb3ServiceLocator.getInstance().getLocalService(DataCollection3Service.class);
+	}
+	
+	protected DataCollectionGroup3Service getDataCollectionGroup3Service() throws NamingException {
+		return (DataCollectionGroup3Service) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionGroup3Service.class);
 	}
 	
 	protected Image3Service getImage3Service() throws NamingException {
