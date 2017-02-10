@@ -103,7 +103,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@POST
-	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/save")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/comments/save")
 	@Produces("image/png")
 	public Response saveDataCollectionComments(
 			@PathParam("token") String token, 
