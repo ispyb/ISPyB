@@ -28,7 +28,7 @@ public class DataCollectionGroupRestWebService extends MXRestWebService {
 			@PathParam("dataCollectionGroupId") int dataCollectionGroupId,
 			@FormParam("comments") String comments) {
 		
-		String methodName = "saveDataCollectionComments";
+		String methodName = "saveDataCollectionGroupComments";
 		long id = this.logInit(methodName, logger, token, proposal, dataCollectionGroupId, comments);
 		
 		try {
