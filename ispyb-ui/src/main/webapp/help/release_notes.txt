@@ -1,3 +1,18 @@
+New TAG : 17.02.14
+
+**************
+* 14.02.2017     *
+**************
+
+- New property to store the pdf template on the server for EXI
+  	<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
+- See other improvements on github: https://github.com/ispyb/ISPyB
+
+New TAG : 17.02.08
+Switch to GitHub
+
+********************************************************************************
+
 New TAG : ISPYB_4.1.6
 before switch to GitHub
 
