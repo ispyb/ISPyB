@@ -1001,12 +1001,15 @@ public final class Constants {
 	/*
 	 * Parcel labels
 	 */
+	
+	public static final String PATH_TO_PDF_TEMPLATES = getProperty("ispyb.upload.folder.pdf");
+	
 	/**
 	 * PDF template used for parcel labels
 	 */
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_FILENAME = getProperty("dewar.label.template");
 	
-	public static final String TEMPLATE_PDF_PARCEL_LABELS_PYARCH_PATH = DATA_PDB_FILEPATH_START + "pdf/"
+	public static final String TEMPLATE_PDF_PARCEL_LABELS_PYARCH_PATH = PATH_TO_PDF_TEMPLATES
 			+ TEMPLATE_PDF_PARCEL_LABELS_FILENAME;
 
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH = TEMPLATE_RELATIVE_DIRECTORY_PATH
@@ -1021,7 +1024,7 @@ public final class Constants {
 	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH = TEMPLATE_RELATIVE_DIRECTORY_PATH
 			+ TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME;
 	
-	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_PYARCH_PATH = DATA_PDB_FILEPATH_START + "pdf/"
+	public static final String TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_PYARCH_PATH = PATH_TO_PDF_TEMPLATES
 			+ TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_FILENAME;
 
 
