@@ -24,33 +24,6 @@
 
 package ispyb.client.common.shipping;
 
-import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.Confidentiality;
-import ispyb.client.common.util.MISServletUtils;
-import ispyb.client.common.util.PDFFormFiller;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.DBTools;
-import ispyb.server.common.services.proposals.LabContact3Service;
-import ispyb.server.common.services.proposals.Laboratory3Service;
-import ispyb.server.common.services.proposals.Person3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Laboratory3VO;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -72,6 +45,33 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+
+import fr.improve.struts.taglib.layout.util.FormUtils;
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.Confidentiality;
+import ispyb.client.common.util.MISServletUtils;
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.PDFFormFiller;
+import ispyb.server.common.services.proposals.LabContact3Service;
+import ispyb.server.common.services.proposals.Laboratory3Service;
+import ispyb.server.common.services.proposals.Person3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.DewarTransportHistory3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Laboratory3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 
 /**
  * @struts.action name="viewDewarForm" path="/user/viewDewarAction" type="ispyb.client.common.shipping.ViewDewarAction"
