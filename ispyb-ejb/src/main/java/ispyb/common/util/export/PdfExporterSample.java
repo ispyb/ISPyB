@@ -16,7 +16,7 @@
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ******************************************************************************/
-package ispyb.client.mx.sample;
+package ispyb.common.util.export;
 
 import ispyb.server.mx.vos.sample.BLSample3VO;
 
