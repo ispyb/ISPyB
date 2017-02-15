@@ -268,7 +268,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<BLSample3VO> findFiltered(Integer proposalId, Integer proteinId, String acronym, Integer crystalId,
-			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId) {
+			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId, String sortType) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);

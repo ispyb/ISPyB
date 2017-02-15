@@ -895,7 +895,7 @@ public class ViewSampleAction extends DispatchAction {
 				form.setListInfo(fullSampleList);
 			} else {
 				acronym = acronym.replace('*', '%');
-				fullSampleList = sampleService.findByAcronymAndProposalId(acronym, proposalId);
+				fullSampleList = sampleService.findByAcronymAndProposalId(acronym, proposalId, null);
 				form.setListInfo(fullSampleList);
 			}
 

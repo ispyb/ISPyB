@@ -202,7 +202,7 @@ public class SampleRestWebService extends MXRestWebService {
 		if (sortView == null || sortView.isEmpty())
 			sortView = "1";
 		try {
-			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal));
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal), null);
 			String viewName = "Sample list for acronym "+ acronym;
 			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView, proposal);
 
