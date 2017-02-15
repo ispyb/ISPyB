@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -86,22 +88,45 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@Produces("image/png")
 	public Response getQualityIndicatorsPlot(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("dataCollectionId") int dataCollectionId) {
-
-//		String methodName = "getQualityIndicatorsPlot";
-//		long start = this.logInit(methodName, logger, token, proposal, dataCollectionId);
 		try {
 			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
-//			this.logFinish(methodName, start, logger);
 			if (dataCollection != null) {
 				return this.sendImage(dataCollection.getImageQualityIndicatorsPlotPath());
 			}
 
 		} catch (Exception e) {
-//			return this.logError(methodName, e, start, logger);
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@POST
+	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionId}/comments/save")
+	@Produces("image/png")
+	public Response saveDataCollectionComments(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("dataCollectionId") int dataCollectionId,
+			@FormParam("comments") String comments) {
+		
+		String methodName = "saveDataCollectionComments";
+		long id = this.logInit(methodName, logger, token, proposal, dataCollectionId);
+		
+		try {
+			DataCollection3VO dataCollection = this.getDataCollection3Service().findByPk(dataCollectionId, false, false);
+			dataCollection.setComments(comments);
+			this.getDataCollection3Service().update(dataCollection);
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
+	
+	
+	
 
 	@Path("{token}/proposal/{proposal}/mx/xrfscan/xrfscanId/{xrfscanId}/qualityindicatorcsv")
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
