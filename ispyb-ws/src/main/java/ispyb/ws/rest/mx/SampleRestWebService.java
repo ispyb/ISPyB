@@ -179,6 +179,15 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param token
+	 * @param proposal
+	 * @param acronym
+	 * @param sortView can be 1:default or 2: in the case of view sorted by dewar/container, a page break is added after each container
+	 * @return
+	 * @throws NamingException
+	 */
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/sample/acronym/{acronym}/sortView/{sortView}/list")
@@ -190,7 +199,8 @@ public class SampleRestWebService extends MXRestWebService {
 
 		long start = this.logInit("getSamplesListByAcronymPDF", logger, token, proposal,
 				acronym);
-
+		if (sortView == null || sortView.isEmpty())
+			sortView = "1";
 		try {
 			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal));
 			String viewName = "Sample list for acronym "+ acronym;
