@@ -1,5 +1,6 @@
 package ispyb.ws.rest.mx;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +16,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import ispyb.common.util.export.PdfExporterSample;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.ws.rest.sample.SampleRestWsService;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.SampleInfo;
@@ -177,5 +179,29 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/acronym/{acronym}/sortView/{sortView}/list")
+	@Produces({ "application/pdf" })
+	public Response getSamplesListByAcronymPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("acronym") String acronym,
+			@PathParam("sortView") String sortView) throws NamingException {
+
+		long start = this.logInit("getSamplesListByAcronymPDF", logger, token, proposal,
+				acronym);
+
+		try {
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal));
+			String viewName = "Sample list for acronym "+ acronym;
+			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView, proposal);
+
+			byte [] byteToExport = pdf.exportAsPdf().toByteArray();
+			return this.downloadFile(byteToExport, "Sample_list_for_" + acronym +".pdf");
+			
+		} catch (Exception e) {
+			return this.logError("getLabels", e, start, logger);
+		}
+	}
 
 }

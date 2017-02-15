@@ -1026,7 +1026,7 @@ public class ViewSampleAction extends DispatchAction {
 
 			}
 
-			PdfExporterSample pdf = new PdfExporterSample(aList, viewName, sortView, proposalCode, proposalNumber);
+			PdfExporterSample pdf = new PdfExporterSample(aList, viewName, sortView, proposalCode+proposalNumber);
 			ByteArrayOutputStream baos = pdf.exportAsPdf();
 
 			String filename = proposalCode + proposalNumber + "exportSampleList.pdf";
