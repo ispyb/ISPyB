@@ -199,10 +199,14 @@ public class SampleRestWebService extends MXRestWebService {
 
 		long start = this.logInit("getSamplesListByAcronymPDF", logger, token, proposal,
 				acronym);
-		if (sortView == null || sortView.isEmpty())
+		String sortType = "name";
+		if (sortView == null || sortView.isEmpty()) {
 			sortView = "1";
+		} else if (sortView.equals("2") ){
+			sortType = "container";
+		}
 		try {
-			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal));
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal), sortType);
 			String viewName = "Sample list for acronym "+ acronym;
 			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView, proposal);
 

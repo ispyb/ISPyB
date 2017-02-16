@@ -268,13 +268,15 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<BLSample3VO> findFiltered(Integer proposalId, Integer proteinId, String acronym, Integer crystalId,
-			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId) {
+			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId, String sortType) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);
 		Criteria subCritCrystal = null;
 		Criteria subCritProtein = null;
 		Criteria subCritProposal = null;
+		Criteria subCritContainer = null;
+		Criteria subCritDewar = null;
 
 		if (proposalId != null) {
 			subCritCrystal = criteria.createCriteria("crystalVO");
@@ -292,7 +294,6 @@ public class BLSample3DAOBean implements BLSample3DAO {
 				subCritProtein.add(Restrictions.eq("proteinId", proteinId));
 			if (acronym != null) {
 				subCritProtein.add(Restrictions.ilike("acronym", acronym));
-				criteria.addOrder(Order.asc("name"));
 			}
 
 		}
@@ -319,12 +320,23 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			criteria.add(Restrictions.eq("isInSampleChanger", isInSampleChanger));
 		}
 		if (shippingId != null) {
-			Criteria subCritContainer = criteria.createCriteria("containerVO");
-			Criteria subCritDewar = subCritContainer.createCriteria("dewarVO");
+			subCritContainer = criteria.createCriteria("containerVO");
+			subCritDewar = subCritContainer.createCriteria("dewarVO");
 			Criteria subCritShipping = subCritDewar.createCriteria("shippingVO");
 			subCritShipping.add(Restrictions.eq("shippingId", shippingId));
 		}
 
+		if (sortType != null) {
+			if (sortType.equals("container")) {
+				subCritContainer = criteria.createCriteria("containerVO");
+				subCritDewar = subCritContainer.createCriteria("dewarVO");
+				subCritDewar.addOrder(Order.asc("code"));
+				subCritContainer.addOrder(Order.asc("code"));
+			} else if (sortType.equals("name")) {
+				criteria.addOrder(Order.asc("name"));
+			}
+		}
+			
 		return criteria.list();
 
 	}
