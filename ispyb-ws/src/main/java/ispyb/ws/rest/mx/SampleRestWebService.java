@@ -3,6 +3,7 @@ package ispyb.ws.rest.mx;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -190,7 +191,7 @@ public class SampleRestWebService extends MXRestWebService {
 	 */
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/sample/acronym/{acronym}/sortView/{sortView}/list")
+	@Path("{token}/proposal/{proposal}/mx/sample/acronym/{acronym}/sortView/{sortView}/list/pdf")
 	@Produces({ "application/pdf" })
 	public Response getSamplesListByAcronymPDF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
@@ -212,6 +213,46 @@ public class SampleRestWebService extends MXRestWebService {
 
 			byte [] byteToExport = pdf.exportAsPdf().toByteArray();
 			return this.downloadFile(byteToExport, "Sample_list_for_" + acronym +".pdf");
+			
+		} catch (Exception e) {
+			return this.logError("getLabels", e, start, logger);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param token
+	 * @param proposal
+	 * @param acronym
+	 * @param sortView can be 1:default or 2: in the case of view sorted by dewar/container, a page break is added after each container
+	 * @return
+	 * @throws NamingException
+	 */
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/dewar/{dewarIdList}/sortView/{sortView}/list/pdf")
+	@Produces({ "application/pdf" })
+	public Response getSamplesListByDewarIdPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("dewarIdList") String dewarIdList) throws NamingException {
+
+		long start = this.logInit("getSamplesListByDewarIdPDF", logger, token, proposal,
+				dewarIdList);
+		try {
+			Integer sortView = 1;
+			List<BLSample3VO> sampleList = new ArrayList<BLSample3VO>();
+			List<Integer> ids = this.parseToInteger(dewarIdList);	
+			for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
+				Integer dewarId = (Integer) iterator.next();
+				List<BLSample3VO> tmpList = this.getBLSample3Service().findByDewarId(new Integer(dewarId), sortView);
+				sampleList.addAll(tmpList);
+			}
+			
+			String viewName = "Sample list for dewars "+ dewarIdList;
+			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView.toString(), proposal);
+
+			byte [] byteToExport = pdf.exportAsPdf().toByteArray();
+			return this.downloadFile(byteToExport, "Sample_list_for_dewars.pdf");
 			
 		} catch (Exception e) {
 			return this.logError("getLabels", e, start, logger);
