@@ -193,6 +193,8 @@ public interface BLSample3Service {
 	
 	public List<BLSample3VO> findByShippingIdOrder(final Integer shippingId, final Integer sortView) throws Exception;
 
+	public List<BLSample3VO> findByDewarId(final List<Integer> dewarIds, final Integer sortView) throws Exception;
+	
 	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception;
 
 	public List<BLSample3VO> findByContainerId(final Integer containerId) throws Exception;

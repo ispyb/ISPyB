@@ -234,20 +234,16 @@ public class SampleRestWebService extends MXRestWebService {
 	@Produces({ "application/pdf" })
 	public Response getSamplesListByDewarIdPDF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("dewarIdList") String dewarIdList) throws NamingException {
+			@PathParam("dewarIdList") String dewarIdList,
+			@PathParam("sortView") String sortView) throws NamingException {
 
 		long start = this.logInit("getSamplesListByDewarIdPDF", logger, token, proposal,
 				dewarIdList);
 		try {
-			Integer sortView = 1;
-			List<BLSample3VO> sampleList = new ArrayList<BLSample3VO>();
 			List<Integer> ids = this.parseToInteger(dewarIdList);	
-			for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
-				Integer dewarId = (Integer) iterator.next();
-				List<BLSample3VO> tmpList = this.getBLSample3Service().findByDewarId(new Integer(dewarId), sortView);
-				sampleList.addAll(tmpList);
-			}
 			
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByDewarId(ids, new Integer(sortView));
+		
 			String viewName = "Sample list for dewars "+ dewarIdList;
 			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView.toString(), proposal);
 
