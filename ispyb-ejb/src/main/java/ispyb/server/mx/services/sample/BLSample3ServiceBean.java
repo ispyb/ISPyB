@@ -34,6 +34,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.server.mx.vos.sample.SampleInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -183,12 +184,12 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BLSample3VO> findByShippingDewarContainer(final Integer shippingId, final Integer dewarId,
+	public List<BLSample3VO> findByShippingDewarContainer(final Integer shippingId, final List<Integer> dewarIds,
 			final Integer containerId, final String dmCode, final Integer sortView) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<BLSample3VO>) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<BLSample3VO> foundEntities = dao.findByShippingDewarContainer(shippingId, dewarId, containerId,
+				List<BLSample3VO> foundEntities = dao.findByShippingDewarContainer(shippingId, dewarIds, containerId,
 						dmCode, sortView);
 				return foundEntities;
 			}
@@ -237,11 +238,17 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	// });
 	// }
 
-	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception {
-		return this.findByShippingDewarContainer(null, dewarId, null, null, sortView);
+	public List<BLSample3VO> findByDewarId(final List<Integer> dewarIds, final Integer sortView) throws Exception {
+		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
 
 	}
 
+	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception {
+		List<Integer> dewarIds = Collections.singletonList(dewarId); 
+		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BLSample3VO> findByContainerId(final Integer containerId) throws Exception {

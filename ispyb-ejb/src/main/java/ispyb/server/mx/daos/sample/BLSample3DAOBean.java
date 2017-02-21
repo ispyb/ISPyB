@@ -179,7 +179,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, Integer dewarId, Integer containerId,
+	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, List<Integer> dewarIds, Integer containerId,
 			String dmCode, Integer sortView) {
 
 		Session session = (Session) this.entityManager.getDelegate();
@@ -205,8 +205,8 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			// ret = criteria.addOrder(Order.asc("location")).list();
 			return criteria.list();
 		}
-		if (dewarId != null) {
-			dewarCriteria.add(Restrictions.eq("dewarId", dewarId));
+		if (dewarIds != null) {
+			dewarCriteria.add(Restrictions.in("dewarId", dewarIds));
 
 			if (sortView.equals(2)) {
 				dewarCriteria.addOrder(Order.asc("code"));
@@ -215,8 +215,8 @@ public class BLSample3DAOBean implements BLSample3DAO {
 				criteria.addOrder(new CastDecimalOrder("location", true));
 			} else {
 				Criteria proteinCriteria = session.createCriteria("crystalVO").createCriteria("proteinVO");
+				//criteria.addOrder(Order.asc("name"));
 				proteinCriteria.addOrder(Order.asc("acronym"));
-				criteria.addOrder(Order.asc("name"));
 			}
 			return criteria.list();
 		}
@@ -333,6 +333,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 				subCritDewar.addOrder(Order.asc("code"));
 				subCritContainer.addOrder(Order.asc("code"));
 			} else if (sortType.equals("name")) {
+				subCritProtein.addOrder(Order.asc("acronym"));
 				criteria.addOrder(Order.asc("name"));
 			}
 		}

@@ -133,7 +133,7 @@ public interface BLSample3DAO {
 
 	public List<BLSample3VO> findByProposalIdAndDewarNull(Integer proposalId);
 
-	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, Integer dewarId, Integer containerId,
+	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, List<Integer> dewarIds, Integer containerId,
 			String dmCode, Integer sortView);
 
 	public List<BLSample3VO> findByShippingId(Integer shippingId);
