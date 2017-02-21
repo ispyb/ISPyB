@@ -31,7 +31,20 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 	LEFT JOIN `DataCollection` ON `DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId` 
     LEFT JOIN `DataCollectionGroup` ON `DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId` 
 	where `DataCollectionGroup`.`dataCollectionGroupId` = v_datacollection_summary.DataCollection_dataCollectionGroupId   
+	and PhasingStep.method = "SAD"
 ) as hasPhasing,
+
+(SELECT count(*) 
+	FROM `PhasingStep`    
+    LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
+	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
+    LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
+	LEFT JOIN `DataCollection` ON `DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId` 
+    LEFT JOIN `DataCollectionGroup` ON `DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId` 
+	where `DataCollectionGroup`.`dataCollectionGroupId` = v_datacollection_summary.DataCollection_dataCollectionGroupId
+	and PhasingStep.method = "MR"
+) as hasMR,
+
 
 (SELECT GROUP_CONCAT(DISTINCT(spaceGroupShortName))
 	FROM `PhasingStep`  
