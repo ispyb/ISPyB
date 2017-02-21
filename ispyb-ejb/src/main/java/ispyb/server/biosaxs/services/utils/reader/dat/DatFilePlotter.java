@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatFilePlotter {
-	enum Operation {
+	public enum Operation {
 		LOG,
 		LINEAL
 	}
@@ -15,6 +15,12 @@ public class DatFilePlotter {
 		this.files = files;
 		this.operation = Operation.LOG;
 	}
+	
+	public DatFilePlotter(List<DatFile> files, Operation op) {
+		this.files = files;
+		this.operation = op;
+	}
+	
 
 	protected float getMin(List<DatPoint> points) {
 		/** Validates input **/

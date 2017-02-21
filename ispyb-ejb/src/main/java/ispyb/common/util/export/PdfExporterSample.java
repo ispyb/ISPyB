@@ -52,10 +52,8 @@ public class PdfExporterSample {
 	String viewName;
 
 	String sortView;
-
-	String proposalCode;
-
-	String proposalNumber;
+	
+	String proposalDesc;
 
 	DecimalFormat df1 = new DecimalFormat("#####0.0");
 
@@ -67,13 +65,12 @@ public class PdfExporterSample {
 	 * @param slv
 	 * @param proposalCode
 	 */
-	public PdfExporterSample(List aList, String viewName, String sortView, String proposalCode, String proposalNumber) {
+	public PdfExporterSample(List aList, String viewName, String sortView, String proposalDesc) {
 		super();
 		this.viewName = viewName;
 		this.sortView = sortView;
 		this.aList = aList;
-		this.proposalCode = proposalCode;
-		this.proposalNumber = proposalNumber;
+		this.proposalDesc = proposalDesc;
 
 	}
 
@@ -94,11 +91,11 @@ public class PdfExporterSample {
 
 		// header + footer
 		if (viewName != null)
-			header = new HeaderFooter(new Phrase("Samples for Proposal: " + proposalCode + proposalNumber + "  ---  "
+			header = new HeaderFooter(new Phrase("Samples for Proposal: " + proposalDesc + "  ---  "
 					+ viewName), false);
 
 		else
-			header = new HeaderFooter(new Phrase("Samples for Proposal: " + proposalCode + proposalNumber), false);
+			header = new HeaderFooter(new Phrase("Samples for Proposal: " + proposalDesc), false);
 
 		header.setAlignment(Element.ALIGN_CENTER);
 		header.setBorderWidth(1);

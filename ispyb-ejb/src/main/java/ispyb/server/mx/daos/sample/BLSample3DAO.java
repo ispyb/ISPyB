@@ -111,7 +111,7 @@ public interface BLSample3DAO {
 	 * @return
 	 */
 	public List<BLSample3VO> findFiltered(Integer proposalId, Integer proteinId, String acronym, Integer crystalId,
-			String name, String code, String status, Byte isInSampleChanger, Integer shippingId);
+			String name, String code, String status, Byte isInSampleChanger, Integer shippingId, String sortType);
 
 	/**
 	 * find all sample info (Tuple of BLSample, Container, Crystal, Protein, DiffractionPlan) for a specified proposal
@@ -133,7 +133,7 @@ public interface BLSample3DAO {
 
 	public List<BLSample3VO> findByProposalIdAndDewarNull(Integer proposalId);
 
-	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, Integer dewarId, Integer containerId,
+	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, List<Integer> dewarIds, Integer containerId,
 			String dmCode, Integer sortView);
 
 	public List<BLSample3VO> findByShippingId(Integer shippingId);

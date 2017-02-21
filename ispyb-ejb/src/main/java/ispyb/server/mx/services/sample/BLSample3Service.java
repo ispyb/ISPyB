@@ -180,7 +180,7 @@ public interface BLSample3Service {
 
 	public List<BLSample3VO> findFiltered(final Integer proposalId, final Integer proteinId, final String acronym,
 			final Integer crystalId, final String name, final String code, final String statusByte,
-			final Byte isInSampleChanger, final Integer shippingId) throws Exception;
+			final Byte isInSampleChanger, final Integer shippingId, final String sortType) throws Exception;
 
 	public List<BLSample3VO> findByProposalIdAndDewarNull(final Integer proposalId) throws Exception;
 
@@ -193,6 +193,8 @@ public interface BLSample3Service {
 	
 	public List<BLSample3VO> findByShippingIdOrder(final Integer shippingId, final Integer sortView) throws Exception;
 
+	public List<BLSample3VO> findByDewarId(final List<Integer> dewarIds, final Integer sortView) throws Exception;
+	
 	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception;
 
 	public List<BLSample3VO> findByContainerId(final Integer containerId) throws Exception;
@@ -202,7 +204,7 @@ public interface BLSample3Service {
 	public List<BLSample3VO> findByProposalIdAndIsInSampleChanger(final Integer proposalId, final Byte isInSampleChanger)
 			throws Exception;
 
-	public List<BLSample3VO> findByAcronymAndProposalId(final String acronym, final Integer proposalId)
+	public List<BLSample3VO> findByAcronymAndProposalId(final String acronym, final Integer proposalId, final String sortType)
 			throws Exception;
 
 	public List<BLSample3VO> findByNameAndProteinId(final String name, final Integer proteinId, final Integer shippingId)

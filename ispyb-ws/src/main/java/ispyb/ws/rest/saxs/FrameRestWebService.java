@@ -3,6 +3,7 @@ package ispyb.ws.rest.saxs;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
 import ispyb.server.biosaxs.services.utils.reader.dat.DatFile;
 import ispyb.server.biosaxs.services.utils.reader.dat.DatFilePlotter;
+import ispyb.server.biosaxs.services.utils.reader.dat.DatFilePlotter.Operation;
 import ispyb.server.biosaxs.services.utils.reader.dat.FactoryProducer;
 import ispyb.server.biosaxs.services.utils.reader.dat.MergeDatFilePlotter;
 import ispyb.server.biosaxs.services.utils.reader.zip.SAXSZipper;
@@ -212,13 +213,16 @@ public class FrameRestWebService extends SaxsRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/frame/datplot")
 	@Produces("text/plain")
-	public Response datplot(@PathParam("token") String token, @PathParam("proposal") String proposal,
+	public Response datplot(@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
 			@QueryParam("frame") String frame, 
 			@QueryParam("average") String average,
 			@QueryParam("subtracted") String subtracted, 
 			@QueryParam("models") String modelsIdList,
 			@QueryParam("sampleaverage") String sampleaverage,
-			@QueryParam("bufferaverage") String bufferaverage) throws Exception {
+			@QueryParam("bufferaverage") String bufferaverage,
+			@QueryParam("operation") String operation) // Operation = "LOG,	LINEAL" 
+					throws Exception {
 
 		String methodName = "datplot";
 		long start = this.logInit(methodName, logger, token, proposal, frame, average, subtracted, sampleaverage,
@@ -264,7 +268,19 @@ public class FrameRestWebService extends SaxsRestWebService {
 				logger.info(datFile);
 				
 			}
-			DatFilePlotter datFilePlotter = new DatFilePlotter(files);
+			
+			DatFilePlotter datFilePlotter = null;
+			if (operation != null){
+				if (operation.toUpperCase().equals("LINEAL")){
+					datFilePlotter = new DatFilePlotter(files, Operation.LINEAL);
+				}
+				else{
+					datFilePlotter = new DatFilePlotter(files, Operation.LOG);
+				}
+			}
+			else{
+				datFilePlotter = new DatFilePlotter(files, Operation.LOG);
+			}
 			
 			String result = datFilePlotter.getCSV();
 			this.logFinish(methodName, start, logger);

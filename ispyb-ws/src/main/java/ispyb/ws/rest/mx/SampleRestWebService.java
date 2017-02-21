@@ -1,7 +1,9 @@
 package ispyb.ws.rest.mx;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +17,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import ispyb.common.util.export.PdfExporterSample;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.services.ws.rest.sample.SampleRestWsService;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.SampleInfo;
@@ -177,5 +180,79 @@ public class SampleRestWebService extends MXRestWebService {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param token
+	 * @param proposal
+	 * @param acronym
+	 * @param sortView can be 1:default or 2: in the case of view sorted by dewar/container, a page break is added after each container
+	 * @return
+	 * @throws NamingException
+	 */
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/acronym/{acronym}/sortView/{sortView}/list/pdf")
+	@Produces({ "application/pdf" })
+	public Response getSamplesListByAcronymPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("acronym") String acronym,
+			@PathParam("sortView") String sortView) throws NamingException {
+
+		long start = this.logInit("getSamplesListByAcronymPDF", logger, token, proposal,
+				acronym);
+		String sortType = "name";
+		if (sortView == null || sortView.isEmpty()) {
+			sortView = "1";
+		} else if (sortView.equals("2") ){
+			sortType = "container";
+		}
+		try {
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByAcronymAndProposalId(acronym, this.getProposalId(proposal), sortType);
+			String viewName = "Sample list for acronym "+ acronym;
+			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView, proposal);
+
+			byte [] byteToExport = pdf.exportAsPdf().toByteArray();
+			return this.downloadFile(byteToExport, "Sample_list_for_" + acronym +".pdf");
+			
+		} catch (Exception e) {
+			return this.logError("getLabels", e, start, logger);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param token
+	 * @param proposal
+	 * @param acronym
+	 * @param sortView can be 1:default or 2: in the case of view sorted by dewar/container, a page break is added after each container
+	 * @return
+	 * @throws NamingException
+	 */
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/sample/dewar/{dewarIdList}/sortView/{sortView}/list/pdf")
+	@Produces({ "application/pdf" })
+	public Response getSamplesListByDewarIdPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("dewarIdList") String dewarIdList,
+			@PathParam("sortView") String sortView) throws NamingException {
+
+		long start = this.logInit("getSamplesListByDewarIdPDF", logger, token, proposal,
+				dewarIdList);
+		try {
+			List<Integer> ids = this.parseToInteger(dewarIdList);	
+			
+			List<BLSample3VO> sampleList = this.getBLSample3Service().findByDewarId(ids, new Integer(sortView));
+		
+			String viewName = "Sample list for dewars "+ dewarIdList;
+			PdfExporterSample pdf = new PdfExporterSample(sampleList, viewName, sortView.toString(), proposal);
+
+			byte [] byteToExport = pdf.exportAsPdf().toByteArray();
+			return this.downloadFile(byteToExport, "Sample_list_for_dewars.pdf");
+			
+		} catch (Exception e) {
+			return this.logError("getLabels", e, start, logger);
+		}
+	}
 
 }

@@ -179,7 +179,7 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, Integer dewarId, Integer containerId,
+	public List<BLSample3VO> findByShippingDewarContainer(Integer shippingId, List<Integer> dewarIds, Integer containerId,
 			String dmCode, Integer sortView) {
 
 		Session session = (Session) this.entityManager.getDelegate();
@@ -205,8 +205,8 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			// ret = criteria.addOrder(Order.asc("location")).list();
 			return criteria.list();
 		}
-		if (dewarId != null) {
-			dewarCriteria.add(Restrictions.eq("dewarId", dewarId));
+		if (dewarIds != null) {
+			dewarCriteria.add(Restrictions.in("dewarId", dewarIds));
 
 			if (sortView.equals(2)) {
 				dewarCriteria.addOrder(Order.asc("code"));
@@ -215,8 +215,8 @@ public class BLSample3DAOBean implements BLSample3DAO {
 				criteria.addOrder(new CastDecimalOrder("location", true));
 			} else {
 				Criteria proteinCriteria = session.createCriteria("crystalVO").createCriteria("proteinVO");
+				//criteria.addOrder(Order.asc("name"));
 				proteinCriteria.addOrder(Order.asc("acronym"));
-				criteria.addOrder(Order.asc("name"));
 			}
 			return criteria.list();
 		}
@@ -268,13 +268,15 @@ public class BLSample3DAOBean implements BLSample3DAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<BLSample3VO> findFiltered(Integer proposalId, Integer proteinId, String acronym, Integer crystalId,
-			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId) {
+			String name, String code, String blSampleStatus, Byte isInSampleChanger, Integer shippingId, String sortType) {
 
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);
 		Criteria subCritCrystal = null;
 		Criteria subCritProtein = null;
 		Criteria subCritProposal = null;
+		Criteria subCritContainer = null;
+		Criteria subCritDewar = null;
 
 		if (proposalId != null) {
 			subCritCrystal = criteria.createCriteria("crystalVO");
@@ -318,12 +320,24 @@ public class BLSample3DAOBean implements BLSample3DAO {
 			criteria.add(Restrictions.eq("isInSampleChanger", isInSampleChanger));
 		}
 		if (shippingId != null) {
-			Criteria subCritContainer = criteria.createCriteria("containerVO");
-			Criteria subCritDewar = subCritContainer.createCriteria("dewarVO");
+			subCritContainer = criteria.createCriteria("containerVO");
+			subCritDewar = subCritContainer.createCriteria("dewarVO");
 			Criteria subCritShipping = subCritDewar.createCriteria("shippingVO");
 			subCritShipping.add(Restrictions.eq("shippingId", shippingId));
 		}
 
+		if (sortType != null) {
+			if (sortType.equals("container")) {
+				subCritContainer = criteria.createCriteria("containerVO");
+				subCritDewar = subCritContainer.createCriteria("dewarVO");
+				subCritDewar.addOrder(Order.asc("code"));
+				subCritContainer.addOrder(Order.asc("code"));
+			} else if (sortType.equals("name")) {
+				subCritProtein.addOrder(Order.asc("acronym"));
+				criteria.addOrder(Order.asc("name"));
+			}
+		}
+			
 		return criteria.list();
 
 	}

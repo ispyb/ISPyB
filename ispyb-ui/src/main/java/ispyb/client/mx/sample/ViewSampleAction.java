@@ -895,7 +895,7 @@ public class ViewSampleAction extends DispatchAction {
 				form.setListInfo(fullSampleList);
 			} else {
 				acronym = acronym.replace('*', '%');
-				fullSampleList = sampleService.findByAcronymAndProposalId(acronym, proposalId);
+				fullSampleList = sampleService.findByAcronymAndProposalId(acronym, proposalId, null);
 				form.setListInfo(fullSampleList);
 			}
 
@@ -1026,7 +1026,7 @@ public class ViewSampleAction extends DispatchAction {
 
 			}
 
-			PdfExporterSample pdf = new PdfExporterSample(aList, viewName, sortView, proposalCode, proposalNumber);
+			PdfExporterSample pdf = new PdfExporterSample(aList, viewName, sortView, proposalCode+proposalNumber);
 			ByteArrayOutputStream baos = pdf.exportAsPdf();
 
 			String filename = proposalCode + proposalNumber + "exportSampleList.pdf";

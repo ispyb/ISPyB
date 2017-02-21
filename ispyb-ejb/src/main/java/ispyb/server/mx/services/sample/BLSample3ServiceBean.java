@@ -34,6 +34,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.server.mx.vos.sample.SampleInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -183,12 +184,12 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BLSample3VO> findByShippingDewarContainer(final Integer shippingId, final Integer dewarId,
+	public List<BLSample3VO> findByShippingDewarContainer(final Integer shippingId, final List<Integer> dewarIds,
 			final Integer containerId, final String dmCode, final Integer sortView) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<BLSample3VO>) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<BLSample3VO> foundEntities = dao.findByShippingDewarContainer(shippingId, dewarId, containerId,
+				List<BLSample3VO> foundEntities = dao.findByShippingDewarContainer(shippingId, dewarIds, containerId,
 						dmCode, sortView);
 				return foundEntities;
 			}
@@ -237,11 +238,17 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	// });
 	// }
 
-	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception {
-		return this.findByShippingDewarContainer(null, dewarId, null, null, sortView);
+	public List<BLSample3VO> findByDewarId(final List<Integer> dewarIds, final Integer sortView) throws Exception {
+		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
 
 	}
 
+	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception {
+		List<Integer> dewarIds = Collections.singletonList(dewarId); 
+		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BLSample3VO> findByContainerId(final Integer containerId) throws Exception {
@@ -709,13 +716,13 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	@Override
 	public List<BLSample3VO> findFiltered(final Integer proposalId, final Integer proteinId, final String acronym,
 			final Integer crystalId, final String name, final String code, final String status,
-			final Byte isInSampleChanger, final Integer shippingId) throws Exception {
+			final Byte isInSampleChanger, final Integer shippingId, final String sortType) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (List<BLSample3VO>) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				return dao.findFiltered(proposalId, proteinId, acronym, crystalId, name, code, status,
-						isInSampleChanger, shippingId);
+						isInSampleChanger, shippingId, sortType);
 			}
 		});
 	}
@@ -723,69 +730,69 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	public List<BLSample3VO> findByCrystalNameCode(final Integer crystalId, final String name, final String code)
 			throws Exception {
 
-		return this.findFiltered(null, null, null, crystalId, name, code, null, null, null);
+		return this.findFiltered(null, null, null, crystalId, name, code, null, null, null, null);
 
 	}
 
 	public List<BLSample3VO> findByProposalIdAndBlSampleStatus(final Integer proposalId, final String status)
 			throws Exception {
-		return this.findFiltered(proposalId, null, null, null, null, null, status, null, null);
+		return this.findFiltered(proposalId, null, null, null, null, null, status, null, null, null);
 
 	}
 
 	public List<BLSample3VO> findByProposalId(final Integer proposalId) throws Exception {
-		return this.findFiltered(proposalId, null, null, null, null, null, null, null, null);
+		return this.findFiltered(proposalId, null, null, null, null, null, null, null, null, null);
 
 	}
 
 	public List<BLSample3VO> findByNameAndCodeAndProposalId(final String name, final String code,
 			final Integer proposalId) throws Exception {
-		return this.findFiltered(proposalId, null, null, null, name, code, null, null, null);
+		return this.findFiltered(proposalId, null, null, null, name, code, null, null, null, null);
 
 	}
 
 	@Override
 	public List<BLSample3VO> findByCrystalId(Integer crystalId) throws Exception {
-		return this.findFiltered(null, null, null, crystalId, null, null, null, null, null);
+		return this.findFiltered(null, null, null, crystalId, null, null, null, null, null, null);
 	}
 
 	@Override
 	public List<BLSample3VO> findByName(String name) throws Exception {
-		return this.findFiltered(null, null, null, null, name, null, null, null, null);
+		return this.findFiltered(null, null, null, null, name, null, null, null, null, null);
 	}
 
 	@Override
 	public List<BLSample3VO> findByCode(String code) throws Exception {
-		return this.findFiltered(null, null, null, null, null, code, null, null, null);
+		return this.findFiltered(null, null, null, null, null, code, null, null, null, null);
 	}
 
 	@Override
 	public List<BLSample3VO> findByStatus(String status) throws Exception {
-		return this.findFiltered(null, null, null, null, null, null, status, null, null);
+		return this.findFiltered(null, null, null, null, null, null, status, null, null, null);
 	}
 
 	public List<BLSample3VO> findByProteinId(final Integer proteinId) throws Exception {
-		return this.findFiltered(null, proteinId, null, null, null, null, null, null, null);
+		return this.findFiltered(null, proteinId, null, null, null, null, null, null, null, null);
 	}
 
 	public List<BLSample3VO> findByProposalIdAndIsInSampleChanger(final Integer proposalId, final Byte isInSampleChanger)
 			throws Exception {
-		return this.findFiltered(proposalId, null, null, null, null, null, null, isInSampleChanger, null);
+		return this.findFiltered(proposalId, null, null, null, null, null, null, isInSampleChanger, null, null);
 	}
 
-	public List<BLSample3VO> findByAcronymAndProposalId(final String acronym, final Integer proposalId)
+	public List<BLSample3VO> findByAcronymAndProposalId(final String acronym, final Integer proposalId, final String sortType)
 			throws Exception {
-		return this.findFiltered(proposalId, null, acronym, null, null, null, null, null, null);
+		return this.findFiltered(proposalId, null, acronym, null, null, null, null, null, null, sortType);
 	}
 
 	public List<BLSample3VO> findByNameAndProteinId(final String name, final Integer proteinId, final Integer shippingId)
 			throws Exception {
-		return this.findFiltered(null, proteinId, null, null, name, null, null, null, shippingId);
+		return this.findFiltered(null, proteinId, null, null, name, null, null, null, shippingId, null);
 
 	}
 
 	public List<BLSample3VO> findByCodeAndProposalId(final String dmCode, final Integer proposalId) throws Exception {
-		return this.findFiltered(proposalId, null, null, null, null, dmCode, null, null, null);
+		return this.findFiltered(proposalId, null, null, null, null, dmCode, null, null, null, null);
 
 	}
 
