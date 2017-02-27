@@ -23,8 +23,8 @@
 package ispyb.client.common.shipping;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.common.util.Formatter;
 import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
 import ispyb.common.util.PropertyLoader;
 import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;

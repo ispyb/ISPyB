@@ -1,7 +1,5 @@
 package ispyb.ws.rest.mx;
 
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,6 +19,10 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.GZIP;
+
+import ispyb.common.util.export.ExiPdfRtfExporter;
+import ispyb.common.util.export.PdfExporterSample;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
 
 @Path("/")
 public class DataCollectionRestWebService extends MXRestWebService {
@@ -213,6 +216,43 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			}
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(dataCollections, false);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/{reportType}/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsReportBySessionIdPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId, @PathParam("reportType") String reportType) throws NamingException {
+
+		String methodName = "getDataCollectionReportyBySessionId";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			Integer id = new Integer(sessionId);
+			List<Map<String, Object>> dataCollections = this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(
+						this.getProposalId(proposal), id);
+		
+			String viewName = "Report for session "+ sessionId;
+			ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(viewName,  proposal, id , dataCollections);
+
+			if (reportType.equals("1")) {
+				byte [] byteToExport = pdf.exportDataCollectionReport(false).toByteArray();
+				return this.downloadFile(byteToExport, "DataCollectionsReport1.pdf");
+			}
+			else if (reportType.equals("2")) {
+				byte [] byteToExport = pdf.exportNewDataCollectionReport(false).toByteArray();
+				return this.downloadFile(byteToExport, "DataCollectionsReport2.pdf");
+			}
+			else {
+				byte [] byteToExport = pdf.exportDetails(false).toByteArray();
+				return this.downloadFile(byteToExport, "DataCollectionsReport3.pdf");
+			}
+			
+			
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}

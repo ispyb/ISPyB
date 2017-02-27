@@ -33,7 +33,6 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
 import ispyb.client.common.util.FileUtil;
-import ispyb.client.common.util.Formatter;
 import ispyb.client.mx.ranking.SampleRankingVO;
 import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
 import ispyb.client.mx.results.ScreeningStrategySubWedgeValueInfo;
@@ -41,6 +40,7 @@ import ispyb.client.mx.results.ScreeningStrategyValueInfo;
 import ispyb.client.mx.results.ScreeningStrategyWedgeValueInfo;
 import ispyb.client.mx.results.SnapshotInfo;
 import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
 import ispyb.common.util.PathUtils;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
