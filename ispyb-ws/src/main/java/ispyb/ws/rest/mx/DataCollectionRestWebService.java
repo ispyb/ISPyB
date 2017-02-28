@@ -237,19 +237,19 @@ public class DataCollectionRestWebService extends MXRestWebService {
 						this.getProposalId(proposal), id);
 		
 			String viewName = "Report for session "+ sessionId;
-			ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(viewName,  proposal, id , dataCollections);
+			
+			// for testing purposes, to be removed later
+			Integer nbRowsMax = new Integer(reportType);
+			
+			ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
 
 			if (reportType.equals("1")) {
 				byte [] byteToExport = pdf.exportDataCollectionReport(false).toByteArray();
-				return this.downloadFile(byteToExport, "DataCollectionsReport1.pdf");
-			}
-			else if (reportType.equals("2")) {
-				byte [] byteToExport = pdf.exportNewDataCollectionReport(false).toByteArray();
-				return this.downloadFile(byteToExport, "DataCollectionsReport2.pdf");
+				return this.downloadFile(byteToExport, "DataCollectionsReport.pdf");
 			}
 			else {
-				byte [] byteToExport = pdf.exportDetails(false).toByteArray();
-				return this.downloadFile(byteToExport, "DataCollectionsReport3.pdf");
+				byte [] byteToExport = pdf.exportDataCollectionReport(false).toByteArray();
+				return this.downloadFile(byteToExport, "DataCollectionsReport.pdf");
 			}
 			
 			
