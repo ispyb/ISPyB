@@ -22,9 +22,7 @@
  * Created on Mar 1, 2005
  *
  */
-package ispyb.client.common.util;
-
-import ispyb.common.util.Constants;
+package ispyb.common.util;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
