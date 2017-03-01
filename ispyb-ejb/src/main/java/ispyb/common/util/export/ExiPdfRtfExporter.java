@@ -106,6 +106,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_TITLE_11 = new Font(Font.HELVETICA, 11, Font.BOLD | Font.UNDERLINE);
 
 	public final static Font FONT_DOC = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLACK);
+	
+	public final static Font FONT_DOC_BLUE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLUE);
 
 	public final static Font FONT_DOC_ITALIC = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.BLACK);
 
@@ -114,8 +116,6 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_DOC_11_ITALIC = new Font(Font.HELVETICA, 11, Font.ITALIC, Color.BLACK);
 
 	public final static Font FONT_DOC_EXPONENT = new Font(Font.HELVETICA, 11, Font.NORMAL, Color.BLACK);
-
-	public final static Font FONT_DOC_EXPONENT_ITALIC = new Font(Font.HELVETICA, 11, Font.ITALIC, Color.BLACK);
 
 	public final static Font FONT_DOC_EXPONENT_BLUE = new Font(Font.HELVETICA, 11, Font.NORMAL, Color.BLUE);
 
@@ -294,7 +294,7 @@ public class ExiPdfRtfExporter {
 	}
 
 	/**
-	 * set the crystallographer - only for OFX proposal
+	 * set the crystallographer - only for IFX proposal
 	 * 
 	 * @param document
 	 * @throws Exception
@@ -403,10 +403,7 @@ public class ExiPdfRtfExporter {
 		if (dataCollections.isEmpty()) {
 			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
 		} else {
-			Table table = new Table(NB_COL_DATACOLLECTION);
-			table = setDataCollectionHeader(document);
 			document.add(new Paragraph(" "));
-			document.add(table);
 			
 			// DataCollection Rows
 			Iterator<Map<String, Object>> it = dataCollections.iterator();
@@ -422,35 +419,6 @@ public class ExiPdfRtfExporter {
 	}
 
 	/**
-	 * set the header for the dataCollection table
-	 * 
-	 * @param document
-	 * @param table
-	 * @throws Exception
-	 */
-	private Table setDataCollectionHeader(Document document) throws Exception {
-		int nbCol = NB_COL_DATACOLLECTION;
-				
-		Table table = new Table(nbCol);
-		int[] headersWidth = new int[nbCol];
-
-		table.setWidths(headersWidth);
-
-		table.setWidth(100); // percentage
-		table.setPadding(3);
-		table.setCellsFitPage(true);
-		table.getDefaultCell().setBorderWidth(1);
-		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-
-		// DataCollection Header
-
-		table.getDefaultCell().setGrayFill(GREY_FILL_HEADER);
-		table.addCell(new Paragraph("Report for "+ proposalDesc, FONT_TITLE));
-		table.getDefaultCell().setBorderWidth(1);
-		return table;
-	}
-
-	/**
 	 * set a line for a specified dataCollection in the dataCollection table
 	 * 
 	 * @param document
@@ -463,25 +431,23 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setDataCollectionMapData(Document document, Map<String, Object> dataCollectionMapItem) throws Exception {
 
+		// 1st row
+		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType") 
+				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime");
+		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
+		document.add(p);
+		
+		//row2		
+		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory");
+		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
+	
+		//row3
 		Table table = new Table(NB_COL_DATACOLLECTION);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
 
-		// 1st row
-//		int colspan = NB_COL_DATACOLLECTION -1;
-//		table.getDefaultCell().setGrayFill(GREY_FILL_DATA);		
-//		setCellParam2(table, dataCollectionMapItem, "Workflow_workflowType", 1);
-//		this.getEmptyCell(colspan);
-		
-		//row2
-		
-//		if (dataCollectionMapItem.get("DataCollection_imagePrefix()") != null)
-//			table.addCell(new Paragraph((String) dataCollectionMapItem.get("DataCollection_imagePrefix"), FONT_DOC));
-//		else
-//			table.addCell("");		
-		
 		// 1st Cell
-		String parag = "Workflow: \n" 
+		parag = "Workflow: \n" 
 				+ "Protein: \n" 
 				+ 	"Sample: \n" 
 				+ 	"Prefix: \n" 
@@ -489,7 +455,7 @@ public class ExiPdfRtfExporter {
 				+ 	"Images: \n" 
 				+ 	"Transmission: \n";
 		LOG.info("parag=" + parag);
-		Paragraph p = new Paragraph(parag, FONT_DOC);
+		p = new Paragraph(parag, FONT_DOC);
 		table.addCell(p);
 		
 		// Cell2
@@ -531,7 +497,7 @@ public class ExiPdfRtfExporter {
 
 
 		// 5 Cell add cell containing autoproc results
-		table.addCell("");
+		table.addCell(" ");
 		
 		// 6 Cell : thumbnail
 		Cell cellThumbnail = getCellImage(dataCollectionMapItem, "DataCollection_bestWilsonPlotPath");
@@ -551,18 +517,14 @@ public class ExiPdfRtfExporter {
 		cellGraph.setBorderWidth(0);
 		table.addCell(cellGraph);
 
+		document.add(table);
 		
 		// row3
 		if (dataCollectionMapItem.get("DataCollection_comments") != null && dataCollectionMapItem.get("DataCollection_comments") != "")
-			table.addCell(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
+			document.add(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
 		else
-			table.addCell("");
-		
-//		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-//		this.getEmptyCell(colspan);
-		
-		document.add(table);
-		
+			document.add(new Paragraph(" "));
+				
 		return;
 	}
 	
@@ -581,42 +543,6 @@ public class ExiPdfRtfExporter {
 		}
 		return paramValue;
 		
-	}
-	/**
-	 * set a cell for a param or empty cell if no more param in the list
-	 * 
-	 * @param table
-	 * @param listParam
-	 * @param id
-	 * @param colSpanTitle
-	 * @throws Exception
-	 */
-	private void setCellParam2(Table table, Map<String, Object> dataCollectionMap, String param, int colSpanTitle) throws Exception {
-		
-		if (dataCollectionMap.get(param) != null && !(dataCollectionMap.get(param).toString()).isEmpty())	{
-			String paramValue = dataCollectionMap.get(param).toString();
-			Cell cellTitle = new Cell();
-			cellTitle.setBorderWidth(0);
-			cellTitle.setColspan(colSpanTitle);
-			cellTitle.setHorizontalAlignment(Element.ALIGN_RIGHT);
-			cellTitle.add(new Paragraph(param, FONT_DOC_PARAM_TITLE));
-			table.addCell(cellTitle);
-
-			Cell cellValue = new Cell();
-			cellValue.setBorderWidth(0);
-			cellValue.setHorizontalAlignment(Element.ALIGN_LEFT);
-			cellValue.add(new Paragraph(paramValue, FONT_DOC));
-			table.addCell(cellValue);
-		} else {
-			Cell cellTitle = getEmptyCell(1);
-			cellTitle.setBorderWidth(0);
-			cellTitle.setColspan(colSpanTitle);
-			table.addCell(cellTitle);
-
-			Cell cellValue = getEmptyCell(1);
-			cellValue.setBorderWidth(0);
-			table.addCell(cellValue);
-		}
 	}
 
 	/**
@@ -643,8 +569,9 @@ public class ExiPdfRtfExporter {
 	private Cell getCellImage(Map<String, Object> dataCollectionMapItem, String imageParam) throws Exception {
 		
 		if (dataCollectionMapItem.get(imageParam) != null && !(dataCollectionMapItem.get(imageParam).toString()).equals("") ) {
-			try {
-				String image = dataCollectionMapItem.get(imageParam).toString();
+			String image = dataCollectionMapItem.get(imageParam).toString();
+			image = PathUtils.getPath(image);
+			try {				
 				Image jpg1 = Image.getInstance(image);
 				jpg1.scaleAbsolute(jpg1.getWidth() * IMAGE_HEIGHT / jpg1.getHeight(), IMAGE_HEIGHT);
 				Cell cell = new Cell(jpg1);
@@ -654,7 +581,7 @@ public class ExiPdfRtfExporter {
 				cell.setVerticalAlignment(Element.ALIGN_CENTER);
 				return cell;
 			} catch (IOException e) {
-				return new Cell(new Paragraph(imageParam + " not found", FONT_DOC));
+				return new Cell(new Paragraph(image + " not found", FONT_DOC));
 			}
 		}
 		return new Cell(new Paragraph("", FONT_DOC));
