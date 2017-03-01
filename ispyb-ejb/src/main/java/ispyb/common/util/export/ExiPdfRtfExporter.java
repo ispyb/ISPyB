@@ -25,14 +25,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -57,9 +54,8 @@ import ispyb.common.util.PathUtils;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
 
 /**
  * allows creation of PDF or RTF report - general report for EXI, available in the
@@ -183,6 +179,10 @@ public class ExiPdfRtfExporter {
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 	
 	private Session3Service sessionService;
+	
+	private DataCollection3Service dcService;
+	
+	private Image3Service imageService;
 		
 	public ExiPdfRtfExporter(String proposalDesc, Integer sessionId,
 			List<Map<String, Object>> dataCollections, Integer nbRowsMax) throws Exception {
@@ -201,6 +201,10 @@ public class ExiPdfRtfExporter {
 
 		sessionService = (Session3Service) ejb3ServiceLocator
 				.getLocalService(Session3Service.class);
+		dcService = (DataCollection3Service) ejb3ServiceLocator
+				.getLocalService(DataCollection3Service.class);
+		imageService = (Image3Service) ejb3ServiceLocator
+				.getLocalService(Image3Service.class);
 		
 		slv = sessionService.findByPk(sessionId, false/*withDataCollectionGroup*/, false/*withEnergyScan*/, false/*withXFESpectrum*/);
 
@@ -500,10 +504,18 @@ public class ExiPdfRtfExporter {
 		table.addCell(" ");
 		
 		// 6 Cell : thumbnail
-		Cell cellThumbnail = getCellImage(dataCollectionMapItem, "DataCollection_bestWilsonPlotPath");
+		
+		if (!getCellParam(dataCollectionMapItem, "lastImageId").isEmpty()) {
+			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId")))).getJpegThumbnailFileFullPath();
+			Cell cellThumbnail = getCellImage(thumbnailPath);
+			cellThumbnail.setBorderWidth(0);
+			table.addCell(cellThumbnail);
+		} else {
+			table.addCell(" ");
+		}
+		
 		//cellThumbnail.setRowspan(nbRows);
-		cellThumbnail.setBorderWidth(0);
-		table.addCell(cellThumbnail);
+		
 		
 		// 7 Cell : snapshot
 		Cell cellSnapshot = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath1");
@@ -511,11 +523,15 @@ public class ExiPdfRtfExporter {
 		cellSnapshot.setBorderWidth(0);
 		table.addCell(cellSnapshot);
 		
-		// 8 Cell : graph or other snapshot
-		Cell cellGraph = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath2");
-		//cellGraph.setRowspan(nbRows);
-		cellGraph.setBorderWidth(0);
-		table.addCell(cellGraph);
+		// 8 Cell : graph or other plot
+		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId").isEmpty()) {
+			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId")), false, false)).getImageQualityIndicatorsPlotPath();
+			Cell cellGraph = getCellImage(plotPath);
+			cellGraph.setBorderWidth(0);
+			table.addCell(cellGraph);
+		} else {
+			table.addCell(" ");
+		}
 
 		document.add(table);
 		
@@ -537,7 +553,7 @@ public class ExiPdfRtfExporter {
 	 */
 	private String getCellParam(Map<String, Object> dataCollectionMap, String param) throws Exception {
 
-		String paramValue = " ";
+		String paramValue = "";
 		if (dataCollectionMap.get(param) != null) {		
 			paramValue = dataCollectionMap.get(param).toString();
 		}
@@ -587,6 +603,32 @@ public class ExiPdfRtfExporter {
 		return new Cell(new Paragraph("", FONT_DOC));
 	}
 
+	/**
+	 * returns a cell with a given image inside
+	 * 
+	 * @param image
+	 * @return
+	 * @throws Exception
+	 */
+	private Cell getCellImage(String imagePath) throws Exception {
+		
+		if (imagePath != null ) {
+			String image = PathUtils.getPath(imagePath);
+			try {				
+				Image jpg1 = Image.getInstance(image);
+				jpg1.scaleAbsolute(jpg1.getWidth() * IMAGE_HEIGHT / jpg1.getHeight(), IMAGE_HEIGHT);
+				Cell cell = new Cell(jpg1);
+				cell.setLeading(0);
+				cell.setBorderWidth(0);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setVerticalAlignment(Element.ALIGN_CENTER);
+				return cell;
+			} catch (IOException e) {
+				return new Cell(new Paragraph(image + " not found", FONT_DOC));
+			}
+		}
+		return new Cell(new Paragraph("", FONT_DOC));
+	}
 	private Chunk getChunkImage(String image) throws BadElementException, MalformedURLException, IOException {
 		Image jpg = Image.getInstance(image);
 		jpg.scaleAbsolute(jpg.getWidth() * 10 / jpg.getHeight(), 10);
