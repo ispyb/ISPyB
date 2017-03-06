@@ -396,7 +396,7 @@
   			
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-  			<ispyb.authentication.method>JBOSS</ispyb.authentication.method>
+  			<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			  			
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
