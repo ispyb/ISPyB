@@ -101,6 +101,24 @@ public class LogonAction extends Action {
 			String userGivenName = "";
 			String userLastName = "";
 			String userSiteNumber = "";
+			
+			/**************************************
+			 * AUTH using properties files
+			 **************************************/
+			if (Constants.SITE_AUTHENTICATION_METHOD.toString().trim().toUpperCase().equals("SIMPLE") ) {
+				
+				String userRolesNames = "Roles for user logged in: ";
+
+				// -----------
+				HttpSession session = request.getSession();
+				ArrayList<RoleDO> userRoles = getUserRoles(request);
+
+				for (RoleDO roleDO : userRoles) {
+					userRolesNames = userRolesNames + roleDO.getName() + roleDO.getValue() + ", ";
+				}
+				session.setAttribute(Constants.ROLES, userRoles);
+				LOG.debug(userRolesNames);
+			}
 
 			/**************************************
 			 * AUTH USING LDAP
