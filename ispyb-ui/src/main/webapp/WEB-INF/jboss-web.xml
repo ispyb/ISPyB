@@ -36,16 +36,10 @@
 	<security-domain>java:/jaas/other</security-domain>
 	-->
 
-	<!-- Configuration to ESRF: LDAP Module 	-->
+		<!-- Configuration to ESRF security-domain 	-->
 
 	<security-domain>java:/jaas/ispyb</security-domain>
 	<context-root>ispyb</context-root>
-
-		<!-- Configuration to ESRF: simple Module 
-
-	<security-domain>java:/jaas/ispybSimple</security-domain>
-	<context-root>ispyb</context-root>
-	-->
 
    <!-- Resource references -->
    <!--
