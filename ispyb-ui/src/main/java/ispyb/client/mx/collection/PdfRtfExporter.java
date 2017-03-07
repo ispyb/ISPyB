@@ -19,10 +19,10 @@
 
 package ispyb.client.mx.collection;
 
-import ispyb.client.common.util.Formatter;
 import ispyb.client.mx.ranking.SampleRankingVO;
 import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
 import ispyb.common.util.PathUtils;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;

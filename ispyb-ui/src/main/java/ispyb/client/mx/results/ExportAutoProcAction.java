@@ -20,11 +20,11 @@
 package ispyb.client.mx.results;
 
 import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.Formatter;
 import ispyb.client.mx.collection.AutoProcShellWrapper;
 import ispyb.client.mx.collection.PdfRtfExporter;
 import ispyb.client.mx.collection.ViewDataCollectionAction;
 import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;

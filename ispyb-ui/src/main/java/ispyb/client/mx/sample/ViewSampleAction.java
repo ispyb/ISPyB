@@ -22,13 +22,33 @@
 
 package ispyb.client.mx.sample;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ejb.CreateException;
+import javax.naming.NamingException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
+
 import fr.improve.struts.taglib.layout.util.FormUtils;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.Confidentiality;
-import ispyb.common.util.DBTools;
-import ispyb.common.util.export.PdfExporterSample;
 import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.DBTools;
+import ispyb.common.util.export.PdfExporterSample;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.shipping.Container3Service;
@@ -52,26 +72,6 @@ import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ejb.CreateException;
-import javax.naming.NamingException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 
 /**
  * @struts.action name="viewSampleForm" path="/user/viewSample" type="ispyb.client.mx.sample.ViewSampleAction"
