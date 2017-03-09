@@ -146,22 +146,35 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 			List<List<AutoProcProgramAttachment3VO>> list = new ArrayList<List<AutoProcProgramAttachment3VO>>();
 			HashMap<String, String> filePaths = new HashMap<String, String>();
 			String filename = "download.zip";
+			
 			for (Integer id : ids) {
 				AutoProcProgram3VO autoProcProgram3VO = this.getAutoProcProgram3Service().findByPk(id, true);
+				
+				/** Prefix for the name of the file and the internal structure if many results are retrieved **/
+				String prefix = String.format("%s_%s", autoProcProgram3VO.getProcessingPrograms(), autoProcProgram3VO.getAutoProcProgramId());
+				
 				list.add(autoProcProgram3VO.getAttachmentListVOs());
 				ArrayList<AutoProcProgramAttachment3VO> listAttachments = autoProcProgram3VO.getAttachmentListVOs();
 				for (AutoProcProgramAttachment3VO auto : listAttachments) {
-					System.out.println("------------");
-					System.out.println(auto.getFileName());
-					System.out.println(auto.getFilePath());
-					String filePah = auto.getFilePath() + "/" + auto.getFileName();
-					if (new File(filePah).exists()){
-						if (new File(filePah).isFile()){
-							filePaths.put(auto.getFileName(), filePah);
+					String filePath = auto.getFilePath() + "/" + auto.getFileName();
+					if (new File(filePath).exists()){
+						if (new File(filePath).isFile()){
+							if (ids.size() > 1){
+								String zipNameFile = prefix + "/" + auto.getFileName();
+								filePaths.put(zipNameFile, filePath);
+							}
+							else{
+								filePaths.put(auto.getFileName(), filePath);
+							}
 						}
 					}
 				}
-				filename = autoProcProgram3VO.getProcessingPrograms() + "_" +autoProcProgram3VO.getAutoProcProgramId() +".zip";
+				
+				/** If it is a single result then filename is the name of the program and the ID **/
+				if (ids.size() == 1){					
+					filename = prefix + ".zip";
+				}
+				
 			}
 			this.logFinish(methodName, start, logger);
 			return this.downloadFile(HashMapToZip.doZip(filePaths), filename);
