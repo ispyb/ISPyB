@@ -26,13 +26,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
-
-import com.google.gson.Gson;
 
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.InnerScientistVO;
@@ -62,6 +61,7 @@ import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.userportal.UserPortalUtils;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 public class UpdateFromSMIS {
@@ -184,6 +184,9 @@ public class UpdateFromSMIS {
 		LOG.debug("--------------------- ws created looking for proposalPk =  " + pk);
 
 		List<ExpSessionInfoLightVO> smisSessions_;
+		List<ProposalParticipantInfoLightVO> mainProposers_ ;
+		
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
 
 		// Get the service
 		SMISWebService sws = SMISWebServiceGenerator.getWs();
@@ -205,7 +208,7 @@ public class UpdateFromSMIS {
 
 		List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
-		mainProposers = mainProposers_.toArray(mainProposers);
+		
 
 		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
 		smisSessions = smisSessions_.toArray(smisSessions);
@@ -217,7 +220,15 @@ public class UpdateFromSMIS {
 		List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
 		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
 		labContacts = labContacts_.toArray(labContacts);
+		
+		}
+		else {
+			List<Map<String, Object>> proposersJson;
+			List<ProposalParticipantInfoLightVO> mainProposers_ = UserPortalUtils.getMainProposers(proposersJson);
+		}
 
+		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
+		
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		
 		LOG.info("Nb of sessions found : " + smisSessions.length);
@@ -800,13 +811,14 @@ public class UpdateFromSMIS {
 		Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 
 		List<Session3VO> sessFromDBs = null;
+		LOG.debug("look for session already in DB for proposalId = " + proposalId + " | startDate = " + startDate
+				+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
+		
 		if (!Constants.SITE_IS_SOLEIL()) {
 			sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 		} else if (Constants.SITE_IS_SOLEIL()) {
 			sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDate, endDate,
-					beamlineName, nbShifts);
-			LOG.debug("look for session for proposalId = " + proposalId + " | startDate = " + startDate
-					+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
+					beamlineName, nbShifts);			
 		}
 
 		// if (col == null || col.isEmpty()) {

@@ -269,6 +269,9 @@
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
   			
   			<ispyb.db.updatescripts.folder>R:/workspaces_neon/wks_ispyb/ispyb-ejb3/sql_scripts/mysql/update_scripts/2016</ispyb.db.updatescripts.folder>
+  			
+  			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+  			
   		</properties>
   	</profile>
   	<profile>
@@ -315,6 +318,8 @@
   
                         <!-- <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> -->
                 	<ispyb.authorisation.active>false</ispyb.authorisation.active>
+                	
+                	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
                 </properties>
   	</profile>
   	<profile>
@@ -373,7 +378,7 @@
 				<userportal.url>http://suntest.synchrotron-soleil.fr:8084/sunset/main?function=proposal_personal</userportal.url>
 				
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
-				
+				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				
   		</properties>
   	</profile> 
@@ -382,6 +387,9 @@
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.authorisation.active>false</ispyb.authorisation.active>
+  			
+  			<ispyb.userportal.link>JSON</ispyb.userportal.link>
+  						
   		</properties>
   	</profile> 
   	
@@ -427,6 +435,8 @@
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
 			
 			<ispyb.authorisation.active>false</ispyb.authorisation.active>
+			
+			<ispyb.userportal.link>JSON</ispyb.userportal.link>
   				
   		</properties>
   	</profile> 
