@@ -185,49 +185,50 @@ public class UpdateFromSMIS {
 
 		List<ExpSessionInfoLightVO> smisSessions_;
 		List<ProposalParticipantInfoLightVO> mainProposers_ ;
+		List<SampleSheetInfoLightVO> smisSamples_;
+		List<ProposalParticipantInfoLightVO> labContacts_;
 		
 		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
 
-		// Get the service
-		SMISWebService sws = SMISWebServiceGenerator.getWs();
+			// Get the service
+			SMISWebService sws = SMISWebServiceGenerator.getWs();
 		
-		switch (Constants.getSite()) {
-		case ESRF:
-			// only sessions WITH local contacts are retrieved
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			//System.out.println(new Gson().toJson(smisSessions_));
-			break;
-		case EMBL:
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
-			break;
-		default:
-		case SOLEIL:
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			break;
-		}
-
-		List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
-		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
-		
-
-		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
-		smisSessions = smisSessions_.toArray(smisSessions);
-
-		List<SampleSheetInfoLightVO> smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
-		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
-		smisSamples = smisSamples_.toArray(smisSamples);
-
-		List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
-		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
-		labContacts = labContacts_.toArray(labContacts);
+			switch (Constants.getSite()) {
+			case ESRF:
+				// only sessions WITH local contacts are retrieved
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				//System.out.println(new Gson().toJson(smisSessions_));
+				break;
+			case EMBL:
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
+				break;
+			default:
+			case SOLEIL:
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				break;
+			}
+				
+			mainProposers_ = sws.findMainProposersForProposal(pk);
+			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
+			labContacts_ = sws.findParticipantsForProposal(pk);
 		
 		}
 		else {
-			List<Map<String, Object>> proposersJson;
-			List<ProposalParticipantInfoLightVO> mainProposers_ = UserPortalUtils.getMainProposers(proposersJson);
+			mainProposers_ = UserPortalUtils.getMainProposers();
+			smisSessions_ = UserPortalUtils.getSessions();
+			smisSamples_ = UserPortalUtils.getSamples();
+			labContacts_ = UserPortalUtils.getLabContacts();
 		}
-
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
+		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
+		smisSessions = smisSessions_.toArray(smisSessions);
+
+		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
+		smisSamples = smisSamples_.toArray(smisSamples);
+
+		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
+		labContacts = labContacts_.toArray(labContacts);
+
 		
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		
