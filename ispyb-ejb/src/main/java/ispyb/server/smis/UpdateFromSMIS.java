@@ -151,22 +151,31 @@ public class UpdateFromSMIS {
 	public static void updateProposalFromSMIS(String proposalCode, String proposalNumber) throws Exception {
 
 		LOG.debug("update ISPyB database for proposal = " + proposalCode + " " + proposalNumber);
-
-		// Get the service
-		SMISWebService wsInit = SMISWebServiceGenerator.getWs();
-		Long proposalNumberInt = null;
-		LOG.debug("getting SMIS WS");
-
+		
 		try {
-			proposalNumberInt = Long.parseLong(proposalNumber);
-			if (proposalNumberInt != null) {
-				Long pk = null;
-				// retrieve proposal_no in smis : pk
-				pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
-				if (pk != null) {
-					updateThisProposalFromSMISPk(pk);
-					LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
+			Long pk = Long.parseLong(Constants.DEFAULT_TEST_PROPOSAL_PK);
+
+			if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+						
+				// Get the service
+				SMISWebService wsInit = SMISWebServiceGenerator.getWs();
+				Long proposalNumberInt = null;
+				LOG.debug("getting SMIS WS");
+				proposalNumberInt = Long.parseLong(proposalNumber);
+				
+				if (proposalNumberInt != null) {
+					
+					// retrieve proposal_no in smis : pk
+					pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
 				}
+			} else {
+			// find a way to retrieve the user portal pk of the proposal
+			
+			}
+
+			if (pk != null) {
+				updateThisProposalFromSMISPk(pk);
+				LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
 			}
 			
 		} catch (NumberFormatException e) {
@@ -192,7 +201,8 @@ public class UpdateFromSMIS {
 
 			// Get the service
 			SMISWebService sws = SMISWebServiceGenerator.getWs();
-		
+			LOG.info("Update of ISPyB from User Portal using soap WS");
+			
 			switch (Constants.getSite()) {
 			case ESRF:
 				// only sessions WITH local contacts are retrieved
@@ -214,9 +224,10 @@ public class UpdateFromSMIS {
 		
 		}
 		else {
+			LOG.info("Update of ISPyB from User Portal using json files");
+			smisSamples_ = UserPortalUtils.getSamples();
 			mainProposers_ = UserPortalUtils.getMainProposers();
 			smisSessions_ = UserPortalUtils.getSessions();
-			smisSamples_ = UserPortalUtils.getSamples();
 			labContacts_ = UserPortalUtils.getLabContacts();
 		}
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];

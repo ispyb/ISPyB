@@ -574,6 +574,7 @@ public final class Constants {
 	
 	public static final boolean SITE_USERPORTAL_LINK_IS_SMIS() {
 		return getProperty("userportal.link.type").equals(SITE_USERPORTAL_LINK_SMIS);
+		
 	}
 
 	public static final String AUTHORISATION_PROPOSALS_SOURCE = getProperty("ISPyB.authorisation.proposals.source");
@@ -1285,6 +1286,8 @@ public final class Constants {
 	public static final String DEFAULT_SCIENTIST_FIRSTNAME = "WebService";
 
 	public static final String DEFAULT_SCIENTIST_LABO = "SMIS";
+	
+	public static final String DEFAULT_TEST_PROPOSAL_PK = Constants.getProperty("userportal.test.proposal.pk");
 
 	public static String getDummyFamilyName() {
 		return (SITE_IS_MAXIV()) ? getProperty("ISPyB.dummy.family.name.lab.contact") : "";
