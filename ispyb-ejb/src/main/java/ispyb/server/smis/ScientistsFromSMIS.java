@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
@@ -49,7 +51,10 @@ public class ScientistsFromSMIS {
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
 		
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, maxResults);
-		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
+		 LOG.debug("Json scientists: ");
+		 LOG.debug(new Gson().toJson(scientists_));
+		
+		scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
 		 scientists = scientists_.toArray(scientists);
 
 		LOG.debug("Number of scientists found = " + scientists.length);
