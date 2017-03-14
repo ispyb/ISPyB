@@ -51,8 +51,6 @@ public class ScientistsFromSMIS {
 		SMISWebService ws = SMISWebServiceGenerator.getWs();
 		
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, maxResults);
-		 LOG.debug("Json scientists: ");
-		 LOG.debug(new Gson().toJson(scientists_));
 		
 		scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
 		 scientists = scientists_.toArray(scientists);
@@ -76,6 +74,10 @@ public class ScientistsFromSMIS {
 		 LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
 		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
 		 firstName);
+		 
+		 LOG.debug("Json scientists: ");
+		 LOG.debug(new Gson().toJson(scientists_));
+
 		 if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL()) {
 				scientists_ = ws.findParticipantsForProposal(proposalPk);
 		 }

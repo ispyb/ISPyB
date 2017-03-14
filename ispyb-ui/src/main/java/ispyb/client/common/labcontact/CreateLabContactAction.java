@@ -850,7 +850,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 		Person3VO person = null;
 		Laboratory3VO laboratory = null;
 
-		matchingPersons = personService.findByFamilyAndGivenName(form.getPerson().getFamilyName(), form.getPerson().getGivenName());
+		matchingPersons = personService.findByFamilyAndGivenName(form.getName(), form.getFirstName());
 
 		LOG.info("There is " + matchingPersons.size() + " person(s) with this name/firstname found in Ispyb Database.");
 
@@ -921,10 +921,8 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 					// if not set in ISPYB, try to get it from SMIS
 					LOG.info("ISPyB laboratory address is empty.........");
 					try {
-						// ProposalFacadeLocal proposalFacade = ProposalFacadeUtil.getLocalHome().create();
 
 						Proposal3VO currentProposal = this.proposalService.findByPk(proposalId);
-						// ProposalLightValue currentProposal = proposalFacade.findByPrimaryKeyLight(proposalId);
 						Long proposalNumberInt = null;
 						try {
 							proposalNumberInt = Long.parseLong(currentProposal.getNumber());
@@ -932,8 +930,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 
 						}
 						ProposalParticipantInfoLightVO[] scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(
-								currentProposal.getCode(), proposalNumberInt, form.getPerson().getFamilyName(), form.getPerson()
-										.getGivenName());
+								currentProposal.getCode(), proposalNumberInt, form.getName(), form.getFirstName());
 
 						// If 1 address found, it's OK
 						if (scientists.length == 1) {
@@ -991,8 +988,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 
 			}
 			ProposalParticipantInfoLightVO[] scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(StringUtils
-					.getUoCode(currentProposal.getCode()), proposalNumberInt, form.getPerson().getFamilyName(), form.getPerson()
-					.getGivenName());
+					.getUoCode(currentProposal.getCode()), proposalNumberInt, form.getName(), form.getFirstName());
 
 			if (scientists == null || scientists.length < 1) {
 				LOG.info("No person retrieved from SMIS database.");
