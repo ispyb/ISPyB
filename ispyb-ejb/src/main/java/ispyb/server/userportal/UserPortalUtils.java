@@ -36,204 +36,53 @@ import ispyb.common.util.Constants;
 
 public class UserPortalUtils {
 	
-//	private static String jsonSamples = Constants.getProperty("userportal.json.samples");
-//	private static String jsonSessions = Constants.getProperty("userportal.json.samples");
-//	private static String jsonProposers = Constants.getProperty("userportal.json.samples");
-//	private static String jsonLabContacts = Constants.getProperty("userportal.json.samples");
-	
-//	private static String jsonSamples = "[{\'acronym\':\'tryp\',\'categoryCode\':\'MX\',\'categoryCounter\':415,\'description\':\'Trypsin\',\'labAddress\':[null,\'71 avenue des Martyrs\',\'CS 40220\',null,\'38043\'],\'labCity\':\'GRENOBLE\',\'labCountryCode\':\'ESRF\',\'labName\':\'ESRF\',\'mainProposerEmail\':\'monaco@esrf.fr\',\'mainProposerFirstName\':\'Stéphanie\',\'mainProposerName\':\'MONACO\',\'mainProposerPk\':225239,\'mainProposerTitle\':\'Dr\',\'opmodePk\':1,\'pk\':148,\'proposalGroup\':103,\'proposalPk\':31529,\'proposalType\':3,\'spaceGroup\':\'\',\'userEmail\':\'mccarthy@esrf.fr\',\'userName\':\'Joanne MCCARTHY\',\'userPhone\':\'24-21\'}]";
-	private static String jsonSamples = "[{\'acronym\':\'tryp\',\'categoryCode\':\'MX\',\'categoryCounter\':415,\'description\':\'Trypsin\',\'opmodePk\':1,\'pk\':148},{\'acronym\':\'tryp2\',\'categoryCode\':\'MX\',\'categoryCounter\':415,\'description\':\'Trypsin2\',\'opmodePk\':1}]";
-	private static String jsonSessions  ="[{\'pk\':79910,\'experimentPk\':115363,\'startDate\':{\'year\':2017,\'month\':4,\'dayOfMonth\':12,\'hourOfDay\':9,\'minute\':30,\'second\':0},\'endDate\':{\'year\':2017,\'month\':4,\'dayOfMonth\':13,\'hourOfDay\':8,\'minute\':0,\'second\':0},\'shifts\':3,\'lostShifts\':0,\'reimbursedDays\':4,\'startShift\':1,\'beamlinePk\':341,\'beamlineName\':\'ID29\',\'proposalPk\':31529,\'proposalSubmissionPk\':1,\'categCode\':\'MX\',\'categCounter\':415,\'proposalTitle\':\'TEST\',\'proposalOpmodePk\':1,\'proposalOpmodeCode\':\'Green\',\'proposalType\':3,\'proposalTypeCode\':\'PROPSBM_MX_NON_BAG\',\'proposalGroup\':103,\'proposalGroupCode\':\'Crystallography\',\'runCode\':\'Run 2/17\',\'runStartDate\':{\'year\':2017,\'month\':2,\'dayOfMonth\':31,\'hourOfDay\':0,\'minute\':0,\'second\':0},\'runEndDate\':{\'year\':2017,\'month\':5,\'dayOfMonth\':8,\'hourOfDay\':0,\'minute\':0,\'second\':0},\'isBagProposal\':false,\'isLongtermProposal\':false,\'hasAform\':false,\'sampleCount\':0,\'firstLocalContact\':{\'name\':\'MONACO\',\'realName\':\'MONACO\',\'firstName\':\'Stéphanie\',\'email\':\'monaco@esrf.fr\',\'phone\':\'+33 (0)4 76 88 20 84\',\'title\':\'Dr\',\'scientistPk\':225239,\'siteId\':17074},\'localContacts\':[{\'name\':\'MONACO\',\'realName\':\'MONACO\',\'firstName\':\'Stéphanie\',\'email\':\'monaco@esrf.fr\',\'phone\':\'+33 (0)4 76 88 20 84\',\'title\':\'Dr\',\'scientistPk\':225239,\'siteId\':17074}],\'mainProposer\':{\'name\':\'MONACO\',\'realName\':\'MONACO\',\'firstName\':\'Stéphanie\',\'email\':\'monaco@esrf.fr\',\'phone\':\'+33 (0)4 76 88 20 84\',\'title\':\'Dr\',\'scientistPk\':225239,\'siteId\':17074},\'cancelled\':false,\'finished\':false,\'jointExperiment\':false,\'localContactEmails\':\'monaco@esrf.fr\',\'name\':\'MX/415 ID29 12-05-2017/13-05-2017\',\'physicalBeamlineName\':\'ID29\'}]";
-	private static String jsonProposers = "[{\'categoryCode\':\'MX\',\'categoryCounter\':415,\'labAddress\':[null,\'71 avenue des Martyrs\',\'CS 40220\',null,\'38043\'],\'labAddress1\':\'71 avenue des Martyrs\',\'labAddress2\':\'CS 40220\',\'labCity\':\'GRENOBLE\',\'labCountryCode\':\'ESRF\',\'labName\':\'ESRF\',\'labPostalCode\':\'38043\',\'laboratoryPk\':200450,\'proposalPk\':31529,\'proposalTitle\':\'TEST\',\'scientistEmail\':\'monaco@esrf.fr\',\'scientistFirstName\':\'Stéphanie\',\'scientistName\':\'MONACO\',\'scientistPk\':225239,\'siteId\':17074}]";
-	private static String jsonLabContacts = "[{\'categoryCode\':\'MX\',\'categoryCounter\':415,\'labAddress\':[null,\'71 avenue des Martyrs\',\'CS 40220\',null,\'38043\'],\'labAddress1\':\'71 avenue des Martyrs\',\'labAddress2\':\'CS 40220\',\'labCity\':\'GRENOBLE\',\'labCountryCode\':\'ESRF\',\'labName\':\'ESRF\',\'labPostalCode\':\'38043\',\'laboratoryPk\':200450,\'mainProposer\':false,\'pk\':330938,\'proposalPk\':31529,\'proposalTitle\':\'TEST\',\'proposalType\':3,\'proposer\':false,\'scientistEmail\':\'solange.delageniere@esrf.fr\',\'scientistFirstName\':\'Solange\',\'scientistName\':\'DELAGENIERE\',\'scientistPk\':284191,\'scientistTitle\':\'Dr\',\'siteId\':91481,\'user\':true},{\'categoryCode\':\'MX\',\'categoryCounter\':415,\'labAddress\':[null,\'71 avenue des Martyrs\',\'CS 40220\',null,\'38043\'],\'labAddress1\':\'71 avenue des Martyrs\',\'labAddress2\':\'CS 40220\',\'labCity\':\'GRENOBLE\',\'labCountryCode\':\'ESRF\',\'labName\':\'ESRF\',\'labPostalCode\':\'38043\',\'laboratoryPk\':200450,\'mainProposer\':false,\'pk\':428429,\'proposalGroup\':103,\'proposalPk\':31529,\'proposalTitle\':\'TEST\',\'proposalType\':3,\'proposer\':false,\'scientistEmail\':\'sarah.guillot@esrf.fr\',\'scientistFirstName\':\'Sarah\',\'scientistName\':\'GUILLOT\',\'scientistPk\':282441,\'scientistTitle\':\'Mme\',\'siteId\':190200}]";
-
-
-
-	/**
-	 * Returns the list of main proposers from a json file
-	 * 
-	 * @return
-	 */
-	public static List<ProposalParticipantInfoLightVO> getMainProposers(List<Map<String, Object>> proposersJson) {
-
-		List<ProposalParticipantInfoLightVO> mainProposers = new ArrayList<ProposalParticipantInfoLightVO>();
+	private static String jsonSamples = Constants.getProperty("userportal.json.samples");
+	private static String jsonSessions = Constants.getProperty("userportal.json.sessions");
+	private static String jsonProposers = Constants.getProperty("userportal.json.proposers");
+	private static String jsonLabContacts = Constants.getProperty("userportal.json.labcontacts");
 		
-		for (Map<String, Object> map : proposersJson) {
-			ProposalParticipantInfoLightVO proposer = new ProposalParticipantInfoLightVO();
-
-			proposer.setBllogin(getParam(map, "bllogin"));
-			proposer.setCategoryCode(getParam(map, "categoryCode"));
-			proposer.setCategoryCounter(getParamInt(map, "categoryCounter"));
-			proposer.setLabAddress1(getParam(map, "labAddress1"));
-			proposer.setLabAddress2(getParam(map, "labAddress2"));
-			proposer.setLabAddress3(getParam(map, "labAddress3"));
-			proposer.setLabCity(getParam(map, "labCity"));
-			proposer.setLabDeparment(getParam(map, "labDeparment"));
-			proposer.setLabName(getParam(map, "labName"));
-			proposer.setLabCountryCode(getParam(map, "labCountryCode"));
-			proposer.setLabPostalCode(getParam(map, "labPostalCode"));
-			proposer.setScientistEmail(getParam(map, "scientistEmail"));
-			proposer.setScientistName(getParam(map, "scientistName"));
-			proposer.setScientistFirstName(getParam(map, "scientistFirstName"));
-			proposer.setSiteId(getParamInt(map, "siteId"));
-			proposer.setLaboratoryPk(getParamInt(map,"laboratoryExtPk"));
-		
-			mainProposers.add(proposer);
-		}
-		return mainProposers;
-
-	}
-	
-	/**
-	 * Returns the list of sessions from a json file
-	 * 
-	 * @return
-	 */
-	public static List<ExpSessionInfoLightVO> getSessions(List<Map<String, Object>> jsonFile) {
-
-		List<ExpSessionInfoLightVO> smisSessions = new ArrayList<ExpSessionInfoLightVO>();
-		
-		for (Map<String, Object> map : jsonFile) {
-			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
-			
-			session.setBeamlineName(getParam(map, "beamlineName"));
-			session.setExperimentPk(getParamLong(map, "experimentPk"));
-			session.setEndDate(getParamDate(map,"endDate"));
-			session.setStartDate(getParamDate(map,"startDate"));
-			session.setComment(getParam(map,"comment"));
-			session.setPk(getParamLong(map, "pk"));
-			session.setFirstLocalContact((InnerScientistVO) map.get("firstLocalContact"));
-
-			smisSessions.add(session);
-		}
-		return smisSessions;
-
-	}
-	
-	/**
-	 * Returns the list of sessions from a json file
-	 * 
-	 * @return
-	 */
-	public static List<SampleSheetInfoLightVO> getSamples(List<Map<String, Object>> jsonFile) {
-
-		List<SampleSheetInfoLightVO> smisSamples = new ArrayList<SampleSheetInfoLightVO>();
-		
-		for (Map<String, Object> map : jsonFile) {
-			SampleSheetInfoLightVO sample = new SampleSheetInfoLightVO();
-			sample.setAcronym(getParam(map, "acronym"));
-			sample.setCategoryCode(getParam(map, "categoryCode"));
-			sample.setCategoryCounter(getParamInt(map, "categoryCounter"));
-			sample.setDescription(getParam(map, "description"));
-			sample.setOpmodePk(getParamLong(map, "opmodePk"));
-			sample.setUserEmail(getParam(map, "userEmail"));
-			sample.setUserName(getParam(map, "userName"));
-			sample.setUserPhone(getParam(map, "userPhone"));
-			
-			smisSamples.add(sample);
-		}
-		return smisSamples;
-
-	}
-	
-	/**
-	 * Returns the list of lab contacts from a json file
-	 * 
-	 * @return
-	 */
-	public static List<ProposalParticipantInfoLightVO> getLabContacts(List<Map<String, Object>> proposersJson) {
-
-		List<ProposalParticipantInfoLightVO> labContacts = new ArrayList<ProposalParticipantInfoLightVO>();
-		
-		for (Map<String, Object> map : proposersJson) {
-			ProposalParticipantInfoLightVO labContact = new ProposalParticipantInfoLightVO();
-
-			labContact.setBllogin(getParam(map, "bllogin"));
-			labContact.setCategoryCode(getParam(map, "categoryCode"));
-			labContact.setCategoryCounter(getParamInt(map, "categoryCounter"));
-			labContact.setLabAddress1(getParam(map, "labAddress1"));
-			labContact.setLabAddress2(getParam(map, "labAddress2"));
-			labContact.setLabAddress3(getParam(map, "labAddress3"));
-			labContact.setLabCity(getParam(map, "labCity"));
-			labContact.setLabDeparment(getParam(map, "labDeparment"));
-			labContact.setLabName(getParam(map, "labName"));
-			labContact.setLabCountryCode(getParam(map, "labCountryCode"));
-			labContact.setLabPostalCode(getParam(map, "labPostalCode"));
-			labContact.setScientistEmail(getParam(map, "scientistEmail"));
-			labContact.setScientistName(getParam(map, "scientistName"));
-			labContact.setScientistFirstName(getParam(map, "scientistFirstName"));
-			labContact.setSiteId(getParamInt(map, "siteId"));
-			labContact.setLaboratoryPk(getParamInt(map,"laboratoryExtPk"));
-		
-			labContacts.add(labContact);
-		}
-		return labContacts;
-
-	}
-	
 	public static List<ProposalParticipantInfoLightVO> getMainProposers() {
-		return getMainProposers(jsonToListmap(jsonProposers));
+		return jsonToProposersList(jsonProposers);
 	}
 
 	public static List<ExpSessionInfoLightVO> getSessions() {
-		return getSessions(jsonToListmap(jsonSessions));
+		return jsonToSessionsList(jsonSessions);
 	}
 
 	public static List<SampleSheetInfoLightVO> getSamples() {
-		return getSamples(jsonToListmap(jsonSamples));
+		return jsonToSamplesList(jsonSamples);
 	}
 	
 	public static List<ProposalParticipantInfoLightVO> getLabContacts(){
-		return getLabContacts(jsonToListmap(jsonLabContacts));
+		return jsonToLabContactsList(jsonLabContacts);
 	}
 	
-	public static List<Map<String, Object>> jsonToListmap(String json){   
+	
+	public static List<SampleSheetInfoLightVO> jsonToSamplesList(String json){   
 	    Gson gson = new Gson();
-	    Type mapType = new TypeToken<List<Map<String, Object>>>() {}.getType();
-	    List<Map<String, Object>> mapList = gson.fromJson(json , mapType);
-	    return gson.fromJson(json , mapType);
+	    Type listType = new TypeToken<List<SampleSheetInfoLightVO>>() {}.getType();
+	    List<SampleSheetInfoLightVO> sampleList = gson.fromJson(json , listType);
+	    return sampleList;
+	}
+	
+	public static List<ExpSessionInfoLightVO> jsonToSessionsList(String json){   
+	    Gson gson = new Gson();
+	    Type listType = new TypeToken<List<ExpSessionInfoLightVO>>() {}.getType();
+	    List<ExpSessionInfoLightVO> sampleList = gson.fromJson(json , listType);
+	    return sampleList;
 	}
 
-	private static String getParam(Map<String, Object> map, String key){
-		String param = "";
-		
-		if (map.get(key) != null)
-			param = map.get(key).toString();		
-		return param;		
-	}
-	
-	private static Integer getParamInt(Map<String, Object> map, String key){
-		Integer param = null;
-		
-		if (map.get(key) != null) {
-				Object paramStr = map.get(key);
-				System.out.println("paramstr = " + paramStr);
-				param = (Integer)paramStr;
-		}
-		
-		return param;		
-	}
-	
-	private static Long getParamLong(Map<String, Object> map, String key){
-		Long param = null;
-		
-		if (map.get(key) != null) {
-				param = new Long(map.get(key).toString());
-		}
-		
-		return param;		
-	}
-	
-	private static Calendar getParamDate(Map<String, Object> map, String key){
-		Date param = null;
-		Calendar cal = Calendar.getInstance();
-		
-		if (map.get(key) != null) {
-				param = new Date(map.get(key).toString());
-		}
-		
-		cal.setTime(param);
-		return cal;
+	public static List<ProposalParticipantInfoLightVO> jsonToProposersList(String json){   
+	    Gson gson = new Gson();
+	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
+	    List<ProposalParticipantInfoLightVO> sampleList = gson.fromJson(json , listType);
+	    return sampleList;
 	}
 
+	public static List<ProposalParticipantInfoLightVO> jsonToLabContactsList(String json){   
+	    Gson gson = new Gson();
+	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
+	    List<ProposalParticipantInfoLightVO> sampleList = gson.fromJson(json , listType);
+	    return sampleList;
+	}
 }
