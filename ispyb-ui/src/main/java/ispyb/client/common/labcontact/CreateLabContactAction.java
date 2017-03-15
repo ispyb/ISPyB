@@ -942,7 +942,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 						// Otherwise give up
 						else {
 							LOG.info(scientists.length + " laboratory addresses retrieved from SMIS database for name/firstname = "
-									+ form.getPerson().getFamilyName() + "/" + form.getPerson().getGivenName() + ". None taken.");
+									+ form.getName() + "/" + form.getFirstName() + ". None taken.");
 							labAddress = "";
 						}
 					} catch (Exception e) {
@@ -991,7 +991,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 					.getUoCode(currentProposal.getCode()), proposalNumberInt, form.getName(), form.getFirstName());
 
 			if (scientists == null || scientists.length < 1) {
-				LOG.info("No person retrieved from SMIS database.");
+				LOG.info("No person retrieved from SMIS database: "+form.getName() + form.getFirstName());
 				// Retrieves all the scientists saved in the SMIS database, for this proposal
 				scientists = ScientistsFromSMIS.findScientistsForProposalByNameAndFirstName(
 						StringUtils.getUoCode(currentProposal.getCode()), proposalNumberInt, null, null);
