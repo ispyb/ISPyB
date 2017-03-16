@@ -18,23 +18,6 @@
 
 package ispyb.ws.soap.crims;
 
-import generated.ws.smis.SMISWebService;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.shipping.external.External3Service;
-import ispyb.server.common.util.LoggerFormatter;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.collections.DataCollection3Service;
-import ispyb.server.mx.services.collections.Image3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.Image3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -64,6 +47,21 @@ import org.jboss.ws.api.annotation.WebContext;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.external.External3Service;
+import ispyb.server.common.util.LoggerFormatter;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.collections.DataCollection3Service;
+import ispyb.server.mx.services.collections.Image3Service;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.Image3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.smis.UpdateFromSMIS;
 
 /**
  * Web services for BLSample
@@ -458,11 +456,7 @@ public class CrimsWebService {
 			Proposal3Service proposal3Service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			ProposalWS3VO proposal = proposal3Service.findForWSByCodeAndNumber(proposalCode, proposalNumber);
 			if (proposal != null) {
-
-				Long pk = null;
-					SMISWebService ws = SMISWebServiceGenerator.getWs();
-					pk = ws.getProposalPK(proposal.getCode(), Long.parseLong(proposal.getNumber()));
-				UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
+				UpdateFromSMIS.updateProposalFromSMIS(proposalCode, proposalNumber);
 			} else {
 				throw new Exception("Proposal: " + proposalCode + proposalNumber + " not found");
 			}

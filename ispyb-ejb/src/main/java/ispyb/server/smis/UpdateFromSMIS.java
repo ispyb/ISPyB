@@ -32,8 +32,6 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.InnerScientistVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
@@ -62,6 +60,7 @@ import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.userportal.UserPortalUtils;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 public class UpdateFromSMIS {
@@ -114,15 +113,26 @@ public class UpdateFromSMIS {
 	public static void updateFromSMIS(String startDateStr, String endDateStr) throws Exception {
 
 		LOG.debug("update ISPyB database start date = " + startDateStr + " end date = " + endDateStr);
-
-		// Get the service
-		SMISWebService wsInit = SMISWebServiceGenerator.getWs();
-
-		LOG.debug("getting SMIS WS");
-
-		// retrieve all new proposals
+		
 		List<Long> newProposalPks = null;
-		newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
+		
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+
+			// Get the service
+			SMISWebService wsInit = SMISWebServiceGenerator.getWs();
+
+			LOG.debug("getting SMIS WS");
+
+			// retrieve all new proposals
+			newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
+		
+		} else {
+			// find a way to retrieve the user portal pks of the new proposals
+			Long defaultPk = Long.parseLong(Constants.DEFAULT_TEST_PROPOSAL_PK);
+			newProposalPks = new ArrayList<Long>();
+			newProposalPks.add(defaultPk);
+			
+		}
 
 		int nbFoundESRF = 0;
 		if (newProposalPks != null && newProposalPks.size() > 0) {
@@ -148,25 +158,68 @@ public class UpdateFromSMIS {
 		LOG.info("Update of ISPyB is finished, nbFound for ESRF = " + nbFoundESRF);
 	}
 	
+	public static void updateProposalFromSMIS(Integer proposalId) throws Exception {
+
+		Proposal3VO myProposal = proposal.findByPk(proposalId);
+
+		Long pk = new Long(1);
+		
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+		
+			switch (Constants.getSite()) {
+			case ESRF:
+				SMISWebService ws = SMISWebServiceGenerator.getWs();
+				pk = ws.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
+				break;
+			case SOLEIL:
+				SMISWebService wsSOLEIL = SMISWebServiceGenerator.getWs();
+				pk = wsSOLEIL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
+				break;
+			case EMBL:
+		
+				SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
+				pk = wsEMBL.getProposalPK("SAXS", 225L);
+				System.out.println("GREAT!!! " + pk.toString());			
+		
+				break;
+			default:
+				break;
+			}
+			
+		} else {
+			// find a way to retrieve the user portal pk of the proposal from its proposalId
+		}
+		
+		updateThisProposalFromSMISPk(pk);
+	}
+	
 	public static void updateProposalFromSMIS(String proposalCode, String proposalNumber) throws Exception {
 
 		LOG.debug("update ISPyB database for proposal = " + proposalCode + " " + proposalNumber);
-
-		// Get the service
-		SMISWebService wsInit = SMISWebServiceGenerator.getWs();
-		Long proposalNumberInt = null;
-		LOG.debug("getting SMIS WS");
-
+		
 		try {
-			proposalNumberInt = Long.parseLong(proposalNumber);
-			if (proposalNumberInt != null) {
-				Long pk = null;
-				// retrieve proposal_no in smis : pk
-				pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
-				if (pk != null) {
-					updateThisProposalFromSMISPk(pk);
-					LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
+			Long pk = Long.parseLong(Constants.DEFAULT_TEST_PROPOSAL_PK);
+
+			if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+						
+				// Get the service
+				SMISWebService wsInit = SMISWebServiceGenerator.getWs();
+				Long proposalNumberInt = null;
+				LOG.debug("getting SMIS WS");
+				proposalNumberInt = Long.parseLong(proposalNumber);
+				
+				if (proposalNumberInt != null) {				
+					// retrieve proposal_no in smis : pk
+					pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
 				}
+			} else {
+			// find a way to retrieve the user portal pk of the proposal
+			
+			}
+
+			if (pk != null) {
+				updateThisProposalFromSMISPk(pk);
+				LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
 			}
 			
 		} catch (NumberFormatException e) {
@@ -184,40 +237,55 @@ public class UpdateFromSMIS {
 		LOG.debug("--------------------- ws created looking for proposalPk =  " + pk);
 
 		List<ExpSessionInfoLightVO> smisSessions_;
-
-		// Get the service
-		SMISWebService sws = SMISWebServiceGenerator.getWs();
+		List<ProposalParticipantInfoLightVO> mainProposers_ ;
+		List<SampleSheetInfoLightVO> smisSamples_;
+		List<ProposalParticipantInfoLightVO> labContacts_;
 		
-		switch (Constants.getSite()) {
-		case ESRF:
-			// only sessions WITH local contacts are retrieved
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			//System.out.println(new Gson().toJson(smisSessions_));
-			break;
-		case EMBL:
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
-			break;
-		default:
-		case SOLEIL:
-			smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
-			break;
-		}
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
 
-		List<ProposalParticipantInfoLightVO> mainProposers_ = sws.findMainProposersForProposal(pk);
+			// Get the service
+			SMISWebService sws = SMISWebServiceGenerator.getWs();
+			LOG.info("Update of ISPyB from User Portal using soap WS");
+			
+			switch (Constants.getSite()) {
+			case ESRF:
+				// only sessions WITH local contacts are retrieved
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				break;
+			case EMBL:
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
+				break;
+			default:
+			case SOLEIL:
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				break;
+			}
+				
+			mainProposers_ = sws.findMainProposersForProposal(pk);
+			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
+			labContacts_ = sws.findParticipantsForProposal(pk);
+		
+		}
+		else {
+			LOG.info("Update of ISPyB from User Portal using json files");
+			smisSamples_ = UserPortalUtils.getSamples();
+			mainProposers_ = UserPortalUtils.getMainProposers();
+			smisSessions_ = UserPortalUtils.getSessions();
+			labContacts_ = UserPortalUtils.getLabContacts();
+		}
 		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
 		mainProposers = mainProposers_.toArray(mainProposers);
-
+		
 		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
 		smisSessions = smisSessions_.toArray(smisSessions);
 
-		List<SampleSheetInfoLightVO> smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
 		smisSamples = smisSamples_.toArray(smisSamples);
 
-		List<ProposalParticipantInfoLightVO> labContacts_ = sws.findParticipantsForProposal(pk);
 		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
 		labContacts = labContacts_.toArray(labContacts);
 
+		
 		LOG.info("Nb of proposers found : " + mainProposers.length);
 		
 		LOG.info("Nb of sessions found : " + smisSessions.length);
@@ -251,6 +319,7 @@ public class UpdateFromSMIS {
 		// -----------------------------------------------------------------------------------
 		ArrayList<ProposalParticipantInfoLightVO> mxProposers = new ArrayList<ProposalParticipantInfoLightVO>();
 		ArrayList<ProposalParticipantInfoLightVO> bxProposers = new ArrayList<ProposalParticipantInfoLightVO>();
+		
 		if (Constants.SITE_IS_SOLEIL()) {
 			if (mainProposers != null && mainProposers.length > 0) {
 				for (ProposalParticipantInfoLightVO proposer : mainProposers) {
@@ -437,8 +506,7 @@ public class UpdateFromSMIS {
 					labContactService.create(labContact3VO);
 					LOG.debug("inserted a new labcontact : " + labContact3VO.getCardName() + " for proposal " + proposalId
 							+ " inside ISPyB db");
-				} 
-					
+				} 					
 			}
 		}
 
@@ -447,9 +515,7 @@ public class UpdateFromSMIS {
 	@SuppressWarnings("unused")
 	private static void loadProposers(ProposalParticipantInfoLightVO[] mainProposers) throws Exception {
 		String proposalNumber = null;
-		
-		
-		
+
 		if (mainProposers != null && mainProposers.length > 0) {
 
 			ProposalParticipantInfoLightVO mainProp = mainProposers[0];
@@ -800,13 +866,14 @@ public class UpdateFromSMIS {
 		Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 
 		List<Session3VO> sessFromDBs = null;
+		LOG.debug("look for session already in DB for proposalId = " + proposalId + " | startDate = " + startDate
+				+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
+		
 		if (!Constants.SITE_IS_SOLEIL()) {
 			sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 		} else if (Constants.SITE_IS_SOLEIL()) {
 			sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDate, endDate,
-					beamlineName, nbShifts);
-			LOG.debug("look for session for proposalId = " + proposalId + " | startDate = " + startDate
-					+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
+					beamlineName, nbShifts);			
 		}
 
 		// if (col == null || col.isEmpty()) {

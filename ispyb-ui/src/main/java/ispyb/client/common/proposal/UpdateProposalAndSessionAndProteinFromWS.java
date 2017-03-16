@@ -18,18 +18,9 @@
  ******************************************************************************/
 package ispyb.client.common.proposal;
 
-import generated.ws.smis.SMISWebService;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +31,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.smis.UpdateFromSMIS;
 
 /**
  * @struts.action name="proposalAndSessionAndProteinForm" path="/updateDB"
@@ -133,12 +129,7 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 		LOG.debug("update ISPyB database for proposal: " + proposalCode + proposalNumber + " --- uoCode: " + uoCode);
 
 		try {
-			// Get the service
-			SMISWebService ws = null;
 
-				ws = SMISWebServiceGenerator.getWs();
-
-			LOG.debug("getting SMIS WS");
 			if (proposalNumber == null) {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "Please fill the proposal number"));
 			} else {
@@ -150,13 +141,7 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 							new ActionMessage("errors.detail", "The proposal number is not a number"));
 				}
 				if (proposalNumberInt != null) {
-					Long pk = null;
-					// retrieve proposal_no in smis : pk
-					pk = ws.getProposalPK(uoCode, proposalNumberInt);
-
-					if (pk != null) {
-						UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-					}
+					UpdateFromSMIS.updateProposalFromSMIS(uoCode,proposalNumber);
 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", "proposal data"));
 				}
 			}
@@ -197,37 +182,12 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 				endDateStr = simple.format(today);
 			}
 
-			// Get the service
-			SMISWebService wsInit = SMISWebServiceGenerator.getWs();
-
-			LOG.debug("getting SMIS WS");
-
 			// retrieve all new proposals
-
-			List<Long> newProposalPks = wsInit.findNewMXProposalPKs(startDateStr, endDateStr);
-
+			
 			LOG.debug("update ISPyB database between startDate = " + startDateStr + "  and endDate =" + endDateStr);
+			UpdateFromSMIS.updateFromSMIS(startDateStr, endDateStr);
 
-			if (newProposalPks != null && newProposalPks.size() > 0) {
-
-				LOG.debug("Nb of new proposals found : " + newProposalPks.size());
-
-				for (Iterator<Long> iterator = newProposalPks.iterator(); iterator.hasNext();) {
-					long pk = (Long) iterator.next();
-					if (Constants.SITE_IS_ESRF()) {
-						// in case of ESRF we do not want old proposals
-						if ( pk > 20000) {
-							UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-						}
-						else {
-							LOG.debug("proposal with pk = "+ pk + " is an old one, not updated ");
-							}
-					}
-					else
-						UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-				}
-				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", " new sessions + proteins"));
-			}
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", " new sessions + proteins"));
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.sample.viewProteinFromSS"));

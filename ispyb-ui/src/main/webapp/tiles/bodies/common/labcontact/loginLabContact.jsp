@@ -58,8 +58,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	    <layout:text key="shippingId"	name="viewLabContactForm" property="shippingId"  mode="H,H,H"/>
 		<layout:grid cols="1" styleClass="SEARCH_GRID">	
 			<layout:column>
-				<layout:text key="Scientist name" property="person.familyName"	 styleClass="FIELD"	mode="E,E,E" isRequired="false" />
-				<layout:text key="Scientist firstname" property="person.givenName"	 styleClass="FIELD"	mode="E,E,E" isRequired="false" />
+				<layout:text key="Scientist name" property="name"	 styleClass="FIELD"	mode="E,E,E" isRequired="false" />
+				<layout:text key="Scientist firstname" property="firstName"	 styleClass="FIELD"	mode="E,E,E" isRequired="false" />
 			</layout:column>
 			<layout:space/>
 			<layout:row styleClass="rowAlignCenter">
