@@ -55,6 +55,10 @@ public class ViewLabContactForm extends ActionForm implements Serializable {
 	 * Person
 	 */
 	private Person3VO person = new Person3VO();
+	
+	private String name;
+	
+	private String firstName;
 
 	/**
 	 * Used for ViewAll screen
@@ -116,6 +120,22 @@ public class ViewLabContactForm extends ActionForm implements Serializable {
 
 	public void setPerson(Person3VO person) {
 		this.person = person;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public List<LabContact3VO> getListOfLabContacts() {

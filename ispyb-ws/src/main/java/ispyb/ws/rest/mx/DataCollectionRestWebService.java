@@ -363,9 +363,6 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	private byte [] getPdfRtf(String sessionId, String proposal, String reportType, boolean isRtf) throws NamingException, Exception {
 		
-		String methodName = "getDataCollectionReportyBySessionId";
-		long start = this.logInit(methodName, logger, proposal, sessionId, isRtf?"rtf":"pdf");
-
 		Integer id = new Integer(sessionId);
 		
 		List<Map<String, Object>> dataCollections = 

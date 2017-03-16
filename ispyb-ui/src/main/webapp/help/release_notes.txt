@@ -1,3 +1,12 @@
+New TAG : 17.03.08
+
+**************
+* 08.03.2017     *
+**************
+
+- Update of developers documentation with simple authentication and roles explanation
+- New webservices to export reports as PDF/RTF files for EXI
+
 New TAG : 17.02.14
 
 **************
