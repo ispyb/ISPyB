@@ -18,18 +18,18 @@
  ******************************************************************************/
 package ispyb.server.userportal;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import generated.ws.smis.ExpSessionInfoLightVO;
-import generated.ws.smis.InnerScientistVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SampleSheetInfoLightVO;
 import ispyb.common.util.Constants;
@@ -77,11 +77,35 @@ public class UserPortalUtils {
 	    return sampleList;
 	}
 
-	public static List<ProposalParticipantInfoLightVO> jsonToScientistsList(String json){   
-	    Gson gson = new Gson();
-	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
-	    List<ProposalParticipantInfoLightVO> sciList = gson.fromJson(json , listType);
-	    return sciList;
+	public static List<ProposalParticipantInfoLightVO> jsonToScientistsListFromPath(String filename){   
+	    
+	    return jsonToScientistsList(loadJsonFile(filename));
 	}
+	
+	public static List<SampleSheetInfoLightVO> jsonToSamplesListFromPath(String filename){   
+		return jsonToSamplesList(loadJsonFile(filename));
+	}
+	
+	public static List<ExpSessionInfoLightVO> jsonToSessionsListFromPath(String filename){   
+		return jsonToSessionsList(loadJsonFile(filename));
+	}
+
+	public static List<ProposalParticipantInfoLightVO> jsonToScientistsList(String filename){   
+		return jsonToScientistsList(loadJsonFile(filename));
+	}
+	
+	private static String loadJsonFile(String filename) {
+		String path = Constants.PATH_TO_UPLOAD_JSON + filename;
+		String json = "";
+		File file = new File(path);
+		try {
+			json = FileUtils.readFileToString(file);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
 	
 }

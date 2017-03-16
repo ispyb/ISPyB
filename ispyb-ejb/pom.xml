@@ -272,6 +272,7 @@
   			
   			 <!-- <ispyb.userportal.link>JSON</ispyb.userportal.link> -->
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
+  			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
   			
   		</properties>
   	</profile>
@@ -321,6 +322,8 @@
                 	<ispyb.authorisation.active>false</ispyb.authorisation.active>
                 	
                 	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+                	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                	  	
                 </properties>
   	</profile>
   	<profile>
@@ -380,6 +383,8 @@
 				
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+				
 				
   		</properties>
   	</profile> 
@@ -438,7 +443,8 @@
 			<ispyb.authorisation.active>false</ispyb.authorisation.active>
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
-  				
+			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+			  				
   		</properties>
   	</profile> 
   	

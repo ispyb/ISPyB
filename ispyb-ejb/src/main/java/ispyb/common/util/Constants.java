@@ -576,6 +576,8 @@ public final class Constants {
 		return getProperty("userportal.link.type").equals(SITE_USERPORTAL_LINK_SMIS);
 		
 	}
+	
+	public static final String PATH_TO_UPLOAD_JSON = getProperty("ispyb.upload.folder.json");
 
 	public static final String AUTHORISATION_PROPOSALS_SOURCE = getProperty("ISPyB.authorisation.proposals.source");
 
