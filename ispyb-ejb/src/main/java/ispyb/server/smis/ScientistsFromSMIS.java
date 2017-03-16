@@ -23,11 +23,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.userportal.UserPortalUtils;
 import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 
@@ -43,14 +46,20 @@ public class ScientistsFromSMIS {
 			throws Exception {
 		LOG.debug("WS created looking for scientist with name/firstname =  " + name + "/" + firstName);
 
-		ProposalParticipantInfoLightVO[] scientists = null;
+		List<ProposalParticipantInfoLightVO> scientists_ = null;
 
-		// Get the service
-		SMISWebService ws = SMISWebServiceGenerator.getWs();
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+			// Get the service
+			SMISWebService ws = SMISWebServiceGenerator.getWs();		
+			scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, maxResults);
+		} else {
+			// find a way to retrieve the list of scientists in the form of json files
+			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
+			scientists_ = UserPortalUtils.getScientists();
+		}
 		
-		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, maxResults);
-		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
-		 scientists = scientists_.toArray(scientists);
+		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
+		scientists = scientists_.toArray(scientists);
 
 		LOG.debug("Number of scientists found = " + scientists.length);
 
@@ -62,25 +71,29 @@ public class ScientistsFromSMIS {
 		LOG.debug("WS created looking for scientist with name/firstname =  " + name + "/" + firstName);
 
 		Long proposalPk = null;
-		ProposalParticipantInfoLightVO[] scientists = null;
+		List<ProposalParticipantInfoLightVO> scientists_ = null;
 
-		// Get the service
-		SMISWebService ws = SMISWebServiceGenerator.getWs();
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+			// Get the service
+			SMISWebService ws = SMISWebServiceGenerator.getWs();
 		
-		 proposalPk = ws.getProposalPK(proposalCode, proposalNumber);
-		 LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
-		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
-		 firstName);
-		 if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL()) {
+			proposalPk = ws.getProposalPK(proposalCode, proposalNumber);
+			LOG.debug("for proposal : " + proposalCode + " " + proposalNumber + "   proposalPk = " + proposalPk);
+			scientists_ = ws.findScientistsForProposalByNameAndFirstName(proposalPk, name,
+					firstName);
+		 
+			if (name == null && firstName == null && !Constants.SITE_IS_SOLEIL()) {
 				scientists_ = ws.findParticipantsForProposal(proposalPk);
-		 }
+			}
 
-		 
-		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
-		 scientists = scientists_.toArray(scientists);
-		 
-
-
+		} else {
+			// find a way to retrieve the list of scientists in the form of json files
+			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
+			scientists_ = UserPortalUtils.getScientists();	
+		}
+		
+		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
+		scientists = scientists_.toArray(scientists);
 
 		if (scientists != null)
 			LOG.debug("Number of scientists found = " + scientists.length);
@@ -93,14 +106,20 @@ public class ScientistsFromSMIS {
 	public static ProposalParticipantInfoLightVO findUniqueScientist(String name, String firstName) throws Exception {
 		LOG.debug("WS created looking for scientist with name/firstname =  " + name + "/" + firstName);
 
-		ProposalParticipantInfoLightVO[] scientists = null;
+		List<ProposalParticipantInfoLightVO> scientists_ = null;
 
-		// Get the service
-		SMISWebService ws = SMISWebServiceGenerator.getWs();
-		 List<ProposalParticipantInfoLightVO> scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, 2);
-		 scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
-		 scientists = scientists_.toArray(scientists);
-
+		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
+			// Get the service
+			SMISWebService ws = SMISWebServiceGenerator.getWs();
+			scientists_ = ws.findScientistsByNameAndFirstName(name, firstName, 2);
+			
+		} else {
+			// find a way to retrieve the list of scientists in the form of json files
+			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
+			scientists_ = UserPortalUtils.getScientists();	
+		}
+		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
+		scientists = scientists_.toArray(scientists);
 
 		LOG.debug("Number of scientists found = " + scientists.length);
 

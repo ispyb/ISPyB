@@ -92,7 +92,6 @@ import ispyb.server.mx.vos.collections.InputParameterWorkflow;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 public class BiosaxsActions {
 
@@ -708,33 +707,8 @@ public class BiosaxsActions {
 	 * @throws Exception
 	 */
 	public void updateSMISDataBase(Integer proposalId) throws Exception {
-		Proposal3VO myProposal = this.proposal3Service.findByPk(proposalId);
 
-		Long pk = new Long(1);
-
-		switch (Constants.getSite()) {
-		case ESRF:
-			SMISWebService ws = SMISWebServiceGenerator.getWs();
-			pk = ws.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
-			UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-			break;
-		case SOLEIL:
-			SMISWebService wsSOLEIL = SMISWebServiceGenerator.getWs();
-			pk = wsSOLEIL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
-			UpdateFromSMIS.updateThisProposalFromSMISPk(pk);
-			break;
-		case EMBL:
-
-			SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
-			Long uId = wsEMBL.getProposalPK("SAXS", 225L);
-			System.out.println("GREAT!!! " + uId.toString());
-			// pk = wsEMBL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
-			UpdateFromSMIS.updateThisProposalFromSMISPk(uId);
-
-			break;
-		default:
-			break;
-		}
+		UpdateFromSMIS.updateProposalFromSMIS(proposalId);
 
 	}
 

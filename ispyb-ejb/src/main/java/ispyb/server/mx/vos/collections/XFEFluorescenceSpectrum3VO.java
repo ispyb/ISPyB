@@ -132,7 +132,8 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 			String filename, Float energy, Float exposureTime,
 			Float beamTransmission, String annotatedPymcaXfeSpectrum,
 			Float beamSizeVertical, Float beamSizeHorizontal,
-			String crystalClass, String comments, Double flux, Double flux_end) {
+			String crystalClass, String comments, Double flux, Double flux_end,
+			String workingDirectory) {
 		super();
 		this.xfeFluorescenceSpectrumId = xfeFluorescenceSpectrumId;
 		this.sessionVO = sessionVO;
@@ -153,6 +154,7 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 		this.comments = comments;
 		this.flux = flux;
 		this.flux_end = flux_end;
+		this.workingDirectory = workingDirectory;
 	}
 
 	public XFEFluorescenceSpectrum3VO(XFEFluorescenceSpectrum3VO vo) {
@@ -176,6 +178,7 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 		this.comments = vo.getComments();
 		this.flux = vo.getFlux();
 		this.flux_end = vo.getFlux_end();
+		this.workingDirectory = vo.getWorkingDirectory();
 	}
 	
 	
@@ -199,6 +202,7 @@ public class XFEFluorescenceSpectrum3VO extends ISPyBValueObject implements Clon
 		this.comments = vo.getComments();
 		this.flux = vo.getFlux();
 		this.flux_end = vo.getFlux_end();
+		this.workingDirectory = vo.getWorkingDirectory();
 	}
 
 
