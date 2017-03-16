@@ -40,9 +40,10 @@ public class UserPortalUtils {
 	private static String jsonSessions = Constants.getProperty("userportal.json.sessions");
 	private static String jsonProposers = Constants.getProperty("userportal.json.proposers");
 	private static String jsonLabContacts = Constants.getProperty("userportal.json.labcontacts");
+	private static String jsonScientists = Constants.getProperty("userportal.json.scientists");
 		
 	public static List<ProposalParticipantInfoLightVO> getMainProposers() {
-		return jsonToProposersList(jsonProposers);
+		return jsonToScientistsList(jsonProposers);
 	}
 
 	public static List<ExpSessionInfoLightVO> getSessions() {
@@ -54,9 +55,13 @@ public class UserPortalUtils {
 	}
 	
 	public static List<ProposalParticipantInfoLightVO> getLabContacts(){
-		return jsonToLabContactsList(jsonLabContacts);
+		return jsonToScientistsList(jsonLabContacts);
 	}
-	
+
+	public static List<ProposalParticipantInfoLightVO> getScientists(){
+		return jsonToScientistsList(jsonScientists);
+	}
+
 	
 	public static List<SampleSheetInfoLightVO> jsonToSamplesList(String json){   
 	    Gson gson = new Gson();
@@ -72,17 +77,11 @@ public class UserPortalUtils {
 	    return sampleList;
 	}
 
-	public static List<ProposalParticipantInfoLightVO> jsonToProposersList(String json){   
+	public static List<ProposalParticipantInfoLightVO> jsonToScientistsList(String json){   
 	    Gson gson = new Gson();
 	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
-	    List<ProposalParticipantInfoLightVO> sampleList = gson.fromJson(json , listType);
-	    return sampleList;
+	    List<ProposalParticipantInfoLightVO> sciList = gson.fromJson(json , listType);
+	    return sciList;
 	}
-
-	public static List<ProposalParticipantInfoLightVO> jsonToLabContactsList(String json){   
-	    Gson gson = new Gson();
-	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
-	    List<ProposalParticipantInfoLightVO> sampleList = gson.fromJson(json , listType);
-	    return sampleList;
-	}
+	
 }

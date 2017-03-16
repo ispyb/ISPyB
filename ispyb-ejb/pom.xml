@@ -270,8 +270,8 @@
   			
   			<ispyb.db.updatescripts.folder>R:/workspaces_neon/wks_ispyb/ispyb-ejb3/sql_scripts/mysql/update_scripts/2016</ispyb.db.updatescripts.folder>
   			
-  			<!--  <ispyb.userportal.link>JSON</ispyb.userportal.link> -->
-  			 <ispyb.userportal.link>SMIS</ispyb.userportal.link> 
+  			 <!-- <ispyb.userportal.link>JSON</ispyb.userportal.link> -->
+  			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			
   		</properties>
   	</profile>
