@@ -1,7 +1,6 @@
 
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_03_20_Update_v_datacollection_summary.sql','ONGOING');
 
-
 CREATE 
      OR REPLACE ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
@@ -33,6 +32,7 @@ VIEW `v_datacollection_summary` AS
         `Dewar`.`code` AS `Dewar_code`,
         `Dewar`.`storageLocation` AS `Dewar_storageLocation`,
         `Container`.`containerType` AS `Container_containerType`,
+        `Container`.`code` AS `Container_code`,
         `Container`.`capacity` AS `Container_capacity`,
         `Container`.`beamlineLocation` AS `Container_beamlineLocation`,
         `Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,
@@ -73,6 +73,12 @@ VIEW `v_datacollection_summary` AS
         `DataCollection`.`axisStart` AS `DataCollection_axisStart`,
         `DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,
         `DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,
+        `DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,
+        `DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,
+        `DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,
+        `DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,
+        `DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,
+        `DataCollection`.`beamShape` AS `DataCollection_beamShape`,
         `Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,
         `Workflow`.`workflowType` AS `Workflow_workflowType`,
         `Workflow`.`status` AS `Workflow_status`,
@@ -155,8 +161,7 @@ VIEW `v_datacollection_summary` AS
         `DiffractionPlan`.`maxDimAccrossSpindleAxis` AS `maxDimAccrossSpindleAxis`,
         `DiffractionPlan`.`radiationSensitivityBeta` AS `radiationSensitivityBeta`,
         `DiffractionPlan`.`radiationSensitivityGamma` AS `radiationSensitivityGamma`,
-        `DiffractionPlan`.`minOscWidth` AS `minOscWidth`,
-      
+        `DiffractionPlan`.`minOscWidth` AS `minOscWidth`,     
         `Detector`.`detectorType` AS `Detector_detectorType`,
         `Detector`.`detectorManufacturer` AS `Detector_detectorManufacturer`,
         `Detector`.`detectorModel` AS `Detector_detectorModel`,
@@ -173,14 +178,15 @@ VIEW `v_datacollection_summary` AS
         `Detector`.`YGeoCorr` AS `Detector_YGeoCorr`,
         `Detector`.`detectorMode` AS `Detector_detectorMode`,
         `BeamLineSetup`.`undulatorType1` AS `BeamLineSetup_undulatorType1`,
-  `BeamLineSetup`.`undulatorType2` AS `BeamLineSetup_undulatorType2`,
-  `BeamLineSetup`.`undulatorType3` AS `BeamLineSetup_undulatorType3`,
-  `BeamLineSetup`.`synchrotronName` AS `BeamLineSetup_synchrotronName`,
-    `BeamLineSetup`.`polarisation` AS `BeamLineSetup_polarisation`,
-  `BeamLineSetup`.`focusingOptic` AS `BeamLineSetup_focusingOptic`,
-  `BeamLineSetup`.`beamDivergenceHorizontal` AS `BeamLineSetup_beamDivergenceHorizontal`,
-  `BeamLineSetup`.`beamDivergenceVertical` AS `BeamLineSetup_beamDivergenceVertical`,
-   `BeamLineSetup`.`monochromatorType` AS `BeamLineSetup_monochromatorType`
+        `BeamLineSetup`.`undulatorType2` AS `BeamLineSetup_undulatorType2`,
+        `BeamLineSetup`.`undulatorType3` AS `BeamLineSetup_undulatorType3`,
+        `BeamLineSetup`.`synchrotronName` AS `BeamLineSetup_synchrotronName`,
+        `BeamLineSetup`.`synchrotronMode` AS `BeamLineSetup_synchrotronMode`,
+        `BeamLineSetup`.`polarisation` AS `BeamLineSetup_polarisation`,
+        `BeamLineSetup`.`focusingOptic` AS `BeamLineSetup_focusingOptic`,
+        `BeamLineSetup`.`beamDivergenceHorizontal` AS `BeamLineSetup_beamDivergenceHorizontal`,
+        `BeamLineSetup`.`beamDivergenceVertical` AS `BeamLineSetup_beamDivergenceVertical`,
+        `BeamLineSetup`.`monochromatorType` AS `BeamLineSetup_monochromatorType`
     FROM
         (((((((((((((`DataCollectionGroup`
         LEFT JOIN `DataCollection` ON (((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)

@@ -74,6 +74,7 @@ VIEW `v_datacollection` AS
   `BeamLineSetup`.`undulatorType2` AS `undulatorType2`,
   `BeamLineSetup`.`undulatorType3` AS `undulatorType3`,
   `BeamLineSetup`.`synchrotronName` AS `synchrotronName`,
+  `BeamLineSetup`.`synchrotronMode` AS `synchrotronMode`,
     `BeamLineSetup`.`polarisation` AS `polarisation`,
   `BeamLineSetup`.`focusingOptic` AS `focusingOptic`,
   `BeamLineSetup`.`beamDivergenceHorizontal` AS `beamDivergenceHorizontal`,
