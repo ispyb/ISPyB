@@ -76,6 +76,8 @@ VIEW `v_datacollection_summary` AS
         `DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,
         `DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,
         `DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,
+        `DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,
+        `DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,
         `DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,
         `DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,
         `DataCollection`.`beamShape` AS `DataCollection_beamShape`,
