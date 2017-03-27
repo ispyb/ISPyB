@@ -55,7 +55,8 @@ public class ScientistsFromSMIS {
 		} else {
 			// find a way to retrieve the list of scientists in the form of json files
 			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
-			scientists_ = UserPortalUtils.getScientists();
+			String proposal = "all";
+			scientists_ = UserPortalUtils.getScientists(proposal);
 		}
 		
 		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
@@ -89,7 +90,8 @@ public class ScientistsFromSMIS {
 		} else {
 			// find a way to retrieve the list of scientists in the form of json files
 			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
-			scientists_ = UserPortalUtils.getScientists();	
+			String proposal="all";
+			scientists_ = UserPortalUtils.getScientists(proposal);	
 		}
 		
 		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
@@ -116,7 +118,8 @@ public class ScientistsFromSMIS {
 		} else {
 			// find a way to retrieve the list of scientists in the form of json files
 			//scientists_ = UserPortalUtils.jsonToScientistsList(json);
-			scientists_ = UserPortalUtils.getScientists();	
+			String proposal="all";
+			scientists_ = UserPortalUtils.getScientists(proposal);		
 		}
 		ProposalParticipantInfoLightVO[] scientists = new ProposalParticipantInfoLightVO[scientists_.size()];
 		scientists = scientists_.toArray(scientists);
