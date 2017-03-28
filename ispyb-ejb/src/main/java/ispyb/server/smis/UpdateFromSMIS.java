@@ -212,21 +212,43 @@ public class UpdateFromSMIS {
 					// retrieve proposal_no in smis : pk
 					pk = wsInit.getProposalPK(proposalCode, proposalNumberInt);
 				}
+				
+				if (pk != null) {
+					updateThisProposalFromSMISPk(pk);
+					LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk );
+				}
+
 			} else {
-			// find a way to retrieve the user portal pk of the proposal
-			
+				// find a way to retrieve the user portal pk of the proposal
+				// we set it to 0 as we will use json files
+				pk=new Long(0);
+				String proposalName = StringUtils.getProposalName(proposalCode, proposalNumber);				
+				updateProposalFromJsonFiles(proposalName);				
 			}
 
-			if (pk != null) {
-				updateThisProposalFromSMISPk(pk);
-				LOG.info("Update of ISPyB is finished, proposal updated with pk = " + pk);
-			}
-			
+						
 		} catch (NumberFormatException e) {
 			LOG.debug("Update not done because proposalNumber was not a number : " + proposalNumber);
 		}				
-
 	}
+	
+	public static void updateProposalFromJsonFiles(String proposalName) throws Exception {
+	
+		Long pk=new Long(0);
+		LOG.info("Update of ISPyB from User Portal using json files");
+		LOG.debug("update ISPyB database for proposal = " + proposalName);
+						
+		List<SampleSheetInfoLightVO> smisSamples_ = UserPortalUtils.getSamples(proposalName);
+		List<ProposalParticipantInfoLightVO> mainProposers_ = UserPortalUtils.getMainProposers(proposalName);
+		List<ExpSessionInfoLightVO> smisSessions_ = UserPortalUtils.getSessions(proposalName);
+		List<ProposalParticipantInfoLightVO> labContacts_ = UserPortalUtils.getLabContacts(proposalName);
+		
+		updateThisProposalFromLists(smisSessions_,mainProposers_,smisSamples_,labContacts_,pk);				
+		
+		LOG.info("Update of ISPyB is finished, proposal updated: "+  proposalName);
+	}
+
+
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
 
@@ -259,40 +281,60 @@ public class UpdateFromSMIS {
 			case SOLEIL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 				break;
-			}
-				
+			}			
 			mainProposers_ = sws.findMainProposersForProposal(pk);
 			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 			labContacts_ = sws.findParticipantsForProposal(pk);
-		
+			
+			updateThisProposalFromLists(smisSessions_,mainProposers_,smisSamples_,labContacts_,pk);	
 		}
+
 		else {
-			LOG.info("Update of ISPyB from User Portal using json files");
-			smisSamples_ = UserPortalUtils.getSamples();
-			mainProposers_ = UserPortalUtils.getMainProposers();
-			smisSessions_ = UserPortalUtils.getSessions();
-			labContacts_ = UserPortalUtils.getLabContacts();
+			// no method form user portal pk defined
+			LOG.info("Update of ISPyB from User Portal using json files form user portal pk not defined yet");
 		}
-		ProposalParticipantInfoLightVO[] mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
-		mainProposers = mainProposers_.toArray(mainProposers);
-		
-		ExpSessionInfoLightVO[] smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
-		smisSessions = smisSessions_.toArray(smisSessions);
+				
+	}
+	
+	public static void updateThisProposalFromLists(List<ExpSessionInfoLightVO> smisSessions_, List<ProposalParticipantInfoLightVO> mainProposers_,
+			List<SampleSheetInfoLightVO> smisSamples_, List<ProposalParticipantInfoLightVO> labContacts_, Long userPortalPk	) throws Exception {
 
-		SampleSheetInfoLightVO[] smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
-		smisSamples = smisSamples_.toArray(smisSamples);
-
-		ProposalParticipantInfoLightVO[] labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
-		labContacts = labContacts_.toArray(labContacts);
+		// userPortalPk is needed only for SOLEIL to display messages, it can be null or set to 0 if upload by json files
+		
+		ProposalParticipantInfoLightVO[] mainProposers = null;
+		if (mainProposers_ != null) {
+			mainProposers = new ProposalParticipantInfoLightVO[mainProposers_.size()];
+			mainProposers = mainProposers_.toArray(mainProposers);
+			LOG.info("Nb of proposers found : " + mainProposers.length);
+		} else
+			LOG.info("No proposers found");
 
 		
-		LOG.info("Nb of proposers found : " + mainProposers.length);
-		
-		LOG.info("Nb of sessions found : " + smisSessions.length);
+		ExpSessionInfoLightVO[] smisSessions = null;
+		if (smisSessions_ != null) {
+			smisSessions = new ExpSessionInfoLightVO[smisSessions_.size()];
+			smisSessions = smisSessions_.toArray(smisSessions);
+			LOG.info("Nb of sessions found : " + smisSessions.length);
+		} else
+			LOG.info("No sessions found");
 
-		LOG.info("Nb of samplesheets found : " + smisSamples.length);
 		
-		LOG.info("Nb of labcontacts found : " + labContacts.length);
+		SampleSheetInfoLightVO[] smisSamples = null;
+		if (smisSamples_ != null) {
+			smisSamples = new SampleSheetInfoLightVO[smisSamples_.size()];
+			smisSamples = smisSamples_.toArray(smisSamples);
+			LOG.info("Nb of samplesheets found : " + smisSamples.length);
+		} else
+			LOG.info("No samplesheets found");
+
+
+		ProposalParticipantInfoLightVO[] labContacts = null;
+		if (labContacts_ != null) {
+			labContacts = new ProposalParticipantInfoLightVO[labContacts_.size()];
+			labContacts = labContacts_.toArray(labContacts);
+			LOG.info("Nb of labcontacts found : " + labContacts.length);
+		} else
+			LOG.info("No labcontacts found");
 		
 //		LOG.debug("JSON serialization of SMIS objects needed to fill ISPyB");
 //		LOG.debug("Json proposers: ");
@@ -305,7 +347,7 @@ public class UpdateFromSMIS {
 //		LOG.debug(new Gson().toJson(labContacts));
 //		
 		
-		if ( mainProposers.length <1 ) {
+		if ( mainProposers == null || mainProposers.length <1 ) {
 			LOG.info("Problem because no proposers found, could not extract proposal correctly");
 			return;
 		}
@@ -325,10 +367,10 @@ public class UpdateFromSMIS {
 				for (ProposalParticipantInfoLightVO proposer : mainProposers) {
 					if (proposer.getCategoryCode().equalsIgnoreCase("mx")) {
 						mxProposers.add(proposer);
-						LOG.debug(" mx proposers for propos_no = " + pk + " | size = " + mxProposers.size());
+						LOG.debug(" mx proposers for propos_no = " + userPortalPk + " | size = " + mxProposers.size());
 					} else if (proposer.getCategoryCode().equalsIgnoreCase("bx")) {
 						bxProposers.add(proposer);
-						LOG.debug(" bx proposers for propos_no = " + pk + " | size = " + bxProposers.size());
+						LOG.debug(" bx proposers for propos_no = " + userPortalPk + " | size = " + bxProposers.size());
 					}
 				}
 			}
@@ -338,13 +380,13 @@ public class UpdateFromSMIS {
 			loadProposers(mainProposers);
 		} else if (Constants.SITE_IS_SOLEIL()) {
 			if (mxProposers != null && !mxProposers.isEmpty()) {
-				LOG.debug(" search for mx sessions for propos_no = " + pk + " | size = " + mxProposers.size());
+				LOG.debug(" search for mx sessions for propos_no = " + userPortalPk + " | size = " + mxProposers.size());
 				mainProposers = new ProposalParticipantInfoLightVO[mxProposers.size()];
 				mainProposers = mxProposers.toArray(mainProposers);
 				loadProposers(mainProposers);
 			}
 			if (bxProposers != null && !bxProposers.isEmpty()) {
-				LOG.debug(" search for bx sessions for propos_no = " + pk);
+				LOG.debug(" search for bx sessions for propos_no = " + userPortalPk);
 				mainProposers = new ProposalParticipantInfoLightVO[bxProposers.size()];
 				mainProposers = bxProposers.toArray(mainProposers);
 				loadProposers(mainProposers);
@@ -372,13 +414,13 @@ public class UpdateFromSMIS {
 			loadSessions(smisSessions);
 		} else if (Constants.SITE_IS_SOLEIL()) {
 			if (mxSessions != null && !mxSessions.isEmpty()) {
-				LOG.debug(" search for mx sessions for propos_no = " + pk);
+				LOG.debug(" search for mx sessions for propos_no = " + userPortalPk);
 				smisSessions = new ExpSessionInfoLightVO[mxSessions.size()];
 				smisSessions = mxSessions.toArray(smisSessions);
 				loadSessions(smisSessions);
 			}
 			if (bxSessions != null && !bxSessions.isEmpty()) {
-				LOG.debug(" search for bx sessions for propos_no = " + pk);
+				LOG.debug(" search for bx sessions for propos_no = " + userPortalPk);
 				smisSessions = new ExpSessionInfoLightVO[bxSessions.size()];
 				smisSessions = bxSessions.toArray(smisSessions);
 				loadSessions(smisSessions);
@@ -403,13 +445,13 @@ public class UpdateFromSMIS {
 			loadSamples(smisSamples);
 		} else if (Constants.SITE_IS_SOLEIL()) {
 			if (mxSamples != null && !mxSamples.isEmpty()) {
-				LOG.debug(" search for mx samples for propos_no = " + pk);
+				LOG.debug(" search for mx samples for propos_no = " + userPortalPk);
 				smisSamples = new SampleSheetInfoLightVO[mxSamples.size()];
 				smisSamples = mxSamples.toArray(smisSamples);
 				loadSamples(smisSamples);
 			}
 			if (bxSamples != null && !bxSamples.isEmpty()) {
-				LOG.debug(" search for bx samples for propos_no = " + pk);
+				LOG.debug(" search for bx samples for propos_no = " + userPortalPk);
 				smisSamples = new SampleSheetInfoLightVO[bxSamples.size()];
 				smisSamples = bxSamples.toArray(smisSamples);
 				loadSamples(smisSamples);
