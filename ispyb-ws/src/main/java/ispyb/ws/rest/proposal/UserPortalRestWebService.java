@@ -1,20 +1,24 @@
 package ispyb.ws.rest.proposal;
 
+import generated.ws.smis.ExpSessionInfoLightVO;
+import generated.ws.smis.ProposalParticipantInfoLightVO;
+import generated.ws.smis.SampleSheetInfoLightVO;
+import ispyb.server.smis.UpdateFromSMIS;
+import ispyb.server.userportal.UserPortalUtils;
+import ispyb.ws.rest.RestWebService;
+
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.json.Json;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-
-import ispyb.common.util.IspybFileUtils;
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.ws.rest.RestWebService;
 
 @Path("/")
 public class UserPortalRestWebService extends RestWebService{
@@ -39,26 +43,42 @@ public class UserPortalRestWebService extends RestWebService{
 		}
 	}
 	
-	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/userportal/filepath/{filepath}/upload")
+	/**
+	 * Examples of JSON can be found on src/main/resources/userportal
+	 * 
+	 * @param proposers JSON 
+	 * @param samples JSON
+	 * @param sessions JSON
+	 * @param labcontacts JSON
+	 * @return
+	 * @throws Exception
+	 */
+	@RolesAllowed({"Manager"})
+	@POST
+	@Path("{token}/proposal/update")
 	@Produces({ "application/json" })
-	public Response getJsonFromFilepath(@PathParam("token") String token, @PathParam("proposal") String login, 
-			@PathParam("filepath") String filepath) throws Exception {
-		String methodName = "getJsonFromFilepath";
-		long id = this.logInit(methodName, logger, token);
+	public Response updateProposalFromJSON(
+			@FormParam("proposers") String proposers, 
+			@FormParam("samples") String samples,
+			@FormParam("sessions") String sessions,
+			@FormParam("labcontacts") String labcontacts)
+					throws Exception {
+		
+		String methodName = "updateProposalFromJSON";
+		long id = this.logInit(methodName, logger, proposers,samples,sessions, labcontacts );
 		try {
 			
-			byte[] json = IspybFileUtils.getFile(filepath);
-			for (int i = 0; i < json.length; i++) {
-				
-			}
-			String results= new String(json);
-			return this.sendResponse(results);
-
+			List<ProposalParticipantInfoLightVO> proposerList = UserPortalUtils.jsonToScientistsList(proposers);
+			List<SampleSheetInfoLightVO> sampleList = UserPortalUtils.jsonToSamplesList(samples);
+			List<ProposalParticipantInfoLightVO> labcontactList = UserPortalUtils.jsonToScientistsList(labcontacts);
+			List<ExpSessionInfoLightVO> sessionList = UserPortalUtils.jsonToSessionsList(sessions);
+			Long userPortalPk = (long) 0;
+			UpdateFromSMIS.updateThisProposalFromLists(sessionList, proposerList, sampleList, labcontactList, userPortalPk);
+			this.logFinish(methodName, id, logger);
 		} catch (Exception e) {
-			return this.logError("getJsonFromFilepath", e, id, logger);
+			return this.logError("updateProposalFromUserPortal", e, id, logger);
 		}
+		return null;
 	}
 	
 
