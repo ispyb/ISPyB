@@ -33,6 +33,7 @@ import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
 import ispyb.server.biosaxs.vos.utils.parser.RobotXMLParser;
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
 
 import java.io.File;
 import java.util.Arrays;
@@ -59,10 +60,18 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class Experiment3ServiceBean implements Experiment3Service, Experiment3ServiceLocal {
+public class Experiment3ServiceBean  extends WsServiceBean implements Experiment3Service, Experiment3ServiceLocal {
 
 	private final static Logger log = Logger.getLogger(Experiment3ServiceBean.class);
 
+	
+	/**
+	 * QUERIES
+	 */
+	private String GetExperimentDescriptionByExperimentId = getViewExperimentDescriptionTableQuery() + " where experimentId = :experimentId";
+	
+	
+	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -88,10 +97,10 @@ public class Experiment3ServiceBean implements Experiment3Service, Experiment3Se
 		}
 	}
 	
-//	@Override
-//	public List<Experiment3VO> findByProposalId(int proposalId) {
-//		return this.findByProposalId(proposalId, ExperimentScope.MINIMAL);
-//	}
+	private String getViewExperimentDescriptionTableQuery(){
+		return this.getQueryFromResourceFile("/queries/biosaxs/Experiment3ServiceBean/getViewExperimentDescriptionTableQuery.sql");
+	}
+	
 	
 	@Override
 	public List<Experiment3VO> findByProposalId(int proposalId, ExperimentScope scope) {
@@ -196,15 +205,10 @@ public class Experiment3ServiceBean implements Experiment3Service, Experiment3Se
 	
 	@Override
 	public List<Map<String, Object>> getExperimentDescription(Integer experimentId) {
-		StringBuilder mySQLQuery = new StringBuilder(SQLQueryKeeper.getExperimentDescription());
-		mySQLQuery.append(" where experiment.experimentId = :experimentId");
 		Session session = (Session) this.entityManager.getDelegate();
-		SQLQuery query = session.createSQLQuery(mySQLQuery.toString());
+		SQLQuery query = session.createSQLQuery(GetExperimentDescriptionByExperimentId);
 		query.setParameter("experimentId", experimentId);
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		@SuppressWarnings("unchecked")   
-		List<Map<String,Object>> aliasToValueMapList= query.list();
-		return 	aliasToValueMapList;
+		return executeSQLQuery(query);
 	}
 	
 	

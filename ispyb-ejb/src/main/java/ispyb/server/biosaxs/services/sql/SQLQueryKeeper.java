@@ -48,6 +48,9 @@ public class SQLQueryKeeper {
 
 	}
 
+
+	
+	
 	public static String getExperimentDescription() {
 		return "SELECT Buffer.acronym as buffer, Macromolecule.acronym as macromolecule, Specimen.*, Measurement.*, SamplePlatePosition.*, SamplePlate.*  FROM \r\n"
 				+ "Experiment experiment\r\n"
