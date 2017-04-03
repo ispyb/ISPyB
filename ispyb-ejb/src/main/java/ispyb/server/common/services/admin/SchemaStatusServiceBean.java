@@ -64,40 +64,40 @@ public class SchemaStatusServiceBean implements SchemaStatusService, SchemaStatu
 			return doneInDB;
 	}
 
-	@Override
-	public List<String> findScriptsNotDone() throws Exception {
-
-		List<String> results = new ArrayList<String>();
-		List<String> doneInDB = this.getScriptNames(this.findAll());
-		List<String> foundInFolder = this.findUpdateScripts();
-		if (foundInFolder == null) {
-			results.add("No script found ??? may be wrong folder path");
-		}
-		else {			
-			foundInFolder.removeAll(doneInDB);
-			results = foundInFolder;	
-		}
-			return results;
-	}
+//	@Override
+//	public List<String> findScriptsNotDone() throws Exception {
+//
+//		List<String> results = new ArrayList<String>();
+//		List<String> doneInDB = this.getScriptNames(this.findAll());
+//		List<String> foundInFolder = this.findUpdateScripts();
+//		if (foundInFolder == null) {
+//			results.add("No script found ??? may be wrong folder path");
+//		}
+//		else {			
+//			foundInFolder.removeAll(doneInDB);
+//			results = foundInFolder;	
+//		}
+//			return results;
+//	}
 	
-	private List<String> findUpdateScripts() {
-		
-		LOG.info(" Path to scripts = " + Constants.PATH_TO_SCRIPTS );
-		List<String> results = new ArrayList<String>();
-		if (Constants.PATH_TO_SCRIPTS == null) 
-			return null;
-		File[] files = new File(Constants.PATH_TO_SCRIPTS).listFiles();
-		//If this pathname does not denote a directory, then listFiles() returns null. 
-
-		if (files != null) {
-			for (File file : files) {
-				if (file.isFile()) {
-					results.add(file.getName().replaceAll(".sql", ""));
-				}
-			}	
-		}
-		return results;
-	}
+//	private List<String> findUpdateScripts() {
+//		
+//		LOG.info(" Path to scripts = " + Constants.PATH_TO_SCRIPTS );
+//		List<String> results = new ArrayList<String>();
+//		if (Constants.PATH_TO_SCRIPTS == null) 
+//			return null;
+//		File[] files = new File(Constants.PATH_TO_SCRIPTS).listFiles();
+//		//If this pathname does not denote a directory, then listFiles() returns null. 
+//
+//		if (files != null) {
+//			for (File file : files) {
+//				if (file.isFile()) {
+//					results.add(file.getName().replaceAll(".sql", ""));
+//				}
+//			}	
+//		}
+//		return results;
+//	}
 				
 	private List<String> getScriptNames(List<SchemaStatusVO> listVOs){
 		

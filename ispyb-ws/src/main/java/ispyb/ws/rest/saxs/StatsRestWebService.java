@@ -97,17 +97,7 @@ public class StatsRestWebService extends SaxsRestWebService {
 	@Path("stats/experiment/{year}/csv")
 	@Produces("text/plain")
 	public String getStatsCSV(@PathParam("year") int year) {
-		
-		Properties properties = System.getProperties();
-		Enumeration<Object> enumeration = properties.keys();
-		for (int i = 0; i < properties.size(); i++) {
-		    Object obj = enumeration.nextElement();
-		    System.out.println("Key: "+obj+"\tOutPut= "+System.getProperty(obj.toString()));
-		}
-		
 		StringBuilder sb = new StringBuilder();
-		String methodName = "getStatsCSV";
-		long id = this.logInit(methodName, logger, year);
 		try{
 			return this.getCSVStatsByYear(year);
 		}
