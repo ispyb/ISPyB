@@ -1,4 +1,6 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_19_Stats_InnerShell.sql','ONGOING');
+
+drop view if exists v_mx_autoprocessing_stats;
 CREATE 
     ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
@@ -45,6 +47,6 @@ VIEW `v_mx_autoprocessing_stats` AS
         LEFT JOIN `AutoProcIntegration` ON ((`AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId`)))
         LEFT JOIN `DataCollection` ON ((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`)))
         LEFT JOIN `DataCollectionGroup` ON ((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`)))
-        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)))
+        LEFT JOIN `BLSession` ON ((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)));
         
 update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_01_19_Stats_InnerShell.sql'; 

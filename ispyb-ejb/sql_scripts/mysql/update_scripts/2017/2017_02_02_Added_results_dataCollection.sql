@@ -1,5 +1,7 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_02_02_Added_results_dataCollection.sql','ONGOING');
 
+drop view if exists v_datacollection;
+
 CREATE or replace
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 

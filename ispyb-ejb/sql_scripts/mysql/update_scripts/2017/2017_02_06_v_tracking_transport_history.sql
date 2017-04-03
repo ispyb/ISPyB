@@ -2,6 +2,8 @@
 
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_02_06_v_tracking_transport_history.sql','ONGOING');
 
+drop view if exists v_tracking_shipment_history;
+
 CREATE 
     ALGORITHM = MERGE    
 VIEW `v_tracking_shipment_history` AS

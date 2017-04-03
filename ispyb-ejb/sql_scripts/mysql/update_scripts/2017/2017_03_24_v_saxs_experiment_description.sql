@@ -62,6 +62,6 @@ VIEW `v_saxs_experiment_description` AS
         LEFT JOIN `Buffer` ON ((`Buffer`.`bufferId` = `Specimen`.`bufferId`)))
         LEFT JOIN `Measurement` ON ((`Measurement`.`specimenId` = `Specimen`.`specimenId`)))
         LEFT JOIN `SamplePlatePosition` ON ((`Specimen`.`samplePlatePositionId` = `SamplePlatePosition`.`samplePlatePositionId`)))
-        LEFT JOIN `SamplePlate` ON ((`SamplePlate`.`samplePlateId` = `SamplePlatePosition`.`samplePlateId`)))
+        LEFT JOIN `SamplePlate` ON ((`SamplePlate`.`samplePlateId` = `SamplePlatePosition`.`samplePlateId`)));
 
 update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_03_24_v_saxs_experiment_description.sql';

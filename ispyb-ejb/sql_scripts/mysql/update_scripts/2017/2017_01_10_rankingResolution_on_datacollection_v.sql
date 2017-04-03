@@ -1,6 +1,6 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_10_rankingResolution_on_datacollection_v.sql','ONGOING');
 
-drop view v_datacollection;
+drop view if exists v_datacollection;
 
 CREATE 
     ALGORITHM = MERGE 
@@ -77,7 +77,7 @@ VIEW `pydb`.`v_datacollection` AS
         LEFT JOIN `pydb`.`Workflow` ON ((`pydb`.`DataCollectionGroup`.`workflowId` = `pydb`.`Workflow`.`workflowId`)))
         LEFT JOIN `pydb`.`BLSession` ON ((`pydb`.`BLSession`.`sessionId` = `pydb`.`DataCollectionGroup`.`sessionId`)))
         LEFT JOIN `pydb`.`Screening` ON ((`pydb`.`Screening`.`dataCollectionGroupId` = `pydb`.`DataCollection`.`dataCollectionGroupId`)))
-        LEFT JOIN `pydb`.`ScreeningOutput` ON ((`pydb`.`ScreeningOutput`.`screeningId` = `pydb`.`Screening`.`screeningId`)))
+        LEFT JOIN `pydb`.`ScreeningOutput` ON ((`pydb`.`ScreeningOutput`.`screeningId` = `pydb`.`Screening`.`screeningId`)));
         
 -- last line of script  
 update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_01_10_rankingResolution_on_datacollection_v.sql'; 
