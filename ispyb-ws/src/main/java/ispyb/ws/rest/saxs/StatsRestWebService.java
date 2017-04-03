@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Properties;
 
 import javax.annotation.security.PermitAll;
 import javax.naming.NamingException;
@@ -95,6 +97,13 @@ public class StatsRestWebService extends SaxsRestWebService {
 	@Path("stats/experiment/{year}/csv")
 	@Produces("text/plain")
 	public String getStatsCSV(@PathParam("year") int year) {
+		
+		Properties properties = System.getProperties();
+		Enumeration<Object> enumeration = properties.keys();
+		for (int i = 0; i < properties.size(); i++) {
+		    Object obj = enumeration.nextElement();
+		    System.out.println("Key: "+obj+"\tOutPut= "+System.getProperty(obj.toString()));
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		String methodName = "getStatsCSV";
