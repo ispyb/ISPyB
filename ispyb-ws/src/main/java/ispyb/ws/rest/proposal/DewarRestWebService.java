@@ -1,14 +1,15 @@
 package ispyb.ws.rest.proposal;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
@@ -291,7 +292,14 @@ public class DewarRestWebService extends RestWebService {
 				dewar3vo.setShippingVO(shipping);
 				if (shipping.getSessions() != null){
 					if (shipping.getSessions().size() > 0){
-						dewar3vo.setSessionVO(shipping.getSessions().iterator().next());
+						Set<Session3VO> set = shipping.getSessions();
+						for (Session3VO session3vo : set) {
+							if (session3vo != null) {
+								dewar3vo.setSessionVO(session3vo);
+								break;
+							}
+						}
+						
 					}
 				}
 				dewar3vo = getDewar3Service().create(dewar3vo);
@@ -338,19 +346,30 @@ public class DewarRestWebService extends RestWebService {
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
-		// Retrieve dewar object ---------------------------
-		Integer sessionId = null;
-		if (dewar.getSessionVO() != null)
-			sessionId = dewar.getSessionVO().getSessionId();
 
-		// SessionValue session = sessionService.findByPrimaryKey(sessionId);
-		Session3VO session = null;
-		if (sessionId != null)
-			session = this.getSession3Service().findByPk(sessionId, false, false, false);
 
 		// Retrieve shipment object ------------------------
 		Shipping3VO shipping = dewar.getShippingVO();
 		shipping = this.getShipping3Service().loadEager(shipping);
+		
+		// Retrieve dewar object ---------------------------
+		//TODO understand why sessionVO is null in dewarVO
+		
+		Integer sessionId = null;
+		Session3VO session = null;
+		if (dewar.getSessionVO() != null) {
+			sessionId = dewar.getSessionVO().getSessionId();
+		}
+		else if (shipping.getSessions() != null && shipping.getSessions().size() > 0) {
+			Set<Session3VO> set = shipping.getSessions();
+			for (Session3VO session3vo : set) {
+				if (session3vo != null) {
+					dewar.setSessionVO(session3vo);
+					session =session3vo;
+					break;
+				}
+			}
+		}		
 
 		// Retrieve SENDING labcontact object ---------------
 		Integer sendingLabContactId = shipping.getSendingLabContactId();

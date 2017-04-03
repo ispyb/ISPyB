@@ -7,6 +7,7 @@ import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
@@ -182,9 +183,18 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("setShippingStatus", logger, token, proposal, shippingId);
 		try {
-			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, false, false, false);
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, false, false);
 			result.setShippingStatus(status);
 			this.getShipping3Service().update(result);
+			/**
+			 * Issue 69 status of shipment also should update dewars status
+			 * https://github.com/ispyb/ISPyB/issues/69
+			 **/
+			for (Dewar3VO dewar : result.getDewars()) {
+				logger.info("Updating dewar status " + dewar.getDewarId() + " from " + dewar.getDewarStatus() + " to " + status);
+				dewar.setDewarStatus(status);
+				this.getDewar3Service().update(dewar);
+			}
 			this.logFinish("setShippingStatus", id, logger);
 			HashMap<String, String> response = new HashMap<String, String>();
 			response.put("setShippingStatus", "ok");
