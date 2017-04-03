@@ -1,4 +1,6 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_19_Stats_InnerShell.sql','ONGOING');
+
+drop view if exists v_mx_autoprocessing_stats;
 CREATE 
     ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
