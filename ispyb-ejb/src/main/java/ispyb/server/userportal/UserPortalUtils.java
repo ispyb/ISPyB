@@ -19,12 +19,12 @@
 package ispyb.server.userportal;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,36 +33,53 @@ import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SampleSheetInfoLightVO;
 import ispyb.common.util.Constants;
+import ispyb.common.util.PathUtils;
+import ispyb.server.smis.UpdateFromSMIS;
 
 public class UserPortalUtils {
+	
+	private static final Logger LOG = Logger.getLogger(UserPortalUtils.class);
+
 	
 	private static String jsonSamples = Constants.getProperty("userportal.json.samples");
 	private static String jsonSessions = Constants.getProperty("userportal.json.sessions");
 	private static String jsonProposers = Constants.getProperty("userportal.json.proposers");
 	private static String jsonLabContacts = Constants.getProperty("userportal.json.labcontacts");
 	private static String jsonScientists = Constants.getProperty("userportal.json.scientists");
+	private static String filepathPrefix = Constants.getProperty("ispyb.upload.folder.json");
+	
+	// the filepath is defined by a custom property in pom.xml + name of the proposal in small letters + word to define the type of extraction
 		
-	public static List<ProposalParticipantInfoLightVO> getMainProposers() {
+	public static List<ProposalParticipantInfoLightVO> getMainProposers(String proposalName) throws IOException {
+		String filepath = filepathPrefix + proposalName + "_json_proposers";
+		jsonProposers = loadJsonFile(filepath);
 		return jsonToScientistsList(jsonProposers);
 	}
 
-	public static List<ExpSessionInfoLightVO> getSessions() {
+	public static List<ExpSessionInfoLightVO> getSessions(String proposalName) throws IOException {
+		String filepath = filepathPrefix + proposalName + "_json_sessions";
+		jsonSessions = loadJsonFile(filepath);
 		return jsonToSessionsList(jsonSessions);
 	}
 
-	public static List<SampleSheetInfoLightVO> getSamples() {
+	public static List<SampleSheetInfoLightVO> getSamples(String proposalName) throws IOException {
+		String filepath = filepathPrefix + proposalName + "_json_samples"; 
+		jsonSamples = loadJsonFile(filepath);
 		return jsonToSamplesList(jsonSamples);
 	}
 	
-	public static List<ProposalParticipantInfoLightVO> getLabContacts(){
+	public static List<ProposalParticipantInfoLightVO> getLabContacts(String proposalName) throws IOException {
+		String filepath = filepathPrefix + proposalName + "_json_labcontacts";
+		jsonLabContacts  = loadJsonFile(filepath);
 		return jsonToScientistsList(jsonLabContacts);
 	}
 
-	public static List<ProposalParticipantInfoLightVO> getScientists(){
+	public static List<ProposalParticipantInfoLightVO> getScientists(String proposalName) throws IOException {
+		String filepath = filepathPrefix + proposalName + "_json_scientists";
+		jsonScientists= loadJsonFile(filepath);
 		return jsonToScientistsList(jsonScientists);
 	}
-
-	
+		
 	public static List<SampleSheetInfoLightVO> jsonToSamplesList(String json){   
 	    Gson gson = new Gson();
 	    Type listType = new TypeToken<List<SampleSheetInfoLightVO>>() {}.getType();
@@ -76,28 +93,19 @@ public class UserPortalUtils {
 	    List<ExpSessionInfoLightVO> sampleList = gson.fromJson(json , listType);
 	    return sampleList;
 	}
-
-	public static List<ProposalParticipantInfoLightVO> jsonToScientistsListFromPath(String filename){   
-	    
-	    return jsonToScientistsList(loadJsonFile(filename));
+	
+	public static List<ProposalParticipantInfoLightVO> jsonToScientistsList(String json){   
+	    Gson gson = new Gson();
+	    Type listType = new TypeToken<List<ProposalParticipantInfoLightVO>>() {}.getType();
+	    List<ProposalParticipantInfoLightVO> scientistList = gson.fromJson(json , listType);
+	    return scientistList;
 	}
 	
-	public static List<SampleSheetInfoLightVO> jsonToSamplesListFromPath(String filename){   
-		return jsonToSamplesList(loadJsonFile(filename));
-	}
-	
-	public static List<ExpSessionInfoLightVO> jsonToSessionsListFromPath(String filename){   
-		return jsonToSessionsList(loadJsonFile(filename));
-	}
-
-	public static List<ProposalParticipantInfoLightVO> jsonToScientistsList(String filename){   
-		return jsonToScientistsList(loadJsonFile(filename));
-	}
-	
-	private static String loadJsonFile(String filename) {
-		String path = Constants.PATH_TO_UPLOAD_JSON + filename;
+	private static String loadJsonFile(String filepath) {
 		String json = "";
-		File file = new File(path);
+		filepath = PathUtils.FitPathToOS(filepath);
+		LOG.debug("path to json files : " + filepath);
+		File file = new File(filepath);
 		try {
 			json = FileUtils.readFileToString(file);
 			

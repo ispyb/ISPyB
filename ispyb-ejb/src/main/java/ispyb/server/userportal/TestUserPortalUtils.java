@@ -29,7 +29,8 @@ public class TestUserPortalUtils {
 		try {
 			System.out.println("*************** testUserPortalUtils ***************");
 			
-			smisSessions_ = UserPortalUtils.getSessions();
+			String proposal = "mx415";
+			smisSessions_ = UserPortalUtils.getSessions(proposal);
 			
 			System.out.println("Importing sessions = "+ smisSessions_.size());
 			int i=0;
@@ -50,7 +51,7 @@ public class TestUserPortalUtils {
 			}
 			
 			//smisSamples_ = UserPortalUtils.jsonToSamplesList(jsonSamples);
-			smisSamples_ = UserPortalUtils.getSamples();
+			smisSamples_ = UserPortalUtils.getSamples(proposal);
 			
 			System.out.println("Importing samples = "+ smisSamples_.size());
 			i=0;
@@ -61,7 +62,7 @@ public class TestUserPortalUtils {
 			}
 		
 			//mainProposers_ = UserPortalUtils.jsonToProposersList(jsonProposers);
-			mainProposers_ = UserPortalUtils.getMainProposers();
+			mainProposers_ = UserPortalUtils.getMainProposers(proposal);
 			
 			System.out.println("Importing proposers = "+ mainProposers_.size());
 			i=0;
@@ -73,7 +74,7 @@ public class TestUserPortalUtils {
 
 			
 			//labContacts_ = UserPortalUtils.jsonToProposersList(jsonLabContacts);
-			labContacts_ = UserPortalUtils.getLabContacts();
+			labContacts_ = UserPortalUtils.getLabContacts(proposal);
 			
 			System.out.println("Importing lab contacts = "+ labContacts_.size());
 			i=0;
