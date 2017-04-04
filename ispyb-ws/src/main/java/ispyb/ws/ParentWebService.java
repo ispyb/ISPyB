@@ -181,6 +181,7 @@ public  class ParentWebService {
 		return (Container3Service) Ejb3ServiceLocator.getInstance().getLocalService(Container3Service.class);
 	}
 	
+	
 	protected ShipmentRestWsService getShipmentWsService() throws NamingException {
 		return (ShipmentRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(ShipmentRestWsService.class);
 	}

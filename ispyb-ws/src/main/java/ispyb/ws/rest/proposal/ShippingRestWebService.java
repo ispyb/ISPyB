@@ -8,10 +8,12 @@ import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -194,6 +196,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			for (Dewar3VO dewar : result.getDewars()) {
 				logger.info("\t Updating dewar status " + dewar.getDewarId() + " from " + dewar.getDewarStatus() + " to " + status);
 				dewar.setDewarStatus(status);
+				
 				this.getDewar3Service().update(dewar);
 				for (Container3VO container : dewar.getContainerVOs()) {
 					logger.info("\t\tUpdating container status " + container.getContainerId() + " from " + container.getContainerStatus() + " to " + status);
@@ -201,6 +204,9 @@ public class ShippingRestWebService extends MXRestWebService {
 					this.getContainer3Service().update(container);
 				}
 			}
+			
+			
+			
 			this.logFinish("setShippingStatus", id, logger);
 			HashMap<String, String> response = new HashMap<String, String>();
 			response.put("setShippingStatus", "ok");
