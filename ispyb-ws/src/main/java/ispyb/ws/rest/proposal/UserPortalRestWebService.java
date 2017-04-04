@@ -1,9 +1,10 @@
 package ispyb.ws.rest.proposal;
 
-import java.util.List;
+import ispyb.common.util.IspybFileUtils;
+import ispyb.server.smis.UpdateFromSMIS;
+import ispyb.ws.rest.RestWebService;
 
 import javax.annotation.security.RolesAllowed;
-import javax.json.Json;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,10 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-
-import ispyb.common.util.IspybFileUtils;
-import ispyb.server.smis.UpdateFromSMIS;
-import ispyb.ws.rest.RestWebService;
 
 @Path("/")
 public class UserPortalRestWebService extends RestWebService{

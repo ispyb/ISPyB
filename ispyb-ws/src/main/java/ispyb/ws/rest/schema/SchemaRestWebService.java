@@ -2,8 +2,6 @@ package ispyb.ws.rest.schema;
 
 import ispyb.ws.rest.RestWebService;
 
-import java.util.List;
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,10 +23,7 @@ public class SchemaRestWebService extends RestWebService{
 		String methodName = "getScriptsDone";
 		long id = this.logInit(methodName, logger);
 		try {
-			
-			List<String> results = getSchemaStatusService().findScriptsDone();
-			return this.sendResponse(results);
-
+			return this.sendResponse(getSchemaStatusService().findAll());
 		} catch (Exception e) {
 			return this.logError("getScriptsDone", e, id, logger);
 		}
