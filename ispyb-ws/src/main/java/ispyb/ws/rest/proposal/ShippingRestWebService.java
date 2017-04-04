@@ -200,7 +200,6 @@ public class ShippingRestWebService extends MXRestWebService {
 					container.setContainerStatus(status);
 					this.getContainer3Service().update(container);
 				}
-				
 			}
 			this.logFinish("setShippingStatus", id, logger);
 			HashMap<String, String> response = new HashMap<String, String>();
