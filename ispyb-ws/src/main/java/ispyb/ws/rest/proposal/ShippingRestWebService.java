@@ -185,6 +185,13 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("setShippingStatus", logger, token, proposal, shippingId);
 		try {
+			/**
+			 * This should be changed passing the status as form param
+			 */
+			if (status.equals("Sent_to_ESRF")){
+				status = "Sent to ESRF";
+			}
+			
 			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true,true, false);
 			logger.info("Updating shipping status " + result.getShippingId() + " from " + result.getShippingStatus() + " to " + status);
 			result.setShippingStatus(status);
