@@ -1,0 +1,34 @@
+[
+   {
+      "categoryCode":"MX",
+      "categoryCounter":415,
+      "labAddress":[
+         null,
+         "71 avenue des Martyrs",
+         "CS 40220",
+         null,
+         "38043"
+      ],
+      "labAddress1":"71 avenue des Martyrs",
+      "labAddress2":"CS 40220",
+      "labCity":"GRENOBLE",
+      "labCountryCode":"ESRF",
+      "labName":"ESRF",
+      "labPostalCode":"38043",
+      "laboratoryPk":200450,
+      "mainProposer":true,
+      "pk":181482,
+      "proposalGroup":103,
+      "proposalPk":31529,
+      "proposalTitle":"TEST",
+      "proposalType":3,
+      "proposer":true,
+      "scientistEmail":"monaco@esrf.fr",
+      "scientistFirstName":"St�phanie",
+      "scientistName":"MONACO",
+      "scientistPk":225239,
+      "scientistTitle":"Dr",
+      "siteId":17074,
+      "user":true
+   }
+]
