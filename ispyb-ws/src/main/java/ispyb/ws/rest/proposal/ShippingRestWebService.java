@@ -183,7 +183,8 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("setShippingStatus", logger, token, proposal, shippingId);
 		try {
-			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, false, false);
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true,true, false);
+			logger.info("Updating shipping status " + result.getShippingId() + " from " + result.getShippingStatus() + " to " + status);
 			result.setShippingStatus(status);
 			this.getShipping3Service().update(result);
 			/**
@@ -191,9 +192,15 @@ public class ShippingRestWebService extends MXRestWebService {
 			 * https://github.com/ispyb/ISPyB/issues/69
 			 **/
 			for (Dewar3VO dewar : result.getDewars()) {
-				logger.info("Updating dewar status " + dewar.getDewarId() + " from " + dewar.getDewarStatus() + " to " + status);
+				logger.info("\t Updating dewar status " + dewar.getDewarId() + " from " + dewar.getDewarStatus() + " to " + status);
 				dewar.setDewarStatus(status);
 				this.getDewar3Service().update(dewar);
+				for (Container3VO container : dewar.getContainerVOs()) {
+					logger.info("\t\tUpdating container status " + container.getContainerId() + " from " + container.getContainerStatus() + " to " + status);
+					container.setContainerStatus(status);
+					this.getContainer3Service().update(container);
+				}
+				
 			}
 			this.logFinish("setShippingStatus", id, logger);
 			HashMap<String, String> response = new HashMap<String, String>();
