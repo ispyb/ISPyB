@@ -25,23 +25,26 @@ public class UserPortalRestWebService extends RestWebService{
 
 	private final static Logger logger = Logger.getLogger(UserPortalRestWebService.class);
 		
-	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/userportal/update")
-	@Produces({ "application/json" })
-	public Response updateProposalFromUserPortal(@PathParam("token") String token, @PathParam("proposal") String login) throws Exception {
-		String methodName = "updateProposalFromUserPortal";
-		long id = this.logInit(methodName, logger, token);
-		try {
-			
-			UpdateFromSMIS.updateProposalFromJsonFiles(login);
-			String results= "success";
-			return this.sendResponse(results);
-
-		} catch (Exception e) {
-			return this.logError("updateProposalFromUserPortal", e, id, logger);
-		}
-	}
+	/**
+	 * This method will update from a JSON file which file path is in the pom.xml
+	 */
+//	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+//	@GET
+//	@Path("{token}/proposal/{proposal}/userportal/update")
+//	@Produces({ "application/json" })
+//	public Response updateProposalFromUserPortal(@PathParam("token") String token, @PathParam("proposal") String login) throws Exception {
+//		String methodName = "updateProposalFromUserPortal";
+//		long id = this.logInit(methodName, logger, token);
+//		try {
+//			
+//			UpdateFromSMIS.updateProposalFromJsonFiles(login);
+//			String results= "success";
+//			return this.sendResponse(results);
+//
+//		} catch (Exception e) {
+//			return this.logError("updateProposalFromUserPortal", e, id, logger);
+//		}
+//	}
 	
 	/**
 	 * Examples of JSON can be found on src/main/resources/userportal
@@ -55,7 +58,7 @@ public class UserPortalRestWebService extends RestWebService{
 	 */
 	@RolesAllowed({"Manager"})
 	@POST
-	@Path("{token}/proposal/update")
+	@Path("{token}/userportal/ingest")
 	@Produces({ "application/json" })
 	public Response updateProposalFromJSON(
 			@FormParam("proposers") String proposers, 
