@@ -4,7 +4,7 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_24_Removed_ranking_from_view.sql','ONGOING');
 USE `pydb`;
 
-drop view v_datacollection;
+drop view if exists v_datacollection;
 
 CREATE 
      OR REPLACE ALGORITHM = MERGE 

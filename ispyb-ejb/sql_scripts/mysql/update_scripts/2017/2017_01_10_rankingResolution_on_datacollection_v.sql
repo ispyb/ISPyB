@@ -1,6 +1,6 @@
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_01_10_rankingResolution_on_datacollection_v.sql','ONGOING');
 
-drop view v_datacollection;
+drop view if exists v_datacollection;
 
 CREATE 
     ALGORITHM = MERGE 

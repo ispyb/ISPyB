@@ -1,28 +1,5 @@
 package ispyb.ws.rest.proposal;
 
-import java.io.ByteArrayOutputStream;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.security.RolesAllowed;
-import javax.naming.NamingException;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Logger;
-
 import ispyb.common.util.Constants;
 import ispyb.common.util.PDFFormFiller;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
@@ -38,6 +15,28 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsService;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
+
+import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
 
 @Path("/")
 public class DewarRestWebService extends RestWebService {
@@ -94,39 +93,6 @@ public class DewarRestWebService extends RestWebService {
 		}
 
 	}
-	
-	/*
-	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/dewar/{dewarId}/status/{status}/update")
-	@Produces({ "application/json" })
-	public Response setDewarStatus(
-			@PathParam("token") String token, 
-			@PathParam("proposal") String proposal,
-			@PathParam("dewarId") Integer dewarId,
-			@PathParam("status") String status) throws Exception {
-
-		long id = this.logInit("setDewarStatus", logger, token, proposal, dewarId);
-		try {
-			Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, false, false);
-			dewar.setDewarStatus(status);
-			//If processing it blocks the shipment 
-			if (status.equals("processing")){
-				int shippingId = dewar.getShippingVO().getShippingId();
-				Shipping3VO shipment  = this.getShipping3Service().findByPk(shippingId, false);
-				shipment.setShippingStatus(status);
-				this.getShipping3Service().update(shipment);
-			}
-			this.getDewar3Service().update(dewar);
-			this.logFinish("setDewarStatus", id, logger);
-			HashMap<String, String> response = new HashMap<String, String>();
-			response.put("setShippingStatus", "ok");
-			return sendResponse(response);
-		} catch (Exception e) {
-			return this.logError("setDewarStatus", e, id, logger);
-		}
-
-	}*/
 	
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
