@@ -70,7 +70,7 @@ public class UserPortalRestWebService extends RestWebService{
 		String methodName = "updateProposalFromJSON";
 		long id = this.logInit(methodName, logger, proposers,samples,sessions, labcontacts );
 		try {
-			
+			System.out.println(proposers);
 			List<ProposalParticipantInfoLightVO> proposerList = UserPortalUtils.jsonToScientistsList(proposers);
 			List<SampleSheetInfoLightVO> sampleList = UserPortalUtils.jsonToSamplesList(samples);
 			List<ProposalParticipantInfoLightVO> labcontactList = UserPortalUtils.jsonToScientistsList(labcontacts);
