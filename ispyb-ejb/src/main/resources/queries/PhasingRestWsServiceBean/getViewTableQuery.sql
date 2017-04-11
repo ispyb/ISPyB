@@ -22,7 +22,16 @@ ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `pdb`,
 (SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
 FROM `PhasingProgramAttachment` 
 WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.png%')) 
-ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `png`
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `png`,
 
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.png%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `phasingProgramAttachmentId`,
+
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.fileType)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.png%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `fileType`
 
 from v_phasing 

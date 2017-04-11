@@ -311,7 +311,7 @@ public class PhasingRestWebService extends MXRestWebService {
 						/** Returns file **/
 						System.out.println("Single file");
 						System.out.println(list.get(0).get(0).get("filePath"));
-						return this.downloadFile(list.get(0).get(0).get("filePath").toString());
+						return this.downloadFileAsAttachment(list.get(0).get(0).get("filePath").toString());
 					}
 				}
 			}
@@ -360,7 +360,7 @@ public class PhasingRestWebService extends MXRestWebService {
 						/** Returns file **/
 						System.out.println("Single file");
 						System.out.println(list.get(0).get(0).get("filePath"));
-						return this.downloadFile(list.get(0).get(0).get("filePath").toString());
+						return this.downloadFileAsAttachment(list.get(0).get(0).get("filePath").toString());
 					}
 				}
 			}
@@ -390,7 +390,7 @@ public class PhasingRestWebService extends MXRestWebService {
 				if (attachment.getFilePath() != null){
 					if (new File(attachment.getFilePath()).exists()){
 						this.logFinish(methodName, start, logger);
-						return this.downloadFile(attachment.getFilePath());
+						return this.downloadFileAsAttachment(attachment.getFilePath());
 					}
 					else{
 						throw new Exception("File " +  attachment.getFilePath() + " does not exist");

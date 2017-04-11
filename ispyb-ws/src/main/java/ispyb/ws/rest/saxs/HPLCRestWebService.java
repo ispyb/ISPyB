@@ -174,7 +174,7 @@ public class HPLCRestWebService extends SaxsRestWebService {
 		
 		try {
 			String filePath = getH5FilePathByExperimentId(experimentId, this.getProposalId(proposal));
-			return this.downloadFile(filePath);
+			return this.downloadFileAsAttachment(filePath);
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
