@@ -312,8 +312,6 @@ public class DewarRestWebService extends RestWebService {
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
-
-
 		// Retrieve shipment object ------------------------
 		Shipping3VO shipping = dewar.getShippingVO();
 		shipping = this.getShipping3Service().loadEager(shipping);
@@ -321,21 +319,34 @@ public class DewarRestWebService extends RestWebService {
 		// Retrieve dewar object ---------------------------
 		//TODO understand why sessionVO is null in dewarVO
 		
-		Integer sessionId = null;
+//		Integer sessionId = null;
+		
 		Session3VO session = null;
 		if (dewar.getSessionVO() != null) {
-			sessionId = dewar.getSessionVO().getSessionId();
+//			sessionId = dewar.getSessionVO().getSessionId();
+			session = dewar.getSessionVO();
 		}
-		else if (shipping.getSessions() != null && shipping.getSessions().size() > 0) {
-			Set<Session3VO> set = shipping.getSessions();
-			for (Session3VO session3vo : set) {
-				if (session3vo != null) {
-					dewar.setSessionVO(session3vo);
-					session =session3vo;
-					break;
-				}
+		else{
+//			if (shipping.getSessions() != null && shipping.getSessions().size() > 0) {
+//			Set<Session3VO> set = shipping.getSessions();
+//			for (Session3VO session3vo : set) {
+//				if (session3vo != null) {
+//					dewar.setSessionVO(session3vo);
+//					session =session3vo;
+//					break;
+//				}
+//			}
+			List<Session3VO> sessions = this.getSession3Service().findByShippingId(shipping.getShippingId());
+			if (sessions.size() > 0){
+				session = sessions.get(0);
 			}
-		}		
+		}	
+		if (session == null){
+			logger.warn("Session is null for dewar: " + dewarId);
+		}
+		else{
+		    dewar.setSessionVO(session);
+		}
 
 		// Retrieve SENDING labcontact object ---------------
 		Integer sendingLabContactId = shipping.getSendingLabContactId();
