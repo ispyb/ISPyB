@@ -40,7 +40,7 @@ public class CrystalRestWebService extends MXRestWebService {
 			this.logFinish(methodName, start, logger);
 			if (filePath != null){
 				if (new File(filePath).exists()){
-					return this.downloadFile(filePath);
+					return this.downloadFileAsAttachment(filePath);
 				}
 			}
 			throw new Exception("File " + filePath + " does not exit");
