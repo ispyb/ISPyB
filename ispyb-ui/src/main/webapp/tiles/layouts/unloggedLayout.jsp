@@ -70,7 +70,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
   </TBODY>
 </TABLE>
 
-<c:if test="${SITE_ATTRIBUTE eq 'ESRF'}">
+<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'ALBA'}">
 	<!-- ****************** begin Body of the page: menu left + content + footer *********************** -->
 	<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
 	  <TBODY>

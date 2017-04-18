@@ -30,7 +30,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	BarContext bar = new BarContext(request);
 	%>
 
-<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'SOLEIL' or SITE_ATTRIBUTE eq 'ALBA' }">
+<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'SOLEIL'}">
 	<TR bgColor=#ffffff>
 		<TD vAlign=center colspan=2>
 			<TABLE  cellpadding="0" cellspacing="0">
@@ -137,6 +137,33 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 </c:if>
 
 <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+	<TR bgColor=#ffffff>
+		<TD vAlign=center colspan=2>
+			<TABLE  cellpadding="0" cellspacing="0">
+				<TR>
+				    <TD>&nbsp;</TD>
+					<logic:iterate id="contextItem" collection="<%=bar.getContext()%>" type="ispyb.server.common.vos.config.Menu3VO">
+						<TD>
+							<IMG src="<%=request.getContextPath()%>/images/blue-arrow.gif">
+							<A class=navbarchild 
+							<logic:present name="contextItem" property="action">href="<bean:write name="contextItem" property="action"/>"</logic:present>>
+							<bean:write name="contextItem" property="name"/></A>
+							&nbsp;
+			     		</TD>
+		     		</logic:iterate>
+	 				<!--   
+					<TD>
+						&nbsp;<IMG src="<%=request.getContextPath()%>/images/blue-arrow.gif">
+						<A class=navbarchild><%=  request.getRequestURL().toString().substring(request.getRequestURL().toString().lastIndexOf('/'))  %></A>
+					</TD>
+					-->
+				</TR>
+			</TABLE>
+  		</TD>
+    </TR>
+</c:if>
+
+<c:if test="${SITE_ATTRIBUTE eq 'ALBA'}">
 	<TR bgColor=#ffffff>
 		<TD vAlign=center colspan=2>
 			<TABLE  cellpadding="0" cellspacing="0">
