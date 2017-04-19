@@ -1,25 +1,17 @@
 package ispyb.ws.rest.saxs;
 
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.ws.rest.RestWebService;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -105,10 +97,7 @@ public class StatsRestWebService extends SaxsRestWebService {
 	@Path("stats/experiment/{year}/csv")
 	@Produces("text/plain")
 	public String getStatsCSV(@PathParam("year") int year) {
-		
 		StringBuilder sb = new StringBuilder();
-		String methodName = "getStatsCSV";
-		long id = this.logInit(methodName, logger, year);
 		try{
 			return this.getCSVStatsByYear(year);
 		}

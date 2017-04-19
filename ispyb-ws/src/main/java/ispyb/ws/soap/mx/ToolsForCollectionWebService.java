@@ -392,7 +392,7 @@ public class ToolsForCollectionWebService {
 	@WebResult(name = "dataCollectionId")
 	public Integer storeOrUpdateDataCollection(@WebParam(name = "dataCollection")
 	DataCollectionWS3VO vo) throws Exception {
-		try {
+		try {			
 			LOG.debug("storeOrUpdateDataCollection");
 			// if vo is null we return null, no creation
 			if (vo == null)
