@@ -1,27 +1,5 @@
 package ispyb.ws.rest.proposal;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.security.RolesAllowed;
-import javax.naming.NamingException;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Logger;
-
 import ispyb.common.util.Constants;
 import ispyb.common.util.PDFFormFiller;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
@@ -37,6 +15,28 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.services.ws.rest.dewar.DewarRestWsService;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
+
+import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.security.RolesAllowed;
+import javax.naming.NamingException;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
 
 @Path("/")
 public class DewarRestWebService extends RestWebService {
@@ -93,39 +93,6 @@ public class DewarRestWebService extends RestWebService {
 		}
 
 	}
-	
-	/*
-	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-	@GET
-	@Path("{token}/proposal/{proposal}/dewar/{dewarId}/status/{status}/update")
-	@Produces({ "application/json" })
-	public Response setDewarStatus(
-			@PathParam("token") String token, 
-			@PathParam("proposal") String proposal,
-			@PathParam("dewarId") Integer dewarId,
-			@PathParam("status") String status) throws Exception {
-
-		long id = this.logInit("setDewarStatus", logger, token, proposal, dewarId);
-		try {
-			Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, false, false);
-			dewar.setDewarStatus(status);
-			//If processing it blocks the shipment 
-			if (status.equals("processing")){
-				int shippingId = dewar.getShippingVO().getShippingId();
-				Shipping3VO shipment  = this.getShipping3Service().findByPk(shippingId, false);
-				shipment.setShippingStatus(status);
-				this.getShipping3Service().update(shipment);
-			}
-			this.getDewar3Service().update(dewar);
-			this.logFinish("setDewarStatus", id, logger);
-			HashMap<String, String> response = new HashMap<String, String>();
-			response.put("setShippingStatus", "ok");
-			return sendResponse(response);
-		} catch (Exception e) {
-			return this.logError("setDewarStatus", e, id, logger);
-		}
-
-	}*/
 	
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
@@ -291,7 +258,14 @@ public class DewarRestWebService extends RestWebService {
 				dewar3vo.setShippingVO(shipping);
 				if (shipping.getSessions() != null){
 					if (shipping.getSessions().size() > 0){
-						dewar3vo.setSessionVO(shipping.getSessions().iterator().next());
+						Set<Session3VO> set = shipping.getSessions();
+						for (Session3VO session3vo : set) {
+							if (session3vo != null) {
+								dewar3vo.setSessionVO(session3vo);
+								break;
+							}
+						}
+						
 					}
 				}
 				dewar3vo = getDewar3Service().create(dewar3vo);
@@ -338,19 +312,41 @@ public class DewarRestWebService extends RestWebService {
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
-		// Retrieve dewar object ---------------------------
-		Integer sessionId = null;
-		if (dewar.getSessionVO() != null)
-			sessionId = dewar.getSessionVO().getSessionId();
-
-		// SessionValue session = sessionService.findByPrimaryKey(sessionId);
-		Session3VO session = null;
-		if (sessionId != null)
-			session = this.getSession3Service().findByPk(sessionId, false, false, false);
-
 		// Retrieve shipment object ------------------------
 		Shipping3VO shipping = dewar.getShippingVO();
 		shipping = this.getShipping3Service().loadEager(shipping);
+		
+		// Retrieve dewar object ---------------------------
+		//TODO understand why sessionVO is null in dewarVO
+		
+//		Integer sessionId = null;
+		
+		Session3VO session = null;
+		if (dewar.getSessionVO() != null) {
+//			sessionId = dewar.getSessionVO().getSessionId();
+			session = dewar.getSessionVO();
+		}
+		else{
+//			if (shipping.getSessions() != null && shipping.getSessions().size() > 0) {
+//			Set<Session3VO> set = shipping.getSessions();
+//			for (Session3VO session3vo : set) {
+//				if (session3vo != null) {
+//					dewar.setSessionVO(session3vo);
+//					session =session3vo;
+//					break;
+//				}
+//			}
+			List<Session3VO> sessions = this.getSession3Service().findByShippingId(shipping.getShippingId());
+			if (sessions.size() > 0){
+				session = sessions.get(0);
+			}
+		}	
+		if (session == null){
+			logger.warn("Session is null for dewar: " + dewarId);
+		}
+		else{
+		    dewar.setSessionVO(session);
+		}
 
 		// Retrieve SENDING labcontact object ---------------
 		Integer sendingLabContactId = shipping.getSendingLabContactId();

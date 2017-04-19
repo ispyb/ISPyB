@@ -657,4 +657,28 @@ public class StringUtils {
 		}
 		return s.toString();
 	}
+	
+	/**
+	 * Returns the name of the proposal in lowercase 
+	 * 
+	 * @return
+	 */
+	public static String getProposalName(String proposalCode, String proposalNumber) {
+
+		String proposalName = "";
+		
+		if (proposalCode == null && proposalNumber == null)
+			return "noproposal";
+			
+		if (proposalCode != null) {
+			proposalName = proposalCode;
+			if (proposalNumber != null){
+				proposalName = proposalName + proposalNumber;
+			}
+		} else {
+			proposalName = proposalNumber;
+		}
+
+		return proposalName;
+	}
 }

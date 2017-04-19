@@ -72,7 +72,7 @@ public  class ParentWebService {
 		return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
-	protected Response downloadFile(String filePath) throws Exception {
+	protected Response downloadFileAsAttachment(String filePath) throws Exception {
 		File file = new File(filePath);
 		if (file.exists()) {
 			ResponseBuilder response = Response.ok((Object) file);
@@ -82,8 +82,21 @@ public  class ParentWebService {
 		else{
 			throw new Exception("File " + file.getAbsolutePath() + " does not exist");
 		}
-//		return Response.noContent().build();
 	}
+	
+	protected Response downloadFile(String filePath) throws Exception {
+		File file = new File(filePath);
+		if (file.exists()) {
+			ResponseBuilder response = Response.ok((Object) file);
+			response.header("Content-Disposition", "filename=" + file.getName());
+			return response.header("Access-Control-Allow-Origin", "*").build();
+		}
+		else{
+			throw new Exception("File " + file.getAbsolutePath() + " does not exist");
+		}
+	}
+	
+	
 	
 	/**
 	 * File name can not contain commas!!!
@@ -180,6 +193,7 @@ public  class ParentWebService {
 	protected Container3Service getContainer3Service() throws NamingException {
 		return (Container3Service) Ejb3ServiceLocator.getInstance().getLocalService(Container3Service.class);
 	}
+	
 	
 	protected ShipmentRestWsService getShipmentWsService() throws NamingException {
 		return (ShipmentRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(ShipmentRestWsService.class);

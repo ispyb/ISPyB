@@ -70,7 +70,7 @@ public class EnergyScanRestWebService extends RestWebService {
    			if (energyScan != null){
 	   			if (new File(energyScan.getScanFileFullPath()).exists()){
 	   				this.logFinish(methodName, start, logger);
-	   				return this.downloadFile(energyScan.getScanFileFullPath());
+	   				return this.downloadFileAsAttachment(energyScan.getScanFileFullPath());
 				}
    			}
    		}
@@ -101,7 +101,7 @@ public class EnergyScanRestWebService extends RestWebService {
 	   	   				logger.info("File: " + energyScan.getScanFileFullPath());
 	   	   			    logger.info("Downloading: " + energyScan.getChoochFileFullPath());
 	   	   			    this.logFinish(methodName, id, logger);
-	   					return this.downloadFile(energyScan.getChoochFileFullPath());
+	   					return this.downloadFileAsAttachment(energyScan.getChoochFileFullPath());
 	   				}
    				}
    			}
