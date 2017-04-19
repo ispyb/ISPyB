@@ -62,7 +62,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 			if (subtraction != null) {
 				String filePath = subtraction.getSubstractedFilePath();
 				this.logFinish(methodName, start, logger);
-				return this.downloadFile(filePath);
+				return this.downloadFileAsAttachment(filePath);
 			}
 			
 			throw new Exception("Subtraction does not exist");
