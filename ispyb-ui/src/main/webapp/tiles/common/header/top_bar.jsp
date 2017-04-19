@@ -25,7 +25,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 <%@page import="ispyb.common.util.Constants"%>
 
-<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'EMBL'}">
+<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'EMBL' or SITE_ATTRIBUTE eq 'ALBA'}">
 <!-- first bar:  Logon / Logoff   |   Documentation   -->
 <TR>
 	<TD class=headerblue vAlign=center align=right colspan=2>

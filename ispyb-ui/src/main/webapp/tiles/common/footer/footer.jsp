@@ -42,7 +42,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
       		Copyright © 2008 ISPyB All rights reserved. <br/>
       </P>
     </c:if>
-    <c:if test="${SITE_ATTRIBUTE eq 'EMBL'}">
+    <c:if test="${SITE_ATTRIBUTE eq 'EMBL' or SITE_ATTRIBUTE eq 'ALBA'}">
       <P class=small>
       		Copyright © 2014 ISPyB All rights reserved. <br/>
       </P>

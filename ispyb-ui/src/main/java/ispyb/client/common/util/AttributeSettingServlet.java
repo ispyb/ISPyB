@@ -24,6 +24,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import org.apache.log4j.Logger;
+
 /**
  * This servlet is only used to setup context attributes on startup.
  * 
@@ -31,6 +33,8 @@ import javax.servlet.http.HttpServlet;
  * 
  */
 public class AttributeSettingServlet extends HttpServlet {
+	
+	private final static Logger LOG = Logger.getLogger(AttributeSettingServlet.class);
 
     /**
      * Initializes the SITE_ATTRIBUTE attribute based on the SITE_PROPERTY property.
@@ -38,6 +42,8 @@ public class AttributeSettingServlet extends HttpServlet {
     public void init() throws ServletException {
         ServletContext context = getServletContext();
         context.setAttribute(Constants.SITE_ATTRIBUTE,Constants.getProperty(Constants.SITE_PROPERTY));
+        LOG.info("Site is: " + Constants.getProperty(Constants.SITE_PROPERTY));
+        
         context.setAttribute(Constants.SITE_AUTHENTICATION_METHOD_ATTRIBUTE,Constants.SITE_AUTHENTICATION_METHOD);
         context.setAttribute(Constants.PROPOSAL_LIST_DISPLAY_ATTRIBUTE, Constants.PROPOSAL_LIST_DISPLAY);
         context.setAttribute(Constants.BCM_ATTRIBUTE, Constants.BCM);
