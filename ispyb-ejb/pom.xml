@@ -265,12 +265,9 @@
 			
 			<ispyb.authorisation.active>true</ispyb.authorisation.active>
 			
-<!-- 		<userportal.webservices.url>http://localhost:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?WSDL</userportal.webservices.url>	-->		  			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
   			
-  			<ispyb.db.updatescripts.folder>R:/workspaces_neon/wks_ispyb/ispyb-ejb3/sql_scripts/mysql/update_scripts/2016</ispyb.db.updatescripts.folder>
-  			
-  			 <!--  <ispyb.userportal.link>JSON</ispyb.userportal.link> -->
+
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
   			

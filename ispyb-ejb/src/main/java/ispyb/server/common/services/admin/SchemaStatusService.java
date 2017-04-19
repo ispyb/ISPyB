@@ -13,7 +13,4 @@ public interface SchemaStatusService {
 
 	public List<SchemaStatusVO> findAll() throws Exception;
 
-	public List<String> findScriptsNotDone() throws Exception;
-	
-	public List<String> findScriptsDone() throws Exception;
 }
