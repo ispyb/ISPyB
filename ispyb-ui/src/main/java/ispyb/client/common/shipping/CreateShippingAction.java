@@ -752,41 +752,6 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 					// save it into the database
 					infoDewar = dewarService.create(infoDewar);
 
-					// add the bar code
-					if (Constants.SITE_IS_ESRF()) {
-						String barCode = "ESRF";
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-					//IK TODO
-					if (Constants.SITE_IS_EMBL()) {
-						String barCode = "EMBL";
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-					if (Constants.SITE_IS_MAXIV()) {
-						String barCode = "MAXIV";
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-					if (Constants.SITE_IS_SOLEIL()) {
-						String barCode = Constants.SITE_NAME;
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-
 					LOG.debug("Default dewar (" + i + ") created : " + infoDewar);
 				}
 			}
@@ -815,31 +780,6 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 					// save it into the database
 					infoDewar = dewarService.create(infoDewar);
 
-					// add the bar code
-					if (Constants.SITE_IS_ESRF()) {
-						String barCode = "ESRF";
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-					if (Constants.SITE_IS_EMBL()) {
-						String barCode = "EMBL";
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
-					if (Constants.SITE_IS_SOLEIL()) {
-						String barCode = Constants.SITE_NAME;
-						if (infoDewar.getDewarId() < 1000000)
-							barCode = barCode + "0";
-						barCode = barCode + infoDewar.getDewarId().toString();
-						infoDewar.setBarCode(barCode);
-						dewarService.update(infoDewar);
-					}
 					LOG.debug("Default dewar (" + i + ") created : " + infoDewar);
 				}
 

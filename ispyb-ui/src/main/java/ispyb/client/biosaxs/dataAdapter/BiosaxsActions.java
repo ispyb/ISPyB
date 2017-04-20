@@ -830,11 +830,8 @@ public class BiosaxsActions {
 		dewar3VO.setType("Dewar");
 		dewar3VO.setDewarStatus(Constants.SHIPPING_STATUS_OPENED);
 		Dewar3VO dewar = this.dewarService.create(dewar3VO);
-		dewar.setBarCode("ESRF" + dewar.getDewarId());
-		if (Constants.SITE_IS_SOLEIL()) {
-			dewar.setBarCode("SOLEIL" + dewar.getDewarId());
-		}
-		return this.dewarService.update(dewar);
+
+		return dewar;
 	}
 
 	/**
@@ -860,7 +857,6 @@ public class BiosaxsActions {
 			}
 		}
 
-		// dewar3VO.setBarCode(dewarMap.get("barCode"));
 		dewar3VO.setComments(dewarMap.get("comments"));
 		dewar3VO.setTrackingNumberToSynchrotron(dewarMap.get("trackingNumberToSynchrotron"));
 		dewar3VO.setTrackingNumberFromSynchrotron(dewarMap.get("trackingNumberFromSynchrotron"));

@@ -2,6 +2,8 @@ USE `pydb`;
 
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_03_24_v_saxs_experiment_description.sql','ONGOING');
 
+drop view if exists v_saxs_experiment_description;
+
 CREATE 
     ALGORITHM = UNDEFINED 
     DEFINER = `pxadmin`@`%` 
