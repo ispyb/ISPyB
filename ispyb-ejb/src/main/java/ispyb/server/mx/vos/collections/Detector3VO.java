@@ -65,7 +65,7 @@ public class Detector3VO extends ISPyBValueObject implements Cloneable {
 	protected Double detectorPixelSizeVertical;
 	
 	@Column(name = "detectorSerialNumber")
-	protected Double detectorSerialNumber;
+	protected String detectorSerialNumber;
 	
 	@Column(name = "detectorDistanceMax")
 	protected Double detectorDistanceMax;
@@ -122,7 +122,7 @@ public class Detector3VO extends ISPyBValueObject implements Cloneable {
 	public Detector3VO(Integer detectorId, String detectorType,
 			String detectorManufacturer, String detectorModel,
 			Double detectorPixelSizeHorizontal,
-			Double detectorPixelSizeVertical, Double detectorSerialNumber,
+			Double detectorPixelSizeVertical, String detectorSerialNumber,
 			Double detectorDistanceMax, Double detectorDistanceMin,
 			Double trustedPixelValueRangeLower,
 			Double trustedPixelValueRangeUpper, Double sensorThickness,
@@ -196,11 +196,11 @@ public class Detector3VO extends ISPyBValueObject implements Cloneable {
 		this.detectorPixelSizeVertical = detectorPixelSizeVertical;
 	}
 
-	public Double getDetectorSerialNumber() {
+	public String getDetectorSerialNumber() {
 		return detectorSerialNumber;
 	}
 
-	public void setDetectorSerialNumber(Double detectorSerialNumber) {
+	public void setDetectorSerialNumber(String detectorSerialNumber) {
 		this.detectorSerialNumber = detectorSerialNumber;
 	}
 
