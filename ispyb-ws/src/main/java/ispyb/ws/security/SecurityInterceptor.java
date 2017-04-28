@@ -50,7 +50,6 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 		requestContext.getHeaders().put("Access-Control-Allow-Origin", header);
 		
 		if (method.isAnnotationPresent(PermitAll.class)) {
-			
 			logger.info("PermitAll " + method.getName() + " "+ method.getDeclaredAnnotations() + " " + method.getAnnotations() + " " + method.getParameterAnnotations());
 			return;
 		}
@@ -72,31 +71,23 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 			if (login != null) {
 				if (login.checkRoles(rolesSet)){
 					if (login.isValid()) {
-						// if role manager or localcontact ok
-						// TODO: later the localcontact should have access only to the sessions on her/his beamlines
-						// so that a check has to be done among the proposals attached to the beamlines of the local contact.
 						if (login.isManager() || login.isLocalContact()) {
+							/** TODO: ISPyB might want to check that local contact has the permission on this proposal **/
 							return;
 						}
-						// if role user have to check in request the proposal name to match the username
-						// TODO: now it is ok because the username is the proposalname, 
-						// but later the username will give access to several proposals so that a check has to be done among the proposals belonging to the user.
-						
 						if (login.isUser() || login.isIndustrial()){
-							// special case to display the list of proposal, with no proposalname present in the url
-							if (requestContext.getUriInfo().getPathParameters().get("proposal") == null )
-								return;
-							
-							String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
-							if (login.getUsername().toUpperCase().equals(proposalname.toUpperCase())) {							
+							/** special case to display the list of proposal, with no proposalname present in the url **/ 
+							if (!requestContext.getUriInfo().getPathParameters().containsKey("proposal")){
 								return;
 							}
-							else if (login.getAuthorized().toUpperCase().contains(proposalname.toUpperCase())) {
-								logger.debug("Proposal "+ proposalname + " allowed for this user");
-								return;
-							} else {
-								logger.info("Proposal not allowed for this user");
-								requestContext.abortWith(ACCESS_DENIED);
+							else{
+								String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
+								if (login.getAuthorized().toUpperCase().contains(proposalname.toUpperCase())) {
+									return;
+								} else {
+									logger.info(String.format("Proposal %s not allowed for %s", proposalname, login.getUsername()));
+									requestContext.abortWith(ACCESS_DENIED);
+								}
 							}
 						}
 					} else {
