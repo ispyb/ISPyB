@@ -1,5 +1,8 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.common.util.export.ExiPdfRtfExporter;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,17 +23,12 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.GZIP;
 
-import ispyb.common.util.export.ExiPdfRtfExporter;
-import ispyb.common.util.export.PdfExporterSample;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-
 @Path("/")
 public class DataCollectionRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(DataCollectionRestWebService.class);
 
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
-	@Deprecated
 	@GET
 	@GZIP
 	@Path("{token}/proposal/{proposal}/mx/datacollection/{dataCollectionIdList}/list")
@@ -41,10 +39,6 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionById";
 		long start = this.logInit(methodName, logger, token, proposal, dataCollectionIdList);
 		try {
-			
-			if (!isProposalnameMatchingToken(token, proposal)) {
-				return this.unauthorizedResponse();
-			}
 			
 			List<Integer> ids = this.parseToInteger(dataCollectionIdList);
 			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
