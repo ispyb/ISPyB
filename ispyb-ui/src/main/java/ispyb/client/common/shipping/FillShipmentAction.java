@@ -350,39 +350,7 @@ public class FillShipmentAction   extends DispatchAction{
 			
 			// Create the dewar
 			dewar3vo = dewarService.create(dewar3vo);
-			// add the bar code
-			if (Constants.SITE_IS_ESRF()) {
-				String barCode = "ESRF";
-				if (dewar3vo.getDewarId() < 1000000)
-					barCode = barCode + "0";
-				barCode = barCode + dewar3vo.getDewarId().toString();
-				dewar3vo.setBarCode(barCode);
-				dewarService.update(dewar3vo);
-			}
-			if (Constants.SITE_IS_EMBL()) {
-				String barCode = "EMBL";
-				if (dewar3vo.getDewarId() < 1000000)
-					barCode = barCode + "0";
-				barCode = barCode + dewar3vo.getDewarId().toString();
-				dewar3vo.setBarCode(barCode);
-				dewarService.update(dewar3vo);
-			}
-			if (Constants.SITE_IS_MAXIV()) {
-				String barCode = "MAXIV";
-				if (dewar3vo.getDewarId() < 1000000)
-					barCode = barCode + "0";
-				barCode = barCode + dewar3vo.getDewarId().toString();
-				dewar3vo.setBarCode(barCode);
-				dewarService.update(dewar3vo);
-			}
-			if (Constants.SITE_IS_SOLEIL()) {
-				String barCode = Constants.SITE_NAME;
-				if (dewar3vo.getDewarId() < 1000000)
-					barCode = barCode + "0";
-				barCode = barCode + dewar3vo.getDewarId().toString();
-				dewar3vo.setBarCode(barCode);
-				dewarService.update(dewar3vo);
-			}
+			
 			return getInformationForShipment(mapping, actForm, request, response);
 		}catch(Exception exp){
 			exp.printStackTrace();

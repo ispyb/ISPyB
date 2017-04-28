@@ -499,39 +499,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 			if (CheckFormFields(info.getCode(), errors, request)) {
 				// Create the dewar
 				info = dewarService.create(info);
-				// add the bar code
-				if (Constants.SITE_IS_ESRF()) {
-					String barCode = "ESRF";
-					if (info.getDewarId() < 1000000)
-						barCode = barCode + "0";
-					barCode = barCode + info.getDewarId().toString();
-					info.setBarCode(barCode);
-					dewarService.update(info);
-				}
-				else if (Constants.SITE_IS_EMBL()) {
-					String barCode = "EMBL";
-					if (info.getDewarId() < 1000000)
-						barCode = barCode + "0";
-					barCode = barCode + info.getDewarId().toString();
-					info.setBarCode(barCode);
-					dewarService.update(info);
-				}
-				else if (Constants.SITE_IS_MAXIV()) {
-					String barCode = "MAXIV";
-					if (info.getDewarId() < 1000000)
-						barCode = barCode + "0";
-					barCode = barCode + info.getDewarId().toString();
-					info.setBarCode(barCode);
-					dewarService.update(info);
-				}	
-				else if (Constants.SITE_IS_SOLEIL()) {
-					String barCode = Constants.SITE_NAME;
-					if (info.getDewarId() < 1000000)
-						barCode = barCode + "0";
-					barCode = barCode + info.getDewarId().toString();
-					info.setBarCode(barCode);
-					dewarService.update(info);
-				}
 
 				form.setInfo(new Dewar3VO());
 				BreadCrumbsForm.getIt(request).setSelectedDewar(info);
