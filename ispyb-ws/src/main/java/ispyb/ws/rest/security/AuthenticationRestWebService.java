@@ -88,6 +88,9 @@ public class AuthenticationRestWebService extends RestWebService {
 					case "SOLEIL":
 						roles = SOLEILLLoginModule.authenticate(login, password);
 						break;
+					case "MAXIV":
+						roles = MAXIVLoginModule.authenticate(login, password);
+						break;
 					default:
 						throw new Exception("Site is not defined");
 					}
