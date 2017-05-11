@@ -7,6 +7,7 @@ import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.ESRFLoginModule;
 import ispyb.ws.rest.security.login.SOLEILLLoginModule;
+import ispyb.ws.rest.security.login.MAXIVLoginModule;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
