@@ -53,7 +53,7 @@ public class MAXIVWebService implements SMISWebService{
 	
 	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/pbd?startdate=")
-				.append("2015-01-01").append("&enddate=").append("2016-01-01").append("&beamline=MX");
+				.append(startDateStr).append("&enddate=").append(endDateStr).append("&beamline=MX");
 		
 		JSONObject response = readJsonDataFromUrl(url.toString());
 		
