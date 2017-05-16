@@ -70,7 +70,6 @@ public class EMBLLoginModule{
 	
 		
 	private static List<String> authenticate(String username, String password, Properties properties) throws NamingException {
-		logger.info("auth --- " + username);
 		List<String> myRoles = new ArrayList<String>();
 //		InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
 		InitialLdapContext ctx = new InitialLdapContext(properties, null);
