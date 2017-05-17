@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -34,6 +36,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.log4j.Logger;
@@ -51,7 +54,7 @@ public class LdapConnection {
 	 * @throws Exception
 	 */
 
-	private static final String LDAP_Employee_Identifier = "uid";
+	private static final String LDAP_Employee_Identifier = Constants.LDAP_Employee_Identifier;
 
 	private static final String LDAP_Employee_Resource = Constants.LDAP_Employee_Resource;
 
@@ -60,6 +63,12 @@ public class LdapConnection {
 	private static final String LDAP_people_AllEmployeefilter = "persCategory=S";
 
 	private static final String LDAP_people_AllOnSitefilter = "(&amp;(objectClass=esrfPerson)  (!(persCategory=B)) )";
+	
+	private static final String LDAP_prefix = Constants.LDAP_prefix;
+	
+	private static final String LDAP_username = Constants.LDAP_username;
+	
+	private static final String LDAP_credential = Constants.LDAP_credential;
 
 	public static EmployeeVO findByUniqueIdentifier(String intMat) throws Exception {
 		String searchAttribute = LDAP_Employee_Identifier;
@@ -71,8 +80,9 @@ public class LdapConnection {
 		LdapContext ldapCtx;
 		EmployeeVO emp = null;
 		try {
-			InitialContext iniCtx = new InitialContext();
-			ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			//InitialContext iniCtx = new InitialContext();
+			//ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			ldapCtx = getLDAPContext();
 			String people = LDAP_people;
 			Attributes matchAttrs = new BasicAttributes(true);
 			matchAttrs.put(new BasicAttribute(searchAttribute, value));
@@ -89,7 +99,7 @@ public class LdapConnection {
 			}
 			answer.close();
 			ldapCtx.close();
-			iniCtx.close();
+			//iniCtx.close();
 
 		} catch (NamingException e) {
 			LOG.error("LdapContext " + ldapEmployeeDirectory + " not bound. Exception: " + e.toString());
@@ -115,8 +125,9 @@ public class LdapConnection {
 		Collection<Person3VO> matchingPersons = new ArrayList<Person3VO>();
 		LdapContext ldapCtx;
 		try {
-			InitialContext iniCtx = new InitialContext();
-			ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			//InitialContext iniCtx = new InitialContext();
+			//ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			ldapCtx = getLDAPContext();
 			String people = LDAP_people;
 			Attributes matchAttrs = new BasicAttributes(true);
 			matchAttrs.put(new BasicAttribute(searchAttribute, value));
@@ -143,7 +154,7 @@ public class LdapConnection {
 
 			answer.close();
 			ldapCtx.close();
-			iniCtx.close();
+			//iniCtx.close();
 			return matchingPersons;
 		} catch (NamingException e) {
 			LOG.error("LdapContext " + ldapEmployeeDirectory + " not bound. Exception: " + e.toString());
@@ -209,8 +220,9 @@ public class LdapConnection {
 		String ldapEmployeeDirectory = LDAP_Employee_Resource;
 		LdapContext ldapCtx;
 		try {
-			InitialContext iniCtx = new InitialContext();
-			ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			//InitialContext iniCtx = new InitialContext();
+			//ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			ldapCtx = getLDAPContext();
 			String people = LDAP_people;
 			String filter = "(&(sn=" + lastName + ")(givenName=" + firstName + "))";
 			NamingEnumeration answer = ldapCtx.search(people, filter, null);
@@ -233,7 +245,7 @@ public class LdapConnection {
 			}
 			answer.close();
 			ldapCtx.close();
-			iniCtx.close();
+			//iniCtx.close();
 			return emp;
 		} catch (NamingException e) {
 			LOG.error("LdapContext " + ldapEmployeeDirectory + " not bound");
@@ -277,5 +289,30 @@ public class LdapConnection {
 		}
 		res = emailAddress;
 		return res;
+	}
+	
+	private static InitialLdapContext getLDAPContext(){
+		InitialLdapContext ldapContext = null;
+		
+		Properties env = new Properties();
+		
+		env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
+		env.put("java.naming.provider.url", LDAP_Employee_Resource);
+		env.put(Context.SECURITY_AUTHENTICATION,"simple");
+		String principalDNPrefix = LDAP_prefix;
+		String user = LDAP_username;
+		String userDN = principalDNPrefix + user;
+		env.setProperty(Context.SECURITY_PRINCIPAL, userDN);
+		String credential = LDAP_credential;
+		env.put(Context.SECURITY_CREDENTIALS, credential);
+		
+		try {
+			ldapContext = new InitialLdapContext(env, null);
+		}
+		catch(Exception ex){
+			LOG.error("LDAP connection failed.");
+		}
+		
+		return ldapContext;
 	}
 }
