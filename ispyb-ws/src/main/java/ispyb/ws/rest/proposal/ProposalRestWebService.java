@@ -39,23 +39,64 @@ public class ProposalRestWebService extends MXRestWebService{
 		String methodName = "getProposals";
 		long id = this.logInit(methodName, logger, token);
 		try {
-			Login3VO login3VO = this.getLogin3Service().findByToken(token);
-			if (login3VO != null){
-				if (login3VO.isValid()){
-					List<Map<String, Object>> proposals = new ArrayList<Map<String,Object>>(); 
-					if (login3VO.isLocalContact() || login3VO.isManager()){
-						proposals = this.getProposal3Service().findProposals();
-					}
-					else{
-						proposals = this.getProposal3Service().findProposals(login3VO.getUsername());
-					}
-					this.logFinish(methodName, id, logger);
-					return this.sendResponse(proposals);
-				}
-			}
-			return this.sendError("Token is not valid");
+			List<Map<String, Object>> proposals = this.getProposalsFromToken(token);
+			this.logFinish(methodName, id, logger);
+			return this.sendResponse(proposals);
 		} catch (Exception e) {
 			return this.logError("getProposals", e, id, logger);
+		}				
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/info/get")
+	@Produces({ "application/json" })
+	public Response getProposaInfos(@PathParam("token") String token, @PathParam("proposal") String proposal)
+				throws Exception {
+		long id = this.logInit("listProposal", logger, token, proposal);
+		try {
+			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();				
+			HashMap<String, List<?>> results = new HashMap<String, List<?>>();
+			
+			if (proposal == null || proposal.isEmpty()) {					
+				List<Map<String, Object>> proposals = this.getProposalsFromToken(token);
+				results.put("proposal", proposals);
+				
+			} else {
+						
+				int proposalId = this.getProposalId(proposal);
+
+				List<Macromolecule3VO> macromolecules = this.getSaxsProposal3Service().findMacromoleculesByProposalId(proposalId);
+				List<Buffer3VO> buffers = this.getSaxsProposal3Service().findBuffersByProposalId(proposalId);
+
+				List<StockSolution3VO> stockSolutions = this.getSaxsProposal3Service().findStockSolutionsByProposalId(
+						proposalId);
+				List<Platetype3VO> plateTypes = this.getPlateType3Service().findAll();
+				List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+				proposals.add(this.getProposal3Service().findProposalById(proposalId));
+				
+				List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
+				List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
+				
+				List<LabContact3VO> labContacts = this.getLabContact3Service().findFiltered(proposalId, null);
+				results.put("proposal", proposals);
+				results.put("crystals", crystals);
+				results.put("plateTypes", plateTypes);
+				results.put("macromolecules", macromolecules);
+				results.put("buffers", buffers);
+				results.put("stockSolutions", stockSolutions);
+				results.put("labcontacts", labContacts);
+				results.put("proteins", proteins);
+				
+			}
+
+			multiple.add(results);
+			this.logFinish("listProposal", id, logger);
+
+			return this.sendResponse(multiple);
+
+		} catch (Exception e) {
+			return this.logError("listProposal", e, id, logger);
 		}
 	}
 	
@@ -86,6 +127,7 @@ public class ProposalRestWebService extends MXRestWebService{
 	@Produces({ "application/json" })
 	public Response listProposal(@PathParam("token") String token, @PathParam("proposal") String login)
 			throws Exception {
+		//TODO remove this method if above getProposaInfos is sufficient
 		long id = this.logInit("listProposal", logger, token, login);
 		try {
 			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();
@@ -123,4 +165,26 @@ public class ProposalRestWebService extends MXRestWebService{
 			return this.logError("listProposal", e, id, logger);
 		}
 	}
+	
+	private List<Map<String, Object>> getProposalsFromToken (String token) throws Exception {
+		Login3VO login3VO = this.getLogin3Service().findByToken(token);
+		List<Map<String, Object>> proposals = new ArrayList<Map<String,Object>>(); 
+		
+		if (login3VO != null){
+			if (login3VO.isValid()){
+				
+				if (login3VO.isLocalContact() || login3VO.isManager()){
+					proposals = this.getProposal3Service().findProposals();
+				}
+				else{
+					proposals = this.getProposal3Service().findProposals(login3VO.getUsername());
+				}				
+			}
+		}	else {		
+			throw new Exception("Token is not valid");
+		}
+		return (proposals);
+
+	}
+
 }
