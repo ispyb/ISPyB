@@ -53,7 +53,8 @@ public class ProposalRestWebService extends MXRestWebService{
 	@Produces({ "application/json" })
 	public Response getProposaInfos(@PathParam("token") String token, @PathParam("proposal") String proposal)
 				throws Exception {
-		long id = this.logInit("listProposal", logger, token, proposal);
+		String methodName = "getProposaInfos";
+		long id = this.logInit(methodName, logger, token, proposal);
 		try {
 			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();				
 			HashMap<String, List<?>> results = new HashMap<String, List<?>>();
@@ -91,12 +92,12 @@ public class ProposalRestWebService extends MXRestWebService{
 			}
 
 			multiple.add(results);
-			this.logFinish("listProposal", id, logger);
+			this.logFinish(methodName, id, logger);
 
 			return this.sendResponse(multiple);
 
 		} catch (Exception e) {
-			return this.logError("listProposal", e, id, logger);
+			return this.logError(methodName, e, id, logger);
 		}
 	}
 	
