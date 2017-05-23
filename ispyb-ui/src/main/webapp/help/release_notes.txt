@@ -1,3 +1,16 @@
+New TAG : ISPyB5
+
+New TAG : 17.05.02
+
+**************
+* 02.05.2017     *
+**************
+
+- Database is merged with DLS schema, all tables and new fields have been added
+- fixes: #68, #69, #74, #78, #82
+
+**************************************************************
+
 New TAG : 17.03.23
 
 - fixes several bugs #54, #55, #48, #49

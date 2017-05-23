@@ -97,9 +97,53 @@ public class Dewar3DAOBean implements Dewar3DAO {
 	 * Insert the given value object. TODO update this comment for insertion details.
 	 * </p>
 	 */
-	public void create(Dewar3VO vo) throws Exception {
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
+	public void create(Dewar3VO infoDewar) throws Exception {
+		this.checkAndCompleteData(infoDewar, true);
+		this.entityManager.persist(infoDewar);
+		
+		// generate and add the bar code to the vo
+		if (Constants.SITE_IS_ESRF()) {
+			String barCode = "ESRF";
+			if (infoDewar.getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + infoDewar.getDewarId().toString();
+			infoDewar.setBarCode(barCode);
+			this.update(infoDewar);
+		}
+		//IK TODO
+		else if (Constants.SITE_IS_EMBL()) {
+			String barCode = "EMBL";
+			if (infoDewar.getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + infoDewar.getDewarId().toString();
+			infoDewar.setBarCode(barCode);
+			this.update(infoDewar);
+		}
+		else if (Constants.SITE_IS_MAXIV()) {
+			String barCode = "MAXIV";
+			if (infoDewar.getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + infoDewar.getDewarId().toString();
+			infoDewar.setBarCode(barCode);
+			this.update(infoDewar);
+		}
+		else if (Constants.SITE_IS_SOLEIL()) {
+			String barCode = Constants.SITE_NAME;
+			if (infoDewar.getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + infoDewar.getDewarId().toString();
+			infoDewar.setBarCode(barCode);
+			this.update(infoDewar);
+		}
+		else  {
+			String barCode = Constants.SITE_NAME;
+			if (infoDewar.getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + infoDewar.getDewarId().toString();
+			infoDewar.setBarCode(barCode);
+			this.update(infoDewar);
+		}
+
 	}
 
 	/**
@@ -308,6 +352,7 @@ public class Dewar3DAOBean implements Dewar3DAO {
 				throw new IllegalArgumentException(
 						"Primary key is already set! This must be done automatically. Please, set it to null!");
 			}
+			
 		} else {
 			if (vo.getDewarId() == null) {
 				throw new IllegalArgumentException("Primary key is not set for update!");

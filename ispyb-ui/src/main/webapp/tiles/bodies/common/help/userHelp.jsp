@@ -43,4 +43,7 @@ You may find some help on our <a href="<%=Constants.getProperty("ISPyB.help.url"
 <h2>Database update</h2>
 <h4>
 If you do not find your latest proteins/samplesheets, or if your do not find your latest sessions <a href="<%=targetUpdateDB%>" >update ISPyB database</a> (this may take a few minutes).
+<br>
+-> Note that the new/duplicated samplesheets need to be <font color= '#ff6622'>approved by Safety</font> in the User Portal prior to be imported in ISPyB.
+
 </h4>

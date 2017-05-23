@@ -26,6 +26,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 %>
 
 <h3>
-When creating a new sample, if some protein acronyms are missing in the list, you can get them by <a href="<%=targetUpdateDB%>" >updating ISPyB database</a> (this may take a few minutes).
+<br>
+If some protein acronyms are missing in the list, you can get them by <a href="<%=targetUpdateDB%>" >updating ISPyB database</a> (this may take a few minutes).
 </h3>
+</br>
+<h3><font color= '#ff6622'>
+Note that the new/duplicated samplesheets need to be approved by Safety in the User Portal prior to be imported in ISPyB.
+</font></h3>
 <br>
