@@ -225,9 +225,6 @@
   <!--  profiles to separate site dependent properties -->  
   	<profile>
   		<id>ESRF</id>
-  		<activation>
-        	<activeByDefault>true</activeByDefault>
-        </activation>
   		
   		<properties>
   			<ispyb.site>ESRF</ispyb.site>
@@ -238,6 +235,7 @@
   			
   			<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
   			<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
+  			<ldap.attribute>uid</ldap.attribute>
   			
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
@@ -287,7 +285,8 @@
                         <ispyb.authentication.method>LDAP</ispyb.authentication.method>
                         <ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
                         <ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
-
+						<ldap.attribute>uid</ldap.attribute>
+						
                         <ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
                         <ispyb.uploaded.root.folder>/data/ispyb/pyapdb/</ispyb.uploaded.root.folder>
   						<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
@@ -345,6 +344,7 @@
 				
 	  			<ldap.employee.resource></ldap.employee.resource>
 	  			<ldap.people></ldap.people>
+	  			<ldap.attribute>uid</ldap.attribute>
 
 				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
 				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
@@ -392,11 +392,7 @@
   	</profile> 
   	
   	<profile>
-  		<id>MAXIV</id>
-  		<activation>
-        	<activeByDefault>true</activeByDefault>
-        </activation>
-  		
+  		<id>MAXIV</id>  		
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
@@ -449,9 +445,6 @@
   	
   	<profile>
   		<id>NEWSITE</id>
-  		  <activation>
-        	<activeByDefault>false</activeByDefault>
-        </activation>
   		
   		<properties>
   			<ispyb.site>NEWSITE</ispyb.site>
