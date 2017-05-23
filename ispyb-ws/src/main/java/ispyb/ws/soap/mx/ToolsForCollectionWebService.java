@@ -169,45 +169,6 @@ public class ToolsForCollectionWebService {
 		}
 	}
 
-	// TODO remove the following if ok : proposal number is a string now.
-	// /**
-	// * returns the session for a proposal Code and Number and with the endDate > today or null
-	// *
-	// * @param code
-	// * @param number
-	// * @return
-	// * @throws Exception
-	// */
-	// @WebMethod
-	// @WebResult(name = "Sessions")
-	// public SessionWS3VO[] findSessionsByCodeAndNumberAndBeamLine(@WebParam(name = "code") String code,
-	// @WebParam(name = "number") Integer number, @WebParam(name = "beamLineName") String beamLineName)
-	// throws Exception {
-	//
-	// try {
-	// LOG.debug("findSessionsByCodeAndNumberAndBeamLine : code= " + code + ", number= " + number
-	// + ", beamlineName= " + beamLineName);
-	// long startTime = System.currentTimeMillis();
-	// Session3Service sessionService = (Session3Service) ejb3ServiceLocator
-	// .getLocalService(Session3Service.class);
-	// // String beamLine = ESRFBeamlineEnum.retrieveBeamlineWithName(beamLineName).getBeamlineName();
-	// SessionWS3VO[] ret = sessionService.findForWSByProposalCodeAndNumber(StringUtils.getProposalCode(code),
-	// number+"", beamLineName);
-	// // if(ret == null || ret.length < 1)
-	// // return null;
-	// // return ret[0];
-	// long endTime = System.currentTimeMillis();
-	// long duration = endTime - startTime;
-	// LOG.debug("findSessionsByCodeAndNumberAndBeamLine : code= " + code + ", number= " + number
-	// + ", beamlineName= " + beamLineName + " time = " + duration + " ms");
-	// return ret;
-	// } catch (Exception e) {
-	// LOG.error("WS ERROR: findSessionsByCodeAndNumberAndBeamLine - " + StringUtils.getCurrentDate() + " - "
-	// + code + ", " + number + ", " + beamLineName);
-	// throw e;
-	// }
-	// }
-
 	/**
 	 * returns the session for a proposal Code and Number and with the endDate > today or null
 	 * 

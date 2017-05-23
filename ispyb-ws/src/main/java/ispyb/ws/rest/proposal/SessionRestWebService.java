@@ -6,7 +6,10 @@ import ispyb.server.common.vos.login.Login3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
@@ -120,8 +123,7 @@ public class SessionRestWebService extends RestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
-	
-	
+		
 	@RolesAllowed({ "Manager", "Localcontact" })
 	@GET
 	@GZIP
@@ -132,8 +134,24 @@ public class SessionRestWebService extends RestWebService {
 			@PathParam("beamlineOperator") String beamlineOperator) throws Exception {
 		String methodName = "getSessionsByBeamlineOperator";
 		long id = this.logInit(methodName, logger, token, beamlineOperator);
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+			
 		try {
-			List<Map<String, Object>> result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+			Login3VO login = this.getLogin3Service().findByToken(token);
+			if (login.isManager() || login.getSiteId() == null){
+				// logged user is manager
+				result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+			} else {
+				//check if the localcontact is the beamlineOperator
+				String surname = this.getPerson3Service().findBySiteId(login.getSiteId()).getFamilyName();
+				if (beamlineOperator.contains(surname)) {
+					result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+				} else {					
+					Exception e = new Exception ("Unauthorized " + surname + " to view " + beamlineOperator);
+					throw e;
+				}
+			}
+			
 			this.logFinish(methodName, id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {
