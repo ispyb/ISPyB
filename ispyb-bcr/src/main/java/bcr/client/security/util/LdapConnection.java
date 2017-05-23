@@ -32,7 +32,7 @@ public class LdapConnection {
 	private static final String LDAP_people_AllEmployeefilter = "persCategory=S";
 
 	private static final String LDAP_people_AllOnSitefilter = "(&amp;(objectClass=esrfPerson)  (!(persCategory=B)) )";
-
+	
 	/**
 	 * @param intMat
 	 * @return

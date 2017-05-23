@@ -24,17 +24,23 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * BeamLineSetup value object mapping table BeamLineSetup
@@ -84,6 +90,12 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "externalId")
 	protected Integer externalId;
 
+
+	@Fetch(value = FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") }, inverseJoinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") })
+	protected Set<Person3VO> participants;
+	
 	public Proposal3VO() {
 		super();
 	}
@@ -117,6 +129,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs = vo.getProteinVOs();
 		this.shippingVOs = vo.getShippingVOs();
 		this.externalId = vo.getExternalId();
+		this.participants = vo.getParticipants();
 	}
 	
 	public void fillVOFromLight(ProposalWS3VO vo) {
@@ -130,6 +143,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs =  null;
 		this.shippingVOs =  null;
 		this.externalId = vo.getExternalId();
+		this.participants = vo.getParticipants();
 	}
 
 
@@ -225,6 +239,27 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.externalId = externalId;
 	}
 
+	public Set<Person3VO> getParticipants() {
+		return this.participants;
+	}
+
+	public void setParticipants(Set<Person3VO> participants) {
+		this.participants = participants;
+	}
+
+	public void addParticipant(Person3VO participant) {
+		if (this.participants == null) {
+			this.participants = new HashSet<Person3VO>();
+		}
+		if (participant != null && !this.participants.contains(participant)) {
+			this.participants.add(participant);
+		}
+	}
+
+	public void clearParticipants() {
+		this.participants.clear();
+
+	}
 
 	/**
 	 * Checks the values of this value object for correctness and completeness. Should be done before persisting the

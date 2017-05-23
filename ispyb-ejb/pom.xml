@@ -187,6 +187,11 @@
 			<version>1.3</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
 	
 	</dependencies>
 	
@@ -385,16 +390,62 @@
 				
   		</properties>
   	</profile> 
-  	  	<profile>
+  	
+  	<profile>
   		<id>MAXIV</id>
+  		<activation>
+        	<activeByDefault>true</activeByDefault>
+        </activation>
+  		
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
-  			<ispyb.authorisation.active>false</ispyb.authorisation.active>
+  			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+  			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+  			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			
-  			<ispyb.userportal.link>JSON</ispyb.userportal.link>
-  						
+  			<ldap.employee.resource>ldap://w-v-ad-test-0.maxiv.lu.se:389/</ldap.employee.resource>
+  			<ldap.base>dc=duotest,dc=lu,dc=se</ldap.base>
+  			<ldap.people>CN=Users,dc=duotest,dc=lu,dc=se</ldap.people>
+  			<ldap.attribute>samaccountname</ldap.attribute>
+  			<ldap.principalDNPrefix>duotest\\</ldap.principalDNPrefix>
+  			
+  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+  			
+  			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
+  			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
+  			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
+  			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
+  			
+  			<shipping.container.capacity>16</shipping.container.capacity>
+			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				
+  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+  			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
+  			<ispyb.bcm>mxcube</ispyb.bcm>
+  			
+  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			
+  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
+			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+			
+			<dictionary.site>MAX IV</dictionary.site> 
+			<dictionary.bcm>mxCuBE</dictionary.bcm>
+			
+			<ispyb.authorisation.active>true</ispyb.authorisation.active>
+			 			 
+			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+			
+			<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url> 
+  			
   		</properties>
-  	</profile> 
+  	</profile>
   	
   	<profile>
   		<id>NEWSITE</id>
