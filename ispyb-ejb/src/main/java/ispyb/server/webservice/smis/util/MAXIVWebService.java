@@ -53,7 +53,7 @@ public class MAXIVWebService implements SMISWebService{
 	
 	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/pbd?startdate=")
-				.append(startDateStr).append("&enddate=").append(endDateStr).append("&beamline=MX");
+				.append(startDateStr).append("&enddate=").append(endDateStr).append("&beamline=BioMAX");
 		
 		JSONObject response = readJsonDataFromUrl(url.toString());
 		
@@ -144,7 +144,9 @@ public class MAXIVWebService implements SMISWebService{
 				participant.setBllogin((String)jsonParticipant.get("bl_login"));
 				participant.setLabAddress1((String)jsonParticipant.get("lab_address_1"));
 				participant.setLabCity((String)jsonParticipant.get("lab_city"));
-				participant.setLabDeparment((String)jsonParticipant.get("lab_department"));//Check for NULL
+				Object dept = jsonParticipant.get("lab_department");
+				if(!jsonParticipant.isNull("lab_department"))
+					participant.setLabDeparment((String)jsonParticipant.get("lab_department"));
 				String labname = (String)jsonParticipant.get("lab_name");
 				if(labname.length() >= 45){
 					labname = labname.substring(0,40).concat("...");

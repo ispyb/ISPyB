@@ -1,4 +1,6 @@
-package ispyb.server.webservice.smis.util;
+package ispyb.common.server.webservice.smis.util;
+
+import ispyb.server.webservice.smis.util.MAXIVWebService;
 
 public class TestMAXIVWebService {
 
