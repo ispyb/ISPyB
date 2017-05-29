@@ -19,20 +19,13 @@
 
 package ispyb.server.common.services.proposals;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -50,6 +43,15 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
+
 /**
  * <p>
  * This session bean handles Proposal table.
@@ -65,6 +67,14 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				+ (fetchShippings ? " left join fetch vo.shippingVOs " : "")
 				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.proposalId = :pk";
 	}
+	
+	private static final String FIND_BY_PERSON_PK(Integer personPk, boolean fetchSessions, boolean fetchProteins,
+			boolean fetchShippings) {
+		return "from Proposal3VO vo  " + (fetchSessions ? " left join fetch vo.sessionVOs " : "")
+				+ (fetchShippings ? " left join fetch vo.shippingVOs " : "")
+				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.personId = :personPk";
+	}
+
 
 	// Generic HQL request to find all instances of Proposal
 	// TODO choose between left/inner join
@@ -196,6 +206,21 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		return (Proposal3VO) listVOs.toArray()[0];
 	}
 
+	@SuppressWarnings("unchecked")
+	@WebMethod
+	public Set <Proposal3VO> findByPersonPk(final Integer personPk, final boolean fetchSessions,
+			final boolean fetchProteins, final boolean fetchShippings) throws Exception {
+
+		Query query = entityManager.createQuery(FIND_BY_PERSON_PK(personPk, fetchSessions, fetchProteins, fetchShippings)).setParameter("personPk", personPk);
+
+		List<Proposal3VO> foundEntities = query.getResultList();
+		if (foundEntities == null) 
+			return null;
+		
+		Set<Proposal3VO> vos = new HashSet<Proposal3VO>(foundEntities);
+		return vos;
+
+	}
 	@SuppressWarnings("unchecked")
 	@WebMethod
 	public List<Proposal3VO> findByCodeAndNumber(final String code, final String number, final boolean fetchSessions,

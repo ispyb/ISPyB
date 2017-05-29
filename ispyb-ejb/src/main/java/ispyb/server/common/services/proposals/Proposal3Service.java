@@ -19,14 +19,15 @@
 
 package ispyb.server.common.services.proposals;
 
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.Remote;
 import javax.jws.WebMethod;
+
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
 
 @Remote
 public interface Proposal3Service {
@@ -87,6 +88,8 @@ public interface Proposal3Service {
 	public Proposal3VO findByPk(final Integer pk, final boolean fetchSessions, final boolean fetchProteins,
 			final boolean fetchShippings) throws Exception;
 
+	public Set<Proposal3VO> findByPersonPk(final Integer personPk, final boolean fetchSessions,
+			final boolean fetchProteins, final boolean fetchShippings) throws Exception ;
 	/**
 	 * Find all Proposal3 and set linked value objects if necessary.
 	 * 

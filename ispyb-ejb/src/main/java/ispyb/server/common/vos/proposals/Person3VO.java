@@ -36,6 +36,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
@@ -91,10 +92,10 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "faxNumber")
 	protected String faxNumber;
-
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name = "personId")
-	private Set<Proposal3VO> proposalDirectVOs;
+	
+	// only used if we want the list of all proposal for 1 main proposer
+	@Transient
+	private Set<Proposal3VO> proposalTransVOs;
 
 	@Column(name = "externalId")
 	protected Integer externalId;
@@ -118,7 +119,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = phoneNumber;
 		this.login = login;
 		this.faxNumber = faxNumber;
-		this.proposalDirectVOs = proposalDirectVOs;
+		this.proposalTransVOs = proposalDirectVOs;
 		this.externalId = externalId;
 	}
 
@@ -135,7 +136,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalDirectVOs = vo.getProposalVOs();
+		this.proposalTransVOs = vo.getProposalVOs();
 		this.externalId = vo.getExternalId();
 	}
 
@@ -151,7 +152,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalDirectVOs = null;
+		//this.proposalDirectVOs = null;
 		this.externalId = vo.getExternalId();
 	}
 
@@ -257,19 +258,19 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	public Set<Proposal3VO> getProposalVOs() {
-		return proposalDirectVOs;
+		return proposalTransVOs;
 	}
 
-	public void setProposalVOs(Set<Proposal3VO> proposalVOs) {
-		this.proposalDirectVOs = proposalVOs;
+	public void setProposalTransVOs(Set<Proposal3VO> proposalVOs) {
+		this.proposalTransVOs = proposalVOs;
 	}
 
 	public Set<Proposal3VO> getProposalDirectVOs() {
-		return proposalDirectVOs;
+		return proposalTransVOs;
 	}
 
 	public void setProposalDirectVOs(Set<Proposal3VO> proposalDirectVOs) {
-		this.proposalDirectVOs = proposalDirectVOs;
+		this.proposalTransVOs = proposalDirectVOs;
 	}
 
 	public Integer getLaboratoryVOId() {
