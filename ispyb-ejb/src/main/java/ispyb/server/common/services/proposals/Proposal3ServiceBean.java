@@ -560,6 +560,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		otherVO.setProteinVOs(null);
 		otherVO.setSessionVOs(null);
 		otherVO.setShippingVOs(null);
+		otherVO.setParticipants(null);
 		return otherVO;
 	}
 

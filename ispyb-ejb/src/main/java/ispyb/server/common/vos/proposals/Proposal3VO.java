@@ -90,7 +90,6 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "externalId")
 	protected Integer externalId;
 
-
 	@Fetch(value = FetchMode.SELECT)
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") }, inverseJoinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") })
@@ -143,7 +142,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs =  null;
 		this.shippingVOs =  null;
 		this.externalId = vo.getExternalId();
-		this.participants = vo.getParticipants();
+		this.participants = null;
 	}
 
 
