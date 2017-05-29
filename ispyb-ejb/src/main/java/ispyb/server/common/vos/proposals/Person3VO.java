@@ -96,11 +96,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "personId")
 	private Set<Proposal3VO> proposalDirectVOs;
 
-	@Fetch(value = FetchMode.SELECT)
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") }, inverseJoinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") })
-	private Set<Proposal3VO> proposalVOs;
-
 	@Column(name = "externalId")
 	protected Integer externalId;
 
@@ -110,7 +105,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	public Person3VO(Integer personId, Laboratory3VO laboratoryVO, String siteId, String personUUID, String familyName, String givenName,
 			String title, String emailAddress, String phoneNumber, String login, String faxNumber,
-			Set<Proposal3VO> proposalVOs, Integer externalId) {
+			Set<Proposal3VO> proposalDirectVOs, Integer externalId) {
 		super();
 		this.personId = personId;
 		this.laboratoryVO = laboratoryVO;
@@ -123,7 +118,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = phoneNumber;
 		this.login = login;
 		this.faxNumber = faxNumber;
-		this.proposalVOs = proposalVOs;
+		this.proposalDirectVOs = proposalDirectVOs;
 		this.externalId = externalId;
 	}
 
@@ -140,7 +135,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalVOs = vo.getProposalVOs();
+		this.proposalDirectVOs = vo.getProposalVOs();
 		this.externalId = vo.getExternalId();
 	}
 
@@ -156,7 +151,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalVOs = null;
+		this.proposalDirectVOs = null;
 		this.externalId = vo.getExternalId();
 	}
 
@@ -262,11 +257,11 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	}
 
 	public Set<Proposal3VO> getProposalVOs() {
-		return proposalVOs;
+		return proposalDirectVOs;
 	}
 
 	public void setProposalVOs(Set<Proposal3VO> proposalVOs) {
-		this.proposalVOs = proposalVOs;
+		this.proposalDirectVOs = proposalVOs;
 	}
 
 	public Set<Proposal3VO> getProposalDirectVOs() {
