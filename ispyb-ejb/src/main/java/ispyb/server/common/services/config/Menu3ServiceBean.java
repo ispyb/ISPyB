@@ -18,21 +18,26 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.config;
 
-import ispyb.server.common.daos.config.Menu3DAO;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.config.Menu3VO;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.server.common.services.config.VOValidateException;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.config.Menu3VO;
 
 /**
  * <p>
@@ -43,14 +48,26 @@ import org.apache.log4j.Logger;
 public class Menu3ServiceBean implements Menu3Service,
 		Menu3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(Menu3ServiceBean.class);
+	private final static Logger LOG = Logger.getLogger(Menu3ServiceBean.class);
+	
 
-	@EJB
-	private Menu3DAO dao;
+	// Generic HQL request to find instances of Menu3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK(boolean fetchMenuGroup) {
+		return "from Menu3VO vo " + (fetchMenuGroup ? "left join fetch vo.menuGroupVOs " : "") + "where vo.menuId = :pk";
+	}
 
-	@Resource
-	private SessionContext context;
+	// Generic HQL request to find all instances of Menu3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL(boolean fetchMenuGroup) {
+		return "from Menu3VO vo " + (fetchMenuGroup ? "left join fetch vo.menuGroupVOs " : "");
+	}
+
+	@PersistenceContext(unitName = "ispyb_config")
+	private EntityManager entityManager;
+
+	@PersistenceUnit(unitName = "ispyb_config")
+	private EntityManagerFactory entitymanagerFactory;
 
 	public Menu3ServiceBean() {
 	};
@@ -61,17 +78,11 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @return the persisted entity.
 	 */
 	public Menu3VO create(final Menu3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Menu3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -80,16 +91,10 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @return the updated entity.
 	 */
 	public Menu3VO update(final Menu3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Menu3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -97,37 +102,20 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Menu3VO vo = findByPk(pk, false);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
-	}
+		
+		checkCreateChangeRemoveAccess();
+		Menu3VO vo = findByPk(pk, false);			
+		delete(vo);
+		}
 
 	/**
 	 * Remove the Menu3
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final Menu3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -138,17 +126,16 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @return the Menu3 value object
 	 */
 	public Menu3VO findByPk(final Integer pk, final boolean withMenuGroup) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Menu3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				Menu3VO found = dao.findByPk(pk, withMenuGroup);
-				return found;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		try {
+			entityManager = entitymanagerFactory.createEntityManager();
+			return (Menu3VO) entityManager.createQuery(FIND_BY_PK(withMenuGroup)).setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	/**
@@ -159,6 +146,7 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @throws Exception
 	 */
 	public Menu3VO loadEager(Menu3VO vo) throws Exception {
+		
 		Menu3VO newVO = this.findByPk(vo.getMenuId(), true);
 		return newVO;
 	}
@@ -170,40 +158,33 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Menu3VO> findAll(final boolean withMenuGroup,
-			 final boolean detachLight)
-			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Menu3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Collection<Menu3VO> foundEntities = dao.findAll(withMenuGroup);
-				List<Menu3VO> vos;
-				if (detachLight)
-					vos = getLightMenu3VOs(foundEntities);
-				else
-					vos = getMenu3VOs(foundEntities);
-				return vos;
+	public List<Menu3VO> findAll(final boolean withMenuGroup, final boolean detachLight) throws Exception {
+		
+		entityManager = entitymanagerFactory.createEntityManager();
+		try {
+			Collection<Menu3VO> foundEntities = entityManager.createQuery(FIND_ALL(withMenuGroup)).getResultList();
+			List<Menu3VO> vos;
+			if (detachLight){
+				vos = getLightMenu3VOs(foundEntities);
 			}
-
-		});
-	}
-
+			else{
+				vos = getMenu3VOs(foundEntities);
+			}
+			return vos;
+			
+		} finally {
+			entityManager.close();
+		}
+	}	
+				
 	/**
 	 * Check if user has access rights to create, change and remove Menu3 entities. If not set rollback only and throw AccessDeniedException
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
+		
 				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
 				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
 	}
 
 	/**
@@ -212,6 +193,7 @@ public class Menu3ServiceBean implements Menu3Service,
 	 * @return
 	 */
 	private List<Menu3VO> getMenu3VOs(Collection<Menu3VO> entities) {
+		
 		List<Menu3VO> results = new ArrayList<Menu3VO>(entities.size());
 		for (Menu3VO vo : entities) {
 			results.add(vo);
@@ -255,15 +237,66 @@ public class Menu3ServiceBean implements Menu3Service,
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Menu3VO> findFiltered(final Integer parentId, final Integer menuGroupId, final String proposalCode)throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Menu3VO>) template.execute(new EJBAccessCallback() {
+		
+		entityManager = entitymanagerFactory.createEntityManager();
+		try {
+			Session session = (Session) entityManager.getDelegate();
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Collection<Menu3VO> foundEntities = dao.findFiltered(parentId, menuGroupId, proposalCode);
-				List<Menu3VO> vos = getMenu3VOs(foundEntities);
-				return vos;
+			Criteria criteriaMenu = session.createCriteria(Menu3VO.class);
+			Criteria criteriaMenuGroup = criteriaMenu.createCriteria("menuGroupVOs");
+
+			criteriaMenu.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+
+			if (proposalCode != null) {
+				criteriaMenu.add(Restrictions.or(Restrictions.eq("expType", "MB"), Restrictions.eq("expType", proposalCode)));
 			}
 
-		});
+			if (menuGroupId != null) {
+				criteriaMenuGroup.add(Restrictions.eq("menuGroupId", menuGroupId));
+			}
+
+			if (parentId != null) {
+				criteriaMenu.add(Restrictions.eq("parentId", parentId));
+			}
+			criteriaMenu.addOrder(Order.asc("parentId"));
+			criteriaMenu.addOrder(Order.asc("sequence"));
+
+			List<Menu3VO> vos = getMenu3VOs(criteriaMenu.list());
+			return vos;
+			
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like testing the primary
+	 *            key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(Menu3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getMenuId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getMenuId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
 	}
 }
+
