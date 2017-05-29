@@ -29,6 +29,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -37,6 +38,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -48,6 +50,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "Proposal")
+@SqlResultSetMapping(name = "proposalNativeQuery", entities = { @EntityResult(entityClass = Proposal3VO.class) })
 public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here

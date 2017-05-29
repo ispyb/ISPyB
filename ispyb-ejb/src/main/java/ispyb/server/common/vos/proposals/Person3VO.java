@@ -136,7 +136,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalTransVOs = vo.getProposalVOs();
+		this.proposalTransVOs = vo.getProposalDirectVOs();
 		this.externalId = vo.getExternalId();
 	}
 
@@ -152,7 +152,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		//this.proposalDirectVOs = null;
+		this.proposalTransVOs = null;
 		this.externalId = vo.getExternalId();
 	}
 
@@ -255,14 +255,6 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setFaxNumber(String faxNumber) {
 		this.faxNumber = faxNumber;
-	}
-
-	public Set<Proposal3VO> getProposalVOs() {
-		return proposalTransVOs;
-	}
-
-	public void setProposalTransVOs(Set<Proposal3VO> proposalVOs) {
-		this.proposalTransVOs = proposalVOs;
 	}
 
 	public Set<Proposal3VO> getProposalDirectVOs() {

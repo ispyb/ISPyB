@@ -57,7 +57,7 @@ public interface ATSASPipeline3Service {
 	public Model3VO merge(Model3VO model);
 
 	public List<Macromolecule3VO> getMacromoleculeByAcronym(String proposal,
-			String acronym);
+			String acronym) throws Exception ;
 
 	/** Used for ToolsForAssembly WS **/
 	public void addSubtraction(String measurementId, String rgStdev, String i0, String i0Stdev, String firstPointUsed,

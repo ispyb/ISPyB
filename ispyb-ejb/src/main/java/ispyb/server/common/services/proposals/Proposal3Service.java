@@ -88,6 +88,8 @@ public interface Proposal3Service {
 	public Proposal3VO findByPk(final Integer pk, final boolean fetchSessions, final boolean fetchProteins,
 			final boolean fetchShippings) throws Exception;
 
+	public List <Proposal3VO> findAllProposalsByPersonPk(final Integer personId) throws Exception;
+	
 	public Set<Proposal3VO> findByPersonPk(final Integer personPk, final boolean fetchSessions,
 			final boolean fetchProteins, final boolean fetchShippings) throws Exception ;
 	/**
@@ -128,19 +130,19 @@ public interface Proposal3Service {
 	@WebMethod
 	public List<Proposal3VO> findFiltered(final String code, final String number, final String title) throws Exception;
 
-	public List<Proposal3VO> findProposalByLoginName(String loginName, String site);
+	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) throws Exception ;
 
-	public List<Proposal3VO> findProposalByLoginName(String loginName);
+	public List<Proposal3VO> findProposalByLoginName(String loginName) throws Exception;
 	
-	public List<String> findProposalNamesByLoginName(String loginName, String site);
+	public List<String> findProposalNamesByLoginName(String loginName, String site) throws Exception ;
 	
 	public Proposal3VO findProposalById(int proposalId);
 	
 	public List<Proposal3VO> findAllProposals();
 	
-	public List<Map<String, Object>> findProposals();
+	public List<Map<String, Object>> findProposals() throws Exception ;
 	
-	public List<Map<String, Object>> findProposals(String loginName);
+	public List<Map<String, Object>> findProposals(String loginName) throws Exception ;
 
 	public List<Map<String, Object>> findProposalById(Integer proposalId);
 

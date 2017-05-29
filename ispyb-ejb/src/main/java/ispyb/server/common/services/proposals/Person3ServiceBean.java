@@ -378,7 +378,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		if (vo == null)
 			return null;
 		Person3VO otherVO = (Person3VO) vo.clone();
-		otherVO.setProposalTransVOs(null);
+		otherVO.setProposalDirectVOs(null);
 		return otherVO;
 	}
 	
@@ -398,7 +398,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		
 			Proposal3Service propService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			Set <Proposal3VO> proposalVOs = propService.findByPersonPk(person.getPersonId(), false/*fetchSessions*/, false/*fetchProteins*/, false/*fetchShippings*/);
-			person.setProposalTransVOs(proposalVOs);			
+			person.setProposalDirectVOs(proposalVOs);			
 			return person;
 	}
 
