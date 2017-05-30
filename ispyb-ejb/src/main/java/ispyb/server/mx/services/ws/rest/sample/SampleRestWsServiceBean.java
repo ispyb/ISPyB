@@ -88,6 +88,7 @@ public class SampleRestWsServiceBean implements SampleRestWsService, SampleRestW
 	public List<Map<String, Object>> getSamplesByContainerId(int proposalId,int containerId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByContainerId);
+		System.out.println(ByContainerId);
 		query.setParameter("containerId", containerId);
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
@@ -97,6 +98,7 @@ public class SampleRestWsServiceBean implements SampleRestWsService, SampleRestW
 	public List<Map<String, Object>> getSamplesByShipmentId(int proposalId,int shipingId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByShippingId);
+		
 		query.setParameter("shipingId", shipingId);
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
