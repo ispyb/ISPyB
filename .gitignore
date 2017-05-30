@@ -75,5 +75,9 @@ ispyb-ui/.classpath
 # Code Recommenders
 .recommenders/
 
+# Mac
+*.DS_Store
+
 # Batch to deploy ispyb.ear
 deploy.bat
+

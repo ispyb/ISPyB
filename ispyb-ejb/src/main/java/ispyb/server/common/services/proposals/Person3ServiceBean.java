@@ -21,8 +21,10 @@ package ispyb.server.common.services.proposals;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -34,8 +36,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.common.util.StringUtils;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.PersonWS3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 	
 
 /**
@@ -47,13 +51,13 @@ import ispyb.server.common.vos.proposals.PersonWS3VO;
 public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Person3ServiceBean.class);
+	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 	
 
 	// Generic HQL request to find instances of Person3 by pk
 	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean withProposals) {
-		return "from Person3VO vo " + (withProposals ? "left join fetch vo.proposalVOs " : "")
-				+ "where vo.personId = :pk";
+	private static final String FIND_BY_PK() {
+		return "from Person3VO vo where vo.personId = :pk";
 	}
 
 	private static final String FIND_BY_SITE_ID() {
@@ -141,10 +145,38 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 * @param fetchRelation1
 	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
-	public Person3VO findByPk(Integer pk, boolean withProposals) {
+	public Person3VO findByPk(Integer pk) {
 		try {
-			return (Person3VO) entityManager.createQuery(FIND_BY_PK(withProposals)).setParameter("pk", pk)
-					.getSingleResult();
+			return (Person3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
+						.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * <p>
+	 * Returns the Person3VO instance matching the given primary key.
+	 * </p>
+	 * <p>
+	 * <u>Please note</u> that the booleans to fetch relationships are needed <u>ONLY</u> if the value object has to be
+	 * used out the EJB container.
+	 * </p>
+	 * 
+	 * @param pk
+	 *            the primary key of the object to load.
+	 * @param fetchRelation1
+	 *            if true, the linked instances by the relation "relation1" will be set.
+	 * @throws Exception 
+	 */
+	public Person3VO findByPk(Integer pk, boolean withProposals) throws Exception {
+		try {
+			Person3VO person = this.findByPk(pk);
+			if (withProposals) {
+				return this.loadProposals(person);
+			}
+			return person;
+			
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -346,7 +378,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		if (vo == null)
 			return null;
 		Person3VO otherVO = (Person3VO) vo.clone();
-		otherVO.setProposalVOs(null);
+		otherVO.setProposalDirectVOs(null);
 		return otherVO;
 	}
 	
@@ -362,6 +394,13 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		return wsPerson;
 	}
 
+	public Person3VO loadProposals(Person3VO person) throws Exception {
+		
+			Proposal3Service propService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+			Set <Proposal3VO> proposalVOs = propService.findByPersonPk(person.getPersonId(), false/*fetchSessions*/, false/*fetchProteins*/, false/*fetchShippings*/);
+			person.setProposalDirectVOs(proposalVOs);			
+			return person;
+	}
 
 	
 	/**
