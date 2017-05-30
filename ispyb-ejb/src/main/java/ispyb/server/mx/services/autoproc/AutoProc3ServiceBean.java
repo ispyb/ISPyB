@@ -18,19 +18,18 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.AutoProc3DAO;
-import ispyb.server.mx.vos.autoproc.AutoProc3VO;
-
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.mx.daos.autoproc.VOValidateException;
+import ispyb.server.mx.vos.autoproc.AutoProc3VO;
 
 /**
  * <p>
@@ -41,12 +40,37 @@ import org.apache.log4j.Logger;
 public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(AutoProc3ServiceBean.class);
+	
+	// Generic HQL request to find instances of AutoProc3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from AutoProc3VO vo "  + "where vo.autoProcId = :pk";
+	}
+	
+	// Generic HQL request to find all instances of AutoProc3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from AutoProc3VO vo " ;
+	}
 
-	@EJB
-	private AutoProc3DAO dao;
+	private static final String FIND_BY_COLLECTION_ID = "select * from AutoProc ap , AutoProcScaling aps, AutoProcScaling_has_Int apshi1, AutoProcScaling_has_Int apshi2, AutoProcIntegration api"
+			+ " WHERE aps.autoProcId = ap.autoProcId AND aps.autoProcScalingId = apshi1.autoProcScalingId AND apshi1.autoProcScaling_has_IntId = apshi2.autoProcScaling_has_IntId"
+			+ " AND apshi2.autoProcIntegrationId = api.autoProcIntegrationId AND api.dataCollectionId = :dataCollectionId";
 
-	@Resource
-	private SessionContext context;
+	
+	private static final String FIND_BY_ANOMALOUS_DATACOLLECTIONID =  
+		"SELECT o.autoProcId, o.autoProcProgramId, o.spaceGroup, " +
+					"o.refinedCell_a, o.refinedCell_b, o.refinedCell_c, " +
+					"o.refinedCell_alpha, o.refinedCell_beta, o.refinedCell_gamma, o.recordTimeStamp "+ 
+				"FROM AutoProc o, AutoProcScaling aps, AutoProcScaling_has_Int apshi , AutoProcIntegration api, SpaceGroup sp  "+
+				"WHERE  api.dataCollectionId = :dataCollectionId AND api.anomalous = :anomalous AND "+
+				"api.autoProcIntegrationId = apshi.autoProcIntegrationId AND apshi.autoProcScalingId = aps.autoProcScalingId AND "+
+				"aps.autoProcId = o.autoProcId AND "+
+				"REPLACE(o.spaceGroup, ' ', '') = sp.spaceGroupShortName  "+
+				"ORDER BY sp.spaceGroupNumber DESC";
+	
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	public AutoProc3ServiceBean() {
 	};
@@ -59,17 +83,11 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 * @return the persisted entity.
 	 */
 	public AutoProc3VO create(final AutoProc3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProc3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -80,16 +98,10 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 * @return the updated entity.
 	 */
 	public AutoProc3VO update(final AutoProc3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProc3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -99,19 +111,10 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				AutoProc3VO vo = findByPk(pk);
-				// TODO Edit this business code
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		
+		checkCreateChangeRemoveAccess();
+		AutoProc3VO vo = findByPk(pk);
+		delete(vo);
 	}
 
 	/**
@@ -121,17 +124,9 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 *            the entity to remove.
 	 */
 	public void delete(final AutoProc3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -144,17 +139,14 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 * @return the AutoProc3 value object
 	 */
 	public AutoProc3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProc3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				AutoProc3VO found = dao.findByPk(pk);
-				return found;
+		checkCreateChangeRemoveAccess();
+		try{
+			return (AutoProc3VO) entityManager.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+			}catch(NoResultException e){
+				return null;
 			}
-
-		});
 	}
 
 	// TODO remove following method if not adequate
@@ -166,28 +158,17 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 */
 	@SuppressWarnings("unchecked")
 	public List<AutoProc3VO> findAll() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<AutoProc3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<AutoProc3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		
+		List<AutoProc3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<AutoProc3VO> findByDataCollectionId(final Integer dataCollectionId) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<AutoProc3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<AutoProc3VO> foundEntities = dao.findByDataCollectionId(dataCollectionId);
-				return foundEntities;
-			}
-
-		});
+		List<AutoProc3VO> foundEntities = this.entityManager.createNativeQuery(FIND_BY_COLLECTION_ID, "autoProcNativeQuery")
+				.setParameter("dataCollectionId", dataCollectionId).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -202,16 +183,12 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	@SuppressWarnings("unchecked")
 	public List<AutoProc3VO> findByAnomalousDataCollectionIdAndOrderBySpaceGroupNumber(final Integer dataCollectionId,
 			final boolean anomalous) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<AutoProc3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<AutoProc3VO> foundEntities = dao.findByAnomalousDataCollectionIdAndOrderBySpaceGroupNumber(
-						dataCollectionId, anomalous ? 1 : 0);
-				return foundEntities;
-			}
-
-		});
+		
+		String query = FIND_BY_ANOMALOUS_DATACOLLECTIONID;
+		List<AutoProc3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcNativeQuery")
+				.setParameter("dataCollectionId", dataCollectionId).
+				setParameter("anomalous", anomalous).getResultList();
+		return listVOs;
 	}
 
 	/**
@@ -221,18 +198,40 @@ public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceL
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
 				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
 				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
 				// to the one checking the needed access rights
 				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
 	}
+	
+	/* Private methods ------------------------------------------------------ */
 
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(AutoProc3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getAutoProcId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getAutoProcId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
+	
 }
