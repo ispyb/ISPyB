@@ -34,7 +34,7 @@ VIEW `v_mx_sample` AS
         `Protein`.`name` AS `Protein_name`,
         `Protein`.`acronym` AS `Protein_acronym`,
         `Protein`.`proteinType` AS `Protein_proteinType`,
-        `Protein`.`proposalId` AS `Shipping_proposalId`,
+        `Shipping`.`proposalId` AS `Protein_proposalId`,
         `Person`.`personId` AS `Person_personId`,
         `Person`.`familyName` AS `Person_familyName`,
         `Person`.`givenName` AS `Person_givenName`,
