@@ -74,3 +74,6 @@ ispyb-ui/.classpath
 
 # Code Recommenders
 .recommenders/
+
+# Batch to deploy ispyb.ear
+deploy.bat
