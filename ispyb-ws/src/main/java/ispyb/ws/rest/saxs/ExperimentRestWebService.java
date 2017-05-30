@@ -40,7 +40,7 @@ import com.google.gson.reflect.TypeToken;
 public class ExperimentRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(BufferRestWebService.class);
 
-	private List<Map<String, Object>> getExperimentListByProposal(String proposal) throws NamingException {
+	private List<Map<String, Object>> getExperimentListByProposal(String proposal) throws Exception {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		Proposal3Service proposalService = this.getProposal3Service();
 		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(proposal);
@@ -57,7 +57,7 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 	}
 
 	private List<Map<String, Object>> getExperimentListBySessionId(String proposal, int sessionId)
-			throws NamingException {
+			throws Exception {
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		
 		Proposal3Service proposalService = this.getProposal3Service();
