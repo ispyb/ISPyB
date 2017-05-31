@@ -22,6 +22,7 @@ package ispyb.server.mx.services.collections;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.mx.daos.collections.BeamLineSetup3DAO;
+import ispyb.server.mx.daos.collections.VOValidateException;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 
 import java.util.List;
@@ -31,6 +32,9 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
@@ -44,10 +48,29 @@ import org.apache.log4j.Logger;
 public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLineSetup3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(BeamLineSetup3ServiceBean.class);
+	
+	// Generic HQL request to find instances of BeamLineSetup by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK(Integer pk) {
+		return "from BeamLineSetup3VO vo  where vo.beamLineSetupId = :pk";
+	}
 
-	@EJB
-	private BeamLineSetup3DAO dao;
+	// Generic HQL request to find all instances of BeamLineSetup
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from BeamLineSetup3VO vo ";
+	}
 
+	private static final String FIND_BY_SCREENING_INPUT = "SELECT * "
+			+ "FROM BeamLineSetup bls, ScreeningInput si, Screening s, DataCollection dc, DataCollectionGroup g, BLSession ses  "
+			+ " WHERE si.screeningInputId = :screeningInputId AND si.screeningId = s.screeningId "
+			+ "AND s.dataCollectionId = dc.dataCollectionId AND "
+			+ "dc.dataCollectionGroupId = g.dataCollectionGroupId AND "
+			+ "g.sessionId = ses.sessionId AND ses.beamLineSetupId = bls.beamLineSetupId";
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
+	
 	@Resource
 	private SessionContext context;
 
@@ -62,17 +85,12 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 	 * @return the persisted entity.
 	 */
 	public BeamLineSetup3VO create(final BeamLineSetup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (BeamLineSetup3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -83,17 +101,11 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 	 * @return the updated entity.
 	 */
 	public BeamLineSetup3VO update(final BeamLineSetup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (BeamLineSetup3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -103,20 +115,13 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				BeamLineSetup3VO vo = findByPk(pk);
-				// TODO Edit this business code
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+	
+		checkCreateChangeRemoveAccess();
+		BeamLineSetup3VO vo = findByPk(pk);
+		// TODO Edit this business code
+		delete(vo);
 	}
+
 
 	/**
 	 * Remove the BeamLineSetup
@@ -125,17 +130,10 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 	 *            the entity to remove.
 	 */
 	public void delete(final BeamLineSetup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -154,7 +152,12 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				BeamLineSetup3VO found = dao.findByPk(pk);
+				
+				List<BeamLineSetup3VO> listVOs = entityManager.createQuery(FIND_BY_PK(pk)).setParameter("pk", pk).getResultList();
+				if (listVOs == null || listVOs.isEmpty())
+					listVOs = null;
+				
+				BeamLineSetup3VO found = (BeamLineSetup3VO) listVOs.toArray()[0];
 				return found;
 			};
 		};
@@ -176,8 +179,9 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List<BeamLineSetup3VO> foundEntities = dao.findAll();
-				return foundEntities;
+				Query query = entityManager.createQuery(FIND_ALL());
+				List<BeamLineSetup3VO> vos = query.getResultList();
+				return vos;
 			};
 		};
 		List<BeamLineSetup3VO> ret = (List<BeamLineSetup3VO>) template.execute(callBack);
@@ -191,21 +195,14 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
 
 				// TODO add an authorization service bean for ISPyB
 				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance()
 				// .getService(AuthorizationServiceLocalHome.class); // TODO change method to the one checking the
 				// // needed access rights
 				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
 	}
+
 
 	
 	
@@ -221,7 +218,13 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
 			public BeamLineSetup3VO doInEJBAccess(Object parent) throws Exception {
-				BeamLineSetup3VO foundEntities = dao.findByScreeningInputId(screeningInputId);
+				String query = FIND_BY_SCREENING_INPUT;
+				List<BeamLineSetup3VO> listVOs = entityManager.createNativeQuery(query, "beamLineSetupNativeQuery")
+						.setParameter("screeningInputId", screeningInputId).getResultList();
+				if (listVOs == null || listVOs.isEmpty())
+					listVOs = null;
+				
+				BeamLineSetup3VO foundEntities = (BeamLineSetup3VO) listVOs.toArray()[0];
 				BeamLineSetup3VO vos;
 				if (detachLight)
 					vos = getLightBeamLineSetupVO(foundEntities);
@@ -263,4 +266,34 @@ public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLin
 		return vo;
 	}
 
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(BeamLineSetup3VO vo, boolean create) throws Exception {
+		if (create) {
+			if (vo.getBeamLineSetupId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getBeamLineSetupId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
+	
 }
