@@ -18,23 +18,11 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.daos.shipping.Dewar3DAO;
-import ispyb.server.common.daos.shipping.Dewar3DAOBean;
-import ispyb.server.common.daos.shipping.VOValidateException;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -47,6 +35,11 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.shipping.Dewar3VO;
 
 /**
  * <p>

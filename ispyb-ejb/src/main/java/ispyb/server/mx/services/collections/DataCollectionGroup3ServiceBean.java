@@ -35,7 +35,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.collections.VOValidateException;
+
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroupWS3VO;
 

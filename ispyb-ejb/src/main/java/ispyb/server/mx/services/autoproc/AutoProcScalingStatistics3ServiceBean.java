@@ -32,7 +32,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
+
 import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
 
 /**

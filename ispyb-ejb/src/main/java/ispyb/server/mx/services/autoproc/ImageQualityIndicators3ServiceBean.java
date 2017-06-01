@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
+
 import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
 import ispyb.server.mx.vos.autoproc.ImageQualityIndicatorsWS3VO;
 

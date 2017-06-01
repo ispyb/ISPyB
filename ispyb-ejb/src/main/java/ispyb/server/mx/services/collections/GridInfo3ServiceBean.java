@@ -20,8 +20,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.GridInfo3DAO;
-import ispyb.server.mx.daos.collections.VOValidateException;
+
 import ispyb.server.mx.vos.collections.GridInfo3VO;
 
 import java.util.List;

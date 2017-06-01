@@ -27,7 +27,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
-import ispyb.server.common.daos.shipping.VOValidateException;
+
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.vos.shipping.DewarLocation3VO;
 

@@ -35,7 +35,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import ispyb.server.common.services.config.VOValidateException;
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.vos.config.Menu3VO;
 

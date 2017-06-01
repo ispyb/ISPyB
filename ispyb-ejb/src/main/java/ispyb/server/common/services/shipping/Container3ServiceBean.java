@@ -35,7 +35,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import ispyb.server.common.daos.shipping.VOValidateException;
+
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.mx.services.sample.Crystal3Service;

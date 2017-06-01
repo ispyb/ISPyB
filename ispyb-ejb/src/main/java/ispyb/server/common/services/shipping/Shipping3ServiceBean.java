@@ -19,8 +19,7 @@
 package ispyb.server.common.services.shipping;
 
 import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.common.daos.shipping.Shipping3DAO;
-import ispyb.server.common.daos.shipping.VOValidateException;
+
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;

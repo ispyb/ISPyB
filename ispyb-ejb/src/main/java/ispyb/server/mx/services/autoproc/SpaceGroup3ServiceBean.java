@@ -20,8 +20,7 @@ package ispyb.server.mx.services.autoproc;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.SpaceGroup3DAO;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
+
 import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
 
 import java.util.List;

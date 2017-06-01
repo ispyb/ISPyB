@@ -20,7 +20,7 @@ package ispyb.server.mx.services.sample;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.sample.BLSubSample3DAO;
+
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 
 import java.util.List;
@@ -31,6 +31,17 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.NoResultException;
+
+import org.apache.log4j.Logger;
+
+import ispyb.server.mx.vos.sample.BLSubSample3VO;
 
 /**
  * <p>
@@ -44,8 +55,21 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	private final static Logger LOG = Logger
 			.getLogger(BLSubSample3ServiceBean.class);
 
-	@EJB
-	private BLSubSample3DAO dao;
+	// Generic HQL request to find instances of BLSubSample3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from BLSubSample3VO vo "
+				+ "where vo.blSubSampleId = :pk";
+	}
+
+	// Generic HQL request to find all instances of BLSubSample3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from BLSubSample3VO vo ";
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext context;
@@ -59,17 +83,12 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @return the persisted entity.
 	 */
 	public BLSubSample3VO create(final BLSubSample3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (BLSubSample3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -78,16 +97,11 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @return the updated entity.
 	 */
 	public BLSubSample3VO update(final BLSubSample3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (BLSubSample3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -95,19 +109,11 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				BLSubSample3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		checkCreateChangeRemoveAccess();
+		BLSubSample3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -115,17 +121,10 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final BLSubSample3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -134,35 +133,27 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @return the BLSubSample3 value object
 	 */
 	public BLSubSample3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (BLSubSample3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				BLSubSample3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			return (BLSubSample3VO) entityManager
+					.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
-
 	
 	/**
 	 * Find all BLSubSample3s and set linked value objects if necessary
 	 */
 	@SuppressWarnings("unchecked")
 	public List<BLSubSample3VO> findAll()throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<BLSubSample3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<BLSubSample3VO> foundEntities = dao.findAll();
-				
-				return foundEntities;
-			}
-
-		});
+		
+		List<BLSubSample3VO> foundEntities = (List<BLSubSample3VO>) entityManager.createQuery(
+				FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -170,17 +161,37 @@ public class BLSubSample3ServiceBean implements BLSubSample3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+		//autService.checkUserRightToChangeAdminData();
 	}
 
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * @param vo the data to check
+	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
+	 */
+	private void checkAndCompleteData(BLSubSample3VO vo, boolean create)
+			throws Exception {
+
+		if (create) {
+			if (vo.getBlSubSampleId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getBlSubSampleId() == null) {
+				throw new IllegalArgumentException(
+						"Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
 	
 }

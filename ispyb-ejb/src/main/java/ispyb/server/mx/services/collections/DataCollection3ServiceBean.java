@@ -23,8 +23,7 @@ import ispyb.common.util.StringUtils;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.daos.collections.DataCollection3DAO;
-import ispyb.server.mx.daos.collections.VOValidateException;
+
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionWS3VO;

@@ -30,7 +30,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
-import ispyb.server.common.daos.shipping.VOValidateException;
+
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 
