@@ -28,7 +28,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
 import ispyb.server.mx.vos.autoproc.AutoProcStatus3VO;
 
 /**

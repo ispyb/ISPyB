@@ -32,7 +32,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
 import ispyb.server.mx.vos.autoproc.PreparePhasingData3VO;
 
 /**
@@ -90,7 +89,7 @@ public class PreparePhasingData3ServiceBean implements PreparePhasingData3Servic
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo)
+		return entityManager.merge(vo);
 	}
 
 	/**
