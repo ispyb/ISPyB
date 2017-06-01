@@ -18,19 +18,22 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.Phasing3DAO;
-import ispyb.server.mx.vos.autoproc.Phasing3VO;
-
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.mx.daos.autoproc.VOValidateException;
+import ispyb.server.mx.vos.autoproc.Phasing3VO;
 
 /**
  * <p>
@@ -41,12 +44,22 @@ import org.apache.log4j.Logger;
 public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Phasing3ServiceBean.class);
+	
+	// Generic HQL request to find instances of Phasing3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from Phasing3VO vo "
+				+ "where vo.phasingId = :phasingId";
+	}
 
-	@EJB
-	private Phasing3DAO dao;
+	// Generic HQL request to find all instances of Phasing3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from Phasing3VO vo ";
+	}
 
-	@Resource
-	private SessionContext context;
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	public Phasing3ServiceBean() {
 	};
@@ -57,17 +70,12 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 * @return the persisted entity.
 	 */
 	public Phasing3VO create(final Phasing3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Phasing3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -76,16 +84,11 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 * @return the updated entity.
 	 */
 	public Phasing3VO update(final Phasing3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Phasing3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -93,19 +96,11 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Phasing3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+	
+		checkCreateChangeRemoveAccess();
+		Phasing3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -113,36 +108,28 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final Phasing3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
-
+	
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
 	 * @param pk the primary key
 	 * @return the Phasing3 value object
 	 */
 	public Phasing3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Phasing3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				Phasing3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			return (Phasing3VO) entityManager
+					.createQuery(FIND_BY_PK())
+					.setParameter("phasingId", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -152,15 +139,9 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Phasing3VO> findAll()throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return ( List<Phasing3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				 List<Phasing3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		List<Phasing3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -168,30 +149,51 @@ public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
-	}
 	
+		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+		//autService.checkUserRightToChangeAdminData();
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Phasing3VO> findFiltered(final Integer phasingAnalysisId) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return ( List<Phasing3VO>) template.execute(new EJBAccessCallback() {
+	
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria criteria = session.createCriteria(Phasing3VO.class);
+		
+		if (phasingAnalysisId != null) {
+			Criteria subCrit = criteria.createCriteria("phasingAnalysisVO");
+			subCrit.add(Restrictions.eq("phasingAnalysisId", phasingAnalysisId));
+			subCrit.addOrder(Order.asc("phasingAnalysisId"));
+		}
+		List<Phasing3VO> foundEntities = criteria.list();
+		return foundEntities;
+	}
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				 List<Phasing3VO> foundEntities = dao.findFiltered(phasingAnalysisId);
-				return foundEntities;
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * @param vo the data to check
+	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
+	 */
+	private void checkAndCompleteData(Phasing3VO vo, boolean create)
+			throws Exception {
+
+		if (create) {
+			if (vo.getPhasingId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
 			}
-
-		});
+		} else {
+			if (vo.getPhasingId() == null) {
+				throw new IllegalArgumentException(
+						"Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
 	}
 	
-
 }
