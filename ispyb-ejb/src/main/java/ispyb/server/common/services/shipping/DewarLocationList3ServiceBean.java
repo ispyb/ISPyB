@@ -18,23 +18,18 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping;
 
-import ispyb.server.common.daos.shipping.DewarLocationList3DAO;
-import ispyb.server.common.daos.shipping.VOValidateException;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.shipping.DewarLocationList3VO;
-
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.common.daos.shipping.VOValidateException;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.shipping.DewarLocationList3VO;
 
 /**
  * <p>
@@ -194,5 +189,5 @@ public class DewarLocationList3ServiceBean implements DewarLocationList3Service,
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
-	}\
+	}
 }
