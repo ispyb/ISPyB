@@ -170,6 +170,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 * @throws Exception 
 	 */
 	public Person3VO findByPk(Integer pk, boolean withProposals) throws Exception {
+		//TODO remove this method because the proposals should be eager loaded
 		try {
 			Person3VO person = this.findByPk(pk);
 			if (withProposals) {

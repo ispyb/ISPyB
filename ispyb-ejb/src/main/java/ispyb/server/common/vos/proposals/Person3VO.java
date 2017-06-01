@@ -19,8 +19,6 @@
 
 package ispyb.server.common.vos.proposals;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,11 +34,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import ispyb.server.common.vos.ISPyBValueObject;
 
 /**
  * Person3 value object mapping table Person
@@ -93,9 +92,15 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "faxNumber")
 	protected String faxNumber;
 	
-	// only used if we want the list of all proposal for 1 main proposer
-	@Transient
-	private Set<Proposal3VO> proposalTransVOs;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "personId")
+    private Set<Proposal3VO> proposalDirectVOs;
+
+    @Fetch(value = FetchMode.SELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") }, inverseJoinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") })
+    private Set<Proposal3VO> proposalVOs;
+
 
 	@Column(name = "externalId")
 	protected Integer externalId;
@@ -119,7 +124,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = phoneNumber;
 		this.login = login;
 		this.faxNumber = faxNumber;
-		this.proposalTransVOs = proposalDirectVOs;
+		this.proposalVOs =proposalVOs;
 		this.externalId = externalId;
 	}
 
@@ -136,7 +141,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalTransVOs = vo.getProposalDirectVOs();
+		this.proposalVOs = vo.getProposalVOs();
 		this.externalId = vo.getExternalId();
 	}
 
@@ -152,7 +157,7 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.phoneNumber = vo.getPhoneNumber();
 		this.login = vo.getLogin();
 		this.faxNumber = vo.getFaxNumber();
-		this.proposalTransVOs = null;
+		this.proposalVOs = null;
 		this.externalId = vo.getExternalId();
 	}
 
@@ -257,13 +262,21 @@ public class Person3VO extends ISPyBValueObject implements Cloneable {
 		this.faxNumber = faxNumber;
 	}
 
-	public Set<Proposal3VO> getProposalDirectVOs() {
-		return proposalTransVOs;
-	}
+    public Set<Proposal3VO> getProposalVOs() {
+        return proposalVOs;
+    }
 
-	public void setProposalDirectVOs(Set<Proposal3VO> proposalDirectVOs) {
-		this.proposalTransVOs = proposalDirectVOs;
-	}
+    public void setProposalVOs(Set<Proposal3VO> proposalVOs) {
+        this.proposalVOs = proposalVOs;
+    }
+
+    public Set<Proposal3VO> getProposalDirectVOs() {
+        return proposalDirectVOs;
+    }
+
+    public void setProposalDirectVOs(Set<Proposal3VO> proposalDirectVOs) {
+        this.proposalDirectVOs = proposalDirectVOs;
+    }
 
 	public Integer getLaboratoryVOId() {
 		return laboratoryVO == null ? null : laboratoryVO.getLaboratoryId();
