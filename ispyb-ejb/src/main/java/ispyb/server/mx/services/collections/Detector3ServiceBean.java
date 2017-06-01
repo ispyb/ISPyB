@@ -21,7 +21,6 @@ package ispyb.server.mx.services.collections;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.mx.daos.collections.Detector3DAO;
-import ispyb.server.mx.daos.collections.VOValidateException;
 import ispyb.server.mx.vos.collections.Detector3VO;
 
 import java.util.List;
@@ -30,14 +29,8 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -51,20 +44,8 @@ public class Detector3ServiceBean implements Detector3Service,
 	private final static Logger LOG = Logger
 			.getLogger(Detector3ServiceBean.class);
 
-	// Generic HQL request to find instances of Detector3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from Detector3VO vo " + "where vo.detectorId = :pk";
-	}
-
-	// Generic HQL request to find all instances of Detector3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from Detector3VO vo ";
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@EJB
+	private Detector3DAO dao;
 
 	@Resource
 	private SessionContext context;
@@ -78,12 +59,17 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @return the persisted entity.
 	 */
 	public Detector3VO create(final Detector3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -92,11 +78,16 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @return the updated entity.
 	 */
 	public Detector3VO update(final Detector3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -104,11 +95,19 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		Detector3VO vo = findByPk(pk);
-		// TODO Edit this business code				
-		delete(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				Detector3VO vo = findByPk(pk);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -116,10 +115,17 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final Detector3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -130,14 +136,17 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @return the Detector3 value object
 	 */
 	public Detector3VO findByPk(final Integer pk) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			return (Detector3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				Detector3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
 
 	/**
@@ -161,9 +170,15 @@ public class Detector3ServiceBean implements Detector3Service,
 	@SuppressWarnings("unchecked")
 	public List<Detector3VO> findAll()
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Detector3VO>) template.execute(new EJBAccessCallback() {
 
-		List<Detector3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Detector3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -171,11 +186,18 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
+			public Object doInEJBAccess(Object parent) throws Exception {
+				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+				//autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
-
+	
 	/**
 	 * Find a dataCollectionGroup by its primary key -- webservices object
 	 * @param pk
@@ -185,14 +207,17 @@ public class Detector3ServiceBean implements Detector3Service,
 	 * @throws Exception
 	 */
 	public Detector3VO findForWSByPk(final Integer pk) throws Exception{
-		
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			return (Detector3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				Detector3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
 	
 	/**
@@ -208,37 +233,20 @@ public class Detector3ServiceBean implements Detector3Service,
 	public Detector3VO findByCharacteristics(final String detectorType, final String detectorManufacturer, 
 			final String detectorModel, final Double detectorPixelSizeHorizontal, 
 			final Double detectorPixelSizeVertical) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		Session session = (Session) this.entityManager.getDelegate();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
 
-		Criteria crit = session.createCriteria(Detector3VO.class);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				List<Detector3VO> vos = dao.findFiltered(detectorType, detectorManufacturer, 
+						detectorModel, detectorPixelSizeHorizontal, 
+						detectorPixelSizeVertical, null);
+				if (vos == null || vos.size() == 0)
+					return null;
+				return vos.get(0);
+			}
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (detectorType != null) {
-			crit.add(Restrictions.like("detectorType", detectorType));
-		}
-
-		if (detectorManufacturer != null) {
-			crit.add(Restrictions.like("detectorManufacturer", detectorManufacturer));
-		}
-
-		if (detectorModel != null) {
-			crit.add(Restrictions.like("detectorModel", detectorModel));
-		}
-
-		/* problem with comparison of floats for equality */
-		if (detectorPixelSizeHorizontal != null)
-			crit.add(Restrictions.like("detectorPixelSizeHorizontal", detectorPixelSizeHorizontal));
-
-		if (detectorPixelSizeVertical != null)
-			crit.add(Restrictions.like("detectorPixelSizeVertical", detectorPixelSizeVertical));
-
-		List<Detector3VO> vos = crit.list();
-		if (vos == null || vos.size() == 0)
-			return null;
-		return vos.get(0);
+		});
 	}
 
 	/**
@@ -252,63 +260,20 @@ public class Detector3ServiceBean implements Detector3Service,
 	 */
 	public Detector3VO findDetector(final String detectorType, final String detectorManufacturer, 
 			final String detectorModel, final String detectorMode) throws Exception{
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Detector3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				List<Detector3VO> vos = dao.findFiltered(detectorType, detectorManufacturer, 
+						detectorModel, null, 
+						null, detectorMode);
+				if (vos == null || vos.size() == 0)
+					return null;
+				return vos.get(0);
+			}
+
+		});
+	}
 	
-		checkCreateChangeRemoveAccess();
-		Session session = (Session) this.entityManager.getDelegate();
-
-		Criteria crit = session.createCriteria(Detector3VO.class);
-
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (detectorType != null) {
-			crit.add(Restrictions.like("detectorType", detectorType));
-		}
-
-		if (detectorManufacturer != null) {
-			crit.add(Restrictions.like("detectorManufacturer", detectorManufacturer));
-		}
-
-		if (detectorModel != null) {
-			crit.add(Restrictions.like("detectorModel", detectorModel));
-		}
-
-		if (detectorMode != null && !detectorMode.equals("")) {
-			crit.add(Restrictions.like("detectorMode", detectorMode));
-		}
-
-		List<Detector3VO> vos = crit.list();
-		if (vos == null || vos.size() == 0)
-			return null;
-		return vos.get(0);
-	}
-
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(Detector3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getDetectorId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getDetectorId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
 }

@@ -18,22 +18,19 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.autoproc.PhasingProgramAttachment3DAO;
+import ispyb.server.mx.vos.autoproc.PhasingProgramAttachment3VO;
+
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
-import ispyb.server.mx.vos.autoproc.PhasingProgramAttachment3VO;
 
 /**
  * <p>
@@ -45,21 +42,11 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 
 	private final static Logger LOG = Logger.getLogger(PhasingProgramAttachment3ServiceBean.class);
 
-	// Generic HQL request to find instances of PhasingProgramAttachment3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from PhasingProgramAttachment3VO vo "
-				+ "where vo.phasingProgramAttachmentId = :phasingProgramAttachmentId";
-	}
+	@EJB
+	private PhasingProgramAttachment3DAO dao;
 
-	// Generic HQL request to find all instances of PhasingProgramAttachment3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from PhasingProgramAttachment3VO vo ";
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@Resource
+	private SessionContext context;
 
 	public PhasingProgramAttachment3ServiceBean() {
 	};
@@ -70,11 +57,17 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @return the persisted entity.
 	 */
 	public PhasingProgramAttachment3VO create(final PhasingProgramAttachment3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (PhasingProgramAttachment3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -83,10 +76,16 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @return the updated entity.
 	 */
 	public PhasingProgramAttachment3VO update(final PhasingProgramAttachment3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (PhasingProgramAttachment3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -94,11 +93,19 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		PhasingProgramAttachment3VO vo = findByPk(pk);
-		// TODO Edit this business code				
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				PhasingProgramAttachment3VO vo = findByPk(pk);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -106,9 +113,17 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final PhasingProgramAttachment3VO vo) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		entityManager.remove(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -117,26 +132,34 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @return the PhasingProgramAttachment3 value object
 	 */
 	public PhasingProgramAttachment3VO findByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (PhasingProgramAttachment3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			return (PhasingProgramAttachment3VO) entityManager
-					.createQuery(FIND_BY_PK())
-					.setParameter("phasingProgramAttachmentId", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				PhasingProgramAttachment3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
+
 	
 	/**
 	 * Find all PhasingProgramAttachment3s and set linked value objects if necessary
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PhasingProgramAttachment3VO> findAll()throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<PhasingProgramAttachment3VO>) template.execute(new EJBAccessCallback() {
 
-		List<PhasingProgramAttachment3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<PhasingProgramAttachment3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -144,52 +167,29 @@ public class PhasingProgramAttachment3ServiceBean implements PhasingProgramAttac
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+				//autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<PhasingProgramAttachment3VO> findFiltered(final Integer phasingProgramRunId)throws Exception {
-		
-		Session session = (Session) this.entityManager.getDelegate();
-		Criteria criteria = session.createCriteria(PhasingProgramAttachment3VO.class);
-		
-		if (phasingProgramRunId != null) {
-			Criteria subCrit = criteria.createCriteria("phasingProgramRunVO");
-			subCrit.add(Restrictions.eq("phasingProgramRunId", phasingProgramRunId));
-			subCrit.addOrder(Order.asc("phasingProgramRunId"));
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return ( List<PhasingProgramAttachment3VO>) template.execute(new EJBAccessCallback() {
 
-		List<PhasingProgramAttachment3VO> foundEntities = criteria.list();
-		return foundEntities;
-	}
-
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
-	 * @exception VOValidateException if data is not correct
-	 */
-	private void checkAndCompleteData(PhasingProgramAttachment3VO vo, boolean create)
-			throws Exception {
-
-		if (create) {
-			if (vo.getPhasingProgramAttachmentId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			public Object doInEJBAccess(Object parent) throws Exception {
+				 List<PhasingProgramAttachment3VO> foundEntities = dao.findFiltered(phasingProgramRunId);
+				return foundEntities;
 			}
-		} else {
-			if (vo.getPhasingProgramAttachmentId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
+
+		});
 	}
 	
 }

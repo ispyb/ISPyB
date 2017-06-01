@@ -21,7 +21,6 @@ package ispyb.server.mx.services.autoproc;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.mx.daos.autoproc.SubstructureDetermination3DAO;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
 import ispyb.server.mx.vos.autoproc.SubstructureDetermination3VO;
 
 import java.util.List;
@@ -30,15 +29,8 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -51,22 +43,12 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 
 	private final static Logger LOG = Logger
 			.getLogger(SubstructureDetermination3ServiceBean.class);
-	
-	// Generic HQL request to find instances of SubstructureDetermination3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from SubstructureDetermination3VO vo "
-				+ "where vo.substructureDeterminationId = :substructureDeterminationId";
-	}
 
-	// Generic HQL request to find all instances of SubstructureDetermination3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from SubstructureDetermination3VO vo ";
-	}
+	@EJB
+	private SubstructureDetermination3DAO dao;
 
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@Resource
+	private SessionContext context;
 
 	public SubstructureDetermination3ServiceBean() {
 	};
@@ -77,25 +59,35 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	 * @return the persisted entity.
 	 */
 	public SubstructureDetermination3VO create(final SubstructureDetermination3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (SubstructureDetermination3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
-	
+
 	/**
 	 * Update the SubstructureDetermination3 data.
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
 	public SubstructureDetermination3VO update(final SubstructureDetermination3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (SubstructureDetermination3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -103,11 +95,19 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		SubstructureDetermination3VO vo = findByPk(pk);
-		// TODO Edit this business code				
-		delete(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				SubstructureDetermination3VO vo = findByPk(pk);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -115,10 +115,17 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final SubstructureDetermination3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -127,18 +134,20 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	 * @return the SubstructureDetermination3 value object
 	 */
 	public SubstructureDetermination3VO findByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (SubstructureDetermination3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			return (SubstructureDetermination3VO) entityManager
-					.createQuery(FIND_BY_PK())
-					.setParameter("substructureDeterminationId", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				SubstructureDetermination3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
 
+	
 	/**
 	 * Find all SubstructureDetermination3s and set linked value objects if necessary
 	 * @param withLink1
@@ -147,10 +156,15 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	@SuppressWarnings("unchecked")
 	public List<SubstructureDetermination3VO> findAll()
 			throws Exception {
-		
-		List<SubstructureDetermination3VO> foundEntities = entityManager.createQuery(
-							FIND_ALL()).getResultList();
-		return foundEntities;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return ( List<SubstructureDetermination3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				 List<SubstructureDetermination3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -158,52 +172,29 @@ public class SubstructureDetermination3ServiceBean implements SubstructureDeterm
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
+			public Object doInEJBAccess(Object parent) throws Exception {
 				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
 				//autService.checkUserRightToChangeAdminData();
-	}
+				return null;
+			}
 
+		});
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<SubstructureDetermination3VO> findFiltered(final Integer phasingAnalysisId) throws Exception {
-	
-		Session session = (Session) this.entityManager.getDelegate();
-		Criteria criteria = session.createCriteria(SubstructureDetermination3VO.class);
-		
-		if (phasingAnalysisId != null) {
-			Criteria subCrit = criteria.createCriteria("phasingAnalysisVO");
-			subCrit.add(Restrictions.eq("phasingAnalysisId", phasingAnalysisId));
-			subCrit.addOrder(Order.asc("phasingAnalysisId"));
-		}
-		
-		List<SubstructureDetermination3VO> foundEntities = criteria.list();
-		return foundEntities;
-	}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return ( List<SubstructureDetermination3VO>) template.execute(new EJBAccessCallback() {
 
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
-	 * @exception VOValidateException if data is not correct
-	 */
-	private void checkAndCompleteData(SubstructureDetermination3VO vo, boolean create)
-			throws Exception {
-
-		if (create) {
-			if (vo.getSubstructureDeterminationId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			public Object doInEJBAccess(Object parent) throws Exception {
+				 List<SubstructureDetermination3VO> foundEntities = dao.findFiltered(phasingAnalysisId);
+				return foundEntities;
 			}
-		} else {
-			if (vo.getSubstructureDeterminationId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
+
+		});
 	}
 	
 }

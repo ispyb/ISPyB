@@ -18,18 +18,19 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.autoproc.IspybAutoProcAttachment3DAO;
+import ispyb.server.mx.vos.autoproc.IspybAutoProcAttachment3VO;
+
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
-import ispyb.server.mx.vos.autoproc.IspybAutoProcAttachment3VO;
 
 /**
  * <p>
@@ -43,20 +44,11 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	private final static Logger LOG = Logger
 			.getLogger(IspybAutoProcAttachment3ServiceBean.class);
 
-	// Generic HQL request to find instances of IspybAutoProcAttachment3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from IspybAutoProcAttachment3VO vo "  + "where vo.autoProcAttachmentId = :pk";
-	}
+	@EJB
+	private IspybAutoProcAttachment3DAO dao;
 
-	// Generic HQL request to find all instances of IspybAutoProcAttachment3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from IspybAutoProcAttachment3VO vo " ;
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@Resource
+	private SessionContext context;
 
 	public IspybAutoProcAttachment3ServiceBean() {
 	};
@@ -67,11 +59,17 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @return the persisted entity.
 	 */
 	public IspybAutoProcAttachment3VO create(final IspybAutoProcAttachment3VO vo) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybAutoProcAttachment3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -80,10 +78,16 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @return the updated entity.
 	 */
 	public IspybAutoProcAttachment3VO update(final IspybAutoProcAttachment3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybAutoProcAttachment3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -91,10 +95,19 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		IspybAutoProcAttachment3VO vo = findByPk(pk);		
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				IspybAutoProcAttachment3VO vo = findByPk(pk);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -102,10 +115,17 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final IspybAutoProcAttachment3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -114,14 +134,17 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @return the IspybAutoProcAttachment3 value object
 	 */
 	public IspybAutoProcAttachment3VO findByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybAutoProcAttachment3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		try{
-			return (IspybAutoProcAttachment3VO) entityManager.createQuery(FIND_BY_PK())
-					.setParameter("pk", pk).getSingleResult();
-			}catch(NoResultException e){
-				return null;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				IspybAutoProcAttachment3VO found = dao.findByPk(pk);
+				return found;
 			}
+
+		});
 	}
 
 	/**
@@ -130,9 +153,15 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	@SuppressWarnings("unchecked")
 	public List<IspybAutoProcAttachment3VO> findAll()
 			throws Exception {
-	
-		List<IspybAutoProcAttachment3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
-		return foundEntities;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<IspybAutoProcAttachment3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<IspybAutoProcAttachment3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -140,39 +169,17 @@ public class IspybAutoProcAttachment3ServiceBean implements IspybAutoProcAttachm
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
-	}
-	
-	/* Private methods ------------------------------------------------------ */
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(IspybAutoProcAttachment3VO vo, boolean create) throws Exception {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+				//autService.checkUserRightToChangeAdminData();
+				return null;
+			}
 
-		if (create) {
-			if (vo.getAutoProcAttachmentId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getAutoProcAttachmentId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
+		});
 	}
+
 	
 }

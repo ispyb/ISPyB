@@ -16,64 +16,41 @@
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
-
 package ispyb.server.common.services.proposals;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.daos.proposals.LabContact3DAO;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 
+import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+
+import org.apache.log4j.Logger;
 
 /**
  * <p>
- * The data access object for LabContact3 objects (rows of table TableName).
+ * This session bean handles ISPyB LabContact3.
  * </p>
- * 
- * @see {@link LabContact3DAO}
  */
 @Stateless
 public class LabContact3ServiceBean implements LabContact3Service, LabContact3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(LabContact3ServiceBean.class);
 
-	private final static String HAS_SHIPPING = "SELECT COUNT(*) FROM Shipping "
-			+ "WHERE sendingLabContactId = :labContactId OR returnLabContactId = :labContactId";
+	@EJB
+	private LabContact3DAO dao;
 
-	// Generic HQL request to find instances of LabContact3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from LabContact3VO vo where vo.labContactId = :pk";
-	}
-
-	// Generic HQL request to find all instances of LabContact3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from LabContact3VO vo ";
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@Resource
+	private SessionContext context;
 
 	public LabContact3ServiceBean() {
 	};
 
-	/* Creation/Update methods ---------------------------------------------- */
-	
 	/**
 	 * Create new LabContact3.
 	 * 
@@ -81,14 +58,20 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 *            the entity to persist.
 	 * @return the persisted entity.
 	 */
-	
 	public LabContact3VO create(final LabContact3VO vo) throws Exception {
-		
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (LabContact3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
-	
+
 	/**
 	 * Update the LabContact3 data.
 	 * 
@@ -97,9 +80,16 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 * @return the updated entity.
 	 */
 	public LabContact3VO update(final LabContact3VO vo) throws Exception {
-		
-		this.checkAndCompleteData(vo, false);
-		return this.entityManager.merge(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (LabContact3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -109,12 +99,20 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
-		LabContact3VO vo = findByPk(pk);
-		checkCreateChangeRemoveAccess();
-		delete(vo);
-	}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				LabContact3VO vo = findByPk(pk);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
+	}
 
 	/**
 	 * Remove the LabContact3
@@ -123,11 +121,18 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 *            the entity to remove.
 	 */
 	public void delete(final LabContact3VO vo) throws Exception {
-		
-		entityManager.remove(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
-	
-		
 
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
@@ -139,12 +144,17 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 * @return the LabContact3 value object
 	 */
 	public LabContact3VO findByPk(final Integer pk) throws Exception {
-		checkCreateChangeRemoveAccess();
-		try {
-			return (LabContact3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (LabContact3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				LabContact3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
 
 	// TODO remove following method if not adequate
@@ -156,31 +166,28 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 */
 	@SuppressWarnings("unchecked")
 	public List<LabContact3VO> findAll() throws Exception {
-		
-		List<LabContact3VO> foundEntities = this.entityManager.createQuery(FIND_ALL()).getResultList();
-		return foundEntities;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<LabContact3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<LabContact3VO> findFiltered(Integer proposalId, String cardName)  {
-		Session session = (Session) this.entityManager.getDelegate();
+	public List<LabContact3VO> findFiltered(final Integer proposalId, final String cardName) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
 
-		Criteria crit = session.createCriteria(LabContact3VO.class);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<LabContact3VO> foundEntities = dao.findFiltered(proposalId, cardName);
+				return foundEntities;
+			}
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (cardName != null && !cardName.isEmpty()) {
-			crit.add(Restrictions.ilike("cardName", cardName));
-		}
-
-		if (proposalId != null) {
-			Criteria subCrit = crit.createCriteria("proposalVO");
-			subCrit.add(Restrictions.eq("proposalId", proposalId));
-		}
-
-		crit.addOrder(Order.desc("labContactId"));
-
-		return crit.list();
+		});
 	}
 
 	/**
@@ -190,89 +197,71 @@ public class LabContact3ServiceBean implements LabContact3Service, LabContact3Se
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
 				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
 				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
 				// to the one checking the needed access rights
 				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LabContact3VO> findByPersonIdAndProposalId(final Integer personId, final Integer proposalId) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		Session session = (Session) this.entityManager.getDelegate();
-		return session.createQuery("from LabContact3VO where personId=:personId and proposalId=:proposalId")
-					.setParameter("personId", personId).setParameter("proposalId", proposalId)
-					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				return dao.findByPersonIdAndProposalId(personId, proposalId);
+			}
 
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LabContact3VO> findByCardName(final String cardNameWithNum) throws Exception {
-
-		checkCreateChangeRemoveAccess();
-		Session session = (Session) this.entityManager.getDelegate();
-		return session.createCriteria(LabContact3VO.class).add(Restrictions.eq("cardName", cardNameWithNum)).list();
-	}
-	
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(LabContact3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getLabContactId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				return dao.findByCardName(cardNameWithNum);
 			}
-		} else {
-			if (vo.getLabContactId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
+
+		});
 	}
 	
 	public Integer hasShipping(final Integer labContactId) throws Exception {
 
-		Query query = entityManager.createNativeQuery(HAS_SHIPPING).setParameter("labContactId", labContactId);
-		try{
-			BigInteger res = (BigInteger) query.getSingleResult();
-			return new Integer(res.intValue());
-		}catch(NoResultException e){
-			System.out.println("ERROR in hasShipping - NoResultException: "+labContactId);
-			e.printStackTrace();
-			return 0;
-		}catch(Exception e){
-			e.printStackTrace();
-			return 0;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Integer) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				Integer foundEntities = dao.hasShipping(labContactId);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LabContact3VO> findByProposalId(final Integer proposalId) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		Session session = (Session) this.entityManager.getDelegate();
-		return session.createQuery("from LabContact3VO where proposalId=:proposalId")
-				.setParameter("proposalId", proposalId)
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<LabContact3VO>) template.execute(new EJBAccessCallback() {
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				return dao.findByProposalId(proposalId);
+			}
 
-	}
+		});
+	};
+
 
 }

@@ -18,18 +18,19 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.autoproc.GeometryClassname3DAO;
+import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
+
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.daos.autoproc.VOValidateException;
-import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
 
 /**
  * <p>
@@ -40,21 +41,12 @@ import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
 public class GeometryClassname3ServiceBean implements GeometryClassname3Service, GeometryClassname3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(GeometryClassname3ServiceBean.class);
-	
-	// Generic HQL request to find instances of GeometryClassname3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean fetchSpaceGroups) {
-		return "from GeometryClassname3VO vo "+ (fetchSpaceGroups ? "left join fetch vo.spaceGroupVOs " : "") + "where vo.geometryClassnameId = :pk";
-	}
 
-	// Generic HQL request to find all instances of GeometryClassname3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL(boolean fetchSpaceGroups) {
-		return "from GeometryClassname3VO vo " + (fetchSpaceGroups ? "left join fetch vo.spaceGroupVOs " : "")+" ORDER BY vo.geometryOrder";
-	}
-	
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@EJB
+	private GeometryClassname3DAO dao;
+
+	@Resource
+	private SessionContext context;
 
 	public GeometryClassname3ServiceBean() {
 	};
@@ -65,11 +57,17 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @return the persisted entity.
 	 */
 	public GeometryClassname3VO create(final GeometryClassname3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (GeometryClassname3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -78,10 +76,16 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @return the updated entity.
 	 */
 	public GeometryClassname3VO update(final GeometryClassname3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (GeometryClassname3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -89,10 +93,19 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		GeometryClassname3VO vo = findByPk(pk, false);			
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				GeometryClassname3VO vo = findByPk(pk, false);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -100,9 +113,17 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final GeometryClassname3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -111,16 +132,19 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @return the GeometryClassname3 value object
 	 */
 	public GeometryClassname3VO findByPk(final Integer pk, final boolean fetchSpaceGroups) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (GeometryClassname3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		try {
-			return (GeometryClassname3VO) entityManager
-					.createQuery(FIND_BY_PK(fetchSpaceGroups))
-					.setParameter("pk", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				GeometryClassname3VO found = dao.findByPk(pk, fetchSpaceGroups);
+				return found;
+			}
+
+		});
 	}
+
 	
 	/**
 	 * Find all GeometryClassname3s and set linked value objects if necessary
@@ -130,9 +154,15 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	@SuppressWarnings("unchecked")
 	public List<GeometryClassname3VO> findAll(final boolean fetchSpaceGroups)
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return ( List<GeometryClassname3VO>) template.execute(new EJBAccessCallback() {
 
-		List<GeometryClassname3VO> foundEntities = entityManager.createQuery(FIND_ALL(fetchSpaceGroups)).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				 List<GeometryClassname3VO> foundEntities = dao.findAll(fetchSpaceGroups);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -140,36 +170,18 @@ public class GeometryClassname3ServiceBean implements GeometryClassname3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
+			public Object doInEJBAccess(Object parent) throws Exception {
+				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+				//autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
-	 * @exception VOValidateException if data is not correct
-	 */
-	private void checkAndCompleteData(GeometryClassname3VO vo, boolean create)
-			throws Exception {
-
-		if (create) {
-			if (vo.getGeometryClassnameId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getGeometryClassnameId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
+	
 
 }

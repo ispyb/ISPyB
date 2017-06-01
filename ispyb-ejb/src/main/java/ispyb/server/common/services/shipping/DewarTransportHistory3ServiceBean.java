@@ -18,21 +18,19 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping;
 
+import ispyb.server.common.daos.shipping.DewarTransportHistory3DAO;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
+
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-
-import ispyb.server.common.daos.shipping.VOValidateException;
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 
 /**
  * <p>
@@ -44,20 +42,12 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 		DewarTransportHistory3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(DewarTransportHistory3ServiceBean.class);
-	// Generic HQL request to find instances of DewarTransportHistory3 by pk
-	private static final String FIND_BY_PK(boolean fetchLink1, boolean fetchLink2) {
-		return "from DewarTransportHistory3VO vo " + (fetchLink1 ? "<inner|left> join fetch vo.link1 " : "")
-				+ (fetchLink2 ? "<inner|left> join fetch vo.link2 " : "") + "where vo.dewarTransportHistory = :pk";
-	}
 
-	// Generic HQL request to find all instances of DewarTransportHistory3
-	private static final String FIND_ALL(boolean fetchLink1, boolean fetchLink2) {
-		return "from DewarTransportHistory3VO vo " + (fetchLink1 ? "<inner|left> join fetch vo.link1 " : "")
-				+ (fetchLink2 ? "<inner|left> join fetch vo.link2 " : "");
-	}
+	@EJB
+	private DewarTransportHistory3DAO dao;
 
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@Resource
+	private SessionContext context;
 
 	public DewarTransportHistory3ServiceBean() {
 	};
@@ -70,12 +60,17 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 * @return the persisted entity.
 	 */
 	public DewarTransportHistory3VO create(final DewarTransportHistory3VO vo) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (DewarTransportHistory3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -86,11 +81,16 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 * @return the updated entity.
 	 */
 	public DewarTransportHistory3VO update(final DewarTransportHistory3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (DewarTransportHistory3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -100,11 +100,19 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-				
-		checkCreateChangeRemoveAccess();
-		DewarTransportHistory3VO vo = findByPk(pk, false, false);
-		// TODO Edit this business code
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				DewarTransportHistory3VO vo = findByPk(pk, false, false);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -114,10 +122,17 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 *            the entity to remove.
 	 */
 	public void delete(final DewarTransportHistory3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -131,15 +146,17 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 */
 	public DewarTransportHistory3VO findByPk(final Integer pk, final boolean withLink1, final boolean withLink2)
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (DewarTransportHistory3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try{
-			return (DewarTransportHistory3VO) entityManager.createQuery(FIND_BY_PK(withLink1, withLink2))
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				DewarTransportHistory3VO found = dao.findByPk(pk, withLink1, withLink2);
+				return found;
+			}
+
+		});
 	}
 
 	// TODO remove following method if not adequate
@@ -151,11 +168,17 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DewarTransportHistory3VO> findAll(final boolean withLink1, final boolean withLink2) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<DewarTransportHistory3VO>) template.execute(new EJBAccessCallback() {
 
-		List<DewarTransportHistory3VO> foundEntities = entityManager.createQuery(FIND_ALL(withLink1, withLink2)).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<DewarTransportHistory3VO> foundEntities = dao.findAll(withLink1, withLink2);
+				return foundEntities;
+			}
+
+		});
 	}
-	
+
 	/**
 	 * Check if user has access rights to create, change and remove DewarTransportHistory3 entities. If not set rollback
 	 * only and throw AccessDeniedException
@@ -163,56 +186,34 @@ public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
 				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
 				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
 				// to the one checking the needed access rights
 				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
+
 	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DewarTransportHistory3VO> findByDewarId(final Integer dewarId)
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<DewarTransportHistory3VO>) template.execute(new EJBAccessCallback() {
 
-		Session session = (Session) this.entityManager.getDelegate();
-		Criteria criteria = session.createCriteria(DewarTransportHistory3VO.class);
-		
-		if (dewarId != null){
-			criteria.createCriteria("dewarVO").add(Restrictions.eq("dewarId", dewarId));
-		}
-		
-		return criteria.list();
-	}
-	
-	
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(DewarTransportHistory3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getDewarTransportHistoryId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			public Object doInEJBAccess(Object parent) throws Exception {
+				return dao.findFiltered(dewarId);
 			}
-		} else {
-			if (vo.getDewarTransportHistoryId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
+
+		});
 	}
+
 }

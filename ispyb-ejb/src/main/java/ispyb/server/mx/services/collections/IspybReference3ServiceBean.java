@@ -21,7 +21,6 @@ package ispyb.server.mx.services.collections;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.mx.daos.collections.IspybReference3DAO;
-import ispyb.server.mx.daos.collections.VOValidateException;
 import ispyb.server.mx.vos.collections.IspybReference3VO;
 
 import java.util.List;
@@ -30,9 +29,6 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -48,21 +44,8 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	private final static Logger LOG = Logger
 			.getLogger(IspybReference3ServiceBean.class);
 
-	// Generic HQL request to find instances of IspybReference3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from IspybReference3VO vo "
-				+ "where vo.referenceId = :pk";
-	}
-
-	// Generic HQL request to find all instances of IspybReference3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from IspybReference3VO vo ";
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@EJB
+	private IspybReference3DAO dao;
 
 	@Resource
 	private SessionContext context;
@@ -76,12 +59,17 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	 * @return the persisted entity.
 	 */
 	public IspybReference3VO create(final IspybReference3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybReference3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -90,11 +78,16 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	 * @return the updated entity.
 	 */
 	public IspybReference3VO update(final IspybReference3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybReference3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -102,11 +95,19 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		IspybReference3VO vo = findByPk(pk);
-		// TODO Edit this business code				
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				IspybReference3VO vo = findByPk(pk);
+				// TODO Edit this business code				
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -114,10 +115,17 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final IspybReference3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -128,17 +136,19 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	 * @return the IspybReference3 value object
 	 */
 	public IspybReference3VO findByPk(final Integer pk) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			return (IspybReference3VO) entityManager
-					.createQuery(FIND_BY_PK())
-					.setParameter("pk", pk).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (IspybReference3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				IspybReference3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
+
 	
 	/**
 	 * Find all IspybReference3s and set linked value objects if necessary
@@ -148,49 +158,35 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 	@SuppressWarnings("unchecked")
 	public List<IspybReference3VO> findAll()
 			throws Exception {
-		
-		List<IspybReference3VO> foundEntities = (List<IspybReference3VO>) entityManager.createQuery(
-				FIND_ALL()).getResultList();	
-		return foundEntities;
-	}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<IspybReference3VO>) template.execute(new EJBAccessCallback() {
 
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<IspybReference3VO> foundEntities = dao.findAll();
+				
+				return foundEntities;
+			}
+
+		});
+	}
 
 	/**
 	 * Check if user has access rights to create, change and remove IspybReference3 entities. If not set rollback only and throw AccessDeniedException
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
+			public Object doInEJBAccess(Object parent) throws Exception {
 				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
 				//autService.checkUserRightToChangeAdminData();
-		
+				return null;
+			}
+
+		});
 	}
 
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
-	 * @exception VOValidateException if data is not correct
-	 */
-	private void checkAndCompleteData(IspybReference3VO vo, boolean create)
-			throws Exception {
-
-		if (create) {
-			if (vo.getReferenceId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getReferenceId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
+	
 	
 }
