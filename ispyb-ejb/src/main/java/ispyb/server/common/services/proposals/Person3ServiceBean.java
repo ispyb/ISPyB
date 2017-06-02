@@ -21,10 +21,8 @@ package ispyb.server.common.services.proposals;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -36,10 +34,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.common.util.StringUtils;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.PersonWS3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
 	
 
 /**
@@ -51,13 +47,13 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Person3ServiceBean.class);
-	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 	
 
 	// Generic HQL request to find instances of Person3 by pk
 	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from Person3VO vo where vo.personId = :pk";
+	private static final String FIND_BY_PK(boolean withProposals) {
+		return "from Person3VO vo " + (withProposals ? "left join fetch vo.proposalVOs " : "")
+				+ "where vo.personId = :pk";
 	}
 
 	private static final String FIND_BY_SITE_ID() {
@@ -116,7 +112,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 		
-		Person3VO vo = findByPk(pk);
+		Person3VO vo = findByPk(pk, false);
 		checkCreateChangeRemoveAccess();
 		delete(vo);
 	}
@@ -145,15 +141,15 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 * @param fetchRelation1
 	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
-	public Person3VO findByPk(Integer pk) {
+	public Person3VO findByPk(Integer pk, boolean withProposals) {
 		try {
-			return (Person3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
-						.getSingleResult();
+			return (Person3VO) entityManager.createQuery(FIND_BY_PK(withProposals)).setParameter("pk", pk)
+					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * find a Person with a sessionId
 	 */
@@ -350,7 +346,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		if (vo == null)
 			return null;
 		Person3VO otherVO = (Person3VO) vo.clone();
-		otherVO.setProposalDirectVOs(null);
+		otherVO.setProposalVOs(null);
 		return otherVO;
 	}
 	
@@ -365,6 +361,8 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		wsPerson.setLaboratoryId(laboratoryId);
 		return wsPerson;
 	}
+
+
 	
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.

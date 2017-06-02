@@ -31,16 +31,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
-<<<<<<< HEAD
-=======
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.mx.vos.autoproc.PreparePhasingData3VO;
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 
 /**
  * <p>
@@ -91,7 +81,6 @@ public class PreparePhasingData3ServiceBean implements PreparePhasingData3Servic
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		return (PreparePhasingData3VO) template.execute(new EJBAccessCallback() {
 
-<<<<<<< HEAD
 			public Object doInEJBAccess(Object parent) throws Exception {
 				checkCreateChangeRemoveAccess();
 				// TODO Edit this business code
@@ -99,12 +88,6 @@ public class PreparePhasingData3ServiceBean implements PreparePhasingData3Servic
 			}
 
 		});
-=======
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 	}
 
 	/**

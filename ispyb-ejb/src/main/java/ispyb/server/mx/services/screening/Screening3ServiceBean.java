@@ -18,24 +18,20 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.screening;
 
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.screening.Screening3DAO;
 import ispyb.server.mx.vos.screening.Screening3VO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -47,22 +43,8 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 
 	private final static Logger LOG = Logger.getLogger(Screening3ServiceBean.class);
 
-	// Generic HQL request to find instances of Screening3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean fetchScreeningRank, boolean fetchScreeningOutput) {
-		return "from Screening3VO vo " + (fetchScreeningRank ? "left join fetch vo.screeningRankVOs " : "")
-				+ (fetchScreeningOutput ? "left join fetch vo.screeningOutputVOs " : "")+ "where vo.screeningId = :pk";
-	}
-
-	// Generic HQL request to find all instances of Screening3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL(boolean fetchScreeningRank, boolean fetchScreeningOutput) {
-		return "from Screening3VO vo " + (fetchScreeningRank ? "left join fetch vo.screeningRankVOs " : "")
-		+ (fetchScreeningOutput ? "left join fetch vo.screeningOutputVOs " : "");
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@EJB
+	private Screening3DAO dao;
 
 	@Resource
 	private SessionContext context;
@@ -78,12 +60,17 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 * @return the persisted entity.
 	 */
 	public Screening3VO create(final Screening3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Screening3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -94,11 +81,16 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 * @return the updated entity.
 	 */
 	public Screening3VO update(final Screening3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Screening3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -108,11 +100,19 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		Screening3VO vo = findByPk(pk, false,  false);
-		// TODO Edit this business code
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				Screening3VO vo = findByPk(pk, false,  false);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -122,12 +122,18 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 *            the entity to remove.
 	 */
 	public void delete(final Screening3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
-
 
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
@@ -139,17 +145,18 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 * @return the Screening3 value object
 	 */
 	public Screening3VO findByPk(final Integer pk, final boolean fetchScreeningRank,  final boolean fetchScreeningOutput) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try{
-			return (Screening3VO) entityManager.createQuery(FIND_BY_PK(fetchScreeningRank, fetchScreeningOutput ))
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
-			return null;
-		}
-	}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Screening3VO) template.execute(new EJBAccessCallback() {
 
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				Screening3VO found = dao.findByPk(pk, fetchScreeningRank,  fetchScreeningOutput);
+				return found;
+			}
+
+		});
+	}
 
 	// TODO remove following method if not adequate
 	/**
@@ -160,9 +167,15 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Screening3VO> findAll(final boolean fetchScreeningRank,  final boolean fetchScreeningOutput) throws Exception {
-	
-		List<Screening3VO> foundEntities = entityManager.createQuery(FIND_ALL(fetchScreeningRank, fetchScreeningOutput )).getResultList();
-		return foundEntities;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Screening3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Screening3VO> foundEntities = dao.findAll(fetchScreeningRank,  fetchScreeningOutput);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -172,11 +185,18 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-		// to the one checking the needed access rights
-		// autService.checkUserRightToChangeAdminData();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
+				// to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
 	/**
@@ -202,54 +222,15 @@ public class Screening3ServiceBean implements Screening3Service, Screening3Servi
 	
 	@SuppressWarnings("unchecked")
 	public List<Screening3VO> findFiltered(final Integer dataCollectionId) throws Exception{
-		
-		Session session = (Session) this.entityManager.getDelegate();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Screening3VO>) template.execute(new EJBAccessCallback() {
 
-		Criteria crit = session.createCriteria(Screening3VO.class);
-		Criteria subCritDc = crit.createCriteria("dataCollectionVO");
-
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (dataCollectionId != null) {
-			subCritDc.add(Restrictions.eq("dataCollectionId", dataCollectionId));
-		}
-		
-
-		crit.addOrder(Order.desc("screeningId"));
-
-		List<Screening3VO> foundEntities = crit.list();
-		return foundEntities;
-	}
-	
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(Screening3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getScreeningId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Screening3VO> foundEntities = dao.findFiltered(dataCollectionId);
+				return foundEntities;
 			}
-		} else {
-			if (vo.getScreeningId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
 
+		});
+	}
 
 }

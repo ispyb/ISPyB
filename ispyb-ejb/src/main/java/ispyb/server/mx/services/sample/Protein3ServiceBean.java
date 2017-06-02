@@ -18,26 +18,19 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.sample;
 
-
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.sample.Protein3DAO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
 import java.util.List;
 
 import javax.annotation.Resource;
-
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -49,25 +42,9 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 
 	private final static Logger LOG = Logger.getLogger(Protein3ServiceBean.class);
 
-	// Generic HQL request to find instances of Protein3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean fetchCrystals) {
-		return "from Protein3VO vo " + (fetchCrystals ? " left join fetch vo.crystalVOs " : "")
-				+ " where vo.proteinId = :pk";
-	}
+	@EJB
+	private Protein3DAO dao;
 
-	// Generic HQL request to find all instances of Protein3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL(boolean fetchLink1) {
-		return "from Protein3VO vo " + (fetchLink1 ? "left join fetch vo.crystalVOs " : "");
-	}
-
-	private final static String UPDATE_PROPOSALID_STATEMENT = " update Protein  set proposalId = :newProposalId "
-			+ " WHERE proposalId = :oldProposalId"; // 2 old value to be replaced
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
-	
 	@Resource
 	private SessionContext context;
 
@@ -82,12 +59,17 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 * @return the persisted entity.
 	 */
 	public Protein3VO create(final Protein3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Protein3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -98,11 +80,16 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 * @return the updated entity.
 	 */
 	public Protein3VO update(final Protein3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Protein3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -112,14 +99,20 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
-		checkCreateChangeRemoveAccess();
-		Protein3VO vo = findByPk(pk, false);
-		// TODO Edit this business code
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				Protein3VO vo = findByPk(pk, false);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
-
-
 
 	/**
 	 * Remove the Protein3
@@ -128,12 +121,19 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 *            the entity to remove.
 	 */
 	public void delete(final Protein3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
-	
+
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
 	 * 
@@ -144,15 +144,17 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 * @return the Protein3 value object
 	 */
 	public Protein3VO findByPk(final Integer pk, final boolean withLink1) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try {
-			Query query = entityManager.createQuery(FIND_BY_PK(withLink1)).setParameter("pk", pk);
-			return (Protein3VO) query.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Protein3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				Protein3VO found = dao.findByPk(pk, withLink1);
+				return found;
+			}
+
+		});
 	}
 
 	// TODO remove following method if not adequate
@@ -164,39 +166,28 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Protein3VO> findAll(final boolean withLink1) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Protein3VO>) template.execute(new EJBAccessCallback() {
 
-		List<Protein3VO> foundEntities = entityManager.createQuery(FIND_ALL(withLink1)).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Protein3VO> foundEntities = dao.findAll(withLink1);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Protein3VO> findByAcronymAndProposalId(final Integer proposalId, final String acronym, final boolean withCrystal, final boolean sortByAcronym) throws Exception {
-		
-		Session session = (Session) this.entityManager.getDelegate();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<Protein3VO>) template.execute(new EJBAccessCallback() {
 
-		Criteria crit = session.createCriteria(Protein3VO.class);
-		Criteria subCrit = crit.createCriteria("proposalVO");
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<Protein3VO> foundEntities = dao.findFiltered(proposalId, acronym, withCrystal, sortByAcronym);
+				return foundEntities;
+			}
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (proposalId != null) {
-			subCrit.add(Restrictions.eq("proposalId", proposalId));
-		}
-
-		if (acronym != null && !acronym.isEmpty()) {
-			crit.add(Restrictions.like("acronym", acronym.toUpperCase()));
-		}
-
-		if (withCrystal) {
-			crit.setFetchMode("crystalVOs", FetchMode.JOIN);
-		}
-		if (sortByAcronym) {
-			crit.addOrder(Order.asc("acronym"));
-		} else
-			crit.addOrder(Order.desc("proteinId"));
-
-		List<Protein3VO> foundEntities = crit.list();
-		return foundEntities;
+		});
 	}
 	
 	public List<Protein3VO> findByAcronymAndProposalId(final Integer proposalId, final String acronym) throws Exception {
@@ -215,11 +206,18 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-		// to the one checking the needed access rights
-		// autService.checkUserRightToChangeAdminData();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
+				// to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
 	
@@ -233,13 +231,15 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 	 * @throws Exception
 	 */
 	public Integer updateProposalId(final Integer newProposalId, final Integer oldProposalId) throws Exception{
-		
-		int nbUpdated = 0;
-		Query query = entityManager.createNativeQuery(UPDATE_PROPOSALID_STATEMENT)
-				.setParameter("newProposalId", newProposalId).setParameter("oldProposalId", oldProposalId);
-		nbUpdated = query.executeUpdate();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (Integer) template.execute(new EJBAccessCallback() {
 
-		return new Integer(nbUpdated);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				Integer foundEntities = dao.updateProposalId(newProposalId, oldProposalId);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	@Override
@@ -252,35 +252,4 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 		return this.findByAcronymAndProposalId(proposalId, null, withCrystal, sortByAcronym);
 	}
 
-
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(Protein3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getProteinId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getProteinId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
-	
 }

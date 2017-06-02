@@ -18,18 +18,17 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.screening;
 
-
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.screening.ScreeningStrategy3DAO;
 import ispyb.server.mx.vos.screening.ScreeningStrategy3VO;
 
 import java.util.List;
 
 import javax.annotation.Resource;
-
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -43,22 +42,9 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 
 	private final static Logger LOG = Logger.getLogger(ScreeningStrategy3ServiceBean.class);
 
-	// Generic HQL request to find instances of ScreeningStrategy3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean fetchScreeningStrategyWedge) {
-		return "from ScreeningStrategy3VO vo " + (fetchScreeningStrategyWedge ? "left join fetch vo.screeningStrategyWedgeVOs " : "")
-				 + "where vo.screeningStrategyId = :pk";
-	}
+	@EJB
+	private ScreeningStrategy3DAO dao;
 
-	// Generic HQL request to find all instances of ScreeningStrategy3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL(boolean fetchScreeningStrategyWedge) {
-		return "from ScreeningStrategy3VO vo " + (fetchScreeningStrategyWedge ? "left join fetch vo.screeningStrategyWedgeVOs " : "");
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
-	
 	@Resource
 	private SessionContext context;
 
@@ -73,12 +59,17 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 * @return the persisted entity.
 	 */
 	public ScreeningStrategy3VO create(final ScreeningStrategy3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningStrategy3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -89,11 +80,16 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 * @return the updated entity.
 	 */
 	public ScreeningStrategy3VO update(final ScreeningStrategy3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningStrategy3VO) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -103,11 +99,19 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		ScreeningStrategy3VO vo = findByPk(pk, false);
-		// TODO Edit this business code
-		delete(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				ScreeningStrategy3VO vo = findByPk(pk, false);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -117,10 +121,17 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 *            the entity to remove.
 	 */
 	public void delete(final ScreeningStrategy3VO vo) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -134,17 +145,18 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 */
 	public ScreeningStrategy3VO findByPk(final Integer pk, final boolean withScreeningStrategyWedge)
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningStrategy3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try{
-			return (ScreeningStrategy3VO) entityManager.createQuery(FIND_BY_PK(withScreeningStrategyWedge))
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				ScreeningStrategy3VO found = dao.findByPk(pk, withScreeningStrategyWedge);
+				return found;
+			}
+
+		});
 	}
-
 
 	// TODO remove following method if not adequate
 	/**
@@ -155,9 +167,15 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ScreeningStrategy3VO> findAll(final boolean withScreeningStrategyWedge) throws Exception {
-	
-		List<ScreeningStrategy3VO> foundEntities = entityManager.createQuery(FIND_ALL(withScreeningStrategyWedge)).getResultList();
-		return foundEntities;
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<ScreeningStrategy3VO>) template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<ScreeningStrategy3VO> foundEntities = dao.findAll(withScreeningStrategyWedge);
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -167,11 +185,18 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-		// to the one checking the needed access rights
-		// autService.checkUserRightToChangeAdminData();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
+				// to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 
 	public ScreeningStrategy3VO loadEager(ScreeningStrategy3VO vo) throws Exception{
@@ -179,35 +204,6 @@ public class ScreeningStrategy3ServiceBean implements ScreeningStrategy3Service,
 		return newVO;
 	}
 
-
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(ScreeningStrategy3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getScreeningStrategyId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getScreeningStrategyId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
+	
 
 }

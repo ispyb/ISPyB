@@ -49,6 +49,15 @@ public interface Person3Service {
 	public void delete(final Person3VO vo) throws Exception;
 
 	/**
+	 * Finds a Person3 entity by its primary key and set linked value objects if necessary.
+	 * 
+	 * @param pk
+	 *            the primary key
+	 * @return the value object
+	 */
+	public Person3VO findByPk(final Integer pk, final boolean withProposals) throws Exception;
+
+	/**
 	 * Find a Person for a specified sessionId
 	 * 
 	 * @param sessionId

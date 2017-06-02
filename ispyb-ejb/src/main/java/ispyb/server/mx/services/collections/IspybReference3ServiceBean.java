@@ -20,11 +20,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-<<<<<<< HEAD
 import ispyb.server.mx.daos.collections.IspybReference3DAO;
-=======
-
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 import ispyb.server.mx.vos.collections.IspybReference3VO;
 
 import java.util.List;

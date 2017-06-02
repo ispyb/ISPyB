@@ -42,22 +42,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-<<<<<<< HEAD
-=======
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.mx.services.sample.Crystal3Service;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 
 /**
  * <p>

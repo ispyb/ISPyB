@@ -21,11 +21,7 @@ package ispyb.server.mx.services.autoproc;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-<<<<<<< HEAD
 import ispyb.server.mx.daos.autoproc.AutoProcProgram3DAO;
-=======
-
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;

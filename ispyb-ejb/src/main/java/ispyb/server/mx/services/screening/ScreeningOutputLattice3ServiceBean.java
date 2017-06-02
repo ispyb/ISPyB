@@ -18,24 +18,20 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.screening;
 
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.mx.daos.screening.ScreeningOutputLattice3DAO;
 import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
 import ispyb.server.mx.vos.screening.ScreeningOutputLatticeWS3VO;
 
 import java.util.List;
 
 import javax.annotation.Resource;
-
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -48,20 +44,8 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 
 	private final static Logger LOG = Logger.getLogger(ScreeningOutputLattice3ServiceBean.class);
 
-	// Generic HQL request to find instances of ScreeningOutputLattice3 by pk
-	// TODO choose between left/inner join
-	private static final String FIND_BY_PK() {
-		return "from ScreeningOutputLattice3VO vo " + "where vo.screeningOutputId = :pk";
-	}
-
-	// Generic HQL request to find all instances of ScreeningOutputLattice3
-	// TODO choose between left/inner join
-	private static final String FIND_ALL() {
-		return "from ScreeningOutputLattice3VO vo " ;
-	}
-
-	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	@EJB
+	private ScreeningOutputLattice3DAO dao;
 
 	@Resource
 	private SessionContext context;
@@ -77,12 +61,17 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 * @return the persisted entity.
 	 */
 	public ScreeningOutputLattice3VO create(final ScreeningOutputLattice3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningOutputLattice3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.create(vo);
+				return vo;
+			}
+
+		});
 	}
 
 	/**
@@ -93,11 +82,16 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 * @return the updated entity.
 	 */
 	public ScreeningOutputLattice3VO update(final ScreeningOutputLattice3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningOutputLattice3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, false);
-		return entityManager.merge(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				return dao.update(vo);
+			}
+
+		});
 	}
 
 	/**
@@ -107,11 +101,19 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-	
-		checkCreateChangeRemoveAccess();
-		ScreeningOutputLattice3VO vo = findByPk(pk);
-		// TODO Edit this business code
-		delete(vo);
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				ScreeningOutputLattice3VO vo = findByPk(pk);
+				// TODO Edit this business code
+				delete(vo);
+				return vo;
+			}
+
+		});
+
 	}
 
 	/**
@@ -121,12 +123,19 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 *            the entity to remove.
 	 */
 	public void delete(final ScreeningOutputLattice3VO vo) throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		entityManager.remove(vo);
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				dao.delete(vo);
+				return vo;
+			}
+
+		});
 	}
-		
+
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
 	 * 
@@ -138,15 +147,17 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 */
 	public ScreeningOutputLattice3VO findByPk(final Integer pk)
 			throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (ScreeningOutputLattice3VO) template.execute(new EJBAccessCallback() {
 
-		checkCreateChangeRemoveAccess();
-		// TODO Edit this business code
-		try{
-			return (ScreeningOutputLattice3VO) entityManager.createQuery(FIND_BY_PK())
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
-			return null;
-		}
+			public Object doInEJBAccess(Object parent) throws Exception {
+				checkCreateChangeRemoveAccess();
+				// TODO Edit this business code
+				ScreeningOutputLattice3VO found = dao.findByPk(pk);
+				return found;
+			}
+
+		});
 	}
 
 	// TODO remove following method if not adequate
@@ -158,9 +169,15 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ScreeningOutputLattice3VO> findAll() throws Exception {
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<ScreeningOutputLattice3VO>) template.execute(new EJBAccessCallback() {
 
-		List<ScreeningOutputLattice3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<ScreeningOutputLattice3VO> foundEntities = dao.findAll();
+				return foundEntities;
+			}
+
+		});
 	}
 
 	/**
@@ -170,33 +187,30 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-	
-		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-		// to the one checking the needed access rights
-		// autService.checkUserRightToChangeAdminData();
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		template.execute(new EJBAccessCallback() {
+
+			public Object doInEJBAccess(Object parent) throws Exception {
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
+				// to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
+				return null;
+			}
+
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ScreeningOutputLattice3VO> findFiltered(final Integer dataCollectionId) throws Exception{
+		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		return (List<ScreeningOutputLattice3VO>) template.execute(new EJBAccessCallback() {
 
-		Session session = (Session) this.entityManager.getDelegate();
-
-		Criteria crit = session.createCriteria(ScreeningOutputLattice3VO.class);
-		Criteria subCritScOut = crit.createCriteria("screeningOutputVO");
-		Criteria subCritSc = subCritScOut.createCriteria("screeningVO");
-		Criteria subCritDc = subCritSc.createCriteria("dataCollectionVO");
-
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-		if (dataCollectionId != null) {
-			subCritDc.add(Restrictions.eq("dataCollectionId", dataCollectionId));
-		}
-		
-		crit.addOrder(Order.desc("screeningOutputLatticeId"));
-
-		List<ScreeningOutputLattice3VO> foundEntities = crit.list();
-		return foundEntities;
+			public Object doInEJBAccess(Object parent) throws Exception {
+				List<ScreeningOutputLattice3VO> foundEntities = dao.findFiltered(dataCollectionId);
+				return foundEntities;
+			}
+		});
 	}
 	
 	
@@ -224,36 +238,4 @@ public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattic
 		// otherVO.set(null);
 		return otherVO;
 	}
-	
-
-	/* Private methods ------------------------------------------------------ */
-
-	/**
-	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
-	 */
-	private void checkAndCompleteData(ScreeningOutputLattice3VO vo, boolean create) throws Exception {
-
-		if (create) {
-			if (vo.getScreeningOutputLatticeId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
-			}
-		} else {
-			if (vo.getScreeningOutputLatticeId() == null) {
-				throw new IllegalArgumentException("Primary key is not set for update!");
-			}
-		}
-		// check value object
-		vo.checkValues(create);
-		// TODO check primary keys for existence in DB
-	}
-	
 }

@@ -19,15 +19,14 @@
 
 package ispyb.server.common.services.proposals;
 
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ejb.Remote;
 import javax.jws.WebMethod;
-
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
 
 @Remote
 public interface Proposal3Service {
@@ -87,7 +86,7 @@ public interface Proposal3Service {
 	 */
 	public Proposal3VO findByPk(final Integer pk, final boolean fetchSessions, final boolean fetchProteins,
 			final boolean fetchShippings) throws Exception;
-	
+
 	/**
 	 * Find all Proposal3 and set linked value objects if necessary.
 	 * 
@@ -126,19 +125,19 @@ public interface Proposal3Service {
 	@WebMethod
 	public List<Proposal3VO> findFiltered(final String code, final String number, final String title) throws Exception;
 
-	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) throws Exception ;
+	public List<Proposal3VO> findProposalByLoginName(String loginName, String site);
 
-	public List<Proposal3VO> findProposalByLoginName(String loginName) throws Exception;
+	public List<Proposal3VO> findProposalByLoginName(String loginName);
 	
-	public List<String> findProposalNamesByLoginName(String loginName, String site) throws Exception ;
+	public List<String> findProposalNamesByLoginName(String loginName, String site);
 	
 	public Proposal3VO findProposalById(int proposalId);
 	
 	public List<Proposal3VO> findAllProposals();
 	
-	public List<Map<String, Object>> findProposals() throws Exception ;
+	public List<Map<String, Object>> findProposals();
 	
-	public List<Map<String, Object>> findProposals(String loginName) throws Exception ;
+	public List<Map<String, Object>> findProposals(String loginName);
 
 	public List<Map<String, Object>> findProposalById(Integer proposalId);
 

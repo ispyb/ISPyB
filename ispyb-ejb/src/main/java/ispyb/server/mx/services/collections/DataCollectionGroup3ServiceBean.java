@@ -32,19 +32,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
-<<<<<<< HEAD
-=======
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
-import ispyb.server.common.exceptions.AccessDeniedException;
-
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroupWS3VO;
->>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 
 /**
  * <p>
@@ -204,8 +191,6 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 */
 	private DataCollectionGroup3VO getLightDataCollectionGroup3VO(DataCollectionGroup3VO vo)
 			throws CloneNotSupportedException {
-		if (vo == null) 
-			return null;
 		DataCollectionGroup3VO otherVO = (DataCollectionGroup3VO) vo.clone();
 		otherVO.setDataCollectionVOs(null);
 		otherVO.setScreeningVOs(null);
