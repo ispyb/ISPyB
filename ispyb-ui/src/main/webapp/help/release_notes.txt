@@ -1,3 +1,12 @@
+New TAG : 17.06.02
+
+**************
+* 02.06.2017     *
+**************
+
+- contains modifications for MaxIV WS and connection to user portal
+- fixes: #97, #99, #3, #101, #19, #109, #113
+
 New TAG : ISPyB5
 
 New TAG : 17.05.02
