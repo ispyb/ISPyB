@@ -20,16 +20,20 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.Workflow3DAO;
+
 import ispyb.server.mx.vos.collections.InputParameterWorkflow;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -45,9 +49,59 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	private final static Logger LOG = Logger
 			.getLogger(Workflow3ServiceBean.class);
 
-	@EJB
-	private Workflow3DAO dao;
 
+	// Generic HQL request to find instances of Workflow3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from Workflow3VO vo "
+				+ "where vo.workflowId = :pk";
+	}
+
+	// Generic HQL request to find all instances of Workflow3
+	private static final String FIND_ALL() {
+		return "from Workflow3VO vo ";
+	}
+	
+	/** Get workflow by status **/
+	private static final String FIND_BY_STATUS() {
+		return "from Workflow3VO vo where vo.status = :status ";
+	}
+	
+	/** Get inputParameter by workFlowId **/
+	private static final String FIND_INPUT_BY_WORKFLOW_ID() {
+		return "from InputParameterWorkflow vo where vo.workflowId= :workflowId ";
+	}
+	
+	private static final String COUNT_WF = 
+		"SELECT count(w.workflowId) as nbW "+
+		"FROM Workflow w, DataCollectionGroup g, BLSession s, Proposal p "+
+		"WHERE w.workflowId = g.workflowId  and "+
+		"      g.sessionId = s.sessionId and "+
+		"      s.proposalId = p.proposalId and "+
+		"      s.proposalId = p.proposalId and "+
+		"      p.proposalCode != 'opid' and "+
+		"      p.proposalId != 1170 and "+
+		"     YEAR(g.startTime) = :year AND "+
+		"     s.beamlineName like :beamline AND " +
+		"     w.workflowType = :workflowType AND "+
+		"     w.status = :status ";
+	
+	private static final String WORKFLOW_RESULT =  "SELECT w.logFilePath  "+
+			"FROM Workflow w, DataCollectionGroup g, BLSession s, Proposal p "+
+			"WHERE w.workflowId = g.workflowId  and "+
+			"      g.sessionId = s.sessionId and "+
+			"      s.proposalId = p.proposalId and "+
+			"      s.proposalId = p.proposalId and "+
+			"      p.proposalCode != 'opid' and "+
+			"      p.proposalId != 1170 and "+
+			"     YEAR(g.startTime) = :year AND "+
+			"     s.beamlineName like :beamline AND " +
+			"     w.workflowType = :workflowType AND "+
+			"     w.status = 'Failure' ";
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
+	
 	@Resource
 	private SessionContext context;
 
@@ -60,17 +114,12 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @return the persisted entity.
 	 */
 	public Workflow3VO create(final Workflow3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Workflow3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -79,16 +128,11 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @return the updated entity.
 	 */
 	public Workflow3VO update(final Workflow3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Workflow3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -96,19 +140,11 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				Workflow3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		checkCreateChangeRemoveAccess();
+		Workflow3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -116,17 +152,10 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final Workflow3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -135,19 +164,17 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @return the Workflow3 value object
 	 */
 	public Workflow3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Workflow3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				Workflow3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			return (Workflow3VO) entityManager
+					.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
-
 	
 	/**
 	 * Find all Workflow3s and set linked value objects if necessary
@@ -157,15 +184,10 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	@SuppressWarnings("unchecked")
 	public List<Workflow3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Workflow3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<Workflow3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		List<Workflow3VO> foundEntities = (List<Workflow3VO>) entityManager.createQuery(
+				FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -173,63 +195,93 @@ public class Workflow3ServiceBean implements Workflow3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
 				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
 				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+	
 	}
 	
 	public Integer countWF(final String year, final String beamline, final String workflowType, final String status) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (Integer) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				Integer foundEntities = dao.countWF(year, beamline, workflowType, status);
-				return foundEntities;
-			}
-
-		});
+	
+		try {
+			String query = COUNT_WF;
+			BigInteger ret = (BigInteger)this.entityManager.createNativeQuery(query)
+					.setParameter("year", year)
+					.setParameter("beamline", beamline)
+					.setParameter("status", status)
+					.setParameter("workflowType", workflowType).getSingleResult();
+			return ret.intValue();
+		} catch (NoResultException e) {
+			return null;
+		}
+		
 	}
+
 	
 	public List getWorkflowResult(final String year, final String beamline, final String workflowType) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List foundEntities = dao.getWorkflowResult(year, beamline, workflowType);
-				return foundEntities;
-			}
-
-		});
+		try {
+			String query = WORKFLOW_RESULT;
+			List ret = this.entityManager.createNativeQuery(query)
+					.setParameter("year", year)
+					.setParameter("beamline", beamline)
+					.setParameter("workflowType", workflowType).getResultList();
+			return ret;
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Workflow3VO> findAllByStatus(final String status) throws Exception{
-		
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<Workflow3VO>) template.execute(new EJBAccessCallback() {
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List foundEntities = dao.findAll(status);
-				return foundEntities;
-			}
-		});
+		try {
+			String query = FIND_BY_STATUS();
+			List<Workflow3VO> ret = this.entityManager.createQuery(query)
+					.setParameter("status", status).getResultList();
+			return ret;
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<InputParameterWorkflow> findInputParametersByWorkflowId(final int workflowId) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<InputParameterWorkflow>) template.execute(new EJBAccessCallback() {
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List foundEntities = dao.findInputParametersByWorkflowId(workflowId);
-				return foundEntities;
+		try {
+			String query = FIND_INPUT_BY_WORKFLOW_ID();
+			List<Workflow3VO> ret = this.entityManager.createQuery(query).setParameter("workflowId", workflowId).getResultList();
+			List foundEntities = ret;
+			return foundEntities;
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * @param vo the data to check
+	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
+	 */
+	private void checkAndCompleteData(Workflow3VO vo, boolean create)
+			throws Exception {
+
+		if (create) {
+			if (vo.getWorkflowId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
 			}
-		});
+		} else {
+			if (vo.getWorkflowId() == null) {
+				throw new IllegalArgumentException(
+						"Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
 	}
 	
 }
