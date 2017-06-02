@@ -509,6 +509,10 @@ public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 		return this.findFiltered(null, null, null, null, barCode, null, null, null, null, null, null,null,  false, false,
 				false);
 	}
+	
+	public List<Dewar3VO> findByExperiment(final Integer experimentId, final String dewarStatus) throws Exception{
+		return this.findFiltered(null, null, null, null, null, null, null, null, dewarStatus, null, null, experimentId, false, false, false);
+	}
 
 	public List<Dewar3VO> findByDateWithHistory(final java.sql.Date firstDate) throws Exception {
 		
