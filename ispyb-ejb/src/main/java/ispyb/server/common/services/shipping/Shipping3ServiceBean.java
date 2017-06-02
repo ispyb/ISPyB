@@ -18,7 +18,12 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping;
 
+<<<<<<< HEAD
 import ispyb.server.common.daos.shipping.Shipping3DAO;
+=======
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
+
+>>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;

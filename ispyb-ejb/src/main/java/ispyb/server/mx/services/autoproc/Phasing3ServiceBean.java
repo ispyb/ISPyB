@@ -31,6 +31,17 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
+<<<<<<< HEAD
+=======
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+
+import ispyb.server.mx.vos.autoproc.Phasing3VO;
+>>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 
 /**
  * <p>

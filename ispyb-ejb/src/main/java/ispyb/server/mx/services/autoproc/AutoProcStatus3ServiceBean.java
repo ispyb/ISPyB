@@ -32,6 +32,12 @@ import javax.ejb.Stateless;
 
 import org.apache.log4j.Logger;
 
+<<<<<<< HEAD
+=======
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.mx.vos.autoproc.AutoProcStatus3VO;
+
+>>>>>>> aa35504f989cd6f3f35a4019958215da79e405e3
 /**
  * <p>
  *  This session bean handles ISPyB AutoProcStatus3.
