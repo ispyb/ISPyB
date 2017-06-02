@@ -19,28 +19,25 @@
 
 package ispyb.server.common.vos.proposals;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 /**
  * BeamLineSetup value object mapping table BeamLineSetup
@@ -48,6 +45,7 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "Proposal")
+@SqlResultSetMapping(name = "proposalNativeQuery", entities = { @EntityResult(entityClass = Proposal3VO.class) })
 public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
@@ -90,9 +88,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "externalId")
 	protected Integer externalId;
 
-	@Fetch(value = FetchMode.SELECT)
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") }, inverseJoinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") })
+	@Transient
 	protected Set<Person3VO> participants;
 	
 	public Proposal3VO() {
@@ -114,6 +110,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs = proteinVOs;
 		this.shippingVOs = shippingVOs;
 		this.externalId = externalId;
+		this.participants=null;
 	}
 	
 	public Proposal3VO(Proposal3VO vo) {

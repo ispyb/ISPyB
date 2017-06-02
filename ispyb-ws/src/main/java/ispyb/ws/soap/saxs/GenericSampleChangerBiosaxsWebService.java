@@ -603,7 +603,7 @@ public class GenericSampleChangerBiosaxsWebService {
 			List<Macromolecule3VO> macromolecules = atsasPipeline3Service.getMacromoleculeByAcronym(proposal, acronym);
 			logFinish("getMacromoleculeByAcronym", id);
 			return macromolecules;
-		} catch (NamingException e) {
+		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addAbinitioModelling", id, System.currentTimeMillis(),
 					e.getMessage(), e);
 			e.printStackTrace();

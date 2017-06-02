@@ -39,6 +39,7 @@ import org.apache.struts.actions.DispatchAction;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.DBConstants;
 import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.shipping.Container3VO;
@@ -320,6 +321,13 @@ public abstract class AbstractSampleAction extends DispatchAction {
 					DBConstants.MAX_LENGTH_SAMPLE_BLSAMPLESTATUS);
 			l_ActionMessages.add("info.blSampleStatus", l_ActionMessageLabel);
 		}
+		// sample name
+				if (form.getInfo().getName() != null
+						&& !StringUtils.isStringOkForName(form.getInfo().getName())) {
+					isOk = false;
+					ActionMessage l_ActionMessageLabel = new ActionMessage("errors.format", "Sample name");
+					l_ActionMessages.add("info.name", l_ActionMessageLabel);
+				}
 		// diffraction plan: observed resolution
 		if (form.getDifPlanInfo() != null
 				&& form.getDifPlanInfo().getAnomalousScatterer() != null

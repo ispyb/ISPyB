@@ -77,3 +77,7 @@ ispyb-ui/.classpath
 
 # Mac
 *.DS_Store
+
+# Batch to deploy ispyb.ear
+deploy.bat
+

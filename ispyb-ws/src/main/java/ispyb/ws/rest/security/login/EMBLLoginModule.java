@@ -56,7 +56,8 @@ public class EMBLLoginModule{
 	
 	private static Properties getVisitorConnectionProperties(String username, String password){
 		Properties env = EMBLLoginModule.getConnectionProperties(username, password);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=Visitor,ou=People,dc=embl-hamburg,dc=de");
+		env.put("java.naming.security.principal", "uid=" + username + ",ou=visitor,ou=people,dc=embl-hamburg,dc=de");
+		env.put("principalDNSuffix", ",ou=visitor,ou=people,dc=embl-hamburg,dc=de");
 		return env;
 	}
 	
@@ -97,12 +98,14 @@ public class EMBLLoginModule{
 	
 	public static List<String> authenticate(String username, String password) throws NamingException {
 		try{
+			logger.info("Trying to authenticate as staff (internal)");
 			return authenticate(username, password, EMBLLoginModule.getInternalConnectionProperties(username, password));
 		}
 		catch(Exception e){
-			logger.info("Failed to authentica as staff (internal");
-			e.printStackTrace();
+			logger.info("Failed to authenticate as staff (internal");
+			//e.printStackTrace();
 		}
+		logger.info("Trying to authenticate as user");
 		return authenticate(username, password, EMBLLoginModule.getVisitorConnectionProperties(username, password));
 	}
 }

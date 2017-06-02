@@ -191,6 +191,8 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 */
 	private DataCollectionGroup3VO getLightDataCollectionGroup3VO(DataCollectionGroup3VO vo)
 			throws CloneNotSupportedException {
+		if (vo == null) 
+			return null;
 		DataCollectionGroup3VO otherVO = (DataCollectionGroup3VO) vo.clone();
 		otherVO.setDataCollectionVOs(null);
 		otherVO.setScreeningVOs(null);

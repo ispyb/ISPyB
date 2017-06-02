@@ -253,7 +253,7 @@ public class LogonAction extends Action {
 //		return proposalCode;
 //	}
 
-	private List<Proposal3VO> getProposalsFromUserPortal(ActionMessages errors, ActionMessages messages, String loginName) {
+	private List<Proposal3VO> getProposalsFromUserPortal(ActionMessages errors, ActionMessages messages, String loginName) throws Exception {
 		// Case of proposal existing in ldap but not updated in ISPyB :launch updateProposal, then
 		// retrieve proposalId
 

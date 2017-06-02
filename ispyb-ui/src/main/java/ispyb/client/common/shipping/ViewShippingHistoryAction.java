@@ -149,9 +149,9 @@ public class ViewShippingHistoryAction extends org.apache.struts.actions.Dispatc
 			form.setReturnLabContact(returnLabContact);
 
 			// person
-			Person3VO  sendingPerson = this.person3Service.findByPk(sendingLabContact.getPersonVOId(), false);
+			Person3VO  sendingPerson = this.person3Service.findByPk(sendingLabContact.getPersonVOId());
 			form.setSendingPerson(sendingPerson);
-			Person3VO  returnPerson = this.person3Service.findByPk(returnLabContact.getPersonVOId(), false);
+			Person3VO  returnPerson = this.person3Service.findByPk(returnLabContact.getPersonVOId());
 			form.setReturnPerson(returnPerson);
 
 			// laboratory

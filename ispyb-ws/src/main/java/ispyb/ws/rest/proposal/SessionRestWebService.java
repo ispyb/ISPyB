@@ -3,15 +3,21 @@ package ispyb.ws.rest.proposal;
 import ispyb.server.common.services.ws.rest.session.SessionService;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,6 +30,30 @@ import org.jboss.resteasy.annotations.GZIP;
 public class SessionRestWebService extends RestWebService {
 	private final static Logger logger = Logger.getLogger(SessionRestWebService.class);
 
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@POST
+	@Path("{token}/proposal/{proposal}/mx/session/{sessionId}/comments/save")
+	@Produces("image/png")
+	public Response saveSessionComments(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") int sessionId,
+			@FormParam("comments") String comments) {
+		
+		String methodName = "saveSessionComments";
+		long id = this.logInit(methodName, logger, token, proposal, sessionId, comments);
+		
+		try {
+			Session3VO session = this.getSession3Service().findByPk(sessionId, false, false, false);
+			session.setComments(comments);
+			this.getSession3Service().update(session);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.logError(methodName, e, id, logger);
+		}
+		return this.sendResponse(true);
+	}
+	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
@@ -120,8 +150,7 @@ public class SessionRestWebService extends RestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
-	
-	
+		
 	@RolesAllowed({ "Manager", "Localcontact" })
 	@GET
 	@GZIP
@@ -132,8 +161,24 @@ public class SessionRestWebService extends RestWebService {
 			@PathParam("beamlineOperator") String beamlineOperator) throws Exception {
 		String methodName = "getSessionsByBeamlineOperator";
 		long id = this.logInit(methodName, logger, token, beamlineOperator);
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+			
 		try {
-			List<Map<String, Object>> result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+			Login3VO login = this.getLogin3Service().findByToken(token);
+			if (login.isManager() || login.getSiteId() == null){
+				// logged user is manager
+				result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+			} else {
+				//check if the localcontact is the beamlineOperator
+				String surname = this.getPerson3Service().findBySiteId(login.getSiteId()).getFamilyName();
+				if (beamlineOperator.contains(surname)) {
+					result = getSessionService().getSessionViewByBeamlineOperator(beamlineOperator);
+				} else {					
+					Exception e = new Exception ("Unauthorized " + surname + " to view " + beamlineOperator);
+					throw e;
+				}
+			}
+			
 			this.logFinish(methodName, id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {

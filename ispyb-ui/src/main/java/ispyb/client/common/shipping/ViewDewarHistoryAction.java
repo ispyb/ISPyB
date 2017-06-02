@@ -163,12 +163,12 @@ public class ViewDewarHistoryAction extends org.apache.struts.actions.DispatchAc
 			Person3VO sendingPerson = null;
 
 			if (sendingLabContact != null)
-				sendingPerson = this.person3Service.findByPk(sendingLabContact.getPersonVOId(), false);
+				sendingPerson = this.person3Service.findByPk(sendingLabContact.getPersonVOId());
 			form.setSendingPerson(sendingPerson);
 
 			Person3VO returnPerson = null;
 			if (returnLabContact != null)
-				returnPerson = this.person3Service.findByPk(returnLabContact.getPersonVOId(), false);
+				returnPerson = this.person3Service.findByPk(returnLabContact.getPersonVOId());
 			form.setReturnPerson(returnPerson);
 
 			// laboratory

@@ -43,6 +43,9 @@ public class StringUtils {
 	private static final String href_pattern = "<A HREF=.*image.*<IMG SRC=\"((.*)_small[.](.*).*)\"></A>";
 
 	private static final String index_pattern = "<A HREF=.*index[.]html.*A>|<A HREF=.*log.*A>";
+	
+	private static final String name_pattern = "^[a-zA-Z0-9\\-_]+$";
+
 
 	/**
 	 * Returns User Office code from Proposal code
@@ -680,5 +683,13 @@ public class StringUtils {
 		}
 
 		return proposalName;
+	}
+	
+	public static boolean isStringOkForName(String name) {
+		
+		if (name.matches(name_pattern))
+			return true;
+		else
+			return false;
 	}
 }

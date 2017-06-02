@@ -108,7 +108,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			LabContact3VO labContact = this.getGson().fromJson(labContactJson, LabContact3VO.class);
 			/** Update Person **/
 			
-			Person3VO person = this.getPerson3Service().findByPk(labContact.getPersonVO().getPersonId(), false);
+			Person3VO person = this.getPerson3Service().findByPk(labContact.getPersonVO().getPersonId());
 			person.setEmailAddress(labContact.getPersonVO().getEmailAddress());			
 			person.setFamilyName(labContact.getPersonVO().getFamilyName());
 			person.setFaxNumber(labContact.getPersonVO().getFaxNumber());

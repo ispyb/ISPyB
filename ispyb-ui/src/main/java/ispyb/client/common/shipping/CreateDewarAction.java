@@ -404,7 +404,7 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 
 						// old PersonFacadeLocal _personFacade = PersonFacadeUtil.getLocalHome().create();
 						// old mainProposer = _personFacade.findByPrimaryKey(proposal.getPersonId());
-						mainProposer = this.person3Service.findByPk(proposal.getPersonVOId(), false);
+						mainProposer = this.person3Service.findByPk(proposal.getPersonVOId());
 					}
 					Session3VO dewarFirstExp = null;
 					// old if (dbDewar.getFirstExperimentId() != null) {
@@ -674,13 +674,13 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 				// old LabContactValue labContact =
 				// _labContactFacade.findByPrimaryKey(shipping.getSendingLabContactId());
 				LabContact3VO labContact = labContact3Service.findByPk(shipping.getSendingLabContactId());
-				toAddress = this.person3Service.findByPk(labContact.getPersonVOId(), false).getEmailAddress();
+				toAddress = this.person3Service.findByPk(labContact.getPersonVOId()).getEmailAddress();
 			} else if (dewar.getDewarStatus().equals(Constants.SHIPPING_STATUS_SENT_TO_USER)) {
 				// LABCONTACT FOR RETURN
 				// old LabContactValue labContact =
 				// _labContactFacade.findByPrimaryKey(shipping.getReturnLabContactId());
 				LabContact3VO labContact = this.labContact3Service.findByPk(shipping.getReturnLabContactId());
-				toAddress = this.person3Service.findByPk(labContact.getPersonVOId(), false).getEmailAddress();
+				toAddress = this.person3Service.findByPk(labContact.getPersonVOId()).getEmailAddress();
 			}
 
 			String mainProposerFamilyName = mainProposer == null ? "" : mainProposer.getFamilyName();

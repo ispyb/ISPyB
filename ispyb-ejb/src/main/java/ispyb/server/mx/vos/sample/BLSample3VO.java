@@ -19,28 +19,23 @@
 
 package ispyb.server.mx.vos.sample;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.mx.vos.collections.EnergyScan3VO;
-
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.mx.vos.collections.EnergyScan3VO;
 
 /**
  * BLSample3 value object mapping table BLSample
@@ -446,7 +441,12 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	 */
 	@Override
 	public void checkValues(boolean create) throws Exception {
-		// TODO
+		
+		if (this.name != null && !StringUtils.isStringOkForName(this.name)) {
+			Exception e = new Exception ("String contains invalid characters");
+			throw e;
+		}
+			
 		return;
 	}
 	
