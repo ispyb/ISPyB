@@ -20,7 +20,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.IspybCrystalClass3DAO;
+
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 
 import java.util.List;
@@ -29,6 +29,9 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -44,8 +47,20 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	private final static Logger LOG = Logger
 			.getLogger(IspybCrystalClass3ServiceBean.class);
 
-	@EJB
-	private IspybCrystalClass3DAO dao;
+	// Generic HQL request to find instances of IspybCrystalClass3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from IspybCrystalClass3VO vo " + "where vo.crystalClassId = :pk";
+	}
+
+	// Generic HQL request to find all instances of IspybCrystalClass3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from IspybCrystalClass3VO vo " ;
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext context;
@@ -59,17 +74,12 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	 * @return the persisted entity.
 	 */
 	public IspybCrystalClass3VO create(final IspybCrystalClass3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (IspybCrystalClass3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -78,16 +88,11 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	 * @return the updated entity.
 	 */
 	public IspybCrystalClass3VO update(final IspybCrystalClass3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (IspybCrystalClass3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -95,19 +100,11 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				IspybCrystalClass3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		
+		checkCreateChangeRemoveAccess();
+		IspybCrystalClass3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -115,17 +112,10 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final IspybCrystalClass3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -136,17 +126,15 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	 * @return the IspybCrystalClass3 value object
 	 */
 	public IspybCrystalClass3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (IspybCrystalClass3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				IspybCrystalClass3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try{
+			return (IspybCrystalClass3VO) entityManager.createQuery(FIND_BY_PK())
+				.setParameter("pk", pk).getSingleResult();
+		}catch(NoResultException e){
+			return null;
+		}
 	}
 
 	// TODO remove following method if not adequate
@@ -158,15 +146,9 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	@SuppressWarnings("unchecked")
 	public List<IspybCrystalClass3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<IspybCrystalClass3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<IspybCrystalClass3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		
+		List<IspybCrystalClass3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -186,6 +168,34 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 		});
 	}
 
-	
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(IspybCrystalClass3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getCrystalClassId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getCrystalClassId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
 
 }

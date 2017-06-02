@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
@@ -262,7 +263,7 @@ public class UpdateFromSMIS {
 		List<ProposalParticipantInfoLightVO> mainProposers_ ;
 		List<SampleSheetInfoLightVO> smisSamples_;
 		List<ProposalParticipantInfoLightVO> labContacts_;
-		
+	    	
 		if (Constants.SITE_USERPORTAL_LINK_IS_SMIS()) {
 
 			// Get the service
@@ -462,6 +463,9 @@ public class UpdateFromSMIS {
 		// the proposal, samples and sessions are created: load labcontacts
 		// -----------------------------------------------------------------------------------
 		if (labContacts != null && labContacts.length > 0) {
+			if (Constants.SITE_IS_MAXIV()) {
+				loadParticipants(labContacts);
+			} else { 
 			for (int i = 0; i < labContacts.length; i++) {
 				boolean labContactExists = false;
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
@@ -550,6 +554,7 @@ public class UpdateFromSMIS {
 							+ " inside ISPyB db");
 				} 					
 			}
+		}
 		}
 
 	}
@@ -737,6 +742,58 @@ public class UpdateFromSMIS {
 			LOG.debug(" no samples found for propos_no = " + proposalNumber);
 		}
 	}
+	
+	private static void loadParticipants(ProposalParticipantInfoLightVO[] participants)
+		    throws Exception
+	  {
+	    if ((participants != null) && (participants.length > 0)) {
+	      for (ProposalParticipantInfoLightVO participant : participants)
+	      {
+	        participant.getCategoryCode();
+	        String uoCode = participant.getCategoryCode();
+	        String proposalNumber = participant.getCategoryCounter() != null ? participant.getCategoryCounter().toString() : "";
+	        String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
+	        
+	        LOG.debug("Proposal found for participant : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+	        LOG.debug("Bllogin : " + participant.getBllogin());
+	        
+	        List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+	        
+	        if (!listProposals.isEmpty())
+	        {
+	          LOG.debug("proposal already exists");
+	          Proposal3VO proposalVO = (Proposal3VO)listProposals.get(0);
+
+	          Person3VO personEnt = person.findByLogin(participant.getBllogin());
+	          if (personEnt == null) {
+	            personEnt = new Person3VO();
+	            personEnt.setLogin(participant.getBllogin());
+	          }
+	          
+	          personEnt.setGivenName(participant.getScientistFirstName());
+	          personEnt.setFamilyName(participant.getScientistName());
+	          //TODO: Add more details
+	          
+	          personEnt = person.merge(personEnt);
+	          
+	          Set<Person3VO> currentParticipants = proposalVO.getParticipants();
+	          
+	          boolean personExists = false;
+	          for (Person3VO person : currentParticipants) {
+	            if (person.getLogin() == personEnt.getLogin())
+	            {
+	              personExists = true;
+	              break;
+	            }
+	          }
+	          if (!personExists) {
+	            currentParticipants.add(personEnt);
+	          }
+	          proposal.update(proposalVO);
+	        }
+	      }
+	    }
+	  }
 	
 	private static void retrieveSampleSheet(Proposal3VO proplv, SampleSheetInfoLightVO value) throws Exception {
 

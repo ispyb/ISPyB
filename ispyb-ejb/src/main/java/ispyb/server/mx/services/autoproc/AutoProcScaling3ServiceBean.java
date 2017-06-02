@@ -20,7 +20,7 @@ package ispyb.server.mx.services.autoproc;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.AutoProcScaling3DAO;
+
 import ispyb.server.mx.vos.autoproc.AutoProcScaling3VO;
 
 import java.util.List;
@@ -29,6 +29,9 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
@@ -44,11 +47,20 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	private final static Logger LOG = Logger
 			.getLogger(AutoProcScaling3ServiceBean.class);
 
-	@EJB
-	private AutoProcScaling3DAO dao;
+	// Generic HQL request to find instances of AutoProcScaling3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from AutoProcScaling3VO vo "  + "where vo.autoProcScalingId = :pk";
+	}
 
-	@Resource
-	private SessionContext context;
+	// Generic HQL request to find all instances of AutoProcScaling3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from AutoProcScaling3VO vo " ;
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	public AutoProcScaling3ServiceBean() {
 	};
@@ -59,17 +71,12 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @return the persisted entity.
 	 */
 	public AutoProcScaling3VO create(final AutoProcScaling3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProcScaling3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -78,16 +85,11 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @return the updated entity.
 	 */
 	public AutoProcScaling3VO update(final AutoProcScaling3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProcScaling3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -95,19 +97,11 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				AutoProcScaling3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		
+		checkCreateChangeRemoveAccess();
+		AutoProcScaling3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -115,19 +109,12 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final AutoProcScaling3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
-
+	
 	/**
 	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
 	 * @param pk the primary key
@@ -136,17 +123,14 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @return the AutoProcScaling3 value object
 	 */
 	public AutoProcScaling3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (AutoProcScaling3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				AutoProcScaling3VO found = dao.findByPk(pk);
-				return found;
+	
+		checkCreateChangeRemoveAccess();
+		try{
+			return (AutoProcScaling3VO) entityManager.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+			}catch(NoResultException e){
+				return null;
 			}
-
-		});
 	}
 
 	// TODO remove following method if not adequate
@@ -158,15 +142,9 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	@SuppressWarnings("unchecked")
 	public List<AutoProcScaling3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<AutoProcScaling3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<AutoProcScaling3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		List<AutoProcScaling3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -174,16 +152,39 @@ public class AutoProcScaling3ServiceBean implements AutoProcScaling3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
+		
 				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
 				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
+	}
+	
+	/* Private methods ------------------------------------------------------ */
 
-		});
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(AutoProcScaling3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getAutoProcScalingId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getAutoProcScalingId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
 	}
 
 }

@@ -20,7 +20,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.GridInfo3DAO;
+
 import ispyb.server.mx.vos.collections.GridInfo3VO;
 
 import java.util.List;
@@ -29,8 +29,14 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -44,8 +50,22 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	private final static Logger LOG = Logger
 			.getLogger(GridInfo3ServiceBean.class);
 
-	@EJB
-	private GridInfo3DAO dao;
+
+	// Generic HQL request to find instances of GridInfo3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from GridInfo3VO vo "
+				+ "where vo.gridInfoId = :pk";
+	}
+
+	// Generic HQL request to find all instances of GridInfo3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from GridInfo3VO vo ";
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext context;
@@ -59,17 +79,12 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 * @return the persisted entity.
 	 */
 	public GridInfo3VO create(final GridInfo3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (GridInfo3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -78,16 +93,11 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 * @return the updated entity.
 	 */
 	public GridInfo3VO update(final GridInfo3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (GridInfo3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -95,37 +105,23 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				GridInfo3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		checkCreateChangeRemoveAccess();
+		GridInfo3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
+
 
 	/**
 	 * Remove the GridInfo3
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final GridInfo3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -136,17 +132,16 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 * @return the GridInfo3 value object
 	 */
 	public GridInfo3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (GridInfo3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				GridInfo3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			return (GridInfo3VO) entityManager
+					.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -157,15 +152,10 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	@SuppressWarnings("unchecked")
 	public List<GridInfo3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<GridInfo3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<GridInfo3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		
+		List<GridInfo3VO> foundEntities = (List<GridInfo3VO>) entityManager.createQuery(
+				FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -173,16 +163,9 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+	
+		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+		//autService.checkUserRightToChangeAdminData();
 	}
 	
 	/**
@@ -193,18 +176,47 @@ public class GridInfo3ServiceBean implements GridInfo3Service,
 	 */
 	@SuppressWarnings("unchecked")
 	public List<GridInfo3VO> findByWorkflowMeshId(final Integer workflowMeshId) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<GridInfo3VO>) template.execute(new EJBAccessCallback() {
+		
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria crit = session.createCriteria(GridInfo3VO.class);
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<GridInfo3VO> foundEntities = dao.findByWorkflowMeshId(workflowMeshId);
-				return foundEntities;
-			}
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
-		});
+		if (workflowMeshId != null) {
+			Criteria subCrit = crit.createCriteria("workflowMeshVO");
+			subCrit.add(Restrictions.eq("workflowMeshId", workflowMeshId));
+		}
+		List<GridInfo3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
 
-	
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * @param vo the data to check
+	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
+	 */
+	private void checkAndCompleteData(GridInfo3VO vo, boolean create)
+			throws Exception {
+
+		if (create) {
+			if (vo.getGridInfoId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getGridInfoId() == null) {
+				throw new IllegalArgumentException(
+						"Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
 	
 
 }
