@@ -116,7 +116,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 		
-		Person3VO vo = findByPk(pk, false);
+		Person3VO vo = findByPk(pk);
 		checkCreateChangeRemoveAccess();
 		delete(vo);
 	}
@@ -154,34 +154,6 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		}
 	}
 	
-	/**
-	 * <p>
-	 * Returns the Person3VO instance matching the given primary key.
-	 * </p>
-	 * <p>
-	 * <u>Please note</u> that the booleans to fetch relationships are needed <u>ONLY</u> if the value object has to be
-	 * used out the EJB container.
-	 * </p>
-	 * 
-	 * @param pk
-	 *            the primary key of the object to load.
-	 * @param fetchRelation1
-	 *            if true, the linked instances by the relation "relation1" will be set.
-	 * @throws Exception 
-	 */
-	public Person3VO findByPk(Integer pk, boolean withProposals) throws Exception {
-		try {
-			Person3VO person = this.findByPk(pk);
-			if (withProposals) {
-				return this.loadProposals(person);
-			}
-			return person;
-			
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * find a Person with a sessionId
 	 */
@@ -393,15 +365,6 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 		wsPerson.setLaboratoryId(laboratoryId);
 		return wsPerson;
 	}
-
-	public Person3VO loadProposals(Person3VO person) throws Exception {
-		
-			Proposal3Service propService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
-			Set <Proposal3VO> proposalVOs = propService.findByPersonPk(person.getPersonId(), false/*fetchSessions*/, false/*fetchProteins*/, false/*fetchShippings*/);
-			person.setProposalDirectVOs(proposalVOs);			
-			return person;
-	}
-
 	
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.

@@ -336,7 +336,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 
 			// Retrieve SENDING person object
 			Integer sendingPersonId = sendingLabContact.getPersonVOId();
-			Person3VO sendingPerson = this.person3Service.findByPk(sendingPersonId, false);
+			Person3VO sendingPerson = this.person3Service.findByPk(sendingPersonId);
 
 			// Retrieve SENDING laboratory object
 			Integer sendingLaboratoryId = sendingPerson.getLaboratoryVOId();
@@ -347,7 +347,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 
 			// Retrieve RETURN person object
 			Integer returnPersonId = returnLabContact.getPersonVOId();
-			Person3VO returnPerson = this.person3Service.findByPk(returnPersonId, false);
+			Person3VO returnPerson = this.person3Service.findByPk(returnPersonId);
 
 			// Retrieve RETURN laboratory object
 			Integer returnLaboratoryId = returnPerson.getLaboratoryVOId();

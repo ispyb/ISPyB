@@ -354,8 +354,7 @@ public class DewarRestWebService extends RestWebService {
 
 		// Retrieve SENDING person object
 		Integer sendingPersonId = sendingLabContact.getPersonVOId();
-		Person3VO sendingPerson = this.getPerson3Service().findByPk(sendingPersonId,
-				false);
+		Person3VO sendingPerson = this.getPerson3Service().findByPk(sendingPersonId);
 
 		// Retrieve SENDING laboratory object
 		Integer sendingLaboratoryId = sendingPerson.getLaboratoryVOId();
@@ -366,8 +365,7 @@ public class DewarRestWebService extends RestWebService {
 
 		// Retrieve RETURN person object
 		Integer returnPersonId = returnLabContact.getPersonVOId();
-		Person3VO returnPerson = this.getPerson3Service().findByPk(returnPersonId,
-				false);
+		Person3VO returnPerson = this.getPerson3Service().findByPk(returnPersonId);
 
 		// Retrieve RETURN laboratory object
 		Integer returnLaboratoryId = returnPerson.getLaboratoryVOId();

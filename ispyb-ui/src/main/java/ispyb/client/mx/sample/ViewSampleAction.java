@@ -834,7 +834,7 @@ public class ViewSampleAction extends DispatchAction {
 						form.setProteinVO(proteinVO);
 						Person3VO personLightValue = new Person3VO();
 						if (proteinVO.getPersonId() != null) {
-							personLightValue = personService.findByPk(proteinVO.getPersonId(), false);
+							personLightValue = personService.findByPk(proteinVO.getPersonId());
 						}
 						form.setPersonLightValue(personLightValue);
 						form.setResponsibleAddress(personLightValue.getGivenName(), personLightValue.getFamilyName(),

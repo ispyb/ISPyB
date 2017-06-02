@@ -557,7 +557,7 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 
 					// old PersonFacadeLocal _personFacade = PersonFacadeUtil.getLocalHome().create();
 					// old PersonValue mainProposer = _personFacade.findByPrimaryKey(proposal.getPersonId());
-					Person3VO mainProposer = this.person3Service.findByPk(proposal.getPersonVOId(), false);
+					Person3VO mainProposer = this.person3Service.findByPk(proposal.getPersonVOId());
 
 					reportShippingModificationByMail(request, proposal, mainProposer, dbShipping, fieldsChanged);
 					// confirmation message
