@@ -57,6 +57,7 @@ public interface Person3Service {
 	 */
 	public PersonWS3VO findForWSPersonBySessionId(final Integer sessionId) throws Exception;
 	
+	public Person3VO findByPk(Integer pk) ;
 	/**
 	 * Find a Person for a specified code and proposal number
 	 * 

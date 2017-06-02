@@ -186,7 +186,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 			LOG.debug("LabContact found in DB :" + labContact);
 
 			// load person infos
-			Person3VO person = personService.findByPk(labContact.getPersonVOId(), false);
+			Person3VO person = personService.findByPk(labContact.getPersonVOId());
 			LOG.debug("Person found in DB :" + person);
 			labContact.setPersonVO(person);
 
@@ -238,7 +238,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 			LOG.debug("LabContact found in DB :" + labContact);
 
 			// load person infos
-			Person3VO person = personService.findByPk(labContact.getPersonVOId(), false);
+			Person3VO person = personService.findByPk(labContact.getPersonVOId());
 			LOG.debug("Person found in DB :" + person);
 			labContact.setPersonVO(person);
 
@@ -325,7 +325,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 			}
 
 			// --> Person ----------------------------------------------
-			Person3VO existingPerson = personService.findByPk(personForm.getPersonId(), false);
+			Person3VO existingPerson = personService.findByPk(personForm.getPersonId());
 			if (!existingLaboratory.getLaboratoryId().equals(existingPerson.getLaboratoryVOId())
 					|| // link to the new Laboratory
 					!personForm.getFamilyName().equals(existingPerson.getFamilyName())
@@ -465,7 +465,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 				LOG.debug("New Person created =" + person);
 			} else {
 				// the person is already existing
-				Person3VO existingPerson = personService.findByPk(person.getPersonId(), false);
+				Person3VO existingPerson = personService.findByPk(person.getPersonId());
 				if (!laboratory.getLaboratoryId().equals(existingPerson.getLaboratoryVOId())
 						|| // link to the new Laboratory
 						!person.getFamilyName().equals(existingPerson.getFamilyName())
@@ -624,7 +624,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 
 			if (personId != 0) {// ->selection into ISPYB scientists list, the personId is known
 				// person already saved in ISPYB database
-				selectedPerson = personService.findByPk(personId, false);
+				selectedPerson = personService.findByPk(personId);
 				// fill the login form fields
 				form.setPerson(selectedPerson);
 				form.setLaboratory(laboratoryService.findByPk(selectedPerson.getLaboratoryVOId()));
@@ -913,7 +913,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 			// Look if ISPYB laboratory has an address
 			String messageSMIS = "";
 			String labAddress = "";
-			Person3VO personISPYB = personService.findByPk(person.getPersonId(), false);
+			Person3VO personISPYB = personService.findByPk(person.getPersonId());
 			Laboratory3VO labISPYB = personISPYB.getLaboratoryVO();
 			if (labISPYB != null) {
 				labAddress = labISPYB.getAddress();

@@ -701,11 +701,11 @@ public class ToolsForCollectionWebService {
 									.getLocalService(LabContact3Service.class);
 							LabContact3VO labContactS = labContact3Service.findByPk(shipping.getSendingLabContactId());
 							if (labContactS != null)
-								to = person3Service.findByPk(labContactS.getPersonVOId(), false).getEmailAddress();
+								to = person3Service.findByPk(labContactS.getPersonVOId()).getEmailAddress();
 							LabContact3VO labContactR = labContact3Service.findByPk(shipping.getReturnLabContactId());
 							if (labContactS != null && labContactR != null
 									&& !labContactS.getLabContactId().equals(labContactR.getLabContactId()))
-								to += ", " + person3Service.findByPk(labContactR.getPersonVOId(), false).getEmailAddress();
+								to += ", " + person3Service.findByPk(labContactR.getPersonVOId()).getEmailAddress();
 						}
 						LOG.debug("test Create first collection on " + beamline + " : sendMail to " + to);
 						// to = Constants.getProperty("mail.notification.collect.cc");
