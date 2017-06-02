@@ -69,13 +69,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.proposalId = :pk";
 	}
 	
-	private static final String FIND_BY_PERSON_PK(Integer personPk, boolean fetchSessions, boolean fetchProteins,
-			boolean fetchShippings) {
-		return "from Proposal3VO vo  " + (fetchSessions ? " left join fetch vo.sessionVOs " : "")
-				+ (fetchShippings ? " left join fetch vo.shippingVOs " : "")
-				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.personId = :personPk";
-	}
-
 
 	// Generic HQL request to find all instances of Proposal
 	// TODO choose between left/inner join
@@ -105,8 +98,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	private final static String UPDATE_PROPOSALID_PROTEINS = " update Protein  set proposalId = :newProposalId "
 			+ " WHERE proposalId = :oldProposalId"; // 2 old value to be replaced
 	
-	private final static String FIND_ALL_PROPOSALS_FOR_PERSON ="SELECT Proposal.* FROM Proposal,ProposalHasPerson WHERE Proposal.proposalId = ProposalHasPerson.proposalId and ProposalHasPerson.personId = :personId";
-
 	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -208,36 +199,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 			return null;
 		return (Proposal3VO) listVOs.toArray()[0];
 	}
-
-	// return only the proposals where the person is MP
-	@SuppressWarnings("unchecked")
-	@WebMethod
-	public Set <Proposal3VO> findByPersonPk(final Integer personPk, final boolean fetchSessions,
-			final boolean fetchProteins, final boolean fetchShippings) throws Exception {
-
-		Query query = entityManager.createQuery(FIND_BY_PERSON_PK(personPk, fetchSessions, fetchProteins, fetchShippings)).setParameter("personPk", personPk);
-
-		List<Proposal3VO> foundEntities = query.getResultList();
-		if (foundEntities == null) 
-			return null;
-		
-		Set<Proposal3VO> vos = new HashSet<Proposal3VO>(foundEntities);
-		return vos;
-
-	}
-
-	// returns all proposals linked to person
-	@SuppressWarnings("unchecked")
-	@WebMethod
-	public List <Proposal3VO> findAllProposalsByPersonPk(final Integer personId) throws Exception {
-
-		String query = FIND_ALL_PROPOSALS_FOR_PERSON;
-		List <Proposal3VO> col = this.entityManager.createNativeQuery(query, "proposalNativeQuery")
-				.setParameter("personId", personId).getResultList();
-		return col;
-	}
-	
-	
 	
 	@SuppressWarnings("unchecked")
 	@WebMethod
@@ -276,15 +237,15 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 					if (person3vo.getProposalDirectVOs() != null && person3vo.getProposalDirectVOs().size() > 0) {
 						proposals.addAll(person3vo.getProposalDirectVOs());
 					}
-					if (this.findAllProposalsByPersonPk(person3vo.getPersonId()) != null && this.findAllProposalsByPersonPk(person3vo.getPersonId()).size() > 0) {
-						proposals.addAll(this.findAllProposalsByPersonPk(person3vo.getPersonId()));
-					}
-					if (this.findByPersonPk(person3vo.getPersonId(), false, false, false) != null && this.findByPersonPk(person3vo.getPersonId(), false, false, false).size() > 0) {
-						proposals.addAll(this.findByPersonPk(person3vo.getPersonId(), false, false, false));
+					if (person3vo.getProposalVOs() != null && person3vo.getProposalVOs().size() > 0) {
+						proposals.addAll(person3vo.getProposalVOs());
 					}
 				}
 			}
+		} else {
+			proposals = findProposalByCodeAndNumber(loginName);
 		}
+		
 		return proposals;
 	}
 
@@ -467,7 +428,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		String queryPerson = "SELECT person FROM Person3VO person WHERE login=:loginName";
 		Query EJBQueryPerson = this.entityManager.createQuery(queryPerson);
 		EJBQueryPerson.setParameter("loginName", loginName);
-		@SuppressWarnings("unchecked")
 		List<Person3VO> persons = EJBQueryPerson.getResultList();
 		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 		if (persons != null) {
@@ -476,8 +436,8 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 					if (person3vo.getProposalDirectVOs() != null && person3vo.getProposalDirectVOs().size() > 0) {
 						proposals.addAll(person3vo.getProposalDirectVOs());
 					}
-					if (this.findAllProposalsByPersonPk(person3vo.getPersonId()) != null && this.findAllProposalsByPersonPk(person3vo.getPersonId()).size() > 0){
-						proposals.addAll(this.findAllProposalsByPersonPk(person3vo.getPersonId()));
+					if (person3vo.getProposalVOs() != null && person3vo.getProposalVOs().size() > 0) {
+						proposals.addAll(person3vo.getProposalVOs());
 					}
 				}
 			}

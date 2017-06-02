@@ -87,11 +87,7 @@ public interface Proposal3Service {
 	 */
 	public Proposal3VO findByPk(final Integer pk, final boolean fetchSessions, final boolean fetchProteins,
 			final boolean fetchShippings) throws Exception;
-
-	public List <Proposal3VO> findAllProposalsByPersonPk(final Integer personId) throws Exception;
 	
-	public Set<Proposal3VO> findByPersonPk(final Integer personPk, final boolean fetchSessions,
-			final boolean fetchProteins, final boolean fetchShippings) throws Exception ;
 	/**
 	 * Find all Proposal3 and set linked value objects if necessary.
 	 * 
