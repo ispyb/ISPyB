@@ -44,7 +44,6 @@ import ispyb.server.common.vos.proposals.LabContact3VO;
  * The data access object for LabContact3 objects (rows of table TableName).
  * </p>
  * 
- * @see {@link LabContact3DAO}
  */
 @Stateless
 public class LabContact3ServiceBean implements LabContact3Service, LabContact3ServiceLocal {

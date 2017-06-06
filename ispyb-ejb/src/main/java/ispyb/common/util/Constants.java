@@ -642,7 +642,7 @@ public final class Constants {
 	public static final String NB_DATA_SESSION_OBJECTS = "nbOfItems";
 
 	/*
-	 * DewarFullDAO constantes moved to here
+	 * DewarFull constantes moved to here
 	 */
 	public static final String NOT_AT_STORES = "!STORES%";
 
