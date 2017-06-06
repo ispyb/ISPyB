@@ -88,7 +88,6 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "externalId")
 	protected Integer externalId;
 
-
 	@Transient
 	protected Set<Person3VO> participants;
 	

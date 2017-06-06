@@ -1,5 +1,7 @@
 package ispyb.ws.rest.security.login;
 
+import ispyb.common.util.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -12,19 +14,19 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
 public class MAXIVLoginModule {
-	  private	static String groupUniqueMemberName = "uniqueMember";
-	  private	static String principalDNSuffix = ",ou=maxivusers,dc=maxlab,dc=lu,dc=se";
-	  private	static String groupCtxDN = "ou=maxivgroups,dc=maxlab,dc=lu,dc=se";
-	  private	static String principalDNPrefix = "uid=";
-	  private	static String groupAttributeID = "cn";
-	  private	static String server = "ldap://w-v-ispybldap-0:389/";
-
-
+	
+	private	static final String groupUniqueMemberName = "uniqueMember";
+	private	static final String principalDNSuffix = "";
+	private	static final String groupCtxDN = Constants.LDAP_people;
+	private	static final String principalDNPrefix = Constants.LDAP_prefix;
+	private	static final String groupAttributeID = "cn";
+	private	static final String server = Constants.LDAP_Employee_Resource;
+	
 	protected static Properties getConnectionProperties(String username, String password){
 		Properties env = new Properties();
+		
 		env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put("principalDNPrefix", principalDNPrefix);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=maxivusers,dc=maxlab,dc=lu,dc=se");
 		env.put("groupAttributeID", groupAttributeID);
 		env.put("groupCtxDN", groupCtxDN);
 		env.put("principalDNSuffix", principalDNSuffix);
@@ -33,9 +35,11 @@ public class MAXIVLoginModule {
 		env.put("jboss.security.security_domain", "ispyb");
 		env.put("java.naming.provider.url", server);
 		env.put("java.naming.security.authentication", "simple");
+		String userDN = principalDNPrefix + username;
+		env.setProperty("java.naming.security.principal", userDN);
 		env.put("java.naming.security.credentials", password);
-		return env;
 		
+		return env;		
 	}
 	
 	protected static String getFilter(String username){

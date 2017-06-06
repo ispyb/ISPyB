@@ -331,25 +331,42 @@ public class ToolsForShippingWebService {
 			Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator
 					.getLocalService(Proposal3Service.class);
 			
-			
-			//get proposal groups from LDAP
-			LOG.debug("findProposalByLoginAndBeamline: get proposal groups from LDAP for the user " +login +"...");
-			LdapSearchModule ldapModule = new LdapSearchModule();
-			List<String> groups = ldapModule.getUserGroups(login);
+			List<String> groups = null;
+			if(Constants.SITE_IS_MAXIV()) {
+				List<Proposal3VO> props = proposalService.findByLoginName(login);
+				if(props.size() >= 1){
+					Proposal3VO prop = props.get(0);
+					ProposalWS3VO wsProposal = new ProposalWS3VO(prop);
+					wsProposal.setProteinVOs(null);
+					wsProposal.setSessionVOs(null);
+					wsProposal.setShippingVOs(null);
+					wsProposal.setParticipants(null);
+					wsProposal.setPersonVO(null);
+					wsProposal.setPersonId(prop.getPersonVOId());
+					//ProposalWS3VO wsProposal = proposalService.findForWSByCodeAndNumber("MX", prop.getNumber());
+					
+					proposalValues.add(wsProposal);
+				}
+			} else{
+				//get proposal groups from LDAP
+				LOG.debug("findProposalByLoginAndBeamline: get proposal groups from LDAP for the user " +login +"...");
+				LdapSearchModule ldapModule = new LdapSearchModule();
+				groups = ldapModule.getUserGroups(login);
 
-
-			//Get the proposals of the user for a specific beamline
-			LOG.debug("findProposalByLoginAndBeamline: get the proposals for the " +beamline +" beamline...");
-			for (String groupName : groups) {
-				ArrayList<String> proposalNumberAndCode = StringUtils.GetProposalNumberAndCode(groupName);
-				if (proposalNumberAndCode != null && !proposalNumberAndCode.isEmpty()){
-					LOG.debug("findProposalByLoginAndBeamline: find the proposal in the DB with code = " +StringUtils.getProposalCode(proposalNumberAndCode.get(0)) +" and number = " +proposalNumberAndCode.get(2));
-					ProposalWS3VO prop= proposalService.findForWSByCodeAndNumber(StringUtils.getProposalCode(proposalNumberAndCode.get(0)), proposalNumberAndCode.get(2)+"");
-					proposalValues.add(prop);
-				} else {
-					LOG.debug("findProposalByLoginAndBeamline: no match found between group and proposal number/code");
+				//Get the proposals of the user for a specific beamline
+				LOG.debug("findProposalByLoginAndBeamline: get the proposals for the " +beamline +" beamline...");
+				for (String groupName : groups) {
+					ArrayList<String> proposalNumberAndCode = StringUtils.GetProposalNumberAndCode(groupName);
+					if (proposalNumberAndCode != null && !proposalNumberAndCode.isEmpty()){
+						LOG.debug("findProposalByLoginAndBeamline: find the proposal in the DB with code = " +StringUtils.getProposalCode(proposalNumberAndCode.get(0)) +" and number = " +proposalNumberAndCode.get(2));
+						ProposalWS3VO prop= proposalService.findForWSByCodeAndNumber(StringUtils.getProposalCode(proposalNumberAndCode.get(0)), proposalNumberAndCode.get(2)+"");
+						proposalValues.add(prop);
+					} else {
+						LOG.debug("findProposalByLoginAndBeamline: no match found between group and proposal number/code");
+					}
 				}
 			}
+			
 			if (proposalValues != null && !proposalValues.isEmpty()) {
 				LOG.debug("findProposalByLoginAndBeamline: "+proposalValues.size() +" proposals found in the ISPyB database");
 				LOG.debug("findProposalByLoginAndBeamline: check if there is a proposal with a current active session (only for accademic experiments)");
