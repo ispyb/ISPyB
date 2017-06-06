@@ -62,7 +62,7 @@ public class AutoProcProgram3VO extends ISPyBValueObject {
 	protected String processingPrograms;
 
 	@Column(name = "processingStatus")
-	protected Boolean processingStatus;
+	protected String processingStatus;
 
 	@Column(name = "processingMessage")
 	protected String processingMessage;
@@ -88,7 +88,7 @@ public class AutoProcProgram3VO extends ISPyBValueObject {
 	}
 
 	public AutoProcProgram3VO(Integer autoProcProgramId, String processingCommandLine, String processingPrograms,
-			Boolean processingStatus, String processingMessage, Date processingStartTime, Date processingEndTime,
+			String processingStatus, String processingMessage, Date processingStartTime, Date processingEndTime,
 			String processingEnvironment, Date recordTimeStamp) {
 		super();
 		this.autoProcProgramId = autoProcProgramId;
@@ -139,11 +139,11 @@ public class AutoProcProgram3VO extends ISPyBValueObject {
 		this.processingPrograms = processingPrograms;
 	}
 
-	public Boolean getProcessingStatus() {
+	public String getProcessingStatus() {
 		return processingStatus;
 	}
 
-	public void setProcessingStatus(Boolean processingStatus) {
+	public void setProcessingStatus(String processingStatus) {
 		this.processingStatus = processingStatus;
 	}
 

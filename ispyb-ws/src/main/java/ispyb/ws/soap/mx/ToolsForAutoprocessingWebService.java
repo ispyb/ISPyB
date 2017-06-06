@@ -583,7 +583,7 @@ public class ToolsForAutoprocessingWebService {
 	public Integer storeOrUpdateAutoProcProgram(Integer autoProcProgramId,
 			@WebParam(name = "processingCommandLine") String processingCommandLine,
 			@WebParam(name = "processingPrograms") String processingPrograms,
-			@WebParam(name = "processingStatus") Boolean processingStatus,
+			@WebParam(name = "processingStatus") String processingStatus,
 			@WebParam(name = "processingMessage") String processingMessage,
 			@WebParam(name = "processingStartTime") Date processingStartTime,
 			@WebParam(name = "processingEndTime") Date processingEndTime,
