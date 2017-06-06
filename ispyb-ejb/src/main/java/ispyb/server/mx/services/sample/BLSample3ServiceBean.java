@@ -289,17 +289,6 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		return sampleList;
 	}
 
-	// @SuppressWarnings("unchecked")
-	// public List<BLSample3VO> findByShippingId(final Integer shippingId) throws Exception {
-	// EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-	// return (List<BLSample3VO>) template.execute(new EJBAccessCallback() {
-	// public Object doInEJBAccess(Object parent) throws Exception {
-	// List<BLSample3VO> foundEntities = dao.findByShippingDewarContainer(shippingId);
-	// return foundEntities;
-	// }
-	// });
-	// }
-
 	public List<BLSample3VO> findByDewarId(final List<Integer> dewarIds, final Integer sortView) throws Exception {
 		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
 
