@@ -51,9 +51,8 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 
 	// Generic HQL request to find instances of Person3 by pk
 	// TODO choose between left/inner join
-	private static final String FIND_BY_PK(boolean withProposals) {
-		return "from Person3VO vo " + (withProposals ? "left join fetch vo.proposalVOs " : "")
-				+ "where vo.personId = :pk";
+	private static final String FIND_BY_PK() {
+		return "from Person3VO vo  where vo.personId = :pk";
 	}
 
 	private static final String FIND_BY_SITE_ID() {
@@ -112,7 +111,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 		
-		Person3VO vo = findByPk(pk, false);
+		Person3VO vo = findByPk(pk);
 		checkCreateChangeRemoveAccess();
 		delete(vo);
 	}
@@ -141,9 +140,9 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	 * @param fetchRelation1
 	 *            if true, the linked instances by the relation "relation1" will be set.
 	 */
-	public Person3VO findByPk(Integer pk, boolean withProposals) {
+	public Person3VO findByPk(Integer pk) {
 		try {
-			return (Person3VO) entityManager.createQuery(FIND_BY_PK(withProposals)).setParameter("pk", pk)
+			return (Person3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

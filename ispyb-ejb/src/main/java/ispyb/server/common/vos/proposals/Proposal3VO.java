@@ -19,6 +19,7 @@
 
 package ispyb.server.common.vos.proposals;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -107,6 +108,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs = proteinVOs;
 		this.shippingVOs = shippingVOs;
 		this.externalId = externalId;
+		this.participants = null;
 	}
 	
 	public Proposal3VO(Proposal3VO vo) {
@@ -121,6 +123,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs = vo.getProteinVOs();
 		this.shippingVOs = vo.getShippingVOs();
 		this.externalId = vo.getExternalId();
+		this.participants = vo.getParticipants();
 	}
 	
 	public void fillVOFromLight(ProposalWS3VO vo) {
@@ -134,6 +137,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs =  null;
 		this.shippingVOs =  null;
 		this.externalId = vo.getExternalId();
+		this.participants = null;
 	}
 
 
@@ -229,7 +233,28 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.externalId = externalId;
 	}
 
+	public Set<Person3VO> getParticipants() {
+		return this.participants;
+	}
 
+	public void setParticipants(Set<Person3VO> participants) {
+		this.participants = participants;
+	}
+
+	public void addParticipant(Person3VO participant) {
+		if (this.participants == null) {
+			this.participants = new HashSet<Person3VO>();
+		}
+		if (participant != null && !this.participants.contains(participant)) {
+			this.participants.add(participant);
+		}
+	}
+
+	public void clearParticipants() {
+		this.participants.clear();
+
+	}
+	
 	/**
 	 * Checks the values of this value object for correctness and completeness. Should be done before persisting the
 	 * data in the DB.

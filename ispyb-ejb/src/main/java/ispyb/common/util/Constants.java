@@ -218,8 +218,16 @@ public final class Constants {
 	public static final String LDAP_Employee_Resource = getProperty("ldap.employee.resource");
 
 	public static final String LDAP_people = getProperty("ldap.people");
+	
+	public static final String LDAP_Employee_Identifier = getProperty("ldap.attribute");
 
 	public static final String LDAP_base = SITE_IS_MAXIV() ? getProperty("ldap.base") : "";
+	
+	public static final String LDAP_prefix = SITE_IS_MAXIV() ? getProperty("ldap.principalDNPrefix") : "";
+	
+	public static final String LDAP_username = SITE_IS_MAXIV() ? getProperty("ldap.username") : "";
+	
+	public static final String LDAP_credential = SITE_IS_MAXIV() ? getProperty("ldap.credential") : "";
 
 	/*
 	 * login prefix
