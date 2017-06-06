@@ -19,11 +19,6 @@
 
 package ispyb.server.common.vos.proposals;
 
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -34,6 +29,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 
 /**
@@ -84,6 +85,9 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "externalId")
 	protected Integer externalId;
 
+	@Transient
+	protected Set<Person3VO> participants;
+	
 	public Proposal3VO() {
 		super();
 	}
