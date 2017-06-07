@@ -46,10 +46,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		});
 		
 		
-		// Loading on demand in case of need 
-		$.getScript('http://pc593.embl.fr:8082/emergency/after.js', function(data, textStatus){
-				   console.log(textStatus, data);
-		});
 </script>
 
 
