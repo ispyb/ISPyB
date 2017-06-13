@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: pyproserv
--- Generation Time: Mar 30, 2017 at 12:00 PM
+-- Generation Time: Jun 09, 2017 at 03:32 PM
 -- Server version: 5.5.40
 -- PHP Version: 5.4.45-0+deb7u2
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `pydb` version 17.03.23
+-- Database: `pydb`  version tag 17.06.06
 --
 
 -- --------------------------------------------------------
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `SchemaStatus` (
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`schemaStatusId`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
 
 --
 -- Dumping data for table `SchemaStatus`
@@ -61,7 +61,17 @@ INSERT INTO `SchemaStatus` (`schemaStatusId`, `scriptName`, `schemaStatus`, `rec
 (23, '2017_02_10_New_PhasingStep_types.sql', 'DONE', '2017-02-14 15:22:33'),
 (24, '2017_02_16_Dewar_summary_proposalId_modification.sql', 'DONE', '2017-02-16 09:29:04'),
 (25, '2017_02_09_Update_datacollection_with_detector.sql', 'DONE', '2017-02-21 11:23:18'),
-(27, '2017_03_20_Update_v_datacollection_summary.sql', 'DONE', '2017-03-21 09:51:01');
+(27, '2017_03_20_Update_v_datacollection_summary.sql', 'DONE', '2017-03-21 09:51:01'),
+(28, '2017_04_05_PhasingAttachement_Enumeration.sql', 'DONE', '2017-04-05 11:02:54'),
+(29, '2017_04_18_CreateDataCollectionFileAttachment.sql', 'DONE', '2017-05-02 12:31:12'),
+(30, '2017_04_19_UpdateDetector.sql', 'DONE', '2017-05-02 12:33:19'),
+(31, '2017_05_02_Merge_with_DLS_update.sql', 'DONE', '2017-05-02 12:47:11'),
+(32, '2017_05_02_Merge_with_DLS_create.sql', 'DONE', '2017-05-02 12:47:39'),
+(33, '2017_05_04_BeamlineName.sql', 'DONE', '2017-06-09 13:30:33'),
+(34, '2017_05_09_Axis_for_subwedge.sql', 'DONE', '2017-06-09 13:30:56'),
+(35, '2017_05_11_ProposalId_for_sample.sql', 'DONE', '2017-06-09 13:31:14'),
+(36, '2017_05_19_ProposalHasPerson_AutoIncrement.sql', 'DONE', '2017-06-09 13:31:29'),
+(37, '2017_06_06_ProcessingStatus_to_enumeration.sql', 'DONE', '2017-06-09 13:31:41');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
