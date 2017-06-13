@@ -263,10 +263,8 @@ public class ViewDataCollectionAction extends DispatchAction {
 
 		try {
 			// data archived
-			String archived = Constants.PYARCH_ARCHIVED_NO;
 			String proposal = getProposal(request);
 			String beamlineName = getBeamlineName(request, form);
-			archived = checkArchiving(buildPathArchiving(beamlineName, proposal));
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.EDIT_MODE);
 
 		} catch (Exception e) {
@@ -1348,86 +1346,7 @@ public class ViewDataCollectionAction extends DispatchAction {
 		return wrapper;
 
 	}
-
-	/**
-	 * Restore archived data; create a file .RESTORE-PLEASE in the directory /data/pyarch/beamlineDir/proposal
-	 * 
-	 * @param mapping
-	 * @param actForm
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public ActionForward restoreArchivedData(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
-			HttpServletResponse response) {
-
-		ActionMessages errors = new ActionMessages();
-
-		try {
-			// Retrieve updated information from form
-			ViewDataCollectionForm form = (ViewDataCollectionForm) actForm;
-
-			// proposal
-			String proposal = getProposal(request);
-			// beamline
-			String beamlineName = getBeamlineName(request, form);
-
-			restoreData(buildPathArchiving(beamlineName, proposal));
-			form.setArchived(Constants.PYARCH_ARCHIVED_INPROGRESS);
-
-		} catch (IOException e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollection"));
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
-			e.printStackTrace();
-		} catch (Exception e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollection"));
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
-			e.printStackTrace();
-		}
-
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-			return (mapping.findForward("error"));
-		}
-		return display(mapping, actForm, request, response);
-	}
-
-	/**
-	 * Restore archived data; create a file .RESTORE-PLEASE in the directory /data/pyarch/beamlineDir/proposal
-	 * 
-	 * @param beamlineName
-	 * @param proposal
-	 * @throws IOException
-	 */
-	private void restoreData(String archivingPath) throws IOException {
-		if (checkArchiving(archivingPath).equals(Constants.PYARCH_ARCHIVED)) {
-			LOG.debug("Please restore data on " + archivingPath);
-			File restorePleaseFile = new File(archivingPath + "/" + Constants.DATA_PLEASE_RESTORE_FILENAME);
-			restorePleaseFile.createNewFile();
-		}
-	}
-
-	/**
-	 * Returns status of archiving (Constants.PYARCH_ARCHIVED) if .RESTORE-PLEASE exists, archiving in progress else if .AUTO-ARCHIVED
-	 * exists, data are archived else not
-	 * 
-	 * @param archivingPath
-	 * @return
-	 */
-	private String checkArchiving(String archivingPath) {
-		File archivingFile = new File(archivingPath + "/" + Constants.DATA_ARCHIVED_FILENAME);
-		File restoreFile = new File(archivingPath + "/" + Constants.DATA_PLEASE_RESTORE_FILENAME);
-		if (restoreFile.exists()) {
-			return Constants.PYARCH_ARCHIVED_INPROGRESS;
-		} else {
-			if (archivingFile.exists()) {
-				return Constants.PYARCH_ARCHIVED;
-			} else {
-				return Constants.PYARCH_ARCHIVED_NO;
-			}
-		}
-	}
-
+	
 	/**
 	 * build the path for archiving: /data/pyarch/beamlineDir/proposal
 	 * 
@@ -1486,38 +1405,6 @@ public class ViewDataCollectionAction extends DispatchAction {
 		if (slv != null)
 			beamlineName = slv.getBeamlineName();
 		return beamlineName;
-	}
-
-	/**
-	 * update the archiving status
-	 * 
-	 * @param mapping
-	 * @param actForm
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public ActionForward updateArchiving(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
-			HttpServletResponse response) {
-		ActionMessages errors = new ActionMessages();
-		try {
-			ViewDataCollectionForm form = (ViewDataCollectionForm) actForm;
-			String archived = Constants.PYARCH_ARCHIVED_NO;
-			String proposal = getProposal(request);
-			String beamlineName = getBeamlineName(request, form);
-			archived = checkArchiving(buildPathArchiving(beamlineName, proposal));
-			form.setArchived(archived);
-		} catch (Exception e) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollection"));
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
-			e.printStackTrace();
-		}
-
-		if (!errors.isEmpty()) {
-			saveErrors(request, errors);
-			return (mapping.findForward("error"));
-		}
-		return mapping.findForward("dataCollectionArchiving");
 	}
 
 	/**
