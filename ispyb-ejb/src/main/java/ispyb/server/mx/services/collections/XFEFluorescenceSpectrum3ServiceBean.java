@@ -20,7 +20,7 @@ package ispyb.server.mx.services.collections;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.XFEFluorescenceSpectrum3DAO;
+
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 
 import java.util.List;
@@ -29,8 +29,15 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
@@ -44,8 +51,21 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	private final static Logger LOG = Logger
 			.getLogger(XFEFluorescenceSpectrum3ServiceBean.class);
 
-	@EJB
-	private XFEFluorescenceSpectrum3DAO dao;
+
+	// Generic HQL request to find instances of XFEFluorescenceSpectrum3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from XFEFluorescenceSpectrum3VO vo "  + "where vo.xfeFluorescenceSpectrumId = :pk";
+	}
+
+	// Generic HQL request to find all instances of XFEFluorescenceSpectrum3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from XFEFluorescenceSpectrum3VO vo " ;
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext context;
@@ -59,17 +79,12 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @return the persisted entity.
 	 */
 	public XFEFluorescenceSpectrum3VO create(final XFEFluorescenceSpectrum3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (XFEFluorescenceSpectrum3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -78,16 +93,11 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @return the updated entity.
 	 */
 	public XFEFluorescenceSpectrum3VO update(final XFEFluorescenceSpectrum3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (XFEFluorescenceSpectrum3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -95,19 +105,11 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				XFEFluorescenceSpectrum3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+	
+		checkCreateChangeRemoveAccess();
+		XFEFluorescenceSpectrum3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -115,17 +117,10 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final XFEFluorescenceSpectrum3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -136,18 +131,17 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @return the XFEFluorescenceSpectrum3 value object
 	 */
 	public XFEFluorescenceSpectrum3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (XFEFluorescenceSpectrum3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				XFEFluorescenceSpectrum3VO found = dao.findByPk(pk);
-				return found;
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try{
+			return (XFEFluorescenceSpectrum3VO) entityManager.createQuery(FIND_BY_PK())
+				.setParameter("pk", pk).getSingleResult();
+		}catch(NoResultException e){
+			return null;
+		}
 	}
+
 
 	// TODO remove following method if not adequate
 	/**
@@ -158,15 +152,9 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	@SuppressWarnings("unchecked")
 	public List<XFEFluorescenceSpectrum3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<XFEFluorescenceSpectrum3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<XFEFluorescenceSpectrum3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		List<XFEFluorescenceSpectrum3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -174,34 +162,75 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				// TODO add an authorization service bean for ISPyB
-//				AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator
-//						.getInstance().getService(
-//								AuthorizationServiceLocalHome.class); // TODO change method to the one checking the needed access rights
+		
+		// TODO add an authorization service bean for ISPyB
+//		AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator
+//				.getInstance().getService(
+//					AuthorizationServiceLocalHome.class); // TODO change method to the one checking the needed access rights
 //				autService.checkUserRightToChangeAdminData();
-				return null;
-			}
 
-		});
 	}
-
 	
 	
 	@SuppressWarnings("unchecked")
 	public List<XFEFluorescenceSpectrum3VO> findFiltered(final Integer sessionId, final Integer sampleId, final Integer proposalId) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<XFEFluorescenceSpectrum3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<XFEFluorescenceSpectrum3VO> foundEntities = dao.findFiltered(sessionId, sampleId, proposalId);
-				return foundEntities;
-			}
+		Session session = (Session)entityManager.getDelegate();
 
-		});
+		Criteria crit = session.createCriteria(XFEFluorescenceSpectrum3VO.class);
+		
+		Criteria subCritSess = crit.createCriteria("sessionVO");
+
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+
+		if (sessionId != null) {
+			subCritSess.add(Restrictions.eq("sessionId", sessionId));
+		}
+		
+		if (proposalId != null) {
+			Criteria subCritProposal = subCritSess.createCriteria("proposalVO");
+			subCritProposal.add(Restrictions.eq("proposalId", proposalId));
+		}
+		
+		if (sampleId != null) {
+			Criteria subCritSample = crit.createCriteria("blSampleVO");
+			subCritSample.add(Restrictions.eq("blSampleId", sampleId));
+		}
+
+		crit.addOrder(Order.desc("xfeFluorescenceSpectrumId"));
+
+		List<XFEFluorescenceSpectrum3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
 
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(XFEFluorescenceSpectrum3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getXfeFluorescenceSpectrumId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getXfeFluorescenceSpectrumId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
 }

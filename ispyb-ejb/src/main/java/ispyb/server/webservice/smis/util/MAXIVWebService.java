@@ -1,9 +1,6 @@
 package ispyb.server.webservice.smis.util;
 
-import generated.ws.smis.SampleSheetInfoLightVO;
-import ispyb.common.util.Constants;
-import ispyb.server.smis.UpdateFromSMIS;
-
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -26,14 +23,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import generated.ws.smis.SMISWebService;
 
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
-
-import java.io.InputStreamReader;
+import generated.ws.smis.SMISWebService;
+import generated.ws.smis.SampleSheetInfoLightVO;
+import ispyb.common.util.Constants;
+import ispyb.server.smis.UpdateFromSMIS;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

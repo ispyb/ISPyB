@@ -51,10 +51,6 @@ public class ViewDataCollectionForm extends ActionForm implements Serializable {
 
 	private Boolean editSkipAndComments;
 
-
-	// indicates if the data are archived or not, or in progress: Constants PYARCH_ARCHIVED_*
-	private String archived = Constants.PYARCH_ARCHIVED_NO;
-
 	private String displayType; // DisplayForSession, DisplayForProtein,...
 
 	private DataCollection3VO selectedDataCollection = new DataCollection3VO();
@@ -658,14 +654,6 @@ public class ViewDataCollectionForm extends ActionForm implements Serializable {
 	}
 
 	
-	public String getArchived() {
-		return this.archived;
-	}
-
-	public void setArchived(String archived) {
-		this.archived = archived;
-	}
-
 	public void setIsDataCollectionGroupView(boolean isDataCollectionGroupView){
 		this.isDataCollectionGroupView = isDataCollectionGroupView;
 	}

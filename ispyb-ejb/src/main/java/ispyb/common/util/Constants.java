@@ -18,19 +18,9 @@
  ******************************************************************************************************************************/
 package ispyb.common.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
-
-import org.apache.commons.compress.utils.IOUtils;
 
 
 /**
@@ -163,11 +153,6 @@ public final class Constants {
 	public static final String MYSQL_ORACLE_YESTERDAY = (DATABASE_IS_MYSQL()) ? "ADDDATE( NOW(), -1)"
 			: (DATABASE_IS_ORACLE()) ? "(sysdate -1)" : "";
 
-	/** TODO: open properties on demand instead of always ? **/
-	public static final String SMIS_WS_PWD = getSmisWSAccount()[1];
-
-	public static final String SMIS_WS_USERNAME = getSmisWSAccount()[0];
-
 	public static final String SMIS_WS_URL = getProperty("userportal.webservices.url");
 	
 	public static final String USER_PORTAL_URL = getProperty("userportal.url");
@@ -228,7 +213,6 @@ public final class Constants {
 	public static final String LDAP_username = SITE_IS_MAXIV() ? getProperty("ldap.username") : "";
 	
 	public static final String LDAP_credential = SITE_IS_MAXIV() ? getProperty("ldap.credential") : "";
-
 
 	/*
 	 * login prefix
@@ -525,7 +509,6 @@ public final class Constants {
 
 	public static final String PATH_MAPPING_STYLE = getProperty("ISPyB.path.mappingstyle");
 
-	// TODO check if no problems when new data storage for ID29 : /data/pyarch29
 	// it should be used only in case of test for windows environment which corresponds to test on local machine
 	public static final String DATA_FILEPATH_START = getProperty("ISPyB.root.folder"); // Map file path starting by ...
 
@@ -651,7 +634,7 @@ public final class Constants {
 	public static final String NB_DATA_SESSION_OBJECTS = "nbOfItems";
 
 	/*
-	 * DewarFullDAO constantes moved to here
+	 * DewarFull constantes moved to here
 	 */
 	public static final String NOT_AT_STORES = "!STORES%";
 
@@ -1185,27 +1168,6 @@ public final class Constants {
 	public static final String AUTOPROC_RANKING_VALUE_LIST = "autoProcRankingValueList";
 
 	/**
-	 * If data are archived, a single file .AUTO-ARCHIVED is created in the directory
-	 */
-	public static final String DATA_ARCHIVED_FILENAME = ".AUTO-ARCHIVED";
-
-	/**
-	 * If ISPyB needs a restoration, it will create a file .RESTORE-PLEASE in the directory
-	 */
-	//TODO remove the following after January 2017 : no restore needed any more
-	public static final String DATA_PLEASE_RESTORE_FILENAME = ".RESTORE-PLEASE";
-
-	// no archived data
-	public static final String PYARCH_ARCHIVED_NO = "0";
-
-	// archived data
-	public static final String PYARCH_ARCHIVED = "1";
-
-	// restoration data in progress
-	public static final String PYARCH_ARCHIVED_INPROGRESS = "2";
-	
-	
-	/**
 	 * path to the folder where the update scripts are stored
 	 */
 	public final static String PATH_TO_SCRIPTS = getProperty("ispyb.db.updatescripts.folder");
@@ -1311,18 +1273,6 @@ public final class Constants {
 	/*
 	 * Functions
 	 */
-
-	/**
-	 * method to load the account info to connect to SMIS WS the account info is stored in the DoNoCommit.properties file which should
-	 * NEVER be committed
-	 */
-	@Deprecated
-	public final static String[] getSmisWSAccount() {
-		String[] tab = new String[2];
-		tab[0] = getUserSmisLoginName();
-		tab[1] = getUserSmisPassword();
-		return tab;
-	}
 	
 	public final static String getUserSmisLoginName() {
 		return PropertyLoader.loadProperties("ISPyB").getProperty("smis.ws.username");
@@ -1333,7 +1283,6 @@ public final class Constants {
 	}
 			
 	public static String getProperty(String propertyName) {
-		String prop = mProp.getProperty(propertyName);
 		return mProp.getProperty(propertyName);
 	}
 

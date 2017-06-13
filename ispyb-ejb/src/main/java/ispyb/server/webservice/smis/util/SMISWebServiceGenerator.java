@@ -28,11 +28,7 @@ public class SMISWebServiceGenerator {
 	}
 
 	public static SMISWebService getWs() {
-		if (Constants.SITE_IS_MAXIV()) {
-			return new MAXIVWebService();
-		} else {
-			return getSMISWebService();
-		}
+		return getSMISWebService();
 	}
 
 }

@@ -19,13 +19,20 @@
 
 package ispyb.server.common.services.proposals;
 
-import java.nio.file.AccessDeniedException;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -43,16 +50,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-
 /**
  * <p>
  * This session bean handles Proposal table.
@@ -68,7 +65,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				+ (fetchShippings ? " left join fetch vo.shippingVOs " : "")
 				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.proposalId = :pk";
 	}
-	
 
 	// Generic HQL request to find all instances of Proposal
 	// TODO choose between left/inner join
@@ -97,7 +93,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 
 	private final static String UPDATE_PROPOSALID_PROTEINS = " update Protein  set proposalId = :newProposalId "
 			+ " WHERE proposalId = :oldProposalId"; // 2 old value to be replaced
-	
+
 	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -199,7 +195,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 			return null;
 		return (Proposal3VO) listVOs.toArray()[0];
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@WebMethod
 	public List<Proposal3VO> findByCodeAndNumber(final String code, final String number, final boolean fetchSessions,
@@ -234,18 +230,17 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		if (persons != null) {
 			if (persons.size() > 0) {
 				for (Person3VO person3vo : persons) {
-					if (person3vo.getProposalDirectVOs() != null && person3vo.getProposalDirectVOs().size() > 0) {
-						proposals.addAll(person3vo.getProposalDirectVOs());
-					}
-					if (person3vo.getProposalVOs() != null && person3vo.getProposalVOs().size() > 0) {
-						proposals.addAll(person3vo.getProposalVOs());
+					if (person3vo.getProposalVOs() != null) {
+						if (person3vo.getProposalVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalVOs());
+						}
+						if (person3vo.getProposalDirectVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalDirectVOs());
+						}
 					}
 				}
 			}
-		} else {
-			proposals = findProposalByCodeAndNumber(loginName);
 		}
-		
 		return proposals;
 	}
 
@@ -367,7 +362,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	}
 	
 	@Override
-	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) throws Exception  {
+	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) {
 
 		String userName = loginName;
 		if (site != null){
@@ -410,7 +405,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	}
 
 	@Override
-	public List<String> findProposalNamesByLoginName(String loginName, String site) throws Exception {
+	public List<String> findProposalNamesByLoginName(String loginName, String site) {
 		List<Proposal3VO> proposals = this.findProposalByLoginName(loginName, site);
 		return this.getProposalAccounts(proposals);
 	}
@@ -424,20 +419,23 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Proposal3VO> findProposalByPerson(String loginName) throws Exception {
+	private List<Proposal3VO> findProposalByPerson(String loginName) {
 		String queryPerson = "SELECT person FROM Person3VO person WHERE login=:loginName";
 		Query EJBQueryPerson = this.entityManager.createQuery(queryPerson);
 		EJBQueryPerson.setParameter("loginName", loginName);
+		@SuppressWarnings("unchecked")
 		List<Person3VO> persons = EJBQueryPerson.getResultList();
 		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 		if (persons != null) {
 			if (persons.size() > 0) {
 				for (Person3VO person3vo : persons) {
-					if (person3vo.getProposalDirectVOs() != null && person3vo.getProposalDirectVOs().size() > 0) {
-						proposals.addAll(person3vo.getProposalDirectVOs());
-					}
-					if (person3vo.getProposalVOs() != null && person3vo.getProposalVOs().size() > 0) {
-						proposals.addAll(person3vo.getProposalVOs());
+					if (person3vo.getProposalVOs() != null) {
+						if (person3vo.getProposalVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalVOs());
+						}
+						if (person3vo.getProposalDirectVOs().size() > 0) {
+							proposals.addAll(person3vo.getProposalDirectVOs());
+						}
 					}
 				}
 			}
@@ -452,7 +450,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	 * It looks for proposal based on the login name It looks for proposal in: - Proposal table concatenating proposalCode and
 	 * proposalNumber - Person table y the column login Then both systems, by proposal and by user are allowed
 	 */
-	public List<Proposal3VO> findProposalByLoginName(String loginName) throws Exception {
+	public List<Proposal3VO> findProposalByLoginName(String loginName) {
 		return this.findProposalByLoginName(loginName, null);
 	}
 
@@ -477,7 +475,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> findProposals(String loginName) throws Exception {
+	public List<Map<String, Object>> findProposals(String loginName) {
 		List<Proposal3VO> proposals = this.findProposalByLoginName(loginName);
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 		for (Proposal3VO proposal : proposals) {
