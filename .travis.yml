@@ -2,6 +2,10 @@ language: java
 
 sudo: false
 
+addons:
+  mariadb: '10.0'
+
+
 script: mvn clean verify
 
 before_install:
