@@ -42,3 +42,18 @@ If the build has succeed a summary repost should appear:
 
 ```
 
+## Versioning
+
+Use versions:set from the versions-maven plugin:
+```
+mvn versions:set -DnewVersion=5.0.0
+```
+
+If you are happy with the change then:
+```
+mvn versions:commit
+```
+Otherwise
+```
+mvn versions:revert
+```
