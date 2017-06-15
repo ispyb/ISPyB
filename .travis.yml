@@ -11,9 +11,9 @@ addons:
 script: mvn clean verify
 
 before_install:
-- mysql -e 'CREATE DATABASE pydb;'
-- mysql -e 'CREATE DATABASE pyconfig;'
-- mysql -e 'CREATE USER 'pxuser'@'%' IDENTIFIED BY 'pxuser';
+- mysql -e "CREATE DATABASE pydb;"
+- mysql -e "CREATE DATABASE pyconfig;"
+- mysql -e "CREATE USER 'pxuser'@'%' IDENTIFIED BY 'pxuser';"
 - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'pxuser'@'%';"
 - cd dependencies
 - mvn install:install-file -Dfile=securityfilter.jar -DgroupId=securityfilter -DartifactId=securityfilter -Dversion=1.0 -Dpackaging=jar
