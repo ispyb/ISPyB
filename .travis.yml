@@ -15,8 +15,8 @@ before_install:
 - mysql -u root -e "CREATE DATABASE pyconfig;"
 - mysql -u root -e "CREATE USER 'pxuser'@'%' IDENTIFIED BY 'pxuser';"
 - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'pxuser'@'%';"
-- mysql -u pxuser -p pxuser -h localhost pyconfig < ispyb-ejb/db/pyconfig.sql 
-- mysql -u pxuser -p pxuser -h localhost pydb < ispyb-ejb/db/pydb.sql 
+- mysql -upxuser -ppxuser pyconfig < ispyb-ejb/db/pyconfig.sql 
+- mysql -upxuser -ppxuser pydb < ispyb-ejb/db/pydb.sql 
 - cd dependencies
 - mvn install:install-file -Dfile=securityfilter.jar -DgroupId=securityfilter -DartifactId=securityfilter -Dversion=1.0 -Dpackaging=jar
 - mvn install:install-file -Dfile=securityaes.jar -DgroupId=securityaes -DartifactId=securityaes -Dversion=1.0 -Dpackaging=jar
