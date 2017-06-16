@@ -3,7 +3,7 @@ sudo: required
 services: mariadb
 addons:
   mariadb: '10.0'
-script: mvn clean verify
+script: mvn clean package -Popenshift
 before_install:
 - mysql -u root -e "CREATE DATABASE pydb;"
 - mysql -u root -e "CREATE DATABASE pyconfig;"
