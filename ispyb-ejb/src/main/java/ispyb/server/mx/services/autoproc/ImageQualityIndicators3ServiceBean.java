@@ -18,21 +18,24 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.autoproc;
 
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.autoproc.ImageQualityIndicators3DAO;
-import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
-import ispyb.server.mx.vos.autoproc.ImageQualityIndicatorsWS3VO;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+
+import ispyb.server.mx.vos.autoproc.ImageQualityIndicators3VO;
+import ispyb.server.mx.vos.autoproc.ImageQualityIndicatorsWS3VO;
 
 /**
  * <p>
@@ -45,10 +48,27 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 	private final static Logger LOG = Logger
 			.getLogger(ImageQualityIndicators3ServiceBean.class);
+	
+	// Generic HQL request to find instances of ImageQualityIndicators3 by pk
+	// TODO choose between left/inner join
+	private static final String FIND_BY_PK() {
+		return "from ImageQualityIndicators3VO vo " + "where vo.imageQualityIndicatorsId = :pk";
+	}
 
-	@EJB
-	private ImageQualityIndicators3DAO dao;
+	// Generic HQL request to find all instances of ImageQualityIndicators3
+	// TODO choose between left/inner join
+	private static final String FIND_ALL() {
+		return "from ImageQualityIndicators3VO vo " ;
+	}
 
+	private static String FIND_BY_DATACOLLECTION_ID = "select * " + " FROM ImageQualityIndicators q, Image i "
+			+ "WHERE q.imageId = i.imageId  AND  i.dataCollectionId = :dataCollectionId ";
+
+	private static String FIND_BY_IMAGE_ID = "select * FROM ImageQualityIndicators q " + "WHERE q.imageId = :imageId ";
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
+	
 	@Resource
 	private SessionContext context;
 
@@ -61,17 +81,12 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @return the persisted entity.
 	 */
 	public ImageQualityIndicators3VO create(final ImageQualityIndicators3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (ImageQualityIndicators3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
 
 	/**
@@ -80,16 +95,11 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @return the updated entity.
 	 */
 	public ImageQualityIndicators3VO update(final ImageQualityIndicators3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (ImageQualityIndicators3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -97,19 +107,11 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				ImageQualityIndicators3VO vo = findByPk(pk);
-				// TODO Edit this business code				
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+		checkCreateChangeRemoveAccess();
+		ImageQualityIndicators3VO vo = findByPk(pk);
+		// TODO Edit this business code				
+		delete(vo);
 	}
 
 	/**
@@ -117,17 +119,10 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final ImageQualityIndicators3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -138,17 +133,14 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @return the ImageQualityIndicators3 value object
 	 */
 	public ImageQualityIndicators3VO findByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (ImageQualityIndicators3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				ImageQualityIndicators3VO found = dao.findByPk(pk);
-				return found;
+		
+		checkCreateChangeRemoveAccess();
+		try{
+			return (ImageQualityIndicators3VO) entityManager.createQuery(FIND_BY_PK())
+					.setParameter("pk", pk).getSingleResult();
+			}catch(NoResultException e){
+				return null;
 			}
-
-		});
 	}
 
 	// TODO remove following method if not adequate
@@ -160,15 +152,9 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	@SuppressWarnings("unchecked")
 	public List<ImageQualityIndicators3VO> findAll()
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<ImageQualityIndicators3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<ImageQualityIndicators3VO> foundEntities = dao.findAll();
-				return foundEntities;
-			}
-
-		});
+		List<ImageQualityIndicators3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -176,19 +162,10 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
+		//autService.checkUserRightToChangeAdminData();
 	}
-
-	
 	
 	/**
 	 * 
@@ -196,12 +173,23 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @return
 	 * @throws Exception
 	 */
+	
+	public List<ImageQualityIndicators3VO> findByDataCollectionIdDAO(Integer dataCollectionId) {
+		String query = FIND_BY_DATACOLLECTION_ID;
+		List<ImageQualityIndicators3VO> listVOs = this.entityManager
+				.createNativeQuery(query, "imageQualityIndicatorsNativeQuery")
+				.setParameter("dataCollectionId", dataCollectionId).getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		return listVOs;
+	}
+	
 	public ImageQualityIndicatorsWS3VO[] findForWSByDataCollectionId(final Integer dataCollectionId) throws Exception{
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
 			public ImageQualityIndicatorsWS3VO[] doInEJBAccess(Object parent) throws Exception {
-				List<ImageQualityIndicators3VO> foundEntities = dao.findByDataCollectionId(dataCollectionId);
+				List<ImageQualityIndicators3VO> foundEntities = findByDataCollectionIdDAO(dataCollectionId);
 				ImageQualityIndicatorsWS3VO[] vos;
 				vos = getWSImageQualityIndicatorsVOs(foundEntities);
 				return vos;
@@ -259,15 +247,16 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ImageQualityIndicators3VO> findByImageId(final Integer imageId) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<ImageQualityIndicators3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<ImageQualityIndicators3VO> foundEntities = dao.findByImageId(imageId);
-				return foundEntities;
-			}
-
-		});
+		
+		String query = FIND_BY_IMAGE_ID;
+		List<ImageQualityIndicators3VO> listVOs = this.entityManager
+				.createNativeQuery(query, "imageQualityIndicatorsNativeQuery").setParameter("imageId", imageId)
+				.getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			listVOs = null;
+		
+		List<ImageQualityIndicators3VO> foundEntities = listVOs;
+		return foundEntities;
 	}
 	
 	/**
@@ -278,15 +267,38 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ImageQualityIndicators3VO> findByDataCollectionId(final Integer dataCollectionId) throws Exception{
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<ImageQualityIndicators3VO>) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<ImageQualityIndicators3VO> foundEntities = dao.findByDataCollectionId(dataCollectionId);
-				return foundEntities;
-			}
-
-		});
+		
+		List<ImageQualityIndicators3VO> foundEntities = findByDataCollectionIdDAO(dataCollectionId);
+		return foundEntities;
 	}
 
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(ImageQualityIndicators3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getImageQualityIndicatorsId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getImageQualityIndicatorsId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
 }

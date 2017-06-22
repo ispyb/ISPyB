@@ -18,20 +18,26 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.collections;
 
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.mx.daos.collections.DataCollectionGroup3DAO;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroupWS3VO;
-
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroupWS3VO;
 
 /**
  * <p>
@@ -42,9 +48,21 @@ import org.apache.log4j.Logger;
 public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Service, DataCollectionGroup3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(DataCollectionGroup3ServiceBean.class);
+	
+	// Generic HQL request to find instances of DataCollectionGroup3 by pk
+	private static final String FIND_BY_PK(boolean fetchDataCollection, boolean fetchScreening) {
+		return "from DataCollectionGroup3VO vo " + (fetchDataCollection ? "left join fetch vo.dataCollectionVOs " : "")
+				+ (fetchScreening ? "left join fetch vo.screeningVOs " : "")
+				+ "where vo.dataCollectionGroupId = :pk";
+	}
 
-	@EJB
-	private DataCollectionGroup3DAO dao;
+	// Generic HQL request to find all instances of DataCollectionGroup3
+	private static final String FIND_ALL(boolean fetchDataCollection) {
+		return "from DataCollectionGroup3VO vo " + (fetchDataCollection ? "left join fetch vo.dataCollectionVOs " : "");
+	}
+
+	@PersistenceContext(unitName = "ispyb_db")
+	private EntityManager entityManager;
 
 	@Resource
 	private SessionContext context;
@@ -60,18 +78,13 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @return the persisted entity.
 	 */
 	public DataCollectionGroup3VO create(final DataCollectionGroup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (DataCollectionGroup3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.create(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, true);
+		this.entityManager.persist(vo);
+		return vo;
 	}
+
 
 	/**
 	 * Update the DataCollectionGroup3 data.
@@ -81,16 +94,10 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @return the updated entity.
 	 */
 	public DataCollectionGroup3VO update(final DataCollectionGroup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (DataCollectionGroup3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				return dao.update(vo);
-			}
-
-		});
+		
+		checkCreateChangeRemoveAccess();
+		this.checkAndCompleteData(vo, false);
+		return entityManager.merge(vo);
 	}
 
 	/**
@@ -100,19 +107,11 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 *            the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				DataCollectionGroup3VO vo = findByPk(pk, false, false);
-				// TODO Edit this business code
-				delete(vo);
-				return vo;
-			}
-
-		});
-
+	
+		checkCreateChangeRemoveAccess();
+		DataCollectionGroup3VO vo = findByPk(pk, false, false);
+		// TODO Edit this business code
+		delete(vo);
 	}
 
 	/**
@@ -122,17 +121,9 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 *            the entity to remove.
 	 */
 	public void delete(final DataCollectionGroup3VO vo) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				dao.delete(vo);
-				return vo;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		entityManager.remove(vo);
 	}
 
 	/**
@@ -145,17 +136,15 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @return the DataCollectionGroup3 value object
 	 */
 	public DataCollectionGroup3VO findByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (DataCollectionGroup3VO) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection, withScreening);
-				return found;
-			}
-
-		});
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			return (DataCollectionGroup3VO) entityManager.createQuery(FIND_BY_PK(withDataCollection, withScreening))
+					.setParameter("pk", pk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -168,18 +157,17 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @throws Exception
 	 */
 	public DataCollectionGroupWS3VO findForWSByPk(final Integer pk, final boolean withDataCollection, final boolean withScreening) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (DataCollectionGroupWS3VO) template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-				checkCreateChangeRemoveAccess();
-				// TODO Edit this business code
-				DataCollectionGroup3VO found = dao.findByPk(pk, withDataCollection, withScreening);
-				DataCollectionGroupWS3VO sesLight = getWSDataCollectionGroupVO(found);
-				return sesLight;
-			}
-
-		});
+	
+		checkCreateChangeRemoveAccess();
+		// TODO Edit this business code
+		try {
+			DataCollectionGroup3VO found = (DataCollectionGroup3VO) entityManager.createQuery(FIND_BY_PK(withDataCollection, withScreening))
+					.setParameter("pk", pk).getSingleResult();
+			DataCollectionGroupWS3VO sesLight = getWSDataCollectionGroupVO(found);
+			return sesLight;
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -191,8 +179,6 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 */
 	private DataCollectionGroup3VO getLightDataCollectionGroup3VO(DataCollectionGroup3VO vo)
 			throws CloneNotSupportedException {
-		if (vo == null) 
-			return null;
 		DataCollectionGroup3VO otherVO = (DataCollectionGroup3VO) vo.clone();
 		otherVO.setDataCollectionVOs(null);
 		otherVO.setScreeningVOs(null);
@@ -223,15 +209,9 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollectionGroup3VO> findAll(final boolean withDataCollection) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao.findAll(withDataCollection);
-				return foundEntities;
-			}
-
-		});
+		List<DataCollectionGroup3VO> foundEntities = entityManager.createQuery(FIND_ALL(withDataCollection)).getResultList();
+		return foundEntities;
 	}
 
 	/**
@@ -241,20 +221,14 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
 				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator
 				// .getInstance().getService(
 				// AuthorizationServiceLocalHome.class); // TODO change method to the one checking the needed access
 				// rights
 				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
 	}
+
 
 	/**
 	 * 
@@ -270,16 +244,30 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	@SuppressWarnings("unchecked")
 	public List<DataCollectionGroup3VO> findFiltered(final Integer sessionId, final boolean withDataCollection, final boolean withScreenings)
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao
-						.findFiltered(sessionId, withDataCollection, withScreenings, null, null);
-				return foundEntities;
-			}
+		List<DataCollectionGroup3VO> resultList;
 
-		});
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria crit = session.createCriteria(DataCollectionGroup3VO.class);
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+		if (sessionId != null) {
+			Criteria subCritSession = crit.createCriteria("sessionVO");
+			subCritSession.add(Restrictions.eq("sessionId", sessionId));
+		}
+		if (withDataCollection) {
+			crit.setFetchMode("dataCollectionVOs", FetchMode.JOIN);
+		}
+		if (withScreenings) {
+			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
+		}
+
+		crit.addOrder(Order.desc("startTime"));
+
+		resultList = crit.list();
+		// TODO understand why crit.setMaxResults does not work ???
+
+		List<DataCollectionGroup3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
 
 	/**
@@ -291,16 +279,24 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollectionGroup3VO> findByWorkflow(final Integer workflowId) throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null,  true, true, workflowId, null);
-				return foundEntities;
-			}
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria crit = session.createCriteria(DataCollectionGroup3VO.class);
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
-		});
+		if (workflowId != null) {
+			Criteria subCritWorkflow = crit.createCriteria("workflowVO");
+			subCritWorkflow.add(Restrictions.eq("workflowId", workflowId));
+		}
+
+		crit.addOrder(Order.desc("startTime"));
+
+		// TODO understand why crit.setMaxResults does not work ???
+
+		List<DataCollectionGroup3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
+
 
 	/**
 	 * find groups for a given blSampleId
@@ -312,15 +308,59 @@ public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Serv
 	@SuppressWarnings("unchecked")
 	public List<DataCollectionGroup3VO> findBySampleId(final Integer sampleId, final boolean withDataCollection, final boolean withScreenings)
 			throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		return (List<DataCollectionGroup3VO>) template.execute(new EJBAccessCallback() {
 
-			public Object doInEJBAccess(Object parent) throws Exception {
-				List<DataCollectionGroup3VO> foundEntities = dao.findFiltered(null, withDataCollection, withScreenings, null, sampleId);
-				return foundEntities;
-			}
+		Session session = (Session) this.entityManager.getDelegate();
+		Criteria crit = session.createCriteria(DataCollectionGroup3VO.class);
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+	
+		if (withDataCollection) {
+			crit.setFetchMode("dataCollectionVOs", FetchMode.JOIN);
+		}
+		if (withScreenings) {
+			crit.setFetchMode("screeningVOs", FetchMode.JOIN);
+		}
 
-		});
+		if (sampleId != null) {
+			Criteria subCritSample = crit.createCriteria("blSampleVO");
+			subCritSample.add(Restrictions.eq("blSampleId", sampleId));
+		}
+		crit.addOrder(Order.desc("startTime"));
+
+		// TODO understand why crit.setMaxResults does not work ???
+
+		List<DataCollectionGroup3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
 
+
+	/* Private methods ------------------------------------------------------ */
+
+	/**
+	 * Checks the data for integrity. E.g. if references and categories exist.
+	 * 
+	 * @param vo
+	 *            the data to check
+	 * @param create
+	 *            should be true if the value object is just being created in the DB, this avoids some checks like
+	 *            testing the primary key
+	 * @exception VOValidateException
+	 *                if data is not correct
+	 */
+	private void checkAndCompleteData(DataCollectionGroup3VO vo, boolean create) throws Exception {
+
+		if (create) {
+			if (vo.getDataCollectionGroupId() != null) {
+				throw new IllegalArgumentException(
+						"Primary key is already set! This must be done automatically. Please, set it to null!");
+			}
+		} else {
+			if (vo.getDataCollectionGroupId() == null) {
+				throw new IllegalArgumentException("Primary key is not set for update!");
+			}
+		}
+		// check value object
+		vo.checkValues(create);
+		// TODO check primary keys for existence in DB
+	}
+	
 }

@@ -24,13 +24,11 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -39,13 +37,13 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
+
 /**
  * BeamLineSetup value object mapping table BeamLineSetup
  * 
  */
 @Entity
 @Table(name = "Proposal")
-@SqlResultSetMapping(name = "proposalNativeQuery", entities = { @EntityResult(entityClass = Proposal3VO.class) })
 public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
@@ -110,7 +108,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.proteinVOs = proteinVOs;
 		this.shippingVOs = shippingVOs;
 		this.externalId = externalId;
-		this.participants=null;
+		this.participants = null;
 	}
 	
 	public Proposal3VO(Proposal3VO vo) {
@@ -256,7 +254,7 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 		this.participants.clear();
 
 	}
-
+	
 	/**
 	 * Checks the values of this value object for correctness and completeness. Should be done before persisting the
 	 * data in the DB.

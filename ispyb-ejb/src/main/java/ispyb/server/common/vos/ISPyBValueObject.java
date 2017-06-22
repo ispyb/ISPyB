@@ -35,7 +35,7 @@ abstract public class ISPyBValueObject implements Serializable {
 	 * @param create
 	 *            should be true if the value object is just being created in the DB, this avoids some checks like
 	 *            testing the primary key
-	 * @throws Exception
+	 * @throws VOValidateException
 	 *             if the data of the value object is not correct
 	 */
 	abstract public void checkValues(boolean create) throws Exception;
