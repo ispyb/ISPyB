@@ -26,17 +26,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 <jsp:include page="/tiles/common/util/breadCrumbsBar.jsp" flush="true" />
 
-
-<%-- ###################################################### --%>
-<%--                 Archiving                                                                              --%>
-<%-- ###################################################### --%>
-<script type="text/javascript">
-	addEvent(window , "load", onLoadPage);
-</script>
-<div id="pyarchArchivedDiv">
-	<jsp:include page="viewDataCollectionArchiving.jsp" flush="false" />	
-</div>
-
 <%-- ###################################################### --%>
 <%--                 Session and information                                                      --%>
 <%-- ###################################################### --%>
