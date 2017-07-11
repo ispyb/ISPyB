@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.0.1</version>
+		<version>5.0.2</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
