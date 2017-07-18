@@ -19,6 +19,7 @@
 package ispyb.server.security;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -86,13 +87,12 @@ public class EmployeeVO implements Serializable {
 	private boolean obsolete = false;
 
 	public EmployeeVO(Map<String, String> attributesMap) {
-
+				
 		this.roomNumber = attributesMap.get("roomNumber");
 		this.postOfficeBox = attributesMap.get("postOfficeBox");
 		this.givenName = attributesMap.get("givenName");
 		this.departmentNumber = attributesMap.get("departmentNumber");
-		this.esrfEndDate = attributesMap.get("esrfEndDate");
-		this.persCategory = attributesMap.get("persCategory");
+		this.esrfEndDate = attributesMap.get("esrfEndDate");		
 		this.uid = attributesMap.get("uid");
 		this.uidNumber = attributesMap.get("uidNumber");
 		this.mail = attributesMap.get("mail");
@@ -103,16 +103,21 @@ public class EmployeeVO implements Serializable {
 		this.esrfAlternateMail = attributesMap.get("esrfAlternateMail");
 		this.sambaPwdLastSet = attributesMap.get("sambaPwdLastSet");
 		this.sambaAcctFlags = attributesMap.get("sambaAcctFlags");
-		this.employeeNumber = attributesMap.get("employeeNumber");
 		this.esrfStartDate = attributesMap.get("esrfStartDate");
 		this.sambaPwdCanChange = attributesMap.get("sambaPwdCanChange");
 		this.sambaSID = attributesMap.get("sambaSID");
 		this.description = attributesMap.get("description");
-		this.secretaryTelephoneNumber = attributesMap.get("secretaryTelephoneNumber");
 		this.esrfPhotoURL = attributesMap.get("esrfPhotoURL");
 		this.sn = attributesMap.get("sn");
 		this.esrfMisClient = attributesMap.get("esrfMisClient");
-		this.siteNumber = attributesMap.get("siteNumber");
+		
+		// search for esrf prefix 
+		//TODO small trick to be removed end of 2017 and use final ldap attribute at ESRF
+		this.persCategory = getEsrfAttribute("persCategory", (HashMap<String, String>)attributesMap);
+		this.siteNumber = getEsrfAttribute("siteNumber", (HashMap<String, String>)attributesMap);
+		this.secretaryTelephoneNumber = getEsrfAttribute("secretaryTelephoneNumber", (HashMap<String, String>)attributesMap);
+		this.employeeNumber = getEsrfAttribute("employeeNumber", (HashMap<String, String>)attributesMap);
+
 	}
 
 	public String getCn() {
@@ -227,4 +232,13 @@ public class EmployeeVO implements Serializable {
 		return siteNumber;
 	}
 
+	private String getEsrfAttribute(String key, HashMap<String, String> attributesMap){
+		
+		if ((attributesMap).containsKey(key)) {
+			return attributesMap.get(key);
+		} else {
+			return attributesMap.get("esrf"+ key.substring(0, 1).toUpperCase() + key.substring(1));
+		}
+
+	}
 }
