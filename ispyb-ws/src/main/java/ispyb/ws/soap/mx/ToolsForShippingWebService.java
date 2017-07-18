@@ -34,6 +34,7 @@ import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 import ispyb.ws.soap.common.WSUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -425,6 +426,7 @@ public class ToolsForShippingWebService {
 			List<Proposal3VO> proposals = service.findByLoginName(loginName);
 			
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 			
 			for (Proposal3VO proposal3vo : proposals) {
 				HashMap<String, String> entry = new HashMap<String, String>();
@@ -433,6 +435,7 @@ public class ToolsForShippingWebService {
 				entry.put("number", proposal3vo.getNumber());
 				entry.put("type", proposal3vo.getType());
 				entry.put("proposalId", proposal3vo.getProposalId().toString());
+				entry.put("timeStamp", dateFormat.format(proposal3vo.getTimeStamp()).toString());
 				result.add(entry);
 			}
 			return new Gson().toJson(result);

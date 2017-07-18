@@ -42,3 +42,54 @@ If the build has succeed a summary repost should appear:
 
 ```
 
+## Versioning
+
+Use versions:set from the versions-maven plugin:
+```
+mvn versions:set -DnewVersion=5.0.0
+```
+
+If you are happy with the change then:
+```
+mvn versions:commit
+```
+Otherwise
+```
+mvn versions:revert
+```
+
+
+## Database creation and update
+Run the creation scripts present in the module ispyb-ejb, to run the scripts you will need a user “pxadmin” with full permissions.
+
+ispyb-ejb/db/scripts/pyconfig.sql
+This corresponds to the menu options, and contains both structure and data
+
+ispyb-ejb/db/scripts /pydb.sql
+This corresponds to the ISPyB metadata and contains only the database structure.
+
+ispyb-ejb/db/scripts/schemaStatus.sql
+This corresponds to the entries present in SchemaStatus table and gives an overview of the executed update scripts.
+
+The creation scripts are normally updated for each tag, but if you are using the trunk version you may have to run the update scripts present in :
+ispyb-ejb/db/scripts/ahead
+
+Check before the entries in SchemaStatus table to know which scripts to execute.
+The scripts already run for the current tag are in :
+ispyb-ejb/db/scripts/passed
+
+### Creating an update script
+The 1st line must be:
+```
+insert into SchemaStatus (scriptName, schemaStatus) values ('2017_06_06_blabla.sql','ONGOING');
+```
+then the update script
+
+....
+
+and the last line must be:
+```
+update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_06_06_blabla.sql';
+```
+This allows to keep the SchemaStus table uptodate and to know which scripts have been run.
+You can look for examples in ispyb-ejb/db/scripts/passed/2017

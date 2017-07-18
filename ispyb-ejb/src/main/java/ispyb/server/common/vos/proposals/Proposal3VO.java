@@ -19,6 +19,7 @@
 
 package ispyb.server.common.vos.proposals;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -85,6 +86,9 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Column(name = "externalId")
 	protected Integer externalId;
+
+	@Column(name = "bltimeStamp")
+	protected Date timeStamp;
 
 	@Transient
 	protected Set<Person3VO> participants;
@@ -281,5 +285,9 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	
 	public String getProposalAccount(){
 		return (this.code+this.number).toLowerCase();
+	}
+
+	public Date getTimeStamp() {
+		return this.timeStamp;	
 	}
 }

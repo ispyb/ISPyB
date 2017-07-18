@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,10 @@ import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
+import ispyb.server.mx.services.collections.IspybCrystalClass3Service;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 
 /**
@@ -409,6 +414,9 @@ public class ExiPdfRtfExporter {
 		} else {
 			document.add(new Paragraph(" "));
 			
+			// need the list of DCgroups for crystal class summary
+			Map<String, String> mapDataCollectionGroupIdCClass = new HashMap<String, String>();
+
 			// DataCollection Rows
 			Iterator<Map<String, Object>> it = dataCollections.iterator();
 			int i = 0;
@@ -416,10 +424,20 @@ public class ExiPdfRtfExporter {
 				Map<String, Object> dataCollectionMapData = it.next();
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
 				setDataCollectionMapData(document, dataCollectionMapData);
+				
+				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass") != null) {
+					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId");
+					if (!mapDataCollectionGroupIdCClass.containsKey(dcgId)){
+							mapDataCollectionGroupIdCClass.put(dcgId, getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass"));
+					}
+				}					
 				i++;
 			}
+			setCrystalClassSummary(document, mapDataCollectionGroupIdCClass);
 			document.add(new Paragraph(" "));
 		}
+		document.add(new Paragraph(" "));			
+			
 	}
 
 	/**
@@ -640,5 +658,108 @@ public class ExiPdfRtfExporter {
 		emptyCell.setColspan(colspan);
 		return emptyCell;
 	}
+	
+	/**
+	 * set the summary - IFX proposal
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setCrystalClassSummary(Document document, Map<String, String> mapDataCollectionGroupIdCClass) throws Exception {
+		
+		if (proposalDesc.toLowerCase().startsWith(Constants.PROPOSAL_CODE_FX) ) {
+			
+			IspybCrystalClass3Service ispybCrystalClassService = (IspybCrystalClass3Service) ejb3ServiceLocator
+					.getLocalService(IspybCrystalClass3Service.class);
+			List<IspybCrystalClass3VO> listOfCrystalClass = ispybCrystalClassService.findAll();
+			List<Integer> listOfNbCrystalPerClass = getListOfNbCrystalPerClass(listOfCrystalClass, mapDataCollectionGroupIdCClass);
+
+			document.add(new Paragraph(" "));
+			document.add(new Paragraph("Summary:", FONT_TITLE));
+			document.add(new Paragraph(" "));
+
+			int NumColumnsCC = 2;
+			Table tableCC = new Table(NumColumnsCC);
+			int headerwidthsCC[] = { 30, 15 }; // percentage
+			tableCC.setWidths(headerwidthsCC);
+
+			tableCC.setWidth(50); // percentage
+			tableCC.setPadding(3);
+			tableCC.setCellsFitPage(true);
+			tableCC.getDefaultCell().setBorderWidth(1);
+			tableCC.getDefaultCell().setGrayFill(GREY_FILL_HEADER);
+			tableCC.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+			tableCC.addCell(new Paragraph("Crystal class", FONT_DOC_BOLD));
+			tableCC.addCell(new Paragraph("Number of crystals", FONT_DOC_BOLD));
+			tableCC.getDefaultCell().setGrayFill(GREY_FILL_DATA);
+
+			int nbCC = listOfCrystalClass.size();
+			for (int cc = 0; cc < nbCC; cc++) {
+				if (listOfNbCrystalPerClass.get(cc) > 0) {
+					tableCC.addCell(new Paragraph(listOfCrystalClass.get(cc).getCrystalClassName() + " ("
+							+ listOfCrystalClass.get(cc).getCrystalClassCode() + ")", FONT_DOC));
+					tableCC.addCell(new Paragraph(listOfNbCrystalPerClass.get(cc).toString(), FONT_DOC));
+				}
+				LOG.debug("classe " + listOfCrystalClass.get(cc).getCrystalClassCode() + ": "
+						+ listOfNbCrystalPerClass.get(cc).toString());
+			}
+
+			document.add(tableCC);
+
+			// total
+			// int nbPuckScreen = nbCrystal3;
+			// int nbTotal = nbCrystal1 + nbCrystal2 + nbCrystalT;
+			int nbPuckScreen = listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "PS"));
+			// nbTotal = C+CR+T+SC+SCR
+			int nbTotal = listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "C"))
+					+ listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "SC"))
+					+ listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "T"))
+					+ listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "CR"))
+					+ listOfNbCrystalPerClass.get(getCrystalClassIndex(listOfCrystalClass, "SCR"));
+			document.add(new Paragraph(" "));
+			document.add(new Paragraph("Total number of tests: " + new String(new Integer(nbTotal).toString()),
+					FONT_DOC));
+			document.add(new Paragraph("Nb of puck screens: " + new String(new Integer(nbPuckScreen).toString()),
+					FONT_DOC));
+			document.add(new Paragraph("Total number of samples: "
+					+ new String(new Integer(nbTotal + (nbPuckScreen * 10)).toString()), FONT_DOC));
+		}
+	}
+
+	private int getCrystalClassIndex(List<IspybCrystalClass3VO> list, String crystalClass) {
+		int nb = list.size();
+		for (int i = 0; i < nb; i++) {
+			if (crystalClass != null && list.get(i).getCrystalClassCode().equals(crystalClass)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	private List<Integer> getListOfNbCrystalPerClass(List<IspybCrystalClass3VO> listOfCrystalClass,
+			Map<String, String> mapDataCollectionGroupIdCClass) {
+		
+		List<Integer> listOfNbCrystalPerClass = new ArrayList<Integer>(); // number of crystals / crystal classes
+		String crystalClass;
+
+			// for MXPress users, the table with crystal class will be displayed
+			// calculate number of Crystals of class 1,2, ... 5, T
+			// Browse dataCollections
+			int nbCC = listOfCrystalClass.size();
+			for (int i = 0; i < nbCC; i++) {
+				listOfNbCrystalPerClass.add(0);
+			}
+			for (Iterator<String> it = mapDataCollectionGroupIdCClass.keySet().iterator(); it.hasNext();) {
+				crystalClass = mapDataCollectionGroupIdCClass.get(it.next());
+				int idCc = getCrystalClassIndex(listOfCrystalClass, crystalClass);
+				if (idCc != -1) {
+					listOfNbCrystalPerClass.set(idCc, listOfNbCrystalPerClass.get(idCc) + 1);
+				}
+			}
+		
+		return listOfNbCrystalPerClass;
+	}
+
 
 }

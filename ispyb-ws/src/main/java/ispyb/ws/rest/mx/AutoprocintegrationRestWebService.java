@@ -21,6 +21,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -137,8 +138,11 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@GZIP
 	@Produces("text/plain")
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/attachment/autoprocprogramid/{autoprocattachmentids}/download")
-	public Response downloadAttachments(@PathParam("token") String token, @PathParam("proposal") String proposal,
-			@PathParam("autoprocattachmentids") String autoprocattachmentids) {
+	public Response downloadAttachments(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("autoprocattachmentids") String autoprocattachmentids,
+			@QueryParam("forceFilename") String forceFilename) {
 
 		String methodName = "downloadAttachments";
 		long start = this.logInit(methodName, logger, token, proposal);
@@ -174,6 +178,13 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 				/** If it is a single result then filename is the name of the program and the ID **/
 				if (ids.size() == 1){					
 					filename = prefix + ".zip";
+				}
+				
+				/** If forceFilename is filled then it will be used as filename **/ 
+				if (forceFilename != null){
+					if (forceFilename.length() > 0){
+						filename = forceFilename; 
+					}
 				}
 				
 			}
