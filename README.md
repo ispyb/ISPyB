@@ -93,3 +93,10 @@ update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_06_06_bla
 ```
 This allows to keep the SchemaStus table uptodate and to know which scripts have been run.
 You can look for examples in ispyb-ejb/db/scripts/passed/2017
+
+### Database schema
+
+Please do not forget to update the database schema :
+ https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb 
+ 
+This schema can be updated using MySQLWorkbench (free tool from MySQL).
