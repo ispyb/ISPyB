@@ -21,15 +21,6 @@
  */
 package ispyb.client.mx.collection;
 
-import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.DBConstants;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.vos.collections.Session3VO;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +30,17 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
+
+import fr.improve.struts.taglib.layout.util.FormUtils;
+import ispyb.client.ParentIspybAction;
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.DBConstants;
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.vos.collections.Session3VO;
 
 /**
  * 
@@ -54,7 +55,7 @@ import org.apache.struts.actions.DispatchAction;
  * 
  * 
  */
-public class EditSessionAction extends DispatchAction {
+public class EditSessionAction extends ParentIspybAction {
 
 	private Session3Service sessionService;
 
@@ -137,6 +138,11 @@ public class EditSessionAction extends DispatchAction {
 			form.setTheSessionId(sessionId);
 
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.INSPECT_MODE);
+
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			return accessDeniedPage(mapping, actForm, request, in_reponse);
+
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewSession"));
@@ -226,6 +232,10 @@ public class EditSessionAction extends DispatchAction {
 
 			// redirect to view the last sessions
 			response.sendRedirect(request.getContextPath() + "/user/viewSession.do?reqCode=displayLast");
+
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			LOG.info(Constants.ACCESS_DENIED);
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));

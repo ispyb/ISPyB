@@ -36,6 +36,6 @@ public interface AuthorisationService {
 	 * @throws Exception
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
-			throws AccessDeniedException, Exception;
+			throws AccessDeniedException;
 
 }

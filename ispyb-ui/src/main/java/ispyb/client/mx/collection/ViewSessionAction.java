@@ -21,28 +21,6 @@
  */
 package ispyb.client.mx.collection;
 
-import fr.improve.struts.taglib.layout.util.FormUtils;
-import ispyb.client.SiteSpecific;
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.help.SendReportAction;
-import ispyb.client.common.util.Confidentiality;
-import ispyb.client.common.util.DBConstants;
-import ispyb.client.common.util.GSonUtils;
-import ispyb.client.security.roles.RoleDO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.Formatter;
-import ispyb.common.util.beamlines.EMBLBeamlineEnum;
-import ispyb.common.util.beamlines.ESRFBeamlineEnum;
-import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
-import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,9 +38,32 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 
 import com.google.gson.Gson;
+
+import fr.improve.struts.taglib.layout.util.FormUtils;
+import ispyb.client.ParentIspybAction;
+import ispyb.client.SiteSpecific;
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.help.SendReportAction;
+import ispyb.client.common.util.Confidentiality;
+import ispyb.client.common.util.DBConstants;
+import ispyb.client.common.util.GSonUtils;
+import ispyb.client.security.roles.RoleDO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
+import ispyb.common.util.beamlines.EMBLBeamlineEnum;
+import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
+import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 
 /**
  * 
@@ -77,7 +78,7 @@ import com.google.gson.Gson;
  * @struts.action-forward name="viewSessionLocalContact" path="localContact.collection.viewSession.page"
  * 
  */
-public class ViewSessionAction extends DispatchAction {
+public class ViewSessionAction extends ParentIspybAction {
 
 	private Session3Service sessionService;
 
@@ -290,6 +291,10 @@ public class ViewSessionAction extends DispatchAction {
 			}
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.INSPECT_MODE);
 
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			return accessDeniedPage(mapping, actForm, request, in_reponse);
+			
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewSession"));
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
@@ -300,11 +305,6 @@ public class ViewSessionAction extends DispatchAction {
 			saveErrors(request, errors);
 			return (mapping.findForward("error"));
 		}
-		// else if (isManager) {
-		// return mapping.findForward("viewSessionManager");
-		// } else {
-		// return mapping.findForward("viewSession");
-		// }
 		return redirectPageFromRole(mapping, request);
 	}
 

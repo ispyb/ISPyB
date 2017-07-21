@@ -64,15 +64,15 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	 * @throws Exception
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
-			throws Exception{
+			throws AccessDeniedException, NullPointerException{
 				
 		if (vo == null) 
-			throw new Exception("no session has been found");
+			throw new NullPointerException("no session has been found");
 		
 		if (!Constants.isAuthorisationActive() )
 			return;
 		
-		if (isUserAdminOrLcOrWs() ) 
+		if (isUserAdminOrLcOrWs() )
 			return;
 								
 		boolean hasAccess = false;
@@ -97,7 +97,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 			throw new AccessDeniedException("Access not authorised to session:" + vo.toString() + " for user:"+ user);
 	}
 	
-	public String getLoggedUser() throws Exception {
+	public String getLoggedUser()  {
 		String user = "guest";
 		
 			LOG.debug("Authorisation : getLoggedUser: context.getCallerPrincipal=" + this.context.getCallerPrincipal().getName());
@@ -106,7 +106,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 		return user;
 	}
 	
-	public boolean isUserAdminOrLcOrWs() throws Exception {
+	public boolean isUserAdminOrLcOrWs() {
 				
 		if (this.context.isCallerInRole(Constants.ALL_MANAGE_ROLE_NAME) 
 				|| this.context.isCallerInRole(Constants.ROLE_MANAGER) 

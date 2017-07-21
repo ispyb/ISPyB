@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URI;
-import java.nio.file.AccessDeniedException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,8 +56,8 @@ import org.hibernate.criterion.Restrictions;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import ispyb.common.util.Constants;
-import ispyb.common.util.IspybDateUtils;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.AuthorisationServiceLocal;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
@@ -810,7 +809,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 * 
 	 * @throws AccessDeniedException
 	 */
-	private void checkChangeRemoveAccess(Session3VO vo) throws AccessDeniedException, Exception {
+	private void checkChangeRemoveAccess(Session3VO vo) throws AccessDeniedException {
 		if (vo == null) return;
 		autService.checkUserRightToAccessSession(vo);				
 	}
