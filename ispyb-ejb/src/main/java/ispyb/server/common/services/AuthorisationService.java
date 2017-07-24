@@ -22,7 +22,9 @@ package ispyb.server.common.services;
 import javax.ejb.Remote;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 @Remote
 public interface AuthorisationService {
@@ -36,6 +38,12 @@ public interface AuthorisationService {
 	 * @throws Exception
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
+			throws AccessDeniedException;
+	
+	public void checkUserRightToAccessProposal( Proposal3VO vo )
+			throws AccessDeniedException;
+	
+	public void checkUserRightToAccessProtein( Protein3VO vo )
 			throws AccessDeniedException;
 
 }

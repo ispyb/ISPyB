@@ -19,15 +19,6 @@
 
 package ispyb.server.common.services.proposals;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.biosaxs.services.sql.SqlTableMapper;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
@@ -49,6 +41,15 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.sql.SqlTableMapper;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.AuthorisationServiceLocal;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
 
 /**
  * <p>
@@ -99,6 +100,9 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	private EntityManager entityManager;
 
 	private final static Logger LOG = Logger.getLogger(Proposal3ServiceBean.class);
+	
+	@EJB
+	private AuthorisationServiceLocal autService;
 
 	@Resource
 	private SessionContext context;
@@ -126,7 +130,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	 * @return the updated entity.
 	 */
 	public Proposal3VO update(final Proposal3VO vo) throws Exception {
-		checkCreateChangeRemoveAccess();
+		checkChangeRemoveAccess(vo);
 		entityManager.merge(vo);
 		return vo;
 
@@ -140,7 +144,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 		Proposal3VO vo = this.findByPk(pk, false, false, false);
-		checkCreateChangeRemoveAccess();
+		checkChangeRemoveAccess(vo);
 		entityManager.remove(vo);
 	}
 
@@ -151,7 +155,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	 *            the entity to remove.
 	 */
 	public void delete(final Proposal3VO vo) throws Exception {
-		checkCreateChangeRemoveAccess();
+		checkChangeRemoveAccess(vo);
 		entityManager.remove(vo);
 	}
 
@@ -172,6 +176,8 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		List listVOs = query.getResultList();
 		if (listVOs == null || listVOs.isEmpty())
 			return null;
+		
+		checkChangeRemoveAccess( (Proposal3VO) listVOs.toArray()[0]);
 		return (Proposal3VO) listVOs.toArray()[0];
 	}
 
@@ -193,6 +199,8 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		List listVOs = query.getResultList();
 		if (listVOs == null || listVOs.isEmpty())
 			return null;
+		
+		checkChangeRemoveAccess( (Proposal3VO) listVOs.toArray()[0]);
 		return (Proposal3VO) listVOs.toArray()[0];
 	}
 
@@ -565,26 +573,15 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove Scientist entities. If not set rollback only and
-	 * throw AccessDeniedException
+	 * Check if user has access rights to change and remove Proposal3 entities. If not set throw
+	 * AccessDeniedException
 	 * 
 	 * @throws AccessDeniedException
 	 */
-	private void checkCreateChangeRemoveAccess() throws Exception {
-		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
-		template.execute(new EJBAccessCallback() {
-
-			public Object doInEJBAccess(Object parent) throws Exception {
-
-				// TODO add an authorization service bean for ISPyB
-				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance()
-				// .getService(AuthorizationServiceLocalHome.class); // TODO change method to the one checking the
-				// // needed access rights
-				// autService.checkUserRightToChangeAdminData();
-				return null;
-			}
-
-		});
+	private void checkChangeRemoveAccess(Proposal3VO vo) throws AccessDeniedException {
+		if (vo == null) return;
+		autService.checkUserRightToAccessProposal(vo);				
 	}
+
 
 }

@@ -194,7 +194,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 */
 	public void deleteByPk(final Integer pk) throws AccessDeniedException,Exception {
 		Session3VO vo = this.findByPk(pk, false, false, false);
-		checkChangeRemoveAccess(vo);
 		entityManager.remove(vo);
 
 	}
@@ -206,6 +205,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	 *            the entity to remove.
 	 */
 	public void delete(final Session3VO vo) throws AccessDeniedException,Exception {
+		checkChangeRemoveAccess(vo);
 		entityManager.remove(vo);
 	}
 

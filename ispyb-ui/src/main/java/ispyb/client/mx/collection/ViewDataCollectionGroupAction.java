@@ -310,6 +310,9 @@ public class ViewDataCollectionGroupAction extends ParentIspybAction {
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", "Data"));
 			saveMessages(request, messages);
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
 
 		} catch (Exception e) {
 
@@ -1020,6 +1023,10 @@ public class ViewDataCollectionGroupAction extends ParentIspybAction {
 			}
 			session3vo = ViewSessionAction.saveSession(session3vo);
 			return null;
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
+
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			response.getWriter().write(GSonUtils.getErrorMessage(exp));

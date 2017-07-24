@@ -323,7 +323,6 @@ public class ViewSessionAction extends ParentIspybAction {
 		form.setNbSessionsToDisplay(Constants.NB_SESSIONS_TO_DISPLAY);
 		form.setSessionsTitle("Last " + Constants.NB_SESSIONS_TO_DISPLAY + " " + Constants.SESSIONS);
 
-
 		return this.display(mapping, actForm, request, response);
 
 	}
@@ -345,6 +344,11 @@ public class ViewSessionAction extends ParentIspybAction {
 				dataCollectionGroupService.delete(vo);
 			}
 			sessionService.delete(ses);
+			
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			return accessDeniedPage(mapping, actForm, request, response);
+
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
 			LOG.error(e.toString());
@@ -634,6 +638,10 @@ public class ViewSessionAction extends ParentIspybAction {
 			}
 			saveSession(session3vo);
 			return getSessions(mapping, actForm, request, response);
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
+
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			response.getWriter().write(GSonUtils.getErrorMessage(exp));
@@ -642,9 +650,9 @@ public class ViewSessionAction extends ParentIspybAction {
 		}
 	}
 
-	public static Session3VO saveSession(Session3VO session3vo) {
-		try {
-			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+	public static Session3VO saveSession(Session3VO session3vo) throws Exception {
+
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sv = sessionService.findByPk(session3vo.getSessionId(), false, false, false);
 
@@ -671,10 +679,7 @@ public class ViewSessionAction extends ParentIspybAction {
 
 			sessionService.update(sv);
 			return sv;
-		} catch (Exception exp) {
-			exp.printStackTrace();
-			return null;
-		}
+			
 	}
 
 	/**
@@ -726,6 +731,10 @@ public class ViewSessionAction extends ParentIspybAction {
 			}
 			sessionService.delete(sv);
 			return getSessions(mapping, actForm, request, response);
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
+	
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			response.getWriter().write(GSonUtils.getErrorMessage(exp));
@@ -744,6 +753,10 @@ public class ViewSessionAction extends ParentIspybAction {
 			Session3VO sv = sessionService.findByPk(session3vo.getSessionId(), false, false, false);
 
 			return getSessions(mapping, actForm, request, response);
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
+
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			response.getWriter().write(GSonUtils.getErrorMessage(exp));
