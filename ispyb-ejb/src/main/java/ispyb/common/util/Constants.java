@@ -169,6 +169,9 @@ public final class Constants {
 	}
 
 	public static final String AUTHORISATION_ACTIVE = "ISPyB.authorisation.active";
+	
+	public static final String ACCESS_DENIED = "Access not authorised.";
+	
 	/*
 	 * proposal s types
 	 */

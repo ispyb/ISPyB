@@ -53,12 +53,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import fr.improve.struts.taglib.layout.util.FormUtils;
+import ispyb.client.ParentIspybAction;
 import ispyb.client.SiteSpecific;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.reference.ViewReferenceAction;
@@ -78,6 +78,7 @@ import ispyb.common.util.StringUtils;
 import ispyb.common.util.beamlines.EMBLBeamlineEnum;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.sessions.Session3Service;
@@ -131,7 +132,7 @@ import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
  * @struts.action-forward name="viewLastCollect" path="manager.collection.lastCollect.page"
  * 
  */
-public class ViewDataCollectionAction extends DispatchAction {
+public class ViewDataCollectionAction extends ParentIspybAction {
 
 	private final static Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
@@ -356,6 +357,10 @@ public class ViewDataCollectionAction extends DispatchAction {
 			String iSigma = request.getParameter(Constants.ISIGMA);
 			request.getSession().setAttribute(Constants.RSYMM, rMerge);
 			request.getSession().setAttribute(Constants.ISIGMA, iSigma);
+
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			return accessDeniedPage(mapping, actForm, request, response);
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.collection.viewDataCollection"));

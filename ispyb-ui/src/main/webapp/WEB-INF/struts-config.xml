@@ -534,6 +534,16 @@
         path="localContact.collection.viewSession.page"
         redirect="false"
       />
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="noPermission"
+        path="site.permission.error.page"
+        redirect="false"
+      />
     </action>
     <action
       path="/manager/welcomeManager"
@@ -687,6 +697,16 @@
       <forward
         name="localContactEditSessionPage"
         path="localContact.collection.editSession.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="noPermission"
+        path="site.permission.error.page"
         redirect="false"
       />
     </action>
@@ -1004,6 +1024,16 @@
       <forward
         name="viewLastCollect"
         path="manager.collection.lastCollect.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="noPermission"
+        path="site.permission.error.page"
         redirect="false"
       />
     </action>
@@ -1557,6 +1587,16 @@
         path="site.default.error.page"
         redirect="false"
       />
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="noPermission"
+        path="site.permission.error.page"
+        redirect="false"
+      />
     </action>
     <action
       path="/user/createSampleAction"
@@ -1917,6 +1957,11 @@
       <forward
         name="error"
         path="site.default.error.page"
+        redirect="false"
+      />
+      <forward
+        name="noPermission"
+        path="site.permission.error.page"
         redirect="false"
       />
     </action>

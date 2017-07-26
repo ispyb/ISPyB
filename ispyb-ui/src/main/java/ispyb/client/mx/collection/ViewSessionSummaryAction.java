@@ -27,6 +27,7 @@ import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PathUtils;
 import ispyb.common.util.StringUtils;
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -94,6 +95,7 @@ import com.google.gson.reflect.TypeToken;
  * @struts.action-forward name="localContactSuccessAll"
  *                        path="localcontact.collection.viewSessionSummary.page"
  * @struts.action-forward name="error" path="site.default.error.page"
+ * @struts.action-forward name="noPermission" path="site.permission.error.page"
  * 
  */
 
@@ -250,6 +252,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 			Session3VO slv = sessionService.findByPk(sessionId, false, true, true);
 			// Fill the information bar
 			BreadCrumbsForm.getItClean(request).setSelectedSession(slv);
+
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			LOG.info(Constants.ACCESS_DENIED);
+			return (mapping.findForward("noPermission"));
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
