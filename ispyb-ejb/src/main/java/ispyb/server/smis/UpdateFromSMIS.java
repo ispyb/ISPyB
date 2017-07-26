@@ -896,30 +896,20 @@ public class UpdateFromSMIS {
 		endDateCal.setTime(sessionVO.getEndDate().getTime());
 		Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
 
-		// the finder should be replaced by a finder on the smis session Pk,
-		// instead of the startDate
-		// startDate finder is a problem with a session scheduled on
-		// 08/11-09/11, 1 on 09/11-10/11
-		// the first one is not inserted in ispby (cf. mail David vS)
-		// List<Session3VO> col =
-		// session.findByStartDateAndBeamLineNameAndNbShifts(proposalId,
-		// startDateBegin,
-		// startDateEnd, beamlineName, nbShifts);
 		Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 
 		List<Session3VO> sessFromDBs = null;
 		LOG.debug("look for session already in DB for proposalId = " + proposalId + " | startDate = " + startDate
 				+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
 		
-		if (!Constants.SITE_IS_SOLEIL()) {
-			sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
-		} else if (Constants.SITE_IS_SOLEIL()) {
+		if (Constants.SITE_IS_SOLEIL()) {
 			sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDate, endDate,
 					beamlineName, nbShifts);			
 		}
 
-		// if (col == null || col.isEmpty()) {
-		if (sessFromDB == null || (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() == 0)) {
+		// if the session from DB is null we add a new one only if not cancelled
+		if ( (sessFromDB == null && !sessionVO.isCancelled() )
+				|| (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() == 0)) {
 
 			Session3VO sesv = new Session3VO();
 			BeamLineSetup3VO setupv = new BeamLineSetup3VO();
@@ -956,7 +946,8 @@ public class UpdateFromSMIS {
 				proplv.setType(Constants.PROPOSAL_MX_BX);
 				proplv = proposal.update(proplv);
 			}
-		} else {
+		} // update existing session
+		else {
 			Boolean isSoleil = Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() > 0;
 			Session3VO ispybSession = isSoleil ? sessFromDBs.get(0) : sessFromDB;
 			// update the coming session if needed -
@@ -996,6 +987,16 @@ public class UpdateFromSMIS {
 						&& !sessionVO.getShifts().equals(ispybSession.getNbShifts())) {
 					changeTxt += ", nbShifts " + ispybSession.getNbShifts() + " => " + sessionVO.getShifts();
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
+					changeSession = true;
+				}
+				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {
+					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
+					ispybSession.setScheduled(new Byte("9"));
+					changeSession = true;
+				}
+				if (!sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("9")) ) {
+					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
+					ispybSession.setScheduled(new Byte("1"));
 					changeSession = true;
 				}
 				if (isSoleil) {
