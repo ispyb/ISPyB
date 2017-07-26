@@ -1,6 +1,7 @@
 package bcr.client.security.util;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -72,7 +73,6 @@ public class EmployeeVO implements Serializable {
 		this.givenName = attributesMap.get("givenName");
 		this.departmentNumber = attributesMap.get("departmentNumber");
 		this.esrfEndDate = attributesMap.get("esrfEndDate");
-		this.persCategory = attributesMap.get("persCategory");
 		this.uid = attributesMap.get("uid");
 		this.uidNumber = attributesMap.get("uidNumber");
 		this.mail = attributesMap.get("mail");
@@ -83,15 +83,21 @@ public class EmployeeVO implements Serializable {
 		this.esrfAlternateMail = attributesMap.get("esrfAlternateMail");
 		this.sambaPwdLastSet = attributesMap.get("sambaPwdLastSet");
 		this.sambaAcctFlags = attributesMap.get("sambaAcctFlags");
-		this.employeeNumber = attributesMap.get("employeeNumber");
 		this.esrfStartDate = attributesMap.get("esrfStartDate");
 		this.sambaPwdCanChange = attributesMap.get("sambaPwdCanChange");
 		this.sambaSID = attributesMap.get("sambaSID");
 		this.description = attributesMap.get("description");
-		this.secretaryTelephoneNumber = attributesMap.get("secretaryTelephoneNumber");
 		this.esrfPhotoURL = attributesMap.get("esrfPhotoURL");
 		this.sn = attributesMap.get("sn");
 		this.esrfMisClient = attributesMap.get("esrfMisClient");
+		
+		// search for esrf prefix 
+		//TODO small trick to be removed end of 2017 and use final ldap attribute at ESRF
+		this.persCategory = getEsrfAttribute("persCategory", (HashMap<String, String>)attributesMap);
+		//this.siteNumber = getEsrfAttribute("siteNumber", (HashMap<String, String>)attributesMap);
+		this.secretaryTelephoneNumber = getEsrfAttribute("secretaryTelephoneNumber", (HashMap<String, String>)attributesMap);
+		this.employeeNumber = getEsrfAttribute("employeeNumber", (HashMap<String, String>)attributesMap);
+
 	}
 
 	public String getCn() {
@@ -202,4 +208,13 @@ public class EmployeeVO implements Serializable {
 		this.obsolete = obsolete;
 	}
 
+	private String getEsrfAttribute(String key, HashMap<String, String> attributesMap){
+		
+		if ((attributesMap).containsKey(key)) {
+			return attributesMap.get(key);
+		} else {
+			return attributesMap.get("esrf"+ key.substring(0, 1).toUpperCase() + key.substring(1));
+		}
+
+	}
 }

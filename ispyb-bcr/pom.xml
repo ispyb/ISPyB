@@ -5,7 +5,7 @@
 		
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-bcr</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>5.0.3</version>
 	<packaging>war</packaging>
   	  
   <url>http://maven.apache.org</url>
