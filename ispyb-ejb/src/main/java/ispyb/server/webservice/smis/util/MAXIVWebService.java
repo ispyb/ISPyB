@@ -1,69 +1,63 @@
 package ispyb.server.webservice.smis.util;
 
-import generated.ws.smis.SampleSheetInfoLightVO;
-import ispyb.common.util.Constants;
-import ispyb.server.smis.UpdateFromSMIS;
-
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-
-import generated.ws.smis.SMISWebService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
+import generated.ws.smis.SMISWebService;
+import generated.ws.smis.SampleSheetInfoLightVO;
+import ispyb.common.util.Constants;
+import ispyb.server.smis.UpdateFromSMIS;
 
-import java.io.InputStreamReader;
+public class MAXIVWebService implements SMISWebService {
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-public class MAXIVWebService implements SMISWebService{
-	
 	private static final Logger LOG = Logger.getLogger(UpdateFromSMIS.class);
 	
 	private String serverUrl = "";
-	private String token = "";
 	
-	public MAXIVWebService()
-	{
+	public MAXIVWebService() {
 		this.serverUrl = Constants.getProperty("userportal.url");
-		this.getToken();
 	}
 	
 	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/pbd?startdate=")
-				.append(startDateStr).append("&enddate=").append(endDateStr).append("&beamline=BioMAX");
-		
-		JSONObject response = readJsonDataFromUrl(url.toString());
-		
 		List<Long> pks = new ArrayList<Long>();
-		JSONArray jsonArray = response.getJSONArray("proposals");
-		int len = jsonArray.length();
+		
+		JSONObject exp = new JSONObject();
+		exp.put("regexp", "/^2016|^2017/");
+		JSONObject field = new JSONObject();
+		field.put("propid", exp);
+		JSONObject filter = new JSONObject();
+		filter.put("where", field);
+        
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/proposals?access_token=").append(this.getToken())
+				.append("&filter=").append(filter.toString().getBytes());
+		
+		JSONArray jsonProposals = readJsonArrayFromUrl(url.toString());
+		
+		int len = jsonProposals.length();
 		for (int i=0; i<len; i++){ 
+			JSONObject jsonProposal = (JSONObject)jsonProposals.get(i);
+			
 			Long proposalId = null;
 			try {
-				proposalId = (Long.valueOf(((Integer)jsonArray.get(i))).longValue());
+				proposalId = (Long.valueOf(((Integer)jsonProposal.get("propid"))).longValue());
 				LOG.info("Proposal found: " + proposalId);
 			} catch(Exception ex){
 				//TODO: Handle exception
@@ -72,96 +66,105 @@ public class MAXIVWebService implements SMISWebService{
 			pks.add(proposalId);
 		}
 		
-		LOG.info("No of proposals found : " + pks.size());
-		
+		System.out.println("Number of proposals found : " + pks.size());
+		LOG.info("Number of proposals found : " + pks.size());
+	
 		return pks;
 	}
 	
 	public List<ProposalParticipantInfoLightVO> findMainProposersForProposal(Long propId) {
 		List<ProposalParticipantInfoLightVO> proposers = new ArrayList<ProposalParticipantInfoLightVO>();
+		ProposalParticipantInfoLightVO proposer = new ProposalParticipantInfoLightVO();
 		
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/").append(propId).append("/proposers");
-		JSONObject response = readJsonDataFromUrl(url.toString());
-		
-		JSONArray jsonProposers = response.getJSONArray("proposers");
-		
-		int len = jsonProposers.length();
-		for (int i=0; i<len; i++){ 
-			ProposalParticipantInfoLightVO proposer = new ProposalParticipantInfoLightVO();
-			JSONObject jsonProposer = ((JSONObject)jsonProposers.get(i)).getJSONObject("proposer");
+		try{
+			JSONObject jsonProposal = getProposalForId(propId);
 			
-			try{
-				proposer.setCategoryCode((String)jsonProposer.get("category_code"));
-				proposer.setCategoryCounter((Integer)jsonProposer.get("category_counter"));
-				proposer.setBllogin((String)jsonProposer.get("bl_login"));
-				proposer.setLabAddress1((String)jsonProposer.get("lab_address_1"));
-				proposer.setLabCity((String)jsonProposer.get("lab_city"));
-				proposer.setLabDeparment((String)jsonProposer.get("lab_department"));
-				String labname = (String)jsonProposer.get("lab_name");
-				if(labname.length() >= 45){
-					labname = labname.substring(0,40).concat("...");
-					System.out.println("Truncated lab name :" + labname);
-				}
-				proposer.setLabName(labname);
-				proposer.setProposalPk(Long.valueOf(((Integer)jsonProposer.get("proposal_pk")).longValue()));
-				String title = (String)jsonProposer.get("proposal_title");
-				if(title.length() >= 200){
-					title = title.substring(0,195).concat("...");
-					System.out.println("Truncated Tilte :" + title);
-				}
-				proposer.setProposalTitle(title);
-				proposer.setScientistFirstName((String)jsonProposer.get("scientist_firstname"));
-				proposer.setScientistName((String)jsonProposer.get("scientist_name"));
-			} catch(Exception ex){
-				//TODO: Handle exception
-				ex.printStackTrace();
+			Integer proposerId = (Integer)jsonProposal.get("proposer");
+			JSONObject jsonProposer = getUserForId(proposerId);
+			
+			proposer.setCategoryCode("MX");//TODO Need to check for internal proposals
+			proposer.setCategoryCounter(propId.intValue());
+			proposer.setBllogin((String)jsonProposer.get("username"));
+			
+			Integer labId = (Integer)jsonProposer.get("institute");
+			JSONObject jsonLab = getLabForId(labId);
+			proposer.setLabAddress1((String)jsonLab.get("address"));
+			proposer.setLabCity((String)jsonLab.get("city"));
+			proposer.setLabDeparment((String)jsonLab.get("department"));
+			String labname = (String)jsonLab.get("name");
+			if(labname.length() >= 45){
+				labname = labname.substring(0,40).concat("...");
+				System.out.println("Truncated lab name :" + labname);
 			}
+			proposer.setLabName(labname);
 			
-			proposers.add(proposer);
-		} 
-		
+			proposer.setProposalPk(propId);
+			String title = (String)jsonProposal.get("title");
+			if(title.length() >= 200){
+				title = title.substring(0,195).concat("...");
+				System.out.println("Truncated Tilte :" + title);
+			}
+			proposer.setProposalTitle(title);
+			proposer.setScientistFirstName((String)jsonProposer.get("firstname"));
+			proposer.setScientistName((String)jsonProposer.get("firstname") + " " + (String)jsonProposer.get("lastname"));
+		} catch(Exception ex){
+			//TODO: Handle exception
+			ex.printStackTrace();
+		}
+			
+		proposers.add(proposer);
 		LOG.info("Proposers found : " + proposers.size());
 		
 		return proposers;
 	}
-
+	
 	public List<ProposalParticipantInfoLightVO> findParticipantsForProposal(Long propId) throws Exception_Exception {
 		List<ProposalParticipantInfoLightVO> participants = new ArrayList<ProposalParticipantInfoLightVO>();
 		
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/").append(propId).append("/participants");
-		JSONObject response = readJsonDataFromUrl(url.toString());
+		JSONObject jsonProposal = getProposalForId(propId);
 		
-		JSONArray jsonParticipants = response.getJSONArray("participants");
+		//Get all co-proposer ids
+		ArrayList<Integer> cowriters = new ArrayList<Integer>();
+		if(jsonProposal.get("cowriter1") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter1"));
+		if(jsonProposal.get("cowriter2") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter2"));
+		if(jsonProposal.get("cowriter3") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter3"));
+		if(jsonProposal.get("cowriter4") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter4"));
+		if(jsonProposal.get("cowriter5") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter5"));
 		
-		int len = jsonParticipants.length();
-		for (int i=0; i<len; i++){ 
-			ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
-			JSONObject jsonParticipant = ((JSONObject)jsonParticipants.get(i)).getJSONObject("participant");
+		for(Integer cowriterId : cowriters) {
+			JSONObject jsonParticipant = getUserForId(cowriterId);
 			
+			ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
 			try{
-				participant.setCategoryCode((String)jsonParticipant.get("category_code"));
-				participant.setCategoryCounter((Integer)jsonParticipant.get("category_counter"));
-				participant.setBllogin((String)jsonParticipant.get("bl_login"));
-				participant.setLabAddress1((String)jsonParticipant.get("lab_address_1"));
-				participant.setLabCity((String)jsonParticipant.get("lab_city"));
-				Object dept = jsonParticipant.get("lab_department");
-				if(!jsonParticipant.isNull("lab_department"))
-					participant.setLabDeparment((String)jsonParticipant.get("lab_department"));
-				String labname = (String)jsonParticipant.get("lab_name");
+				participant.setCategoryCode("MX");
+				participant.setCategoryCounter(propId.intValue());
+				participant.setBllogin((String)jsonParticipant.get("username"));
+				
+				Integer labId = (Integer)jsonParticipant.get("institute");
+				JSONObject jsonLab = getLabForId(labId);
+				participant.setLabAddress1((String)jsonLab.get("address"));
+				participant.setLabCity((String)jsonLab.get("city"));
+				participant.setLabDeparment((String)jsonLab.get("department"));
+				String labname = (String)jsonLab.get("name");
 				if(labname.length() >= 45){
 					labname = labname.substring(0,40).concat("...");
 					System.out.println("Truncated lab name :" + labname);
 				}
 				participant.setLabName(labname);
-				participant.setProposalPk(Long.valueOf(((Integer)jsonParticipant.get("proposal_pk")).longValue()));
-				String title = (String)jsonParticipant.get("proposal_title");
+				participant.setProposalPk(propId);
+				String title = (String)jsonProposal.get("title");
 				if(title.length() >= 200){
 					title = title.substring(0,195).concat("...");
+					System.out.println("Truncated Tilte :" + title);
 				}
 				participant.setProposalTitle(title);
-				participant.setScientistFirstName((String)jsonParticipant.get("scientist_firstname"));
-				participant.setScientistName((String)jsonParticipant.get("scientist_name"));
-				participant.setProposer(true);
+				participant.setScientistFirstName((String)jsonParticipant.get("firstname"));
+				participant.setScientistName((String)jsonParticipant.get("firstname") + " " + (String)jsonParticipant.get("lastname"));
 			} catch(Exception ex){
 				//TODO: Handle exception
 				ex.printStackTrace();
@@ -174,7 +177,52 @@ public class MAXIVWebService implements SMISWebService{
 		
 		return participants;
 	}
-
+	
+	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days)
+			throws FinderException_Exception {
+		List<ExpSessionInfoLightVO> sessions = new ArrayList<ExpSessionInfoLightVO>();
+		
+		JSONObject jsonProposal = getProposalForId(propId);
+		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
+		
+		for(JSONObject jsonSession : jsonSessions){
+			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
+			
+			try{
+				session.setBeamlineName((String)jsonSession.get("beamline"));
+				session.setBeamlinePk(Long.valueOf(12345));//TODO Verify. We dont have a Long id
+				session.setProposalGroup(0);//TODO Need to check for industrial proposals
+				session.setProposalGroupCode(propId.toString());
+				session.setProposalPk(propId);
+				session.setProposalSubmissionPk(propId);
+				String title = (String)jsonProposal.get("title");
+				if(title.length() >= 200){
+					title = title.substring(0,195).concat("...");
+					System.out.println("Truncated Tilte :" + title);
+				}
+				session.setProposalTitle(title);
+				session.setCategCode("MX");
+				session.setCategCounter(propId.intValue());
+				String startDate[] = ((String)jsonSession.get("evtstart")).split("-");
+				String stDatetime[] = startDate[2].split("T");
+				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(stDatetime[1])));
+				String endDate[] = ((String)jsonSession.get("evtend")).split("-");
+				String endDatetime[] = endDate[2].split("T");
+				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDatetime[1])));
+				//session.setStartShift((Integer)jsonSession.get("start_shitf"));
+				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
+				session.setShifts((Integer)jsonSession.get("shifts"));
+				
+				sessions.add(session);
+			} catch(Exception ex){
+				//TODO: Handle exception
+				ex.printStackTrace();
+			}
+		}
+		
+		return sessions;
+	}
+	
 	public List<String> findProposalsFromBeamlineLogin(String arg0) throws Exception_Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -185,53 +233,7 @@ public class MAXIVWebService implements SMISWebService{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days)
-			throws FinderException_Exception {
-		List<ExpSessionInfoLightVO> sessList = new ArrayList<ExpSessionInfoLightVO>();
-		
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/proposals/").append(propId).append("/sessions/");
-		JSONObject response = readJsonDataFromUrl(url.toString());
-		
-		JSONArray jsonSessions = response.getJSONArray("sessions");
-		
-		int len = jsonSessions.length();
-		for (int i=0; i<len; i++){ 
-			ExpSessionInfoLightVO session= new ExpSessionInfoLightVO();
-			JSONObject jsonSession = ((JSONObject)jsonSessions.get(i)).getJSONObject("session");
-			
-			try{
-				session.setBeamlineName((String)jsonSession.get("beamline_name"));
-				//session.setBeamlinePk(Long.valueOf(((Integer)jsonSession.get("beamline_pk")).longValue()));
-				session.setBeamlinePk(Long.valueOf(12345));
-				session.setProposalGroup((Integer)jsonSession.get("proposal_group"));
-				session.setProposalGroupCode((String)jsonSession.get("proposal_group_code"));
-				session.setProposalPk(Long.valueOf(((Integer)jsonSession.get("proposal_pk")).longValue()));
-				session.setProposalSubmissionPk(Long.valueOf(((Integer)jsonSession.get("proposal_submission_pk")).longValue()));
-				String title = (String)jsonSession.get("proposal_title");
-				if(title.length() >= 200){
-					title = title.substring(0,195).concat("...");
-				}
-				session.setProposalTitle(title);
-				session.setCategCode((String)jsonSession.get("category_code"));
-				session.setCategCounter((Integer)jsonSession.get("category_counter"));
-				String startDate[] = ((String)jsonSession.get("start_date")).split("-");
-				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(startDate[2])));
-				String endDate[] = ((String)jsonSession.get("end_date")).split("-");
-				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDate[2])));
-				//session.setStartShift((Integer)jsonSession.get("start_shitf"));
-				session.setStartShift(Integer.valueOf(1));
-				session.setShifts((Integer)jsonSession.get("shifts"));
-				sessList.add(session);
-			} catch(Exception ex){
-				//TODO: Handle exception
-				ex.printStackTrace();
-			}
-		}
-
-		return sessList;
-	}
-
+	
 	public List<SampleSheetInfoLightVO> findSamplesheetInfoLightForProposalPk(Long arg0) throws Exception_Exception {
 		List<SampleSheetInfoLightVO> sampleSheets = new ArrayList<SampleSheetInfoLightVO>();
 		SampleSheetInfoLightVO sampleSheet = new SampleSheetInfoLightVO();
@@ -278,65 +280,83 @@ public class MAXIVWebService implements SMISWebService{
 		return 0;
 	}
 	
-	public void getToken() {
+	private JSONObject getProposalForId(Long propId){
+		JSONObject proposal = null;
 		
-        HttpHost target = new HttpHost(this.serverUrl, 443, "https");
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-                new AuthScope(target.getHostName(), target.getPort()),
-                new UsernamePasswordCredentials("ws_user", "1453996998"));
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setDefaultCredentialsProvider(credsProvider).build();
-        
-        try {
-
-            // Create AuthCache instance
-            AuthCache authCache = new BasicAuthCache();
-            // Generate BASIC scheme object and add it to the local
-            // auth cache
-            BasicScheme basicAuth = new BasicScheme();
-            authCache.put(target, basicAuth);
-
-            // Add AuthCache to the execution context
-            HttpClientContext localContext = HttpClientContext.create();
-            localContext.setAuthCache(authCache);
-
-            StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/duo/api/v1/token");
-            HttpGet httpget = new HttpGet(url.toString());
-
-            CloseableHttpResponse response = httpclient.execute(target, httpget, localContext);
-            try {
-                this.token = EntityUtils.toString(response.getEntity());
-                this.token = this.token.substring(1, this.token.length()-1);
-                System.out.println("Token received " + this.token);
-            } finally {
-                response.close();
-            }
-        } catch(Exception ex){
-        	ex.printStackTrace();
-        }
-        finally {
-        	try{
-        		httpclient.close();
-            }catch(Exception ex){
-            	ex.printStackTrace();
-            }
-        }
-    }
-
-	public JSONObject readJsonDataFromUrl(String url){
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+				.append(propId).append("?access_token=").append(this.getToken());
+		
+		proposal = readJsonObjectFromUrl(url.toString());
+		
+		return proposal;
+	}
+	
+	private ArrayList<JSONObject> getBeamlinesForProposal(Long propId){
+		ArrayList<JSONObject> beamlines = new ArrayList<JSONObject>();
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+				.append(propId).append("/beamlines").append("?access_token=").append(this.getToken());
+		
+		JSONArray jsonBeamlines = readJsonArrayFromUrl(url.toString());
+		
+		int len = jsonBeamlines.length();
+		for (int i=0; i<len; i++){ 
+			JSONObject jsonBeamline = (JSONObject)jsonBeamlines.get(i);
+			beamlines.add(jsonBeamline);
+		}
+		
+		return beamlines;
+	}
+	
+	private ArrayList<JSONObject> getSessionsForProposal(Long propId){
+		ArrayList<JSONObject> sessions = new ArrayList<JSONObject>();
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+				.append(propId).append("/sessions").append("?access_token=").append(this.getToken());
+		
+		JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
+		
+		int len = jsonSessions.length();
+		for (int i=0; i<len; i++){ 
+			JSONObject jsonSession = (JSONObject)jsonSessions.get(i);
+			sessions.add(jsonSession);
+		}
+		
+		return sessions;
+	}
+	
+	private JSONObject getUserForId(Integer userId){
+		JSONObject user = null;
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Clients/")
+				.append(userId).append("?access_token=").append(this.getToken());
+		
+		user = readJsonObjectFromUrl(url.toString());
+		
+		return user;
+	}
+	
+	private JSONObject getLabForId(Integer labId){
+		JSONObject lab = null;
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Institutes/")
+				.append(labId).append("?access_token=").append(this.getToken());
+		
+		lab = readJsonObjectFromUrl(url.toString());
+		
+		return lab;
+	}
+	
+	private JSONObject readJsonObjectFromUrl(String url){
 		JSONObject jsonObj = null;
-		
+				
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(url.toString());
-		httpGet.setHeader("Authorization", "Bearer " + this.token);
 		
 		try{
 			CloseableHttpResponse response = httpclient.execute(httpGet);
-			System.out.println(response.getStatusLine());
-			String jsonStr = IOUtils.toString(new InputStreamReader(
-                    (response.getEntity().getContent())));
-
+			//System.out.println(response.getStatusLine());
+			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
 			jsonObj = new JSONObject(jsonStr);
 		}
 		catch(Exception ex)
@@ -347,4 +367,56 @@ public class MAXIVWebService implements SMISWebService{
 		return jsonObj;
 	}
 	
+	private JSONArray readJsonArrayFromUrl(String url){
+		JSONArray jsonArr = null;
+				
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpGet httpGet = new HttpGet(url.toString());
+		
+		try{
+			CloseableHttpResponse response = httpclient.execute(httpGet);
+			//System.out.println(response.getStatusLine());
+			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
+			jsonArr = new JSONArray(jsonStr);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		return jsonArr;
+	}
+	
+	public String getToken()
+	{
+		String token = "";
+		
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpPost httpPost = new HttpPost("https://duotest.maxiv.lu.se:3000/api/Users/login");
+		
+		try{
+			httpPost.addHeader("Accept", "application/json");
+			httpPost.addHeader("Content-Type", "application/json");
+			
+			JSONObject body = new JSONObject();
+            body.put("email", "ispyb@maxiv.lu.se");
+            body.put("password", "Test1234!");
+            
+            String parameterStr = body.toString();
+            StringEntity entity = new StringEntity(parameterStr);
+            httpPost.setEntity(entity);
+			
+			CloseableHttpResponse response = httpclient.execute(httpPost);
+			//System.out.println(response.getStatusLine());
+			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
+			JSONObject jsonObj = new JSONObject(jsonStr);
+			token = (String)jsonObj.get("id");
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		return token;
+	}
 }
