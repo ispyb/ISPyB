@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -39,15 +41,9 @@ public class MAXIVWebService implements SMISWebService {
 	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
 		List<Long> pks = new ArrayList<Long>();
 		
-		JSONObject exp = new JSONObject();
-		exp.put("regexp", "/^2016|^2017/");
-		JSONObject field = new JSONObject();
-		field.put("propid", exp);
-		JSONObject filter = new JSONObject();
-		filter.put("where", field);
         
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/proposals?access_token=").append(this.getToken())
-				.append("&filter=").append(filter.toString().getBytes());
+				.append("&filter=").append(this.getFilter());
 		
 		JSONArray jsonProposals = readJsonArrayFromUrl(url.toString());
 		
@@ -418,5 +414,32 @@ public class MAXIVWebService implements SMISWebService {
 		}
 		
 		return token;
+	}
+	
+	private String getFilter(){
+		StringBuilder filter = new StringBuilder();
+		String filterStr = "";
+		
+		JSONObject jsonExp = new JSONObject();
+		jsonExp.put("regexp", "/^2016|^2017/");
+		JSONObject jsonField = new JSONObject();
+		jsonField.put("propid", jsonExp);
+		JSONObject jsonFilter = new JSONObject();
+		jsonFilter.put("where", jsonField);
+		
+		filterStr = jsonFilter.toString();
+		
+		Pattern p = Pattern.compile("[a-zA-Z0-9]");
+	    
+		for (int i = 0; i < filterStr.length(); i++) {
+			Matcher m = p.matcher(String.valueOf(filterStr.charAt(i)));
+	        if (m.find()){
+	        	filter.append(filterStr.charAt(i));
+	        } else {
+	        	filter.append("%").append(String.format("%h", (filterStr.charAt(i))));
+	        }
+	    }
+		
+		return filter.toString();
 	}
 }
