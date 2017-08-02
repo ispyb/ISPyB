@@ -372,7 +372,7 @@ public class UploadShipmentUtils {
 				// Puck
 				container = new Container3VO();
 				container.setDewarVO(dewar);
-				container.setContainerType("Puck");
+				container.setContainerType(Constants.CONTAINER_TYPE_SPINE);
 				container.setCode((sheet.getRow(puckRow).getCell(puckCol)).toString().trim());
 				container.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
 				container.setTimeStamp(StringUtils.getCurrentTimeStamp());
@@ -410,8 +410,12 @@ public class UploadShipmentUtils {
 				// List<Crystal3VO> listCrystalCreated = new ArrayList<Crystal3VO>();
 				List<Crystal3VO> listCrystalCreated = crystalService.findByProposalId(sheetProposalId);
 				// TBD: need to add sanity check that this puck has not already been put in the dewar!
+				
+				// count the samples to decide if SPINE or UNIPUCK
+				int nbSamplesInPuck = 0;
 
 				for (int i = dataRow; i < dataRow + Constants.BASKET_SAMPLE_CAPACITY; i += 1) {
+					nbSamplesInPuck = nbSamplesInPuck + 1;
 					// --- Retrieve interesting values from spreadsheet
 					String puckCode = cellToString(sheet.getRow(puckRow).getCell(puckCol));
 					String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
@@ -624,6 +628,11 @@ public class UploadShipmentUtils {
 						}// end crystalID
 					} // end sampleRowOK
 				} // for dataRow
+				if (nbSamplesInPuck > Constants.SPINE_SAMPLE_CAPACITY) {
+					container.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
+					containerService.update(container);
+				}
+				
 			} // end dewar != null
 				// all samples were empty
 			if (sheetIsEmpty) {
@@ -631,21 +640,6 @@ public class UploadShipmentUtils {
 					// remove the container
 					containerService.deleteByPk(container.getContainerId());
 				}
-				// TODO understand the following and remove it
-				// remove the dewar if no containers
-				// Dewar3Service dewarService = (Dewar3Service) ejb3ServiceLocator.getLocalService(Dewar3Service.class);
-				// boolean removedOK = true;
-				// if (dewar != null) {
-				// Dewar3VO existingDewar = dewarService.findByPk(dewar.getDewarId(), false, false);
-				// if (existingDewarList == null || existingDewarList.isEmpty()) { // Dewar did not exist
-				// removedOK = false;
-				// } else {// Dewar was there, deleting it ...
-				// dewar = dewarService.findByPk(dewar.getDewarId(), true, true);
-				// if (dewar.getContainerVOs().size() == 0) {
-				// dewars.remove(dewar);
-				// }
-				// }
-				// }
 			}
 		}
 		String[] msg = new String[2];

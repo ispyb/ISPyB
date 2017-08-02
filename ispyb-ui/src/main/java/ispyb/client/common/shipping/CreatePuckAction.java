@@ -475,7 +475,11 @@ public class CreatePuckAction extends DispatchAction {
 			if (containerVO == null) {
 				// Container
 				containerVO = new Container3VO();
-				containerVO.setContainerType("Puck");
+				if (listSamples != null && listSamples.length() > Constants.SPINE_SAMPLE_CAPACITY){
+					containerVO.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
+				} else {
+					containerVO.setContainerType(Constants.CONTAINER_TYPE_SPINE);
+				}			
 				containerVO.setCode(puckCode);
 				containerVO.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
 				containerVO.setTimeStamp(StringUtils.getCurrentTimeStamp());
