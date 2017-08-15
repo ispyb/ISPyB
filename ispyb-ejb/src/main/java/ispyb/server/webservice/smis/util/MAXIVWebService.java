@@ -43,7 +43,7 @@ public class MAXIVWebService implements SMISWebService {
 		
         
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/proposals?access_token=").append(this.getToken())
-				.append("&filter=").append(this.getFilter());
+				.append("&filter=").append(this.getFilter(startDateStr, endDateStr));
 		
 		JSONArray jsonProposals = readJsonArrayFromUrl(url.toString());
 		
@@ -200,11 +200,11 @@ public class MAXIVWebService implements SMISWebService {
 				session.setCategCode("MX");
 				session.setCategCounter(propId.intValue());
 				String startDate[] = ((String)jsonSession.get("evtstart")).split("-");
-				String stDatetime[] = startDate[2].split("T");
-				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(stDatetime[1])));
+				System.out.println("Date: " + Integer.parseInt(startDate[2].substring(0,2)));
+				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(startDate[2].substring(0,2))));
 				String endDate[] = ((String)jsonSession.get("evtend")).split("-");
-				String endDatetime[] = endDate[2].split("T");
-				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDatetime[1])));
+				//String endDatetime[] = endDate[2].split("T");
+				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDate[2].substring(0,2))));
 				//session.setStartShift((Integer)jsonSession.get("start_shitf"));
 				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
 				session.setShifts((Integer)jsonSession.get("shifts"));
@@ -416,12 +416,15 @@ public class MAXIVWebService implements SMISWebService {
 		return token;
 	}
 	
-	private String getFilter(){
+	private String getFilter(String startDateStr, String endDateStr){
 		StringBuilder filter = new StringBuilder();
 		String filterStr = "";
 		
+		String startYear = startDateStr.substring(0, 4);
+		String endYear = endDateStr.substring(0, 4);
+		StringBuilder regexp = new StringBuilder("/^").append(startYear).append("|^").append(endYear).append("/");
 		JSONObject jsonExp = new JSONObject();
-		jsonExp.put("regexp", "/^2016|^2017/");
+		jsonExp.put("regexp", regexp.toString());
 		JSONObject jsonField = new JSONObject();
 		jsonField.put("propid", jsonExp);
 		JSONObject jsonFilter = new JSONObject();
