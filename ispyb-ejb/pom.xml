@@ -186,7 +186,7 @@
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
 			<version>1.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -438,7 +438,7 @@
 			 			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 			
-			<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url> 
+			<userportal.url>duotest.maxiv.lu.se:3000</userportal.url> 
   			
   		</properties>
   	</profile>
