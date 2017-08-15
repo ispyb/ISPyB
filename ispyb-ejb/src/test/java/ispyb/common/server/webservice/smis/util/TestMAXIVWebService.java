@@ -6,10 +6,10 @@ public class TestMAXIVWebService {
 
 	public static void main(String args[]) {
 		//testAuthenticate();
-		testFindNewMXProposalPKs();
+		//testFindNewMXProposalPKs();
 		//testFindMainProposersForProposal();
 		//testFindParticipantsForProposal();
-		//testFindRecentSessionsInfoLightForProposalPkAndDays();
+		testFindRecentSessionsInfoLightForProposalPkAndDays();
 	}
 	
 	public static void testAuthenticate()
