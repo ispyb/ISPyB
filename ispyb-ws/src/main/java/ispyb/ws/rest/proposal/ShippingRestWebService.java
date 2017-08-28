@@ -315,7 +315,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("savePuck", logger, token, proposal, shippingId, containerId,puck);
 		try {
-			Container3VO container = this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class));
+			this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
 			this.logFinish("savePuck", id, logger);
 			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
 		} catch (Exception e) {
