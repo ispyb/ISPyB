@@ -239,11 +239,6 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	public Container3VO savePuck(Container3VO container, int proposalId) throws Exception {
 		Container3VO containerDB = this.findByPk(container.getContainerId(), true);
 		
-		/** Removing all samples **/
-		/** Never do this, it removes the data collections **/
-		/*for (BLSample3VO sample : containerDB.getSampleVOs()) {
-			entityManager.remove(sample);
-		}*/
 		containerDB.setSampleChangerLocation(container.getSampleChangerLocation());
 		containerDB.setCapacity(container.getCapacity());
 		containerDB.setCode(container.getCode());
