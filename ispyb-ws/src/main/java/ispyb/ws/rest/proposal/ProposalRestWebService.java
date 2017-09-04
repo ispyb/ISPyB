@@ -14,6 +14,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
@@ -25,6 +27,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
 
 @Path("/")
@@ -189,6 +192,28 @@ public class ProposalRestWebService extends MXRestWebService{
 		}
 		return (proposals);
 
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/update")
+	@Produces({ "application/json" })
+	public Response updateProposal(@PathParam("token") String token, @PathParam("proposal") String proposal)
+			throws Exception {
+		
+		long id = this.logInit("updateProposal", logger, token, proposal);
+		int proposalId = this.getProposalId(proposal);
+		try {
+			logger.info("Updating " + proposal + ":" + proposalId);
+			UpdateFromSMIS.updateProposalFromSMIS(proposalId);
+			this.logFinish("updateProposal", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("Status", "Done");
+			return this.sendResponse(response);
+		}
+		catch(Exception e){
+			return this.logError("updateProposal", e, id, logger);
+		}
 	}
 
 }
