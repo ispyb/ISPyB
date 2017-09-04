@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -139,6 +141,9 @@ public class UploadShipmentUtils {
 	private static Double holderLength = new Double(22);
 	
 	private static String loopType = "Nylon";
+	
+	private static final Logger LOG = Logger.getLogger(UploadShipmentUtils.class);
+
 
 	/**
 	 * PopulateTemplate
@@ -364,18 +369,17 @@ public class UploadShipmentUtils {
 				}
 			}
 
-			Container3VO container = null;
 			if (dewar == null) {
 				msgError += "Dewar with code '" + dewarCode + "' does not correspond to any dewar. Please check the dewar's name.\n";
 				sheetIsEmpty = true;
 			} else {
 				// Puck
-				container = new Container3VO();
-				container.setDewarVO(dewar);
-				container.setContainerType(Constants.CONTAINER_TYPE_SPINE);
-				container.setCode((sheet.getRow(puckRow).getCell(puckCol)).toString().trim());
-				container.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
-				container.setTimeStamp(StringUtils.getCurrentTimeStamp());
+				Container3VO newContainer = new Container3VO();
+				newContainer.setDewarVO(dewar);
+				newContainer.setContainerType(Constants.CONTAINER_TYPE_SPINE);
+				newContainer.setCode((sheet.getRow(puckRow).getCell(puckCol)).toString().trim());
+				newContainer.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
+				newContainer.setTimeStamp(StringUtils.getCurrentTimeStamp());
 				if (!deleteAllShipment) {
 					// check sheet empty before
 					boolean sheetEmpty = true;
@@ -397,25 +401,27 @@ public class UploadShipmentUtils {
 							break;
 						}
 					}
-					List<Container3VO> listContainerFromDB = containerService.findByCode(dewar.getDewarId(), container.getCode());
+					List<Container3VO> listContainerFromDB = containerService.findByCode(dewar.getDewarId(), newContainer.getCode());
 					if (listContainerFromDB != null && listContainerFromDB.size() > 0 && !sheetEmpty) { // delete it in
 																										// order to be
 																										// replaced by
 																										// the new one
 						containerService.deleteByPk(listContainerFromDB.get(0).getContainerId());
-						msgWarning += "The Puck " + container.getCode() + " has been deleted and a new one has been added.";
+						msgWarning += "The Puck " + newContainer.getCode() + " has been deleted and a new one has been added.";
 					}
 				}
-				container = containerService.create(container);
+				Container3VO container = containerService.create(newContainer);
 				// List<Crystal3VO> listCrystalCreated = new ArrayList<Crystal3VO>();
 				List<Crystal3VO> listCrystalCreated = crystalService.findByProposalId(sheetProposalId);
 				// TBD: need to add sanity check that this puck has not already been put in the dewar!
+				
+				Set<BLSample3VO> sampleVOs = new HashSet();
 				
 				// count the samples to decide if SPINE or UNIPUCK
 				int nbSamplesInPuck = 0;
 
 				for (int i = dataRow; i < dataRow + Constants.BASKET_SAMPLE_CAPACITY; i += 1) {
-					nbSamplesInPuck = nbSamplesInPuck + 1;
+					
 					// --- Retrieve interesting values from spreadsheet
 					String puckCode = cellToString(sheet.getRow(puckRow).getCell(puckCol));
 					String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
@@ -481,7 +487,8 @@ public class UploadShipmentUtils {
 						// Skip this line we do not create the sample
 					} else {
 						sheetIsEmpty = false;
-
+						nbSamplesInPuck = nbSamplesInPuck + 1;
+						
 						String crystalID = UUID.randomUUID().toString();
 						// String diffractionPlanUUID = uuidGenerator.generateRandomBasedUUID().toString();
 						if ((null != crystalID) && (!crystalID.equals(""))) {
@@ -616,31 +623,40 @@ public class UploadShipmentUtils {
 									holder.setWireWidth(0.010);
 									holder.setComments(sampleComments);
 									// Add holder to the container...
-									holder.setContainerVO(container);
-
-									holder = sampleService.create(holder);
-									// container.addSampleVO(holder);
-
+									
 									holder.setDiffractionPlanVO(difPlan);
-									holder = sampleService.update(holder);
+									holder = sampleService.create(holder);							
+									sampleVOs.add(holder);
+									
+									LOG.debug("sample created in container : " + container.getContainerId());
 								} // end validName
 							} // end protein
 						}// end crystalID
 					} // end sampleRowOK
 				} // for dataRow
+				
+				container.setSampleVOs(sampleVOs);
+				containerService.update(container);
+				
 				if (nbSamplesInPuck > Constants.SPINE_SAMPLE_CAPACITY) {
 					container.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
-					containerService.update(container);
+					container.setCapacity(Constants.UNIPUCK_SAMPLE_CAPACITY);
+				} else { 
+					container.setContainerType(Constants.CONTAINER_TYPE_SPINE);
+					container.setCapacity(Constants.SPINE_SAMPLE_CAPACITY);
+				}
+				containerService.update(container);
+				
+				// all samples were empty
+				if (sheetIsEmpty) {
+					if (container != null) {
+						// remove the container
+						containerService.deleteByPk(container.getContainerId());
+					}
 				}
 				
 			} // end dewar != null
-				// all samples were empty
-			if (sheetIsEmpty) {
-				if (container != null) {
-					// remove the container
-					containerService.deleteByPk(container.getContainerId());
-				}
-			}
+						
 		}
 		String[] msg = new String[2];
 		msg[0] = msgError;

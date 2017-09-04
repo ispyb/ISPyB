@@ -472,20 +472,31 @@ public class CreatePuckAction extends DispatchAction {
 				}
 				dewarVO.setTransportValue(transportValue);
 			}
+			int nbSamples = 0;
+			if (samples != null) {
+				for (Iterator<SamplePuck> iterator = samples.iterator(); iterator.hasNext();) {
+					SamplePuck samplePuck = iterator.next();
+					if (samplePuck.proteinAcronym != null && !samplePuck.proteinAcronym.isEmpty() && samplePuck.sampleName != null && !samplePuck.sampleName.isEmpty()){
+						nbSamples++;
+					}				
+				}
+			}
+			//container
 			if (containerVO == null) {
-				// Container
 				containerVO = new Container3VO();
-				if (listSamples != null && listSamples.length() > Constants.SPINE_SAMPLE_CAPACITY){
-					containerVO.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
-				} else {
-					containerVO.setContainerType(Constants.CONTAINER_TYPE_SPINE);
-				}			
-				containerVO.setCode(puckCode);
-				containerVO.setCapacity(Constants.BASKET_SAMPLE_CAPACITY);
+				containerVO.setCode(puckCode);				
 				containerVO.setTimeStamp(StringUtils.getCurrentTimeStamp());
 				containerVO.setDewarVO(dewarVO);
 			}
-
+			
+			if (samples != null && nbSamples > Constants.SPINE_SAMPLE_CAPACITY){
+				containerVO.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
+				containerVO.setCapacity(Constants.UNIPUCK_SAMPLE_CAPACITY);
+			} else {
+				containerVO.setContainerType(Constants.CONTAINER_TYPE_SPINE);
+				containerVO.setCapacity(Constants.SPINE_SAMPLE_CAPACITY);
+			}	
+			
 			boolean isError = false;
 			if (samples != null) {
 				for (Iterator<SamplePuck> iterator = samples.iterator(); iterator.hasNext();) {
@@ -849,6 +860,8 @@ public class CreatePuckAction extends DispatchAction {
 				if (createContainer) {
 					containerVO.setDewarVO(dewarVO);
 					containerVO = containerService.create(containerVO);
+				} else {
+					containerVO = containerService.update(containerVO);
 				}
 //				for (Iterator<DiffractionPlan3VO> d = listDifPlanCreated.iterator(); d.hasNext();) {
 //					DiffractionPlan3VO diffractionPlanVO = d.next();

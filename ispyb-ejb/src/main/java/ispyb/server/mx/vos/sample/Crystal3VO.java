@@ -110,7 +110,6 @@ public class Crystal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "pdbFilePath")
 	protected String pdbFilePath;
 
-
 	@OneToMany
 	@JoinColumn(name = "crystalId")
 	private Set<BLSample3VO> sampleVOs;
