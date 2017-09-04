@@ -159,7 +159,9 @@ public class UpdateFromSMIS {
 	}
 	
 	public static void updateProposalFromSMIS(Integer proposalId) throws Exception {
-
+		if (proposal == null){
+			initServices();
+		}
 		Proposal3VO myProposal = proposal.findByPk(proposalId);
 
 		Long pk = new Long(1);

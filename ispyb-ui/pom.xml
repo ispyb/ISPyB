@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
-			<version>5.0.3</version>
+			<version>5.0.4</version>
 			<scope>provided</scope>
 		</dependency>
 
