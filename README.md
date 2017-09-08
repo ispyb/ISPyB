@@ -23,7 +23,15 @@ mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=ojdbc6 -DartifactId=ojdbc6 
 mvn install:install-file -Dfile=ispyb-WSclient-userportal-gen-1.3.jar -DgroupId=ispyb -DartifactId=ispyb-WSclient-userportal-gen -Dversion=1.3 -Dpackaging=jar
 ```
 
-3. Build the project by using maven
+3. Configure the SITE property
+
+Copy the settings.xml present in ispyb-parent/configuration, put it outside the ISPyB folder, edit it with your own profile : jboss_home, site, dev, passwords ...
+
+Configure maven to point to this user.settings.
+
+These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
+
+4. Build the project by using maven
 ```
 mvn clean install
 ```
