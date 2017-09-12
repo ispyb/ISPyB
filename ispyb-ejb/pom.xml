@@ -442,7 +442,7 @@
 			 			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 			
-			<userportal.url>duo.maxiv.lu.se:3000</userportal.url> 
+			<userportal.url>w-v-duo-1.maxiv.lu.se:3000</userportal.url> 
   			
   		</properties>
   	</profile>
