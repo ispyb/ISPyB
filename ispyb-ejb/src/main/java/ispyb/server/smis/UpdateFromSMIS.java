@@ -503,9 +503,11 @@ public class UpdateFromSMIS {
 				LOG.debug("current labo is : " + currentLabo.getAddress());
 
 				List<LabContact3VO> labContactsList = null;
-				if (currentPerson != null)
+				if (currentPerson != null) {
 					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
 							currentProposal.getProposalId());
+					
+				}
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
 					labContactExists = true;
@@ -516,6 +518,10 @@ public class UpdateFromSMIS {
 						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
 								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
 							LOG.debug("laboratory already exists");
+							if (!person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail())){
+								person3VO.setEmailAddress(labContacts[i].getScientistEmail());
+								person.merge(person3VO);
+							}
 							continue;
 						}
 						else {
@@ -527,6 +533,7 @@ public class UpdateFromSMIS {
 								LOG.debug("new laboratory created for labContact");
 							}
 							person3VO.setLaboratoryVO(existingLab);
+							person3VO.setEmailAddress(labContacts[i].getScientistEmail());
 							person.merge(person3VO);
 							labContact3VO.setPersonVO(person3VO);
 							labContactService.update(labContact3VO);
@@ -592,10 +599,13 @@ public class UpdateFromSMIS {
 				String currentFamilyName = currentPerson.getFamilyName();
 				String currentGivenName = currentPerson.getGivenName();
 				String currentSiteId = currentPerson.getSiteId();
+				String currentEmail = currentPerson.getEmailAddress();
 				// main proposer
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
 				String siteId = null;
+				String email = mainProp.getScientistEmail();
+				
 				if (Constants.SITE_IS_ESRF() && mainProp.getSiteId() != null ) 
 					siteId=mainProp.getSiteId().toString();
 
@@ -614,6 +624,14 @@ public class UpdateFromSMIS {
 					currentPerson = person.merge(currentPerson);
 					currentSiteId = siteId;
 					LOG.debug("Update person with siteId");
+				}
+				
+				// update the email if changed
+				if (StringUtils.matchString(currentFamilyName, familyName)
+						&& StringUtils.matchString(currentGivenName, givenName) && (!StringUtils.matchStringNotNull(email, currentEmail)) ) {
+					currentPerson.setEmailAddress(email);
+					currentPerson = person.merge(currentPerson);
+					LOG.debug("Update person with email");
 				}
 				
 				// test if siteId are different or are not filled
