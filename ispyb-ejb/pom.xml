@@ -404,11 +404,11 @@
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			
-  			<ldap.employee.resource>ldap://w-v-ad-test-0.maxiv.lu.se:389/</ldap.employee.resource>
-  			<ldap.base>dc=duotest,dc=lu,dc=se</ldap.base>
-  			<ldap.people>CN=Users,dc=duotest,dc=lu,dc=se</ldap.people>
+  			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
+ 			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
+  			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
   			<ldap.attribute>samaccountname</ldap.attribute>
-  			<ldap.principalDNPrefix>duotest\\</ldap.principalDNPrefix>
+  			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
   			
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
@@ -441,7 +441,7 @@
 			<ispyb.authorisation.active>true</ispyb.authorisation.active>
 			 			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-			
+			<ispyb.userportal.link>SMIS</ispyb.userportal.link> 
 			<userportal.url>duo.maxiv.lu.se:3000</userportal.url> 
   			
   		</properties>
