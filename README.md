@@ -25,9 +25,47 @@ mvn install:install-file -Dfile=ispyb-WSclient-userportal-gen-1.3.jar -DgroupId=
 
 3. Configure the SITE property
 
-Copy the settings.xml present in ispyb-parent/configuration, put it outside the ISPyB folder, edit it with your own profile : jboss_home, site, dev, passwords ...
+Copy the settings.xml present in ispyb-parent/configuration into ~/.m2/settings.xml if you are using a Linux machine or configure maven accordingly to use this setting file [https://maven.apache.org/settings.html](https://maven.apache.org/settings.html)
 
-Configure maven to point to this user.settings.
+For example:
+```
+<settings>
+	<proxies>
+		<proxy>
+			<id>esrf</id>
+			<active>true</active>
+			<protocol>http</protocol>
+			<host>proxy.esrf.fr</host>
+			<port>3128</port>
+			<nonProxyHosts>localhost</nonProxyHosts>
+		</proxy>
+		<proxy>
+			<id>esrf</id>
+			<active>true</active>
+			<protocol>https</protocol>
+			<host>proxy.esrf.fr</host>
+			<port>3128</port>
+			<nonProxyHosts>localhost</nonProxyHosts>
+		</proxy>
+	</proxies>
+	<profiles>
+		<profile>
+			<id>ESRF</id>
+			<properties>
+				<ispyb.site>ESRF</ispyb.site>
+				<smis.ws.usr>******</smis.ws.usr>
+				<smis.ws.pwd>******</smis.ws.pwd>
+				<jboss.home>/opt/wildfly</jboss.home>
+			</properties>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>ESRF</activeProfile>
+	</activeProfiles>
+</settings>
+```
+
+
 
 These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
 
