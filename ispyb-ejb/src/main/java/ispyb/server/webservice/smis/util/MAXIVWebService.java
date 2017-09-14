@@ -41,7 +41,6 @@ public class MAXIVWebService implements SMISWebService {
 	
 	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
 		List<Long> pks = new ArrayList<Long>();
-		
         
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/proposals?access_token=").append(this.getToken())
 				.append("&filter=").append(this.getFilter(startDateStr, endDateStr));
@@ -181,7 +180,7 @@ public class MAXIVWebService implements SMISWebService {
 		
 		JSONObject jsonProposal = getProposalForId(propId);
 		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
-		
+
 		for(JSONObject jsonSession : jsonSessions){
 			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
 			
@@ -338,7 +337,7 @@ public class MAXIVWebService implements SMISWebService {
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Institutes/")
 				.append(labId).append("?access_token=").append(this.getToken());
-		
+
 		lab = readJsonObjectFromUrl(url.toString());
 		
 		return lab;
@@ -388,8 +387,10 @@ public class MAXIVWebService implements SMISWebService {
 	{
 		String token = "";
 		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Users/login");
+		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpPost httpPost = new HttpPost("https://duotest.maxiv.lu.se:3000/api/Users/login");
+		HttpPost httpPost = new HttpPost(url.toString());
 		
 		try{
 			httpPost.addHeader("Accept", "application/json");
