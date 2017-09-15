@@ -175,6 +175,7 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 		ProposalWS3VO proposal = proposalService.findForWSByCodeAndNumber(proposalCode, proposalNumber);
 		
 		Experiment3VO experiment = new Experiment3VO();
+		experiment = this.experiment3Service.initPlates(experiment);
 		experiment.setName(name);
 		experiment.setType("STATIC");
 		try{
