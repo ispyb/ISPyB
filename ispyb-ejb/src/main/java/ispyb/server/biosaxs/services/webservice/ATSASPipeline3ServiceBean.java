@@ -348,6 +348,11 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 	
 	@Override
 	public void addAveraged(String measurementId, String averaged, String discarded, String averageFile) {
+		this.addAveraged(measurementId, averaged, discarded, averageFile, null);
+	}
+	
+	@Override
+	public void addAveraged(String measurementId, String averaged, String discarded, String averageFile, String visitorFilePath) {
 
 		Type listType = new TypeToken<List<HashMap<String, String>>>() {
 		}.getType();
@@ -374,6 +379,16 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 
 		/** Does it contains already a average **/
 		List<Merge3VO> merges = primaryDataProcessing3Service.findByMeasurementId(Integer.parseInt(measurementId));
+		
+		try{
+			Measurement3VO measurement = this.measurement3Service.findById(Integer.parseInt(measurementId));
+			measurement.setImageDirectory(visitorFilePath);
+			this.measurement3Service.merge(measurement);
+		}
+		catch(Exception exp){
+			exp.printStackTrace();
+		}
+		
 		LOG.info("------ Number of Averages by measurementId --------");
 		LOG.info(merges.size());
 

@@ -69,6 +69,7 @@ For example:
 
 These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
 
+
 4. Build the project by using maven
 ```
 mvn clean install
