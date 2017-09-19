@@ -40,8 +40,11 @@ public interface ATSASPipeline3Service {
 	public Measurement3VO appendMeasurementToExperiment(String experimentId, String runNumber, String type, String plate, String row, String well, String name, String bufferName,
 			String concentration, String sEUtemperature, String viscosity, String volume, String volumeToLoad, String waitTime, String transmission, String comments);
 	
-	public void addAveraged(String measurementId, String averaged, String discarded, String averageFile);
+	public void addAveraged(String measurementId, String averaged, String discarded, String averageFile, String visitorFilePath);
 
+	void addAveraged(String measurementId, String averaged, String discarded,
+			String averageFile);
+	
 	public void addSubtraction(String experimentId, String runNumberList, String rgStdev, String i0, String i0Stdev, String firstPointUsed, String lastPointUsed, String quality,
 			String isagregated, String rgGuinier, String rgGnom, String dmax, String total, String volume, String sampleOneDimensionalFiles,
 			String bufferOneDimensionalFiles, String sampleAverageFilePath, String bestBufferFilePath, String subtractedFilePath, String experimentalDataPlotFilePath,
@@ -87,4 +90,6 @@ public interface ATSASPipeline3Service {
 	public List<Macromolecule3VO> getMacromoleculesByProposal(String code, String number) throws Exception;
 
 	public List<Buffer3VO> getBuffersByProposal(String code, String number) throws Exception;
+
+
 }
