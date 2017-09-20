@@ -1,19 +1,5 @@
 package ispyb.ws.rest.proposal;
 
-import generated.ws.smis.ProposalParticipantInfoLightVO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.smis.ScientistsFromSMIS;
-import ispyb.ws.rest.mx.MXRestWebService;
-
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +15,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import generated.ws.smis.ProposalParticipantInfoLightVO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.smis.ScientistsFromSMIS;
+import ispyb.ws.rest.mx.MXRestWebService;
 
 @Path("/")
 public class ShippingRestWebService extends MXRestWebService {
@@ -315,7 +313,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("savePuck", logger, token, proposal, shippingId, containerId,puck);
 		try {
-			Container3VO container = this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class));
+			this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
 			this.logFinish("savePuck", id, logger);
 			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
 		} catch (Exception e) {
@@ -340,6 +338,24 @@ public class ShippingRestWebService extends MXRestWebService {
 			return sendResponse(this.getShipping3Service().getShippingById(shippingId));
 		} catch (Exception e) {
 			return this.logError("removePuck", e, id, logger);
+		}
+
+	}
+
+	@RolesAllowed({"Manager"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/remove")
+	@Produces({ "application/json" })
+	public Response removeShipment(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId) throws Exception {
+
+		long id = this.logInit("removeShipment", logger, token, proposal, shippingId);
+		try {
+			this.getShipping3Service().deleteByPk(new Integer(shippingId));
+			this.logFinish("removeShipment", id, logger);
+			return sendResponse(this.getShipping3Service().getShippingById(shippingId));
+		} catch (Exception e) {
+			return this.logError("removeShipment", e, id, logger);
 		}
 
 	}

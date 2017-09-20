@@ -159,7 +159,9 @@ public class UpdateFromSMIS {
 	}
 	
 	public static void updateProposalFromSMIS(Integer proposalId) throws Exception {
-
+		if (proposal == null){
+			initServices();
+		}
 		Proposal3VO myProposal = proposal.findByPk(proposalId);
 
 		Long pk = new Long(1);
@@ -501,9 +503,11 @@ public class UpdateFromSMIS {
 				LOG.debug("current labo is : " + currentLabo.getAddress());
 
 				List<LabContact3VO> labContactsList = null;
-				if (currentPerson != null)
+				if (currentPerson != null) {
 					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
 							currentProposal.getProposalId());
+					
+				}
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
 					labContactExists = true;
@@ -514,6 +518,10 @@ public class UpdateFromSMIS {
 						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
 								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
 							LOG.debug("laboratory already exists");
+							if (!person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail())){
+								person3VO.setEmailAddress(labContacts[i].getScientistEmail());
+								person.merge(person3VO);
+							}
 							continue;
 						}
 						else {
@@ -525,6 +533,7 @@ public class UpdateFromSMIS {
 								LOG.debug("new laboratory created for labContact");
 							}
 							person3VO.setLaboratoryVO(existingLab);
+							person3VO.setEmailAddress(labContacts[i].getScientistEmail());
 							person.merge(person3VO);
 							labContact3VO.setPersonVO(person3VO);
 							labContactService.update(labContact3VO);
@@ -590,10 +599,13 @@ public class UpdateFromSMIS {
 				String currentFamilyName = currentPerson.getFamilyName();
 				String currentGivenName = currentPerson.getGivenName();
 				String currentSiteId = currentPerson.getSiteId();
+				String currentEmail = currentPerson.getEmailAddress();
 				// main proposer
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
 				String siteId = null;
+				String email = mainProp.getScientistEmail();
+				
 				if (Constants.SITE_IS_ESRF() && mainProp.getSiteId() != null ) 
 					siteId=mainProp.getSiteId().toString();
 
@@ -612,6 +624,14 @@ public class UpdateFromSMIS {
 					currentPerson = person.merge(currentPerson);
 					currentSiteId = siteId;
 					LOG.debug("Update person with siteId");
+				}
+				
+				// update the email if changed
+				if (StringUtils.matchString(currentFamilyName, familyName)
+						&& StringUtils.matchString(currentGivenName, givenName) && (!StringUtils.matchStringNotNull(email, currentEmail)) ) {
+					currentPerson.setEmailAddress(email);
+					currentPerson = person.merge(currentPerson);
+					LOG.debug("Update person with email");
 				}
 				
 				// test if siteId are different or are not filled
@@ -896,30 +916,20 @@ public class UpdateFromSMIS {
 		endDateCal.setTime(sessionVO.getEndDate().getTime());
 		Timestamp endDate = new Timestamp(endDateCal.getTimeInMillis());
 
-		// the finder should be replaced by a finder on the smis session Pk,
-		// instead of the startDate
-		// startDate finder is a problem with a session scheduled on
-		// 08/11-09/11, 1 on 09/11-10/11
-		// the first one is not inserted in ispby (cf. mail David vS)
-		// List<Session3VO> col =
-		// session.findByStartDateAndBeamLineNameAndNbShifts(proposalId,
-		// startDateBegin,
-		// startDateEnd, beamlineName, nbShifts);
 		Session3VO sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
 
 		List<Session3VO> sessFromDBs = null;
 		LOG.debug("look for session already in DB for proposalId = " + proposalId + " | startDate = " + startDate
 				+ " | endDate = " + endDate + " | beamlineName = " + beamlineName + " | nbShifts = " + nbShifts);
 		
-		if (!Constants.SITE_IS_SOLEIL()) {
-			sessFromDB = session.findByExpSessionPk(sessionVO.getPk());
-		} else if (Constants.SITE_IS_SOLEIL()) {
+		if (Constants.SITE_IS_SOLEIL()) {
 			sessFromDBs = session.findByStartDateAndBeamLineNameAndNbShifts(proposalId, startDate, endDate,
 					beamlineName, nbShifts);			
 		}
 
-		// if (col == null || col.isEmpty()) {
-		if (sessFromDB == null || (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() == 0)) {
+		// if the session from DB is null we add a new one only if not cancelled
+		if ( (sessFromDB == null && !sessionVO.isCancelled() )
+				|| (Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() == 0)) {
 
 			Session3VO sesv = new Session3VO();
 			BeamLineSetup3VO setupv = new BeamLineSetup3VO();
@@ -956,7 +966,8 @@ public class UpdateFromSMIS {
 				proplv.setType(Constants.PROPOSAL_MX_BX);
 				proplv = proposal.update(proplv);
 			}
-		} else {
+		} // update existing session
+		else {
 			Boolean isSoleil = Constants.SITE_IS_SOLEIL() && sessFromDBs != null && sessFromDBs.size() > 0;
 			Session3VO ispybSession = isSoleil ? sessFromDBs.get(0) : sessFromDB;
 			// update the coming session if needed -
@@ -996,6 +1007,16 @@ public class UpdateFromSMIS {
 						&& !sessionVO.getShifts().equals(ispybSession.getNbShifts())) {
 					changeTxt += ", nbShifts " + ispybSession.getNbShifts() + " => " + sessionVO.getShifts();
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
+					changeSession = true;
+				}
+				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {
+					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
+					ispybSession.setScheduled(new Byte("9"));
+					changeSession = true;
+				}
+				if (!sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("9")) ) {
+					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
+					ispybSession.setScheduled(new Byte("1"));
 					changeSession = true;
 				}
 				if (isSoleil) {

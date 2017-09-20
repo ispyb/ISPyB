@@ -1,17 +1,5 @@
 package ispyb.ws.rest.proposal;
 
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
-import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
-import ispyb.server.common.vos.login.Login3VO;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.ws.rest.mx.MXRestWebService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +13,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.smis.UpdateFromSMIS;
+import ispyb.ws.rest.mx.MXRestWebService;
 
 @Path("/")
 public class ProposalRestWebService extends MXRestWebService{
@@ -116,6 +120,8 @@ public class ProposalRestWebService extends MXRestWebService{
 			List<Map<String, Object>> proposal = this.getProposal3Service().findProposalById(session.getProposalVOId());
 			this.logFinish(methodName, id, logger);
 			return this.sendResponse(proposal);
+		} catch (AccessDeniedException e) {
+			return this.sendError(methodName + " unauthorized user");
 		} catch (Exception e) {
 			return this.logError(methodName, e, id, logger);
 		}
@@ -186,6 +192,28 @@ public class ProposalRestWebService extends MXRestWebService{
 		}
 		return (proposals);
 
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/update")
+	@Produces({ "application/json" })
+	public Response updateProposal(@PathParam("token") String token, @PathParam("proposal") String proposal)
+			throws Exception {
+		
+		long id = this.logInit("updateProposal", logger, token, proposal);
+		int proposalId = this.getProposalId(proposal);
+		try {
+			logger.info("Updating " + proposal + ":" + proposalId);
+			UpdateFromSMIS.updateProposalFromSMIS(proposalId);
+			this.logFinish("updateProposal", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("Status", "Done");
+			return this.sendResponse(response);
+		}
+		catch(Exception e){
+			return this.logError("updateProposal", e, id, logger);
+		}
 	}
 
 }

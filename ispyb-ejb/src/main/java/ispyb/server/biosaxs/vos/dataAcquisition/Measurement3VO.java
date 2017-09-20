@@ -62,6 +62,19 @@ public class Measurement3VO implements java.io.Serializable {
 	protected String code;
 	protected String transmission;
 	protected String waitTime;
+	protected String imageDirectory;
+	
+	
+	@Column(name = "imageDirectory")
+	public String getImageDirectory() {
+		return imageDirectory;
+	}
+
+
+	public void setImageDirectory(String imageDirectory) {
+		this.imageDirectory = imageDirectory;
+	}
+
 	@Expose
 	protected Run3VO run3VO;
 	@Expose

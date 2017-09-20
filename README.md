@@ -23,7 +23,54 @@ mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=ojdbc6 -DartifactId=ojdbc6 
 mvn install:install-file -Dfile=ispyb-WSclient-userportal-gen-1.3.jar -DgroupId=ispyb -DartifactId=ispyb-WSclient-userportal-gen -Dversion=1.3 -Dpackaging=jar
 ```
 
-3. Build the project by using maven
+3. Configure the SITE property
+
+Copy the settings.xml present in ispyb-parent/configuration into ~/.m2/settings.xml if you are using a Linux machine or configure maven accordingly to use this setting file [https://maven.apache.org/settings.html](https://maven.apache.org/settings.html)
+
+For example:
+```
+<settings>
+	<proxies>
+		<proxy>
+			<id>esrf</id>
+			<active>true</active>
+			<protocol>http</protocol>
+			<host>proxy.esrf.fr</host>
+			<port>3128</port>
+			<nonProxyHosts>localhost</nonProxyHosts>
+		</proxy>
+		<proxy>
+			<id>esrf</id>
+			<active>true</active>
+			<protocol>https</protocol>
+			<host>proxy.esrf.fr</host>
+			<port>3128</port>
+			<nonProxyHosts>localhost</nonProxyHosts>
+		</proxy>
+	</proxies>
+	<profiles>
+		<profile>
+			<id>ESRF</id>
+			<properties>
+				<ispyb.site>ESRF</ispyb.site>
+				<smis.ws.usr>******</smis.ws.usr>
+				<smis.ws.pwd>******</smis.ws.pwd>
+				<jboss.home>/opt/wildfly</jboss.home>
+			</properties>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>ESRF</activeProfile>
+	</activeProfiles>
+</settings>
+```
+
+
+
+These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
+
+
+4. Build the project by using maven
 ```
 mvn clean install
 ```
@@ -42,3 +89,61 @@ If the build has succeed a summary repost should appear:
 
 ```
 
+## Versioning
+
+Use versions:set from the versions-maven plugin:
+```
+mvn versions:set -DnewVersion=5.0.0
+```
+
+If you are happy with the change then:
+```
+mvn versions:commit
+```
+Otherwise
+```
+mvn versions:revert
+```
+
+
+## Database creation and update
+Run the creation scripts present in the module ispyb-ejb, to run the scripts you will need a user “pxadmin” with full permissions.
+
+ispyb-ejb/db/scripts/pyconfig.sql
+This corresponds to the menu options, and contains both structure and data
+
+ispyb-ejb/db/scripts /pydb.sql
+This corresponds to the ISPyB metadata and contains only the database structure.
+
+ispyb-ejb/db/scripts/schemaStatus.sql
+This corresponds to the entries present in SchemaStatus table and gives an overview of the executed update scripts.
+
+The creation scripts are normally updated for each tag, but if you are using the trunk version you may have to run the update scripts present in :
+ispyb-ejb/db/scripts/ahead
+
+Check before the entries in SchemaStatus table to know which scripts to execute.
+The scripts already run for the current tag are in :
+ispyb-ejb/db/scripts/passed
+
+### Creating an update script
+The 1st line must be:
+```
+insert into SchemaStatus (scriptName, schemaStatus) values ('2017_06_06_blabla.sql','ONGOING');
+```
+then the update script
+
+....
+
+and the last line must be:
+```
+update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_06_06_blabla.sql';
+```
+This allows to keep the SchemaStus table uptodate and to know which scripts have been run.
+You can look for examples in ispyb-ejb/db/scripts/passed/2017
+
+### Database schema
+
+Please do not forget to update the database schema :
+ https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb 
+ 
+This schema can be updated using MySQLWorkbench (free tool from MySQL).

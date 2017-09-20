@@ -18,6 +18,26 @@
  ******************************************************************************/
 package ispyb.client.mx.collection;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import ispyb.client.ParentIspybAction;
 import ispyb.client.SiteSpecific;
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.Confidentiality;
@@ -27,6 +47,7 @@ import ispyb.client.security.roles.RoleDO;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PathUtils;
 import ispyb.common.util.StringUtils;
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.sessions.Session3Service;
@@ -46,26 +67,6 @@ import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 /**
  * @struts.action name="viewDataCollectionGroupForm" path="/user/viewDataCollectionGroup"
  *                input="user.collection.viewSession.page" parameter="reqCode" scope="request" validate="false"
@@ -78,7 +79,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  */
 
-public class ViewDataCollectionGroupAction extends DispatchAction {
+public class ViewDataCollectionGroupAction extends ParentIspybAction {
 
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
@@ -160,6 +161,10 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 			Session3VO slv = sessionService.findByPk(sessionId, false, true, true);
 			// Fill the information bar
 			BreadCrumbsForm.getItClean(request).setSelectedSession(slv);
+
+		} catch (AccessDeniedException e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			return accessDeniedPage(mapping, actForm, request, response);
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE,
@@ -305,6 +310,9 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", "Data"));
 			saveMessages(request, messages);
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
 
 		} catch (Exception e) {
 
@@ -1015,6 +1023,10 @@ public class ViewDataCollectionGroupAction extends DispatchAction {
 			}
 			session3vo = ViewSessionAction.saveSession(session3vo);
 			return null;
+			
+		} catch (AccessDeniedException e) {
+			return accessDeniedPage(mapping, actForm, request, response);
+
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			response.getWriter().write(GSonUtils.getErrorMessage(exp));

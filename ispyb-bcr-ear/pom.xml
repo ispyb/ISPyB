@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>5.2.0</version>
 	</parent>
 	<artifactId>ispyb-bcr-ear</artifactId>
 	<packaging>ear</packaging>
@@ -37,14 +37,14 @@
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
 			<type>ejb</type>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>5.2.0</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-bcr</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>5.0.3</version>
 			<type>war</type>
 		</dependency>
 		

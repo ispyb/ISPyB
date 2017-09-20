@@ -33,7 +33,11 @@ import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.proposals.Proposal3ServiceLocal;
 import ispyb.server.common.services.sessions.Session3ServiceLocal;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.mx.services.sample.BLSample3ServiceLocal;
+import ispyb.server.mx.services.sample.Protein3ServiceLocal;
 import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 
 /**
@@ -55,6 +59,12 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	@EJB
 	private Proposal3ServiceLocal proposalService;
 	
+	@EJB
+	private Protein3ServiceLocal proteinService;
+	
+	@EJB
+	private BLSample3ServiceLocal sampleService;
+	
 	/**
 	 * 
 	 * @param sessionVO
@@ -64,15 +74,15 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 	 * @throws Exception
 	 */
 	public void checkUserRightToAccessSession( Session3VO vo )
-			throws Exception{
+			throws AccessDeniedException, NullPointerException{
 				
 		if (vo == null) 
-			throw new Exception("no session has been found");
+			throw new NullPointerException("no session has been found");
 		
 		if (!Constants.isAuthorisationActive() )
 			return;
 		
-		if (isUserAdminOrLcOrWs() ) 
+		if (isUserAdminOrLcOrWs() )
 			return;
 								
 		boolean hasAccess = false;
@@ -97,7 +107,75 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 			throw new AccessDeniedException("Access not authorised to session:" + vo.toString() + " for user:"+ user);
 	}
 	
-	public String getLoggedUser() throws Exception {
+	public void checkUserRightToAccessProposal( Proposal3VO vo)
+			throws AccessDeniedException, NullPointerException{
+				
+		if (vo == null) 
+			throw new NullPointerException("no proposal selected ");
+		
+		if (!Constants.isAuthorisationActive() )
+			return;
+		
+		if (isUserAdminOrLcOrWs() )
+			return;
+								
+		boolean hasAccess = false;
+		String user = this.getLoggedUser();
+						
+		//TODO	
+		//find a way to authorise calls from rest webservices here we authorise anonymous !!!
+		if (user.equalsIgnoreCase("anonymous"))
+			return;
+		
+		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(user, Constants.SITE_ESRF);
+		
+		for (Iterator<Proposal3VO> iterator = proposals.iterator(); iterator.hasNext();) {
+			Proposal3VO proposal3vo = (Proposal3VO) iterator.next();
+			if ( vo.getProposalId().equals(proposal3vo.getProposalId()))
+				hasAccess = true;
+		}
+				
+		if (hasAccess)
+			return;
+		else
+			throw new AccessDeniedException("Access not authorised to proposal:" + vo.toString() + " for user:"+ user);
+	}
+
+	public void checkUserRightToAccessProtein( Protein3VO vo)
+			throws AccessDeniedException, NullPointerException{
+				
+		if (vo == null) 
+			throw new NullPointerException("no protein selected ");
+		
+		if (!Constants.isAuthorisationActive() )
+			return;
+		
+		if (isUserAdminOrLcOrWs() )
+			return;
+								
+		boolean hasAccess = false;
+		String user = this.getLoggedUser();
+						
+		//TODO	
+		//find a way to authorise calls from rest webservices here we authorise anonymous !!!
+		if (user.equalsIgnoreCase("anonymous"))
+			return;
+		
+		List<Proposal3VO> proposals = proposalService.findProposalByLoginName(user, Constants.SITE_ESRF);
+		
+		for (Iterator<Proposal3VO> iterator = proposals.iterator(); iterator.hasNext();) {
+			Proposal3VO proposal3vo = (Proposal3VO) iterator.next();
+			if ( vo.getProposalVOId().equals(proposal3vo.getProposalId()))
+				hasAccess = true;
+		}
+				
+		if (hasAccess)
+			return;
+		else
+			throw new AccessDeniedException("Access not authorised to protein:" + vo.toString() + " for user:"+ user);
+	}
+	
+	public String getLoggedUser()  {
 		String user = "guest";
 		
 			LOG.debug("Authorisation : getLoggedUser: context.getCallerPrincipal=" + this.context.getCallerPrincipal().getName());
@@ -106,7 +184,7 @@ public class AuthorisationServiceBean implements AuthorisationService, Authorisa
 		return user;
 	}
 	
-	public boolean isUserAdminOrLcOrWs() throws Exception {
+	public boolean isUserAdminOrLcOrWs() {
 				
 		if (this.context.isCallerInRole(Constants.ALL_MANAGE_ROLE_NAME) 
 				|| this.context.isCallerInRole(Constants.ROLE_MANAGER) 

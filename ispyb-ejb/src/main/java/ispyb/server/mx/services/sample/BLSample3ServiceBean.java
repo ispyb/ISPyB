@@ -497,6 +497,12 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 							+ "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
 							+ "(Container.beamlineLocation like '" + beamlineLocation
 							+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
+
+                                        System.out.println(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
+                                                        + " AND " + "(Container.containerStatus LIKE '" + status
+                                                        + "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
+                                                        + "(Container.beamlineLocation like '" + beamlineLocation
+                                                        + "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
 					List o = q.getResultList();
 					listInfo = o;
 				}

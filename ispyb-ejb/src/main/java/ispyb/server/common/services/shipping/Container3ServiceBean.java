@@ -236,14 +236,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	}
 
 	@Override
-	public Container3VO savePuck(Container3VO container) throws Exception {
+	public Container3VO savePuck(Container3VO container, int proposalId) throws Exception {
 		Container3VO containerDB = this.findByPk(container.getContainerId(), true);
 		
-		/** Removing all samples **/
-		/** Never do this, it removes the data collections **/
-		/*for (BLSample3VO sample : containerDB.getSampleVOs()) {
-			entityManager.remove(sample);
-		}*/
 		containerDB.setSampleChangerLocation(container.getSampleChangerLocation());
 		containerDB.setCapacity(container.getCapacity());
 		containerDB.setCode(container.getCode());
@@ -253,28 +248,16 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		Set<String> locations = new HashSet<String>();
 		/** Adding Sample **/
 		for (BLSample3VO sample : container.getSampleVOs()) {
-			System.out.println("-------------------------");
-			System.out.println("Storing sample: " + sample.getCode() + " " + sample.getName());
-			System.out.println("sampleId: " + sample.getBlSampleId());
-			System.out.println("location: " + sample.getLocation());
 			locations.add(sample.getLocation());
-			/** We create a new sample **/
-			//sample.setBlSampleId(null);
-			
-			System.out.println("\t\t\t Creating new diffraction plan ");
 			DiffractionPlan3VO diff = sample.getDiffractionPlanVO();
-			System.out.println("Diffraction: " + diff.toString());
-			//diff.setDiffractionPlanId(null);
 			diff = entityManager.merge(diff);
 			
 			Crystal3VO crystal = sample.getCrystalVO();
 			
-			Crystal3VO searchCrystal = crystal3Service.findByAcronymAndCellParam(sample.getCrystalVO().getProteinVO().getAcronym(), crystal, null); 
+			Crystal3VO searchCrystal = crystal3Service.findByAcronymAndCellParam(sample.getCrystalVO().getProteinVO().getAcronym(), crystal, proposalId); 
 			if (searchCrystal != null ){
 				/** Crystal for this acronym and cell unit parameters already exist **/
-				System.out.println("Crystal found");
 				sample.setCrystalVO(searchCrystal);
-//				searchCrystal.getSampleVOs().add(sample);
 			}
 			else{
 				/** Crystal not found then we create a new one **/
@@ -286,8 +269,6 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 			}
 			
 			sample.setDiffractionPlanVO(diff);
-
-//			sample.setBlSampleId(null);
 			sample.setContainerVO(containerDB);
 			sample = entityManager.merge(sample);
 		}
