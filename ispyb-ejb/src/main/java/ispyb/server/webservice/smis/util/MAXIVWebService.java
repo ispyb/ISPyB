@@ -387,8 +387,10 @@ public class MAXIVWebService implements SMISWebService {
 	{
 		String token = "";
 		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Users/login");
+		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpPost httpPost = new HttpPost("https://duotest.maxiv.lu.se:3000/api/Users/login");
+		HttpPost httpPost = new HttpPost(url.toString());
 		
 		try{
 			httpPost.addHeader("Accept", "application/json");

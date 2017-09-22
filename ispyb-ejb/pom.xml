@@ -411,6 +411,7 @@
   			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
 
   			<protein.allowedToCreate>true</protein.allowedToCreate>
+
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
   			
@@ -427,8 +428,8 @@
   			<ispyb.bcm>mxcube</ispyb.bcm>
   			
   			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+  			<mail.admin>ims@maxiv.lu.se</mail.admin>
+  			<mail.dev>ims@maxiv.lu.se</mail.dev>
   			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
   			<mail.stores>dewar-stores@esrf.fr</mail.stores>
   			
@@ -442,8 +443,8 @@
 			<ispyb.authorisation.active>true</ispyb.authorisation.active>
 			 			 
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-			
-			<userportal.url>duotest.maxiv.lu.se:3000</userportal.url> 
+			<ispyb.userportal.link>SMIS</ispyb.userportal.link> 
+			<userportal.url>duo.maxiv.lu.se:3000</userportal.url> 
   			
   		</properties>
   	</profile>
