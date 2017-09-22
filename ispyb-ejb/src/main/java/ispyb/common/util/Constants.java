@@ -42,7 +42,7 @@ public final class Constants {
 	private static Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	public enum SITE {
-		SOLEIL, EMBL, ESRF, GENERIC	
+		SOLEIL, EMBL, ESRF, MAXIV, GENERIC
 
 	}
 
@@ -130,9 +130,12 @@ public final class Constants {
 		if (SITE_IS_EMBL()) {
 			return SITE.EMBL;
 		}
-		if (SITE_IS_ESRF()) {
-			return SITE.ESRF;
+		if (SITE_IS_MAXIV()) {
+			return SITE.MAXIV;
 		}
+        if (SITE_IS_ESRF()) {
+            return SITE.ESRF;
+        }
 		return SITE.GENERIC;
 	}
 
