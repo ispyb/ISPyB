@@ -45,15 +45,6 @@ public class LdapConnection {
 
 	private final static Logger LOG = Logger.getLogger(LdapConnection.class);
 
-	/**
-	 * finder by "uid". uid is a LDAP attribute.
-	 * 
-	 * 
-	 * @param intMat
-	 * @return
-	 * @throws Exception
-	 */
-
 	private static final String LDAP_Employee_Identifier = Constants.LDAP_Employee_Identifier;
 
 	private static final String LDAP_Employee_Resource = Constants.LDAP_Employee_Resource;
