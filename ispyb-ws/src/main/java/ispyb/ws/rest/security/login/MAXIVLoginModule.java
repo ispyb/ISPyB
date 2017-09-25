@@ -15,7 +15,7 @@ import javax.naming.ldap.InitialLdapContext;
 
 public class MAXIVLoginModule {
 	
-	private	static final String groupUniqueMemberName = "uniqueMember";
+	private	static final String groupUniqueMemberName = "member";
 	private	static final String principalDNSuffix = "";
 	private	static final String groupCtxDN = Constants.LDAP_people;
 	private	static final String principalDNPrefix = Constants.LDAP_prefix;
@@ -43,7 +43,7 @@ public class MAXIVLoginModule {
 	}
 	
 	protected static String getFilter(String username){
-		String userDN = principalDNPrefix + username + principalDNSuffix;
+		String userDN = principalDNPrefix + "\\" + username + principalDNSuffix;
 		return new StringBuffer().append("(&")
 				.append("(objectClass=groupOfUniqueNames)")
 				.append("(" + groupUniqueMemberName + "=").append(userDN)
