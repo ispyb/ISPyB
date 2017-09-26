@@ -353,11 +353,13 @@ public class MAXIVWebService implements SMISWebService {
 			CloseableHttpResponse response = httpclient.execute(httpGet);
 			//System.out.println(response.getStatusLine());
 			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
+			LOG.debug("readJsonObjectFromUrl: JSON string: " + jsonStr);
 			jsonObj = new JSONObject(jsonStr);
 		}
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
+			throw new RuntimeException("Error reading json. " + ex.getMessage());
 		}
 		
 		return jsonObj;
@@ -373,11 +375,13 @@ public class MAXIVWebService implements SMISWebService {
 			CloseableHttpResponse response = httpclient.execute(httpGet);
 			//System.out.println(response.getStatusLine());
 			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
+			LOG.debug("readJsonArrayFromUrl: JSON string: " + jsonStr);
 			jsonArr = new JSONArray(jsonStr);
 		}
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
+			throw new RuntimeException("Error reading json. " + ex.getMessage());
 		}
 		
 		return jsonArr;
