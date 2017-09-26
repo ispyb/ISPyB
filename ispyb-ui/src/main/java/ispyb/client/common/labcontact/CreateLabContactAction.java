@@ -701,6 +701,14 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 				List<LabContact3VO> labContactlist = labCService.findByPersonIdAndProposalId(dummyPerson.getPersonId(), proposalId);
 				if (labContactlist != null && !labContactlist.isEmpty()) {
 					labContact = labContactlist.get(0);
+				} else {
+					labContact = new LabContact3VO();
+					labContact.setCardName("MAX IV Lab Contact - Lund University");
+					labContact.setPersonVO(dummyPerson);
+					labContact.setProposalVO(proposalService.findByPk(proposalId));
+					labContact.setDewarAvgCustomsValue(0);
+					labContact.setDewarAvgTransportValue(0);
+					labContact = labCService.create(labContact);
 				}
 				if (labContact != null) {
 					form.getLabContact().setLabContactId(labContact.getLabContactId());
