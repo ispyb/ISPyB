@@ -427,10 +427,17 @@ public class MAXIVWebService implements SMISWebService {
 		StringBuilder regexp = new StringBuilder("/^").append(startYear).append("|^").append(endYear).append("/");
 		JSONObject jsonExp = new JSONObject();
 		jsonExp.put("regexp", regexp.toString());
-		JSONObject jsonField = new JSONObject();
-		jsonField.put("propid", jsonExp);
+		JSONObject jsonField1 = new JSONObject();
+		jsonField1.put("propid", jsonExp);
+		JSONObject jsonField2 = new JSONObject();
+		jsonField2.put("status", "A");
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(jsonField1);
+		jsonArray.put(jsonField2);
+		JSONObject jsonField3 = new JSONObject();
+		jsonField3.put("and", jsonArray);
 		JSONObject jsonFilter = new JSONObject();
-		jsonFilter.put("where", jsonField);
+		jsonFilter.put("where", jsonField3);
 		
 		filterStr = jsonFilter.toString();
 		
