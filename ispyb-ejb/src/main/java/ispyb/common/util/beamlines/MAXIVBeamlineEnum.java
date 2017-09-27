@@ -30,8 +30,8 @@ import java.util.List;
  *
  */
 public enum MAXIVBeamlineEnum {
-	BIOMAX("BioMAX", "idBioMAX", new String[]{"BioMAX"}, "<font style='color:#6888A8;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>312</font></font>", null, true, false),
-	MX("MX", "idi911_3", new String[]{"i911-3 (MX)"}, "<font style='color:#000080;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, true),
+	BIOMAX("BioMAX", "idBioMAX", new String[]{"BioMAX"}, "<font style='color:#6888A8;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>312</font></font>", null, true, true),
+	MX("MX", "idi911_3", new String[]{"i911-3 (MX)"}, "<font style='color:#000080;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, false),
 	;
 	
 	private MAXIVBeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber, String[] correctionFiles, boolean emailNotification, boolean inActivity){
