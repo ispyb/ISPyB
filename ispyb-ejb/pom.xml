@@ -422,6 +422,9 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+			<ISPyB.dummy.family.name.lab.contact>BioMAX Lab Contact</ISPyB.dummy.family.name.lab.contact>
+			<ISPyB.dummy.given.name.lab.contact>Generic</ISPyB.dummy.given.name.lab.contact>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
