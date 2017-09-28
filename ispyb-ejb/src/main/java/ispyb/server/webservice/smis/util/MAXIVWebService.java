@@ -209,6 +209,8 @@ public class MAXIVWebService implements SMISWebService {
 				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
 				session.setShifts((Integer)jsonSession.get("shifts"));
 				
+				session.setCancelled(false);//TODO: Check what this means
+				
 				sessions.add(session);
 			} catch(Exception ex){
 				//TODO: Handle exception
