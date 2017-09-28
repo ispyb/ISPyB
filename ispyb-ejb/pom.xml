@@ -401,11 +401,13 @@
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			
   			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
- 			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
+  			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
   			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
   			<ldap.attribute>samaccountname</ldap.attribute>
   			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
-  			
+
+  			<protein.allowedToCreate>true</protein.allowedToCreate>
+
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
   			
@@ -416,6 +418,9 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+			<ISPyB.dummy.family.name.lab.contact>BioMAX Lab Contact</ISPyB.dummy.family.name.lab.contact>
+			<ISPyB.dummy.given.name.lab.contact>Generic</ISPyB.dummy.given.name.lab.contact>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
