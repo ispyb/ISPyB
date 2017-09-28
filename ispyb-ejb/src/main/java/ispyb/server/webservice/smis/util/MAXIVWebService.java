@@ -145,7 +145,8 @@ public class MAXIVWebService implements SMISWebService {
 				JSONObject jsonLab = getLabForId(labId);
 				participant.setLabAddress1((String)jsonLab.get("address"));
 				participant.setLabCity((String)jsonLab.get("city"));
-				participant.setLabDeparment((String)jsonLab.get("department"));
+				if(jsonLab.get("department") != JSONObject.NULL)
+					participant.setLabDeparment((String)jsonLab.get("department"));
 				String labname = (String)jsonLab.get("name");
 				if(labname.length() >= 45){
 					labname = labname.substring(0,40).concat("...");
