@@ -670,7 +670,7 @@ public class CreateLabContactAction extends org.apache.struts.actions.DispatchAc
 	 * @param mapping
 	 * @param actForm
 	 * @param request
-	 * @param in_reponse
+	 * @param in_response
 	 * @return
 	 */
 	public ActionForward createDummyLabContact(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
