@@ -412,8 +412,8 @@
 
   			<protein.allowedToCreate>true</protein.allowedToCreate>
 
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+  			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
+  			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
   			
   			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
   			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
