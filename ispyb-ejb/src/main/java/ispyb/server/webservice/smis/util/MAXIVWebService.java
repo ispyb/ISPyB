@@ -192,6 +192,8 @@ public class MAXIVWebService implements SMISWebService {
 				session.setProposalGroupCode(propId.toString());
 				session.setProposalPk(propId);
 				session.setProposalSubmissionPk(propId);
+				session.setExperimentPk(propId);
+				session.setPk(propId);
 				String title = (String)jsonProposal.get("title");
 				if(title.length() >= 200){
 					title = title.substring(0,195).concat("...");
@@ -202,10 +204,10 @@ public class MAXIVWebService implements SMISWebService {
 				session.setCategCounter(propId.intValue());
 				String startDate[] = ((String)jsonSession.get("evtstart")).split("-");
 				System.out.println("Date: " + Integer.parseInt(startDate[2].substring(0,2)));
-				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(startDate[2].substring(0,2))));
+				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(startDate[2].substring(0,2)), Integer.parseInt(startDate[2].substring(3,5)),0));
 				String endDate[] = ((String)jsonSession.get("evtend")).split("-");
 				//String endDatetime[] = endDate[2].split("T");
-				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDate[2].substring(0,2))));
+				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDate[2].substring(0,2)), Integer.parseInt(endDate[2].substring(3,5)),0));
 				//session.setStartShift((Integer)jsonSession.get("start_shitf"));
 				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
 				session.setShifts((Integer)jsonSession.get("shifts"));
@@ -276,7 +278,7 @@ public class MAXIVWebService implements SMISWebService {
 
 	public long getProposalPK(String arg0, Long arg1) throws FinderException_Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return arg1;
 	}
 	
 	private JSONObject getProposalForId(Long propId){
