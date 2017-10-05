@@ -361,8 +361,14 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
 								} else if (roleName.equals("ispyb-manager")) {
 									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_ADMIN));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_BLOM));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_INDUSTRIAL));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_STORE));
 								} else if (roleName.equals("ispyb-biomax-contacts")) {
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
 								} else if (roleName.contains("-group")){
 									userRoles.addMember(new SimplePrincipal("mx"+roleName.replace("-group", "")));
 									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
