@@ -248,6 +248,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.capacity>24</samplechanger.capacity>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -302,6 +303,7 @@
                         <protein.allowedToCreate>true</protein.allowedToCreate>
                         <shipping.container.capacity>16</shipping.container.capacity>
                         <samplechanger.container.capacity>16</samplechanger.container.capacity>
+						<samplechanger.capacity>24</samplechanger.capacity>
 
                         <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
                         <shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
@@ -357,6 +359,7 @@
 
 				<shipping.container.capacity>16</shipping.container.capacity>
 				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				<samplechanger.capacity>24</samplechanger.capacity>
 				
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
@@ -418,6 +421,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.capacity>29</samplechanger.capacity>
 
 			<ISPyB.dummy.family.name.lab.contact>BioMAX Lab Contact</ISPyB.dummy.family.name.lab.contact>
 			<ISPyB.dummy.given.name.lab.contact>Generic</ISPyB.dummy.given.name.lab.contact>
@@ -470,6 +474,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.capacity>24</samplechanger.capacity>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
