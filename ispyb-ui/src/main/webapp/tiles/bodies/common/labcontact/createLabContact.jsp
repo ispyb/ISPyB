@@ -21,7 +21,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
-
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 
 <%	
