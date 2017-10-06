@@ -7,8 +7,8 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 
 public class EMDataCollection {
 	
-//	protected Logger log = Logger.getLogger(ToolsForEMDataCollection.class);
-//
+	protected Logger log = Logger.getLogger(ToolsForEMDataCollection.class);
+
 //	protected long now;
 //
 //	protected final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();

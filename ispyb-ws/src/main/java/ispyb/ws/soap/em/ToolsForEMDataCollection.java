@@ -18,8 +18,6 @@
 
 package ispyb.ws.soap.em;
 
-import ispyb.server.common.util.LoggerFormatter;
-
 import java.util.HashMap;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,11 +28,11 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
-import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+	
 
 @WebService(name = "ToolsForEMWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.em")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
@@ -43,9 +41,8 @@ import com.google.gson.Gson;
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
 public class ToolsForEMDataCollection extends EMDataCollection{
-	
+
 	protected Logger log = LoggerFactory.getLogger(ToolsForEMDataCollection.class);
-	
 
 	@WebMethod(operationName = "addMovie")
 	public void addMovie(
@@ -67,19 +64,11 @@ public class ToolsForEMDataCollection extends EMDataCollection{
 			params.put("mrc", String.valueOf(mrc));
 			params.put("xml", String.valueOf(xml));
 			
-			log.info("addMovie. parameters={} ", new Gson().toJson(params));
-			
-		} catch (Exception exp) {
-			log.error("Error. parameters={} ", exp.getMessage());
-			exp.printStackTrace();
-		}
+			log.info("addMovie.technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml);
 
-//		try {
-//
-//		} catch (Exception e) {
-//			LoggerFormatter.log(this.log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addMovie", id,
-//					System.currentTimeMillis(), e.getMessage(), e);
-//		}
+		} catch (Exception exp) {
+			log.error("addMovie. technique=EM  cause={} proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={}", exp.getCause(), proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml);
+		}
 	}
 
 	
