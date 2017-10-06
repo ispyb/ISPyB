@@ -450,13 +450,16 @@ public class MAXIVWebService implements SMISWebService {
 		jsonField1.put("propid", jsonExp);
 		JSONObject jsonField2 = new JSONObject();
 		jsonField2.put("status", "A");
+		JSONObject jsonField3 = new JSONObject();
+		jsonField3.put("beamline_assigned", "BioMAX");
 		JSONArray jsonArray = new JSONArray();
 		jsonArray.put(jsonField1);
 		jsonArray.put(jsonField2);
-		JSONObject jsonField3 = new JSONObject();
-		jsonField3.put("and", jsonArray);
+		jsonArray.put(jsonField3);
+		JSONObject jsonFieldAnd = new JSONObject();
+		jsonFieldAnd.put("and", jsonArray);
 		JSONObject jsonFilter = new JSONObject();
-		jsonFilter.put("where", jsonField3);
+		jsonFilter.put("where", jsonFieldAnd);
 		
 		filterStr = jsonFilter.toString();
 		
