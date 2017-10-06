@@ -1,10 +1,10 @@
-ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
+# ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
 
 
-- [Installing](#Installing)
-- [Versioning](#Versioning)
-- [Database creation and update](#Database creation and update)
-- [Database schema](#Database schema)
+1. [Installing](#Installing)
+2. [Versioning](#Versioning)
+3. [Database creation and update](#Database creation and update)
+4. [Database schema](#Database schema)
 
 # Installing
 
