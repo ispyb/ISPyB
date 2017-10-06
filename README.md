@@ -155,7 +155,7 @@ Please do not forget to update the database schema :
 This schema can be updated using MySQLWorkbench (free tool from MySQL).
 
 
-### Graylog on wildfly 8.2
+### Graylog
 
 Download [biz.paluch.logging](http://logging.paluch.biz) that provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1. 
 
