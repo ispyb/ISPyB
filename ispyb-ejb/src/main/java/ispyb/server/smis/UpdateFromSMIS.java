@@ -568,6 +568,9 @@ public class UpdateFromSMIS {
 		String proposalNumber = null;
 
 		if (mainProposers != null && mainProposers.length > 0) {
+			
+			Integer proposalId = null;
+			Integer personId = null;
 
 			ProposalParticipantInfoLightVO mainProp = mainProposers[0];
 			mainProp.getCategoryCode();
@@ -579,6 +582,7 @@ public class UpdateFromSMIS {
 			LOG.debug("Bllogin : " + mainProp.getBllogin());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+			
 			if (listProposals.isEmpty()) {
 				// the proposal does not belong yet to ISPyB database
 
@@ -586,7 +590,7 @@ public class UpdateFromSMIS {
 
 				Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
 
-				Integer proposalId = proposal.create(propv).getProposalId();
+				proposalId = proposal.create(propv).getProposalId();
 
 				LOG.debug("inserted a new proposal inside ISPyB db:" + proposalCode + proposalNumber);
 			} else {
@@ -594,8 +598,11 @@ public class UpdateFromSMIS {
 				// proposer and the laboratory if needed
 				// Issue 1656
 				LOG.debug("proposal already exists");
+				
 				Proposal3VO proposalVO = listProposals.get(0);
+				proposalId = proposalVO.getProposalId();
 				Person3VO currentPerson = proposalVO.getPersonVO();
+				personId = currentPerson.getPersonId();
 				String currentFamilyName = currentPerson.getFamilyName();
 				String currentGivenName = currentPerson.getGivenName();
 				String currentSiteId = currentPerson.getSiteId();
@@ -651,6 +658,9 @@ public class UpdateFromSMIS {
 					}
 				}
 			}
+			
+			// we check if an entry exists in ProposalHasPerson with the personId and proposalId
+			
 		} else {
 			LOG.debug("No main proposers found for propos_no = " + proposalNumber);
 		}
