@@ -1,4 +1,4 @@
-# ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
+ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
 
 
 - [Installing](#Installing)
@@ -6,7 +6,7 @@
 - [Database creation and update](#Database creation and update)
 - [Database schema](#Database schema)
 
-## Installing
+# Installing
 
 1. Clone or fork the ISPyB repository and then clone it by typing:
 ```
