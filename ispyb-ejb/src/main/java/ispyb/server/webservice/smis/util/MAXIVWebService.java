@@ -131,6 +131,16 @@ public class MAXIVWebService implements SMISWebService {
 			cowriters.add((Integer)jsonProposal.get("cowriter4"));
 		if(jsonProposal.get("cowriter5") != JSONObject.NULL)
 			cowriters.add((Integer)jsonProposal.get("cowriter5"));
+		if(jsonProposal.get("cowriter6") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter6"));
+		if(jsonProposal.get("cowriter7") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter7"));
+		if(jsonProposal.get("cowriter8") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter8"));
+		if(jsonProposal.get("cowriter9") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter9"));
+		if(jsonProposal.get("cowriter10") != JSONObject.NULL)
+			cowriters.add((Integer)jsonProposal.get("cowriter10"));
 		
 		for(Integer cowriterId : cowriters) {
 			JSONObject jsonParticipant = getUserForId(cowriterId);
