@@ -19,6 +19,24 @@
 
 package ispyb.server.biosaxs.services.core.robot;
 
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.log4j.Logger;
+
+import com.google.gson.GsonBuilder;
+
 import ispyb.common.util.Constants;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.services.core.experiment.Experiment3ServiceLocal;
@@ -39,24 +57,6 @@ import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplateposition3VO;
 import ispyb.server.biosaxs.vos.datacollection.MeasurementTodataCollection3VO;
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
-
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.apache.log4j.Logger;
-
-import com.google.gson.GsonBuilder;
 
 @Stateless
 public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
@@ -775,8 +775,8 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 			String sourceFilePath, String name, Boolean optimize, String comments) throws Exception {
 
 		Experiment3VO experiment = new Experiment3VO();
+		experiment = this.experiment3ServiceLocal.initPlates(experiment);
 		experiment.setType(type);
-
 		experiment.setSourceFilePath(sourceFilePath);
 		experiment.setCreationDate(getNow());
 		experiment.setName(name);

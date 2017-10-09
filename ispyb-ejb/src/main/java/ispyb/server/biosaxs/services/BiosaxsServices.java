@@ -491,6 +491,7 @@ public class BiosaxsServices {
 			}
 
 			Experiment3VO experiment = new Experiment3VO();
+			experiment = this.experiment3Service.initPlates(experiment);
 			experiment.setProposalId(proposal.getProposalId());
 			experiment.setName(name);
 			experiment.setSessionId(sessionId);

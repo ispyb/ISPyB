@@ -175,6 +175,7 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 		ProposalWS3VO proposal = proposalService.findForWSByCodeAndNumber(proposalCode, proposalNumber);
 		
 		Experiment3VO experiment = new Experiment3VO();
+		experiment = this.experiment3Service.initPlates(experiment);
 		experiment.setName(name);
 		experiment.setType("STATIC");
 		try{
@@ -328,7 +329,7 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 		measurement = entityManager.merge(measurement);
 		return measurement;
 	}
-
+	
 	public void updateAverage(int measurementId, int averagedCount, int framesCount, String oneDimensionalDataFilePathArray, String discardedCurves, String averageFilePath) {
 		List<String> curveList = Arrays.asList(oneDimensionalDataFilePathArray.split(","));
 		List<Merge3VO> mergeList = this.primaryDataProcessing3Service.findByMeasurementId(measurementId);
@@ -405,8 +406,7 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 					oneDimensionalFiles.toString().replace("[", "").replace("]", ""), null, averageFile);
 			
 		}
-	}
-
+}
 //	private void removeFrameListById(int frameListId) {
 //		Framelist3VO frameList = this.entityManager.find(Framelist3VO.class, frameListId);
 //		/** Looking for FrameToListObjects **/
