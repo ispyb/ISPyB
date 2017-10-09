@@ -1,4 +1,4 @@
-# ISPyB Project
+# ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
 
 
 ## Installing
@@ -68,6 +68,7 @@ For example:
 
 
 These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
+
 
 4. Build the project by using maven
 ```

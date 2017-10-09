@@ -379,7 +379,7 @@ public class ToolsForAssemblyWebService {
 	@WebResult(name = "addAveraged")
 	public void addAveraged(@WebParam(name = "measurementId") String measurementId,
 			@WebParam(name = "dataCollectionOrder") String dataCollectionOrder, @WebParam(name = "averaged") String averaged,
-			@WebParam(name = "discarded") String discarded, @WebParam(name = "averageFile") String averageFile) throws Exception {
+			@WebParam(name = "discarded") String discarded, @WebParam(name = "averageFile") String averageFile, @WebParam(name = "visitorFilePath") String visitorFilePath) throws Exception {
 
 		/** Logging **/
 		long id = 0;
@@ -391,6 +391,7 @@ public class ToolsForAssemblyWebService {
 			params.put("averaged", String.valueOf(averaged));
 			params.put("discarded", String.valueOf(discarded));
 			params.put("averageFile", String.valueOf(averageFile));
+			params.put("visitorFilePath", String.valueOf(visitorFilePath));
 			
 			
 			LOGGER.info("-----------------------");
@@ -399,6 +400,7 @@ public class ToolsForAssemblyWebService {
 			LOGGER.info(" averaged:\t '" + averaged + "'");
 			LOGGER.info(" discarded:\t '" + discarded + "'");
 			LOGGER.info(" averageFile:\t '" + averageFile + "'");
+			LOGGER.info(" visitorFilePath:\t '" + visitorFilePath + "'");
 			
 			id = this.logInit("addAveraged", new Gson().toJson(params));
 		} catch (Exception exp) {
@@ -408,7 +410,7 @@ public class ToolsForAssemblyWebService {
 
 		try {
 			BiosaxsServices biosaxsWebServiceActions = new BiosaxsServices();
-			biosaxsWebServiceActions.addAveraged(measurementId, dataCollectionOrder, averaged, discarded, averageFile);
+			biosaxsWebServiceActions.addAveraged(measurementId, dataCollectionOrder, averaged, discarded, averageFile, visitorFilePath);
 
 			logFinish("addAveraged", id);
 		} catch (Exception e) {

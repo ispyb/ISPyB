@@ -302,6 +302,10 @@ public class BiosaxsServices {
 	}
 
 	public void addAveraged(String sampleMeasurementId, String dataCollectionOrder, String averaged, String discarded, String averageFile) {
+		this.addAveraged(sampleMeasurementId, dataCollectionOrder, averaged, discarded, averageFile, null);
+	}
+	
+	public void addAveraged(String sampleMeasurementId, String dataCollectionOrder, String averaged, String discarded, String averageFile, String visitorFilePath) {
 		String measurementId = sampleMeasurementId;
 		/** Buffer before **/
 		if (Integer.parseInt(dataCollectionOrder) == 0) {
@@ -314,7 +318,7 @@ public class BiosaxsServices {
 			Experiment3VO experiment = experiment3Service.findByMeasurementId(Integer.parseInt(sampleMeasurementId));
 			measurementId = this.getMeasurementAfter(experiment, Integer.parseInt(sampleMeasurementId));
 		}
-		atsasPipeline3Service.addAveraged(measurementId, averaged, discarded, averageFile);
+		atsasPipeline3Service.addAveraged(measurementId, averaged, discarded, averageFile, visitorFilePath);
 		
 	}
 	
