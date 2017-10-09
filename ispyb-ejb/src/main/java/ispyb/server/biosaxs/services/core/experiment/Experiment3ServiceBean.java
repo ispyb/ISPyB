@@ -20,10 +20,29 @@
 package ispyb.server.biosaxs.services.core.experiment;
 
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+
 import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
-import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
-import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Stoichiometry3VO;
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
@@ -34,28 +53,6 @@ import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
 import ispyb.server.biosaxs.vos.utils.parser.RobotXMLParser;
 import ispyb.server.mx.services.ws.rest.WsServiceBean;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import org.apache.log4j.Logger;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 
@@ -77,6 +74,9 @@ public class Experiment3ServiceBean  extends WsServiceBean implements Experiment
 
 	@EJB
 	private SaxsProposal3Service saxsProposal3Service;
+	
+	@EJB
+	private PlateType3Service plateType3Service;
 	
 	@Override
 	public void persist(Experiment3VO transientInstance) {
@@ -128,6 +128,15 @@ public class Experiment3ServiceBean  extends WsServiceBean implements Experiment
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+	
+	public Experiment3VO initPlates(Experiment3VO vo){
+		try {
+			vo.setPlatetype3VOs(this.plateType3Service.findAll());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		return vo;
 	}
 	
 	public static StringBuilder getQueryByScope(ExperimentScope scope){
