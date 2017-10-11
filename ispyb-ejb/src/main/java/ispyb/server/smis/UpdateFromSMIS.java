@@ -1203,6 +1203,11 @@ public class UpdateFromSMIS {
 			}
 			break;
 			
+		case MAXIV:
+			propv.setType(Constants.PROPOSAL_MX);
+			
+			break;
+			
 		default:
 			if (mainProp.getProposalType() != null && mainProp.getProposalGroup() != null) {
 				if (mainProp.getProposalType().intValue() == Constants.PROPOSAL_ROLLING_TYPE

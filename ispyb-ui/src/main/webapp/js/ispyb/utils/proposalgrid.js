@@ -10,8 +10,8 @@ ProposalGrid.prototype.show = function(data, targetId){
 		if (data[i].type == "MB"){
 			data[i].type = "MX";
 			parsed.push(JSON.parse(JSON.stringify(data[i])));
-			//data[i].type = "BX";
-			//parsed.push(JSON.parse(JSON.stringify(data[i])));
+			data[i].type = "BX";
+			parsed.push(JSON.parse(JSON.stringify(data[i])));
 		}
 		else{
 			parsed.push(data[i]);
