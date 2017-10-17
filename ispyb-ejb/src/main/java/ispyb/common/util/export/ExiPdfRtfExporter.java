@@ -154,7 +154,8 @@ public class ExiPdfRtfExporter {
 
 	public final static float CRYSTAL_IMAGE_HEIGHT = 174;
 
-	public final static float IMAGE_HEIGHT = 120;
+	//public final static float IMAGE_HEIGHT = 120;
+	public final static float IMAGE_HEIGHT = 100;
 
 	// public final static float CRYSTAL_IMAGE_WIDTH = 160;
 	// public final static float CRYSTAL_IMAGE_HEIGHT = 99;
@@ -425,10 +426,10 @@ public class ExiPdfRtfExporter {
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
 				setDataCollectionMapData(document, dataCollectionMapData);
 				
-				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass") != null) {
-					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId");
+				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
+					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
 					if (!mapDataCollectionGroupIdCClass.containsKey(dcgId)){
-							mapDataCollectionGroupIdCClass.put(dcgId, getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass"));
+							mapDataCollectionGroupIdCClass.put(dcgId, getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null));
 					}
 				}					
 				i++;
@@ -454,19 +455,20 @@ public class ExiPdfRtfExporter {
 	private void setDataCollectionMapData(Document document, Map<String, Object> dataCollectionMapItem) throws Exception {
 
 		// 1st row
-		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType") 
-				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime");
+		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) 
+				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime", null);
 		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
 		document.add(p);
 		
 		//row2		
-		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory");
+		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory", null);
 		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
 	
 		//row3
 		Table table = new Table(NB_COL_DATACOLLECTION);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
 
 		// 1st Cell
 		parag = "Workflow: \n" 
@@ -481,13 +483,13 @@ public class ExiPdfRtfExporter {
 		table.addCell(p);
 		
 		// Cell2
-		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "Protein_acronym") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "BLSample_name") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionNumber") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "Protein_acronym") + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_transmission") + "\n";
+		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "Protein_acronym", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "BLSample_name", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionNumber", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_transmission", df2) + "\n";
 		LOG.info("parag=" + parag);
 		p = new Paragraph(parag, FONT_DOC_BOLD);
 		table.addCell(p);
@@ -506,13 +508,13 @@ public class ExiPdfRtfExporter {
 		
 		
 		// Cell 4
-		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner")+ "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_wavelength") + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange") + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart") + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "exposureTime") + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux") + "\n" 
-		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end") + "\n" ;
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange", df2) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart", df2) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "exposureTime", df2) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + "\n" 
+		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + "\n" ;
 		
 		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
 
@@ -523,8 +525,8 @@ public class ExiPdfRtfExporter {
 		
 		// 6 Cell : thumbnail
 		
-		if (!getCellParam(dataCollectionMapItem, "lastImageId").isEmpty()) {
-			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId")))).getJpegThumbnailFileFullPath();
+		if (!getCellParam(dataCollectionMapItem, "lastImageId", null).isEmpty()) {
+			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId", null)))).getJpegThumbnailFileFullPath();
 			Cell cellThumbnail = getCellImage(thumbnailPath);
 			cellThumbnail.setBorderWidth(0);
 			table.addCell(cellThumbnail);
@@ -542,8 +544,8 @@ public class ExiPdfRtfExporter {
 		table.addCell(cellSnapshot);
 		
 		// 8 Cell : graph or other plot
-		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId").isEmpty()) {
-			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId")), false, false)).getImageQualityIndicatorsPlotPath();
+		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null).isEmpty()) {
+			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null)), false, false)).getImageQualityIndicatorsPlotPath();
 			Cell cellGraph = getCellImage(plotPath);
 			cellGraph.setBorderWidth(0);
 			table.addCell(cellGraph);
@@ -569,11 +571,15 @@ public class ExiPdfRtfExporter {
 	 * @param dataCollectionMap
 	 * @throws Exception
 	 */
-	private String getCellParam(Map<String, Object> dataCollectionMap, String param) throws Exception {
+	private String getCellParam(Map<String, Object> dataCollectionMap, String param, DecimalFormat df) throws Exception {
 
 		String paramValue = "";
-		if (dataCollectionMap.get(param) != null) {		
-			paramValue = dataCollectionMap.get(param).toString();
+		if (dataCollectionMap.get(param) != null) {	
+			if (df == null){
+				paramValue = dataCollectionMap.get(param).toString();
+			} else {
+				paramValue = df.format(dataCollectionMap.get(param)).toString();
+			}
 		}
 		return paramValue;
 		
