@@ -51,23 +51,57 @@ public class ToolsForEMDataCollection extends EMDataCollection{
 			@WebParam(name = "imageDirectory") String imageDirectory,
 			@WebParam(name = "jpeg") String jpeg,
 			@WebParam(name = "mrc") String mrc,
-			@WebParam(name = "xml") String xml
+			@WebParam(name = "xml") String xml,
+			@WebParam(name = "microscopeVoltage") String microscopeVoltage,
+			@WebParam(name = "sphericalAberration") String sphericalAberration,
+			@WebParam(name = "amplitudeContrast") String amplitudeContrast,
+			@WebParam(name = "magnificationRate") String magnificationRate,
+			@WebParam(name = "pixelSize") String pixelSize,
+			@WebParam(name = "noImages") String noImages,
+			@WebParam(name = "dosePerImage") String dosePerImage
 			)	
 	{
 		try {
-			/** Logging params **/
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("proposal", String.valueOf(proposal));
-			params.put("sampleAcronym", String.valueOf(sampleAcronym));
-			params.put("imageDirectory", String.valueOf(imageDirectory));
-			params.put("jpeg", String.valueOf(jpeg));
-			params.put("mrc", String.valueOf(mrc));
-			params.put("xml", String.valueOf(xml));
-			
-			log.info("addMovie.technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml);
+			log.info("addMovie. technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={} microscopeVoltage={} sphericalAberration={} amplitudeContrast={} magnificationRate={} pixelSize={} noImages={} dosePerImage={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml, microscopeVoltage, sphericalAberration,amplitudeContrast,magnificationRate,pixelSize,noImages,dosePerImage);
 
 		} catch (Exception exp) {
-			log.error("addMovie. technique=EM  cause={} proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={}", exp.getCause(), proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml);
+			log.error("addMovie. technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={} microscopeVoltage={} sphericalAberration={} amplitudeContrast={} magnificationRate={} pixelSize={} noImages={} dosePerImage={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml, microscopeVoltage, sphericalAberration,amplitudeContrast,magnificationRate,pixelSize,noImages,dosePerImage);
+		}
+	}
+	
+	
+	@WebMethod(operationName = "addMotionCorrection")
+	public void addMotionCorrection(
+			@WebParam(name = "proposal") String proposal,
+			@WebParam(name = "imageDirectory") String imageDirectory,
+			@WebParam(name = "jpeg") String jpeg,
+			@WebParam(name = "png") String png,
+			@WebParam(name = "mrc") String mrc,
+			@WebParam(name = "logFilePath") String logFilePath
+			)	
+	{
+		try {
+			log.info("addMotionCorrection. technique=EM proposal={} imageDirectory={} jpeg={} png={} mrc={} log={}", proposal, imageDirectory, jpeg, png, mrc, logFilePath);
+		} catch (Exception exp) {
+			log.error("addMotionCorrection. technique=EM proposal={} imageDirectory={} jpeg={} png={} mrc={} log={}", proposal, imageDirectory, jpeg, png, mrc, logFilePath);
+		}
+	}
+	
+	@WebMethod(operationName = "addCTF")
+	public void addCTF(
+			@WebParam(name = "proposal") String proposal,
+			@WebParam(name = "imageDirectory") String imageDirectory,
+			@WebParam(name = "jpeg") String jpeg,
+			@WebParam(name = "mrc") String mrc,
+			@WebParam(name = "outputOne") String outputOne,
+			@WebParam(name = "outputTwo") String outputTwo,
+			@WebParam(name = "logFilePath") String logFilePath
+			)	
+	{
+		try {
+			log.info("addCTF. technique=EM proposal={} imageDirectory={} jpeg={} mrc={} outputOne={} outputTwo={} log={}", proposal, imageDirectory, jpeg, mrc, outputOne, outputTwo, logFilePath);
+		} catch (Exception exp) {
+			log.error("addCTF. technique=EM proposal={} imageDirectory={} jpeg={} mrc={} outputOne={} outputTwo={} log={}", proposal, imageDirectory, jpeg, mrc, outputOne, outputTwo, logFilePath);
 		}
 	}
 
