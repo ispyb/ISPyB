@@ -130,6 +130,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_INDEXING_SUCCESS = new Font(Font.HELVETICA, 8, Font.NORMAL, GREEN_COLOR);
 
 	public final static int NB_COL_DATACOLLECTION = 8;
+	
+	public final static int NB_COL_DATA_ANALYSIS = 11;
 
 	public final static int SIZE_FONT = 8;
 
@@ -156,6 +158,7 @@ public class ExiPdfRtfExporter {
 
 	//public final static float IMAGE_HEIGHT = 120;
 	public final static float IMAGE_HEIGHT = 100;
+	public final static float IMAGE_HEIGHT_SMALL = 50;
 
 	// public final static float CRYSTAL_IMAGE_WIDTH = 160;
 	// public final static float CRYSTAL_IMAGE_HEIGHT = 99;
@@ -440,6 +443,36 @@ public class ExiPdfRtfExporter {
 		document.add(new Paragraph(" "));			
 			
 	}
+	
+	/**
+	 * set the dataCollection table
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setDataAnalysisTable(Document document) throws Exception {
+		document.add(new Paragraph("Data Collections + Analysis:", FONT_TITLE));
+		document.add(new Paragraph(" "));
+		if (dataCollections.isEmpty()) {
+			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
+		} else {
+			document.add(new Paragraph(" "));
+			
+			// DataCollection Rows
+			Iterator<Map<String, Object>> it = dataCollections.iterator();
+			int i = 0;
+			while (it.hasNext() && i < nbRowsMax) {
+				Map<String, Object> dataCollectionMapData = it.next();
+				LOG.info("dcMap=" + dataCollectionMapData.toString());
+				setDataAnalysisMapData(document, dataCollectionMapData);
+				
+				i++;
+			}
+			document.add(new Paragraph(" "));
+		}
+		document.add(new Paragraph(" "));			
+			
+	}
 
 	/**
 	 * set a line for a specified dataCollection in the dataCollection table
@@ -527,7 +560,7 @@ public class ExiPdfRtfExporter {
 		
 		if (!getCellParam(dataCollectionMapItem, "lastImageId", null).isEmpty()) {
 			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId", null)))).getJpegThumbnailFileFullPath();
-			Cell cellThumbnail = getCellImage(thumbnailPath);
+			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
 			cellThumbnail.setBorderWidth(0);
 			table.addCell(cellThumbnail);
 		} else {
@@ -538,7 +571,7 @@ public class ExiPdfRtfExporter {
 		
 		
 		// 7 Cell : snapshot
-		Cell cellSnapshot = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath1");
+		Cell cellSnapshot = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath1", IMAGE_HEIGHT);
 		//cellSnapshot.setRowspan(nbRows);
 		cellSnapshot.setBorderWidth(0);
 		table.addCell(cellSnapshot);
@@ -546,7 +579,7 @@ public class ExiPdfRtfExporter {
 		// 8 Cell : graph or other plot
 		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null).isEmpty()) {
 			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null)), false, false)).getImageQualityIndicatorsPlotPath();
-			Cell cellGraph = getCellImage(plotPath);
+			Cell cellGraph = getCellImage(plotPath, IMAGE_HEIGHT);
 			cellGraph.setBorderWidth(0);
 			table.addCell(cellGraph);
 		} else {
@@ -561,6 +594,111 @@ public class ExiPdfRtfExporter {
 		else
 			document.add(new Paragraph(" "));
 				
+		return;
+	}
+	
+	/**
+	 * set a line for a specified dataCollection in the dataCollection table
+	 * 
+	 * @param document
+	 * @param table
+	 * @param col
+	 * @param session
+	 * @param df2
+	 * @param df3
+	 * @throws Exception
+	 */
+	private void setDataAnalysisMapData(Document document, Map<String, Object> dataCollectionMapItem) throws Exception {
+
+		// 1st row
+		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) 
+				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime", null);
+		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
+		document.add(p);
+		
+		//row2		
+		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory", null);
+		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
+	
+		//row 1
+		Table table = new Table(NB_COL_DATA_ANALYSIS);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
+
+		// 1st Cell
+		parag = "Protein: \n" 
+				+ 	" \n" 
+				+ 	"Prefix: \n" 
+				+ 	" \n" 
+				+ 	"Images: \n" 
+				+ 	" \n";
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell 2
+		parag = getCellParam(dataCollectionMapItem, "Protein_acronym", null) + "\n\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+
+		//  Cell 3
+		parag = "Type: \n" 
+				+ "Res. (corner): \n"
+				+ 	"Wavelength: \n" ;
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+
+		// Cell 4
+		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" ;
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+
+		//  Cell 5 : image quality indicator  plot
+		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null).isEmpty()) {
+			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null)), false, false)).getImageQualityIndicatorsPlotPath();
+			Cell cellGraph = getCellImage(plotPath, IMAGE_HEIGHT);
+			cellGraph.setBorderWidth(0);
+			table.addCell(cellGraph);
+		} else {
+			table.addCell(" ");
+		}
+
+		// Cell 6 indexed/strategy or completeness
+		//dataCollectionGroup.ScreeningOutput_indexingSuccess
+		//ScreeningOutput_strategySuccess
+		table.addCell(" ");
+
+		// Cell 7 
+		//dataCollectionGroup.ScreeningOutput_mosaicity
+		//dataCollectionGroup.ScreeningOutputLattice_spaceGroup
+		table.addCell(" ");
+
+		// Cell 8 
+		
+		//if (dataCollectionGroup.ScreeningOutputLattice_spaceGroup){  
+//dataCollectionGroup.ScreeningOutputLattice_unitCell_a + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_b + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_c,
+	        
+		table.addCell(" ");
+
+		// Cell 9 
+		table.addCell(" ");
+
+		// Cell 10 
+		table.addCell(" ");
+
+		// Cell 11 
+		table.addCell(" ");
+
+		document.add(table);
+						
 		return;
 	}
 	
@@ -606,14 +744,14 @@ public class ExiPdfRtfExporter {
 	 * @return
 	 * @throws Exception
 	 */
-	private Cell getCellImage(Map<String, Object> dataCollectionMapItem, String imageParam) throws Exception {
+	private Cell getCellImage(Map<String, Object> dataCollectionMapItem, String imageParam, float image_size) throws Exception {
 		
 		if (dataCollectionMapItem.get(imageParam) != null && !(dataCollectionMapItem.get(imageParam).toString()).equals("") ) {
 			String image = dataCollectionMapItem.get(imageParam).toString();
 			image = PathUtils.getPath(image);
 			try {				
 				Image jpg1 = Image.getInstance(image);
-				jpg1.scaleAbsolute(jpg1.getWidth() * IMAGE_HEIGHT / jpg1.getHeight(), IMAGE_HEIGHT);
+				jpg1.scaleAbsolute(jpg1.getWidth() * image_size / jpg1.getHeight(), image_size);
 				Cell cell = new Cell(jpg1);
 				cell.setLeading(0);
 				cell.setBorderWidth(0);
@@ -634,13 +772,13 @@ public class ExiPdfRtfExporter {
 	 * @return
 	 * @throws Exception
 	 */
-	private Cell getCellImage(String imagePath) throws Exception {
+	private Cell getCellImage(String imagePath, float image_size) throws Exception {
 		
 		if (imagePath != null ) {
 			String image = PathUtils.getPath(imagePath);
 			try {				
 				Image jpg1 = Image.getInstance(image);
-				jpg1.scaleAbsolute(jpg1.getWidth() * IMAGE_HEIGHT / jpg1.getHeight(), IMAGE_HEIGHT);
+				jpg1.scaleAbsolute(jpg1.getWidth() * image_size / jpg1.getHeight(), image_size);
 				Cell cell = new Cell(jpg1);
 				cell.setLeading(0);
 				cell.setBorderWidth(0);
