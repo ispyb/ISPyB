@@ -38,7 +38,6 @@
 			<groupId>javax.ejb</groupId>
 			<artifactId>javax.ejb-api</artifactId>
 			<version>3.2</version>
-			<scope>provided</scope>
 		</dependency>
 		<!-- Import the CDI API, we use provided scope as the API is included in 
 			JBoss WildFly -->
