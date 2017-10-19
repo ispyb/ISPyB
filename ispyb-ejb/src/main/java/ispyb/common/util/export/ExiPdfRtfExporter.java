@@ -271,6 +271,50 @@ public class ExiPdfRtfExporter {
 
 	}
 
+	public ByteArrayOutputStream exportDataCollectionAnalysisReport(boolean rtfFormat) throws Exception {
+		
+		this.init();
+		// create simple doc and write to a ByteArrayOutputStream
+		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		if (!rtfFormat) {
+			PdfWriter.getInstance(document, baos);
+		} else {
+			RtfWriter2.getInstance(document, baos);
+		}
+
+		// =============================
+		// Header + footer
+		// =============================
+
+		setHeader(document);
+		setFooter(document);
+		document.open();
+
+		// ===============================
+		// Body
+		// ===============================
+		// Crystallographer added only for IFX proposal in case of MXPress
+		// experiment
+		setCrystallographer(document);
+		// Session comments
+		setSessionComments(document);
+		// session title& info
+		setSessionTable(document);
+
+		// ======================
+		// Data Collection analysis table
+		// ======================
+		document.add(new Paragraph(" "));
+		setDataAnalysisTable(document);
+
+		// ======================
+		// End of file
+		// ======================
+		document.close();
+		return baos;
+
+	}
 	/**
 	 * sets the header in the specified document
 	 * 
@@ -609,16 +653,6 @@ public class ExiPdfRtfExporter {
 	 * @throws Exception
 	 */
 	private void setDataAnalysisMapData(Document document, Map<String, Object> dataCollectionMapItem) throws Exception {
-
-		// 1st row
-		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) 
-				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime", null);
-		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
-		document.add(p);
-		
-		//row2		
-		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory", null);
-		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
 	
 		//row 1
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
@@ -627,14 +661,14 @@ public class ExiPdfRtfExporter {
 		table.setBorder(0);
 
 		// 1st Cell
-		parag = "Protein: \n" 
+		String parag = "Protein: \n" 
 				+ 	" \n" 
 				+ 	"Prefix: \n" 
 				+ 	" \n" 
 				+ 	"Images: \n" 
 				+ 	" \n";
 		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC);
+		Paragraph p = new Paragraph(parag, FONT_DOC);
 		table.addCell(p);
 		
 		// Cell 2
@@ -672,6 +706,15 @@ public class ExiPdfRtfExporter {
 		}
 
 		// Cell 6 indexed/strategy or completeness
+		String indexed = "success";
+		if (!getCellParam(dataCollectionMapItem, "ScreeningOutput_indexingSuccess", null){
+			indexed = "failed";
+		}
+		parag = "Indexed: \n" 
+				+ "Strategy: \n"
+				;
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
 		//dataCollectionGroup.ScreeningOutput_indexingSuccess
 		//ScreeningOutput_strategySuccess
 		table.addCell(" ");
