@@ -706,15 +706,32 @@ public class ExiPdfRtfExporter {
 		}
 
 		// Cell 6 indexed/strategy or completeness
-		String indexed = "success";
-		if (!getCellParam(dataCollectionMapItem, "ScreeningOutput_indexingSuccess", null){
-			indexed = "failed";
+		String indexed = "failed";
+		String strateg = "failed";
+		Boolean indexing = getBoolean(dataCollectionMapItem, "ScreeningOutput_indexingSuccess");
+		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
+		
+		if (indexing != null && strategy != null){
+			
+			if (indexing ){
+				indexed = "success";
+			} 						
+			
+			if (strategy ){
+				strateg = "success";
+			}
+			
+			parag = "Indexed: "+ indexed + "\n" 
+					+ "Strategy:"+ strateg + "\n" 
+					;
+			p = new Paragraph(parag, FONT_DOC);
+			table.addCell(p);
+			
+		} else {
+			table.addCell(" ");
 		}
-		parag = "Indexed: \n" 
-				+ "Strategy: \n"
-				;
-		p = new Paragraph(parag, FONT_DOC);
-		table.addCell(p);
+				
+		
 		//dataCollectionGroup.ScreeningOutput_indexingSuccess
 		//ScreeningOutput_strategySuccess
 		table.addCell(" ");
@@ -764,6 +781,28 @@ public class ExiPdfRtfExporter {
 		}
 		return paramValue;
 		
+	}
+	
+	/**
+	 * get the value as boolean to fill a cell and return a null value if no value or not an integer
+	 * 
+	 * @param param
+	 * @param dataCollectionMap
+	 * @throws Exception
+	 */
+	private Boolean getBoolean(Map<String, Object> dataCollectionMap, String param) throws Exception {
+
+		Boolean cellBool = null;
+		
+		if (dataCollectionMap.get(param) != null) {	
+			
+			if (dataCollectionMap.get(param).equals("1") ){
+				cellBool = true;
+			} else {
+				cellBool = false;
+			}
+		}
+		return cellBool;		
 	}
 
 	/**
