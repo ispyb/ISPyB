@@ -212,15 +212,28 @@ public class MAXIVWebService implements SMISWebService {
 				session.setProposalTitle(title);
 				session.setCategCode("MX");
 				session.setCategCounter(propId.intValue());
-				String startDate[] = ((String)jsonSession.get("evtstart")).split("-");
-				System.out.println("Date: " + Integer.parseInt(startDate[2].substring(0,2)));
-				session.setStartDate(new GregorianCalendar(Integer.parseInt(startDate[0]),Integer.parseInt(startDate[1]),Integer.parseInt(startDate[2].substring(0,2)), Integer.parseInt(startDate[2].substring(3,5)),0));
-				String endDate[] = ((String)jsonSession.get("evtend")).split("-");
-				//String endDatetime[] = endDate[2].split("T");
-				session.setEndDate(new GregorianCalendar(Integer.parseInt(endDate[0]),Integer.parseInt(endDate[1]),Integer.parseInt(endDate[2].substring(0,2)), Integer.parseInt(endDate[2].substring(3,5)),0));
-				//session.setStartShift((Integer)jsonSession.get("start_shitf"));
+				ArrayList<JSONObject> jsonShifts = getShiftsForSession((Integer)jsonSession.get("sessionid"));
+				String shiftDate[] = ((String) jsonShifts.get(0).get("shift_date")).split("-");
+				Calendar startDate = new GregorianCalendar(Integer.parseInt(shiftDate[0]),Integer.parseInt(shiftDate[1]),Integer.parseInt(shiftDate[2].substring(0,2)), 0, 0);
+				Calendar endDate = startDate;
+
+				for(JSONObject jsonShift : jsonShifts){
+					shiftDate = ((String)jsonShift.get("shift_date")).split("-");
+					Calendar tmp = new GregorianCalendar(Integer.parseInt(shiftDate[0]),Integer.parseInt(shiftDate[1]),Integer.parseInt(shiftDate[2].substring(0,2)), 0, 0);
+					if(0 < startDate.compareTo(tmp)){
+						startDate = tmp;
+					}
+
+					if(0 > endDate.compareTo(tmp)){
+						endDate = tmp;	
+					}
+				}
+
+				session.setStartDate(startDate);
+				session.setEndDate(endDate);
+
 				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
-				session.setShifts((Integer)jsonSession.get("shifts"));
+				session.setShifts(jsonShifts.size());
 				
 				session.setCancelled(false);//TODO: Check what this means
 				
@@ -334,6 +347,23 @@ public class MAXIVWebService implements SMISWebService {
 		}
 		
 		return sessions;
+	}
+	
+	private ArrayList<JSONObject> getShiftsForSession(Integer sessionId){
+		ArrayList<JSONObject> shifts = new ArrayList<JSONObject>();
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/")
+				.append(sessionId).append("/shifts").append("?access_token=").append(this.getToken());
+		
+		JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
+		
+		int len = jsonSessions.length();
+		for (int i=0; i<len; i++){ 
+			JSONObject jsonSession = (JSONObject)jsonSessions.get(i);
+			shifts.add(jsonSession);
+		}
+		
+		return shifts;
 	}
 	
 	private JSONObject getUserForId(Integer userId){
