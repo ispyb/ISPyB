@@ -255,6 +255,46 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/{nbRows}/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsAnalysisReportBySessionIdPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+
+		String methodName = "getDataCollectionAnalysisReportyBySessionIdPdf";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, false);
+			this.logFinish(methodName, start, logger);
+			return this.downloadFile(byteToExport, "DataCollectionsAnalysisReport.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/{nbRows}/rtf")
+	@Produces({ "application/rtf" })
+	public Response getDataCollectionsAnalysisReportBySessionIdRTF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+
+		String methodName = "getDataCollectionReportyBySessionIdRtf";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, true);
+			this.logFinish(methodName, start, logger);
+			return this.downloadFile(byteToExport, "DataCollectionsAnalysisReport.rtf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
 	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
@@ -367,6 +407,22 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
+
+		return byteToExport;
+	}
+	
+	private byte [] getAnalysisPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf) throws NamingException, Exception {
+		
+		Integer id = new Integer(sessionId);
+		
+		List<Map<String, Object>> dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
+
+		Integer nbRowsMax = new Integer(nbRows);
+		
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
+		
+		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
 
 		return byteToExport;
 	}
