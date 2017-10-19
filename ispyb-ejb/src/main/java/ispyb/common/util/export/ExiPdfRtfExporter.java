@@ -61,6 +61,7 @@ import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
+import sun.tools.jstat.Alignment;
 
 /**
  * allows creation of PDF or RTF report - general report for EXI, available in the
@@ -108,6 +109,8 @@ public class ExiPdfRtfExporter {
 
 	public final static Font FONT_DOC = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLACK);
 	
+	public final static Font FONT_DOC_SMALL = new Font(Font.HELVETICA, 6, Font.NORMAL, Color.BLACK);
+	
 	public final static Font FONT_DOC_BLUE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLUE);
 
 	public final static Font FONT_DOC_ITALIC = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.BLACK);
@@ -121,6 +124,11 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_DOC_EXPONENT_BLUE = new Font(Font.HELVETICA, 11, Font.NORMAL, Color.BLUE);
 
 	public final static Font FONT_DOC_BOLD = new Font(Font.HELVETICA, 8, Font.BOLD);
+	
+	public final static Font FONT_DOC_SMALL_BOLD = new Font(Font.HELVETICA, 6, Font.BOLD);
+	
+	public final static Font FONT_DOC_SMALL_CENTERED = new Font(Font.HELVETICA, 6, Font.BOLD);
+
 	public final static Font FONT_DOC_PARAM_TITLE = new Font(Font.HELVETICA, 8, Font.NORMAL, LIGHT_GREY_COLOR);
 
 	public final static Font FONT_INDEXING_NOTDONE = new Font(Font.HELVETICA, 8, Font.NORMAL, LIGHT_GREY_COLOR);
@@ -495,12 +503,12 @@ public class ExiPdfRtfExporter {
 	 * @throws Exception
 	 */
 	private void setDataAnalysisTable(Document document) throws Exception {
-		document.add(new Paragraph("Data Collections + Analysis:", FONT_TITLE));
+		document.add(new Paragraph("Data Collections & Analysis results:", FONT_TITLE));
 		document.add(new Paragraph(" "));
 		if (dataCollections.isEmpty()) {
 			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
 		} else {
-			document.add(new Paragraph(" "));
+			//document.add(new Paragraph(" "));
 			
 			// DataCollection Rows
 			Iterator<Map<String, Object>> it = dataCollections.iterator();
@@ -658,41 +666,40 @@ public class ExiPdfRtfExporter {
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
-		table.setBorder(0);
+		table.setBorder(1);
 
 		// 1st Cell
-		String parag = "Protein: \n" 
-				+ 	" \n" 
-				+ 	"Prefix: \n" 
-				+ 	" \n" 
-				+ 	"Images: \n" 
-				+ 	" \n";
+		String parag = "Protein: \n\n" 
+				+ 	"Prefix: \n\n" 
+				+ 	"Images: \n\n" ;
+
 		LOG.info("parag=" + parag);
-		Paragraph p = new Paragraph(parag, FONT_DOC);
+		Paragraph p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
-		// Cell 2
-		parag = getCellParam(dataCollectionMapItem, "Protein_acronym", null) + "\n\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
-		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC_BOLD);
-		table.addCell(p);
+		// 2st Cell
+		parag = getCellParam(dataCollectionMapItem, "Protein_acronym", null)+ "\n\n" 
+				+ 	getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
+				+ 	getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
 
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
+		table.addCell(p);
+		
 		//  Cell 3
 		parag = "Type: \n" 
-				+ "Res. (corner): \n"
-				+ 	"Wavelength: \n" ;
+				+ "Res. (corner): \n" 
+				+ "Wavelength: \n" ; 
 		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC);
+		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 
 		// Cell 4
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" ;
-		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC_BOLD);
+		
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
 
 		//  Cell 5 : image quality indicator  plot
@@ -706,56 +713,76 @@ public class ExiPdfRtfExporter {
 		}
 
 		// Cell 6 indexed/strategy or completeness
-		String indexed = "failed";
-		String strateg = "failed";
 		Boolean indexing = getBoolean(dataCollectionMapItem, "ScreeningOutput_indexingSuccess");
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
 		
+		p = new Paragraph(); 
+		
+		Chunk chu1 = new Chunk("Indexed: ", FONT_DOC_SMALL);
 		if (indexing != null && strategy != null){
+		
+			Chunk chu2 =  new Chunk( "Failed", FONT_INDEXING_FAILED);	
+			if (indexing.booleanValue() ){
+				chu2 =  new Chunk( "Success", FONT_INDEXING_SUCCESS);						
+			} 
+			p.add(chu1);
+			p.add(chu2);
 			
-			if (indexing ){
-				indexed = "success";
-			} 						
-			
-			if (strategy ){
-				strateg = "success";
+			chu1 = new Chunk("Strategy: ", FONT_DOC_SMALL);
+			chu2 =  new Chunk( "Failed", FONT_INDEXING_FAILED);	
+			if (strategy.booleanValue() ){
+				chu2 =  new Chunk( "Success", FONT_INDEXING_SUCCESS);	
 			}
+			p.add(chu1);
+			p.add(chu2);
 			
-			parag = "Indexed: "+ indexed + "\n" 
-					+ "Strategy:"+ strateg + "\n" 
-					;
-			p = new Paragraph(parag, FONT_DOC);
 			table.addCell(p);
 			
 		} else {
 			table.addCell(" ");
 		}
-				
+		LOG.info("parag=" + p.toString());		
 		
-		//dataCollectionGroup.ScreeningOutput_indexingSuccess
-		//ScreeningOutput_strategySuccess
-		table.addCell(" ");
-
 		// Cell 7 
-		//dataCollectionGroup.ScreeningOutput_mosaicity
-		//dataCollectionGroup.ScreeningOutputLattice_spaceGroup
-		table.addCell(" ");
+		parag = "Space group: \n" 
+				+ "Mosaicity: \n" ; 
+		LOG.info("parag=" + parag);
+		p = new Paragraph(parag, FONT_DOC_SMALL);
+		table.addCell(p);
+
 
 		// Cell 8 
+		parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
+				+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
+		table.addCell(p);
+
 		
 		//if (dataCollectionGroup.ScreeningOutputLattice_spaceGroup){  
 //dataCollectionGroup.ScreeningOutputLattice_unitCell_a + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_b + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_c,
 	        
-		table.addCell(" ");
 
 		// Cell 9 
-		table.addCell(" ");
+		parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
+		+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
+		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+		p.setAlignment(Element.ALIGN_CENTER); 
+		table.addCell(p);
 
 		// Cell 10 
-		table.addCell(" ");
+		parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
+		+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
+		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+		p.setAlignment(Element.ALIGN_CENTER); 
+		table.addCell(p);
 
 		// Cell 11 
-		table.addCell(" ");
+		parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
+		+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
+
+		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+		p.setAlignment(Element.ALIGN_CENTER); 
+		table.addCell(p);
 
 		document.add(table);
 						
@@ -792,15 +819,9 @@ public class ExiPdfRtfExporter {
 	 */
 	private Boolean getBoolean(Map<String, Object> dataCollectionMap, String param) throws Exception {
 
-		Boolean cellBool = null;
-		
-		if (dataCollectionMap.get(param) != null) {	
-			
-			if (dataCollectionMap.get(param).equals("1") ){
-				cellBool = true;
-			} else {
-				cellBool = false;
-			}
+		Boolean cellBool = null;		
+		if (dataCollectionMap.get(param) != null) {				
+			cellBool = new Boolean (dataCollectionMap.get(param).toString());
 		}
 		return cellBool;		
 	}
