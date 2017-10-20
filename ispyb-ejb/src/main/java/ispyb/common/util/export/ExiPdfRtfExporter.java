@@ -137,7 +137,7 @@ public class ExiPdfRtfExporter {
 
 	public final static Font FONT_INDEXING_SUCCESS = new Font(Font.HELVETICA, 8, Font.NORMAL, GREEN_COLOR);
 
-	public final static int NB_COL_DATACOLLECTION = 8;
+	public final static int NB_COL_DATACOLLECTION = 7;
 	
 	public final static int NB_COL_DATA_ANALYSIS = 11;
 
@@ -593,22 +593,18 @@ public class ExiPdfRtfExporter {
 		
 		
 		// Cell 4
-		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2)
+			+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + ") \n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange", df2) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart", df2) + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "exposureTime", df2) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_exposureTime", df2) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + "\n" 
 		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + "\n" ;
 		
 		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
-
-
-
-		// 5 Cell add cell containing autoproc results
-		table.addCell(" ");
 		
-		// 6 Cell : thumbnail
+		// 5 Cell : thumbnail
 		
 		if (!getCellParam(dataCollectionMapItem, "lastImageId", null).isEmpty()) {
 			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId", null)))).getJpegThumbnailFileFullPath();
@@ -622,13 +618,13 @@ public class ExiPdfRtfExporter {
 		//cellThumbnail.setRowspan(nbRows);
 		
 		
-		// 7 Cell : snapshot
+		// 6 Cell : snapshot
 		Cell cellSnapshot = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath1", IMAGE_HEIGHT);
 		//cellSnapshot.setRowspan(nbRows);
 		cellSnapshot.setBorderWidth(0);
 		table.addCell(cellSnapshot);
 		
-		// 8 Cell : graph or other plot
+		// 7 Cell : graph or other plot
 		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null).isEmpty()) {
 			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null)), false, false)).getImageQualityIndicatorsPlotPath();
 			Cell cellGraph = getCellImage(plotPath, IMAGE_HEIGHT);
@@ -696,7 +692,8 @@ public class ExiPdfRtfExporter {
 
 		// Cell 4
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) 
+					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + ") \n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" ;
 		
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
@@ -715,6 +712,7 @@ public class ExiPdfRtfExporter {
 		// Cell 6 indexed/strategy or completeness
 		Boolean indexing = getBoolean(dataCollectionMapItem, "ScreeningOutput_indexingSuccess");
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
+		String autoprocSpaceGroup = getCellParam(dataCollectionMapItem, "AutoProc_spaceGroup", null);
 		
 		p = new Paragraph(); 
 		
@@ -734,33 +732,37 @@ public class ExiPdfRtfExporter {
 				chu2 =  new Chunk( "Success", FONT_INDEXING_SUCCESS);	
 			}
 			p.add(chu1);
-			p.add(chu2);
-			
+			p.add(chu2);			
 			table.addCell(p);
 			
+		} else if (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty()){
+			parag = autoprocSpaceGroup + " Completeness \n"
+					+ "Overall" + "\n"
+					+ "Inner" + "\n"
+					+ "Outer" + "\n";
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+				
 		} else {
+				
 			table.addCell(" ");
+			
 		}
-		LOG.info("parag=" + p.toString());		
 		
 		// Cell 7 
-		parag = "Space group: \n" 
+		if (indexing != null && strategy != null){
+			parag = "Space group: \n" 
 				+ "Mosaicity: \n" ; 
-		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC_SMALL);
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+		} else {
+			p = new Paragraph(" ");
+		}
 		table.addCell(p);
-
 
 		// Cell 8 
 		parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
-
-		
-		//if (dataCollectionGroup.ScreeningOutputLattice_spaceGroup){  
-//dataCollectionGroup.ScreeningOutputLattice_unitCell_a + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_b + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_c,
-	        
 
 		// Cell 9 
 		parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
