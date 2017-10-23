@@ -404,12 +404,12 @@ public class DataCollectionRestWebService extends MXRestWebService {
 				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
 		
 		Integer nbRowsMax = dataCollections.size();
-		
+				
 		if (nbRows != null && !nbRows.isEmpty()) {
 			nbRowsMax = new Integer(nbRows);
 		}
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
 
@@ -429,7 +429,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			nbRowsMax = new Integer(nbRows);
 		}
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
 
