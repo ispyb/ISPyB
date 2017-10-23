@@ -47,6 +47,8 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
 
@@ -666,7 +668,6 @@ public class ExiPdfRtfExporter {
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
-		table.setBorder(1);
 
 		// 1st Cell
 		String parag = "Protein: \n\n" 
@@ -845,8 +846,12 @@ public class ExiPdfRtfExporter {
 			table.addCell(" ");
 			table.addCell(" ");
 		}
-
-		document.add(table);
+		// to avoid splitting table
+		Table containingTable = new Table(1);
+		Cell cell = new Cell(table);
+		containingTable.addCell(cell);
+		
+		document.add(containingTable);
 						
 		return;
 	}
