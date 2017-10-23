@@ -195,6 +195,7 @@ public interface Session3Service {
 	 */
 	public Integer getNbOfTests(final Integer sesId) throws Exception;
 
+	public List<Session3VO> findSessionByDateProposalAndBeamline(int proposalId, String beamlineName, Date date);
 	
 
 }

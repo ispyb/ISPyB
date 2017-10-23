@@ -18,7 +18,14 @@
 
 package ispyb.ws.soap.em;
 
-import java.util.HashMap;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.em.services.EM3Service;
+import ispyb.server.em.vos.CTF;
+import ispyb.server.em.vos.MotionCorrection;
+import ispyb.server.em.vos.Movie;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -44,65 +51,106 @@ public class ToolsForEMDataCollection extends EMDataCollection{
 
 	protected Logger log = LoggerFactory.getLogger(ToolsForEMDataCollection.class);
 
+	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+
 	@WebMethod(operationName = "addMovie")
-	public void addMovie(
+	public Movie addMovie(
 			@WebParam(name = "proposal") String proposal,
 			@WebParam(name = "sampleAcronym") String sampleAcronym,
-			@WebParam(name = "imageDirectory") String imageDirectory,
-			@WebParam(name = "jpeg") String jpeg,
-			@WebParam(name = "mrc") String mrc,
-			@WebParam(name = "xml") String xml,
-			@WebParam(name = "microscopeVoltage") String microscopeVoltage,
+			@WebParam(name = "movieDirectory") String movieDirectory,
+			@WebParam(name = "movieFullPath") String movieFullPath,
+			@WebParam(name = "movieNumber") String movieNumber,
+			@WebParam(name = "micrographFullPath") String micrographFullPath,
+			@WebParam(name = "micrographSnapshotFullPath") String micrographSnapshotFullPath,
+			@WebParam(name = "xmlMetaDataFullPath") String xmlMetaDataFullPath,
+			@WebParam(name = "voltage") String voltage,
 			@WebParam(name = "sphericalAberration") String sphericalAberration,
 			@WebParam(name = "amplitudeContrast") String amplitudeContrast,
-			@WebParam(name = "magnificationRate") String magnificationRate,
-			@WebParam(name = "pixelSize") String pixelSize,
-			@WebParam(name = "noImages") String noImages,
-			@WebParam(name = "dosePerImage") String dosePerImage
+			@WebParam(name = "magnification") String magnification,
+			@WebParam(name = "scannedPixelSize") String scannedPixelSize,
+			@WebParam(name = "imagesCount") String imagesCount,
+			@WebParam(name = "dosePerImage") String dosePerImage,
+			@WebParam(name = "positionX") String positionX,
+			@WebParam(name = "positionY") String positionY,
+			@WebParam(name = "beamlineName") String beamlineName
+			
 			)	
 	{
+		Date startTime = Calendar.getInstance().getTime();
 		try {
-			log.info("addMovie. technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={} microscopeVoltage={} sphericalAberration={} amplitudeContrast={} magnificationRate={} pixelSize={} noImages={} dosePerImage={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml, microscopeVoltage, sphericalAberration,amplitudeContrast,magnificationRate,pixelSize,noImages,dosePerImage);
-
+			log.info("addMovie. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={}", proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addMovie(proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage, sphericalAberration, amplitudeContrast, magnification, scannedPixelSize, imagesCount, dosePerImage, positionX, positionY, beamlineName.toUpperCase(),startTime);
 		} catch (Exception exp) {
-			log.error("addMovie. technique=EM proposal={} sampleAcronym={} imageDirectory={} jpeg={} mrc={} xml={} microscopeVoltage={} sphericalAberration={} amplitudeContrast={} magnificationRate={} pixelSize={} noImages={} dosePerImage={}", proposal, sampleAcronym, imageDirectory, jpeg, mrc, xml, microscopeVoltage, sphericalAberration,amplitudeContrast,magnificationRate,pixelSize,noImages,dosePerImage);
+			exp.printStackTrace();
+			log.error("Error addMovie: {}. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} cause={}",exp.getMessage(),  proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, exp.getCause());
 		}
+		return null;
 	}
 	
 	
 	@WebMethod(operationName = "addMotionCorrection")
-	public void addMotionCorrection(
+	public MotionCorrection addMotionCorrection(
 			@WebParam(name = "proposal") String proposal,
-			@WebParam(name = "imageDirectory") String imageDirectory,
-			@WebParam(name = "jpeg") String jpeg,
-			@WebParam(name = "png") String png,
-			@WebParam(name = "mrc") String mrc,
-			@WebParam(name = "logFilePath") String logFilePath
+			@WebParam(name = "movieFullPath") String movieFullPath,
+			@WebParam(name = "firstFrame") String firstFrame,
+			@WebParam(name = "lastFrame") String lastFrame,
+			@WebParam(name = "dosePerFrame") String dosePerFrame,
+			@WebParam(name = "doseWeight") String doseWeight,
+			@WebParam(name = "totalMotion") String totalMotion,
+			@WebParam(name = "averageMotionPerFrame") String averageMotionPerFrame,
+			@WebParam(name = "driftPlotFullPath") String driftPlotFullPath,
+			@WebParam(name = "micrographFullPath") String micrographFullPath,
+			@WebParam(name = "micrographSnapshotFullPath") String micrographSnapshotFullPath,
+			@WebParam(name = "correctedDoseMicrographFullPath") String correctedDoseMicrographFullPath,
+			@WebParam(name = "logFileFullPath") String logFileFullPath
+			
 			)	
 	{
 		try {
-			log.info("addMotionCorrection. technique=EM proposal={} imageDirectory={} jpeg={} png={} mrc={} log={}", proposal, imageDirectory, jpeg, png, mrc, logFilePath);
+			log.info("addMotionCorrection. technique=EM "
+					+ "proposal={} movieFullPath={} firstFrame={} lastFrame={} dosePerFrame={} doseWeight={} totalMotion={} averageMotionPerFrame={}  driftPlotFullPath={} micrographFullPath={} micrographSnapshotFullPath={} correctedDoseMicrographFullPath={} logFileFullPath={}", 
+					proposal, movieFullPath, firstFrame, lastFrame, dosePerFrame, doseWeight, totalMotion, averageMotionPerFrame, driftPlotFullPath, micrographFullPath,
+					micrographSnapshotFullPath, correctedDoseMicrographFullPath, logFileFullPath);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addMotionCorrection(proposal, movieFullPath, firstFrame, lastFrame, dosePerFrame, doseWeight, totalMotion, averageMotionPerFrame, driftPlotFullPath, micrographFullPath,
+					micrographSnapshotFullPath, correctedDoseMicrographFullPath, logFileFullPath);
 		} catch (Exception exp) {
-			log.error("addMotionCorrection. technique=EM proposal={} imageDirectory={} jpeg={} png={} mrc={} log={}", proposal, imageDirectory, jpeg, png, mrc, logFilePath);
+			exp.printStackTrace();
+			log.info("addMotionCorrection. technique=EM "
+					+ "proposal={} movieFullPath={} firstFrame={} lastFrame={} dosePerFrame={} doseWeight={} totalMotion={} averageMotionPerFrame={}  driftPlotFullPath={} micrographFullPath={} micrographSnapshotFullPath={} correctedDoseMicrographFullPath={} logFileFullPath={} cause={}", 
+					proposal, movieFullPath, firstFrame, lastFrame, dosePerFrame, doseWeight, totalMotion, averageMotionPerFrame, driftPlotFullPath, micrographFullPath,
+					micrographSnapshotFullPath, correctedDoseMicrographFullPath, logFileFullPath, exp.getCause());
 		}
+		return null;
 	}
 	
 	@WebMethod(operationName = "addCTF")
-	public void addCTF(
+	public CTF addCTF(
 			@WebParam(name = "proposal") String proposal,
-			@WebParam(name = "imageDirectory") String imageDirectory,
-			@WebParam(name = "jpeg") String jpeg,
-			@WebParam(name = "mrc") String mrc,
-			@WebParam(name = "outputOne") String outputOne,
-			@WebParam(name = "outputTwo") String outputTwo,
-			@WebParam(name = "logFilePath") String logFilePath
+			@WebParam(name = "movieFullPath") String movieFullPath,
+			@WebParam(name = "spectraImageSnapshotFullPath") String spectraImageSnapshotFullPath,
+			@WebParam(name = "spectraImageFullPath") String spectraImageFullPath,
+			@WebParam(name = "defocusU") String defocusU,
+			@WebParam(name = "defocusV") String defocusV,
+			@WebParam(name = "angle") String angle,
+			@WebParam(name = "crossCorrelationCoefficient") String crossCorrelationCoefficient,
+			@WebParam(name = "resolutionLimit") String resolutionLimit,
+			@WebParam(name = "estimatedBfactor") String estimatedBfactor,
+			@WebParam(name = "logFilePath") String logFilePath	
 			)	
 	{
 		try {
-			log.info("addCTF. technique=EM proposal={} imageDirectory={} jpeg={} mrc={} outputOne={} outputTwo={} log={}", proposal, imageDirectory, jpeg, mrc, outputOne, outputTwo, logFilePath);
+			log.info("addCTF. technique=EM proposal={} movieFullPath={} spectraImageSnapshotFullPath={} spectraImageFullPath={} defocusU={} defocusV={} angle={} crossCorrelationCoefficient={} resolutionLimit={} estimatedBfactor={} logFilePath={}", proposal, movieFullPath, spectraImageSnapshotFullPath, 
+					defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addCTF(proposal, movieFullPath, spectraImageSnapshotFullPath, spectraImageFullPath, defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath);
 		} catch (Exception exp) {
-			log.error("addCTF. technique=EM proposal={} imageDirectory={} jpeg={} mrc={} outputOne={} outputTwo={} log={}", proposal, imageDirectory, jpeg, mrc, outputOne, outputTwo, logFilePath);
+			exp.printStackTrace();
+			log.info("addCTF. technique=EM proposal={} movieFullPath={} spectraImageSnapshotFullPath={} spectraImageFullPath={} defocusU={} defocusV={} angle={} crossCorrelationCoefficient={} resolutionLimit={} estimatedBfactor={} logFilePath={} cause={}", proposal, movieFullPath, spectraImageSnapshotFullPath, 
+					defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath, exp.getCause());
 		}
+		return null;
 	}
 
 	

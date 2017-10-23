@@ -302,6 +302,14 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Session3VO> findSessionByDateProposalAndBeamline(int proposalId, String beamlineName, Date date) {
+		List<Session3VO> sessions = new ArrayList<Session3VO>();
+		sessions.addAll(this.findFiltered(proposalId, null, beamlineName, null, date, date, false, null));
+		sessions.addAll(this.findFiltered(proposalId, null, beamlineName, null, date, date, true, null));
+		return sessions;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Session3VO> findFiltered(Integer nbMax, String beamline, Date date1, Date date2, Date dateEnd,
 			boolean usedFlag, String operatorSiteNumber) {
 		Session session = (Session) this.entityManager.getDelegate();

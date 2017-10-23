@@ -83,19 +83,6 @@ public class Structure3VO implements java.io.Serializable {
 		// this.macromoleculeId = macromoleculeId;
 	}
 
-	// public Structure3VO(Macromolecule3VO macromolecule3VO) {
-	// this.macromolecule3VO = macromolecule3VO;
-	// }
-	// public Structure3VO(Macromolecule3VO macromolecule3VO, String pdb, String
-	// type, String fromResiduesBases, String toResiduesBases, String sequence) {
-	// this.macromolecule3VO = macromolecule3VO;
-	// this.pdb = pdb;
-	// this.type = type;
-	// this.fromResiduesBases = fromResiduesBases;
-	// this.toResiduesBases = toResiduesBases;
-	// this.sequence = sequence;
-	// }
-
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "structureId", unique = true, nullable = false)
@@ -106,17 +93,6 @@ public class Structure3VO implements java.io.Serializable {
 	public void setStructureId(Integer structureId) {
 		this.structureId = structureId;
 	}
-
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "macromoleculeId", nullable = false)
-	// public Macromolecule3VO getMacromolecule3VO() {
-	// return this.macromolecule3VO;
-	// }
-	//
-	// public void setMacromolecule3VO(Macromolecule3VO macromolecule3VO) {
-	// this.macromolecule3VO = macromolecule3VO;
-	// }
-
 
 	@Column(name = "filePath", length = 2048)
 	public String getFilePath() {
