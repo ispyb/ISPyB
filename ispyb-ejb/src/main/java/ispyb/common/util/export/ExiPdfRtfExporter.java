@@ -113,6 +113,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_DOC_SMALL = new Font(Font.HELVETICA, 6, Font.NORMAL, Color.BLACK);
 	
 	public final static Font FONT_DOC_BLUE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLUE);
+	public final static Font FONT_DOC_ORANGE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.ORANGE);
+	public final static Font FONT_DOC_RED = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.RED);
 
 	public final static Font FONT_DOC_ITALIC = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.BLACK);
 
@@ -718,6 +720,9 @@ public class ExiPdfRtfExporter {
 		Boolean indexing = getBoolean(dataCollectionMapItem, "ScreeningOutput_indexingSuccess");
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
 		String autoprocSpaceGroup = getCellParam(dataCollectionMapItem, "AutoProc_spaceGroup", null);
+		boolean existAutoProcSpaceGroup = (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty() ) 
+				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && !((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).isEmpty());
+				
 		
 		p = new Paragraph(); 
 		String [] bestRmerge = null;
@@ -780,22 +785,27 @@ public class ExiPdfRtfExporter {
 			table.addCell(p);
 
 			
-		} else if (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty() && extractBestRmerge(dataCollectionMapItem) != null){
+		} else if (existAutoProcSpaceGroup && extractBestRmerge(dataCollectionMapItem) != null){
 			// Cell 6
 			bestRmerge = extractBestRmerge(dataCollectionMapItem);
-			parag = autoprocSpaceGroup + "\n"
+			parag = bestRmerge[0] + "\n"
 					+ "Overall\n"
 					+ "Inner\n"
 					+ "Outer\n";
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);				
 
-			// Cell 7
-			parag ="Completeness\n"
-					+ bestRmerge[16] + "\n"
-					+ bestRmerge[2] + "\n"
-					+ bestRmerge[12] + "\n";
-			p = new Paragraph(parag, FONT_DOC_SMALL);
+			// Cell 7			
+			p = new Paragraph("Completeness\n", FONT_DOC_SMALL);
+			Chunk chu =  getCompletenessChunk(bestRmerge[16]);	
+			p.add(chu);
+			p.add("\n");
+			chu =  getCompletenessChunk(bestRmerge[2]);	
+			p.add(chu);
+			p.add("\n");
+			chu =  getCompletenessChunk(bestRmerge[12]);	
+			p.add(chu);
+					
 			table.addCell(p);				
 
 			// Cell 8 
@@ -1092,15 +1102,20 @@ public class ExiPdfRtfExporter {
 			List<String> scalingStatisticsTypesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("scalingStatisticsTypes")).trim().split(",")));
 			LOG.info("scalingStatisticsTypesList = " + scalingStatisticsTypesList.size() + scalingStatisticsTypesList.toString());	
 			int i = 0;
-			Double rmergeMin = 1000.0;
+			Double rmergeMin = 1000.000;
 			int indexRmergeMin = 0;
 			
 			for (Iterator iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
-				if (type.equals("innerShell")){
-					if (new Double(rmergesList.get(i)) < rmergeMin) {
-						rmergeMin = new Double(rmergesList.get(i));
+				if (type.contains("innerShell")){
+					double rm = new Double(rmergesList.get(i)).doubleValue();
+					LOG.info("rm = " + rm);
+					if (rm > 0 && rm < rmergeMin) {
+						rmergeMin = rm;
 						indexRmergeMin = i;
+						// TODO replace this by a look for the higher spacegroup
+						if (rmergeMin < 10)
+							break;
 					}
 				}
 				i=i+1;
@@ -1138,13 +1153,32 @@ public class ExiPdfRtfExporter {
 			bestRmerge[13] = resolutionsLimitLowList.get(indexRmergeMin+1) + "/" + resolutionsLimitHighList.get(indexRmergeMin+1);
 		
 			//overall
-			bestRmerge[14] = spaceGroupsList.get(indexRmergeMin+2);
-			bestRmerge[15] = rmergesList.get(indexRmergeMin+2);
-			bestRmerge[16]= completenessList.get(indexRmergeMin+2);
-			bestRmerge[17] = resolutionsLimitLowList.get(indexRmergeMin+2) + "/" + resolutionsLimitHighList.get(indexRmergeMin+2);
+			int overallIndex = indexRmergeMin-1;
+			if (overallIndex < 0 || scalingStatisticsTypesList.get(0).contains("innerShell")) {
+				overallIndex = indexRmergeMin+2;
+			}
+			
+			bestRmerge[14] = spaceGroupsList.get(overallIndex);
+			bestRmerge[15] = rmergesList.get(overallIndex);
+			bestRmerge[16]= completenessList.get(overallIndex);
+			//TODO format to 2 figures after .
+			bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
 		}
-		LOG.info("bestRmerge = " + "- " + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
+		LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		return bestRmerge;		
+	}
+	
+	private Chunk getCompletenessChunk(String completeness) {
+		Chunk chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
+		chu.setBackground(BLUE_COLOR);
+		if (completeness != null && new Double(completeness) < 80 ) {
+			if (new Double(completeness) < 10) {
+				chu.setBackground(RED_COLOR);
+			} else {
+				chu.setBackground(LIGHT_YELLOW_COLOR);
+			}				
+		}
+		return chu;
 	}
 
 }
