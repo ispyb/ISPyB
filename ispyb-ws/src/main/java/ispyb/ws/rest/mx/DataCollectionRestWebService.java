@@ -1,8 +1,5 @@
 package ispyb.ws.rest.mx;
 
-import ispyb.common.util.export.ExiPdfRtfExporter;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,10 +15,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.GZIP;
+
+import ispyb.common.util.export.ExiPdfRtfExporter;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
 
 @Path("/")
 public class DataCollectionRestWebService extends MXRestWebService {
@@ -217,11 +218,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/{nbRows}/pdf")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/pdf")
 	@Produces({ "application/pdf" })
 	public Response getDataCollectionsReportBySessionIdPDF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
 
 		String methodName = "getDataCollectionReportyBySessionIdPdf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
@@ -237,11 +238,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/{nbRows}/rtf")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/rtf")
 	@Produces({ "application/rtf" })
 	public Response getDataCollectionsReportBySessionIdRTF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
 
 		String methodName = "getDataCollectionReportyBySessionIdRtf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
@@ -257,11 +258,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/{nbRows}/pdf")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/pdf")
 	@Produces({ "application/pdf" })
 	public Response getDataCollectionsAnalysisReportBySessionIdPDF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
 
 		String methodName = "getDataCollectionAnalysisReportyBySessionIdPdf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
@@ -277,11 +278,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/{nbRows}/rtf")
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/rtf")
 	@Produces({ "application/rtf" })
 	public Response getDataCollectionsAnalysisReportBySessionIdRTF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
-			@PathParam("sessionId") String sessionId, @PathParam("nbRows") String nbRows) throws NamingException {
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
 
 		String methodName = "getDataCollectionReportyBySessionIdRtf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
@@ -401,10 +402,14 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		
 		List<Map<String, Object>> dataCollections = 
 				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
-
-		Integer nbRowsMax = new Integer(nbRows);
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
+		Integer nbRowsMax = dataCollections.size();
+				
+		if (nbRows != null && !nbRows.isEmpty()) {
+			nbRowsMax = new Integer(nbRows);
+		}
+		
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
 
@@ -418,9 +423,13 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		List<Map<String, Object>> dataCollections = 
 				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
 
-		Integer nbRowsMax = new Integer(nbRows);
+		Integer nbRowsMax = dataCollections.size();
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(proposal, id , dataCollections, nbRowsMax);
+		if (nbRows != null && !nbRows.isEmpty()) {
+			nbRowsMax = new Integer(nbRows);
+		}
+		
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
 

@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -46,6 +47,8 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
 
@@ -57,11 +60,9 @@ import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.IspybCrystalClass3Service;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.services.ws.rest.datacollectiongroup.DataCollectionGroupRestWsService;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
-import sun.tools.jstat.Alignment;
 
 /**
  * allows creation of PDF or RTF report - general report for EXI, available in the
@@ -112,6 +113,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_DOC_SMALL = new Font(Font.HELVETICA, 6, Font.NORMAL, Color.BLACK);
 	
 	public final static Font FONT_DOC_BLUE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLUE);
+	public final static Font FONT_DOC_ORANGE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.ORANGE);
+	public final static Font FONT_DOC_RED = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.RED);
 
 	public final static Font FONT_DOC_ITALIC = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.BLACK);
 
@@ -133,13 +136,13 @@ public class ExiPdfRtfExporter {
 
 	public final static Font FONT_INDEXING_NOTDONE = new Font(Font.HELVETICA, 8, Font.NORMAL, LIGHT_GREY_COLOR);
 
-	public final static Font FONT_INDEXING_FAILED = new Font(Font.HELVETICA, 8, Font.NORMAL, RED_COLOR);
+	public final static Font FONT_INDEXING_FAILED = new Font(Font.HELVETICA, 6, Font.BOLD, RED_COLOR);
 
-	public final static Font FONT_INDEXING_SUCCESS = new Font(Font.HELVETICA, 8, Font.NORMAL, GREEN_COLOR);
+	public final static Font FONT_INDEXING_SUCCESS = new Font(Font.HELVETICA, 6, Font.BOLD, GREEN_COLOR);
 
-	public final static int NB_COL_DATACOLLECTION = 8;
+	public final static int NB_COL_DATACOLLECTION = 7;
 	
-	public final static int NB_COL_DATA_ANALYSIS = 11;
+	public final static int NB_COL_DATA_ANALYSIS = 12;
 
 	public final static int SIZE_FONT = 8;
 
@@ -174,6 +177,8 @@ public class ExiPdfRtfExporter {
 
 	public final static float DIFF_IMAGE_HEIGHT = 174;
 
+	//proposalId
+	int proposalId;
 	// proposal
 	String proposalDesc;
 
@@ -199,9 +204,11 @@ public class ExiPdfRtfExporter {
 	
 	private DataCollection3Service dcService;
 	
+	private DataCollectionGroupRestWsService dcGroupService;
+	
 	private Image3Service imageService;
 		
-	public ExiPdfRtfExporter(String proposalDesc, Integer sessionId,
+	public ExiPdfRtfExporter(int proposalId, String proposalDesc, Integer sessionId,
 			List<Map<String, Object>> dataCollections, Integer nbRowsMax) throws Exception {
 		this.proposalDesc = proposalDesc;
 		this.sessionId = sessionId;
@@ -220,6 +227,8 @@ public class ExiPdfRtfExporter {
 				.getLocalService(Session3Service.class);
 		dcService = (DataCollection3Service) ejb3ServiceLocator
 				.getLocalService(DataCollection3Service.class);
+		dcGroupService = (DataCollectionGroupRestWsService) ejb3ServiceLocator
+				.getLocalService(DataCollectionGroupRestWsService.class);
 		imageService = (Image3Service) ejb3ServiceLocator
 				.getLocalService(Image3Service.class);
 		
@@ -516,8 +525,7 @@ public class ExiPdfRtfExporter {
 			while (it.hasNext() && i < nbRowsMax) {
 				Map<String, Object> dataCollectionMapData = it.next();
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
-				setDataAnalysisMapData(document, dataCollectionMapData);
-				
+				setDataAnalysisMapData(document, dataCollectionMapData);				
 				i++;
 			}
 			document.add(new Paragraph(" "));
@@ -593,22 +601,18 @@ public class ExiPdfRtfExporter {
 		
 		
 		// Cell 4
-		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2)
+			+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + ") \n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange", df2) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart", df2) + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "exposureTime", df2) + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_exposureTime", df2) + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + "\n" 
 		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + "\n" ;
 		
 		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
-
-
-
-		// 5 Cell add cell containing autoproc results
-		table.addCell(" ");
 		
-		// 6 Cell : thumbnail
+		// 5 Cell : thumbnail
 		
 		if (!getCellParam(dataCollectionMapItem, "lastImageId", null).isEmpty()) {
 			String thumbnailPath = (imageService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "lastImageId", null)))).getJpegThumbnailFileFullPath();
@@ -622,13 +626,13 @@ public class ExiPdfRtfExporter {
 		//cellThumbnail.setRowspan(nbRows);
 		
 		
-		// 7 Cell : snapshot
+		// 6 Cell : snapshot
 		Cell cellSnapshot = getCellImage(dataCollectionMapItem,"DataCollection_xtalSnapshotFullPath1", IMAGE_HEIGHT);
 		//cellSnapshot.setRowspan(nbRows);
 		cellSnapshot.setBorderWidth(0);
 		table.addCell(cellSnapshot);
 		
-		// 8 Cell : graph or other plot
+		// 7 Cell : graph or other plot
 		if (!getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null).isEmpty()) {
 			String plotPath = (dcService.findByPk(new Integer(getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionId", null)), false, false)).getImageQualityIndicatorsPlotPath();
 			Cell cellGraph = getCellImage(plotPath, IMAGE_HEIGHT);
@@ -666,7 +670,6 @@ public class ExiPdfRtfExporter {
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
-		table.setBorder(1);
 
 		// 1st Cell
 		String parag = "Protein: \n\n" 
@@ -696,7 +699,8 @@ public class ExiPdfRtfExporter {
 
 		// Cell 4
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2)+ "\n" 
+				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) 
+					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + ") \n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + "\n" ;
 		
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
@@ -712,79 +716,152 @@ public class ExiPdfRtfExporter {
 			table.addCell(" ");
 		}
 
-		// Cell 6 indexed/strategy or completeness
+		// Cell 6 7 8 9 10 11 indexed/strategy or completeness
 		Boolean indexing = getBoolean(dataCollectionMapItem, "ScreeningOutput_indexingSuccess");
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
+		String autoprocSpaceGroup = getCellParam(dataCollectionMapItem, "AutoProc_spaceGroup", null);
+		boolean existAutoProcSpaceGroup = (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty() ) 
+				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && !((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).isEmpty());
+				
 		
 		p = new Paragraph(); 
-		
-		Chunk chu1 = new Chunk("Indexed: ", FONT_DOC_SMALL);
+		String [] bestRmerge = null;
+				
 		if (indexing != null && strategy != null){
-		
-			Chunk chu2 =  new Chunk( "Failed", FONT_INDEXING_FAILED);	
+			// Cell 6
+			parag = "\nIndexed: \n "
+					+ "\nStrategy: \n";
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);
+
+			// Cell 6	
+			p = new Paragraph(); 
+			Chunk chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
 			if (indexing.booleanValue() ){
-				chu2 =  new Chunk( "Success", FONT_INDEXING_SUCCESS);						
+				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);						
 			} 
-			p.add(chu1);
 			p.add(chu2);
 			
-			chu1 = new Chunk("Strategy: ", FONT_DOC_SMALL);
-			chu2 =  new Chunk( "Failed", FONT_INDEXING_FAILED);	
+			chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
 			if (strategy.booleanValue() ){
-				chu2 =  new Chunk( "Success", FONT_INDEXING_SUCCESS);	
+				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);	
 			}
-			p.add(chu1);
-			p.add(chu2);
-			
+			p.add("\n");
+			p.add(chu2);			
+			table.addCell(p);
+
+			// Cell 7
+			parag = "Space group: \n" 
+					+ "Mosaicity: \n" ; 
+			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 			
+			// Cell 8 
+			parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
+					+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
+			table.addCell(p);
+			
+			// Cell 9 
+			parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
+			+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			// Cell 10 
+			parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
+			+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			// Cell 11 
+			parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
+			+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
+
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			
+		} else if (existAutoProcSpaceGroup && extractBestRmerge(dataCollectionMapItem) != null){
+			// Cell 6
+			bestRmerge = extractBestRmerge(dataCollectionMapItem);
+			parag = bestRmerge[0] + "\n"
+					+ "Overall\n"
+					+ "Inner\n"
+					+ "Outer\n";
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);				
+
+			// Cell 7			
+			p = new Paragraph("Completeness\n", FONT_DOC_SMALL);
+			Chunk chu =  getCompletenessChunk(bestRmerge[16]);	
+			p.add(chu);
+			p.add("\n");
+			chu =  getCompletenessChunk(bestRmerge[2]);	
+			p.add(chu);
+			p.add("\n");
+			chu =  getCompletenessChunk(bestRmerge[12]);	
+			p.add(chu);
+					
+			table.addCell(p);				
+
+			// Cell 8 
+			parag = "Res. \n" 
+					+ bestRmerge[17]+ "\n " 
+					+ bestRmerge[3] + "\n"
+					+ bestRmerge[13] + "\n" ; 
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);
+
+			// Cell 9 		
+			parag = "Rmerge \n" 
+					+ bestRmerge[15] + "\n"
+					+ bestRmerge[1] + "\n"
+					+ bestRmerge[11] + "\n"; 
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);
+
+			// cell parameters of innerShell
+			// Cell 10 a alpha
+			parag = "a \n" + bestRmerge[4]
+			+ "\n alpha \n" + bestRmerge[7] ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+		
+			// Cell 11 b beta
+			parag = "b \n" + bestRmerge[5]
+			+ "\n beta \n" + bestRmerge[8] ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			// Cell 12 
+			parag = "c \n" + bestRmerge[6]
+			+ "\n gamma \n" + bestRmerge[9] ;
+
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+		
 		} else {
 			table.addCell(" ");
+			table.addCell(" ");
+			table.addCell(" ");
+			table.addCell(" ");
+			table.addCell(" ");
+			table.addCell(" ");
+			table.addCell(" ");
 		}
-		LOG.info("parag=" + p.toString());		
+		// to avoid splitting table
+		Table containingTable = new Table(1);
+		Cell cell = new Cell(table);
+		containingTable.addCell(cell);
 		
-		// Cell 7 
-		parag = "Space group: \n" 
-				+ "Mosaicity: \n" ; 
-		LOG.info("parag=" + parag);
-		p = new Paragraph(parag, FONT_DOC_SMALL);
-		table.addCell(p);
-
-
-		// Cell 8 
-		parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
-				+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
-		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
-		table.addCell(p);
-
-		
-		//if (dataCollectionGroup.ScreeningOutputLattice_spaceGroup){  
-//dataCollectionGroup.ScreeningOutputLattice_unitCell_a + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_b + ", " + dataCollectionGroup.ScreeningOutputLattice_unitCell_c,
-	        
-
-		// Cell 9 
-		parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
-		+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
-		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-		p.setAlignment(Element.ALIGN_CENTER); 
-		table.addCell(p);
-
-		// Cell 10 
-		parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
-		+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
-		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-		p.setAlignment(Element.ALIGN_CENTER); 
-		table.addCell(p);
-
-		// Cell 11 
-		parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
-		+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
-
-		p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-		p.setAlignment(Element.ALIGN_CENTER); 
-		table.addCell(p);
-
-		document.add(table);
+		document.add(containingTable);
 						
 		return;
 	}
@@ -1008,5 +1085,100 @@ public class ExiPdfRtfExporter {
 		return listOfNbCrystalPerClass;
 	}
 
+	private String[] extractBestRmerge(Map<String, Object> dataCollectionMapItem) throws Exception {
+
+		String listString = (String)dataCollectionMapItem.get("completenessList");
+		listString.trim();
+		List<String> completenessList = new ArrayList<String>(Arrays.asList((listString.split(","))));
+		LOG.info("completenessList = " + completenessList.toString());	
+		
+		String [] bestRmerge = null;
+		
+		if (completenessList != null && !completenessList.isEmpty()) {		
+			
+			bestRmerge = new String[18];
+			List<String> rmergesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("rMerges")).trim().split(",")));
+			LOG.info("rmergesList = " + rmergesList.size() + rmergesList.toString() );	
+			List<String> scalingStatisticsTypesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("scalingStatisticsTypes")).trim().split(",")));
+			LOG.info("scalingStatisticsTypesList = " + scalingStatisticsTypesList.size() + scalingStatisticsTypesList.toString());	
+			int i = 0;
+			Double rmergeMin = 1000.000;
+			int indexRmergeMin = 0;
+			
+			for (Iterator iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
+				String type = (String) iterator.next();
+				if (type.contains("innerShell")){
+					double rm = new Double(rmergesList.get(i)).doubleValue();
+					LOG.info("rm = " + rm);
+					if (rm > 0 && rm < rmergeMin) {
+						rmergeMin = rm;
+						indexRmergeMin = i;
+						// TODO replace this by a look for the higher spacegroup
+						if (rmergeMin < 10)
+							break;
+					}
+				}
+				i=i+1;
+			}
+			List<String> spaceGroupsList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).trim().split(",")));
+			LOG.info("spaceGroupsList = " + spaceGroupsList.size() + spaceGroupsList.toString());	
+			List<String> resolutionsLimitLowList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitLow")).trim().split(",")));
+			LOG.info("resolutionsLimitLowList = " + resolutionsLimitLowList.size() + resolutionsLimitLowList.toString());	
+			List<String> resolutionsLimitHighList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitHigh")).trim().split(",")));
+			LOG.info("resolutionsLimitHighList = " + resolutionsLimitHighList.toString());	
+			
+			
+			bestRmerge[0] = spaceGroupsList.get(indexRmergeMin);
+			bestRmerge[1] = rmergeMin.toString();
+			bestRmerge[2]= completenessList.get(indexRmergeMin);
+			bestRmerge[3] = resolutionsLimitLowList.get(indexRmergeMin) + "/" + resolutionsLimitHighList.get(indexRmergeMin);
+			
+			List<String> tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_a")).trim().split(",")));
+			bestRmerge[4] = tmpList.get(indexRmergeMin);
+			tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_b")).trim().split(",")));
+			bestRmerge[5] = tmpList.get(indexRmergeMin);
+			tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_c")).trim().split(",")));
+			bestRmerge[6] = tmpList.get(indexRmergeMin);
+			tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_alpha")).trim().split(",")));
+			bestRmerge[7] = tmpList.get(indexRmergeMin);
+			tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_beta")).trim().split(",")));
+			bestRmerge[8] = tmpList.get(indexRmergeMin);
+			tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_gamma")).trim().split(",")));
+			bestRmerge[9] = tmpList.get(indexRmergeMin);
+			
+			//outer
+			bestRmerge[10] = spaceGroupsList.get(indexRmergeMin+1);
+			bestRmerge[11] = rmergesList.get(indexRmergeMin+1);
+			bestRmerge[12]= completenessList.get(indexRmergeMin+1);
+			bestRmerge[13] = resolutionsLimitLowList.get(indexRmergeMin+1) + "/" + resolutionsLimitHighList.get(indexRmergeMin+1);
+		
+			//overall
+			int overallIndex = indexRmergeMin-1;
+			if (overallIndex < 0 || scalingStatisticsTypesList.get(0).contains("innerShell")) {
+				overallIndex = indexRmergeMin+2;
+			}
+			
+			bestRmerge[14] = spaceGroupsList.get(overallIndex);
+			bestRmerge[15] = rmergesList.get(overallIndex);
+			bestRmerge[16]= completenessList.get(overallIndex);
+			//TODO format to 2 figures after .
+			bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
+		}
+		LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
+		return bestRmerge;		
+	}
+	
+	private Chunk getCompletenessChunk(String completeness) {
+		Chunk chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
+		chu.setBackground(BLUE_COLOR);
+		if (completeness != null && new Double(completeness) < 80 ) {
+			if (new Double(completeness) < 10) {
+				chu.setBackground(RED_COLOR);
+			} else {
+				chu.setBackground(LIGHT_YELLOW_COLOR);
+			}				
+		}
+		return chu;
+	}
 
 }
