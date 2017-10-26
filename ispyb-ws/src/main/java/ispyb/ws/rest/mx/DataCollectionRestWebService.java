@@ -23,6 +23,7 @@ import org.jboss.resteasy.annotations.GZIP;
 
 import ispyb.common.util.export.ExiPdfRtfExporter;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 
 @Path("/")
 public class DataCollectionRestWebService extends MXRestWebService {
@@ -229,7 +230,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false);
 			this.logFinish(methodName, start, logger);
-			return this.downloadFile(byteToExport, "DataCollectionsReport.pdf");
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -249,7 +251,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true);
 			this.logFinish(methodName, start, logger);
-			return this.downloadFile(byteToExport, "DataCollectionsReport.rtf");
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -269,7 +272,9 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, false);
 			this.logFinish(methodName, start, logger);
-			return this.downloadFile(byteToExport, "DataCollectionsAnalysisReport.pdf");
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
+
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -289,7 +294,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, true);
 			this.logFinish(methodName, start, logger);
-			return this.downloadFile(byteToExport, "DataCollectionsAnalysisReport.rtf");
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);

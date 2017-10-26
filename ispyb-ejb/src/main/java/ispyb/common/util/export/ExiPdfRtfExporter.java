@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.jboss.util.collection.ReverseListIterator;
 
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Cell;
@@ -501,10 +502,12 @@ public class ExiPdfRtfExporter {
 			Map<String, String> mapDataCollectionGroupIdCClass = new HashMap<String, String>();
 
 			// DataCollection Rows
-			Iterator<Map<String, Object>> it = dataCollections.iterator();
+			//Iterator<Map<String, Object>> it = dataCollections.iterator();
+			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
+					
 			int i = 0;
-			while (it.hasNext() && i < nbRowsMax) {
-				Map<String, Object> dataCollectionMapData = it.next();
+			while (it2.hasNext() && i < nbRowsMax) {
+				Map<String, Object> dataCollectionMapData = it2.next();
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
 				setDataCollectionMapData(document, dataCollectionMapData);
 				
@@ -516,7 +519,7 @@ public class ExiPdfRtfExporter {
 				}					
 				i++;
 			}
-			setCrystalClassSummary(document, mapDataCollectionGroupIdCClass);
+			//setCrystalClassSummary(document, mapDataCollectionGroupIdCClass);
 			document.add(new Paragraph(" "));
 		}
 		document.add(new Paragraph(" "));			
@@ -538,10 +541,12 @@ public class ExiPdfRtfExporter {
 			//document.add(new Paragraph(" "));
 			
 			// DataCollection Rows
-			Iterator<Map<String, Object>> it = dataCollections.iterator();
+			//Iterator<Map<String, Object>> it = dataCollections.iterator();
+			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
+
 			int i = 0;
-			while (it.hasNext() && i < nbRowsMax) {
-				Map<String, Object> dataCollectionMapData = it.next();
+			while (it2.hasNext() && i < nbRowsMax) {
+				Map<String, Object> dataCollectionMapData = it2.next();
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
 				setDataAnalysisMapData(document, dataCollectionMapData);				
 				i++;
