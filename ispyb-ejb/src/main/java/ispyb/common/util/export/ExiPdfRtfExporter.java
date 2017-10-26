@@ -28,10 +28,12 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -47,8 +49,6 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
 
@@ -57,10 +57,12 @@ import ispyb.common.util.Formatter;
 import ispyb.common.util.PathUtils;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.collections.IspybCrystalClass3Service;
 import ispyb.server.mx.services.ws.rest.datacollectiongroup.DataCollectionGroupRestWsService;
+import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
 import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 
@@ -176,6 +178,8 @@ public class ExiPdfRtfExporter {
 	public final static float DIFF_IMAGE_WIDTH = 174;
 
 	public final static float DIFF_IMAGE_HEIGHT = 174;
+	
+	public final static double MIN_RMERGE = 10;
 
 	//proposalId
 	int proposalId;
@@ -207,6 +211,10 @@ public class ExiPdfRtfExporter {
 	private DataCollectionGroupRestWsService dcGroupService;
 	
 	private Image3Service imageService;
+	
+	private SpaceGroup3Service spacegroupService;
+	
+	private Map <String, Integer> spgMap = new HashMap <String, Integer> ();
 		
 	public ExiPdfRtfExporter(int proposalId, String proposalDesc, Integer sessionId,
 			List<Map<String, Object>> dataCollections, Integer nbRowsMax) throws Exception {
@@ -231,8 +239,18 @@ public class ExiPdfRtfExporter {
 				.getLocalService(DataCollectionGroupRestWsService.class);
 		imageService = (Image3Service) ejb3ServiceLocator
 				.getLocalService(Image3Service.class);
+		spacegroupService = (SpaceGroup3Service) ejb3ServiceLocator
+				.getLocalService(SpaceGroup3Service.class);
 		
 		slv = sessionService.findByPk(sessionId, false/*withDataCollectionGroup*/, false/*withEnergyScan*/, false/*withXFESpectrum*/);
+		
+		List<SpaceGroup3VO> spaceGroups = spacegroupService.findAll();
+		
+		for (Iterator<SpaceGroup3VO> iterator = spaceGroups.iterator(); iterator.hasNext();) {
+			SpaceGroup3VO spg = (SpaceGroup3VO) iterator.next();
+			spgMap.put(spg.getSpaceGroupName(), spg.getSpaceGroupNumber());
+		}
+		LOG.info("spgMap=" + spgMap.toString());
 
 	}
 
@@ -785,9 +803,9 @@ public class ExiPdfRtfExporter {
 			table.addCell(p);
 
 			
-		} else if (existAutoProcSpaceGroup && extractBestRmerge(dataCollectionMapItem) != null){
+		} else if (existAutoProcSpaceGroup && extractBestAutoproc(dataCollectionMapItem) != null){
 			// Cell 6
-			bestRmerge = extractBestRmerge(dataCollectionMapItem);
+			bestRmerge = extractBestAutoproc(dataCollectionMapItem);
 			parag = bestRmerge[0] + "\n"
 					+ "Overall\n"
 					+ "Inner\n"
@@ -1085,51 +1103,64 @@ public class ExiPdfRtfExporter {
 		return listOfNbCrystalPerClass;
 	}
 
-	private String[] extractBestRmerge(Map<String, Object> dataCollectionMapItem) throws Exception {
+	private String[] extractBestAutoproc(Map<String, Object> dataCollectionMapItem) throws Exception {
 
-		String listString = (String)dataCollectionMapItem.get("completenessList");
-		listString.trim();
-		List<String> completenessList = new ArrayList<String>(Arrays.asList((listString.split(","))));
-		LOG.info("completenessList = " + completenessList.toString());	
-		
 		String [] bestRmerge = null;
+		String listString = (String)dataCollectionMapItem.get("completenessList");
 		
-		if (completenessList != null && !completenessList.isEmpty()) {		
-			
-			bestRmerge = new String[18];
+		if (dataCollectionMapItem.get("completenessList") != null && !listString.isEmpty() && dataCollectionMapItem.get("AutoProc_spaceGroups") != null) {	
+						
+			listString.trim();
+			List<String> completenessList = new ArrayList<String>(Arrays.asList((listString.split(","))));
+			LOG.info("completenessList = " + completenessList.toString());	
+			List<String> spaceGroupsList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).trim().split(",")));
+			LOG.info("spaceGroupsList = " + spaceGroupsList.size() + spaceGroupsList.toString());	
+			List<String> resolutionsLimitLowList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitLow")).trim().split(",")));
+			LOG.info("resolutionsLimitLowList = " + resolutionsLimitLowList.size() + resolutionsLimitLowList.toString());	
+			List<String> resolutionsLimitHighList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitHigh")).trim().split(",")));
+			LOG.info("resolutionsLimitHighList = " + resolutionsLimitHighList.toString());				
 			List<String> rmergesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("rMerges")).trim().split(",")));
 			LOG.info("rmergesList = " + rmergesList.size() + rmergesList.toString() );	
 			List<String> scalingStatisticsTypesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("scalingStatisticsTypes")).trim().split(",")));
 			LOG.info("scalingStatisticsTypesList = " + scalingStatisticsTypesList.size() + scalingStatisticsTypesList.toString());	
+			
+			bestRmerge = new String[18];
 			int i = 0;
 			Double rmergeMin = 1000.000;
 			int indexRmergeMin = 0;
+			Set<Integer> indexSet = new HashSet<Integer>();
 			
-			for (Iterator iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 				if (type.contains("innerShell")){
 					double rm = new Double(rmergesList.get(i)).doubleValue();
 					LOG.info("rm = " + rm);
 					if (rm > 0 && rm < rmergeMin) {
 						rmergeMin = rm;
-						indexRmergeMin = i;
-						// TODO replace this by a look for the higher spacegroup
-						if (rmergeMin < 10)
-							break;
+						indexRmergeMin = i;						
+						if (rmergeMin < MIN_RMERGE)
+							indexSet.add(i);
 					}
 				}
 				i=i+1;
 			}
-			List<String> spaceGroupsList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).trim().split(",")));
-			LOG.info("spaceGroupsList = " + spaceGroupsList.size() + spaceGroupsList.toString());	
-			List<String> resolutionsLimitLowList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitLow")).trim().split(",")));
-			LOG.info("resolutionsLimitLowList = " + resolutionsLimitLowList.size() + resolutionsLimitLowList.toString());	
-			List<String> resolutionsLimitHighList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitHigh")).trim().split(",")));
-			LOG.info("resolutionsLimitHighList = " + resolutionsLimitHighList.toString());	
 			
+			if (!indexSet.isEmpty()) {
+				String spgTemp;
+				Integer spgNb = 0;				
+				for (Iterator<Integer> iterator = indexSet.iterator(); iterator.hasNext();) {
+				Integer index = (Integer) iterator.next();
+					spgTemp = spaceGroupsList.get(index);
+					
+					if (spgMap.get(spgTemp)!= null && spgNb < spgMap.get(spgTemp)) {
+						spgNb = spgMap.get(spgTemp);
+						indexRmergeMin = index;
+					}
+				}				
+			}
 			
 			bestRmerge[0] = spaceGroupsList.get(indexRmergeMin);
-			bestRmerge[1] = rmergeMin.toString();
+			bestRmerge[1] = rmergesList.get(indexRmergeMin);
 			bestRmerge[2]= completenessList.get(indexRmergeMin);
 			bestRmerge[3] = resolutionsLimitLowList.get(indexRmergeMin) + "/" + resolutionsLimitHighList.get(indexRmergeMin);
 			
@@ -1163,8 +1194,9 @@ public class ExiPdfRtfExporter {
 			bestRmerge[16]= completenessList.get(overallIndex);
 			//TODO format to 2 figures after .
 			bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
+			LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		}
-		LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
+		
 		return bestRmerge;		
 	}
 	
