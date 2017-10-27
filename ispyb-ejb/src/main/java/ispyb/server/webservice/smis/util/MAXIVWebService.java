@@ -142,6 +142,16 @@ public class MAXIVWebService implements SMISWebService {
 		if(jsonProposal.get("cowriter10") != JSONObject.NULL)
 			cowriters.add((Integer)jsonProposal.get("cowriter10"));
 		
+		
+		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
+
+		for(JSONObject jsonSession : jsonSessions){
+			ArrayList<JSONObject> jsonParticipants = getParticipantsForSession((Integer)jsonSession.get("sessionid"));
+			for(JSONObject jsonParticipant : jsonParticipants){
+				cowriters.add((Integer)jsonParticipant.get("userid"));
+			}
+		}
+		
 		for(Integer cowriterId : cowriters) {
 			JSONObject jsonParticipant = getUserForId(cowriterId);
 			
@@ -196,52 +206,61 @@ public class MAXIVWebService implements SMISWebService {
 			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
 			
 			try{
-				session.setBeamlineName((String)jsonSession.get("beamline"));
-				session.setBeamlinePk(Long.valueOf(12345));//TODO Verify. We dont have a Long id
-				session.setProposalGroup(0);//TODO Need to check for industrial proposals
-				session.setProposalGroupCode(propId.toString());
-				session.setProposalPk(propId);
-				session.setProposalSubmissionPk(propId);
-				session.setExperimentPk(propId);
-				session.setPk(propId);
-				String title = (String)jsonProposal.get("title");
-				if(title.length() >= 200){
-					title = title.substring(0,195).concat("...");
-					System.out.println("Truncated Tilte :" + title);
-				}
-				session.setProposalTitle(title);
-				session.setCategCode("MX");
-				session.setCategCounter(propId.intValue());
 				ArrayList<JSONObject> jsonShifts = getShiftsForSession((Integer)jsonSession.get("sessionid"));
-				String shiftDate[] = ((String) jsonShifts.get(0).get("shift_date")).split("-");
-				Calendar startDate = new GregorianCalendar(Integer.parseInt(shiftDate[0]),Integer.parseInt(shiftDate[1]),Integer.parseInt(shiftDate[2].substring(0,2)), 0, 0);
-				Calendar endDate = startDate;
-
-				for(JSONObject jsonShift : jsonShifts){
-					shiftDate = ((String)jsonShift.get("shift_date")).split("-");
-					Calendar tmp = new GregorianCalendar(Integer.parseInt(shiftDate[0]),Integer.parseInt(shiftDate[1]),Integer.parseInt(shiftDate[2].substring(0,2)), 0, 0);
-					if(0 < startDate.compareTo(tmp)){
-						startDate = tmp;
+				if(jsonShifts.size() != 0){
+					session.setBeamlineName((String)jsonSession.get("beamline"));
+					session.setBeamlinePk(Long.valueOf(12345));//TODO Verify. We dont have a Long id
+					session.setProposalGroup(0);//TODO Need to check for industrial proposals
+					session.setProposalGroupCode(propId.toString());
+					session.setProposalPk(propId);
+					session.setProposalSubmissionPk(propId);
+					session.setExperimentPk(propId);
+					session.setComment("Created by DUO");
+					session.setPk(new Long((int)jsonSession.get("sessionid")));
+					String title = (String)jsonProposal.get("title");
+					if(title.length() >= 200){
+						title = title.substring(0,195).concat("...");
+						System.out.println("Truncated Tilte :" + title);
+					}
+					session.setProposalTitle(title);
+					session.setCategCode("MX");
+					session.setCategCounter(propId.intValue());
+					String shiftStartDate[] = ((String) jsonShifts.get(0).get("shift_start")).split("-|\\s|:");
+					String shiftEndDate[] = ((String) jsonShifts.get(0).get("shift_end")).split("-|\\s|:");
+					Calendar startDate = new GregorianCalendar(Integer.parseInt(shiftStartDate[0]),Integer.parseInt(shiftStartDate[1]) - 1,Integer.parseInt(shiftStartDate[2]), Integer.parseInt(shiftStartDate[3]), 0);
+					Calendar endDate = new GregorianCalendar(Integer.parseInt(shiftEndDate[0]),Integer.parseInt(shiftEndDate[1]) - 1,Integer.parseInt(shiftEndDate[2]), Integer.parseInt(shiftEndDate[3]), 0);
+					
+					
+					for(JSONObject jsonShift : jsonShifts){
+						shiftStartDate = ((String) jsonShift.get("shift_start")).split("-|\\s|:");
+						shiftEndDate = ((String) jsonShift.get("shift_end")).split("-|\\s|:");
+						Calendar tmpStartDate = new GregorianCalendar(Integer.parseInt(shiftStartDate[0]),Integer.parseInt(shiftStartDate[1]) - 1,Integer.parseInt(shiftStartDate[2]), Integer.parseInt(shiftStartDate[3]), 0);
+						Calendar tmpEndDate = new GregorianCalendar(Integer.parseInt(shiftEndDate[0]),Integer.parseInt(shiftEndDate[1]) - 1,Integer.parseInt(shiftEndDate[2]), Integer.parseInt(shiftEndDate[3]), 0);
+						
+						if(0 < startDate.compareTo(tmpStartDate)){
+							startDate = tmpStartDate;
+						}
+	
+						if(0 > endDate.compareTo(tmpEndDate)){
+							endDate = tmpEndDate;	
+						}
 					}
 
-					if(0 > endDate.compareTo(tmp)){
-						endDate = tmp;	
-					}
+					session.setStartDate(startDate);
+					session.setEndDate(endDate);
+	
+					session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
+					session.setShifts(jsonShifts.size());
+					
+					session.setCancelled(false);//TODO: Check what this means
+					
+					sessions.add(session);
 				}
-
-				session.setStartDate(startDate);
-				session.setEndDate(endDate);
-
-				session.setStartShift(Integer.valueOf(1));//TODO Verify. What should this be?
-				session.setShifts(jsonShifts.size());
-				
-				session.setCancelled(false);//TODO: Check what this means
-				
-				sessions.add(session);
 			} catch(Exception ex){
 				//TODO: Handle exception
 				ex.printStackTrace();
 			}
+			
 		}
 		
 		return sessions;
@@ -364,6 +383,23 @@ public class MAXIVWebService implements SMISWebService {
 		}
 		
 		return shifts;
+	}
+	
+	private ArrayList<JSONObject> getParticipantsForSession(Integer sessionId){
+		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
+		
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/")
+				.append(sessionId).append("/participants").append("?access_token=").append(this.getToken());
+		
+		JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
+		
+		int len = jsonSessions.length();
+		for (int i=0; i<len; i++){ 
+			JSONObject jsonSession = (JSONObject)jsonSessions.get(i);
+			participants.add(jsonSession);
+		}
+		
+		return participants;
 	}
 	
 	private JSONObject getUserForId(Integer userId){
