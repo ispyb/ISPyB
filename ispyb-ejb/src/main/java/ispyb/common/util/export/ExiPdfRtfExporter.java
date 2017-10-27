@@ -553,8 +553,6 @@ public class ExiPdfRtfExporter {
 			}
 			document.add(new Paragraph(" "));
 		}
-		document.add(new Paragraph(" "));			
-			
 	}
 
 	/**
@@ -691,6 +689,9 @@ public class ExiPdfRtfExporter {
 	
 		//row 1
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
+		table.setCellsFitPage(true);
+		table.setBorder(0);
+
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
 
@@ -757,7 +758,7 @@ public class ExiPdfRtfExporter {
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 
-			// Cell 6	
+			// Cell 7	
 			p = new Paragraph(); 
 			Chunk chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
 			if (indexing.booleanValue() ){
@@ -773,33 +774,33 @@ public class ExiPdfRtfExporter {
 			p.add(chu2);			
 			table.addCell(p);
 
-			// Cell 7
+			// Cell 8
 			parag = "Space group: \n" 
 					+ "Mosaicity: \n" ; 
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 			
-			// Cell 8 
+			// Cell 9 
 			parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
 					+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 			table.addCell(p);
 			
-			// Cell 9 
+			// Cell 10 
 			parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
 			+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 
-			// Cell 10 
+			// Cell 11 
 			parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
 			+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 
-			// Cell 11 
+			// Cell 12 
 			parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
 			+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
 
@@ -881,6 +882,10 @@ public class ExiPdfRtfExporter {
 		}
 		// to avoid splitting table
 		Table containingTable = new Table(1);
+		containingTable.setCellsFitPage(true);
+		containingTable.setBorder(0);
+		containingTable.getDefaultCell().setBorderWidth(0);
+
 		Cell cell = new Cell(table);
 		containingTable.addCell(cell);
 		
