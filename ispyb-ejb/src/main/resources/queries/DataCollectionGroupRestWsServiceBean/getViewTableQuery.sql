@@ -20,7 +20,7 @@ GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`
 GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,  
 GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`, 
 GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,
-GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,  
+GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,
 GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 				
 (SELECT count(*) 

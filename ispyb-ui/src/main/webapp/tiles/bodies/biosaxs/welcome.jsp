@@ -91,8 +91,10 @@
 <% String targetDataAcquisitions = request.getContextPath() + "/user/viewProjectList.do?reqCode=display";  %>
 <% String targetListShipment = request.getContextPath() + "/user/viewProjectList.do?reqCode=display&menu=list_shipment";  %>
 <% String targetPrepareExperiment = request.getContextPath() + "/user/viewProjectList.do?reqCode=display&menu=prepareexperiment";  %>
+<% String toUpdateDB 	= request.getContextPath() + "/updateDB.do?reqCode=updateProposal"; %>
 
-<h2>In case of problems when creating shipments/samples, <a href="<%=targetUpdateDB%>" >update ISPyB database</a> (this may take a few minutes).
+	
+<h2>In case of problems when creating shipments/samples, <a href="<%=toUpdateDB%>" >update ISPyB database</a> (this may take a few minutes).
 </h2>
 <br>
 <div class='container'>
