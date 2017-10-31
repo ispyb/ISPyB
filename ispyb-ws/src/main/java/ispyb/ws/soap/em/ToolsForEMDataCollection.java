@@ -19,7 +19,7 @@
 package ispyb.ws.soap.em;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.em.services.EM3Service;
+import ispyb.server.em.services.collections.EM3Service;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
@@ -72,18 +72,19 @@ public class ToolsForEMDataCollection extends EMDataCollection{
 			@WebParam(name = "dosePerImage") String dosePerImage,
 			@WebParam(name = "positionX") String positionX,
 			@WebParam(name = "positionY") String positionY,
-			@WebParam(name = "beamlineName") String beamlineName
+			@WebParam(name = "beamlineName") String beamlineName,
+			@WebParam(name = "gridSquareSnapshotFullPath") String gridSquareSnapshotFullPath
 			
 			)	
 	{
 		Date startTime = Calendar.getInstance().getTime();
 		try {
-			log.info("addMovie. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={}", proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime);
+			log.info("addMovie. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
-			return service.addMovie(proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage, sphericalAberration, amplitudeContrast, magnification, scannedPixelSize, imagesCount, dosePerImage, positionX, positionY, beamlineName.toUpperCase(),startTime);
+			return service.addMovie(proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage, sphericalAberration, amplitudeContrast, magnification, scannedPixelSize, imagesCount, dosePerImage, positionX, positionY, beamlineName.toUpperCase(),startTime, gridSquareSnapshotFullPath);
 		} catch (Exception exp) {
 			exp.printStackTrace();
-			log.error("Error addMovie: {}. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} cause={}",exp.getMessage(),  proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, exp.getCause());
+			log.error("Error addMovie: {}. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={} cause={}",exp.getMessage(),  proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath, exp.getCause());
 		}
 		return null;
 	}

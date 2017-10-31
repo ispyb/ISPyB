@@ -16,7 +16,7 @@
  * 
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
-package ispyb.server.em.services;
+package ispyb.server.em.services.collections;
 
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.sessions.Session3Service;
@@ -110,7 +110,7 @@ public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
 	@Override
 	public Movie addMovie(String proposal, String sampleAcronym, String movieDirectory, String moviePath, String movieNumber, String micrographPath,
 			String thumbnailMicrographPath, String xmlMetaDataPath, String voltage, String sphericalAberration, String amplitudeContrast, String magnification,
-			String scannedPixelSize, String noImages, String dosePerImage, String positionX, String positionY, String beamlineName, Date startTime)
+			String scannedPixelSize, String noImages, String dosePerImage, String positionX, String positionY, String beamlineName, Date startTime, String gridSquareSnapshotFullPath)
 			throws Exception {
 
 		/**
@@ -135,7 +135,10 @@ public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
 			/** Creating datacollection **/
 			DataCollectionGroup3VO group = new DataCollectionGroup3VO();
 			group.setSessionVO(session);
-
+			group.setExperimentType("EM");
+			group.setStartTime(Calendar.getInstance().getTime());
+			group.setXtalSnapshotFullPath(gridSquareSnapshotFullPath);
+			
 			log.info("Creating dataCollectionGroup. technique=EM sessionId={}", session.getSessionId());
 			group = dataCollectionGroup3Service.create(group);
 			log.info("Created dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),

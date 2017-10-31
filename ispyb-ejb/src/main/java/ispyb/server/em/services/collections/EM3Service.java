@@ -17,7 +17,7 @@
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
-package ispyb.server.em.services;
+package ispyb.server.em.services.collections;
 
 
 import java.util.Date;
@@ -39,7 +39,7 @@ public interface EM3Service {
 			String voltage, String sphericalAberration,
 			String amplitudeContrast, String magnification,
 			String scannedPixelSize, String noImages, String dosePerImage,
-			 String positionX, String positionY,String beamlineName, Date startTime) throws Exception;
+			 String positionX, String positionY,String beamlineName, Date startTime, String gridSquareSnapshotFullPath) throws Exception;
 
 	MotionCorrection addMotionCorrection(String proposal, String movieFullPath,
 			String firstFrame, String lastFrame, String dosePerFrame,

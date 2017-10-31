@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `pydb`.`Movie` (
   `micrographSnapshotFullPath` VARCHAR(255) NULL,
   `correctedDoseMicrographFullPath` VARCHAR(255) NULL,
   `patchesUsed` VARCHAR(45) NULL,
-  `logFileFullPath` VARCHAR(45) NULL,
+  `logFileFullPath` VARCHAR(255) NULL,
   `createdTimeStamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`motionCorrectionId`),
   INDEX `fk_MotionCorrection_1_idx` (`movieId` ASC),
@@ -59,7 +59,7 @@ CREATE TABLE `pydb`.`CTF` (
   `crossCorrelationCoefficient` VARCHAR(45) NULL,
   `resolutionLimit` VARCHAR(45) NULL,
   `estimatedBfactor` VARCHAR(45) NULL,
-  `logFilePath` VARCHAR(45) NULL,
+  `logFilePath` VARCHAR(255) NULL,
    `createdTimeStamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`CTFid`));
 
@@ -77,6 +77,8 @@ ADD CONSTRAINT `fk_CTF_1`
 ALTER TABLE `pydb`.`CTF` 
 CHANGE COLUMN `CTFid` `CTFid` INT(11) NOT NULL AUTO_INCREMENT ;
 
+ALTER TABLE `pydb`.`DataCollectionGroup` 
+CHANGE COLUMN `experimentType` `experimentType` ENUM('EM', 'SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration') NULL DEFAULT NULL COMMENT 'Experiment type flag' ;
     
 
 update `pydb`.SchemaStatus set schemaStatus = 'DONE' where scriptName = '20171022_EM.sql';  
