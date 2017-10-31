@@ -8,6 +8,8 @@ import ispyb.server.mx.services.ws.rest.autoprocessingintegration.AutoProcessing
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import org.jboss.resteasy.annotations.GZIP;
 public class AutoprocintegrationRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(AutoprocintegrationRestWebService.class);
+	private static final String NOT_ALLOWED = "You don't have access to this resource";
 
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
@@ -126,6 +129,13 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	}
 	
 	
+	
+	
+	private boolean checkProposalByAutoProcProgramId(int proposalId, int autoProcProgramId) throws NamingException, Exception{
+		return this.getSession3Service().findByAutoProcProgramId(autoProcProgramId).getProposalVOId().equals(proposalId);
+	}
+	
+	
 	/**
 	 * AutoProcProgramAttachment has not AutoProcProgramId mapped in the EJB object
 	 * so it is necessary to keep separately the possible list of ids in order
@@ -147,13 +157,19 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		String methodName = "downloadAttachments";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			List<Integer> ids = this.parseToInteger(autoprocattachmentids);
+			List<Integer> autoProcProgramIds = this.parseToInteger(autoprocattachmentids);
 			List<List<AutoProcProgramAttachment3VO>> list = new ArrayList<List<AutoProcProgramAttachment3VO>>();
 			HashMap<String, String> filePaths = new HashMap<String, String>();
 			String filename = "download.zip";
 			
-			for (Integer id : ids) {
-				AutoProcProgram3VO autoProcProgram3VO = this.getAutoProcProgram3Service().findByPk(id, true);
+			for (Integer autoProcProgramId : autoProcProgramIds) {
+				/** Check that id correspond to the proposal **/
+				if (!this.checkProposalByAutoProcProgramId(this.getProposalId(proposal), autoProcProgramId)){
+					throw new Exception(NOT_ALLOWED);
+				}
+			
+				
+				AutoProcProgram3VO autoProcProgram3VO = this.getAutoProcProgram3Service().findByPk(autoProcProgramId, true);
 				
 				/** Prefix for the name of the file and the internal structure if many results are retrieved **/
 				String prefix = String.format("%s_%s", autoProcProgram3VO.getProcessingPrograms(), autoProcProgram3VO.getAutoProcProgramId());
@@ -164,7 +180,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 					String filePath = auto.getFilePath() + "/" + auto.getFileName();
 					if (new File(filePath).exists()){
 						if (new File(filePath).isFile()){
-							if (ids.size() > 1){
+							if (autoProcProgramIds.size() > 1){
 								String zipNameFile = prefix + "/" + auto.getFileName();
 								filePaths.put(zipNameFile, filePath);
 							}
@@ -176,7 +192,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 				}
 				
 				/** If it is a single result then filename is the name of the program and the ID **/
-				if (ids.size() == 1){					
+				if (autoProcProgramIds.size() == 1){					
 					filename = prefix + ".zip";
 				}
 				
@@ -333,6 +349,10 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 	
+	private boolean checkProposalByAutoProcProgramAttachmentId(int proposalId, int autoProcProgramAttachmentId) throws NamingException, Exception{
+		return this.getSession3Service().findByAutoProcProgramAttachmentId(autoProcProgramAttachmentId).getProposalVOId().equals(proposalId);
+	}
+	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/autoprocattachmentid/{autoProcAttachmentId}/download")
@@ -343,11 +363,17 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		String methodName = "downloadAutoProcAttachment";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
-			this.logFinish(methodName, start, logger);
-			File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
-			this.logFinish(methodName, start, logger);
-			return this.downloadFileAsAttachment(file.getAbsolutePath());
+			/** Checking that attachment is linked to the proposal **/
+			if (this.checkProposalByAutoProcProgramAttachmentId(this.getProposalId(proposal), autoProcAttachmentId)){
+				AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
+				this.logFinish(methodName, start, logger);
+				File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
+				this.logFinish(methodName, start, logger);
+				return this.downloadFileAsAttachment(file.getAbsolutePath());
+			}
+			else{
+				throw new Exception(NOT_ALLOWED);
+			}
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
@@ -360,13 +386,19 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	public Response getAutoProcAttachment(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
 
-		String methodName = "downloadAutoProcAttachment";
+		String methodName = "getAutoProcAttachment";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
-			AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
-			File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
-			this.logFinish(methodName, start, logger);
-			return this.downloadFile(file.getAbsolutePath());
+			/** Checking that attachment is linked to the proposal **/
+			if (this.checkProposalByAutoProcProgramAttachmentId(this.getProposalId(proposal), autoProcAttachmentId)){
+				AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
+				File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
+				this.logFinish(methodName, start, logger);
+				return this.downloadFile(file.getAbsolutePath());
+			}
+			else{
+				throw new Exception(NOT_ALLOWED);
+			}
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
