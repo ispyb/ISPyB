@@ -753,71 +753,13 @@ public class ExiPdfRtfExporter {
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
 		String autoprocSpaceGroup = getCellParam(dataCollectionMapItem, "AutoProc_spaceGroup", null);
 		boolean existAutoProcSpaceGroup = (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty() ) 
-				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && !((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).isEmpty());
-				
+				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && !((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).isEmpty()
+									&& dataCollectionMapItem.get("Autoprocessing_cell_a")!= null);
 		
 		p = new Paragraph(); 
 		String [] bestRmerge = null;
-				
-		if (indexing != null && strategy != null){
-			// Cell 6
-			parag = "\nIndexed: \n "
-					+ "\nStrategy: \n";
-			p = new Paragraph(parag, FONT_DOC_SMALL);
-			table.addCell(p);
-
-			// Cell 7	
-			p = new Paragraph(); 
-			Chunk chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
-			if (indexing.booleanValue() ){
-				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);						
-			} 
-			p.add(chu2);
 			
-			chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
-			if (strategy.booleanValue() ){
-				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);	
-			}
-			p.add("\n");
-			p.add(chu2);			
-			table.addCell(p);
-
-			// Cell 8
-			parag = "Space group: \n" 
-					+ "Mosaicity: \n" ; 
-			p = new Paragraph(parag, FONT_DOC_SMALL);
-			table.addCell(p);
-			
-			// Cell 9 
-			parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
-					+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
-			p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
-			table.addCell(p);
-			
-			// Cell 10 
-			parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
-			+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
-			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-			p.setAlignment(Element.ALIGN_CENTER); 
-			table.addCell(p);
-
-			// Cell 11 
-			parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
-			+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
-			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-			p.setAlignment(Element.ALIGN_CENTER); 
-			table.addCell(p);
-
-			// Cell 12 
-			parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
-			+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
-
-			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
-			p.setAlignment(Element.ALIGN_CENTER); 
-			table.addCell(p);
-
-			
-		} else if (existAutoProcSpaceGroup && extractBestAutoproc(dataCollectionMapItem) != null){
+		if (existAutoProcSpaceGroup && extractBestAutoproc(dataCollectionMapItem) != null){
 			// Cell 6
 			bestRmerge = extractBestAutoproc(dataCollectionMapItem);
 			parag = bestRmerge[0] + "\n"
@@ -874,6 +816,63 @@ public class ExiPdfRtfExporter {
 			// Cell 12 
 			parag = "c \n" + bestRmerge[6]
 			+ "\n gamma \n" + bestRmerge[9] ;
+
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+			
+		} else if (indexing != null && strategy != null){
+			// Cell 6
+			parag = "\nIndexed: \n "
+					+ "\nStrategy: \n";
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);
+
+			// Cell 7	
+			p = new Paragraph(); 
+			Chunk chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
+			if (indexing.booleanValue() ){
+				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);						
+			} 
+			p.add(chu2);
+			
+			chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
+			if (strategy.booleanValue() ){
+				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);	
+			}
+			p.add("\n");
+			p.add(chu2);			
+			table.addCell(p);
+
+			// Cell 8
+			parag = "Space group: \n" 
+					+ "Mosaicity: \n" ; 
+			p = new Paragraph(parag, FONT_DOC_SMALL);
+			table.addCell(p);
+			
+			// Cell 9 
+			parag = getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_spaceGroup", null) + "\n" 
+					+ getCellParam(dataCollectionMapItem, "ScreeningOutput_mosaicity", null)+ "\n" ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
+			table.addCell(p);
+			
+			// Cell 10 
+			parag = "a \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_a", null) 
+			+ "\n alpha \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_alpha", null) ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			// Cell 11 
+			parag = "b \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_b", null) 
+			+ "\n beta \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_beta", null) ;
+			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
+			p.setAlignment(Element.ALIGN_CENTER); 
+			table.addCell(p);
+
+			// Cell 12 
+			parag = "c \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_c", null) 
+			+ "\n gamma \n" + getCellParam(dataCollectionMapItem, "ScreeningOutputLattice_unitCell_gama", null) ;
 
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
@@ -1136,6 +1135,8 @@ public class ExiPdfRtfExporter {
 			int indexRmergeMin = 0;
 			Set<Integer> indexSet = new HashSet<Integer>();
 			
+			//TODO select also no anom
+			
 			for (Iterator<String> iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 				if (type.contains("innerShell")){
@@ -1209,8 +1210,8 @@ public class ExiPdfRtfExporter {
 	private Chunk getCompletenessChunk(String completeness) {
 		Chunk chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
 		chu.setBackground(BLUE_COLOR);
-		if (completeness != null && new Double(completeness) < 80 ) {
-			if (new Double(completeness) < 10) {
+		if (completeness != null && new Double(completeness) < 90 ) {
+			if (new Double(completeness) < 50) {
 				chu.setBackground(RED_COLOR);
 			} else {
 				chu.setBackground(LIGHT_YELLOW_COLOR);
