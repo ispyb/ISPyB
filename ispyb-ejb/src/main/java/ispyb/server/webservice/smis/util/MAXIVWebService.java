@@ -71,45 +71,76 @@ public class MAXIVWebService implements SMISWebService {
 	
 	public List<ProposalParticipantInfoLightVO> findMainProposersForProposal(Long propId) {
 		List<ProposalParticipantInfoLightVO> proposers = new ArrayList<ProposalParticipantInfoLightVO>();
-		ProposalParticipantInfoLightVO proposer = new ProposalParticipantInfoLightVO();
 		
-		try{
-			JSONObject jsonProposal = getProposalForId(propId);
+ 		JSONObject jsonProposal = getProposalForId(propId);
+		
+		//Get all co-proposer ids
+		ArrayList<Integer> writers = new ArrayList<Integer>();
+		
+		Integer proposerId = (Integer)jsonProposal.get("proposer");
+		writers.add(proposerId);
+		if(jsonProposal.get("principal") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("principal"));
+		if(jsonProposal.get("cowriter1") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter1"));
+		if(jsonProposal.get("cowriter2") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter2"));
+		if(jsonProposal.get("cowriter3") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter3"));
+		if(jsonProposal.get("cowriter4") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter4"));
+		if(jsonProposal.get("cowriter5") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter5"));
+		if(jsonProposal.get("cowriter6") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter6"));
+		if(jsonProposal.get("cowriter7") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter7"));
+		if(jsonProposal.get("cowriter8") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter8"));
+		if(jsonProposal.get("cowriter9") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter9"));
+		if(jsonProposal.get("cowriter10") != JSONObject.NULL)
+			writers.add((Integer)jsonProposal.get("cowriter10"));
+
+		for(Integer writerId : writers) {
+			JSONObject jsonParticipant = getUserForId(writerId);
 			
-			Integer proposerId = (Integer)jsonProposal.get("proposer");
-			JSONObject jsonProposer = getUserForId(proposerId);
-			
-			proposer.setCategoryCode("MX");//TODO Need to check for internal proposals
-			proposer.setCategoryCounter(propId.intValue());
-			proposer.setBllogin((String)jsonProposer.get("username"));
-			
-			Integer labId = (Integer)jsonProposer.get("institute");
-			JSONObject jsonLab = getLabForId(labId);
-			proposer.setLabAddress1((String)jsonLab.get("address"));
-			proposer.setLabCity((String)jsonLab.get("city"));
-			proposer.setLabDeparment((String)jsonLab.get("department"));
-			String labname = (String)jsonLab.get("name");
-			if(labname.length() >= 45){
-				labname = labname.substring(0,40).concat("...");
-				System.out.println("Truncated lab name :" + labname);
+			ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
+			try{
+				participant.setCategoryCode("MX");
+				participant.setCategoryCounter(propId.intValue());
+				participant.setBllogin((String)jsonParticipant.get("username"));
+				
+				Integer labId = (Integer)jsonParticipant.get("institute");
+				JSONObject jsonLab = getLabForId(labId);
+				participant.setLabAddress1((String)jsonLab.get("address") + "," + (String)jsonLab.get("country"));
+				participant.setLabCity((String)jsonLab.get("city"));
+				participant.setScientistEmail((String)jsonParticipant.get("email"));
+				if(jsonLab.get("department") != JSONObject.NULL)
+					participant.setLabDeparment((String)jsonLab.get("department"));
+				String labname = (String)jsonLab.get("name");
+				if(labname.length() >= 45){
+					labname = labname.substring(0,40).concat("...");
+					System.out.println("Truncated lab name :" + labname);
+				}
+				participant.setLabName(labname);
+				participant.setProposalPk(propId);
+				String title = (String)jsonProposal.get("title");
+				if(title.length() >= 200){
+					title = title.substring(0,195).concat("...");
+					System.out.println("Truncated Tilte :" + title);
+				}
+				participant.setProposalTitle(title);
+				participant.setScientistFirstName((String)jsonParticipant.get("firstname"));
+				participant.setScientistName((String)jsonParticipant.get("lastname"));
+			} catch(Exception ex){
+				//TODO: Handle exception
+				ex.printStackTrace();
 			}
-			proposer.setLabName(labname);
 			
-			proposer.setProposalPk(propId);
-			String title = (String)jsonProposal.get("title");
-			if(title.length() >= 200){
-				title = title.substring(0,195).concat("...");
-				System.out.println("Truncated Tilte :" + title);
-			}
-			proposer.setProposalTitle(title);
-			proposer.setScientistFirstName((String)jsonProposer.get("firstname"));
-			proposer.setScientistName((String)jsonProposer.get("firstname") + " " + (String)jsonProposer.get("lastname"));
-		} catch(Exception ex){
-			//TODO: Handle exception
-			ex.printStackTrace();
+			proposers.add(participant);
 		}
-			
-		proposers.add(proposer);
+
 		LOG.info("Proposers found : " + proposers.size());
 		
 		return proposers;
@@ -121,40 +152,19 @@ public class MAXIVWebService implements SMISWebService {
 		JSONObject jsonProposal = getProposalForId(propId);
 		
 		//Get all co-proposer ids
-		ArrayList<Integer> cowriters = new ArrayList<Integer>();
-		if(jsonProposal.get("cowriter1") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter1"));
-		if(jsonProposal.get("cowriter2") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter2"));
-		if(jsonProposal.get("cowriter3") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter3"));
-		if(jsonProposal.get("cowriter4") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter4"));
-		if(jsonProposal.get("cowriter5") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter5"));
-		if(jsonProposal.get("cowriter6") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter6"));
-		if(jsonProposal.get("cowriter7") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter7"));
-		if(jsonProposal.get("cowriter8") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter8"));
-		if(jsonProposal.get("cowriter9") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter9"));
-		if(jsonProposal.get("cowriter10") != JSONObject.NULL)
-			cowriters.add((Integer)jsonProposal.get("cowriter10"));
-		
+		ArrayList<Integer> visitors = new ArrayList<Integer>();
 		
 		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
 
 		for(JSONObject jsonSession : jsonSessions){
 			ArrayList<JSONObject> jsonParticipants = getParticipantsForSession((Integer)jsonSession.get("sessionid"));
 			for(JSONObject jsonParticipant : jsonParticipants){
-				cowriters.add((Integer)jsonParticipant.get("userid"));
+				visitors.add((Integer)jsonParticipant.get("userid"));
 			}
 		}
 		
-		for(Integer cowriterId : cowriters) {
-			JSONObject jsonParticipant = getUserForId(cowriterId);
+		for(Integer visitorId : visitors) {
+			JSONObject jsonParticipant = getUserForId(visitorId);
 			
 			ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
 			try{
