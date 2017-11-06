@@ -236,7 +236,7 @@
   			<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
   			<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
   			<ldap.attribute>uid</ldap.attribute>
-  			
+
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
   			<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
@@ -249,6 +249,8 @@
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
 			<samplechanger.capacity>24</samplechanger.capacity>
+
+			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -348,6 +350,8 @@
 	  			<ldap.people></ldap.people>
 	  			<ldap.attribute>uid</ldap.attribute>
 
+				<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
+
 				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
 				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
 				<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
@@ -410,6 +414,10 @@
   			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
 
   			<protein.allowedToCreate>true</protein.allowedToCreate>
+
+			<dewar.label.template>ParcelLabelsTemplate_MAXIV.pdf</dewar.label.template>
+			<!--<shipment.upload.template>ispyb-template_shipment.xls</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template_shipment.xls</shipment.upload.populatedTemplate>-->
 
   			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
@@ -475,6 +483,8 @@
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
 			<samplechanger.capacity>24</samplechanger.capacity>
+
+			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
