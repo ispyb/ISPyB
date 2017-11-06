@@ -183,7 +183,7 @@ public class ScientistsFromSMIS {
 			if (ligne != null)
 				address += ligne + "\n";
 		}
-		laboratory.setAddress(address);
+		laboratory.setAddress(scientist.getLabAddress1());
 
 		return laboratory;
 	}

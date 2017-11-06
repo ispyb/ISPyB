@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
+import generated.ws.smis.InnerScientistVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import generated.ws.smis.SampleSheetInfoLightVO;
@@ -163,8 +164,9 @@ public class MAXIVWebService implements SMISWebService {
 				
 				Integer labId = (Integer)jsonParticipant.get("institute");
 				JSONObject jsonLab = getLabForId(labId);
-				participant.setLabAddress1((String)jsonLab.get("address"));
+				participant.setLabAddress1((String)jsonLab.get("address") + "," + (String)jsonLab.get("country"));
 				participant.setLabCity((String)jsonLab.get("city"));
+				participant.setScientistEmail((String)jsonParticipant.get("email"));
 				if(jsonLab.get("department") != JSONObject.NULL)
 					participant.setLabDeparment((String)jsonLab.get("department"));
 				String labname = (String)jsonLab.get("name");
@@ -181,7 +183,7 @@ public class MAXIVWebService implements SMISWebService {
 				}
 				participant.setProposalTitle(title);
 				participant.setScientistFirstName((String)jsonParticipant.get("firstname"));
-				participant.setScientistName((String)jsonParticipant.get("firstname") + " " + (String)jsonParticipant.get("lastname"));
+				participant.setScientistName((String)jsonParticipant.get("lastname"));
 			} catch(Exception ex){
 				//TODO: Handle exception
 				ex.printStackTrace();
@@ -217,6 +219,10 @@ public class MAXIVWebService implements SMISWebService {
 					session.setExperimentPk(propId);
 					session.setComment("Created by DUO");
 					session.setPk(new Long((int)jsonSession.get("sessionid")));
+					InnerScientistVO localContact = new InnerScientistVO();
+					localContact.setName("Muller");
+					localContact.setFirstName("Uwe");
+					session.setFirstLocalContact(localContact);
 					String title = (String)jsonProposal.get("title");
 					if(title.length() >= 200){
 						title = title.substring(0,195).concat("...");

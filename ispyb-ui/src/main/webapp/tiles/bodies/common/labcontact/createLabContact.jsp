@@ -89,8 +89,8 @@ If you want to make them permanent, then update the User Portal account. </font>
 				<layout:text key="person ID" 	property="person.personId"		styleClass="FIELD"	mode="H,H,H"/>
 				<layout:text key="person login"	property="person.login"			styleClass="FIELD"	mode="H,H,H"/>
 				
-				<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="I,I,I" isRequired="true"/>
-				<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="I,I,I" isRequired="true"/>
+				<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="E,E,I" isRequired="true"/>
+				<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="E,E,I" isRequired="true"/>
 				<layout:text key="Telephone" 	property="person.phoneNumber"  styleClass="FIELD" mode="E,E,I"/>
 				<layout:text key="Fax" 			property="person.faxNumber"    styleClass="FIELD" mode="E,E,I"/>
 				<layout:text key="Email" 		property="person.emailAddress" styleClass="FIELD" mode="E,E,I"/>

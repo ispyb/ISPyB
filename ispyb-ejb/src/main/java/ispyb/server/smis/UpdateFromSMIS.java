@@ -465,7 +465,7 @@ public class UpdateFromSMIS {
 		if (labContacts != null && labContacts.length > 0) {
 			if (Constants.SITE_IS_MAXIV()) {
 				loadParticipants(labContacts);
-			} else { 
+			}
 			for (int i = 0; i < labContacts.length; i++) {
 				boolean labContactExists = false;
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
@@ -555,7 +555,7 @@ public class UpdateFromSMIS {
 				} 					
 			}
 		}
-		}
+		
 	}
 
 	@SuppressWarnings("unused")
