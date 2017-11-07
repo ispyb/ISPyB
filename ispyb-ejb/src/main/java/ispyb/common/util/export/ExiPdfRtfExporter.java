@@ -753,8 +753,7 @@ public class ExiPdfRtfExporter {
 		Boolean strategy = getBoolean(dataCollectionMapItem, "ScreeningOutput_strategySuccess");
 		String autoprocSpaceGroup = getCellParam(dataCollectionMapItem, "AutoProc_spaceGroup", null);
 		boolean existAutoProcSpaceGroup = (autoprocSpaceGroup != null && !autoprocSpaceGroup.isEmpty() ) 
-				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && !((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).isEmpty()
-									&& dataCollectionMapItem.get("Autoprocessing_cell_a")!= null);
+				||  ( dataCollectionMapItem.get("AutoProc_spaceGroups") != null && dataCollectionMapItem.get("Autoprocessing_cell_a") != null);
 		
 		p = new Paragraph(); 
 		String [] bestRmerge = null;
@@ -1117,17 +1116,19 @@ public class ExiPdfRtfExporter {
 						
 			listString.trim();
 			List<String> completenessList = new ArrayList<String>(Arrays.asList((listString.split(","))));
-			LOG.info("completenessList = " + completenessList.toString());	
+			LOG.debug("completenessList = " + completenessList.toString());	
 			List<String> spaceGroupsList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("AutoProc_spaceGroups")).trim().split(",")));
-			LOG.info("spaceGroupsList = " + spaceGroupsList.size() + spaceGroupsList.toString());	
+			LOG.debug("spaceGroupsList = " + spaceGroupsList.size() + spaceGroupsList.toString());	
 			List<String> resolutionsLimitLowList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitLow")).trim().split(",")));
-			LOG.info("resolutionsLimitLowList = " + resolutionsLimitLowList.size() + resolutionsLimitLowList.toString());	
+			LOG.debug("resolutionsLimitLowList = " + resolutionsLimitLowList.size() + resolutionsLimitLowList.toString());	
 			List<String> resolutionsLimitHighList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("resolutionsLimitHigh")).trim().split(",")));
-			LOG.info("resolutionsLimitHighList = " + resolutionsLimitHighList.toString());				
+			LOG.debug("resolutionsLimitHighList = " + resolutionsLimitHighList.toString());				
 			List<String> rmergesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("rMerges")).trim().split(",")));
-			LOG.info("rmergesList = " + rmergesList.size() + rmergesList.toString() );	
+			LOG.debug("rmergesList = " + rmergesList.size() + rmergesList.toString() );	
 			List<String> scalingStatisticsTypesList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("scalingStatisticsTypes")).trim().split(",")));
-			LOG.info("scalingStatisticsTypesList = " + scalingStatisticsTypesList.size() + scalingStatisticsTypesList.toString());	
+			LOG.debug("scalingStatisticsTypesList = " + scalingStatisticsTypesList.size() + scalingStatisticsTypesList.toString());	
+			List<String> anomalousList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_anomalous")).trim().split(",")));
+			LOG.debug("anomalousList = " + anomalousList.size() + anomalousList.toString());	
 			
 			bestRmerge = new String[18];
 			int i = 0;
@@ -1135,32 +1136,34 @@ public class ExiPdfRtfExporter {
 			int indexRmergeMin = 0;
 			Set<Integer> indexSet = new HashSet<Integer>();
 			
-			//TODO select also no anom
-			
 			for (Iterator<String> iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
-				if (type.contains("innerShell")){
+				// select also no anom 		
+				if (type.contains("innerShell") && (new Integer(anomalousList.get(i).trim())).intValue() < 1) {
 					double rm = new Double(rmergesList.get(i)).doubleValue();
-					LOG.info("rm = " + rm);
-					if (rm > 0 && rm < rmergeMin) {
+					LOG.debug("rm = " + rm);
+					if (rm > 0 && rm < MIN_RMERGE) {
+						indexSet.add(i);
+						LOG.debug("index kept: " + i);
+					} else if (rm > 0 && rm < rmergeMin) {
 						rmergeMin = rm;
 						indexRmergeMin = i;						
-						if (rmergeMin < MIN_RMERGE)
-							indexSet.add(i);
 					}
 				}
 				i=i+1;
 			}
 			
+			// select higher symmetry			
 			if (!indexSet.isEmpty()) {
 				String spgTemp;
-				Integer spgNb = 0;				
+				int spgNb = 0;				
 				for (Iterator<Integer> iterator = indexSet.iterator(); iterator.hasNext();) {
-				Integer index = (Integer) iterator.next();
-					spgTemp = spaceGroupsList.get(index);
-					
-					if (spgMap.get(spgTemp)!= null && spgNb < spgMap.get(spgTemp)) {
-						spgNb = spgMap.get(spgTemp);
+					Integer index = (Integer) iterator.next();
+					spgTemp = spaceGroupsList.get(index).trim();
+					LOG.debug("index : " + index + " spgtemp: " + spgTemp);
+					if (spgMap.get(spgTemp)!= null && spgNb <= spgMap.get(spgTemp).intValue() ) {
+						spgNb = spgMap.get(spgTemp).intValue();
+						LOG.debug("index : " + index + " spgNb: " + spgMap.get(spgTemp));
 						indexRmergeMin = index;
 					}
 				}				
@@ -1185,22 +1188,39 @@ public class ExiPdfRtfExporter {
 			bestRmerge[9] = tmpList.get(indexRmergeMin);
 			
 			//outer
-			bestRmerge[10] = spaceGroupsList.get(indexRmergeMin+1);
-			bestRmerge[11] = rmergesList.get(indexRmergeMin+1);
-			bestRmerge[12]= completenessList.get(indexRmergeMin+1);
-			bestRmerge[13] = resolutionsLimitLowList.get(indexRmergeMin+1) + "/" + resolutionsLimitHighList.get(indexRmergeMin+1);
+			int outerIndex = -1;
+			if (scalingStatisticsTypesList.get(indexRmergeMin+1).contains("outerShell") ){
+				outerIndex = indexRmergeMin+1;
+			} else if (indexRmergeMin+2 <  scalingStatisticsTypesList.size() && scalingStatisticsTypesList.get(indexRmergeMin+2).contains("outerShell") ){
+				outerIndex = indexRmergeMin+2;	
+			}
+			if (outerIndex > -1) {
+				bestRmerge[10] = spaceGroupsList.get(outerIndex);
+				bestRmerge[11] = rmergesList.get(outerIndex);
+				bestRmerge[12]= completenessList.get(outerIndex);
+				bestRmerge[13] = resolutionsLimitLowList.get(outerIndex) + "/" + resolutionsLimitHighList.get(outerIndex);
+			}
 		
 			//overall
-			int overallIndex = indexRmergeMin-1;
-			if (overallIndex < 0 || scalingStatisticsTypesList.get(0).contains("innerShell")) {
+			int overallIndex=-1;
+			if (indexRmergeMin-1 >= 0 && scalingStatisticsTypesList.get(indexRmergeMin-1).contains("overall")) {
+				overallIndex = indexRmergeMin-1;
+			} else if (indexRmergeMin-2 >= 0 && scalingStatisticsTypesList.get(indexRmergeMin-2).contains("overall")) {
+				overallIndex = indexRmergeMin-2;
+			} else if (indexRmergeMin+2 <  scalingStatisticsTypesList.size() && scalingStatisticsTypesList.get(indexRmergeMin+2).contains("overall")) {
 				overallIndex = indexRmergeMin+2;
+			} else if (indexRmergeMin+3 <  scalingStatisticsTypesList.size() && scalingStatisticsTypesList.get(indexRmergeMin+3).contains("overall")) {
+					overallIndex = indexRmergeMin+3;
 			}
-			
-			bestRmerge[14] = spaceGroupsList.get(overallIndex);
-			bestRmerge[15] = rmergesList.get(overallIndex);
-			bestRmerge[16]= completenessList.get(overallIndex);
-			//TODO format to 2 figures after .
-			bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
+				
+			if (overallIndex > -1) {
+				bestRmerge[14] = spaceGroupsList.get(overallIndex);
+				bestRmerge[15] = rmergesList.get(overallIndex);
+				bestRmerge[16]= completenessList.get(overallIndex);
+				//TODO format to 2 figures after .
+				bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
+			}
+						
 			LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		}
 		
@@ -1208,14 +1228,20 @@ public class ExiPdfRtfExporter {
 	}
 	
 	private Chunk getCompletenessChunk(String completeness) {
-		Chunk chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
-		chu.setBackground(BLUE_COLOR);
-		if (completeness != null && new Double(completeness) < 90 ) {
-			if (new Double(completeness) < 50) {
-				chu.setBackground(RED_COLOR);
-			} else {
-				chu.setBackground(LIGHT_YELLOW_COLOR);
-			}				
+		
+		Chunk chu =  new Chunk( " ", FONT_DOC_SMALL_BOLD);	
+		
+		if (completeness != null && !completeness.isEmpty()) {		
+			
+			chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
+			chu.setBackground(BLUE_COLOR);
+			if (completeness != null && new Double(completeness) < 90 ) {
+				if (new Double(completeness) < 50) {
+					chu.setBackground(RED_COLOR);
+				} else {
+					chu.setBackground(LIGHT_YELLOW_COLOR);
+				}				
+			}
 		}
 		return chu;
 	}
