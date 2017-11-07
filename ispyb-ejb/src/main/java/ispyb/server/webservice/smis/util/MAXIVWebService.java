@@ -116,7 +116,6 @@ public class MAXIVWebService implements SMISWebService {
 				participant.setLabAddress1((String)jsonLab.get("address") + "," + (String)jsonLab.get("country"));
 				participant.setLabCity((String)jsonLab.get("city"));
 				participant.setScientistEmail((String)jsonParticipant.get("email"));
-				participant.setScientistFax((String)jsonParticipant.get("fax"));
 				if(jsonLab.get("department") != JSONObject.NULL)
 					participant.setLabDeparment((String)jsonLab.get("department"));
 				String labname = (String)jsonLab.get("name");
