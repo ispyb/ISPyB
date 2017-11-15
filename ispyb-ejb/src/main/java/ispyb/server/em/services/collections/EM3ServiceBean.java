@@ -24,15 +24,28 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -40,6 +53,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -52,7 +66,9 @@ import org.slf4j.LoggerFactory;
  * </p>
  */
 @Stateless
-public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
+public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3ServiceLocal {
+
+	private final String ByDataCollectionId = getViewTableQuery() + " where Movie_dataCollectionId = :dataCollectionId and Proposal_proposalId=:proposalId";
 
 	protected Logger log = LoggerFactory.getLogger(EM3ServiceBean.class);
 
@@ -67,17 +83,50 @@ public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
 
 	@EJB
 	private Proposal3Service proposal3Service;
+	
+	@EJB
+	private Protein3Service protein3Service;
+	
+	@EJB
+	private Crystal3Service crystal3Service;
 
 	@EJB
 	private DataCollectionGroup3Service dataCollectionGroup3Service;
+	
+	@EJB
+	private BLSample3Service sample3Service;
+	
+	@EJB
+	private BeamLineSetup3Service beamLineSetup3Service;
 
-	private Session3VO getSession(String proposal, String beamlineName) throws Exception {
+	private String getViewTableQuery(){
+		return this.getQueryFromResourceFile("/queries/em/movie/getViewTableQuery.sql");
+	}
+	
+	@Override
+	public List<Map<String, Object>> getMoviesDataByDataCollectionId(int proposalId, int dataCollectionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(ByDataCollectionId);
+		query.setParameter("dataCollectionId", dataCollectionId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
+	
+	private Integer getProposalId(String proposal, String beamlineName) throws Exception {
 		List<Proposal3VO> proposals = proposal3Service.findProposalByLoginName(proposal);
-		log.info("Found {} proposals for loginName = {}. technique=EM loginName={}", String.valueOf(proposals.size()), proposal, proposal);
+		log.info("Found {} proposals for loginName = {}. technique=EM beamlineName={}", String.valueOf(proposals.size()), proposal, beamlineName);
 
 		if (proposals.size() == 1) {
-			/** Looking for a session **/
-			int proposalId = proposals.get(0).getProposalId();
+			return proposals.get(0).getProposalId();
+		}
+		return null;
+	}
+	
+	
+	private Session3VO getSession(String proposal, String beamlineName) throws Exception {
+		Integer proposalId = this.getProposalId(proposal, beamlineName);
+		if (proposalId != null) {
+			/** Looking for a session on Today **/
 			List<Session3VO> sessions = session3Service.findSessionByDateProposalAndBeamline(proposalId, beamlineName, Calendar.getInstance().getTime());
 
 			if (sessions.size() > 0) {
@@ -86,87 +135,230 @@ public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
 				log.info("Existing session found. technique=EM sessionId={} beamlineName={}", session.getSessionId(), session.getBeamlineName());
 				return session;
 			} else {
+				log.info("No sessions found for proposal {} and time {}.", proposal, Calendar.getInstance().getTime().toString());
 				Session3VO session = new Session3VO();
 				session.setBeamlineName(beamlineName);
 				session.setComments("Session created automatically by ISPyB");
 				session.setStartDate(Calendar.getInstance().getTime());
-				session.setEndDate(Calendar.getInstance().getTime());
-				session.setProposalVO(proposals.get(0));
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, 1);
+				session.setEndDate(calendar.getTime());
+				session.setProposalVO(proposal3Service.findByPk(proposalId));
+				
+				BeamLineSetup3VO beamlineSetup = new BeamLineSetup3VO();
+				try{
+				    beamlineSetup = beamLineSetup3Service.create(beamlineSetup);
+				}
+				catch(Exception exp){
+					log.info("BeamlineSetup could not persist");
+				}
+				if (beamlineSetup.getBeamLineSetupId() != null){
+					session.setBeamLineSetupVO(beamlineSetup);
+				}
+				log.info("Creating session  proposal={}. technique=EM proposal={}", proposal,proposal);
 				session = session3Service.create(session);
+				log.info("Session created for  proposal={}. technique=EM proposal={}", proposal,proposal);
 				return session;
 			}
-		} else {
-			if (proposals.size() == 0) {
-				log.error("No proposal found for. technique=EM loginName={}", proposal);
-				throw new Exception("No proposal found for " + proposal);
-			} else {
-				log.error("Several proposals found ({}) {}. technique=EM loginName={}", proposals.size(), proposals.toArray().toString(), proposal);
-				throw new Exception("Several proposals found for " + proposal);
-			}
+		} 
+		else{
+			log.error("No proposal found for proposal={}. technique=EM proposal={}", proposal,proposal);
+			throw new Exception("No proposal found for proposal=" + proposal);
 		}
 
 	}
 
+	private DataCollectionGroup3VO getDataCollectionGroupBySessionId(List<DataCollectionGroup3VO> dataCollectionGroup, Session3VO session) throws Exception{
+		for (DataCollectionGroup3VO dataCollectionGroup3VO : dataCollectionGroup) {
+			log.info("Comparing session of dataCollectionGroup = {} sessionId={}", dataCollectionGroup3VO.getSessionVO().getSessionId(), session.getSessionId());
+			if (dataCollectionGroup3VO.getSessionVO().getSessionId().equals(session.getSessionId())){
+				return dataCollectionGroup3VO;
+			}
+		}
+		return null;
+	}
+	
+	private DataCollectionGroup3VO createDataCollectionGroup(Session3VO session) throws Exception{
+		DataCollectionGroup3VO group = new DataCollectionGroup3VO();
+		group.setSessionVO(session);
+		group.setExperimentType("EM");
+		group.setStartTime(Calendar.getInstance().getTime());					
+		log.info("Creating dataCollectionGroup. technique=EM sessionId={}", session.getSessionId());
+		group = dataCollectionGroup3Service.create(group);
+		log.info("Created dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),
+				group.getDataCollectionGroupId());
+		return group;
+	}
+	
+	private DataCollectionGroup3VO createDataCollectionGroup(Session3VO session, BLSample3VO sample) throws Exception{
+		DataCollectionGroup3VO group = this.createDataCollectionGroup(session);
+		group.setBlSampleVO(sample);
+		return dataCollectionGroup3Service.update(group);
+	}
+	
+	private DataCollectionGroup3VO getDataCollectionGroup(String sampleAcronym, String proposal, String beamlineName, Session3VO session, String proteinAcronym) throws Exception{
+		int proposalId = this.getProposalId(proposal, beamlineName);
+		
+		List<BLSample3VO> samples = sample3Service.findByAcronymAndProposalId(sampleAcronym, proposalId, null);
+		log.info("{} samples found for sample acronym = {} proposalId = {} beamlineName = {}", samples.size(), sampleAcronym, proposalId, beamlineName);
+		DataCollectionGroup3VO group = new DataCollectionGroup3VO();
+		if (samples != null){
+			if (samples.size() > 1){
+				log.warn("Multiple acronyms found for sample acronym = {} and proposal = {} and only one was expected . technique=EM sampleAcronym={} proposal={}",sampleAcronym, proposal);
+			}
+			if (samples.size() > 0 ){
+				BLSample3VO sample = samples.get(0);
+				/** Grid should already exist **/
+				List<DataCollectionGroup3VO> groups = dataCollectionGroup3Service.findBySampleId(sample.getBlSampleId(), false, false);
+				log.info("{} dataCollectionGroup found for sample acronym = {}", groups.size(), sampleAcronym);
+				if (groups.size() == 0){
+					/** No group exists then we will create one **/
+					/** Creating datacollectionGroup. This is the GRID **/
+					return this.createDataCollectionGroup(session);
+				}
+				else{
+					group = this.getDataCollectionGroupBySessionId(groups, session);
+					
+					if (group == null){
+						/** There are not grid with this sample Acronym for this session **/
+						log.info("No dataCollectionGroup found for sample acronym = {} and sessionId = {}", sampleAcronym, session.getSessionId());
+						return this.createDataCollectionGroup(session);
+						
+					}
+					else{
+						log.info("DataCollectionGroup found for sample acronym = {} and sessionId = {}", sampleAcronym, session.getSessionId());
+						return group;
+					}
+				}
+			}
+			
+		}
+		log.info("No sample acronym found for sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		/** Samples are null or 0 **/
+		
+		List<Protein3VO> proteins = protein3Service.findByAcronymAndProposalId(proposalId, proteinAcronym);
+		Protein3VO protein = new Protein3VO();
+		if (proteins.size() == 0){
+			log.warn("Protein {} does not exist on ISPyB for proposal={}. ", proteinAcronym, proposal);
+			/** It creates the protein **/
+			
+			protein.setProposalVO(proposal3Service.findByPk(proposalId));
+			protein.setAcronym(proteinAcronym);
+			protein.setName(proteinAcronym);
+			log.info("Creating Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			protein = protein3Service.create(protein);
+			log.info("Created Protein with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
+
+			/** It created the crystal form **/
+			Crystal3VO crystal = new Crystal3VO();
+			crystal.setProteinVO(protein);
+			crystal.setComments("Crystal created automatically from ISPyB for EM proteins");
+			crystal.setName(proteinAcronym);
+			log.info("Creating Crystal with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			crystal = crystal3Service.create(crystal);
+			log.info("Created Crystal with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
+			
+			Set<Crystal3VO> crystals = new HashSet<Crystal3VO>();
+			crystals.add(crystal);
+			protein.setCrystalVOs(crystals);
+			log.info("Adding Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			protein = protein3Service.update(protein);
+			log.info("Added Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+		}
+		else{
+			protein = proteins.get(0);
+		}
+		
+		
+		BLSample3VO sample = new BLSample3VO();
+		sample.setName(sampleAcronym);
+		log.info("Find cyrstal for proteinId = {}", protein.getProteinId());
+		List<Crystal3VO> crystals = crystal3Service.findByProteinId(protein.getProteinId());
+		log.info("Found {} crystals", crystals.size());
+		sample.setCrystalVO(crystals.get(0));
+		log.info("Creating Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		sample = sample3Service.create(sample);
+		log.info("Created Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		return this.createDataCollectionGroup(session, sample);
+    }
+	
 	@Override
-	public Movie addMovie(String proposal, String sampleAcronym, String movieDirectory, String moviePath, String movieNumber, String micrographPath,
+	public Movie addMovie(String proposal, String proteinAcronym, String sampleAcronym, String movieDirectory, String moviePath, String movieNumber, String micrographPath,
 			String thumbnailMicrographPath, String xmlMetaDataPath, String voltage, String sphericalAberration, String amplitudeContrast, String magnification,
 			String scannedPixelSize, String noImages, String dosePerImage, String positionX, String positionY, String beamlineName, Date startTime, String gridSquareSnapshotFullPath)
 			throws Exception {
 
 		/**
-		 * Look for a data collection that represents the GRID. We take the
-		 * latest dataCollection
+		 * Look for a data collection that represents the gridSquare. We take the latest dataCollection
 		 **/
 		List<DataCollection3VO> dataCollectionList = dataCollection3Service.findFiltered(movieDirectory, null, null, null, null, null);
 		log.info("Found {} dataCollection(s) for movieDirectory {}. technique=EM ", dataCollectionList.size(), movieDirectory);
-		DataCollection3VO grid = null;
+		DataCollection3VO gridSquare = null;
 
 		/**
 		 * As it is sorted startTime DESC we take the first in case of having
 		 * several
 		 **/
 		if (dataCollectionList.size() > 0) {
-			grid = dataCollectionList.get(0);
-			log.info("Found dataCollection. technique=EM dataCollectionId={}", grid.getDataCollectionId());
+			/** There are  DataCollections then we are adding a movie to an existing gridSquare **/
+			gridSquare = dataCollectionList.get(0);
+			log.info("Found dataCollection. technique=EM dataCollectionId={}", gridSquare.getDataCollectionId());
 		} else {
-			/** There are not DataCollections so we created a new one **/
+			
+			/** There are not DataCollections then we are not adding a movie to an existing gridSquare **/
 			Session3VO session = this.getSession(proposal, beamlineName);
 
-			/** Creating datacollection **/
-			DataCollectionGroup3VO group = new DataCollectionGroup3VO();
-			group.setSessionVO(session);
-			group.setExperimentType("EM");
-			group.setStartTime(Calendar.getInstance().getTime());
-			group.setXtalSnapshotFullPath(gridSquareSnapshotFullPath);
+			/** 
+			 *  Data Collection Group with a BLSample represents a GRID 
+			 *  Uniqueness of BLSample acronym per grid is assumed 
+			 * **/
+			DataCollectionGroup3VO group = this.getDataCollectionGroup(sampleAcronym, proposal, beamlineName, session, proteinAcronym);
 			
-			log.info("Creating dataCollectionGroup. technique=EM sessionId={}", session.getSessionId());
-			group = dataCollectionGroup3Service.create(group);
-			log.info("Created dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),
-					group.getDataCollectionGroupId());
-
-			/** Creating data Collection **/
-			log.info("Creating dataCollection for dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),
-					group.getDataCollectionGroupId());
+															
+			/** Creating data Collection GridSquare**/
+			log.info("Creating dataCollection for dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(), group.getDataCollectionGroupId());
 			DataCollection3VO dataCollection = new DataCollection3VO();
 			dataCollection.setDataCollectionGroupVO(group);
 			dataCollection.setImageDirectory(movieDirectory);
 			dataCollection.setNumberOfImages(Integer.parseInt(noImages));
 			dataCollection.setStartTime(startTime);
-
-//			voltage
-//			sphericalAberration
+			dataCollection.setXtalSnapshotFullPath1(gridSquareSnapshotFullPath);
+			
+			try{
+				dataCollection.setVoltage(Float.valueOf(voltage));
+			}
+			catch(Exception exp){
+				log.error("Voltage {} can not be converted into a double. technique=EM voltage={}", voltage, voltage);
+			}
+			
+			if (session.getBeamLineSetupVO() != null){
+				try{
+					session.getBeamLineSetupVO().setCS(Float.valueOf(sphericalAberration));
+				}
+				catch(Exception exp){
+					log.info("Spherical Abberation {} can not be converted into a double. technique=EM voltage={}", sphericalAberration);
+				}
+			}
+			
+			if (magnification != null){
+				try{
+					dataCollection.setMagnification(Integer.valueOf(magnification));
+				}
+				catch(Exception exp){
+					log.info("Magnification {} can not be converted into a Integer. technique=EM voltage={}", magnification);
+				}
+			}
+						
 //			amplitudeContrast
-//			magnification
-//			scannedPixelSize
-			
-			
-			grid = dataCollection3Service.create(dataCollection);
+//			scannedPixelSize						
+			gridSquare = dataCollection3Service.create(dataCollection);
 
 		}
 
+		/** Adding movie **/
 		Movie movie = new Movie();
-		log.info("DataCollectionId:" + grid.getDataCollectionId());
-		movie.setDataCollectionId(grid.getDataCollectionId());
+		log.info("DataCollectionId:" + gridSquare.getDataCollectionId());
+		movie.setDataCollectionId(gridSquare.getDataCollectionId());
 		movie.setMicrographPath(micrographPath);
 		movie.setMoviePath(moviePath);
 		movie.setThumbnailMicrographPath(thumbnailMicrographPath);
@@ -289,5 +481,70 @@ public class EM3ServiceBean implements EM3Service, EM3ServiceLocal {
 
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Movie> getMoviesByDataCollectionId(int proposalId, int dataCollectionId) throws Exception{
+		List<DataCollection3VO> dataCollections =  dataCollection3Service.findByProposalId(proposalId, dataCollectionId);
+		if (dataCollections.size() == 1){
+			Session session = (Session) this.entityManager.getDelegate();
+			return session.createCriteria(Movie.class).add(Restrictions.eq("dataCollectionId", dataCollectionId)).addOrder(Order.desc("movieId")).list();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Movie getMovieByDataCollectionId(int proposalId, int dataCollectionId, int movieId) throws Exception{
+		List<DataCollection3VO> dataCollections =  dataCollection3Service.findByProposalId(proposalId, dataCollectionId);
+		if (dataCollections.size() == 1){
+			Session session = (Session) this.entityManager.getDelegate();
+			return (Movie) session.createCriteria(Movie.class)
+					.add(Restrictions.eq("dataCollectionId", dataCollectionId))
+					.add(Restrictions.eq("movieId", movieId)).addOrder(Order.asc("movieId")).list().get(0);
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception{
+		List<Movie> movies = this.getMoviesByDataCollectionId(proposalId, dataCollectionId);
+		List<String> doses = new ArrayList<String>();
+		for (Movie movie : movies) {
+			doses.add(movie.getDosePerImage());
+		}
+		return doses;
+	}
+
+	@Override
+	public MotionCorrection getMotionCorrectionByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception {
+		Movie movie = this.getMovieByDataCollectionId(proposalId, dataCollectionId, movieId);
+		if (movie != null){
+			Session session = (Session) this.entityManager.getDelegate();
+			@SuppressWarnings("unchecked")
+			List<MotionCorrection> motionCorrectionList = session.createCriteria(MotionCorrection.class).add(Restrictions.eq("movieId", movie.getMovieId())).addOrder(Order.desc("motionCorrectionId")).list();
+			if (motionCorrectionList.size() > 0){
+				return motionCorrectionList.get(0);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public CTF getCTFByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception {
+		MotionCorrection motion = this.getMotionCorrectionByMovieId(proposalId, dataCollectionId, movieId);
+		if (motion != null){
+			Session session = (Session) this.entityManager.getDelegate();
+			@SuppressWarnings("unchecked")
+			List<CTF> ctfs = session.createCriteria(CTF.class).add(Restrictions.eq("motionCorrectionId", motion.getMotionCorrectionId())).addOrder(Order.desc("CTFid")).list();
+			if (ctfs.size() > 0){
+				return ctfs.get(0);
+			}
+	
+		}
+		return null;
+	}
+
 
 }

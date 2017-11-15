@@ -20,11 +20,13 @@
 package ispyb.server.em.services.collections;
 
 
-import java.util.Date;
-
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -33,7 +35,7 @@ import javax.ejb.Remote;
 public interface EM3Service {
 
 
-	Movie addMovie(String proposal, String sampleAcronym, String movieDirectory,
+	Movie addMovie(String proposal, String proteinAcronym, String sampleAcronym, String movieDirectory,
 			String moviePath, String movieNumber, String micrographPath,
 			String thumbnailMicrographPath, String xmlMetaDataPath,
 			String voltage, String sphericalAberration,
@@ -52,4 +54,17 @@ public interface EM3Service {
 			String spectraImageSnapshotFullPath, String spectraImageFullPath, String defocusU,
 			String defocusV, String angle, String crossCorrelationCoefficient,
 			String resolutionLimit, String estimatedBfactor, String logFilePath);
+
+
+	List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
+
+	List<Movie> getMoviesByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
+
+	List<Map<String, Object>> getMoviesDataByDataCollectionId(int proposalId, int dataCollectionId);
+
+	Movie getMovieByDataCollectionId(int proposalId, int dataCollectionId, int movieId) throws Exception;
+
+	MotionCorrection getMotionCorrectionByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception;
+
+	CTF getCTFByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception;
 }

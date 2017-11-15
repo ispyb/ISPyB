@@ -77,8 +77,27 @@ ADD CONSTRAINT `fk_CTF_1`
 ALTER TABLE `pydb`.`CTF` 
 CHANGE COLUMN `CTFid` `CTFid` INT(11) NOT NULL AUTO_INCREMENT ;
 
-ALTER TABLE `pydb`.`DataCollectionGroup` 
-CHANGE COLUMN `experimentType` `experimentType` ENUM('EM', 'SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration') NULL DEFAULT NULL COMMENT 'Experiment type flag' ;
+#ALTER TABLE `pydb`.`DataCollectionGroup` 
+#CHANGE COLUMN `experimentType` `experimentType` ENUM('EM', 'SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration') NULL DEFAULT NULL COMMENT 'Experiment type flag' ;
     
+#ALTER TABLE `pydb`.`Movie` 
+#CHANGE COLUMN `createdTimeStamp` `createdTimeStamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+
+#ALTER TABLE `pydb`.`Movie` 
+#CHANGE COLUMN `createdTimeStamp` `createdTimeStamp` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ;
+
+#ALTER TABLE `pydb`.`MotionCorrection` 
+#CHANGE COLUMN `createdTimeStamp` `createdTimeStamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+
+ALTER TABLE `pydb`.`MotionCorrection` 
+CHANGE COLUMN `driftPlotFullPath` `driftPlotFullPath` VARCHAR(512) NULL DEFAULT NULL ,
+CHANGE COLUMN `micrographFullPath` `micrographFullPath` VARCHAR(512) NULL DEFAULT NULL ,
+CHANGE COLUMN `micrographSnapshotFullPath` `micrographSnapshotFullPath` VARCHAR(512) NULL DEFAULT NULL ,
+CHANGE COLUMN `correctedDoseMicrographFullPath` `correctedDoseMicrographFullPath` VARCHAR(512) NULL DEFAULT NULL ,
+CHANGE COLUMN `logFileFullPath` `logFileFullPath` VARCHAR(512) NULL DEFAULT NULL ;
+
+
+ALTER TABLE `pydb`.`BeamLineSetup` 
+ADD COLUMN `CS` FLOAT NULL AFTER `minTransmission`;
 
 update `pydb`.SchemaStatus set schemaStatus = 'DONE' where scriptName = '20171022_EM.sql';  

@@ -47,15 +47,39 @@ import org.slf4j.LoggerFactory;
 @RolesAllowed({ "WebService", "User", "Industrial" })
 @SecurityDomain("ispyb")
 @WebContext(authMethod = "BASIC", secureWSDLAccess = false, transportGuarantee = "NONE")
-public class ToolsForEMDataCollection extends EMDataCollection{
+public class ToolsForEMDataCollection{
 
 	protected Logger log = LoggerFactory.getLogger(ToolsForEMDataCollection.class);
 
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
+	/**
+	 * 
+	 * @param proposal
+	 * @param sampleAcronym
+	 * @param movieDirectory
+	 * @param movieFullPath
+	 * @param movieNumber
+	 * @param micrographFullPath
+	 * @param micrographSnapshotFullPath
+	 * @param xmlMetaDataFullPath
+	 * @param voltage STORED ON DATACOLLECTION.WAVELENGTH
+	 * @param sphericalAberration STORED ON BEAMLINESETIP.CS
+	 * @param amplitudeContrast 
+	 * @param magnification STORED ON DATACOLLECTION.MAGNIFICATION
+	 * @param scannedPixelSize
+	 * @param imagesCount
+	 * @param dosePerImage
+	 * @param positionX
+	 * @param positionY
+	 * @param beamlineName
+	 * @param gridSquareSnapshotFullPath
+	 * @return
+	 */
 	@WebMethod(operationName = "addMovie")
 	public Movie addMovie(
 			@WebParam(name = "proposal") String proposal,
+			@WebParam(name = "proteinAcronym") String proteinAcronym,
 			@WebParam(name = "sampleAcronym") String sampleAcronym,
 			@WebParam(name = "movieDirectory") String movieDirectory,
 			@WebParam(name = "movieFullPath") String movieFullPath,
@@ -79,12 +103,12 @@ public class ToolsForEMDataCollection extends EMDataCollection{
 	{
 		Date startTime = Calendar.getInstance().getTime();
 		try {
-			log.info("addMovie. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);
+			log.info("addMovie. technique=EM proposal={} proteinAcronym={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
-			return service.addMovie(proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage, sphericalAberration, amplitudeContrast, magnification, scannedPixelSize, imagesCount, dosePerImage, positionX, positionY, beamlineName.toUpperCase(),startTime, gridSquareSnapshotFullPath);
+			return service.addMovie(proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage, sphericalAberration, amplitudeContrast, magnification, scannedPixelSize, imagesCount, dosePerImage, positionX, positionY, beamlineName.toUpperCase(),startTime, gridSquareSnapshotFullPath);
 		} catch (Exception exp) {
 			exp.printStackTrace();
-			log.error("Error addMovie: {}. technique=EM proposal={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={} cause={}",exp.getMessage(),  proposal, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath, exp.getCause());
+			log.error("Error addMovie: {}. technique=EM proposal={} proteinAcronym={}  sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={} cause={}",exp.getMessage(),  proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath, exp.getCause());
 		}
 		return null;
 	}
