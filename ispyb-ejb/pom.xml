@@ -52,6 +52,7 @@
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<!-- Import the EJB API, we use provided scope as the API is included in 
 			JBoss WildFly -->
 		<dependency>
