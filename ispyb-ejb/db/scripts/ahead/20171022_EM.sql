@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `pydb`.`Movie` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
    
-
+ 
     
     CREATE TABLE `pydb`.`MotionCorrection` (
   `motionCorrectionId` INT(11) NOT NULL AUTO_INCREMENT,
