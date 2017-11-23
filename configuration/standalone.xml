@@ -83,7 +83,7 @@
     </management>
 
     <profile>
-        <subsystem xmlns="urn:jboss:domain:logging:2.0">
+         <subsystem xmlns="urn:jboss:domain:logging:2.0">
             <console-handler name="CONSOLE">
                 <level name="INFO"/>
                 <formatter>
@@ -106,6 +106,26 @@
                 <suffix value=".yyyy-MM-dd"/>
                 <append value="true"/>
             </periodic-rotating-file-handler>
+            <periodic-rotating-file-handler name="BCR" autoflush="true">
+                <formatter>
+                    <named-formatter name="PATTERN"/>
+                </formatter>
+                <file relative-to="jboss.server.log.dir" path="bcr.log"/>
+                <suffix value=".yyyy-MM-dd"/>
+                <append value="true"/>
+            </periodic-rotating-file-handler>
+            <logger category="ispyb">
+                <level name="DEBUG"/>
+                <handlers>
+                    <handler name="ISPYB"/>
+                </handlers>
+            </logger>
+            <logger category="bcr">
+                <level name="DEBUG"/>
+                <handlers>
+                    <handler name="BCR"/>
+                </handlers>
+            </logger>
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
@@ -153,20 +173,28 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:datasources:2.0">
             <datasources>
+                 <datasource jndi-name="java:jboss/ispybconfigDS" pool-name="ispybconfigDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pyconfig</connection-url>
+                    <driver>mysql-connector-java-5.1.21.jar</driver>
+                    <security>
+                        <user-name>****</user-name>
+                        <password>****</password>
+                    </security>
+                </datasource>
                 <datasource jndi-name="java:jboss/ispybDS" pool-name="ispybDS" enabled="true" use-java-context="true">
                     <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pydb</connection-url>
                     <driver>mysql-connector-java-5.1.21.jar</driver>
                     <security>
-                        <user-name>UUUUUUU</user-name>
-                        <password>PPPPPP</password>
+                        <user-name>****</user-name>
+                        <password>****</password>
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/ispyb_db_direct" pool-name="ispyb_db_direct" enabled="true" use-java-context="true">
                     <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pydb</connection-url>
                     <driver>mysql-connector-java-5.1.21.jar</driver>
                     <security>
-                        <user-name>UUUUUUU</user-name>
-                        <password>PPPPPP</password>
+                        <user-name>****</user-name>
+                        <password>****</password>
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
@@ -403,18 +431,6 @@
                     <jms-queue name="DLQ">
                         <entry name="java:/jms/queue/DLQ"/>
                     </jms-queue>
-                    <jms-queue name="ReviewProcess">
-                        <entry name="java:global/jms/queue/ReviewProcess"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="callStoredProc">
-                        <entry name="java:global/jms/queue/callStoredProc"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="printLetters">
-                        <entry name="java:global/jms/queue/printLetters"/>
-                        <durable>true</durable>
-                    </jms-queue>
                     <jms-queue name="deleteFile">
                         <entry name="java:global/jms/queue/deleteFile"/>
                         <durable>true</durable>
@@ -427,23 +443,7 @@
                         <entry name="java:global/jms/queue/pdfRegenerator"/>
                         <durable>true</durable>
                     </jms-queue>
-                    <jms-queue name="LaunchAfsri">
-                        <entry name="java:global/jms/queue/LaunchAfsri"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="SafetyComments">
-                        <entry name="java:global/jms/queue/SafetyComments"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="sendEmailToList">
-                        <entry name="java:global/jms/queue/sendEmailToList"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="SendEmail">
-                        <entry name="java:global/jms/queue/SendEmail"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                </jms-destinations>
+                 </jms-destinations>
             </hornetq-server>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:2.0">
@@ -499,38 +499,6 @@
                         </login-module>
                     </authentication>
                 </security-domain>
-                <security-domain name="SMISServer" cache-type="default">
-                    <authentication>
-                        <login-module code="fr.esrf.utils.jaas.JBossLdapIdLoginModule" flag="optional" module="fr.esrf.utils.jaas">
-                            <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
-                            <module-option name="java.naming.provider.url" value="ldap://ldap-m.esrf.fr:389/"/>
-                            <module-option name="java.naming.security.authentication" value="simple"/>
-                            <module-option name="allowEmptyPasswords" value="false"/>
-                            <module-option name="principalDNPrefix" value="uid="/>
-                            <module-option name="principalDNSuffix" value=",ou=People,dc=esrf,dc=fr"/>
-                            <module-option name="sharedAttributeID" value="employeeNumber"/>
-                        </login-module>
-                        <login-module code="fr.esrf.utils.jaas.JbossUserPwdIdDBLoginModule" flag="required" module="fr.esrf.utils.jaas">
-                            <module-option name="dsJndiName" value="java:/jdbc/SMIS-DS"/>
-                            <module-option name="principalsQuery" value="select USER_NO from usofman.VSMIS_USERS where upper(USERNAME)=upper(?) and upper(PASSWORD)=upper(?)"/>
-                            <module-option name="rolesQuery" value="select distinct USERGROUP, 'Roles' from usofman.VSMIS_USERS_GROUPS where USER_NO=?"/>
-                            <module-option name="standardAuthRole" value="$loginThroughStdAuth$"/>
-                            <module-option name="sessionIdLoginKeyword" value="/$sessionID$/"/>
-                            <module-option name="connectAsLoginKeyword" value="/$connectAs$/"/>
-                            <module-option name="connectBackLoginKeyword" value="/$connectBack$/"/>
-                            <module-option name="reloginLoginKeyword" value="/$relogin$/"/>
-                            <module-option name="sharedUidAttr" value="employeeNumber"/>
-                            <module-option name="sharedUidPrincipalsQuery" value="select USER_NO from usofman.VSMIS_USERS where SHARED_UID=?"/>
-                            <module-option name="sharedUidAuthRole" value="$loginThroughSharedUidAuth$"/>
-                            <module-option name="authTokenCacheName" value="SMISServer"/>
-                            <module-option name="centralAuthLoginPrefix" value="$EAAid$/"/>
-                            <module-option name="centralAuthPrincipalsQuery" value="select USER_NO from usofman.VSMIS_USERS where EAA_HASH=?"/>
-                            <module-option name="centralAuthRole" value="$loginThroughCentralAuth$"/>
-                            <module-option name="ignorePasswordCase" value="true"/>
-                            <module-option name="unauthenticatedIdentity" value="unknown"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
                 <security-domain name="other" cache-type="default">
                     <authentication>
                         <login-module code="Remoting" flag="optional">
@@ -564,6 +532,7 @@
         <subsystem xmlns="urn:jboss:domain:undertow:1.2">
             <buffer-cache name="default"/>
             <server name="default-server">
+				<ajp-listener name="ajp" socket-binding="ajp" max-parameters="20000"/>
                 <http-listener name="default" socket-binding="http" max-parameters="20000"/>
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
@@ -624,12 +593,5 @@
         </outbound-socket-binding>
     </socket-binding-group>
 
-    <deployments>
-        <deployment name="ispyb-ejb3-0.0.1-SNAPSHOT.jar" runtime-name="ispyb-ejb3-0.0.1-SNAPSHOT.jar" enabled="true">
-            <content sha1="1e5866f6e0c7ab32e3b9897a16e7790542f10e54"/>
-        </deployment>
-        <deployment name="ispyb-bcr-0.0.1-SNAPSHOT.war" runtime-name="ispyb-bcr-0.0.1-SNAPSHOT.war" enabled="true">
-            <content sha1="b71b752f8dea6c50b3694baa87842628d63fb6b5"/>
-        </deployment>
-    </deployments>
+
 </server>

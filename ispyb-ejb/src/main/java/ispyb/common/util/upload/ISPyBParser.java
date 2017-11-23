@@ -73,6 +73,8 @@ public class ISPyBParser extends XLSParser {
 	 */
 
 	private HSSFWorkbook mWorkbook = null;
+	
+	private final String PWD = "ispyb";
 
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
@@ -515,7 +517,7 @@ public class ISPyBParser extends XLSParser {
 					workbook.setSheetName(s, dewarCode + "_" + puckNumber);
 					HSSFSheet sheet = workbook.getSheetAt(s);
 
-					sheet.setProtect(false);
+					sheet.protectSheet(PWD);
 
 					// Dewar Code
 					HSSFRow row = sheet.getRow(dewarRow);
@@ -599,7 +601,8 @@ public class ISPyBParser extends XLSParser {
 						cell = row.createCell(shippingDateCol);
 					cell.setCellValue(new HSSFRichTextString(shippingDate));
 
-					sheet.setProtect(true);
+					//sheet.setProtect(true);
+					sheet.protectSheet(PWD);
 					puckNumber++;
 				}
 			}

@@ -175,6 +175,8 @@ public interface Session3Service {
 	 */
 	public Session3VO findByAutoProcScalingId(final Integer autoProcScalingId) throws Exception;
 
+	public Session3VO findByAutoProcProgramAttachmentId(final Integer autoProcProgramAttachmentId) throws Exception;
+	
 	public void protectSession(Integer sessionId) throws Exception;
 
 	/**
@@ -196,6 +198,8 @@ public interface Session3Service {
 	public Integer getNbOfTests(final Integer sesId) throws Exception;
 
 	public List<Session3VO> findSessionByDateProposalAndBeamline(int proposalId, String beamlineName, Date date);
+	public Session3VO findByAutoProcProgramId(int autoProcProgramId);
+
 	
 
 }

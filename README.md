@@ -1,7 +1,13 @@
 # ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
 
 
-## Installing
+1. [Installing](#installing)
+2. [Versioning](#versioning)
+3. [Database creation and update](#database-creation-and-update)
+4. [Database schema](#database-schema)
+5. [Graylog on Widlfly 8.2](#graylog)
+
+# Installing
 
 1. Clone or fork the ISPyB repository and then clone it by typing:
 ```
@@ -147,3 +153,41 @@ Please do not forget to update the database schema :
  https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb 
  
 This schema can be updated using MySQLWorkbench (free tool from MySQL).
+
+
+### Graylog
+
+Download [biz.paluch.logging](http://logging.paluch.biz) that provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1. 
+
+Then create a custom handler on standalone.xml
+```
+  <profile>
+        <subsystem xmlns="urn:jboss:domain:logging:2.0">
+	...
+	<custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler" module="biz.paluch.logging">
+		<level name="INFO"/>
+		<properties>
+		    <property name="host" value="udp:graylog-dau.esrf.fr"/>
+		    <property name="port" value="12201"/>
+		    <property name="version" value="1.0"/>
+		    <property name="facility" value="ispyb-test"/>
+		    <property name="timestampPattern" value="yyyy-MM-dd"/>
+		</properties>
+	</custom-handler>
+	...
+	<logger category="ispyb">
+		<level name="INFO"/>
+		<handlers>
+		    <handler name="ISPYB"/>
+		    <handler name="GelfLogger"/>
+		</handlers>
+	</logger>
+```
+
+I had some problems with the unvalid messages because of timestapPatter. It was fixed by using:
+```
+<property name="timestampPattern" value="yyyy-MM-dd"/>
+```
+
+
+

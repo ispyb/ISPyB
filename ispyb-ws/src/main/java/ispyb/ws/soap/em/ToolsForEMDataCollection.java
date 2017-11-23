@@ -186,9 +186,7 @@ public class ToolsForEMDataCollection{
 			)	
 	{
 		try {
-			log.info("getDataCollectionsByWorkingFolder. technique=EM proposal={} workingFolder={} ", proposal, workingFolder);
-			DataCollection3Service dataCollection3Service = (EM3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
-			return service.addCTF(proposal, movieFullPath, spectraImageSnapshotFullPath, spectraImageFullPath, defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath);
+			throw new Exception("Not implemented yet");
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			log.error("getDataCollectionsByWorkingFolder. technique=EM proposal={} workingFolder={} ", proposal, workingFolder);
