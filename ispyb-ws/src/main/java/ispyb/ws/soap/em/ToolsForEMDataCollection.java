@@ -23,6 +23,7 @@ import ispyb.server.em.services.collections.EM3Service;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.mx.services.collections.DataCollection3Service;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -174,6 +175,23 @@ public class ToolsForEMDataCollection{
 			exp.printStackTrace();
 			log.info("addCTF. technique=EM proposal={} movieFullPath={} spectraImageSnapshotFullPath={} spectraImageFullPath={} defocusU={} defocusV={} angle={} crossCorrelationCoefficient={} resolutionLimit={} estimatedBfactor={} logFilePath={} cause={}", proposal, movieFullPath, spectraImageSnapshotFullPath, 
 					defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath, exp.getCause());
+		}
+		return null;
+	}
+	
+	@WebMethod(operationName = "getDataCollectionsByWorkingFolder")
+	public CTF getDataCollectionsByWorkingFolder(
+			@WebParam(name = "proposal") String proposal,
+			@WebParam(name = "workingFolder") String workingFolder
+			)	
+	{
+		try {
+			log.info("getDataCollectionsByWorkingFolder. technique=EM proposal={} workingFolder={} ", proposal, workingFolder);
+			DataCollection3Service dataCollection3Service = (EM3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+			return service.addCTF(proposal, movieFullPath, spectraImageSnapshotFullPath, spectraImageFullPath, defocusU, defocusV, angle, crossCorrelationCoefficient, resolutionLimit, estimatedBfactor, logFilePath);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.error("getDataCollectionsByWorkingFolder. technique=EM proposal={} workingFolder={} ", proposal, workingFolder);
 		}
 		return null;
 	}
