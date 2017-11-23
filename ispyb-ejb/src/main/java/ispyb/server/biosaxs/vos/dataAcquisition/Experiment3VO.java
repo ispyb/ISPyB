@@ -20,7 +20,7 @@
 package ispyb.server.biosaxs.vos.dataAcquisition;
 
 import static javax.persistence.GenerationType.IDENTITY;
-import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
+//import ispyb.server.biosaxs.services.core.plateType.PlateType3Service;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Sampleplate3VO;
@@ -90,15 +90,16 @@ public class Experiment3VO implements java.io.Serializable {
 	/** Services for filling up plate types **/
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
-	private PlateType3Service plateType3Service;
+	//private PlateType3Service plateType3Service;
 
 	public Experiment3VO() {
-		try {
-			this.plateType3Service = (PlateType3Service) ejb3ServiceLocator.getLocalService(PlateType3Service.class);
-			this.platetype3VOs = this.plateType3Service.findAll();
-		} catch (NamingException e) {
-			// //e.printStackTrace();
-		}
+		// TODO remove this : not correct design no service should be called from a VO to be replaced by the init method of ExperimentService		
+//		try {
+//			this.plateType3Service = (PlateType3Service) ejb3ServiceLocator.getLocalService(PlateType3Service.class);
+//			this.platetype3VOs = this.plateType3Service.findAll();
+//		} catch (NamingException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Id
@@ -208,16 +209,11 @@ public class Experiment3VO implements java.io.Serializable {
 
 	@Transient
 	public List<Platetype3VO> getPlatetype3VOs() {
-		if (this.platetype3VOs == null) {
-			try {
-				this.plateType3Service = (PlateType3Service) ejb3ServiceLocator
-						.getLocalService(PlateType3Service.class);
-				this.platetype3VOs = this.plateType3Service.findAll();
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
-		}
 		return this.platetype3VOs;
+	}
+	
+	public void setPlatetype3VOs(List<Platetype3VO> platetype3vOs) {
+		platetype3VOs = platetype3vOs;
 	}
 
 	@Transient

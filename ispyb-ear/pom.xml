@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.2.0</version>
+		<version>5.3.4</version>
 	</parent>
 	<artifactId>ispyb-ear</artifactId>
 	<packaging>ear</packaging>
@@ -13,8 +13,9 @@
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
 			<type>ejb</type>
-			<version>5.2.0</version>
+			<version>5.3.4</version>
 		</dependency>
+		  
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ui</artifactId>
@@ -25,8 +26,9 @@
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ws</artifactId>
 			<type>war</type>
-			<version>5.2.0</version>
+			<version>5.3.4</version>
 		</dependency>
+		
 	
 	</dependencies>
 	<build>
@@ -58,6 +60,7 @@
 							<artifactId>ispyb-ejb3</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
+											  
 				 		<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ws</artifactId>
@@ -69,7 +72,7 @@
 							<artifactId>ispyb-ui</artifactId>
 							<contextRoot>/ispyb</contextRoot>
 						</webModule>
-
+						
 					</modules>
 					<fileNameMapping>no-version</fileNameMapping>
 				</configuration>
