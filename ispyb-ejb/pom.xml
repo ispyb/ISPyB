@@ -10,18 +10,18 @@
 	<packaging>jar</packaging>
 	<build>
 		<resources>
- 			<resource>
-   				<directory>src/main/resources</directory>
-   				<filtering>true</filtering>
- 			</resource>
- 			<resource>
-   				<directory>sql_scripts/mysql</directory>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>sql_scripts/mysql</directory>
 				<includes>
 					<include>update_scripts/**/*.sql</include>
 				</includes>
- 			</resource>
- 		</resources>
- 		<plugins>
+			</resource>
+		</resources>
+		<plugins>
 			<!-- WildFly plugin to deploy war -->
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
@@ -31,16 +31,16 @@
 					<skip>false</skip>
 				</configuration>
 			</plugin>
-			
-	<plugin>
-		
-		<groupId>org.codehaus.mojo</groupId>
-		<artifactId>jaxws-maven-plugin</artifactId>
-		<version>1.12</version>
-			
-		</plugin>
-		
-  
+
+			<plugin>
+
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>1.12</version>
+
+			</plugin>
+
+
 		</plugins>
 
 	</build>
@@ -52,7 +52,7 @@
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Import the EJB API, we use provided scope as the API is included in 
 			JBoss WildFly -->
 		<dependency>
@@ -164,188 +164,201 @@
 			<artifactId>itext-rtf</artifactId>
 			<version>2.1.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.1-FINAL</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
 			<version>1.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
-	
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
-	
-	  <!--  profiles to separate dev to prod properties -->
-  <!--  the dev properties have to be set according to your own dev environment -->
-  <profiles>
-    <profile>
-  		<id>PROD</id>
-  		<activation>
-        	<activeByDefault>true</activeByDefault>
-      	</activation>
-  		
-  		<properties>
-  		  	<ispyb.deployment.mode>PROD</ispyb.deployment.mode>  		
-  			<js.minimized>true</js.minimized>
-  			<js.alternative.path.enabled>false</js.alternative.path.enabled>
-  			<js.alternative.path> </js.alternative.path>
-  		</properties>
-  	</profile>
-     <profile>
-  		<id>DEV</id>
-  		<properties>
-  			<js.minimized>false</js.minimized>
-  			<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
-  			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
-  			<js.alternative.path.enabled>true</js.alternative.path.enabled>
-  			<data.path>/work/ademaria/data/pyarch/</data.path>
-  		</properties>
-  	</profile>
 
-  <!--  profiles to separate site dependent properties -->  
-  	<profile>
-  		<id>ESRF</id>
-  		
-  		<properties>
-  			<ispyb.site>ESRF</ispyb.site>
-  			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-  			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-  			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			
-  			<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
-  			<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
-  			<ldap.attribute>uid</ldap.attribute>
-  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
-  			<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
-  			
-  			<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
-  			
-  			<shipping.container.capacity>16</shipping.container.capacity>
-			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				
-  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
-  			<ispyb.bcm>mxcube</ispyb.bcm>
-  			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
-  			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
-			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
-			
-			<dictionary.site>The ESRF</dictionary.site> 
-			<dictionary.bcm>mxCuBE</dictionary.bcm>
-			
-			<ispyb.authorisation.active>true</ispyb.authorisation.active>
-			
-			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
-  			
+	<!-- profiles to separate dev to prod properties -->
+	<!-- the dev properties have to be set according to your own dev environment -->
+	<profiles>
+		<profile>
+			<id>PROD</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 
-  			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
-  			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-  			
-  		</properties>
-  	</profile>
-  	<profile>
-  		<id>EMBL</id>
-  		<properties>
-  			<ispyb.site>EMBL</ispyb.site>
-                        <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-                        <ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-                        <ispyb.authentication.method>LDAP</ispyb.authentication.method>
-                        <ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-                        <ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
-						<ldap.attribute>uid</ldap.attribute>
-						
-                        <ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
-                        <ispyb.uploaded.root.folder>/data/ispyb/pyapdb/</ispyb.uploaded.root.folder>
-  						<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
+			<properties>
+				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
+				<js.minimized>true</js.minimized>
+				<js.alternative.path.enabled>false</js.alternative.path.enabled>
+				<js.alternative.path>
+				</js.alternative.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>DEV</id>
+			<properties>
+				<js.minimized>false</js.minimized>
+				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
+				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
+				<js.alternative.path.enabled>true</js.alternative.path.enabled>
+				<data.path>/work/ademaria/data/pyarch/</data.path>
+			</properties>
+		</profile>
+
+		<!-- profiles to separate site dependent properties -->
+		<profile>
+			<id>ESRF</id>
+
+			<properties>
+				<ispyb.site>ESRF</ispyb.site>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+				<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
+				<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
+				<ldap.attribute>uid</ldap.attribute>
+
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+				<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
+
+				<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+
+				<shipping.container.capacity>16</shipping.container.capacity>
+				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+				<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+				<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+				<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+
+				<dictionary.site>The ESRF</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<ispyb.authorisation.active>true</ispyb.authorisation.active>
+
+				<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 
 
-                        <ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
-                        <ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
-                        <ispyb.dataprocessing.denzo>false</ispyb.dataprocessing.denzo>
-                        <ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
-                        <ispyb.bcm>mxcube</ispyb.bcm>
-                        <ispyb.news.url>http://www.esrf.fr/UsersAndScience/Experiments/MX/How_to_use_our_beamlines/ISPYB/ISPYBnews/</ispyb.news.url>
+				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
 
-                        <protein.allowedToCreate>true</protein.allowedToCreate>
-                        <shipping.container.capacity>16</shipping.container.capacity>
-                        <samplechanger.container.capacity>16</samplechanger.container.capacity>
+			</properties>
+		</profile>
+		<profile>
+			<id>EMBL</id>
+			<properties>
+				<ispyb.site>EMBL</ispyb.site>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+				<ldap.employee.resource>ldaps://services:636</ldap.employee.resource>
+				<ldap.attribute>uid</ldap.attribute>
 
-                        <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
-                        <shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
-                        <shipment.upload.populatedTemplate>ispyb-template_shipment_EMBL.xls</shipment.upload.populatedTemplate>
+				<ispyb.root.folder>/data/ispyb/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/ispyb/pyapdb/</ispyb.uploaded.root.folder>
+				<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
 
-                        <mail.smtp.host>160.103.2.175</mail.smtp.host>
-                        <mail.admin>ispyb@embl-hamburg.de</mail.admin>
-                        <mail.dev>ispyb@embl-hamburg.de</mail.dev>
-                        <mail.ispyb>ispyb@embl-hamburg.de</mail.ispyb>
-                        <mail.stores>ispyb@embl-hamburg.de</mail.stores>
 
-                        <mail.report.industry.from>ispyb@embl-hamburg.de</mail.report.industry.from>
-                        <mail.report.industry.cc>ispyb@embl-hamburg.de</mail.report.industry.cc>
-                        <mail.report.industry.cc.fx12>ispyb@embl-hamburg.de</mail.report.industry.cc.fx12>
-                        <dictionary.site>The EMBL</dictionary.site>
-                        <dictionary.bcm>mxCuBE</dictionary.bcm>
-  
-                        <!-- <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> -->
-                	<ispyb.authorisation.active>false</ispyb.authorisation.active>
-                	
-                	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
-                	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-                	  	
-                </properties>
-  	</profile>
-  	<profile>
-  		<id>SOLEIL</id>
-  		<properties>
+				<ispyb.server.name.prod>ispyb.embl-hamburg.de</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.embl-hamburg.de</ispyb.server.name.prod.alias>
+				<ispyb.dataprocessing.denzo>false</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>EMBL</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+				<ispyb.news.url>http://www.esrf.fr/UsersAndScience/Experiments/MX/How_to_use_our_beamlines/ISPYB/ISPYBnews/</ispyb.news.url>
+
+				<protein.allowedToCreate>true</protein.allowedToCreate>
+				<shipping.container.capacity>16</shipping.container.capacity>
+				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+				<dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
+				<shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
+				<shipment.upload.populatedTemplate>ispyb-template_shipment_EMBL.xls</shipment.upload.populatedTemplate>
+
+				<mail.smtp.host>160.103.2.175</mail.smtp.host>
+				<mail.admin>ispyb@embl-hamburg.de</mail.admin>
+				<mail.dev>ispyb@embl-hamburg.de</mail.dev>
+				<mail.ispyb>ispyb@embl-hamburg.de</mail.ispyb>
+				<mail.stores>ispyb@embl-hamburg.de</mail.stores>
+
+				<mail.report.industry.from>ispyb@embl-hamburg.de</mail.report.industry.from>
+				<mail.report.industry.cc>ispyb@embl-hamburg.de</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>ispyb@embl-hamburg.de</mail.report.industry.cc.fx12>
+				<dictionary.site>The EMBL</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<!-- <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> -->
+				<ispyb.authorisation.active>false</ispyb.authorisation.active>
+
+				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+
+			</properties>
+		</profile>
+		<profile>
+			<id>SOLEIL</id>
+			<properties>
 				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path></js.alternative.path>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
-				
+
 				<ispyb.site>SOLEIL</ispyb.site>
 				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
 				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
 				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
 				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
 				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-				
-	  			<ldap.employee.resource></ldap.employee.resource>
-	  			<ldap.people></ldap.people>
-	  			<ldap.attribute>uid</ldap.attribute>
+
+				<ldap.employee.resource></ldap.employee.resource>
+				<ldap.people></ldap.people>
+				<ldap.attribute>uid</ldap.attribute>
 
 				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
 				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
 				<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
-				
+
 				<ispyb.server.name.prod>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod>
 				<ispyb.server.name.prod.alias>ispyb.synchrotron-soleil.fr</ispyb.server.name.prod.alias>
 				<ispyb.server.name.prod.ext>sundemo.synchrotron-soleil.fr</ispyb.server.name.prod.ext>
@@ -353,7 +366,7 @@
 
 				<shipping.container.capacity>16</shipping.container.capacity>
 				<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				
+
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
 				<ispyb.bcm>mxcube</ispyb.bcm>
@@ -375,117 +388,117 @@
 
 				<dictionary.site>SOLEIL</dictionary.site>
 				<dictionary.bcm>mxCuBE</dictionary.bcm>
-				
+
 				<userportal.webservices.url>http://suntest.synchrotron-soleil.fr:8092/jaxws/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 				<userportal.url>http://suntest.synchrotron-soleil.fr:8084/sunset/main?function=proposal_personal</userportal.url>
-				
+
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-				
-				
-  		</properties>
-  	</profile> 
-  	
-  	<profile>
-  		<id>MAXIV</id>  		
-  		<properties>
-  			<ispyb.site>MAXIV</ispyb.site>
-  			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-  			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-  			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
-  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			
-  			<ldap.employee.resource>ldap://w-v-ad-test-0.maxiv.lu.se:389/</ldap.employee.resource>
-  			<ldap.base>dc=duotest,dc=lu,dc=se</ldap.base>
-  			<ldap.people>CN=Users,dc=duotest,dc=lu,dc=se</ldap.people>
-  			<ldap.attribute>samaccountname</ldap.attribute>
-  			<ldap.principalDNPrefix>duotest\\</ldap.principalDNPrefix>
-  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
-  			
-  			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
-  			
-  			<shipping.container.capacity>16</shipping.container.capacity>
-			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				
-  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
-  			<ispyb.bcm>mxcube</ispyb.bcm>
-  			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
-  			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
-			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
-			
-			<dictionary.site>MAX IV</dictionary.site> 
-			<dictionary.bcm>mxCuBE</dictionary.bcm>
-			
-			<ispyb.authorisation.active>true</ispyb.authorisation.active>
-			 			 
-			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
-			
-			<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url> 
-  			
-  		</properties>
-  	</profile>
-  	
-  	<profile>
-  		<id>NEWSITE</id>
-  		
-  		<properties>
-  			<ispyb.site>NEWSITE</ispyb.site>
-  			
-  			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
-  			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
-  			<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>
-  			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
-  			
-  			<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
-  			
-  			<shipping.container.capacity>16</shipping.container.capacity>
-			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				
-  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
-  			<ispyb.bcm>mxcube</ispyb.bcm>
-  			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
-  			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
-			
-			<dictionary.site>The ESRF</dictionary.site> 
-			<dictionary.bcm>mxCuBE</dictionary.bcm>
-			
-			<ispyb.authorisation.active>false</ispyb.authorisation.active>
-			
-			<ispyb.userportal.link>JSON</ispyb.userportal.link>
-			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-			  				
-  		</properties>
-  	</profile> 
-  	
-  </profiles>
-	
+
+
+			</properties>
+		</profile>
+
+		<profile>
+			<id>MAXIV</id>
+			<properties>
+				<ispyb.site>MAXIV</ispyb.site>
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+				<ldap.employee.resource>ldap://w-v-ad-test-0.maxiv.lu.se:389/</ldap.employee.resource>
+				<ldap.base>dc=duotest,dc=lu,dc=se</ldap.base>
+				<ldap.people>CN=Users,dc=duotest,dc=lu,dc=se</ldap.people>
+				<ldap.attribute>samaccountname</ldap.attribute>
+				<ldap.principalDNPrefix>duotest\\</ldap.principalDNPrefix>
+
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+
+				<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
+
+				<shipping.container.capacity>16</shipping.container.capacity>
+				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+				<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+				<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+				<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
+				<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+
+				<dictionary.site>MAX IV</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<ispyb.authorisation.active>true</ispyb.authorisation.active>
+
+				<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+
+				<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url>
+
+			</properties>
+		</profile>
+
+		<profile>
+			<id>NEWSITE</id>
+
+			<properties>
+				<ispyb.site>NEWSITE</ispyb.site>
+
+				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+				<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>
+				<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
+				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+
+				<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
+				<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
+				<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
+				<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+
+				<shipping.container.capacity>16</shipping.container.capacity>
+				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+
+				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+				<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+				<ispyb.bcm>mxcube</ispyb.bcm>
+
+				<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+				<mail.admin>solange.delageniere@esrf.fr</mail.admin>
+				<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+				<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
+				<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+				<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
+				<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>
+
+				<dictionary.site>The ESRF</dictionary.site>
+				<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+				<ispyb.authorisation.active>false</ispyb.authorisation.active>
+
+				<ispyb.userportal.link>JSON</ispyb.userportal.link>
+				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+
+			</properties>
+		</profile>
+
+	</profiles>
+
 
 </project>

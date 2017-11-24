@@ -826,6 +826,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			final Integer crystalId, final String name, final String code, final String status,
 			final Byte isInSampleChanger, final Integer shippingId, final String sortType) throws Exception {
 
+		LOG.info("Name: " + name + " proposalId: " + proposalId);
 		checkCreateChangeRemoveAccess();
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);
@@ -862,6 +863,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		}
 
 		if ((name != null) && (!name.isEmpty())) {
+			System.out.println("Addid restriction Name: " + name + " proposalId: " + proposalId);
 			criteria.add(Restrictions.like("name", name));
 		}
 
@@ -951,13 +953,15 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		return this.findFiltered(proposalId, null, null, null, null, null, null, isInSampleChanger, null, null);
 	}
 
-	public List<BLSample3VO> findByAcronymAndProposalId(final String acronym, final Integer proposalId, final String sortType)
+	public List<BLSample3VO> findByAcronymAndProposalId(final String name, final Integer proposalId, final String sortType)
 			throws Exception {
-		return this.findFiltered(proposalId, null, acronym, null, null, null, null, null, null, sortType);
+		LOG.info("Name: " + name + " proposalId: " + proposalId);
+		return this.findFiltered(proposalId, null, null, null, name, null, null, null, null, sortType);
 	}
 
 	public List<BLSample3VO> findByNameAndProteinId(final String name, final Integer proteinId, final Integer shippingId)
 			throws Exception {
+		
 		return this.findFiltered(null, proteinId, null, null, name, null, null, null, shippingId, null);
 
 	}
