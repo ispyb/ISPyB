@@ -83,7 +83,7 @@
     </management>
 
     <profile>
-         <subsystem xmlns="urn:jboss:domain:logging:2.0">
+        <subsystem xmlns="urn:jboss:domain:logging:2.0">
             <console-handler name="CONSOLE">
                 <level name="INFO"/>
                 <formatter>
@@ -144,15 +144,11 @@
             <logger category="jacorb.config">
                 <level name="ERROR"/>
             </logger>
-            <logger category="org.hibernate" use-parent-handlers="true">
-                <level name="ALL"/>
-            </logger>
             <root-logger>
                 <level name="INFO"/>
                 <handlers>
                     <handler name="CONSOLE"/>
                     <handler name="FILE"/>
-                    <handler name="ISPYB"/>
                 </handlers>
             </root-logger>
             <formatter name="PATTERN">
@@ -173,28 +169,28 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:datasources:2.0">
             <datasources>
-                 <datasource jndi-name="java:jboss/ispybconfigDS" pool-name="ispybconfigDS" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pyconfig</connection-url>
+                <datasource jndi-name="java:jboss/ispybconfigDS" pool-name="ispybconfigDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:mysql://ispydb-prod.esrf.fr:3306/pyconfig</connection-url>
                     <driver>mysql-connector-java-5.1.21.jar</driver>
                     <security>
-                        <user-name>****</user-name>
-                        <password>****</password>
+                        <user-name>pxuser</user-name>
+                        <password>*****</password>
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/ispybDS" pool-name="ispybDS" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pydb</connection-url>
+                    <connection-url>jdbc:mysql://ispydb-prod.esrf.fr:3306/pydb</connection-url>
                     <driver>mysql-connector-java-5.1.21.jar</driver>
                     <security>
-                        <user-name>****</user-name>
-                        <password>****</password>
+                        <user-name>pxuser</user-name>
+                        <password>*****</password>
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/ispyb_db_direct" pool-name="ispyb_db_direct" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:mysql://pydevserv.esrf.fr:3308/pydb</connection-url>
+                    <connection-url>jdbc:mysql://ispydb-prod.esrf.fr:3306/pydb</connection-url>
                     <driver>mysql-connector-java-5.1.21.jar</driver>
                     <security>
-                        <user-name>****</user-name>
-                        <password>****</password>
+                        <user-name>pxuser</user-name>
+                        <password>*****</password>
                     </security>
                 </datasource>
                 <datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
@@ -423,41 +419,9 @@
                         </entries>
                     </pooled-connection-factory>
                 </jms-connection-factories>
-
-                <jms-destinations>
-                    <jms-queue name="ExpiryQueue">
-                        <entry name="java:/jms/queue/ExpiryQueue"/>
-                    </jms-queue>
-                    <jms-queue name="DLQ">
-                        <entry name="java:/jms/queue/DLQ"/>
-                    </jms-queue>
-                    <jms-queue name="deleteFile">
-                        <entry name="java:global/jms/queue/deleteFile"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="pdfTransformer">
-                        <entry name="java:global/jms/queue/pdfTransformer"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                    <jms-queue name="pdfRegenerator">
-                        <entry name="java:global/jms/queue/pdfRegenerator"/>
-                        <durable>true</durable>
-                    </jms-queue>
-                 </jms-destinations>
-            </hornetq-server>
+</hornetq-server>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:2.0">
-            <bindings>
-                <external-context name="java:global/external/ldap/esrf" module="sun.jdk" class="javax.naming.ldap.InitialLdapContext" cache="true">
-                    <environment>
-                        <property name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
-                        <property name="java.naming.provider.url" value="ldap://ldap.esrf.fr:389/"/>
-                        <property name="java.naming.security.authentication" value="simple"/>
-                        <property name="java.naming.security.principal" value="cn=anonymous"/>
-                        <property name="java.naming.security.credentials" value=""/>
-                    </environment>
-                </external-context>
-            </bindings>
             <remote-naming/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:pojo:1.0"/>
@@ -469,7 +433,7 @@
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
         <subsystem xmlns="urn:jboss:domain:security:1.2">
             <security-domains>
-                <security-domain name="ispyb" cache-type="default">
+                <security-domain name="ispybLDAP" cache-type="default">
                     <authentication>
                         <login-module code="ispyb.server.security.LdapLoginModule" flag="required">
                             <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
@@ -496,6 +460,14 @@
                             <module-option name="groupUniqueMember" value="uniqueMember"/>
                             <module-option name="groupAttributeID" value="cn"/>
                             <module-option name="groupCtxDN" value="ou=Pxwebgroups,dc=esrf,dc=fr"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+                <security-domain name="ispyb" cache-type="default">
+                    <authentication>
+                        <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
+                            <module-option name="usersProperties" value="${jboss.server.config.dir}/users.properties"/>
+                            <module-option name="rolesProperties" value="${jboss.server.config.dir}/roles.properties"/>
                         </login-module>
                     </authentication>
                 </security-domain>
@@ -532,7 +504,6 @@
         <subsystem xmlns="urn:jboss:domain:undertow:1.2">
             <buffer-cache name="default"/>
             <server name="default-server">
-				<ajp-listener name="ajp" socket-binding="ajp" max-parameters="20000"/>
                 <http-listener name="default" socket-binding="http" max-parameters="20000"/>
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
@@ -541,7 +512,7 @@
                 </host>
             </server>
             <servlet-container name="default">
-                <jsp-config/>
+                <jsp-config development="true"/>
                 <websockets/>
             </servlet-container>
             <handlers>
@@ -592,6 +563,5 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
-
 
 </server>
