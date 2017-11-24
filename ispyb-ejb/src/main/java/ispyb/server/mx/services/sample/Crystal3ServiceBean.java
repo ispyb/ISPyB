@@ -196,9 +196,9 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
-		if (proteinId != null) {
-			crit.add(Restrictions.eq("proteinId", proteinId));
-		}
+//		if (proteinId != null) {
+//			crit.add(Restrictions.eq("proteinId", proteinId));
+//		}
 
 		if (acronym != null && !spaceGroup.isEmpty()) {
 			crit.add(Restrictions.like("spaceGroup", spaceGroup));
@@ -210,6 +210,11 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 
 			subCrit.add(Restrictions.like("acronym", acronym.toUpperCase()));
 		}
+		
+		if (proteinId != null ) {
+			subCrit.add(Restrictions.eq("proteinId", proteinId));
+		}
+		
 
 		if (proposalId != null) {
 			Criteria subSubCrit = subCrit.createCriteria("proposalVO");

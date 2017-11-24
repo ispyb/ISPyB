@@ -23,7 +23,6 @@ import ispyb.common.util.StringUtils;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionWS3VO;
@@ -60,12 +59,11 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 	private final static Logger LOG = Logger.getLogger(DataCollection3ServiceBean.class);
 
-
 	// Generic HQL request to find instances of DataCollection3 by pk
-	private static final String FIND_BY_PK(boolean fetchImage,  boolean fetchAutoProcIntegration) {
+	private static final String FIND_BY_PK(boolean fetchImage, boolean fetchAutoProcIntegration) {
 		return "from DataCollection3VO vo " + (fetchImage ? "left join fetch vo.imageVOs " : "")
-				
-				+ (fetchAutoProcIntegration ? "left join fetch vo.autoProcIntegrationVOs " : "") + "where vo.dataCollectionId = :pk";
+
+		+ (fetchAutoProcIntegration ? "left join fetch vo.autoProcIntegrationVOs " : "") + "where vo.dataCollectionId = :pk";
 	}
 
 	// Generic HQL request to find all instances of DataCollection3
@@ -80,15 +78,13 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 	private static final String FIND_BY_SAMPLE = "select * from DataCollection, DataCollectionGroup, BLSample "
 			+ " where DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId AND "
-			+ "DataCollectionGroup.blSampleId = BLSample.blSampleId  "
-			+ " and BLSample.blSampleId = :blSampleId ORDER BY DataCollection.endTime ASC ";
+			+ "DataCollectionGroup.blSampleId = BLSample.blSampleId  " + " and BLSample.blSampleId = :blSampleId ORDER BY DataCollection.endTime ASC ";
 
 	private static final String FIND_BY_IMAGE_FILE = "select * from DataCollection, Image "
 			+ " where DataCollection.dataCollectionId = Image.dataCollectionId  "
 			+ " and Image.fileLocation like :fileLocation AND Image.fileName like :fileName ORDER BY DataCollection.endTime ASC ";
 
-	private static final String FIND_PDB_PATH = "SELECT c.pdbFileName, c.pdbFilePath "
-			+ "FROM DataCollection d, DataCollectionGroup g, BLSample s, Crystal c "
+	private static final String FIND_PDB_PATH = "SELECT c.pdbFileName, c.pdbFilePath " + "FROM DataCollection d, DataCollectionGroup g, BLSample s, Crystal c "
 			+ "WHERE d.dataCollectionId = :dataCollectionId AND " + "d.dataCollectionGroupId = g.dataCollectionGroupId AND "
 			+ "g.blSampleId = s.blSampleId AND " + "s.crystalId = c.crystalId ";
 
@@ -97,6 +93,10 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 	private final static String NB_OF_TESTS_FOR_GROUP = "SELECT count(*) FROM DataCollection "
 			+ " WHERE  DataCollection.numberOfImages <=4 and DataCollection.dataCollectionGroupId = :dcGroupId ";
+
+	private static final String FIND_BY_PROPOSALID = "select * from DataCollection, DataCollectionGroup, BLSession, Proposal "
+			+ " where DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId AND BLSession.sessionId = DataCollectionGroup.sessionId"
+			+ " and BLSession.proposalId = Proposal.proposalId and Proposal.proposalId = :proposalId ";
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -159,14 +159,15 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 *            the entity to remove.
 	 */
 	public void delete(final DataCollection3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		entityManager.remove(entityManager.merge(vo));
 	}
-	
+
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
+	 * Finds a Scientist entity by its primary key and set linked value objects
+	 * if necessary
 	 * 
 	 * @param pk
 	 *            the primary key
@@ -174,14 +175,12 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @param withLink2
 	 * @return the DataCollection3 value object
 	 */
-	public DataCollection3VO findByPk(final Integer pk, final boolean withImage,
-			final boolean withAutoProcIntegration) throws Exception {
+	public DataCollection3VO findByPk(final Integer pk, final boolean withImage, final boolean withAutoProcIntegration) throws Exception {
 
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		try {
-			return (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(withImage, withAutoProcIntegration))
-					.setParameter("pk", pk).getSingleResult();
+			return (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(withImage, withAutoProcIntegration)).setParameter("pk", pk).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -196,13 +195,12 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage, 
-			final boolean withAutoProcIntegration) throws Exception {
-		
+	public DataCollectionWS3VO findForWSByPk(final Integer pk, final boolean withImage, final boolean withAutoProcIntegration) throws Exception {
+
 		checkCreateChangeRemoveAccess();
 		try {
-			DataCollection3VO found = (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(withImage, withAutoProcIntegration))
-					.setParameter("pk", pk).getSingleResult();
+			DataCollection3VO found = (DataCollection3VO) entityManager.createQuery(FIND_BY_PK(withImage, withAutoProcIntegration)).setParameter("pk", pk)
+					.getSingleResult();
 			DataCollectionWS3VO sesLight = getWSDataCollectionVO(found);
 			return sesLight;
 		} catch (NoResultException e) {
@@ -225,8 +223,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		return otherVO;
 	}
 
-	private DataCollectionWS3VO[] getWSDataCollectionVOs(List<DataCollection3VO> entities)
-			throws CloneNotSupportedException {
+	private DataCollectionWS3VO[] getWSDataCollectionVOs(List<DataCollection3VO> entities) throws CloneNotSupportedException {
 		if (entities == null)
 			return null;
 		ArrayList<DataCollectionWS3VO> results = new ArrayList<DataCollectionWS3VO>(entities.size());
@@ -280,27 +277,28 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findByShippingId(final Integer shippingId) throws Exception {
-	
+
 		String query = FIND_BY_SHIPPING_ID;
-		List<DataCollection3VO> col = this.entityManager.createNativeQuery(query, "dataCollectionNativeQuery")
-				.setParameter("shippingId", shippingId).getResultList();
+		List<DataCollection3VO> col = this.entityManager.createNativeQuery(query, "dataCollectionNativeQuery").setParameter("shippingId", shippingId)
+				.getResultList();
 		return col;
 	}
-	
+
 	/**
-	 * Check if user has access rights to create, change and remove DataCollection3 entities. If not set rollback only
-	 * and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove
+	 * DataCollection3 entities. If not set rollback only and throw
+	 * AccessDeniedException
 	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
-				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class); // TODO change method
-				// to the one checking the needed access rights
-				// autService.checkUserRightToChangeAdminData();
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method
+		// to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
 	}
-
 
 	/**
 	 * Find the dataCollections for a given sample
@@ -316,8 +314,8 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 			public DataCollectionWS3VO[] doInEJBAccess(Object parent) throws Exception {
 				String query = FIND_BY_SAMPLE;
-				List<DataCollection3VO> listVOs = entityManager.createNativeQuery(query, "dataCollectionNativeQuery")
-						.setParameter("blSampleId", blSampleId).getResultList();
+				List<DataCollection3VO> listVOs = entityManager.createNativeQuery(query, "dataCollectionNativeQuery").setParameter("blSampleId", blSampleId)
+						.getResultList();
 				if (listVOs == null || listVOs.isEmpty())
 					listVOs = null;
 				List<DataCollection3VO> foundEntities = listVOs;
@@ -338,8 +336,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws CloneNotSupportedException
 	 */
 	@SuppressWarnings("unused")
-	private List<DataCollection3VO> getLightDataCollectionVOs(List<DataCollection3VO> entities)
-			throws CloneNotSupportedException {
+	private List<DataCollection3VO> getLightDataCollectionVOs(List<DataCollection3VO> entities) throws CloneNotSupportedException {
 		List<DataCollection3VO> results = new ArrayList<DataCollection3VO>(entities.size());
 		for (DataCollection3VO vo : entities) {
 			DataCollection3VO otherVO = getLightDataCollectionVO(vo);
@@ -363,7 +360,8 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	}
 
 	/**
-	 * Find a dataCollection with the image directory, the image prefix and the dataCollection Number
+	 * Find a dataCollection with the image directory, the image prefix and the
+	 * dataCollection Number
 	 * 
 	 * @param imageDirectory
 	 * @param imagePrefix
@@ -371,16 +369,12 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionWS3VO findForWSDataCollectionFromImageDirectoryAndImagePrefixAndNumber(
-			final String imageDirectory, final String imagePrefix, final Integer dataCollectionNumber) throws Exception {
-		
+	public DataCollectionWS3VO findForWSDataCollectionFromImageDirectoryAndImagePrefixAndNumber(final String imageDirectory, final String imagePrefix,
+			final Integer dataCollectionNumber) throws Exception {
+
 		Session session = (Session) this.entityManager.getDelegate();
-
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
-		Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
-
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT
 		if (imageDirectory != null)
 			crit.add(Restrictions.like("imageDirectory", imageDirectory));
 
@@ -407,8 +401,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 * @throws Exception
 	 */
-	public DataCollectionWS3VO findForWSDataCollectionIdFromFileLocationAndFileName(final String fileLocation,
-			final String fileName) throws Exception {
+	public DataCollectionWS3VO findForWSDataCollectionIdFromFileLocationAndFileName(final String fileLocation, final String fileName) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
@@ -439,8 +432,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public DataCollection3VO findForDataCollectionIdFromFileLocationAndFileName(final String fileLocation,
-			final String fileName) throws Exception {
+	public DataCollection3VO findForDataCollectionIdFromFileLocationAndFileName(final String fileLocation, final String fileName) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
@@ -450,7 +442,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 						.setParameter("fileLocation", fileLocation).setParameter("fileName", fileName).getResultList();
 				if (listVOs == null || listVOs.isEmpty())
 					listVOs = null;
-				
+
 				List<DataCollection3VO> foundEntities = listVOs;
 				return foundEntities;
 			};
@@ -472,15 +464,16 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findFiltered(final String imageDirectory, final String imagePrefix,
-			final Integer dataCollectionNumber, final Integer sessionId, final Byte printableForReport, final Integer dataCollectionGroupId) throws Exception {
-	
+	public List<DataCollection3VO> findFiltered(final String imageDirectory, final String imagePrefix, final Integer dataCollectionNumber,
+			final Integer sessionId, final Byte printableForReport, final Integer dataCollectionGroupId) throws Exception {
+
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
 		Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT
+																	// RESULTS !
 
 		if (sessionId != null) {
 			Criteria subCritSession = subCritgroup.createCriteria("sessionVO");
@@ -509,7 +502,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		return foundEntities;
 	}
 
-
 	/**
 	 * 
 	 * @param proposalId
@@ -526,16 +518,16 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findByCustomQuery(final Integer proposalId, final String sampleName,
-			final String proteinAcronym, final String beamlineName, final Date experimentDateStart,
-			final Date experimentDateEnd, final Integer minNumberOfImages, final Integer maxNumberOfImages,
+	public List<DataCollection3VO> findByCustomQuery(final Integer proposalId, final String sampleName, final String proteinAcronym, final String beamlineName,
+			final Date experimentDateStart, final Date experimentDateEnd, final Integer minNumberOfImages, final Integer maxNumberOfImages,
 			final String imagePrefix, final Byte onlyPrintableForReport, final Integer maxRecords) throws Exception {
-		
+
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT
+																	// RESULTS !
 		Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
 		Criteria subCritSample = null;
 
@@ -577,11 +569,14 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 		if (experimentDateStart != null) {
 			if (Constants.DATABASE_IS_ORACLE()) {
-				// Number of days between 01.01.1970 and creationDateStart = msecs divided by the number of msecs per
+				// Number of days between 01.01.1970 and creationDateStart =
+				// msecs divided by the number of msecs per
 				// day
 				String days = String.valueOf(experimentDateStart.getTime() / (24 * 60 * 60 * 1000));
 				crit.add(Restrictions.sqlRestriction("startTime >= to_date('19700101', 'yyyymmdd') + " + days));
-				// query += " AND o.startTime >= to_date('19700101', 'yyyymmdd') + " + days;
+				// query +=
+				// " AND o.startTime >= to_date('19700101', 'yyyymmdd') + " +
+				// days;
 			} else if (Constants.DATABASE_IS_MYSQL())
 				// query += " AND o.startTime >= '" + experimentDateStart + "'";
 				crit.add(Restrictions.ge("startTime", experimentDateStart));
@@ -591,9 +586,12 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 		if (experimentDateEnd != null) {
 			if (Constants.DATABASE_IS_ORACLE()) {
-				// Number of days between 01.01.1970 and creationDateEnd = msecs divided by the number of msecs per day
+				// Number of days between 01.01.1970 and creationDateEnd = msecs
+				// divided by the number of msecs per day
 				String days = String.valueOf(experimentDateEnd.getTime() / (24 * 60 * 60 * 1000));
-				// query += " AND o.startTime <= to_date('19700101', 'yyyymmdd') + " + days;
+				// query +=
+				// " AND o.startTime <= to_date('19700101', 'yyyymmdd') + " +
+				// days;
 				crit.add(Restrictions.sqlRestriction("startTime <= to_date('19700101', 'yyyymmdd') + " + days));
 			} else if (Constants.DATABASE_IS_MYSQL())
 				// query += " AND o.startTime <= '" + experimentDateEnd + "'";
@@ -640,15 +638,15 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findByProtein(String proteinAcronym, final Byte printableForReport,
-			final Integer proposalId) throws Exception {
-		
+	public List<DataCollection3VO> findByProtein(String proteinAcronym, final Byte printableForReport, final Integer proposalId) throws Exception {
+
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
 		Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT
+																	// RESULTS !
 
 		if (proposalId != null) {
 			Criteria subCritSession = subCritgroup.createCriteria("sessionVO");
@@ -684,15 +682,16 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<DataCollection3VO> findBySample(final Integer blSampleId, String sampleName,
-			final Byte printableForReport, final Integer proposalId) throws Exception {
+	public List<DataCollection3VO> findBySample(final Integer blSampleId, String sampleName, final Byte printableForReport, final Integer proposalId)
+			throws Exception {
 
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
 		Criteria subCritgroup = crit.createCriteria("dataCollectionGroupVO");
 
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT
+																	// RESULTS !
 		Criteria subCritSample = subCritgroup.createCriteria("blSampleVO");
 
 		if (proposalId != null) {
@@ -716,8 +715,8 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		}
 
 		crit.addOrder(Order.desc("startTime"));
-		
-		List<DataCollection3VO> foundEntities =  crit.list();
+
+		List<DataCollection3VO> foundEntities = crit.list();
 		return foundEntities;
 	}
 
@@ -744,20 +743,17 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				Query q = entityManager
-						.createNativeQuery("SELECT BLSession.beamLineSetupId, DataCollection.detectorId,  "
-								+ "DataCollection.axisRange, DataCollection.axisStart, DataCollection.axisEnd, DataCollection.detectorDistance, "
-								+ "DataCollection.fileTemplate, DataCollection.imageDirectory, DataCollection.imageSuffix, "
-								+ "DataCollection.numberOfImages, DataCollection.startImageNumber, "
-								+ "DataCollection.phiStart, DataCollection.kappaStart, "
-								+ "DataCollection.wavelength, DataCollection.xbeam, DataCollection.ybeam "
-								+ "FROM DataCollection, DataCollectionGroup, BLSession " + "WHERE DataCollection.dataCollectionId = "
-								+ dataCollectionId + " AND "
-								+ "DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId AND "
-								+ "DataCollectionGroup.sessionId = BLSession.sessionId ");
+				Query q = entityManager.createNativeQuery("SELECT BLSession.beamLineSetupId, DataCollection.detectorId,  "
+						+ "DataCollection.axisRange, DataCollection.axisStart, DataCollection.axisEnd, DataCollection.detectorDistance, "
+						+ "DataCollection.fileTemplate, DataCollection.imageDirectory, DataCollection.imageSuffix, "
+						+ "DataCollection.numberOfImages, DataCollection.startImageNumber, " + "DataCollection.phiStart, DataCollection.kappaStart, "
+						+ "DataCollection.wavelength, DataCollection.xbeam, DataCollection.ybeam " + "FROM DataCollection, DataCollectionGroup, BLSession "
+						+ "WHERE DataCollection.dataCollectionId = " + dataCollectionId + " AND "
+						+ "DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId AND "
+						+ "DataCollectionGroup.sessionId = BLSession.sessionId ");
 				List orders = q.getResultList();
 				return orders;
-				
+
 			}
 		});
 
@@ -788,8 +784,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			Double ybeam = getDoubleValue((Float) o[j++]);
 
 			Double polarisation = null;
-			BeamLineSetup3Service beamLineSetupService = (BeamLineSetup3Service) ejb3ServiceLocator
-					.getLocalService(BeamLineSetup3Service.class);
+			BeamLineSetup3Service beamLineSetupService = (BeamLineSetup3Service) ejb3ServiceLocator.getLocalService(BeamLineSetup3Service.class);
 			BeamLineSetup3VO beamLineSetup = null;
 			if (beamLineSetupId != null)
 				beamLineSetup = beamLineSetupService.findByPk(beamLineSetupId);
@@ -800,8 +795,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			Double detectorPixelSizeVertical = null;
 			String detectorManufacturer = null;
 			String detectorModel = null;
-			Detector3Service detectorService = (Detector3Service) ejb3ServiceLocator
-					.getLocalService(Detector3Service.class);
+			Detector3Service detectorService = (Detector3Service) ejb3ServiceLocator.getLocalService(Detector3Service.class);
 			Detector3VO detector = null;
 			if (detectorId != null)
 				detector = detectorService.findByPk(detectorId);
@@ -812,10 +806,9 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 				detectorModel = detector.getDetectorModel();
 			}
 
-			xds = new XDSInfo(polarisation, axisRange, axisStart, axisEnd, detectorDistance, fileTemplate,
-					imageDirectory, imageSuffix, numberOfImages, startImageNumber, phiStart, kappaStart, wavelength,
-					xbeam, ybeam, detectorPixelSizeHorizontal, detectorPixelSizeVertical, detectorManufacturer,
-					detectorModel);
+			xds = new XDSInfo(polarisation, axisRange, axisStart, axisEnd, detectorDistance, fileTemplate, imageDirectory, imageSuffix, numberOfImages,
+					startImageNumber, phiStart, kappaStart, wavelength, xbeam, ybeam, detectorPixelSizeHorizontal, detectorPixelSizeVertical,
+					detectorManufacturer, detectorModel);
 
 		}
 
@@ -830,7 +823,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	public String findPdbFullPath(final Integer dataCollectionId) throws Exception {
-		
+
 		Query query = entityManager.createNativeQuery(FIND_PDB_PATH).setParameter("dataCollectionId", dataCollectionId);
 		List orders = query.getResultList();
 		if (orders == null || orders.size() < 1)
@@ -858,7 +851,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 */
 	@SuppressWarnings("unchecked")
 	public List<DataCollection3VO> findLastCollect(final Date startDate, final Date endDate, final String[] beamline) throws Exception {
-		
+
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(DataCollection3VO.class);
@@ -876,7 +869,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			subCritSession.add(Restrictions.in("beamlineName", beamline));
 		}
 		crit.addOrder(Order.desc("startTime"));
-		
+
 		List<DataCollection3VO> foundEntities = crit.list();
 		return foundEntities;
 	}
@@ -889,7 +882,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	public Integer getNbOfCollects(final Integer dcgId) throws Exception {
-		
+
 		Query query = entityManager.createNativeQuery(NB_OF_COLLECTS_FOR_GROUP).setParameter("dcGroupId", dcgId);
 		try {
 			BigInteger res = (BigInteger) query.getSingleResult();
@@ -905,7 +898,6 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		}
 	}
 
-
 	/**
 	 * get the number of datacollections which have less/or 4 images
 	 * 
@@ -914,7 +906,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @throws Exception
 	 */
 	public Integer getNbOfTests(final Integer dcgId) throws Exception {
-	
+
 		Query query = entityManager.createNativeQuery(NB_OF_TESTS_FOR_GROUP).setParameter("dcGroupId", dcgId);
 		try {
 			BigInteger res = (BigInteger) query.getSingleResult();
@@ -928,7 +920,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 			e.printStackTrace();
 			return 0;
 		}
-				
+
 	}
 
 	/* Private methods ------------------------------------------------------ */
@@ -939,8 +931,8 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 	 * @param vo
 	 *            the data to check
 	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like testing the primary
-	 *            key
+	 *            should be true if the value object is just being created in
+	 *            the DB, this avoids some checks like testing the primary key
 	 * @exception VOValidateException
 	 *                if data is not correct
 	 */
@@ -948,8 +940,7 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 
 		if (create) {
 			if (vo.getDataCollectionId() != null) {
-				throw new IllegalArgumentException(
-						"Primary key is already set! This must be done automatically. Please, set it to null!");
+				throw new IllegalArgumentException("Primary key is already set! This must be done automatically. Please, set it to null!");
 			}
 		} else {
 			if (vo.getDataCollectionId() == null) {
@@ -959,6 +950,29 @@ public class DataCollection3ServiceBean implements DataCollection3Service, DataC
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<DataCollection3VO> findByProposalId(int proposalId) throws Exception {
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria crit = session.createCriteria(DataCollection3VO.class).createCriteria("dataCollectionGroupVO").createCriteria("sessionVO")
+				.createCriteria("proposalVO").add(Restrictions.eq("proposalId", proposalId));
+
+		List<DataCollection3VO> foundEntities = crit.list();
+		return foundEntities;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<DataCollection3VO> findByProposalId(int proposalId, int dataCollectionId) throws Exception {
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria crit = session.createCriteria(DataCollection3VO.class).add(Restrictions.eq("dataCollectionId", dataCollectionId));
+		crit.createCriteria("dataCollectionGroupVO").createCriteria("sessionVO")
+				.createCriteria("proposalVO").add(Restrictions.eq("proposalId", proposalId));
+
+		List<DataCollection3VO> foundEntities = crit.list();
+		return foundEntities;
 	}
 
 }

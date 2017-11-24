@@ -19,6 +19,8 @@
 
 package ispyb.server.common.services.ws.rest.session;
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 
 @Stateless
-public class SessionServiceBean implements SessionService, SessionServiceLocal {
+public class SessionServiceBean extends WsServiceBean  implements SessionService, SessionServiceLocal {
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -47,37 +49,40 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 			+ " (BLSession_endDate <= :endDate and BLSession_startDate >= :startDate))";
 	                            
 	/** SQL QUERIES **/
-	private  String BySessionId = getSessionViewTable() + " where v_session.sessionId = :sessionId and proposalId = :proposalId order by v_session.sessionId DESC"; 
-	private  String ByProposalId = getSessionViewTable() + " where v_session.proposalId = :proposalId order by v_session.sessionId DESC";
-	private  String ByDates = getSessionViewTable() + " where " + dateClause + " order by v_session.sessionId DESC";
+	private  String BySessionId = getViewTableQuery() + " where v_session.sessionId = :sessionId and proposalId = :proposalId order by v_session.sessionId DESC"; 
+	private  String ByProposalId = getViewTableQuery() + " where v_session.proposalId = :proposalId order by v_session.sessionId DESC";
+	private  String ByDates = getViewTableQuery() + " where " + dateClause + " order by v_session.sessionId DESC";
 	
-	private  String ByDatesAndSiteId = getSessionViewTable() + " where " + dateClause + " and v_session.operatorSiteNumber=:siteId order by v_session.sessionId DESC";
+	private  String ByDatesAndSiteId = getViewTableQuery() + " where " + dateClause + " and v_session.operatorSiteNumber=:siteId order by v_session.sessionId DESC";
 	
-	private  String ByProposalAndDates = getSessionViewTable() + " where v_session.proposalId = :proposalId and " + dateClause + " order by v_session.sessionId DESC";
+	private  String ByProposalAndDates = getViewTableQuery() + " where v_session.proposalId = :proposalId and " + dateClause + " order by v_session.sessionId DESC";
 	
 	
-	private  String ByBeamlineOperator = getSessionViewTable() + " where v_session.beamLineOperator LIKE :beamlineOperator order by v_session.sessionId DESC";
+	private  String ByBeamlineOperator = getViewTableQuery() + " where v_session.beamLineOperator LIKE :beamlineOperator order by v_session.sessionId DESC";
 	
-
+	private String getViewTableQuery(){
+		return this.getQueryFromResourceFile("/queries/session/getViewTableQuery.sql");
+	}
+	
 	/**
 	 * Query from the view v_session
 	 * @return
 	 */
-	private  String getSessionViewTable(){
-		return "select *,\n" + 
-				"(select count(*) from EnergyScan where EnergyScan.sessionId = v_session.sessionId) as energyScanCount,\n"
-				+ " (select count(distinct(blSampleId)) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId) as sampleCount,"
-				+ " (select sum(DataCollection.numberOfImages) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId) as imagesCount,"
-				+ " (select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages < 5) as testDataCollectionGroupCount,"
-				+ " (select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages > 4) as dataCollectionGroupCount," 
-				+ " (select count(*) from XFEFluorescenceSpectrum where XFEFluorescenceSpectrum.sessionId = v_session.sessionId) as xrfSpectrumCount,\n"  
-				+ " (select count(*) from Experiment exp1 where v_session.sessionId = exp1.sessionId and exp1.experimentType='HPLC') as hplcCount,"
-				+ " (select count(*) from Experiment exp2 where v_session.sessionId = exp2.sessionId and exp2.experimentType='STATIC') as sampleChangerCount,"
-				+ " (select count(*) from Experiment exp3 where v_session.sessionId = exp3.sessionId and exp3.experimentType='CALIBRATION') as calibrationCount,"
-				+ " (select experimentType from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastExperimentDataCollectionGroup,\n"  
-				+ " (select endTime from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastEndTimeDataCollectionGroup\n"  
-				+ "from v_session";
-	}
+//	private  String getViewTableQuery(){
+//		return "select *,\n" + 
+//				"(select count(*) from EnergyScan where EnergyScan.sessionId = v_session.sessionId) as energyScanCount,\n"
+//				+ " (select count(distinct(blSampleId)) from DataCollectionGroup where DataCollectionGroup.sessionId = v_session.sessionId) as sampleCount,"
+//				+ " (select sum(DataCollection.numberOfImages) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId) as imagesCount,"
+//				+ " (select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages < 5) as testDataCollectionGroupCount,"
+//				+ " (select count(*) from DataCollectionGroup, DataCollection where DataCollectionGroup.sessionId = v_session.sessionId and DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId and DataCollection.numberOfImages > 4) as dataCollectionGroupCount," 
+//				+ " (select count(*) from XFEFluorescenceSpectrum where XFEFluorescenceSpectrum.sessionId = v_session.sessionId) as xrfSpectrumCount,\n"  
+//				+ " (select count(*) from Experiment exp1 where v_session.sessionId = exp1.sessionId and exp1.experimentType='HPLC') as hplcCount,"
+//				+ " (select count(*) from Experiment exp2 where v_session.sessionId = exp2.sessionId and exp2.experimentType='STATIC') as sampleChangerCount,"
+//				+ " (select count(*) from Experiment exp3 where v_session.sessionId = exp3.sessionId and exp3.experimentType='CALIBRATION') as calibrationCount,"
+//				+ " (select experimentType from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastExperimentDataCollectionGroup,\n"  
+//				+ " (select endTime from DataCollectionGroup where DataCollectionGroup.dataCollectionGroupId = (select max(dataCollectionGroupId) from DataCollectionGroup dg2 where  dg2.sessionId = v_session.sessionId))  as lastEndTimeDataCollectionGroup\n"  
+//				+ "from v_session";
+//	}
 	
 	@Override
 	public List<Map<String, Object>> getSessionViewBySessionId(int proposalId, int sessionId) {
@@ -109,11 +114,11 @@ public class SessionServiceBean implements SessionService, SessionServiceLocal {
 		return executeSQLQuery(query);
 	}
 	
-	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
-		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-		List<Map<String, Object>> aliasToValueMapList = query.list();
-		return aliasToValueMapList;
-	}
+//	private List<Map<String, Object>> executeSQLQuery(SQLQuery query ){
+//		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+//		List<Map<String, Object>> aliasToValueMapList = query.list();
+//		return aliasToValueMapList;
+//	}
 
 	@Override
 	public List<Map<String, Object>> getSessionViewByProposalAndDates(int proposalId, String startDate, String endDate) {

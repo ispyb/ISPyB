@@ -234,4 +234,8 @@ public interface DataCollection3Service {
 	 * @throws Exception
 	 */
 	public Integer getNbOfTests(final Integer dcgId) throws Exception;
+	
+	public List<DataCollection3VO> findByProposalId(int proposalId) throws Exception;
+
+	public List<DataCollection3VO> findByProposalId(int proposalId, int dataCollectionId) throws Exception;
 }

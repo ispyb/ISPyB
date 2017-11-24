@@ -242,6 +242,14 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "imageQualityIndicatorsCSVPath")
 	protected String imageQualityIndicatorsCSVPath;
 	
+	@Column(name = "magnification")
+	protected Integer magnification;
+	
+	@Column(name = "voltage")
+	protected Float voltage;
+	
+	
+	
 	@OneToMany
 	@JoinColumn(name = "dataCollectionId")
 	private Set<Image3VO> imageVOs;
@@ -1160,5 +1168,21 @@ public class DataCollection3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setImageQualityIndicatorsCSVPath(String imageQualityIndicatorsCSVPath) {
 		this.imageQualityIndicatorsCSVPath = imageQualityIndicatorsCSVPath;
+	}
+
+	public Integer getMagnification() {
+		return magnification;
+	}
+
+	public void setMagnification(Integer magnification) {
+		this.magnification = magnification;
+	}
+
+	public Float getVoltage() {
+		return voltage;
+	}
+
+	public void setVoltage(Float voltage) {
+		this.voltage = voltage;
 	}
 }
