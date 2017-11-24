@@ -189,6 +189,19 @@
 			<version>20160810</version>
 		</dependency>
 	
+	<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		
 	</dependencies>
 	
 	  <!--  profiles to separate dev to prod properties -->
