@@ -384,7 +384,7 @@ public class DataCollectionGroup3VO extends ISPyBValueObject implements Cloneabl
 		int maxLengthActualContainerBarcode = 45;
 		int maxLengthXtalSnapshotFullPath = 255;
 		
-		String[] listExperimentType = {"SAD","SAD - Inverse Beam","OSC","Collect - Multiwedge","MAD","Helical","Multi-positional","Mesh","Burn","MAD - Inverse Beam","Characterization", "Dehydration"};
+		String[] listExperimentType = {"EM", "SAD","SAD - Inverse Beam","OSC","Collect - Multiwedge","MAD","Helical","Multi-positional","Mesh","Burn","MAD - Inverse Beam","Characterization", "Dehydration"};
 		//session
 		if(sessionVO == null)
 			throw new IllegalArgumentException(StringUtils.getMessageRequiredField("DataCollectionGroup", "session"));

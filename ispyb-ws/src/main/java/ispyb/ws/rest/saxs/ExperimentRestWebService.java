@@ -3,18 +3,14 @@ package ispyb.ws.rest.saxs;
 import ispyb.server.biosaxs.services.ExperimentSerializer;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
-import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
-import ispyb.server.common.hdf5.HDF5FileReader;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.ws.rest.RestWebService;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +23,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;

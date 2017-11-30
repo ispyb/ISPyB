@@ -68,6 +68,8 @@ public class LoggerFormatter {
 	    ISPyB_API_LOGIN,
 	    ISPyB_API_LOGIN_ERROR,
 	    
+	    EM_WS
+	    
 	}
 
 	
