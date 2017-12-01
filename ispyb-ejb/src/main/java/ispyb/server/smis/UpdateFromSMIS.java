@@ -47,12 +47,14 @@ import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.proposals.ProposalHasPerson3Service;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalHasPerson3VO;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
@@ -70,6 +72,7 @@ public class UpdateFromSMIS {
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	private static Proposal3Service proposal;
+	private static ProposalHasPerson3Service proposalHasPerson;
 	private static Laboratory3Service lab;
 	private static Person3Service person;
 	private static Session3Service session;
@@ -101,6 +104,7 @@ public class UpdateFromSMIS {
 	private static void initServices() throws Exception {
 
 		proposal = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+		proposalHasPerson = (ProposalHasPerson3Service) ejb3ServiceLocator.getLocalService(ProposalHasPerson3Service.class);
 		lab = (Laboratory3Service) ejb3ServiceLocator.getLocalService(Laboratory3Service.class);
 		person = (Person3Service) ejb3ServiceLocator.getLocalService(Person3Service.class);
 		session = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
@@ -293,7 +297,7 @@ public class UpdateFromSMIS {
 
 		else {
 			// no method form user portal pk defined
-			LOG.info("Update of ISPyB from User Portal using json files form user portal pk not defined yet");
+			LOG.info("Update of ISPyB from User Portal using json files from user portal pk not defined yet");
 		}
 				
 	}
@@ -464,6 +468,8 @@ public class UpdateFromSMIS {
 		// the proposal, samples and sessions are created: load labcontacts
 		// -----------------------------------------------------------------------------------
 		if (labContacts != null && labContacts.length > 0) {
+			
+			LOG.info("Loading labcontacts ... ");
 			for (int i = 0; i < labContacts.length; i++) {
 				boolean labContactExists = false;
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
@@ -497,7 +503,17 @@ public class UpdateFromSMIS {
 				}
 				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
 
+				// fill the ProposalHasPerson table
+				//TODO first remove existing entries for this proposal ???
 				
+				if (proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()) != null 
+						&& !proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()).isEmpty() ){
+					LOG.debug("Link between proposal and person already exist");
+				} else {
+					proposalHasPerson.create(currentProposal.getProposalId(), currentPerson.getPersonId() ) ;
+					LOG.debug("Link between proposal and person added: " + currentProposal.getProposalId() + " " + currentPerson.getPersonId());
+				}
+								
 				// fill the laboratory
 				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
 				LOG.debug("current labo is : " + currentLabo.getAddress());
@@ -568,6 +584,7 @@ public class UpdateFromSMIS {
 		String proposalNumber = null;
 
 		if (mainProposers != null && mainProposers.length > 0) {
+			LOG.info("Loading proposers ... ");
 			
 			Integer proposalId = null;
 			Integer personId = null;
@@ -670,7 +687,8 @@ public class UpdateFromSMIS {
 		String proposalNumber = null;
 		
 		if (smisSessions != null && smisSessions.length > 0) {
-
+			LOG.info("Loading sessions ... ");
+			
 			String uoCode = smisSessions[0].getCategCode();
 			proposalNumber = smisSessions[0].getCategCounter() != null ? smisSessions[0].getCategCounter().toString() : "";
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
@@ -703,15 +721,14 @@ public class UpdateFromSMIS {
 		String proposalNumber = null;
 		
 		if (smisSamples != null && smisSamples.length > 0) {
-
+			LOG.info("Loading samples ... ");
 			String uoCode = smisSamples[0].getCategoryCode();
 			proposalNumber = smisSamples[0].getCategoryCounter() != null ? smisSamples[0].getCategoryCounter().toString() : "";
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
-			System.out.println("UpdateFromSMS proposalCode = " + proposalCode + " | proposalNumber = " + proposalNumber);
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
-			System.out.println("UpdateFromSMS existingProposalList.size = " + existingProposalList + " | existingProposalList = " + existingProposalList);
+			System.out.println("UpdateFromSMIS existingProposalList.size = " + existingProposalList );
 			
 			if (existingProposalList.size() > 1)
 				LOG.debug("error ! duplicate code and number in ISPyB database");	
