@@ -471,7 +471,7 @@ public class UpdateFromSMIS {
 			
 			LOG.info("Loading labcontacts ... ");
 			for (int i = 0; i < labContacts.length; i++) {
-				boolean labContactExists = false;
+				
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
 				labContact.getCategoryCode();
 				String uoCode = labContact.getCategoryCode();
@@ -479,22 +479,8 @@ public class UpdateFromSMIS {
 				String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 				LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-				// create or update the person and his/her laboratory
-				getProposal(labContact, lab, person, proposalNumber, proposalCode);
-
-				// retrieve person to get it 'personId' for persistence of the
-				// labContact
-				String familyName = labContacts[i].getScientistName();
-				String givenName = labContacts[i].getScientistFirstName();
-				List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);
-				Person3VO currentPerson = null;
-				if (persons != null && !persons.isEmpty()) {
-					currentPerson = persons.get(0);
-					LOG.debug("currentPerson Id : " + currentPerson.getPersonId() + " inside ISPyB db");
-				}
-
-				// retrieve proposal to get 'proposalId' for persistence of the
-				// labContact
+				
+				// retrieve proposal to get 'proposalId' for persistence of the labContact
 				Proposal3VO currentProposal = proposal
 						.findForWSByCodeAndNumber(proposalCode, proposalNumber.toString());
 				if (currentProposal == null) {
@@ -502,16 +488,38 @@ public class UpdateFromSMIS {
 					continue;
 				}
 				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
+			
+				// create or update the person and his/her laboratory
+				getProposal(labContact, lab, person, proposalNumber, proposalCode);
 
-				// fill the ProposalHasPerson table
-				//TODO first remove existing entries for this proposal ???
-				
-				if (proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()) != null 
-						&& !proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()).isEmpty() ){
-					LOG.debug("Link between proposal and person already exist");
+				// retrieve person to get it 'personId' for persistence of the labContact
+				String familyName = labContacts[i].getScientistName();
+				String givenName = labContacts[i].getScientistFirstName();
+				String siteId = null;
+				Person3VO currentPerson = null;
+				// try first to use siteID: better for unicity, but only for people having a siteId, later use personUUID
+				if (labContacts[i].getSiteId() != null) {
+					siteId = labContacts[i].getSiteId().toString();
+					currentPerson = person.findBySiteId(siteId);
 				} else {
-					proposalHasPerson.create(currentProposal.getProposalId(), currentPerson.getPersonId() ) ;
-					LOG.debug("Link between proposal and person added: " + currentProposal.getProposalId() + " " + currentPerson.getPersonId());
+					List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);					
+					if (persons != null && !persons.isEmpty()) {
+						currentPerson = persons.get(0);
+					}
+				}
+									
+				if (currentPerson != null) {
+					LOG.debug("currentPerson Id : " + currentPerson.getPersonId() + " inside ISPyB db");
+					
+					// fill the ProposalHasPerson table
+					//TODO first remove existing entries for this proposal ???					
+					if (proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()) != null 
+							&& !proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()).isEmpty() ){
+						LOG.debug("Link between proposal and person already exist");
+					} else {
+						proposalHasPerson.create(currentProposal.getProposalId(), currentPerson.getPersonId() ) ;
+						LOG.debug("Link between proposal and person added: " + currentProposal.getProposalId() + " " + currentPerson.getPersonId());
+					}					
 				}
 								
 				// fill the laboratory
@@ -521,12 +529,10 @@ public class UpdateFromSMIS {
 				List<LabContact3VO> labContactsList = null;
 				if (currentPerson != null) {
 					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
-							currentProposal.getProposalId());
-					
+							currentProposal.getProposalId());					
 				}
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
-					labContactExists = true;
 					for (Iterator<LabContact3VO> iterator = labContactsList.iterator(); iterator.hasNext();) {
 						LabContact3VO labContact3VO = (LabContact3VO) iterator.next();
 						Person3VO person3VO = labContact3VO.getPersonVO();
