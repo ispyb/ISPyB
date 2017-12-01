@@ -69,6 +69,11 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 (select count(*) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as numberOfGridSquares,
 (select GROUP_CONCAT(dataCollectionId) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as dataCollectionIdList,
 
+(select GROUP_CONCAT(imageDirectory) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as imageDirectoryList,
+(select GROUP_CONCAT(startTime) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as startTimeList,
+(select GROUP_CONCAT(magnification) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as magnificationList,
+(select GROUP_CONCAT(voltage) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as voltageList,
+
 
 (SELECT GROUP_CONCAT(numberOfImages) numberOfImages
   FROM DataCollection
