@@ -19,24 +19,13 @@
 
 package ispyb.server.common.vos.proposals;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
 
 
 /**
@@ -61,9 +50,6 @@ public class ProposalHasPerson3VO extends ISPyBValueObject implements Cloneable 
 	
 	@Column(name = "proposalId")
 	protected Integer proposalId;
-
-	@Column(name = "bltimeStamp")
-	protected Date timeStamp;
 	
 	public ProposalHasPerson3VO() {
 		super();
@@ -106,14 +92,6 @@ public class ProposalHasPerson3VO extends ISPyBValueObject implements Cloneable 
 
 	public void setPersonId(Integer personId) {
 		this.personId = personId;
-	}
-
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
-	public Date getTimeStamp() {
-		return this.timeStamp;	
 	}
 
 	@Override
