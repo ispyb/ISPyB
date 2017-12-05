@@ -734,7 +734,6 @@ public class UpdateFromSMIS {
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
-			System.out.println("UpdateFromSMIS existingProposalList.size = " + existingProposalList );
 			
 			if (existingProposalList.size() > 1)
 				LOG.debug("error ! duplicate code and number in ISPyB database");	
@@ -802,6 +801,7 @@ public class UpdateFromSMIS {
 
 		if (protlist.isEmpty()) {
 
+			LOG.debug("creating protein: "+ value.getAcronym());
 			plv.setAcronym(value.getAcronym());
 			plv.setSafetyLevel(getSafetyLevelFromUserPortal(value));
 			plv.setProposalVO(proplv);
@@ -837,7 +837,7 @@ public class UpdateFromSMIS {
 			clv.setCellAlpha(value.getCellAlpha());
 			clv.setCellBeta(value.getCellBeta());
 			clv.setCellGamma(value.getCellGamma());
-
+			
 			plv = protein.create(plv);
 			clv.setProteinVO(plv);
 			crystal.create(clv);
