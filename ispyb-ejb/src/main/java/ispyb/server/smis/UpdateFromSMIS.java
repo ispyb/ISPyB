@@ -462,13 +462,14 @@ public class UpdateFromSMIS {
 		// -----------------------------------------------------------------------------------
 		// the proposal, samples and sessions are created: load labcontacts
 		// -----------------------------------------------------------------------------------
-		if (labContacts != null && labContacts.length > 0) {
-			if (Constants.SITE_IS_MAXIV()) {
-				loadParticipants(labContacts);
-				loadParticipants(mainProposers);
-				labContacts = mainProposers;
+		if (Constants.SITE_IS_MAXIV()) {
+			loadParticipants(labContacts);
+			loadParticipants(mainProposers);
+			labContacts = mainProposers;
 
-			}
+		}
+		if (labContacts != null && labContacts.length > 0) {
+
 			for (int i = 0; i < labContacts.length; i++) {
 				boolean labContactExists = false;
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
