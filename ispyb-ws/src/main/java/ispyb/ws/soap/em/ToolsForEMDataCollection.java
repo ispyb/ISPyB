@@ -25,6 +25,7 @@ import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -98,11 +99,20 @@ public class ToolsForEMDataCollection{
 			@WebParam(name = "positionX") String positionX,
 			@WebParam(name = "positionY") String positionY,
 			@WebParam(name = "beamlineName") String beamlineName,
-			@WebParam(name = "gridSquareSnapshotFullPath") String gridSquareSnapshotFullPath
+			@WebParam(name = "gridSquareSnapshotFullPath") String gridSquareSnapshotFullPath,
+			@WebParam(name = "startTime") String stringStartTime
 			
 			)	
 	{
 		Date startTime = Calendar.getInstance().getTime();
+		try{
+			SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss"); 
+			startTime = dt.parse(stringStartTime); 
+		}
+		catch(Exception exp){
+			exp.printStackTrace();
+			log.error("Error addMovie: {}", exp.getCause());
+		}
 		try {
 			log.info("addMovie. technique=EM proposal={} proteinAcronym={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
