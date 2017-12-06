@@ -95,7 +95,7 @@ and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollecti
 (SELECT GROUP_CONCAT(cnt) cnt
   FROM DataCollection,
 (
-  SELECT dataCollectionId, COUNT(*) cnt
+  SELECT dataCollectionId, COUNT(*) as cnt
     FROM Movie, MotionCorrection
     where MotionCorrection.movieId = Movie.movieId
     GROUP BY Movie.dataCollectionId
@@ -105,10 +105,24 @@ where q.dataCollectionId = DataCollection.dataCollectionId
 and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
 ) as motionCorrectionCount,
 
+(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
+  FROM DataCollection,
+(
+  SELECT dataCollectionId, COUNT(*) as cnt
+    FROM Movie, MotionCorrection
+    where MotionCorrection.movieId = Movie.movieId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as motionCorrectionDataCollectionIds,
+
 (SELECT GROUP_CONCAT(cnt) cnt
   FROM DataCollection,
 (
-  SELECT dataCollectionId, COUNT(*) cnt
+    SELECT dataCollectionId, COUNT(*) as cnt
+ 
     FROM Movie, MotionCorrection, CTF
     where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
     GROUP BY Movie.dataCollectionId
@@ -116,7 +130,21 @@ and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollecti
 ) q
 where q.dataCollectionId = DataCollection.dataCollectionId 
 and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as CTFCount 
+) as CTFCount,
+
+
+(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
+  FROM DataCollection,
+(
+    SELECT dataCollectionId, COUNT(*) as cnt
+    FROM Movie, MotionCorrection, CTF
+    where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as CTFdataCollectionIds 
 
 
 
