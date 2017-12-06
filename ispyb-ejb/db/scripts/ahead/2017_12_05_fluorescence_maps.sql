@@ -7,9 +7,9 @@ CREATE TABLE XRFFluorescenceMappingROI (
     endEnergy float NOT NULL,
     element varchar(2),
     edge varchar(2) COMMENT 'In future may be changed to enum(K, L)',
-    ADD r tinyint unsigned COMMENT 'R colour component',
-    ADD g tinyint unsigned COMMENT 'G colour component',
-    ADD b tinyint unsigned COMMENT 'B colour component'
+    r tinyint unsigned COMMENT 'R colour component',
+    g tinyint unsigned COMMENT 'G colour component',
+    b tinyint unsigned COMMENT 'B colour component'
 );
 
 CREATE TABLE XRFFluorescenceMapping (
