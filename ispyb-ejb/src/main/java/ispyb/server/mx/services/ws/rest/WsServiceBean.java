@@ -16,6 +16,7 @@ public class WsServiceBean {
 		@SuppressWarnings("unchecked")
 		
 		List<Map<String, Object>> aliasToValueMapList = query.list();
+		System.out.println(aliasToValueMapList);
 		return aliasToValueMapList;
 	}
 
