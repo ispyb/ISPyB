@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
-			<version>5.3.4</version>
+			<version>5.4.1</version>
 			<scope>provided</scope>
 		</dependency>
 
