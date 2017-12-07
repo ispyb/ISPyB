@@ -51,7 +51,7 @@ import ispyb.server.common.vos.proposals.ProposalHasPerson3VO;
 public class ProposalHasPerson3ServiceBean implements ProposalHasPerson3Service, ProposalHasPerson3ServiceLocal {
 	
 	private static final String FIND_BY_PK(Integer pk) {
-		return "from ProposalHasPerson3VO vo  where vo.pk = :pk";
+		return "from ProposalHasPerson3VO vo  where vo.proposalHasPersonId = :pk";
 	}
 
 	private static final String FIND_BY_PROPOSAL_PK(Integer proposalPk) {
