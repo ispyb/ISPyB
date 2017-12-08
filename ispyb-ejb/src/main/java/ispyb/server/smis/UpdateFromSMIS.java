@@ -83,15 +83,13 @@ public class UpdateFromSMIS {
 	private static BeamLineSetup3Service setup;
 	private static LabContact3Service labContactService;
 
-	public void updateFromSMIS() throws Exception {
+	public static void updateFromSMIS() throws Exception {
 
-		Date today = Calendar.getInstance().getTime();
-
-		// better to do it over more than 1 day, to be sure to recover all
-		// that's why a day is 26h long !
-
-		long yesterdayL = today.getTime() - (26 * 3600 * 1000);
-		Date yesterday = new Date(yesterdayL);
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.roll(Calendar.DATE, -3);
+		
+		Date yesterday = cal.getTime();
 
 		SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
 		String endDateStr = simple.format(today);
@@ -100,6 +98,7 @@ public class UpdateFromSMIS {
 		if (startDateStr == null || startDateStr.length() == 0) {
 			startDateStr = simple.format(today);
 		}
+		LOG.info("updateFromSMIS from :" + startDateStr + endDateStr);
 		updateFromSMIS(startDateStr, endDateStr);
 	}
 
