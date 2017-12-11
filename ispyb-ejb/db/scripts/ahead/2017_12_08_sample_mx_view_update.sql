@@ -1,7 +1,7 @@
 use pydb;
 insert into SchemaStatus (scriptName, schemaStatus) values ('2017_12_08_sample_mx_view_update.sql','ONGOING');
 
-CREATE 
+CREATE OR REPLACE 
     ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
     SQL SECURITY DEFINER
