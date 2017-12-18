@@ -207,6 +207,42 @@ public class UpdateProposalAndSessionAndProteinFromWS extends org.apache.struts.
 		return redirectPageFromRole(mapping, request);
 	}
 
+	/**
+	 * 
+	 * @param mapping
+	 * @param actForm
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public ActionForward launchBatchUpdate(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		ActionMessages errors = new ActionMessages();
+		ActionMessages messages = new ActionMessages();
+
+		try {
+			UpdateFromSMIS.updateFromSMIS();
+
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.inserted", " new sessions + proteins"));
+
+		} catch (Exception e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.sample.viewProteinFromSS"));
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			e.printStackTrace();
+		}
+
+		if (!errors.isEmpty()) {
+			saveErrors(request, errors);
+			return (mapping.findForward("error"));
+		}
+		if (!messages.isEmpty())
+			saveMessages(request, messages);
+
+		LOG.info("Update of ISPyB is finished");
+		// return mapping.findForward("updateISPYBdbPage");
+		return redirectPageFromRole(mapping, request);
+	}
 	private ActionForward redirectPageFromRole(ActionMapping mapping, HttpServletRequest request) {
 		// redirection page according to the Role ------------------------
 		// retrieves role from session -----------------------------------

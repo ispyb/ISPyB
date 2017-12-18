@@ -24,8 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
@@ -81,15 +83,13 @@ public class UpdateFromSMIS {
 	private static BeamLineSetup3Service setup;
 	private static LabContact3Service labContactService;
 
-	public void updateFromSMIS() throws Exception {
+	public static void updateFromSMIS() throws Exception {
 
-		Date today = Calendar.getInstance().getTime();
-
-		// better to do it over more than 1 day, to be sure to recover all
-		// that's why a day is 26h long !
-
-		long yesterdayL = today.getTime() - (26 * 3600 * 1000);
-		Date yesterday = new Date(yesterdayL);
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.roll(Calendar.DATE, -3);
+		
+		Date yesterday = cal.getTime();
 
 		SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
 		String endDateStr = simple.format(today);
@@ -98,6 +98,7 @@ public class UpdateFromSMIS {
 		if (startDateStr == null || startDateStr.length() == 0) {
 			startDateStr = simple.format(today);
 		}
+		LOG.info("updateFromSMIS from :" + startDateStr + endDateStr);
 		updateFromSMIS(startDateStr, endDateStr);
 	}
 
@@ -465,11 +466,13 @@ public class UpdateFromSMIS {
 		}
 
 		// -----------------------------------------------------------------------------------
-		// the proposal, samples and sessions are created: load labcontacts
+		// the proposal, samples and sessions are created: load labcontacts (list of all people attached to the proposal: proposers and users)
 		// -----------------------------------------------------------------------------------
 		if (labContacts != null && labContacts.length > 0) {
 			
 			LOG.info("Loading labcontacts ... ");
+			Set<Integer> proposalHasPersonIds = new HashSet<Integer>();
+			
 			for (int i = 0; i < labContacts.length; i++) {
 				
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
@@ -487,7 +490,8 @@ public class UpdateFromSMIS {
 					LOG.debug("proposal not found for:" + proposalCode + proposalNumber.toString());
 					continue;
 				}
-				LOG.debug("currentProposal Id : " + currentProposal.getProposalId() + " inside ISPyB db");
+				proposalId = currentProposal.getProposalId();
+				LOG.debug("currentProposal Id : " + proposalId + " inside ISPyB db");
 			
 				// create or update the person and his/her laboratory
 				getProposal(labContact, lab, person, proposalNumber, proposalCode);
@@ -512,13 +516,14 @@ public class UpdateFromSMIS {
 					LOG.debug("currentPerson Id : " + currentPerson.getPersonId() + " inside ISPyB db");
 					
 					// fill the ProposalHasPerson table
-					//TODO first remove existing entries for this proposal ???					
-					if (proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()) != null 
-							&& !proposalHasPerson.findByProposalAndPersonPk(currentProposal.getProposalId(), currentPerson.getPersonId()).isEmpty() ){
+					List<ProposalHasPerson3VO> phpList = proposalHasPerson.findByProposalAndPersonPk(proposalId, currentPerson.getPersonId());
+					if (phpList != null && !phpList.isEmpty() ){
+						proposalHasPersonIds.add(phpList.get(0).getProposalHasPersonId());
 						LOG.debug("Link between proposal and person already exist");
 					} else {
-						proposalHasPerson.create(currentProposal.getProposalId(), currentPerson.getPersonId() ) ;
-						LOG.debug("Link between proposal and person added: " + currentProposal.getProposalId() + " " + currentPerson.getPersonId());
+						ProposalHasPerson3VO php = proposalHasPerson.create(proposalId, currentPerson.getPersonId() ) ;
+						proposalHasPersonIds.add(php.getProposalHasPersonId());
+						LOG.debug("Link between proposal and person added: " + proposalId + " " + currentPerson.getPersonId());
 					}					
 				}
 								
@@ -529,7 +534,7 @@ public class UpdateFromSMIS {
 				List<LabContact3VO> labContactsList = null;
 				if (currentPerson != null) {
 					labContactsList = labContactService.findByPersonIdAndProposalId(currentPerson.getPersonId(),
-							currentProposal.getProposalId());					
+							proposalId);					
 				}
 				if (labContactsList != null && !labContactsList.isEmpty()) {
 					LOG.debug("labContact already exists");
@@ -571,7 +576,7 @@ public class UpdateFromSMIS {
 				// generate labContact infos
 				if (currentPerson != null & currentLabo != null) {
 					labContact3VO.setCardName(generateCardName(currentPerson, currentLabo,
-							currentProposal.getProposalId()));
+							proposalId));
 					labContact3VO.setPersonVO(currentPerson);
 					labContact3VO.setProposalVO(currentProposal);
 					labContact3VO.setDewarAvgCustomsValue(0);
@@ -581,8 +586,17 @@ public class UpdateFromSMIS {
 							+ " inside ISPyB db");
 				} 					
 			}
+			// clean the ProposalHasPerson : remove entries no more present
+			List<ProposalHasPerson3VO> existingPhpList = proposalHasPerson.findByProposalPk(proposalId);			
+			for (Iterator<ProposalHasPerson3VO> iterator = existingPhpList.iterator(); iterator.hasNext();) {
+				ProposalHasPerson3VO proposalHasPerson3VO = (ProposalHasPerson3VO) iterator.next();
+				
+				if (!proposalHasPersonIds.contains(proposalHasPerson3VO.getProposalHasPersonId()) ) {
+					proposalHasPerson.deleteByPk(proposalHasPerson3VO.getProposalHasPersonId());
+					LOG.debug("removed existing link ProposalHasPerson : "+ proposalId + " " + proposalHasPerson3VO.getPersonId());
+				}
+			}			
 		}
-
 	}
 
 	@SuppressWarnings("unused")
@@ -608,13 +622,8 @@ public class UpdateFromSMIS {
 			
 			if (listProposals.isEmpty()) {
 				// the proposal does not belong yet to ISPyB database
-
-				LOG.debug("proposal is new");
-
 				Proposal3VO propv = getProposal(mainProp, lab, person, proposalNumber, proposalCode);
-
 				proposalId = proposal.create(propv).getProposalId();
-
 				LOG.debug("inserted a new proposal inside ISPyB db:" + proposalCode + proposalNumber);
 			} else {
 				// proposal already exists: update information for the main
@@ -643,7 +652,7 @@ public class UpdateFromSMIS {
 					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
 						currentPerson.setLogin(mainProp.getBllogin());
 						currentPerson = person.merge(currentPerson);
-						LOG.debug("Update person");
+						LOG.debug("Update person with bllogin");
 					}
 				}
 				
@@ -680,9 +689,9 @@ public class UpdateFromSMIS {
 								+ propv.getPersonVOId() + ")");
 					}
 				}
-			}
-			
+			}		
 			// we check if an entry exists in ProposalHasPerson with the personId and proposalId
+			// not sure it is needed because already done when loading labcontacts
 			
 		} else {
 			LOG.debug("No main proposers found for propos_no = " + proposalNumber);
@@ -699,22 +708,18 @@ public class UpdateFromSMIS {
 			proposalNumber = smisSessions[0].getCategCounter() != null ? smisSessions[0].getCategCounter().toString() : "";
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 
 			if (existingProposalList.size() > 1)
 				LOG.debug("error ! duplicate code and number in ISPyB database");
 			Proposal3VO proplv = existingProposalList.get(0);
 			Integer proposalId = proplv.getProposalId();
-			LOG.debug("proposal is not new, proposalId = " + proposalId);
+			LOG.debug("proposal is not new, proposalId = " + proposalId + " for " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			// retrieve all new sessions
 			for (int k = 0; k < smisSessions.length; k++) {
 				ExpSessionInfoLightVO sessionVO = smisSessions[k];
-
 				retrieveSession(proplv, sessionVO);
-
 			}
 
 		} else {
@@ -731,7 +736,6 @@ public class UpdateFromSMIS {
 			String uoCode = smisSamples[0].getCategoryCode();
 			proposalNumber = smisSamples[0].getCategoryCounter() != null ? smisSamples[0].getCategoryCounter().toString() : "";
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
-			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			List<Proposal3VO> existingProposalList = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 			
@@ -740,12 +744,9 @@ public class UpdateFromSMIS {
 			
 			Proposal3VO proplv = existingProposalList.get(0);
 			Integer proposalId = proplv.getProposalId();
-			LOG.debug("proposal is not new, proposalId = " + proposalId);
+			LOG.debug("proposal is not new, proposalId = " + proposalId +  " for "+ proposalCode + proposalNumber + " uoCode = " + uoCode);
 
 			// retrieve all new samplesheets
-
-			LOG.debug("searching for new samplesheets");
-
 			/**
 			 * For Biosaxs, copying proteins to macromolecule table if they
 			 * don't exist yet
@@ -858,15 +859,12 @@ public class UpdateFromSMIS {
 				clv.setCellGamma(value.getCellGamma());
 				clv.setProteinVO(prot);
 				crystal.create(clv);
-
 				LOG.debug("inserted a new crystal for an existing protein inside ISPyB db:" + value.getAcronym());
-
 			}
 		}
 	}
 	
 	private static boolean isSampleSheetApproved(SampleSheetInfoLightVO value){
-		// TODO check with other Sites if OK before put in prod : may have problems with CRIMS
 		if (Constants.SITE_IS_ESRF()) {
 			if (value.getOpmodePk() != null && value.getOpmodePk().longValue() < 4) {
 				LOG.debug("Samplesheet safety OK for:" + value.getAcronym());
@@ -908,7 +906,6 @@ public class UpdateFromSMIS {
 	private static void retrieveSession(Proposal3VO proplv, ExpSessionInfoLightVO sessionVO) throws Exception {
 		// local contact name + 1st letter of firstname is retrieved
 		initServices();
-
 		Integer proposalId = proplv.getProposalId();
 		String siteNumber = null;
 		String beamLineO = "";
@@ -968,7 +965,6 @@ public class UpdateFromSMIS {
 			BeamLineSetup3VO setupv = new BeamLineSetup3VO();
 			setupv = setup.create(setupv);
 			sesv.setBeamLineSetupVO(setupv);
-
 			sesv.setNbShifts(new Integer(sessionVO.getShifts()));
 			sesv.setScheduled(new Byte("1"));
 			LOG.debug("scheduled = :" + sesv.getScheduled());
@@ -1146,7 +1142,6 @@ public class UpdateFromSMIS {
 			LOG.debug("Adding login: " + persv.getLogin());
 
 			persv.setLogin(mainProp.getBllogin());
-
 			persv = person.merge(persv);
 			persId = persv.getPersonId();
 
