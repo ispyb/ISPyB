@@ -9,7 +9,6 @@
 	
 	<artifactId>ispyb-ui</artifactId>
 	<packaging>war</packaging>
-	<url>http://maven.apache.org</url>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
