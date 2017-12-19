@@ -384,6 +384,7 @@
 	<!-- profiles to separate dev to prod properties -->
 	<!-- the dev properties have to be set according to your own dev environment -->
 	<profiles>
+	
 		<profile>
 			<id>PROD</id>
 			<activation>
@@ -396,33 +397,15 @@
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 			</properties>
 		</profile>
+		
 		<profile>
 			<id>DEV</id>
 			<properties>
 				<js.minimized>false</js.minimized>
 				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
-				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
-				<js.alternative.path.enabled>true</js.alternative.path.enabled>
-				<data.path>/work/ademaria/data/pyarch/</data.path>
+				<js.alternative.path.enabled>true</js.alternative.path.enabled>				
 			</properties>
 		</profile>
-
-		<profile>
-			<id>SD</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-
-			<properties>
-				<js.minimized>false</js.minimized>
-				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
-				<js.alternative.path>
-				</js.alternative.path>
-				<js.alternative.path.enabled>false</js.alternative.path.enabled>
-				<data.path>/data/pyarch/</data.path>
-			</properties>
-		</profile>
-
 
 		<!-- profiles to separate site dependent properties : the properties are 
 			stored in pom.xml of ispyb-ejb module -->
@@ -431,6 +414,12 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			
+			<properties>
+				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
+				<data.path>/work/ademaria/data/pyarch/</data.path>				
+			</properties>
+			
 
 		</profile>
 
