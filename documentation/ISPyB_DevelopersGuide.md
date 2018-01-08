@@ -351,7 +351,9 @@ and point to the pom of the missing module.
 
 Run maven install on the 4 modules.
 
-ISPyB needs the third party libraries provided in the `dependencies` directory.  These don't exist in a public repository, so install them to the local Maven repository so Maven can find them:
+ISPyB needs the third party libraries provided in the `dependencies` directory.
+These don't exist in a public repository, so install them to the local Maven
+repository so Maven can find them:
 
 ```
 cd dependencies && mvn initialize
