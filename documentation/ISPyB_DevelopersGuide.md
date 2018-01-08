@@ -57,34 +57,6 @@ All the software required may be directly downloaded from internet
 
 ## Installation
 
-### Checkout Ispyb from SourceForge with SVN
-
-#### Install SVN/Subversive in Eclipse
-
-The Subversive distribution consists of two parts: the **Subversive plug-in**
-and Subversive **SVN Connectors**. Both parts are required.
-
- 1. Use Eclipse marketplace to install **Subversive plug-in**
-
- 2. Select install software in the Help menu of eclipse, then use the address:
-
-    <http://community.polarion.com/projects/subversive/download/eclipse/3.0/luna-site/>
-
-    and retrieve the SVN connectors.
-
-#### Connect to ISPyB SourceForge repository
-
- 1. Open the SVN Repository Exploring View in Eclipse
-
- 2. Create a new repository location with:
-
-    * URL: <https://forge.epn-campus.eu/svn/ispyb4>
-
-    * User/Password: empty for checkout (anonymous login), your SourceForge
-      username/password for checkin/checkout
-
- 3. Checkout `trunk/ISPyB_project`
-
 ### Install on development platform WILDFLY 8.2
 
 Firstly, the software above (see [Installation](#installation)) has to be
@@ -95,7 +67,7 @@ respective locations:
 
   * `JBOSS_HOME=/jboss_root/wildfly-8.2Final`
 
-Then, the project must be imported from SVN or other folder to Eclipse and the
+Then, the project must be imported from GITHUB or other folder to Eclipse and the
 respective paths referencing libraries corrected.
 
 To avoid errors when using specified-type list, xdoclet 1.2.3 needs a small
