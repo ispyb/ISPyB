@@ -351,21 +351,10 @@ and point to the pom of the missing module.
 
 Run maven install on the 4 modules.
 
-You will need to install missing jars (maven can not find them in maven
-repository) picking them in the jboss6 ispyb installation.
-
-Added all these libraries in `ispyb-parent/configuration/maven/jar` as well as
-a script (`installCustomJavaLibrariesToMaven.sh`) that will install them on the
-maven local repository:
+ISPyB needs the third party libraries provided in the `dependencies` directory.  These don't exist in a public repository, so install them to the local Maven repository so Maven can find them:
 
 ```
-mvn install:install-file -Dfile=xxx\ISPyB_project\server\lib\securityfilter.jar -DgroupId=securityfilter -DartifactId=securityfilter -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\ISPyB_project\server\lib\securityaes.jar -DgroupId=securityaes -DartifactId=securityaes -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\server\default\lib\jhdf.jar -DgroupId=jhdf -DartifactId=jhdf -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\server\default\lib\jhdf5.jar -DgroupId=jhdf5 -DartifactId=jhdf5 -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\server\default\lib\jhdf5obj.jar -DgroupId=jhdf5obj -DartifactId=jhdf5obj -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\server\default\lib\jhdfobj.jar -DgroupId=jhdfobj -DartifactId=jhdfobj -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=xxx\ISPyB_project\client\lib\struts-layout-1.2.jar -DgroupId=struts-layout -DartifactId=struts-layout -Dversion=1.2 -Dpackaging=jar
+cd dependencies && mvn initialize
 ```
 
 To use the BCR for dewar tracking:
