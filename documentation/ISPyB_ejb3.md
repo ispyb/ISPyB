@@ -111,7 +111,7 @@ for webservices and be able to set all linked Sets to null
 
 **In the serviceBean:**
 
-The fist method is used to detach and put all Sets to null:
+The first method is used to detach and put all Sets to null:
 
 ```java
 private BLSample3VO getLightBLSampleVO(BLSample3VO vo) throws
