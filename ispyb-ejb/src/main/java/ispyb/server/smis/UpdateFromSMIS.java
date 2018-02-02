@@ -981,6 +981,10 @@ public class UpdateFromSMIS {
 			if (Constants.SITE_IS_SOLEIL()) {
 				sesv.setVisit_number(visit_number);
 			}
+			
+			if (Constants.SITE_IS_ESRF()) {
+				sesv.setNbReimbDewars(sessionVO.getReimbursedDewars());
+			}
 			session.create(sesv);
 			LOG.debug("inserted a new session inside ISPyB db: " + sessionVO.getStartDate().getTime() + " start shift="
 					+ startShift + " nb shifts=" + nbShifts + " end date=" + ((Date) endDate).toString());

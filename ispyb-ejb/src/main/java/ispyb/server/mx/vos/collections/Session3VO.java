@@ -147,6 +147,9 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Column(name = "externalId")
 	protected Integer externalId;
+	
+	@Column(name = "nbReimbDewars")
+	protected Integer nbReimbDewars;
 
 
 	// this link is not bidirectional so the following should not be declared
@@ -498,6 +501,14 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setExternalId(Integer externalId) {
 		this.externalId = externalId;
+	}
+
+	public Integer getNbReimbDewars() {
+		return nbReimbDewars;
+	}
+
+	public void setNbReimbDewars(Integer nbReimbDewars) {
+		this.nbReimbDewars = nbReimbDewars;
 	}
 
 	/**
