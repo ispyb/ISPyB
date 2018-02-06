@@ -58,6 +58,8 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 
 	// list of dewar status
 	private String[] listDewarStatus;
+	
+	private Integer nbReimbursedDewars;
 
 	private String role;
 
@@ -144,4 +146,13 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 	public void setFirstExperimentId(String firstExperimentId) {
 		this.firstExperimentId = firstExperimentId;
 	}
+
+	public Integer getNbReimbursedDewars() {
+		return nbReimbursedDewars;
+	}
+
+	public void setNbReimbursedDewars(Integer nbReimbursedDewars) {
+		this.nbReimbursedDewars = nbReimbursedDewars;
+	}	
+	
 }

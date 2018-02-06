@@ -545,7 +545,7 @@ public class UpdateFromSMIS {
 						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
 								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
 							LOG.debug("laboratory already exists");
-							if (!person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail())){
+							if ( person3VO.getEmailAddress() == null || !person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail()) ){
 								person3VO.setEmailAddress(labContacts[i].getScientistEmail());
 								person.merge(person3VO);
 							}
