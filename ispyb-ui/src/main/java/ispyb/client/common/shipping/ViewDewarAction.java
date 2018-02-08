@@ -639,7 +639,12 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 							currentReimbursed ++;
 				}
 				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
-				 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+				 if (defaultSelectedDewar.getSessionVO() != null) {
+					 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+				 } else {
+					 form.setNbReimbursedDewars(new Integer(0));
+				 }
+				 
 			 } else {
 				 form.setNbReimbursedDewars(new Integer(0));
 			 }
