@@ -155,7 +155,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				</logic:present>
 				<logic:greaterThan name="viewDewarForm" property="nbReimbursedDewars" value="0">	
 					<layout:cell>
-						<font color="orange" > Note that for this experiment you are allowed to have only <bean:write name="viewDewarForm" property="nbReimbursedDewars"/> reimbursed dewars</font>
+						<font color="red" > Note that for this experiment you are allowed to have ONLY <bean:write name="viewDewarForm" property="nbReimbursedDewars"/> reimbursed dewars</font>
 					</layout:cell>
 				</logic:greaterThan>
 				
@@ -543,14 +543,14 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 										
 										  <logic:equal name="dewar" property="isReimbursed" value="true">
 										  	<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
-												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Reimburse the Dewar');" onmouseout="return nd();">
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
 											</html:link>
 										</logic:equal>
 										
 										 <logic:notEqual name="dewar" property="isReimbursed" value="true">											
 										  <logic:equal name="viewDewarForm" property="remainingReimbursed" value="true">
 											<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
-												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Reimburse the Dewar');" onmouseout="return nd();">
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
 											</html:link>
 											</logic:equal>
 										</logic:notEqual>
