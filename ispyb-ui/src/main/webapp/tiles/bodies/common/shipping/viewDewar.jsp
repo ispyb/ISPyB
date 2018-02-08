@@ -153,6 +153,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 					</layout:cell>
 				</logic:notPresent>
 				</logic:present>
+				<logic:greaterThan name="viewDewarForm" property="nbReimbursedDewars" value="0">	
+					<layout:cell>
+						<font color="orange" > Note that for this experiment you are allowed to have only <bean:write name="viewDewarForm" property="nbReimbursedDewars"/> reimbursed dewars</font>
+					</layout:cell>
+				</logic:greaterThan>
 				
 				<%-- COLLECTION --%>
 				<layout:collection 	name="viewDewarForm" 
@@ -535,11 +540,22 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 										</logic:equal>
 										&nbsp;
 										<logic:present name="dewar" property="sessionVO.nbReimbDewars">
-										  <logic:greaterThan name="dewar" property="sessionVO.nbReimbDewars" value="0">
+										
+										  <logic:equal name="dewar" property="isReimbursed" value="true">
+										  	<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Reimburse the Dewar');" onmouseout="return nd();">
+											</html:link>
+										</logic:equal>
+										
+										 <logic:notEqual name="dewar" property="isReimbursed" value="true">											
+										  <logic:equal name="viewDewarForm" property="remainingReimbursed" value="true">
 											<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
 												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Reimburse the Dewar');" onmouseout="return nd();">
 											</html:link>
-										  </logic:greaterThan>
+											</logic:equal>
+										</logic:notEqual>
+										
+										
 										</logic:present>
 										&nbsp;
 										<html:link href="<%=targetDeleteDewar%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" onclick="return window.confirm('Do you really want to delete this Dewar?');">

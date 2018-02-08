@@ -30,6 +30,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -448,6 +449,12 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 					Integer.toString(returnLabContact.getDewarAvgCustomsValue()));
 			fieldNamesAndValues.put("TF_returnTransportValue",
 					Integer.toString(returnLabContact.getDewarAvgTransportValue()));
+			
+			// if dewar reimbursed then we replace the courier infos
+			if (dewar.getIsReimbursed() != null && dewar.getIsReimbursed().equals(true)) {
+				fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
+				fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
+			}
 
 			pdfFormFiller.setFields(fieldNamesAndValues);
 
@@ -615,25 +622,37 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			// -----------------------------------------------------
 
 			// Search Dewars
-			if (mProposalId == null) // proposalId
-			{
+			if (mProposalId == null) {  // proposalId
 				return mapping.findForward("error");
 			}
 
 			List<Dewar3VO> listInfo = searchDewars(mapping, code, comments, mProposalId, shippingId, dewarId);
-
-			// -----------------------------------------------------
-			// Populate with Info
-			form.setListInfo(listInfo);
+			int currentReimbursed = 0;
 
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
-			// if (BreadCrumbsForm.getIt(request).getSelectedDewar()==null && !listInfo.isEmpty())
-			// {
-			// Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
-			// BreadCrumbsForm.getIt(request).setSelectedDewar(defaultSelectedDewar);
-			// return this.displaySlave(mapping, actForm, request, in_response);
-			// }
+			 if (!listInfo.isEmpty())
+			 {
+				 for (Iterator iterator = listInfo.iterator(); iterator.hasNext();) {
+						Dewar3VO dewar3vo = (Dewar3VO) iterator.next();
+						if (dewar3vo.getIsReimbursed() != null && dewar3vo.getIsReimbursed().equals(true))
+							currentReimbursed ++;
+				}
+				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
+				 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+			 } else {
+				 form.setNbReimbursedDewars(new Integer(0));
+			 }
+			 
+			 if (currentReimbursed < form.getNbReimbursedDewars()) {
+				 form.setRemainingReimbursed(true);
+			 } else {
+				 form.setRemainingReimbursed(false);
+			 }
+			 
+			// -----------------------------------------------------
+			// Populate with Info
+			form.setListInfo(listInfo);
 
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.EDIT_MODE);
 		} catch (Exception e) {

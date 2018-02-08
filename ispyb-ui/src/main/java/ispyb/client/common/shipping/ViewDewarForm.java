@@ -60,9 +60,11 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 	private String[] listDewarStatus;
 	
 	private Integer nbReimbursedDewars;
+	
+	private boolean remainingReimbursed;
 
 	private String role;
-
+	
 	public ViewDewarForm() {
 	}
 
@@ -153,6 +155,16 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 
 	public void setNbReimbursedDewars(Integer nbReimbursedDewars) {
 		this.nbReimbursedDewars = nbReimbursedDewars;
-	}	
+	}
+
+	public boolean getRemainingReimbursed() {
+		return remainingReimbursed;
+	}
+
+	public void setRemainingReimbursed(boolean remainingReimbursed) {
+		this.remainingReimbursed = remainingReimbursed;
+	}
+
+
 	
 }
