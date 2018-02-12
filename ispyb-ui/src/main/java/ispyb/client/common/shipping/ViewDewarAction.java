@@ -647,13 +647,11 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 				 
 			 } else {
 				 form.setNbReimbursedDewars(new Integer(0));
-			 }
-			 
-			 if (currentReimbursed < form.getNbReimbursedDewars()) {
+			 }			 
+			 form.setRemainingReimbursed(false);			 
+			 if (form.getNbReimbursedDewars() != null && currentReimbursed < form.getNbReimbursedDewars())
 				 form.setRemainingReimbursed(true);
-			 } else {
-				 form.setRemainingReimbursed(false);
-			 }
+			 
 			 
 			// -----------------------------------------------------
 			// Populate with Info
