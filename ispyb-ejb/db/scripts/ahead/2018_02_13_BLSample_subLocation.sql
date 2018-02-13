@@ -1,4 +1,4 @@
--- pt-online-schema-change --execute --alter-foreign-keys-method auto --alter "ADD subLocation SMALLINT UNSIGNED COMMENT 'Indicates the sample\'s location on a multi-sample pin, where 1 is closest to the pin base'" D=ispyb,t=BLSample,h=localhost
+USE pydb;
 
 INSERT INTO SchemaStatus (scriptName, schemaStatus) VALUES ('20180213_BLSample_subLocation.sql', 'ONGOING');
 
