@@ -441,8 +441,8 @@
   			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
   			<mail.admin>ims@maxiv.lu.se</mail.admin>
   			<mail.dev>ims@maxiv.lu.se</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			<mail.ispyb>ispyb@maxiv.lu.se</mail.ispyb>
+  			<mail.stores>mx-dewars@maxiv.lu.se</mail.stores>
   			
   			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
 			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
