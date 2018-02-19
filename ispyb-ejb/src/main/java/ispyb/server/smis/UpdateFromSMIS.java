@@ -278,11 +278,12 @@ public class UpdateFromSMIS {
 			case EMBL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 				break;
-			default:
+            default:
 			case SOLEIL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 				break;
-			}			
+			}
+
 			mainProposers_ = sws.findMainProposersForProposal(pk);
 			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 			labContacts_ = sws.findParticipantsForProposal(pk);
@@ -945,10 +946,18 @@ public class UpdateFromSMIS {
 														// 8:30am,
 														// 4:30pm or 00:30am
 		startShift = Constants.SITE_IS_SOLEIL() ? 0 : startShift;
-		Integer daysToAdd = nbShifts / 3 + 1;
-		if ((startShift == 1 && nbShifts % 3 == 2) || (startShift == 2 && nbShifts % 3 != 0))
-			daysToAdd++;
-
+        Integer daysToAdd = 0;
+		if (Constants.SITE_IS_MAXIV()){
+            daysToAdd = nbShifts / 6 + 1;
+            if ((startShift == 1 && nbShifts % 6 == 5) || (startShift == 2 && nbShifts % 6 == 4) ||
+                    (startShift == 3 && nbShifts % 6 == 3) || (startShift == 4 && nbShifts % 6 == 2) ||
+                    (startShift == 5 && nbShifts % 6 == 1))
+                daysToAdd++;
+        } else {
+            daysToAdd = nbShifts / 3 + 1;
+            if ((startShift == 1 && nbShifts % 3 == 2) || (startShift == 2 && nbShifts % 3 != 0))
+                daysToAdd++;
+        }
 		// only new sessions are retrieved
 		String beamlineName = sessionVO.getBeamlineName();
 		Calendar endDateCal = Calendar.getInstance();

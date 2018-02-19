@@ -2,11 +2,15 @@ package ispyb.server.webservice.smis.util;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.Exception;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import generated.ws.smis.FinderException;
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
@@ -40,34 +45,73 @@ public class MAXIVWebService implements SMISWebService {
 		this.serverUrl = Constants.getProperty("userportal.url");
 	}
 	
-	public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
+	public List<Long> findNewMXProposalPKs_OLD (String startDateStr, String endDateStr) {
 		List<Long> pks = new ArrayList<Long>();
-        
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/proposals?access_token=").append(this.getToken())
-				.append("&filter=").append(this.getFilter(startDateStr, endDateStr));
-		
-		JSONArray jsonProposals = readJsonArrayFromUrl(url.toString());
-		
-		int len = jsonProposals.length();
-		for (int i=0; i<len; i++){ 
-			JSONObject jsonProposal = (JSONObject)jsonProposals.get(i);
-			
-			Long proposalId = null;
-			try {
-				proposalId = (Long.valueOf(((Integer)jsonProposal.get("propid"))).longValue());
-				LOG.info("Proposal found: " + proposalId);
-			} catch(Exception ex){
-				//TODO: Handle exception
-				ex.printStackTrace();
-			}
-			pks.add(proposalId);
-		}
+
+        StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Beamlines/BioMAX/proposals/?access_token=")
+                .append(this.getToken())
+                .append("&filter=").append(this.getFilter(startDateStr, endDateStr));
+
+        JSONArray jsonProposals = readJsonArrayFromUrl(url.toString());
+
+        int len = jsonProposals.length();
+        for (int i = 0; i < len; i++) {
+            JSONObject jsonProposal = (JSONObject) jsonProposals.get(i);
+
+            Long proposalId = null;
+            try {
+                proposalId = (Long.valueOf(((Integer) jsonProposal.get("propid"))).longValue());
+                LOG.info("Proposal found: " + proposalId);
+            } catch (Exception ex) {
+                //TODO: Handle exception
+                ex.printStackTrace();
+            }
+            pks.add(proposalId);
+        }
+
 		
 		System.out.println("Number of proposals found : " + pks.size());
 		LOG.info("Number of proposals found : " + pks.size());
 	
 		return pks;
 	}
+
+    public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
+        List<Long> pks = new ArrayList<Long>();
+        try {
+            StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/?access_token=")
+                .append(this.getToken())
+                .append("&filter=").append(this.getFilter(startDateStr, endDateStr, "BioMAX"));
+
+            JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
+
+            int len = jsonSessions.length();
+            for (int i=0; i<len; i++){
+                JSONObject jsonSession = (JSONObject)jsonSessions.get(i);
+
+                Long proposalId = null;
+                Long sessionId = null;
+                try {
+                    proposalId = (Long.valueOf(((Integer)jsonSession.get("propid"))).longValue());
+                    sessionId = (Long.valueOf(((Integer)jsonSession.get("sessionid"))).longValue());
+                    LOG.info("Session " +sessionId +" for Proposal " +proposalId + " found");
+                } catch(Exception ex){
+                    //TODO: Handle exception
+                    ex.printStackTrace();
+                }
+
+                if (pks.contains(Long.valueOf(proposalId)) == false){
+                    pks.add(proposalId);
+                }
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        System.out.println("Number of proposals found : " + pks.size());
+        LOG.info("Number of proposals found : " + pks.size());
+
+        return pks;
+    }
 	
 	public List<ProposalParticipantInfoLightVO> findMainProposersForProposal(Long propId) {
 		List<ProposalParticipantInfoLightVO> proposers = new ArrayList<ProposalParticipantInfoLightVO>();
@@ -79,27 +123,27 @@ public class MAXIVWebService implements SMISWebService {
 		
 		Integer proposerId = (Integer)jsonProposal.get("proposer");
 		writers.add(proposerId);
-		if(jsonProposal.get("principal") != JSONObject.NULL)
+		if(jsonProposal.get("principal") != JSONObject.NULL && !writers.contains(jsonProposal.get("principal")))
 			writers.add((Integer)jsonProposal.get("principal"));
-		if(jsonProposal.get("cowriter1") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter1") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter1")))
 			writers.add((Integer)jsonProposal.get("cowriter1"));
-		if(jsonProposal.get("cowriter2") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter2") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter2")))
 			writers.add((Integer)jsonProposal.get("cowriter2"));
-		if(jsonProposal.get("cowriter3") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter3") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter3")))
 			writers.add((Integer)jsonProposal.get("cowriter3"));
-		if(jsonProposal.get("cowriter4") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter4") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter4")))
 			writers.add((Integer)jsonProposal.get("cowriter4"));
-		if(jsonProposal.get("cowriter5") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter5") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter5")))
 			writers.add((Integer)jsonProposal.get("cowriter5"));
-		if(jsonProposal.get("cowriter6") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter6") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter6")))
 			writers.add((Integer)jsonProposal.get("cowriter6"));
-		if(jsonProposal.get("cowriter7") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter7") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter7")))
 			writers.add((Integer)jsonProposal.get("cowriter7"));
-		if(jsonProposal.get("cowriter8") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter8") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter8")))
 			writers.add((Integer)jsonProposal.get("cowriter8"));
-		if(jsonProposal.get("cowriter9") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter9") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter9")))
 			writers.add((Integer)jsonProposal.get("cowriter9"));
-		if(jsonProposal.get("cowriter10") != JSONObject.NULL)
+		if(jsonProposal.get("cowriter10") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter10")))
 			writers.add((Integer)jsonProposal.get("cowriter10"));
 
 		for(Integer writerId : writers) {
@@ -146,73 +190,87 @@ public class MAXIVWebService implements SMISWebService {
 		return proposers;
 	}
 	
-	public List<ProposalParticipantInfoLightVO> findParticipantsForProposal(Long propId) throws Exception_Exception {
+	public List<ProposalParticipantInfoLightVO> findParticipantsForProposal(Long propId) {
 		List<ProposalParticipantInfoLightVO> participants = new ArrayList<ProposalParticipantInfoLightVO>();
 		
-		JSONObject jsonProposal = getProposalForId(propId);
-		
-		//Get all co-proposer ids
-		ArrayList<Integer> visitors = new ArrayList<Integer>();
-		
-		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
+		try {
+            JSONObject jsonProposal = getProposalForId(propId);
 
-		for(JSONObject jsonSession : jsonSessions){
-			ArrayList<JSONObject> jsonParticipants = getParticipantsForSession((Integer)jsonSession.get("sessionid"));
-			for(JSONObject jsonParticipant : jsonParticipants){
-				visitors.add((Integer)jsonParticipant.get("userid"));
-			}
-		}
-		
-		for(Integer visitorId : visitors) {
-			JSONObject jsonParticipant = getUserForId(visitorId);
-			
-			ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
-			try{
-				participant.setCategoryCode("MX");
-				participant.setCategoryCounter(propId.intValue());
-				participant.setBllogin((String)jsonParticipant.get("username"));
-				
-				Integer labId = (Integer)jsonParticipant.get("institute");
-				JSONObject jsonLab = getLabForId(labId);
-				participant.setLabAddress1((String)jsonLab.get("address") + "," + (String)jsonLab.get("country"));
-				participant.setLabCity((String)jsonLab.get("city"));
-				participant.setScientistEmail((String)jsonParticipant.get("email"));
-				if(jsonLab.get("department") != JSONObject.NULL)
-					participant.setLabDeparment((String)jsonLab.get("department"));
-				String labname = (String)jsonLab.get("name");
-				if(labname.length() >= 45){
-					labname = labname.substring(0,40).concat("...");
-					System.out.println("Truncated lab name :" + labname);
-				}
-				participant.setLabName(labname);
-				participant.setProposalPk(propId);
-				String title = (String)jsonProposal.get("title");
-				if(title.length() >= 200){
-					title = title.substring(0,195).concat("...");
-					System.out.println("Truncated Tilte :" + title);
-				}
-				participant.setProposalTitle(title);
-				participant.setScientistFirstName((String)jsonParticipant.get("firstname"));
-				participant.setScientistName((String)jsonParticipant.get("lastname"));
-			} catch(Exception ex){
-				//TODO: Handle exception
-				ex.printStackTrace();
-			}
-			
-			participants.add(participant);
-		}
+            //Get all co-proposer ids
+            ArrayList<Integer> visitors = new ArrayList<Integer>();
+            ArrayList<JSONObject> jsonSessions = new ArrayList<JSONObject>();
+            try {
+                jsonSessions = getSessionsForProposal(propId);
+            } catch (Exception ex){
+                ex.printStackTrace();
+                throw new Exception(ex.getMessage());
+            }
+
+            for (JSONObject jsonSession : jsonSessions) {
+
+                ArrayList<JSONObject> jsonParticipants = getParticipantsForSession((Integer) jsonSession.get("sessionid"));
+                for (JSONObject jsonParticipant : jsonParticipants) {
+                    visitors.add((Integer) jsonParticipant.get("userid"));
+                }
+            }
+
+            for (Integer visitorId : visitors) {
+                JSONObject jsonParticipant = getUserForId(visitorId);
+
+                ProposalParticipantInfoLightVO participant = new ProposalParticipantInfoLightVO();
+                try {
+                    participant.setCategoryCode("MX");
+                    participant.setCategoryCounter(propId.intValue());
+                    participant.setBllogin((String) jsonParticipant.get("username"));
+
+                    Integer labId = (Integer) jsonParticipant.get("institute");
+                    JSONObject jsonLab = getLabForId(labId);
+                    participant.setLabAddress1((String) jsonLab.get("address") + "," + (String) jsonLab.get("country"));
+                    participant.setLabCity((String) jsonLab.get("city"));
+                    participant.setScientistEmail((String) jsonParticipant.get("email"));
+                    if (jsonLab.get("department") != JSONObject.NULL)
+                        participant.setLabDeparment((String) jsonLab.get("department"));
+                    String labname = (String) jsonLab.get("name");
+                    if (labname.length() >= 45) {
+                        labname = labname.substring(0, 40).concat("...");
+                        System.out.println("Truncated lab name :" + labname);
+                    }
+                    participant.setLabName(labname);
+                    participant.setProposalPk(propId);
+                    String title = (String) jsonProposal.get("title");
+                    if (title.length() >= 200) {
+                        title = title.substring(0, 195).concat("...");
+                        System.out.println("Truncated Tilte :" + title);
+                    }
+                    participant.setProposalTitle(title);
+                    participant.setScientistFirstName((String) jsonParticipant.get("firstname"));
+                    participant.setScientistName((String) jsonParticipant.get("lastname"));
+                } catch (Exception ex) {
+                    //TODO: Handle exception
+                    ex.printStackTrace();
+                }
+
+                participants.add(participant);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 		
 		LOG.info("Participants found : " + participants.size());
 		
 		return participants;
 	}
 	
-	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days)
-			throws FinderException_Exception {
+	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days){
 		List<ExpSessionInfoLightVO> sessions = new ArrayList<ExpSessionInfoLightVO>();
 		
 		JSONObject jsonProposal = getProposalForId(propId);
-		ArrayList<JSONObject> jsonSessions = getSessionsForProposal(propId);
+        ArrayList<JSONObject> jsonSessions = new ArrayList<JSONObject>();
+        try {
+            jsonSessions = getSessionsForProposal(propId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
 		for(JSONObject jsonSession : jsonSessions){
 			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
@@ -367,19 +425,21 @@ public class MAXIVWebService implements SMISWebService {
 		return beamlines;
 	}
 	
-	private ArrayList<JSONObject> getSessionsForProposal(Long propId){
+	private ArrayList<JSONObject> getSessionsForProposal(Long propId) throws Exception {
 		ArrayList<JSONObject> sessions = new ArrayList<JSONObject>();
-		
-		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
-				.append(propId).append("/sessions").append("?access_token=").append(this.getToken());
-		
-		JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
-		
-		int len = jsonSessions.length();
-		for (int i=0; i<len; i++){ 
-			JSONObject jsonSession = (JSONObject)jsonSessions.get(i);
-			sessions.add(jsonSession);
-		}
+
+        StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+                .append(propId).append("/sessions/").append("?access_token=").append(this.getToken())
+				.append("&filter=").append(this.getFilterSubmittedSessions());
+
+
+        JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
+
+        int len = jsonSessions.length();
+        for (int i = 0; i < len; i++) {
+            JSONObject jsonSession = (JSONObject) jsonSessions.get(i);
+            sessions.add(jsonSession);
+        }
 		
 		return sessions;
 	}
@@ -518,26 +578,127 @@ public class MAXIVWebService implements SMISWebService {
 		
 		return token;
 	}
+
+    private String getFilterSubmittedSessions() throws Exception {
+        StringBuilder filter = new StringBuilder();
+        String filterStr = "";
+        JSONObject jsonFieldNeq = new JSONObject();
+        jsonFieldNeq.put("neq", JSONObject.NULL);
+        JSONObject jsonField1 = new JSONObject();
+        jsonField1.put("submitted", jsonFieldNeq);
+
+        /*JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonField1);
+
+        JSONObject jsonFieldAnd = new JSONObject();
+        jsonFieldAnd.put("and", jsonArray);*/
+        JSONObject jsonFilter = new JSONObject();
+        jsonFilter.put("where", jsonField1);
+
+        filterStr = jsonFilter.toString();
+
+        Pattern p = Pattern.compile("[a-zA-Z0-9]");
+
+        for (int i = 0; i < filterStr.length(); i++) {
+            Matcher m = p.matcher(String.valueOf(filterStr.charAt(i)));
+            if (m.find()) {
+                filter.append(filterStr.charAt(i));
+            } else {
+                filter.append("%").append(String.format("%h", (filterStr.charAt(i))));
+            }
+        }
+
+        return filter.toString();
+    }
+
+
+    private String getFilter(String startDateStr, String endDateStr, String beamline) throws Exception {
+        StringBuilder filter = new StringBuilder();
+        String filterStr = "";
+
+        SimpleDateFormat sdfin = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdfout = new SimpleDateFormat("yyyy-MM-dd");
+        Date convertedDate = sdfin.parse(startDateStr);
+        String startDate=sdfout.format(convertedDate);
+        convertedDate = sdfin.parse(endDateStr);
+        String endDate=sdfout.format(convertedDate);
+
+        JSONObject jsonField1 = new JSONObject();
+        jsonField1.put("beamline", beamline);
+
+        /*JSONObject jsonFieldStart = new JSONObject();
+        jsonFieldStart.put("gte", startDate);
+        JSONObject jsonFieldEnd = new JSONObject();
+        jsonFieldEnd.put("lte", endDate);
+        JSONArray jsonArrayDates = new JSONArray();
+        jsonArrayDates.put(jsonFieldStart);
+        jsonArrayDates.put(jsonFieldEnd);
+        JSONObject jsonFieldBetween = new JSONObject();
+        jsonFieldBetween.put("and", jsonArrayDates);
+        JSONObject jsonField2 = new JSONObject();
+        jsonField2.put("shifts.startDate", jsonFieldBetween);*/
+
+        JSONObject jsonFieldStart = new JSONObject();
+        jsonFieldStart.put("gte", startDate);
+        JSONObject jsonField2 = new JSONObject();
+        jsonField2.put("shifts.startDate", jsonFieldStart);
+
+        JSONObject jsonFieldEnd = new JSONObject();
+        jsonFieldEnd.put("lte", endDate);
+        JSONObject jsonField3 = new JSONObject();
+        jsonField3.put("shifts.startDate", jsonFieldEnd);
+
+        JSONObject jsonFieldNeq = new JSONObject();
+        jsonFieldNeq.put("neq", JSONObject.NULL);
+        JSONObject jsonField4 = new JSONObject();
+        jsonField4.put("submitted", jsonFieldNeq);
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonField1);
+        jsonArray.put(jsonField2);
+        jsonArray.put(jsonField3);
+        jsonArray.put(jsonField4);
+
+        JSONObject jsonFieldAnd = new JSONObject();
+        jsonFieldAnd.put("and", jsonArray);
+        JSONObject jsonFilter = new JSONObject();
+        jsonFilter.put("where", jsonFieldAnd);
+
+        filterStr = jsonFilter.toString();
+
+        Pattern p = Pattern.compile("[a-zA-Z0-9]");
+
+        for (int i = 0; i < filterStr.length(); i++) {
+            Matcher m = p.matcher(String.valueOf(filterStr.charAt(i)));
+            if (m.find()){
+                filter.append(filterStr.charAt(i));
+            } else {
+                filter.append("%").append(String.format("%h", (filterStr.charAt(i))));
+            }
+        }
+
+        return filter.toString();
+    }
 	
 	private String getFilter(String startDateStr, String endDateStr){
 		StringBuilder filter = new StringBuilder();
 		String filterStr = "";
 		
-		String startYear = startDateStr.substring(0, 4);
-		String endYear = endDateStr.substring(0, 4);
+		String startYear = startDateStr.substring(6, 10);
+		String endYear = endDateStr.substring(6, 10);
 		StringBuilder regexp = new StringBuilder("/^").append(startYear).append("|^").append(endYear).append("/");
 		JSONObject jsonExp = new JSONObject();
 		jsonExp.put("regexp", regexp.toString());
 		JSONObject jsonField1 = new JSONObject();
-		jsonField1.put("propid", jsonExp);
-		JSONObject jsonField2 = new JSONObject();
-		jsonField2.put("status", "A");
-		JSONObject jsonField3 = new JSONObject();
-		jsonField3.put("beamline_assigned", "BioMAX");
-		JSONArray jsonArray = new JSONArray();
-		jsonArray.put(jsonField1);
-		jsonArray.put(jsonField2);
-		jsonArray.put(jsonField3);
+        jsonField1.put("propid", jsonExp);
+        JSONObject jsonField2 = new JSONObject();
+        jsonField2.put("status", "A");
+		/*JSONObject jsonField3 = new JSONObject();
+		jsonField3.put("beamline_assigned", "BioMAX");*/
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonField1);
+        jsonArray.put(jsonField2);
+		//jsonArray.put(jsonField3);
 		JSONObject jsonFieldAnd = new JSONObject();
 		jsonFieldAnd.put("and", jsonArray);
 		JSONObject jsonFilter = new JSONObject();

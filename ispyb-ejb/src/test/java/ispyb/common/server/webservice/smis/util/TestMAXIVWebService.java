@@ -21,7 +21,7 @@ public class TestMAXIVWebService {
 	public static void testFindNewMXProposalPKs()
 	{
 		MAXIVWebService service = new MAXIVWebService();
-		service.findNewMXProposalPKs("2017-01-01", "2017-07-30");
+		service.findNewMXProposalPKs("01/01/2017", "30/07/2017");
 	}
 	
 	public static void testFindMainProposersForProposal()

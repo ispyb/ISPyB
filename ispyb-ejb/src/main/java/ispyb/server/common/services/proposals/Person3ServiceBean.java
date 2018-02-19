@@ -26,6 +26,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.NonUniqueResultException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -242,7 +243,10 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 				.setParameter("login", login).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
-		}
+		} /*catch (NonUniqueResultException nuex){
+			LOG.error("No unique result in person table with for login :" + login);
+			throw  nuex;
+		}*/
 	}
 	
 
