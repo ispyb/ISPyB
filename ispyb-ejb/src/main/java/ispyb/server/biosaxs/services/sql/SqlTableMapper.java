@@ -85,6 +85,7 @@ public class SqlTableMapper {
 				+ "BLSession.databackupEurope as BLSession_databackupEurope,\r\n"
 				+ "BLSession.operatorSiteNumber as BLSession_operatorSiteNumber,\r\n"
 				+ "BLSession.lastUpdate as BLSession_lastUpdate,\r\n"
+				+ "BLSession.nbReimbDewars as BLSession_nbReimbDewars,\r\n"
 				+ "BLSession.protectedData as BLSession_protectedData";
 	}
 
@@ -134,6 +135,7 @@ public class SqlTableMapper {
 				+ "Dewar.transportValue as Dewar_transportValue,               \r\n"
 				+ "Dewar.trackingNumberToSynchrotron as Dewar_trackingNumberToSynchrotron,  \r\n"
 				+ "Dewar.trackingNumberFromSynchrotron as Dewar_trackingNumberFromSynchrotron, \r\n"
+				+ "Dewar.isReimbursed as Dewar_isReimbursed, \r\n"
 				+ "Dewar.type as Dewar_type ";
 	}
 
