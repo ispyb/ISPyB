@@ -1,6 +1,8 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
+import ispyb.ws.soap.em.ToolsForEMDataCollection;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -22,6 +24,31 @@ public class WorkflowRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(WorkflowRestWebService.class);
 
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/mx/workflow/{workflowId}/log")
+	@Produces("text/plain")
+	public Response getLogByWorkflowById(
+			@PathParam("token") String token,
+			@PathParam("workflowId") int workflowId) {
+
+		String methodName = "getLogByWorkflowById";
+		long start = this.logInit(methodName, logger, token, workflowId);
+		try {
+			
+			Workflow3VO workflow3VO = this.getWorkflow3Service().findByPk(workflowId);
+			if (workflow3VO.getLogFilePath() != null) {
+				if (new File(workflow3VO.getLogFilePath()).exists()){
+					return this.downloadFile(workflow3VO.getLogFilePath());
+				}
+			}
+			throw new Exception("File " + workflow3VO.getLogFilePath() + " does not exit");
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);			
+		}
+	}
+	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/workflow/step/{workflowStepIds}/list")
