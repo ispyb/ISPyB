@@ -72,7 +72,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 		<layout:grid cols="1"  borderSpacing="10">
 				<layout:column>
-				<p>blablabla engagement
+				<p>Engagement
 				<br>
 				<br> By setting this dewar to reimbursed, the labels that will be generated for the sending will contain the fedex account that you should use to send your dewars.
 				<br> Please note that you MUST NOT use this account to ship more than the allowed number of dewars.
