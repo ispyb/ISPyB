@@ -771,6 +771,8 @@ public final class Constants {
 	/* delivery agents names */
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_FEDEX = "Fedex";
+	
+	public static final String SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT = getProperty("ispyb.shipping.fedex.account");
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_TNT = "TNT";
 

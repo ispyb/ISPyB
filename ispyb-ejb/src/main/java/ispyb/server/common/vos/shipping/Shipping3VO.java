@@ -118,7 +118,7 @@ public class Shipping3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "shippingType")
 	protected String shippingType;
-
+	
 	@OneToMany(cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "shippingId")
 	protected Set<Dewar3VO> dewarVOs;
