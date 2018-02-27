@@ -41,9 +41,9 @@
 						<configuration>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-							<version>1.3</version>
+							<version>1.4</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../dependencies/ispyb-WSclient-userportal-gen-1.3.jar</file>
+							<file>${basedir}/../dependencies/ispyb-WSclient-userportal-gen-1.4.jar</file>
 						</configuration>
 					</execution>
 					<execution>
