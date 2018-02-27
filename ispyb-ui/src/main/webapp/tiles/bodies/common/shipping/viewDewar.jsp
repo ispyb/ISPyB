@@ -51,7 +51,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	
 	String targetUpdateDewar		= request.getContextPath() + "/menuSelected.do?leftMenuId=6&topMenuId=5&targetUrl=/user/createDewarAction.do?reqCode=updateDisplay";
 	String targetDeleteDewar		= request.getContextPath() + "/menuSelected.do?leftMenuId=6&topMenuId=5&targetUrl=/user/createDewarAction.do?reqCode=delete";
-
+	String targetGetReimbursed 	= request.getContextPath() + "/reader/viewDewarAction.do?reqCode=getReimbursed";
+	
 	String targetViewShippings		= request.getContextPath() + "/reader/genericShippingAction.do?reqCode=display";	
 	String targetViewDewars			= request.getContextPath() + "/menuSelected.do?leftMenuId=8&topMenuId=5&targetUrl=/user/viewDewarAction.do?reqCode=display";
 	String selectedDewarTitle		= 	"<a href=\"" + targetViewDewars + "\">" +
@@ -60,6 +61,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 										"Selected Dewar";
 	String dewarPanelTitle			= "All Components in Shipment : ";
 	String containerPanelTitle		= "All Containers in Dewar : ";
+	
+	
 
 %>
 
@@ -150,6 +153,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 					</layout:cell>
 				</logic:notPresent>
 				</logic:present>
+				<logic:greaterThan name="viewDewarForm" property="nbReimbursedDewars" value="0">	
+					<layout:cell>
+						<font color="red" > Note that for this experiment you are allowed to have ONLY <bean:write name="viewDewarForm" property="nbReimbursedDewars"/> reimbursed dewars</font>
+					</layout:cell>
+				</logic:greaterThan>
 				
 				<%-- COLLECTION --%>
 				<layout:collection 	name="viewDewarForm" 
@@ -169,6 +177,9 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 								</logic:equal>
 								<logic:equal name="dewar" property="type" value="<%=Constants.PARCEL_DEWAR_TYPE%>">
 									<img title="Dewar" alt="Dewar" src="<%=request.getContextPath()%>/images/Dewar_32x32_01.png" border="0">
+								</logic:equal>
+								<logic:equal name="dewar"  property="isReimbursed" value="true">
+								(R)
 								</logic:equal>
 							</center>
 						</layout:collectionItem>
@@ -527,6 +538,25 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 												<img src="<%=request.getContextPath()%>/images/blank.gif" border="0" width="26" />
 											</logic:equal>
 										</logic:equal>
+										&nbsp;
+										<logic:present name="dewar" property="sessionVO.nbReimbDewars">
+										
+										  <logic:equal name="dewar" property="isReimbursed" value="true">
+										  	<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
+											</html:link>
+										</logic:equal>
+										
+										 <logic:notEqual name="dewar" property="isReimbursed" value="true">											
+										  <logic:equal name="viewDewarForm" property="remainingReimbursed" value="true">
+											<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
+											</html:link>
+											</logic:equal>
+										</logic:notEqual>
+										
+										
+										</logic:present>
 										&nbsp;
 										<html:link href="<%=targetDeleteDewar%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" onclick="return window.confirm('Do you really want to delete this Dewar?');">
 											<img src="<%=request.getContextPath()%>/images/cancel.png" border="0" onmouseover="return overlib('Delete the Dewar');" onmouseout="return nd();">

@@ -332,6 +332,11 @@
         redirect="false"
       />
       <forward
+        name="dewarReimbursePage"
+        path="user.shipping.dewar.reimburse.page"
+        redirect="false"
+      />
+      <forward
         name="dewarBlomViewPage"
         path="blom.shipping.dewar.view.page"
         redirect="false"
@@ -384,6 +389,11 @@
       <forward
         name="dewarViewPage"
         path="user.shipping.dewar.view.page"
+        redirect="false"
+      />
+      <forward
+        name="dewarReimbursePage"
+        path="user.shipping.dewar.reimburse.page"
         redirect="false"
       />
       <forward
