@@ -2,7 +2,6 @@ package ispyb.ws.rest.mx;
 
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
-import ispyb.ws.soap.em.ToolsForEMDataCollection;
 
 import java.io.File;
 import java.nio.file.Files;
