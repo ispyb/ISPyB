@@ -46,6 +46,8 @@ public class Additive3VO  implements java.io.Serializable {
 	 protected Integer additiveId;
      protected String name;
      protected String additiveType;
+     protected String chemFormulaHead;
+     protected String chemFormulaTail;
      protected String comments;
      private Set<Bufferhasadditive3VO> bufferhasadditive3VOs = new HashSet<Bufferhasadditive3VO>(0);
 
@@ -89,6 +91,24 @@ public class Additive3VO  implements java.io.Serializable {
     
     public void setType(String type) {
         this.additiveType = type;
+    }
+    
+    @Column(name="chemFormulaHead", length=25)
+    public String getChemFormulaHead() {
+        return this.chemFormulaHead;
+    }
+    
+    public void setChemFormulaHead(String chemFormulaHead) {
+        this.chemFormulaHead = chemFormulaHead;
+    }
+    
+    @Column(name="chemFormulaTail", length=25)
+    public String getChemFormulaTail() {
+        return this.chemFormulaTail;
+    }
+    
+    public void setChemFormulaTail(String chemFormulaTail) {
+        this.chemFormulaTail = chemFormulaTail;
     }
 
     
