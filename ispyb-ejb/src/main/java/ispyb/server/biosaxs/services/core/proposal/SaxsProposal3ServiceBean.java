@@ -87,7 +87,7 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		criteria.where(builder.equal(projectRoot.get("proposalId"), proposalId));
 		return entityManager.createQuery(criteria).getResultList();
 	}
-
+/*
 	@Override
 	public List<Additive3VO> findAdditivesByProposalId(int proposalId) {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -97,7 +97,18 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		criteria.where(builder.equal(projectRoot.get("proposalId"), proposalId));
 		return entityManager.createQuery(criteria).getResultList();
 	}
-
+*/
+	@Override
+	public List<Additive3VO> findAdditivesByBufferId(int bufferId) {
+		//////////////UNDER CONSTRUCTION/////////////////////////////
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Additive3VO> criteria = builder.createQuery(Additive3VO.class);
+		Root<Additive3VO> projectRoot = criteria.from(Additive3VO.class);
+		criteria.select(projectRoot);
+		criteria.where(builder.equal(projectRoot.get("bufferId"), bufferId));
+		return entityManager.createQuery(criteria).getResultList();
+		//////////////////////////////////////////////////////////////
+	}
 	@Override
 	public Macromolecule3VO merge(Macromolecule3VO macromolecule3vo) {
 		return entityManager.merge(macromolecule3vo);
@@ -153,6 +164,7 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 				proposalId);
 		return query.getResultList();
 	}
+
 
 	@Override
 	public List<Assembly3VO> test(String queryString) {

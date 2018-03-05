@@ -2,6 +2,7 @@ package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 
@@ -25,11 +26,12 @@ public class BufferAdditiveRestWebService extends SaxsRestWebService {
 	private final static Logger logger = Logger.getLogger(BufferAdditiveRestWebService.class);
 	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
-	@Path("{token}/proposal/{proposal}/saxs/buffer/additive/list")
+	@Path("{token}/proposal/{proposal}/saxs/buffer/{buffer}/additive/list")
 	@Produces({ "application/json" })
-	public Response getBuffers(
+	public Response getAdditives(
 			@PathParam("token") String token, 
-			@PathParam("proposal") String proposal) {
+			@PathParam("proposal") String proposal,
+			@PathParam("buffer") String buffer) {
 
 		String methodName = "getBufferAdditives";
 		long start = this.logInit(methodName, logger, token, proposal);
@@ -37,9 +39,13 @@ public class BufferAdditiveRestWebService extends SaxsRestWebService {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			Proposal3Service proposalService = this.getProposal3Service();
 			List<Proposal3VO> proposals = proposalService.findProposalByLoginName(proposal);
-			List<Additive3VO> additives = new ArrayList<Additive3VO>();
+			List<Buffer3VO> buffers = new ArrayList<Buffer3VO>();
 			for (Proposal3VO proposal3vo : proposals) {
-				additives.addAll(saxsProposalService.findAdditivesByProposalId(proposal3vo.getProposalId()));
+				buffers.addAll(saxsProposalService.findBuffersByProposalId(proposal3vo.getProposalId()));
+			}
+			List<Additive3VO> additives = new ArrayList<Additive3VO>();
+			for (Buffer3VO buffer3vo : buffers) {
+				additives.addAll(saxsProposalService.findAdditivesByBufferId(buffer3vo.getBufferId()));
 			}
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(additives);
@@ -51,15 +57,16 @@ public class BufferAdditiveRestWebService extends SaxsRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@POST
-	@Path("{token}/proposal/{proposal}/saxs/buffer/additive/save")
+	@Path("{token}/proposal/{proposal}/saxs/buffer/{buffer}/additive/save")
 	@Produces({ "application/json" })
 	public Response saveBuffer(
 			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal,
+			@PathParam("buffer") String buffer,
 			@FormParam("additive") String additive) throws Exception {
 		
 		String methodName = "saveBufferAdditive";
-		long start = this.logInit(methodName, logger, token, proposal, additive);
+		long start = this.logInit(methodName, logger, token, proposal, buffer, additive);
 		try {
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			Additive3VO additive3VO = this.getGson().fromJson(additive, Additive3VO.class);

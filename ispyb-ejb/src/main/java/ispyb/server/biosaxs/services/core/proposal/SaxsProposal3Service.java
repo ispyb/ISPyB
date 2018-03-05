@@ -44,7 +44,9 @@ public interface SaxsProposal3Service {
 	/** BUFFER **/
 	public abstract List<Buffer3VO> findBuffersByProposalId(int proposalId);
 
-	public abstract List<Additive3VO> findAdditivesByProposalId(int proposalId);
+	//public abstract List<Additive3VO> findAdditivesByProposalId(int proposalId);
+	
+	public abstract List<Additive3VO> findAdditivesByBufferId(int proposalId);
 
 	public abstract Buffer3VO merge(Buffer3VO buffer3VO);
 
