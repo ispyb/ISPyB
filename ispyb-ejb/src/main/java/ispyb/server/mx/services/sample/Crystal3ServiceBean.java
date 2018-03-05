@@ -50,6 +50,12 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.services.sample.Crystal3ServiceLocal;
+
 /**
  * <p>
  * This session bean handles ISPyB Crystal3.
@@ -239,10 +245,13 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 	@SuppressWarnings("unchecked")
 	public Crystal3VO findByAcronymAndCellParam(final String acronym, final Crystal3VO currentCrystal,
 			final Integer proposalId) throws Exception {
+		
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		
 		List<Crystal3VO> list = (List<Crystal3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
+				
 				Session session = (Session) entityManager.getDelegate();
 
 				Criteria crit = session.createCriteria(Crystal3VO.class);
@@ -263,8 +272,9 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 					if (!StringUtils.isEmpty(currentCrystal.getSpaceGroup())) {
 						crit.add(Restrictions.like("spaceGroup", currentCrystal.getSpaceGroup()));
 					}
-				else{
-					crit.add(Restrictions.isNull("spaceGroup"));
+					else {
+						crit.add(Restrictions.isNull("spaceGroup"));
+					}
 				}
 					
 				if (currentCrystal.getCellA() != null) {
@@ -309,8 +319,8 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 				List<Crystal3VO> foundEntities = crit.list();
 				return foundEntities;
 			}
-
 		});
+			
 		if (list.size() > 0)
 			return list.get(0);
 		else
