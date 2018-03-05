@@ -251,35 +251,58 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 				Criteria subCrit = crit.createCriteria("proteinVO");
 
 				if (acronym != null && !acronym.isEmpty()) {
-
 					subCrit.add(Restrictions.like("acronym", acronym.toUpperCase()));
 				}
 
 				if (proposalId != null) {
 					Criteria subSubCrit = subCrit.createCriteria("proposalVO");
 					subSubCrit.add(Restrictions.eq("proposalId", proposalId));
+					
 				}
-
-				if (!StringUtils.isEmpty(currentCrystal.getSpaceGroup())) {
-					crit.add(Restrictions.like("spaceGroup", currentCrystal.getSpaceGroup()));
+				if (currentCrystal.getSpaceGroup() != null){
+					if (!StringUtils.isEmpty(currentCrystal.getSpaceGroup())) {
+						crit.add(Restrictions.like("spaceGroup", currentCrystal.getSpaceGroup()));
+					}
+				else{
+					crit.add(Restrictions.isNull("spaceGroup"));
 				}
+					
 				if (currentCrystal.getCellA() != null) {
 					crit.add(Restrictions.eq("cellA", currentCrystal.getCellA()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellA"));
+				}
+				
 				if (currentCrystal.getCellB() != null) {
 					crit.add(Restrictions.eq("cellB", currentCrystal.getCellB()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellB"));
 				}
 				if (currentCrystal.getCellC() != null) {
 					crit.add(Restrictions.eq("cellC", currentCrystal.getCellC()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellB"));
+				}
 				if (currentCrystal.getCellAlpha() != null) {
 					crit.add(Restrictions.eq("cellAlpha", currentCrystal.getCellAlpha()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellAlpha"));
 				}
 				if (currentCrystal.getCellBeta() != null) {
 					crit.add(Restrictions.eq("cellBeta", currentCrystal.getCellBeta()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellBeta"));
+				}
 				if (currentCrystal.getCellGamma() != null) {
 					crit.add(Restrictions.eq("cellGamma", currentCrystal.getCellGamma()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellGamma"));
 				}
 				crit.addOrder(Order.desc("crystalId"));
 
