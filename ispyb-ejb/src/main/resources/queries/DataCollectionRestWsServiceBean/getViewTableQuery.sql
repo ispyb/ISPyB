@@ -49,3 +49,4 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 ) as value4,
 (select count(*) from AutoProcIntegration where AutoProcIntegration.dataCollectionId = v_datacollection.dataCollectionId) as hasAutoProcessing
  from v_datacollection 
+ 
