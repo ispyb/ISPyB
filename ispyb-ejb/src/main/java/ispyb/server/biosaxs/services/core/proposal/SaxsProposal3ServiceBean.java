@@ -100,14 +100,13 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 */
 	@Override
 	public List<Additive3VO> findAdditivesByBufferId(int bufferId) {
-		//////////////UNDER CONSTRUCTION/////////////////////////////
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Additive3VO> criteria = builder.createQuery(Additive3VO.class);
-		Root<Additive3VO> projectRoot = criteria.from(Additive3VO.class);
-		criteria.select(projectRoot);
-		criteria.where(builder.equal(projectRoot.get("bufferId"), bufferId));
-		return entityManager.createQuery(criteria).getResultList();
-		//////////////////////////////////////////////////////////////
+		StringBuilder ejbQLQuery = new StringBuilder("SELECT DISTINCT(additive) FROM Additive3VO additive ");
+		ejbQLQuery.append("LEFT JOIN FETCH additive.bufferhasadditive3VOs b ");
+		ejbQLQuery.append("LEFT JOIN FETCH b.buffer3VO ");
+		ejbQLQuery.append("WHERE b.buffer3VO.bufferId = :bufferId ");
+		TypedQuery<Additive3VO> query = entityManager.createQuery(ejbQLQuery.toString(), Additive3VO.class).setParameter("bufferId",
+				bufferId);
+		return query.getResultList();
 	}
 	@Override
 	public Macromolecule3VO merge(Macromolecule3VO macromolecule3vo) {

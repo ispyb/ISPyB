@@ -34,19 +34,18 @@ public class BufferAdditiveRestWebService extends SaxsRestWebService {
 			@PathParam("buffer") String buffer) {
 
 		String methodName = "getBufferAdditives";
-		long start = this.logInit(methodName, logger, token, proposal);
+		long start = this.logInit(methodName, logger, token, proposal, buffer);
 		try{
 			SaxsProposal3Service saxsProposalService = this.getSaxsProposal3Service();
 			Proposal3Service proposalService = this.getProposal3Service();
 			List<Proposal3VO> proposals = proposalService.findProposalByLoginName(proposal);
 			List<Buffer3VO> buffers = new ArrayList<Buffer3VO>();
-			for (Proposal3VO proposal3vo : proposals) {
+			/*for (Proposal3VO proposal3vo : proposals) {
 				buffers.addAll(saxsProposalService.findBuffersByProposalId(proposal3vo.getProposalId()));
-			}
+			}*/
 			List<Additive3VO> additives = new ArrayList<Additive3VO>();
-			for (Buffer3VO buffer3vo : buffers) {
-				additives.addAll(saxsProposalService.findAdditivesByBufferId(buffer3vo.getBufferId()));
-			}
+			additives = saxsProposalService.findAdditivesByBufferId(Integer.parseInt(buffer));
+
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(additives);
 		}
