@@ -50,6 +50,12 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+
+import ispyb.server.common.exceptions.AccessDeniedException;
+
+import ispyb.server.mx.services.sample.Crystal3Service;
+import ispyb.server.mx.services.sample.Crystal3ServiceLocal;
+
 /**
  * <p>
  * This session bean handles ISPyB Crystal3.
@@ -196,9 +202,9 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
 
-		if (proteinId != null) {
-			crit.add(Restrictions.eq("proteinId", proteinId));
-		}
+//		if (proteinId != null) {
+//			crit.add(Restrictions.eq("proteinId", proteinId));
+//		}
 
 		if (acronym != null && !spaceGroup.isEmpty()) {
 			crit.add(Restrictions.like("spaceGroup", spaceGroup));
@@ -210,6 +216,11 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 
 			subCrit.add(Restrictions.like("acronym", acronym.toUpperCase()));
 		}
+		
+		if (proteinId != null ) {
+			subCrit.add(Restrictions.eq("proteinId", proteinId));
+		}
+		
 
 		if (proposalId != null) {
 			Criteria subSubCrit = subCrit.createCriteria("proposalVO");
@@ -234,10 +245,13 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 	@SuppressWarnings("unchecked")
 	public Crystal3VO findByAcronymAndCellParam(final String acronym, final Crystal3VO currentCrystal,
 			final Integer proposalId) throws Exception {
+		
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
+		
 		List<Crystal3VO> list = (List<Crystal3VO>) template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
+				
 				Session session = (Session) entityManager.getDelegate();
 
 				Criteria crit = session.createCriteria(Crystal3VO.class);
@@ -246,43 +260,67 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 				Criteria subCrit = crit.createCriteria("proteinVO");
 
 				if (acronym != null && !acronym.isEmpty()) {
-
 					subCrit.add(Restrictions.like("acronym", acronym.toUpperCase()));
 				}
 
 				if (proposalId != null) {
 					Criteria subSubCrit = subCrit.createCriteria("proposalVO");
 					subSubCrit.add(Restrictions.eq("proposalId", proposalId));
+					
 				}
-
-				if (!StringUtils.isEmpty(currentCrystal.getSpaceGroup())) {
-					crit.add(Restrictions.like("spaceGroup", currentCrystal.getSpaceGroup()));
+				if (currentCrystal.getSpaceGroup() != null){
+					if (!StringUtils.isEmpty(currentCrystal.getSpaceGroup())) {
+						crit.add(Restrictions.like("spaceGroup", currentCrystal.getSpaceGroup()));
+					}
+					else {
+						crit.add(Restrictions.isNull("spaceGroup"));
+					}
 				}
+					
 				if (currentCrystal.getCellA() != null) {
 					crit.add(Restrictions.eq("cellA", currentCrystal.getCellA()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellA"));
+				}
+				
 				if (currentCrystal.getCellB() != null) {
 					crit.add(Restrictions.eq("cellB", currentCrystal.getCellB()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellB"));
 				}
 				if (currentCrystal.getCellC() != null) {
 					crit.add(Restrictions.eq("cellC", currentCrystal.getCellC()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellB"));
+				}
 				if (currentCrystal.getCellAlpha() != null) {
 					crit.add(Restrictions.eq("cellAlpha", currentCrystal.getCellAlpha()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellAlpha"));
 				}
 				if (currentCrystal.getCellBeta() != null) {
 					crit.add(Restrictions.eq("cellBeta", currentCrystal.getCellBeta()));
 				}
+				else{
+					crit.add(Restrictions.isNull("cellBeta"));
+				}
 				if (currentCrystal.getCellGamma() != null) {
 					crit.add(Restrictions.eq("cellGamma", currentCrystal.getCellGamma()));
+				}
+				else{
+					crit.add(Restrictions.isNull("cellGamma"));
 				}
 				crit.addOrder(Order.desc("crystalId"));
 
 				List<Crystal3VO> foundEntities = crit.list();
 				return foundEntities;
 			}
-
 		});
+			
 		if (list.size() > 0)
 			return list.get(0);
 		else

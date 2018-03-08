@@ -1,16 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ispyb</groupId>
+	 <parent>
+		<groupId>ispyb</groupId>
+		<artifactId>ispyb-parent</artifactId>
+		<version>5.4.5</version>
+	</parent>
+	
 	<artifactId>ispyb-ui</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-
-	<url>http://maven.apache.org</url>
-
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jboss.home.dev>${jboss.home}</jboss.home.dev> 
+		<jboss.home.dev>${jboss.home}</jboss.home.dev>
 		<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>
 		<common.lib.dir>${basedir}/lib</common.lib.dir>
 		<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
@@ -18,13 +20,13 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
-			<version>5.0.3</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 
 		<dependency>
 			<groupId>struts</groupId>
@@ -179,11 +181,16 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.0.0.Final</version>
+			<version>5.0.10.Final</version>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>antlr</groupId>
 					<artifactId>antlr</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>dom4j</groupId>
+					<artifactId>dom4j</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -335,9 +342,11 @@
 									<fileset dir="${common.lib.dir}">
 										<include name="*.jar" />
 									</fileset>
- 									<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" /> 
+									<pathelement
+										location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
 								</path>
-<echo message="user.home: ${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
+								<echo
+									message="user.home: ${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
 								<echo message="user.home: ${xdoclet.client.path}" />
 								<echo message="java src:  ${basedir}/src/main/java}" />
 								<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask"
@@ -375,6 +384,7 @@
 	<!-- profiles to separate dev to prod properties -->
 	<!-- the dev properties have to be set according to your own dev environment -->
 	<profiles>
+	
 		<profile>
 			<id>PROD</id>
 			<activation>
@@ -387,83 +397,82 @@
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 			</properties>
 		</profile>
+		
 		<profile>
 			<id>DEV</id>
 			<properties>
 				<js.minimized>false</js.minimized>
 				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
-				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
-				<js.alternative.path.enabled>true</js.alternative.path.enabled>
-				<data.path>/work/ademaria/data/pyarch/</data.path>
+				<js.alternative.path.enabled>true</js.alternative.path.enabled>				
 			</properties>
 		</profile>
-		
-		<profile>
-			<id>SD</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			
-			<properties>
-				<js.minimized>false</js.minimized>
-				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
-				<js.alternative.path> </js.alternative.path>
-				<js.alternative.path.enabled>false</js.alternative.path.enabled>
-				<data.path>/data/pyarch/</data.path>
-			</properties>
-		</profile>
-		
 
-		<!-- profiles to separate site dependent properties : the properties are stored in pom.xml of ispyb-ejb module -->
+		<!-- profiles to separate site dependent properties : the properties are 
+			stored in pom.xml of ispyb-ejb module -->
 		<profile>
 			<id>ESRF</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			
+			<properties>
+				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
+				<data.path>/work/ademaria/data/pyarch/</data.path>				
+			</properties>
+			
 
 		</profile>
-		
+
 		<profile>
-			<id>EMBL</id>			
+			<id>EMBL</id>
 		</profile>
-		
+
 		<profile>
 			<id>SOLEIL</id>
 
-	        <build>
+			<build>
 				<plugins>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<executions>
-					        <execution>
-					        	<id>copy-resources</id>
-					            <phase>validate</phase>
-					            <goals>
-					                <goal>run</goal>
-					            </goals>
-					            <configuration>
-					                <tasks>
-					                    <echo message="Copy securityfilter files ..." /> 
-										<copy file="${basedir}/src/main/webapp/mergedir/servlet-securityfilter.xml" tofile="${basedir}/src/main/webapp/mergedir/servlets.xml" overwrite="true" /> 
-										<copy file="${basedir}/src/main/webapp/mergedir/web-security-securityfilter.xml" tofile="${basedir}/src/main/webapp/mergedir/web-security.xml" overwrite="true" />
-										<copy file="${basedir}/src/main/webapp/mergedir/securityfilter-config.xml" tofile="${build.directory}//WEB-INF/securityfilter-config.xml" overwrite="true" /> 
-										<echo message="Copy of securityfilter files done!" /> 
-										<echo message ="project base direct: ${build.directory}" />
-				                    </tasks>
-				                </configuration>
-				            </execution>
-				         </executions>
-				     </plugin>
-				 </plugins>
+							<execution>
+								<id>copy-resources</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo message="Copy securityfilter files ..." />
+										<copy
+											file="${basedir}/src/main/webapp/mergedir/servlet-securityfilter.xml"
+											tofile="${basedir}/src/main/webapp/mergedir/servlets.xml"
+											overwrite="true" />
+										<copy
+											file="${basedir}/src/main/webapp/mergedir/web-security-securityfilter.xml"
+											tofile="${basedir}/src/main/webapp/mergedir/web-security.xml"
+											overwrite="true" />
+										<copy
+											file="${basedir}/src/main/webapp/mergedir/securityfilter-config.xml"
+											tofile="${build.directory}//WEB-INF/securityfilter-config.xml"
+											overwrite="true" />
+										<echo message="Copy of securityfilter files done!" />
+										<echo message="project base direct: ${build.directory}" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
 			</build>
-			
+
 			<properties>
-			
+
 				<build.directory>${project.build.directory}/${project.artifactId}-${project.version}</build.directory>
-				
+
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>MAXIV</id>
 		</profile>

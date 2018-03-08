@@ -65,16 +65,6 @@ public class Assembly3VO implements java.io.Serializable {
 	public void setAssemblyId(Integer assemblyId) {
 		this.assemblyId = assemblyId;
 	}
-
-//	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//	@JoinColumn(name = "macromoleculeId", nullable = false)
-//	public Macromolecule3VO getMacromolecule3VO() {
-//		return this.macromolecule3VO;
-//	}
-//
-//	public void setMacromolecule3VO(Macromolecule3VO macromolecule3VO) {
-//		this.macromolecule3VO = macromolecule3VO;
-//	}
 	
 	@Column(name = "macromoleculeId")
 	public Integer getMacromoleculeId() {

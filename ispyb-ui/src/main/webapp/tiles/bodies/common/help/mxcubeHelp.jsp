@@ -19,6 +19,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
+<%@ page isELIgnored="false" %>
 
 <html>
 <title>Help page for MxCube</title>
@@ -34,25 +35,25 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 	<%-- 1) Select shipment --%>
 	<span class="greyText">
-		1- Select the dewars</a> you want for processing.<br>
+		1- Select the dewars you want for processing.<br>
 	</span>
 
 	<%-- 2) Fill Sample changer --%>
 	<span class="greyText">
 	<c:if test="${SITE_ATTRIBUTE eq 'ESRF'}"> 
-		2- Fill the sample changer</a>: assign a location for your containers (only required if not using Damatrix codes)<br>
+		2- Fill the sample changer: assign a location for your containers (only required if not using Damatrix codes)<br>
 	</c:if>
 	<c:if test="${SITE_ATTRIBUTE eq 'DLS'}">
-		2- Fill the sample changer</a>: assign a location for your containers<br>
+		2- Fill the sample changer: assign a location for your containers<br>
 	</c:if> 
 	<c:if test="${SITE_ATTRIBUTE eq 'EMBL'}">
-		2- Fill the sample changer</a>: assign a location for your containers<br>
+		2- Fill the sample changer: assign a location for your containers<br>
 	</c:if> 
 	<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-		2- Fill the sample changer</a>: assign a location for your containers<br>
+		2- Fill the sample changer: assign a location for your containers<br>
 	</c:if> 
 	<c:if test="${SITE_ATTRIBUTE eq 'SOLEIL'}">
-		2- Fill the sample changer</a>: assign a location for your containers<br>
+		2- Fill the sample changer: assign a location for your containers<br>
 	</c:if>
 	</span>
 

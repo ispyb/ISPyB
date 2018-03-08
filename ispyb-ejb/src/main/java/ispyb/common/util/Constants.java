@@ -766,10 +766,16 @@ public final class Constants {
 	public static final String PARCEL_TOOLBOX_TYPE = "Toolbox";
 
 	public static final String SHIPPING_CONTAINER_CAPACITY = getProperty("shipping.container.capacity");
+	
+	public static final String CONTAINER_TYPE_UNIPUCK = "Unipuck";
+	
+	public static final String CONTAINER_TYPE_SPINE = "Spinepuck";
 
 	/* delivery agents names */
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_FEDEX = "Fedex";
+	
+	public static final String SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT = getProperty("ispyb.shipping.fedex.account");
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_TNT = "TNT";
 
@@ -852,17 +858,17 @@ public final class Constants {
 
 	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.capacity", "5"));
 
-	public static final String[] CONTAINER_TYPE = { "Basket", "Cane", "Other" }; // both values
+	public static final String[] CONTAINER_TYPE = { "Spinepuck", "Unipuck", "Cane", "Other" }; 
 
-	public static final String[] CONTAINER_CAPACITY_ESRF = { "10", "6", "0" };
+	public static final String[] CONTAINER_CAPACITY_ESRF = { "10", "16", "6", "0" };
 
 	public static final String[] CONTAINER_CAPACITY_DLS = { "16", "6", "0" };
 
-	public static final String[] CONTAINER_CAPACITY_EMBL = { "10", "6", "0" };
+	public static final String[] CONTAINER_CAPACITY_EMBL = { "10", "16", "6", "0" };
 
-	public static final String[] CONTAINER_CAPACITY_MAXIV = { "10", "6", "0" };
+	public static final String[] CONTAINER_CAPACITY_MAXIV = { "10", "16", "6", "0" };
 
-	public static final String[] CONTAINER_CAPACITY_SOLEIL = { "10", "6", "0" };
+	public static final String[] CONTAINER_CAPACITY_SOLEIL = { "10", "16", "6", "0" };
 
 	public static final String[] CONTAINER_CAPACITY = (SITE_IS_ESRF()) ? CONTAINER_CAPACITY_ESRF
 			: (SITE_IS_DLS()) ? CONTAINER_CAPACITY_DLS : (SITE_IS_MAXIV()) ? CONTAINER_CAPACITY_MAXIV
@@ -874,7 +880,7 @@ public final class Constants {
 //	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 //		"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressA" };
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
 
 
 	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
@@ -933,7 +939,7 @@ public final class Constants {
 
 	public static final String TEMPLATE_XLS_FILENAME = getProperty("shipment.upload.template");
 
-	public static final String TEMPLATE_XLS_POPULATED_FILENAME = "ispyb-template5.1.xlt";
+	public static final String TEMPLATE_XLS_POPULATED_FILENAME = getProperty("shipment.upload.template");
 
 	public static final String TEMPLATE_XLS_POPULATED_FOR_EXPORT_FILENAME1 = "ispyb-template5.1.1_1.xls";
 
@@ -1062,6 +1068,10 @@ public final class Constants {
 	public static final int SC_BASKET_CAPACITY = 5;
 
 	public static final int BASKET_SAMPLE_CAPACITY = Integer.valueOf(getProperty("samplechanger.container.capacity"));
+	
+	public static final int SPINE_SAMPLE_CAPACITY = 10;
+	
+	public static final int UNIPUCK_SAMPLE_CAPACITY = 16;
 
 	public static final Double SILLY_NUMBER = new Double(-9999);// used to display N/A instead of no value from MXCube
 

@@ -30,6 +30,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,8 @@ import ispyb.server.mx.vos.collections.Session3VO;
  * @struts.action-forward name="dewarViewOldPage" path="user.dewar.view.old.page"
  * 
  * @struts.action-forward name="dewarViewPage" path="user.shipping.dewar.view.page"
+ * 
+ * @struts.action-forward name="dewarReimbursePage" path="user.shipping.dewar.reimburse.page"
  * 
  * @struts.action-forward name="dewarBlomViewPage" path="blom.shipping.dewar.view.page"
  * 
@@ -191,7 +194,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", "Access denied"));
 				saveErrors(request, errors);
 				return (mapping.findForward("error"));
-			}
+			}			
 
 		} catch (Exception e) {
 			LOG.error(e.toString());
@@ -446,6 +449,12 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 					Integer.toString(returnLabContact.getDewarAvgCustomsValue()));
 			fieldNamesAndValues.put("TF_returnTransportValue",
 					Integer.toString(returnLabContact.getDewarAvgTransportValue()));
+			
+			// if dewar reimbursed then we replace the courier infos
+			if (dewar.getIsReimbursed() != null && dewar.getIsReimbursed().equals(true)) {
+				fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
+				fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
+			}
 
 			pdfFormFiller.setFields(fieldNamesAndValues);
 
@@ -613,25 +622,40 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			// -----------------------------------------------------
 
 			// Search Dewars
-			if (mProposalId == null) // proposalId
-			{
+			if (mProposalId == null) {  // proposalId
 				return mapping.findForward("error");
 			}
 
 			List<Dewar3VO> listInfo = searchDewars(mapping, code, comments, mProposalId, shippingId, dewarId);
-
-			// -----------------------------------------------------
-			// Populate with Info
-			form.setListInfo(listInfo);
+			int currentReimbursed = 0;
 
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
-			// if (BreadCrumbsForm.getIt(request).getSelectedDewar()==null && !listInfo.isEmpty())
-			// {
-			// Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
-			// BreadCrumbsForm.getIt(request).setSelectedDewar(defaultSelectedDewar);
-			// return this.displaySlave(mapping, actForm, request, in_response);
-			// }
+			 if (!listInfo.isEmpty())
+			 {
+				 for (Iterator iterator = listInfo.iterator(); iterator.hasNext();) {
+						Dewar3VO dewar3vo = (Dewar3VO) iterator.next();
+						if (dewar3vo.getIsReimbursed() != null && dewar3vo.getIsReimbursed().equals(true))
+							currentReimbursed ++;
+				}
+				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
+				 if (defaultSelectedDewar.getSessionVO() != null) {
+					 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+				 } else {
+					 form.setNbReimbursedDewars(new Integer(0));
+				 }
+				 
+			 } else {
+				 form.setNbReimbursedDewars(new Integer(0));
+			 }			 
+			 form.setRemainingReimbursed(false);			 
+			 if (form.getNbReimbursedDewars() != null && currentReimbursed < form.getNbReimbursedDewars())
+				 form.setRemainingReimbursed(true);
+			 
+			 
+			// -----------------------------------------------------
+			// Populate with Info
+			form.setListInfo(listInfo);
 
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.EDIT_MODE);
 		} catch (Exception e) {
@@ -659,6 +683,63 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			return mapping.findForward("dewarViewPage");
 		}
 	}
+	
+	public ActionForward getReimbursed(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse in_response) {
+		ActionMessages errors = new ActionMessages();
+		ActionMessages messages = new ActionMessages();
+		String dewarId = request.getParameter(Constants.DEWAR_ID);
+		ViewDewarForm form = (ViewDewarForm) actForm;	
+
+		try {
+			// ---------------------------------------------------------------------------------------------------
+			// Retrieve Attributes
+
+			// Retrieve Dewar information
+			Dewar3VO selectedDewar = DBTools.getSelectedDewar(new Integer(dewarId));
+			Dewar3VO info = selectedDewar;
+			form.setNbReimbursedDewars(info.getSessionVO().getNbReimbDewars());
+			form.setInfo(info);
+			BreadCrumbsForm.getIt(request).setSelectedDewar(info);
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.free", "Note that you are allowed to only " +info.getSessionVO().getNbReimbDewars() + " reimbursed dewars" ));
+
+		} catch (Exception e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			LOG.error(e.toString());
+			saveErrors(request, errors);
+			e.printStackTrace();
+			return mapping.findForward("error");
+		}
+		saveMessages(request, messages);
+		return mapping.findForward("dewarReimbursePage");
+		
+	}
+	
+	public ActionForward setReimbursed(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+			HttpServletResponse in_response) {
+		ActionMessages errors = new ActionMessages();
+		ViewDewarForm form = (ViewDewarForm) actForm;	
+
+		try {
+			// Retrieve Dewar information
+			Dewar3VO selectedDewar = BreadCrumbsForm.getIt(request).getSelectedDewar();
+			selectedDewar.setIsReimbursed(form.getInfo().getIsReimbursed());
+			dewar3Service.update(selectedDewar);
+
+			// we erase the selected dewar to retrieve the full search with all dewars belonging to shipment
+			BreadCrumbsForm.getIt(request).setSelectedDewar(null);			
+
+		} catch (Exception e) {
+			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
+			LOG.error(e.toString());
+			saveErrors(request, errors);
+			e.printStackTrace();
+			return mapping.findForward("error");
+		}
+		return this.search(mapping, actForm, request, in_response);
+		
+	}
+
 
 	private List<Dewar3VO> searchDewars(ActionMapping mapping, String code, String comments, Integer proposalId,
 			String shippingId, String dewarId) throws CreateException, NamingException, FinderException {

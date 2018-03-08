@@ -66,9 +66,9 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
                                <layout:option value="MX"/>
                                <layout:option value="BX"/>
                                <layout:option value="IX"/>   
-                               <layout:option value="IN"/>      
-                               <layout:option value="BM14"/>
-                               <layout:option value="BM14U"/>
+                               <layout:option value="IN"/>
+                               <layout:option value="IM"/>
+                               <layout:option value="IH-LS"/>
                                <layout:option value="BM161"/>
                                <layout:option value="SC"/>
                                <layout:option value="TC"/>                              
@@ -83,6 +83,22 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		</layout:row>
 	</layout:grid>
 	
+</layout:form>
+	
+</layout:panel>
+
+</layout:row>
+<layout:space/>
+
+<layout:row>
+
+<layout:panel key="Launch batch update" align="left" styleClass="PANEL">
+<layout:form action="/updateDB.do" reqCode="launchBatchUpdate">
+	<layout:grid cols="1" styleClass="SEARCH_GRID">	
+		<layout:column>	
+			<layout:submit><layout:message key="launchBatchUpdate"/></layout:submit>
+		</layout:column>
+	</layout:grid>	
 </layout:form>	
 </layout:panel>
 

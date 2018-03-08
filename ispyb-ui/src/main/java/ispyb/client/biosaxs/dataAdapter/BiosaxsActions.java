@@ -179,6 +179,7 @@ public class BiosaxsActions {
 	 */
 	public Experiment3VO createExperiment(Integer proposalId, Integer sessionId, String name, String comments, Date createTime) {
 		Experiment3VO experiment = new Experiment3VO();
+		experiment = experiment3Service.initPlates(experiment);
 		experiment.setCreationDate(createTime);
 		experiment.setComments(comments);
 		experiment.setName(name);

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.0.3</version>
+		<version>5.4.5</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
@@ -53,14 +53,6 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
-			as the API is included in JBoss WildFly -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.jboss.spec.javax.annotation</groupId> -->
-		<!-- <artifactId>jboss-annotations-api_1.2_spec</artifactId> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
-
 		<!-- Import the EJB API, we use provided scope as the API is included in 
 			JBoss WildFly -->
 		<dependency>
@@ -69,15 +61,19 @@
 			<scope>provided</scope>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.0.0.Final</version>
+			<version>5.0.10.Final</version>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>antlr</groupId>
 					<artifactId>antlr</artifactId>
+				</exclusion>
+			   <exclusion>
+					<groupId>dom4j</groupId>
+					<artifactId>dom4j</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -90,12 +86,17 @@
 		<dependency>
 			<groupId>org.jboss.ejb3</groupId>
 			<artifactId>jboss-ejb3-ext-api</artifactId>
-			<version>2.1.0</version>
+			<version>2.2.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-security</artifactId>
 			<version>7.1.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ws</groupId>
+			<artifactId>jbossws-spi</artifactId>
+			<version>2.3.1.Final</version>
 		</dependency>
 
 		<dependency>
@@ -107,11 +108,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.ws</groupId>
-			<artifactId>jbossws-spi</artifactId>
-			<version>2.3.1.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>jhdf</groupId>
@@ -184,15 +180,28 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-			<version>1.3</version>
+			<version>1.4</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
 	
+	<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		
 	</dependencies>
 	
 	  <!--  profiles to separate dev to prod properties -->
@@ -236,7 +245,7 @@
   			<ldap.employee.resource>ldap://ldap.esrf.fr:389/</ldap.employee.resource>
   			<ldap.people>ou=people,dc=esrf,dc=fr</ldap.people>
   			<ldap.attribute>uid</ldap.attribute>
-
+  			
   			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
   			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
   			<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
@@ -248,9 +257,6 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-			<samplechanger.capacity>24</samplechanger.capacity>
-
-			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -276,6 +282,8 @@
 
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+  			 
+  			 <ispyb.shipping.reimburseddewars>true</ispyb.shipping.reimburseddewars>
   			
   		</properties>
   	</profile>
@@ -305,7 +313,6 @@
                         <protein.allowedToCreate>true</protein.allowedToCreate>
                         <shipping.container.capacity>16</shipping.container.capacity>
                         <samplechanger.container.capacity>16</samplechanger.container.capacity>
-						<samplechanger.capacity>24</samplechanger.capacity>
 
                         <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
                         <shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
@@ -328,6 +335,7 @@
                 	
                 	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
                 	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                	  	<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
                 	  	
                 </properties>
   	</profile>
@@ -350,8 +358,6 @@
 	  			<ldap.people></ldap.people>
 	  			<ldap.attribute>uid</ldap.attribute>
 
-				<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
-
 				<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
 				<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
 				<ispyb.upload.folder.pdf>/data/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
@@ -363,7 +369,6 @@
 
 				<shipping.container.capacity>16</shipping.container.capacity>
 				<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				<samplechanger.capacity>24</samplechanger.capacity>
 				
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
@@ -393,6 +398,7 @@
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 				
 				
   		</properties>
@@ -406,57 +412,58 @@
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			
-  			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
-  			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
-  			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
-  			<ldap.attribute>samaccountname</ldap.attribute>
-  			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
 
-  			<protein.allowedToCreate>true</protein.allowedToCreate>
+			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
+			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
+			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
+			<ldap.attribute>samaccountname</ldap.attribute>
+			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
+
+			<protein.allowedToCreate>true</protein.allowedToCreate>
 
 			<dewar.label.template>ParcelLabelsTemplate_MAXIV.pdf</dewar.label.template>
 			<!--<shipment.upload.template>ispyb-template_shipment.xls</shipment.upload.template>
 			<shipment.upload.populatedTemplate>ispyb-template_shipment.xls</shipment.upload.populatedTemplate>-->
 
-  			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
-  			
-  			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
-  			
-  			<shipping.container.capacity>16</shipping.container.capacity>
+			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
+			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
+
+			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
+			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
+			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
+			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
+
+			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
 			<samplechanger.capacity>29</samplechanger.capacity>
 
 			<ISPyB.dummy.family.name.lab.contact>BioMAX Lab Contact</ISPyB.dummy.family.name.lab.contact>
 			<ISPyB.dummy.given.name.lab.contact>Generic</ISPyB.dummy.given.name.lab.contact>
-				
-  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
-  			<ispyb.bcm>mxcube</ispyb.bcm>
-  			
-  			<mail.smtp.host>smtp.maxiv.lu.se</mail.smtp.host>
-  			<mail.admin>ims@maxiv.lu.se</mail.admin>
-  			<mail.dev>ims@maxiv.lu.se</mail.dev>
-  			<mail.ispyb>ispyb@maxiv.lu.se</mail.ispyb>
-  			<mail.stores>mx-dewars@maxiv.lu.se</mail.stores>
-  			
-  			<mail.report.industry.from>mxind@maxiv.lu.se</mail.report.industry.from>
+
+			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
+			<ispyb.bcm>mxcube</ispyb.bcm>
+
+			<mail.smtp.host>smtp.maxiv.lu.se</mail.smtp.host>
+			<mail.admin>ims@maxiv.lu.se</mail.admin>
+			<mail.dev>ims@maxiv.lu.se</mail.dev>
+			<mail.ispyb>ispyb@maxiv.lu.se</mail.ispyb>
+			<mail.stores>mx-dewars@maxiv.lu.se</mail.stores>
+
+			<mail.report.industry.from>mxind@maxiv.lu.se</mail.report.industry.from>
 			<mail.report.industry.cc>ix@maxiv.lu.se</mail.report.industry.cc>
 			<mail.report.industry.cc.fx12>ims@maxiv.lu.se </mail.report.industry.cc.fx12>
-			
-			<dictionary.site>MAX IV</dictionary.site> 
-			<dictionary.bcm>mxCuBE</dictionary.bcm>
-			
-			<ispyb.authorisation.active>true</ispyb.authorisation.active>
-			 			 
-			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 
-			<ispyb.userportal.link>SMIS</ispyb.userportal.link> 
+			<dictionary.site>MAX IV</dictionary.site>
+			<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+			<ispyb.authorisation.active>true</ispyb.authorisation.active>
+
+			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 			<userportal.url>duo.maxiv.lu.se:3000</userportal.url>
+			
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
   			
   		</properties>
   	</profile>
@@ -482,9 +489,6 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-			<samplechanger.capacity>24</samplechanger.capacity>
-
-			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -506,6 +510,8 @@
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
 			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 			  				
   		</properties>
   	</profile> 

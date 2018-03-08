@@ -4,47 +4,25 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.0.3</version>
+		<version>5.4.5</version>
 	</parent>
 	<artifactId>ispyb-bcr-ear</artifactId>
 	<packaging>ear</packaging>
 	
 	<dependencies>
 	
-	<!--  
-		<dependency>
-			<groupId>ispyb</groupId>
-			<artifactId>dewarAPI</artifactId>
-			<type>ejb</type>
-			<version>1.0</version>
-		</dependency>
-		
-		
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>4.0.0.Final</version>
-			<exclusions>
-				<exclusion>
-					<groupId>antlr</groupId>
-					<artifactId>antlr</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-				
--->			
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
 			<type>ejb</type>
-			<version>5.0.3</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-bcr</artifactId>
-			<version>5.0.3</version>
+			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		

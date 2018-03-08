@@ -138,7 +138,6 @@ public class SampleRestWebService extends MXRestWebService {
 			List<Integer> ids = this.parseToInteger(containerid);
 			List<Map<String, Object>> samples = new ArrayList<Map<String,Object>>();
 			for (Integer id : ids) {
-				System.out.println("Proposal: " + proposal + " proposalId: " + this.getProposalId(proposal));
 				samples.addAll(this.getSampleRestWsService().getSamplesByContainerId(this.getProposalId(proposal), id));	
 			}
 			

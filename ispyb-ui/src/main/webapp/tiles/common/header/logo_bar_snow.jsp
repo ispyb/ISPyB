@@ -26,8 +26,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ page isELIgnored="false" %>	
 <%@ page import="ispyb.common.util.Constants"%>
 
-<script type='text/javascript' src="<%=request.getContextPath()%>/js/ispyb/utils/animations.js"></script>
-
 <jsp:useBean id="adminVar" class="ispyb.server.common.util.AdminUtils" scope="page" />
 
 <c:if test="${SITE_ATTRIBUTE eq 'ESRF'}">

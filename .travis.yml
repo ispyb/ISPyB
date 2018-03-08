@@ -1,0 +1,47 @@
+language: java
+sudo: required
+services: mariadb
+addons:
+  mariadb: '10.0'
+script: mvn clean package
+before_install:
+- mysql -u root -e "CREATE DATABASE pydb;"
+- mysql -u root -e "CREATE DATABASE pyconfig;"
+- mysql -u root -e "CREATE USER 'pxuser'@'%' IDENTIFIED BY 'pxuser';"
+- mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'pxuser'@'%';"
+- mysql -u root -e "CREATE USER 'pxadmin'@'%' IDENTIFIED BY 'pxadmin';"
+- mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'pxadmin'@'%';"
+- mysql -upxadmin -ppxadmin pyconfig < ispyb-ejb/db/pyconfig.sql
+- mysql -upxadmin -ppxadmin pydb < ispyb-ejb/db/pydb.sql
+- for entry in ispyb-ejb/db/scripts/ahead/*; do  echo "Running " $entry; mysql -upxadmin
+  -ppxadmin pydb < $entry; done
+- cd dependencies
+- mvn install:install-file -Dfile=securityfilter.jar -DgroupId=securityfilter -DartifactId=securityfilter
+  -Dversion=1.0 -Dpackaging=jar
+- mvn install:install-file -Dfile=securityaes.jar -DgroupId=securityaes -DartifactId=securityaes
+  -Dversion=1.0 -Dpackaging=jar
+- mvn install:install-file -Dfile=jhdf.jar -DgroupId=jhdf -DartifactId=jhdf -Dversion=1.0
+  -Dpackaging=jar
+- mvn install:install-file -Dfile=jhdf5.jar -DgroupId=jhdf5 -DartifactId=jhdf5 -Dversion=1.0
+  -Dpackaging=jar
+- mvn install:install-file -Dfile=jhdf5obj.jar -DgroupId=jhdf5obj -DartifactId=jhdf5obj
+  -Dversion=1.0 -Dpackaging=jar
+- mvn install:install-file -Dfile=jhdfobj.jar -DgroupId=jhdfobj -DartifactId=jhdfobj
+  -Dversion=1.0 -Dpackaging=jar
+- mvn install:install-file -Dfile=Struts-Layout-1.2.jar -DgroupId=struts-layout -DartifactId=struts-layout
+  -Dversion=1.2 -Dpackaging=jar
+- mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=ojdbc6 -DartifactId=ojdbc6
+  -Dversion=1.0 -Dpackaging=jar
+- mvn install:install-file -Dfile=ispyb-WSclient-userportal-gen-1.3.jar -DgroupId=ispyb
+  -DartifactId=ispyb-WSclient-userportal-gen -Dversion=1.3 -Dpackaging=jar
+- cd ..
+deploy:
+  provider: openshift
+  user: antolinos
+  password:
+    secure: TOsSHZHjWV4OXGPe9yWAaTvdykHJaz/1JGYRz4R0mXJToHDcaiJWnJMoiMTf7ZUwvrORp+HgJgAAWTL/wA+Sn36aq2xrALQviXqNyh9xSuFTnPq9KLZWWcPfj+zN65ZNfBDQd8aFRKTFf2MRiDI5n6EduK2aMNzn2ibDo6fR/S1EOaiwfoHiLy19kwHzBhVyEVTS1186EolTJxHI4T/rxCtZaAzW4+c8ckaXGoNi043XwlwCzUhSxVgSVYb9xt/b8bdK/rSTVmLwDkXQufyc2w96rTqAmL65NA5sBQckNrnnKqb3b2OwtqE/MH0XxVNm8UNO8JSoPbD6sUlrnvjLYNkA6QK7p5HD+3ip+fqPUZiSkkbBKD3w/NhjnjDrX59Ql8vG7FXbpnTFgxRevzxuLdH+DAxteAg9cjeiwDCOKlhf7MQeZmtcNkG8kv1LYc0TxZ5qGUucd+ZJdm0+PBFLBWnFyrOqzjSt4gwDX8dxoz7lq1xmBBc6BOxzytxP7PW/UxjAF6k6QEMgV0vgbgyEJ9tMjz0YvdyupdGfK2dbE5GyVlES8MNLgUSoVSchujYi2VIF4GljAV/wlK+cJbD/aE6HfqZiJNT3lUBhpjBYsWwWxvrRb9PxYS/tZAWeiWE6remBqqLzKZqoE9+6Gwzt1/SUm2dtQpwj6FEl6eli578=
+  app: ISPyB
+  domain: ispyb
+  on:
+    repo: antolinos/ISPyB
+    branch: travis

@@ -75,10 +75,12 @@ public class UpdateFromSMISWebService extends ParentWebService{
 		String methodName = "updateFromSMIS";
 		long id = this.logInit(methodName, logger);
 		try {
-			Date today = Calendar.getInstance().getTime();
-			Calendar start = Calendar.getInstance();
-			start.add(Calendar.DAY_OF_MONTH, -10);
-			Date startDate = start.getTime();
+			Calendar cal = Calendar.getInstance();
+			Date today = cal.getTime();
+			
+			cal.roll(Calendar.DATE, -4);			
+			Date startDate = cal.getTime();
+
 			SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
 			UpdateFromSMIS.updateFromSMIS(simple.format(startDate), simple.format(today));
 			

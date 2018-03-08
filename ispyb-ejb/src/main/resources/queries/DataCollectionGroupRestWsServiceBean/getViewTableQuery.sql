@@ -20,7 +20,7 @@ GROUP_CONCAT(`scalingStatisticsType` SEPARATOR ', ') AS `scalingStatisticsTypes`
 GROUP_CONCAT(`resolutionLimitHigh` SEPARATOR ', ') AS `resolutionsLimitHigh`,  
 GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`, 
 GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,
-GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,  
+GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,
 GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 				
 (SELECT count(*) 
@@ -63,5 +63,89 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,
 (select MIN(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as firstImageId,
 (select GROUP_CONCAT(synchrotronCurrent) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as synchrotronCurrent,
-(select GROUP_CONCAT(workflowStepId) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId and WorkflowStep.WorkflowStepType = 'Characterisation') as characterisationWorkflowStepIds
+(select GROUP_CONCAT(workflowStepId) from WorkflowStep where WorkflowStep.workflowId = v_datacollection_summary.Workflow_workflowId and WorkflowStep.WorkflowStepType = 'Characterisation') as characterisationWorkflowStepIds,
+
+
+(select count(*) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as numberOfGridSquares,
+(select GROUP_CONCAT(dataCollectionId) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as dataCollectionIdList,
+
+(select GROUP_CONCAT(imageDirectory) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as imageDirectoryList,
+(select GROUP_CONCAT(startTime) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as startTimeList,
+(select GROUP_CONCAT(magnification) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as magnificationList,
+(select GROUP_CONCAT(voltage) from DataCollection where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as voltageList,
+
+
+(SELECT GROUP_CONCAT(numberOfImages) numberOfImages
+  FROM DataCollection
+where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as imagesCount,
+
+(SELECT GROUP_CONCAT(cnt) cnt
+  FROM DataCollection,
+(
+  SELECT dataCollectionId, COUNT(*) cnt
+    FROM Movie
+    GROUP BY Movie.dataCollectionId
+  
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as movieCount,
+
+(SELECT GROUP_CONCAT(cnt) cnt
+  FROM DataCollection,
+(
+  SELECT dataCollectionId, COUNT(*) as cnt
+    FROM Movie, MotionCorrection
+    where MotionCorrection.movieId = Movie.movieId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as motionCorrectionCount,
+
+(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
+  FROM DataCollection,
+(
+  SELECT dataCollectionId, COUNT(*) as cnt
+    FROM Movie, MotionCorrection
+    where MotionCorrection.movieId = Movie.movieId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as motionCorrectionDataCollectionIds,
+
+(SELECT GROUP_CONCAT(cnt) cnt
+  FROM DataCollection,
+(
+    SELECT dataCollectionId, COUNT(*) as cnt
+ 
+    FROM Movie, MotionCorrection, CTF
+    where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as CTFCount,
+
+
+(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
+  FROM DataCollection,
+(
+    SELECT dataCollectionId, COUNT(*) as cnt
+    FROM Movie, MotionCorrection, CTF
+    where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
+    GROUP BY Movie.dataCollectionId
+    
+) q
+where q.dataCollectionId = DataCollection.dataCollectionId 
+and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
+) as CTFdataCollectionIds 
+
+
+
 from v_datacollection_summary

@@ -111,6 +111,19 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 			+ " where s.sessionId = g.sessionId and  " + " g.dataCollectionGroupId = c.dataCollectionGroupId and "
 			+ " c.dataCollectionId = api.dataCollectionId and " + " api.autoProcIntegrationId = apshi.autoProcIntegrationId and "
 			+ " apshi.autoProcScalingId = aps.autoProcScalingId and " + " aps.autoProcScalingId = :autoProcScalingId ";
+	
+	private static final String FIND_BY_AUTOPROCPROGRAMATTACHMENT_ID = "select s.* from BLSession s, "
+			+ " DataCollectionGroup g, DataCollection c, AutoProcIntegration api, AutoProcProgram autoprocProgram, AutoProcProgramAttachment autoProcProgramAttachment"
+			+ " where s.sessionId = g.sessionId and  g.dataCollectionGroupId = c.dataCollectionGroupId and autoprocProgram.autoProcProgramId = api.autoProcProgramId"
+			+ " and c.dataCollectionId = api.dataCollectionId and autoprocProgram.autoProcProgramId = autoProcProgramAttachment.autoProcProgramId "
+			+ " and autoProcProgramAttachment.autoProcProgramAttachmentId = :autoProcProgramAttachmentId ";
+	
+	
+	private static final String FIND_BY_AUTOPROCPROGRAM_ID = "select s.* from BLSession s, "
+			+ " DataCollectionGroup g, DataCollection c, AutoProcIntegration api, AutoProcProgram autoprocProgram "
+			+ " where s.sessionId = g.sessionId and  g.dataCollectionGroupId = c.dataCollectionGroupId and autoprocProgram.autoProcProgramId = api.autoProcProgramId"
+			+ " and c.dataCollectionId = api.dataCollectionId and autoprocProgram.autoProcProgramId = :autoProcProgramId ";
+	
 
 	private static String getProposalCodeNumberQuery() {
 		String query = "select * " + " FROM BLSession ses, Proposal pro "
@@ -299,6 +312,14 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		List<Session3VO> foundEntities = findFiltered(proposalId, null/* nbMax */, beamlineName, startDateBegin,
 						startDateEnd, null/* endDate */, false/* usedFlag */, nbShifts, null);
 		return foundEntities;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Session3VO> findSessionByDateProposalAndBeamline(int proposalId, String beamlineName, Date date) {
+		List<Session3VO> sessions = new ArrayList<Session3VO>();
+		sessions.addAll(this.findFiltered(proposalId, null, beamlineName, null, date, date, false, null));
+		sessions.addAll(this.findFiltered(proposalId, null, beamlineName, null, date, date, true, null));
+		return sessions;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -525,6 +546,32 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		}
 		return null;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public Session3VO findByAutoProcProgramAttachmentId(final Integer autoProcProgramAttachmentId) throws Exception {
+		String query = FIND_BY_AUTOPROCPROGRAMATTACHMENT_ID;
+		List<Session3VO> col = this.entityManager.createNativeQuery(query, "sessionNativeQuery")
+					.setParameter("autoProcProgramAttachmentId", autoProcProgramAttachmentId).getResultList();
+		if (col != null && col.size() > 0) {
+				return col.get(0);
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public Session3VO findByAutoProcProgramId(int autoProcProgramId) {
+		String query = FIND_BY_AUTOPROCPROGRAM_ID;
+		@SuppressWarnings("unchecked")
+		List<Session3VO> col = this.entityManager.createNativeQuery(query, "sessionNativeQuery")
+					.setParameter("autoProcProgramId", autoProcProgramId).getResultList();
+		if (col != null && col.size() > 0) {
+				return col.get(0);
+		}
+		return null;
+	}
+	
 
 	
 	/**
@@ -746,6 +793,10 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		Session3VO otherVO = getLightSession3VO(vo);
 		Integer beamLineSetupId = null;
 		Integer proposalId = null;
+		String proposalName = null;
+		if (vo.getProposalVO() != null) {
+			proposalName = vo.getProposalVO().getProposalAccount();
+		}
 		beamLineSetupId = otherVO.getBeamLineSetupVOId();
 		proposalId = otherVO.getProposalVOId();
 		otherVO.setBeamLineSetupVO(null);
@@ -753,6 +804,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		SessionWS3VO wsSession = new SessionWS3VO(otherVO);
 		wsSession.setBeamLineSetupId(beamLineSetupId);
 		wsSession.setProposalId(proposalId);
+		wsSession.setProposalName(proposalName);
 		return wsSession;
 	}
 	
@@ -813,6 +865,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		if (vo == null) return;
 		autService.checkUserRightToAccessSession(vo);				
 	}
+
+
 
 
 

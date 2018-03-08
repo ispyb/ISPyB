@@ -299,7 +299,27 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
-	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/save")
+	@Produces({ "application/json" })
+	public Response savePuckFromCSV(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId,
+			@PathParam("dewarId") Integer dewarId,
+			@PathParam("containerId") Integer containerId,
+			@FormParam("puck") String csv) throws Exception {
+
+		try {
+//			this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
+//			this.logFinish("savePuck", id, logger);
+//			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
+			return null;
+		} catch (Exception e) {
+//			return this.logError("savePuck", e, id, logger);
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@POST
@@ -313,7 +333,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("savePuck", logger, token, proposal, shippingId, containerId,puck);
 		try {
-			Container3VO container = this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class));
+			this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
 			this.logFinish("savePuck", id, logger);
 			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
 		} catch (Exception e) {

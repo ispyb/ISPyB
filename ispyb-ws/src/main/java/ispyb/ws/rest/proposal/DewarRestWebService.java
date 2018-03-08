@@ -239,6 +239,7 @@ public class DewarRestWebService extends RestWebService {
 			@FormParam("barCode") String barCode,
 			@FormParam("customValue") String customValue,
 			@FormParam("transportValue") String transportValue,
+			@FormParam("isReimbursed") Boolean isReimbursed,
 			@FormParam("trackingNumberFromSynchrotron") String trackingNumberFromSynchrotron,
 			@FormParam("trackingNumberToSynchrotron") String trackingNumberToSynchrotron)
 			throws Exception {
@@ -292,6 +293,11 @@ public class DewarRestWebService extends RestWebService {
 				}
 			} else {
 				dewar3vo.setTransportValue(null);
+			}
+			if (isReimbursed != null) {			
+				dewar3vo.setIsReimbursed(isReimbursed);				
+			} else {
+				dewar3vo.setIsReimbursed(false);	
 			}
 			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
 			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);

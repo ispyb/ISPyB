@@ -101,6 +101,9 @@ public class BeamLineSetup3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "minTransmission")
 	protected Double minTransmission;
 	
+	@Column(name = "CS")
+	protected Float CS;
+	
 
 	
 
@@ -274,6 +277,15 @@ public class BeamLineSetup3VO extends ISPyBValueObject implements Cloneable {
 		this.minTransmission = minTransmission;
 	}
 
+	public Float getCS() {
+		return CS;
+	}
+
+	public void setCS(Float cS) {
+		CS = cS;
+	}
+
+	
 	/**
 	 * Checks the values of this value object for correctness and completeness. Should be done before persisting the
 	 * data in the DB.
