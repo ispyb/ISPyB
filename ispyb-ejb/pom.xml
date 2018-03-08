@@ -438,15 +438,15 @@
   			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
   			<ispyb.bcm>mxcube</ispyb.bcm>
   			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
+  			<mail.smtp.host>smtp.maxiv.lu.se</mail.smtp.host>
   			<mail.admin>ims@maxiv.lu.se</mail.admin>
   			<mail.dev>ims@maxiv.lu.se</mail.dev>
   			<mail.ispyb>ispyb@maxiv.lu.se</mail.ispyb>
   			<mail.stores>mx-dewars@maxiv.lu.se</mail.stores>
   			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
-			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+  			<mail.report.industry.from>mxind@maxiv.lu.se</mail.report.industry.from>
+			<mail.report.industry.cc>ix@maxiv.lu.se</mail.report.industry.cc>
+			<mail.report.industry.cc.fx12>ims@maxiv.lu.se </mail.report.industry.cc.fx12>
 			
 			<dictionary.site>MAX IV</dictionary.site> 
 			<dictionary.bcm>mxCuBE</dictionary.bcm>

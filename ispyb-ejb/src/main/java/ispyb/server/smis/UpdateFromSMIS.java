@@ -278,6 +278,10 @@ public class UpdateFromSMIS {
 			case EMBL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 				break;
+			case MAXIV:
+				nbDays = 14;
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				break;
             default:
 			case SOLEIL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);

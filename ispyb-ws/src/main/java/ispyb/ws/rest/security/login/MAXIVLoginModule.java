@@ -1,7 +1,5 @@
 package ispyb.ws.rest.security.login;
 
-import ispyb.common.util.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -13,6 +11,8 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import ispyb.common.util.Constants;
+
 public class MAXIVLoginModule {
 	
 	private	static final String groupUniqueMemberName = "member";
@@ -21,34 +21,28 @@ public class MAXIVLoginModule {
 	private	static final String principalDNPrefix = Constants.LDAP_prefix;
 	private	static final String groupAttributeID = "cn";
 	private	static final String server = Constants.LDAP_Employee_Resource;
-	
-	protected static Properties getConnectionProperties(String username, String password){
-		Properties env = new Properties();
-		
-		env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
-		env.put("principalDNPrefix", principalDNPrefix);
-		env.put("groupAttributeID", groupAttributeID);
-		env.put("groupCtxDN", groupCtxDN);
-		env.put("principalDNSuffix", principalDNSuffix);
-		env.put("allowEmptyPasswords", "false");
-		env.put("groupUniqueMember", groupUniqueMemberName);
-		env.put("jboss.security.security_domain", "ispyb");
-		env.put("java.naming.provider.url", server);
-		env.put("java.naming.security.authentication", "simple");
-		String userDN = principalDNPrefix + username;
-		env.setProperty("java.naming.security.principal", userDN);
-		env.put("java.naming.security.credentials", password);
-		
-		return env;		
-	}
-	
-	protected static String getFilter(String username){
-		String userDN = principalDNPrefix + "\\" + username + principalDNSuffix;
-		return new StringBuffer().append("(&")
-				.append("(objectClass=groupOfUniqueNames)")
-				.append("(" + groupUniqueMemberName + "=").append(userDN)
-				.append(")").append(")").toString();
-	}
+
+
+	protected static Properties getConnectionProperties(String username, String password) {
+        Properties env = new Properties();
+
+        env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put("principalDNPrefix", principalDNPrefix);
+        env.put("groupAttributeID", groupAttributeID);
+        env.put("groupCtxDN", groupCtxDN);
+        env.put("principalDNSuffix", principalDNSuffix);
+        env.put("allowEmptyPasswords", "false");
+        env.put("groupUniqueMember", groupUniqueMemberName);
+        env.put("jboss.security.security_domain", "ispyb");
+        env.put("java.naming.provider.url", server);
+        env.put("java.naming.security.authentication", "simple");
+        //env.put("java.naming.provider.url", "url");
+        String userDN = principalDNPrefix + username;
+        env.setProperty("java.naming.security.principal", userDN);
+        env.put("java.naming.security.credentials", password);
+
+        return env;
+    }
 	
 	public static List<String> authenticate(String username, String password)
 			throws Exception {
@@ -56,31 +50,70 @@ public class MAXIVLoginModule {
 		List<String> myRoles = new ArrayList<String>();
 		if (!password.isEmpty()){
 			InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
-			
-			// Set up search constraints
-			SearchControls cons = new SearchControls();
-			cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            String filter;
 			// Search
-			NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, getFilter(username),cons);
-			while (answer.hasMore()) {
-				SearchResult sr = answer.next();
-				Attributes attrs = sr.getAttributes();
-				System.out.println(attrs.toString());
-				Attribute roles = attrs.get(groupAttributeID);
-				for (int r = 0; r < roles.size(); r++) {
-					Object value = roles.get(r);
-					String roleName = null;
-					roleName = value.toString();
-					// fill roles array
-					if (roleName != null) {
-						myRoles.add(roleName);
-					}
-				}
-			}
-			/** Any validated user is in role User */
-			if (myRoles.size() == 0){
-				myRoles.add("User");
-			}
+            try {
+
+                SearchControls constraints = new SearchControls();
+                constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                String[] attrIDs = { "distinguishedName"};
+                constraints.setReturningAttributes(attrIDs);
+                //First input parameter is search bas, it can be "CN=Users,DC=YourDomain,DC=com"
+                //Second Attribute can be uid=username
+                NamingEnumeration answerCN = ctx.search(Constants.LDAP_people, "sAMAccountName=" + username, constraints);
+                if (answerCN.hasMore()) {
+                    Attributes attrs = ((SearchResult) answerCN.next()).getAttributes();
+                    String dn = attrs.get("distinguishedName").toString().replace("distinguishedName: ", "");
+                    // (&(objectClass=group)(member=CN=Alberto Nardella,CN=Users,dc=maxlab,dc=lu,dc=se))
+                    filter = new StringBuffer().append("(&").append("(objectClass=group)").append("(" + groupUniqueMemberName + "=").append(dn).append(")").append(")").toString();
+
+                    // Set up search constraints
+                    SearchControls cons = new SearchControls();
+                    cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                    // Search roles
+                    NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, filter, cons);
+                    while (answer.hasMore()) {
+                        SearchResult sr = answer.next();
+                        attrs = sr.getAttributes();
+                        System.out.println(attrs.toString());
+                        Attribute roles = attrs.get(groupAttributeID);
+
+                        for (int r = 0; r < roles.size(); r++) {
+                            Object value = roles.get(r);
+                            String roleName = null;
+                            roleName = value.toString();
+                            // fill roles array
+                            if (roleName != null) {
+                                if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts")) {
+                                    myRoles.add(Constants.ROLE_MANAGER);
+                                    myRoles.add(Constants.ROLE_LOCALCONTACT);
+                                    myRoles.add(Constants.ROLE_ADMIN);
+                                    myRoles.add(Constants.ROLE_BLOM);
+                                    myRoles.add(Constants.ROLE_INDUSTRIAL);
+                                    myRoles.add(Constants.ROLE_STORE);
+                                    myRoles.add("User");
+                                }
+                                else if (roleName.contains("-group")){
+                                    myRoles.add("User");
+                                }
+                            }
+                        }
+                    }
+                    /** Any validated user is in role User */
+                    if (myRoles.size() == 0){
+                        myRoles.add("User");
+                    }
+                }else{
+                    throw new Exception("Invalid User");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+
+
 		}
 		else{
 			throw new Exception("Empty passwords are not allowed");
