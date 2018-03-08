@@ -26,6 +26,7 @@ import java.util.Date;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -36,6 +37,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
+import ispyb.server.mx.vos.collections.SessionWS3VO;
 import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.ws.ParentWebService;
 
@@ -88,6 +90,27 @@ public class UpdateFromSMISWebService extends ParentWebService{
 			this.logError(methodName, e, id, logger);
 		}
 	}
+	
+	/**
+	 * update from SMIS
+	 * 
+	 * @throws Exception
+	 */
+	@WebMethod
+	@TransactionTimeout(1000)
+	public void updateProposalFromSMIS(@WebParam(name = "code") String code, 
+			@WebParam(name = "number") String number) throws Exception {
+			
+		String methodName = "updateProposalFromSMIS";
+		long id = this.logInit(methodName, logger);
+		try {
+			UpdateFromSMIS.updateProposalFromSMIS(code, number);
+			
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+	}
+
 	
 	@WebMethod
 	public void updateFromSMISByDate(String start, String end) throws Exception {
