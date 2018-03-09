@@ -316,6 +316,7 @@ public class DewarRestWebService extends RestWebService {
 
 
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
+		
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
 		// Retrieve shipment object ------------------------
@@ -468,9 +469,12 @@ public class DewarRestWebService extends RestWebService {
 
 		// default courier company (only if exists)
 		String defaultCourrierCompany = "unknown";
+		
+		
 		if (returnLabContact.getDefaultCourrierCompany() != null)
 			defaultCourrierCompany = returnLabContact
 					.getDefaultCourrierCompany();
+		
 		fieldNamesAndValues.put("TF_returnCourierCompany",
 				defaultCourrierCompany);
 
@@ -482,6 +486,12 @@ public class DewarRestWebService extends RestWebService {
 				Integer.toString(returnLabContact.getDewarAvgCustomsValue()));
 		fieldNamesAndValues.put("TF_returnTransportValue",
 				Integer.toString(returnLabContact.getDewarAvgTransportValue()));
+		
+		// reimbursed dewars
+		if (dewar.getIsReimbursed().booleanValue()) {
+			fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
+			fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
+		}
 
 		pdfFormFiller.setFields(fieldNamesAndValues);
 
