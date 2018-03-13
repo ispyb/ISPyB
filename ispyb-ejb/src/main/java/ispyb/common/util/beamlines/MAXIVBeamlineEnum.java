@@ -29,7 +29,7 @@ import java.util.List;
  * The beamline name can have others names associated (eg ID14-1 & ID14 1)
  *
  */
-public enum MAXIVBeamlineEnum {‭
+public enum MAXIVBeamlineEnum{
 	BIOMAX("BioMAX", "idBioMAX", new String[]{"BioMAX"}, "<font style='color:#6888A8;font-size:90%'>+46702906618<font style='color:#0000FF;font-weight:bold;'>312</font></font>", null, true, true),
 	MX("MX", "idi911_3", new String[]{"i911-3 (MX)"}, "<font style='color:#000080;font-size:90%'>+46462229793<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, false),
 	;
