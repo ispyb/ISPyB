@@ -476,7 +476,7 @@ public class UpdateFromSMIS {
 		if (Constants.SITE_IS_MAXIV()) {
 			loadParticipants(labContacts);
 			loadParticipants(mainProposers);
-			labContacts = mainProposers;
+			labContacts.add(mainProposers);
 
 		}
 		if (labContacts != null && labContacts.length > 0) {
