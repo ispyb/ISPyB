@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
@@ -476,7 +477,19 @@ public class UpdateFromSMIS {
 		if (Constants.SITE_IS_MAXIV()) {
 			loadParticipants(labContacts);
 			loadParticipants(mainProposers);
-			labContacts.add(mainProposers);
+			// Adding the mainProposers
+
+			//Array<ProposalParticipantInfoLightVO> both = array(labContacts).append(array(mainProposers));
+			//labContacts = both.array();
+
+
+			List<ProposalParticipantInfoLightVO> listFromArray = Arrays.asList(labContacts);
+			List<ProposalParticipantInfoLightVO> tempList = new ArrayList<ProposalParticipantInfoLightVO>(listFromArray);
+			for (int i = 0; i < mainProposers.length; i++) {
+				tempList.add(mainProposers[i]);
+			}
+			ProposalParticipantInfoLightVO[] tempArray = new ProposalParticipantInfoLightVO[tempList.size()];
+			labContacts = tempList.toArray(tempArray);
 
 		}
 		if (labContacts != null && labContacts.length > 0) {
