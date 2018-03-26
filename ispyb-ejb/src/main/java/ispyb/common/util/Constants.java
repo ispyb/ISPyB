@@ -856,7 +856,7 @@ public final class Constants {
 
 	public static final String[] BEAMLINE_LOCATION = BEAMLINE_LOCATION_DEFAULT;
 
-	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.capacity", "5"));
+	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.locations", "5"));
 
 	public static final String[] CONTAINER_TYPE = { "Spinepuck", "Unipuck", "Cane", "Other" }; 
 
