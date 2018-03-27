@@ -1042,6 +1042,12 @@ public class UpdateFromSMIS {
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
 					changeSession = true;
 				}
+				if (sessionVO.getReimbursedDewars() != null && ispybSession.getNbReimbDewars() != null
+						&& !sessionVO.getReimbursedDewars().equals(ispybSession.getNbReimbDewars())) {
+					changeTxt += ", getNbReimbDewars() " + ispybSession.getNbReimbDewars() + " => " + sessionVO.getReimbursedDewars();
+					ispybSession.setNbReimbDewars(new Integer(sessionVO.getReimbursedDewars()));
+					changeSession = true;
+				}
 				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {
 					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
 					ispybSession.setScheduled(new Byte("9"));
