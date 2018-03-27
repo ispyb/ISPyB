@@ -19,11 +19,7 @@
 
 package ispyb.ws.soap.common;
 
-import ispyb.server.common.services.admin.AdminVar3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.admin.AdminVar3VO;
-import ispyb.server.mx.vos.collections.SessionWS3VO;
+import java.util.Date;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -39,6 +35,12 @@ import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
+
+import ispyb.server.common.services.admin.AdminVar3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.admin.AdminVar3VO;
+import ispyb.server.mx.vos.collections.SessionWS3VO;
 
 
 /**
@@ -136,6 +138,35 @@ public class BatchWebService {
 			return ret;
 		} catch (Exception e) {
 			LOG.error("WS ERROR: findSessionsNotProtectedToBeProtected ");
+			throw e;
+		}
+	}
+	
+	/**
+	 * returns the sessions not protected which are to be protected
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@WebMethod
+	@WebResult(name = "Sessions")
+	public SessionWS3VO[] findSessionsNotProtectedToBeProtectedByDates(Date date1, Date date2) throws Exception {
+
+		try {
+			LOG.debug("findSessionsNotProtectedToBeProtectedByDates");
+			Session3Service sessionService = (Session3Service) ejb3ServiceLocator
+					.getLocalService(Session3Service.class);
+
+			SessionWS3VO[] ret = sessionService.findForWSNotProtectedToBeProtected(date1, date2);
+
+			if (ret == null || ret.length < 1)
+				return null;
+
+			// return ret[0];
+			LOG.debug("findSessionsNotProtectedToBeProtectedByDates finished.");
+			return ret;
+		} catch (Exception e) {
+			LOG.error("WS ERROR: findSessionsNotProtectedToBeProtectedByDates ");
 			throw e;
 		}
 	}
