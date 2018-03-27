@@ -69,16 +69,18 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<%-- Dewar --%>
 	<layout:panel key="Acknowledge the conditions and set the reimbursement status" align="left" styleClass="PANEL">
 		<layout:form action="/user/viewDewarAction.do" reqCode="setReimbursed">	
-
+		<bean:define name="viewDewarForm" property="fedexCode" id="fedexCode" 	type="java.lang.String"/>
 		<layout:grid cols="1"  borderSpacing="10">
 				<layout:column>
-				<p>Engagement
+				<p><center><b>Engagement</b></center>
 				<br>
 				<br> By setting this dewar to reimbursed, the labels that will be generated for the sending will contain the fedex account that you should use to send your dewars.
 				<br> Please note that you MUST NOT use this account to ship more than the allowed number of dewars.
 				<br> In case of abuse, your proposal will no more be able to benefit from the dewar reimbursement.
 				<br>				
 				<br> Click on the following checkbox if you agree with these conditions and you want to have this dewar automatically reimbursed.
+				<br> Copy the following reference code to your fedex request page: 
+				<br> <center><b><%=fedexCode%></b></center>
 				</p>
 				
 				<layout:space/>
