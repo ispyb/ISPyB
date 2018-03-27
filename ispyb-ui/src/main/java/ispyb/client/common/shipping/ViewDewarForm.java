@@ -65,6 +65,8 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 
 	private String role;
 	
+	private String fedexCode;
+	
 	public ViewDewarForm() {
 	}
 
@@ -165,6 +167,12 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 		this.remainingReimbursed = remainingReimbursed;
 	}
 
+	public String getFedexCode() {
+		return fedexCode;
+	}
 
+	public void setFedexCode(String fedexCode) {
+		this.fedexCode = fedexCode;
+	}
 	
 }
