@@ -628,7 +628,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 
 			List<Dewar3VO> listInfo = searchDewars(mapping, code, comments, mProposalId, shippingId, dewarId);
 			int currentReimbursed = 0;
-
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
 			 if (!listInfo.isEmpty())
@@ -641,6 +641,8 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
 				 if (defaultSelectedDewar.getSessionVO() != null) {
 					 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+					 form.setFedexCode(defaultSelectedDewar.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + defaultSelectedDewar.getSessionVO().getProposalVO().getNumber() + "/" 
+								+ defaultSelectedDewar.getSessionVO().getBeamlineName() + "/" + df.format(defaultSelectedDewar.getSessionVO().getStartDate()));
 				 } else {
 					 form.setNbReimbursedDewars(new Integer(0));
 				 }
@@ -701,10 +703,10 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			form.setNbReimbursedDewars(info.getSessionVO().getNbReimbDewars());
 			form.setInfo(info);
-			form.setFedexCode(info.getSessionVO().getProposalVO().getProposalAccount() + "/" 
+			form.setFedexCode(info.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + info.getSessionVO().getProposalVO().getNumber() + "/" 
 			+ info.getSessionVO().getBeamlineName() + "/" + df.format(info.getSessionVO().getStartDate()));
 			BreadCrumbsForm.getIt(request).setSelectedDewar(info);
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.free", "Note that you are allowed to only " +info.getSessionVO().getNbReimbDewars() + " reimbursed dewars" ));
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message.free", "According to the A-form for this experiment, you are allowed to select " +info.getSessionVO().getNbReimbDewars() + " dewars to be reimbursed by the ESRF" ));
 
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));

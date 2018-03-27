@@ -155,7 +155,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				</logic:present>
 				<logic:greaterThan name="viewDewarForm" property="nbReimbursedDewars" value="0">	
 					<layout:cell>
-						<font color="red" > Note that for this experiment you are allowed to have ONLY <bean:write name="viewDewarForm" property="nbReimbursedDewars"/> reimbursed dewars</font>
+						<font color="red" >According to the A-form for this experiment, you are allowed to have 
+						<bean:write name="viewDewarForm" property="nbReimbursedDewars"/> dewars reimbursed by the ESRF. 
+						Please use the euro icon to select/unselect the dewars to be reimbursed.
+						<br>Your FedEx Reference for this shipment:</font> <bean:write name="viewDewarForm" property="fedexCode"/>
+						
 					</layout:cell>
 				</logic:greaterThan>
 				
@@ -543,14 +547,14 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 										
 										  <logic:equal name="dewar" property="isReimbursed" value="true">
 										  	<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
-												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar Reimbursement');" onmouseout="return nd();">
 											</html:link>
 										</logic:equal>
 										
 										 <logic:notEqual name="dewar" property="isReimbursed" value="true">											
 										  <logic:equal name="viewDewarForm" property="remainingReimbursed" value="true">
 											<html:link href="<%=targetGetReimbursed%>" paramName="dewar" paramId="dewarId" paramProperty="dewarId" >
-												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar reimbursement');" onmouseout="return nd();">
+												<img src="<%=request.getContextPath()%>/images/euro.gif" border="0" onmouseover="return overlib('Set/Unset Dewar Reimbursement');" onmouseout="return nd();">
 											</html:link>
 											</logic:equal>
 										</logic:notEqual>
