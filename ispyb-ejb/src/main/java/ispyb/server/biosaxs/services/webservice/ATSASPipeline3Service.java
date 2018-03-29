@@ -25,6 +25,7 @@ import java.util.List;
 
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.datacollection.Model3VO;
@@ -90,6 +91,8 @@ public interface ATSASPipeline3Service {
 	public List<Macromolecule3VO> getMacromoleculesByProposal(String code, String number) throws Exception;
 
 	public List<Buffer3VO> getBuffersByProposal(String code, String number) throws Exception;
+	
+	public List<Additive3VO> getBufferAdditives(String code, String number, String buffer) throws Exception;
 
 
 }

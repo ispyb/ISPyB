@@ -54,6 +54,7 @@ import ispyb.server.biosaxs.services.webservice.ATSASPipeline3Service;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.datacollection.Model3VO;
@@ -668,6 +669,40 @@ public class GenericSampleChangerBiosaxsWebService {
 			return new GsonBuilder().serializeNulls().create().toJson(buffers);
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getBuffersByProposal", id, System.currentTimeMillis(),
+					e.getMessage(), e);
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	@WebResult(name = "buffers")
+	public String getBufferAdditives(
+			@WebParam(name = "code") String code,
+			@WebParam(name = "number") String number,
+			@WebParam(name = "buffer") String buffer) {
+		
+		/** Logging **/
+		long id = 0;
+		try {
+			/** Logging params **/
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("code", String.valueOf(code));
+			params.put("number", String.valueOf(number));
+			params.put("buffer", String.valueOf(buffer));
+			id = this.logInit("getBufferAdditives", new Gson().toJson(params));
+		} catch (Exception exp) {
+			id = this.logInit("getBufferAdditives");
+			exp.printStackTrace();
+		}
+
+		try {
+			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
+			List<Additive3VO> additives = atsasPipeline3Service.getBufferAdditives(code, number, buffer);
+			logFinish("getBufferAdditives", id);
+			return new GsonBuilder().serializeNulls().create().toJson(additives);
+		} catch (Exception e) {
+			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getBufferAdditives", id, System.currentTimeMillis(),
 					e.getMessage(), e);
 			e.printStackTrace();
 		}
