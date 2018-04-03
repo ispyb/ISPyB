@@ -301,7 +301,10 @@ public class DewarRestWebService extends RestWebService {
 			}
 			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
 			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
-			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			//TODO : if sessionId != null set the new session ? possible to update the session ??
+			if (dewar3vo.getSessionVO() == null ) {
+				dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			}
 			getDewar3Service().update(dewar3vo);
 			this.logFinish("saveDewar", start, logger);
 			
