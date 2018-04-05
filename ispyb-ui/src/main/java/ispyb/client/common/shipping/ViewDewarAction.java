@@ -627,12 +627,13 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			}
 
 			List<Dewar3VO> listInfo = searchDewars(mapping, code, comments, mProposalId, shippingId, dewarId);
-			int currentReimbursed = 0;
+			Integer currentReimbursed = 0;
+			Integer nbReimbursed = 0;
+			
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
-			 if (!listInfo.isEmpty())
-			 {
+			 if (!listInfo.isEmpty()) {
 				 for (Iterator iterator = listInfo.iterator(); iterator.hasNext();) {
 						Dewar3VO dewar3vo = (Dewar3VO) iterator.next();
 						if (dewar3vo.getIsReimbursed() != null && dewar3vo.getIsReimbursed().equals(true))
@@ -640,18 +641,16 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 				}
 				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
 				 if (defaultSelectedDewar.getSessionVO() != null) {
-					 form.setNbReimbursedDewars(defaultSelectedDewar.getSessionVO().getNbReimbDewars());
+					 nbReimbursed=defaultSelectedDewar.getSessionVO().getNbReimbDewars();
 					 form.setFedexCode(defaultSelectedDewar.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + defaultSelectedDewar.getSessionVO().getProposalVO().getNumber() + "/" 
 								+ defaultSelectedDewar.getSessionVO().getBeamlineName() + "/" + df.format(defaultSelectedDewar.getSessionVO().getStartDate()));
-				 } else {
-					 form.setNbReimbursedDewars(new Integer(0));
-				 }
-				 
-			 } else {
-				 form.setNbReimbursedDewars(new Integer(0));
-			 }			 
-			 form.setRemainingReimbursed(false);			 
-			 if (form.getNbReimbursedDewars() != null && currentReimbursed < form.getNbReimbursedDewars())
+				 } 				 
+			 } 
+			 	 
+			 form.setNbReimbursedDewars(nbReimbursed);
+			 form.setCurrentReimbursedDewars(currentReimbursed);
+			 form.setRemainingReimbursed(false);
+			 if (nbReimbursed != null && currentReimbursed < form.getNbReimbursedDewars())
 				 form.setRemainingReimbursed(true);
 			 
 			 

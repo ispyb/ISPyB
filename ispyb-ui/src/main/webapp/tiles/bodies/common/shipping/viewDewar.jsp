@@ -100,6 +100,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 </logic:equal>
 --%>
 
+
+
 <%-------------------------------------------------------- "View all" links ------------------------------------------------------%>
 <layout:row>
 
@@ -134,6 +136,18 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		
 	</logic:present>
 	<%-------------------------------------------------------- Dewars ------------------------------------------------------%>
+	<c:set var="nbReimb"  value="${viewDewarForm.nbReimbursedDewars}" scope="request" />
+	<c:set var="currentReimb"  value="${viewDewarForm.currentReimbursedDewars}" scope="request"/>
+	<c:if test="${nbReimb > 0}">
+		<c:if test="${nbReimb >= currentReimb}">
+			<br><font color="green">You have selected ${currentReimb} reimbursed dewars out of ${nbReimb} allowed.</font>
+		</c:if>						
+		<c:if test="${nbReimb < currentReimb}">
+			<br><font color="red">You have selected ${currentReimb} reimbursed dewars out of ${nbReimb} allowed! Please modify.</font>
+		</c:if>
+	</c:if>
+
+
 	<%-- To not show a empty table when no dewar exists --%>
 	<logic:empty  name="viewDewarForm" property="listInfo">
            <h4>No&nbsp;Dewar&nbsp;have&nbsp;been&nbsp;found</h4>
@@ -159,7 +173,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 						<bean:write name="viewDewarForm" property="nbReimbursedDewars"/> dewars reimbursed by the ESRF. 
 						Please use the euro icon to select/unselect the dewars to be reimbursed.
 						<br>Your FedEx Reference for this shipment:</font> <bean:write name="viewDewarForm" property="fedexCode"/>
-						
+												
 					</layout:cell>
 				</logic:greaterThan>
 				
@@ -617,11 +631,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		</layout:panel>
 	  </layout:row>
 	</logic:notEmpty>
-	
-	
-	
-	
-	
+		
 	<%----------------------------------------------- Containers -----------------------------------------------------------%>		
 	<logic:present name="breadCrumbsForm" property="selectedShipping" scope="session">
 		<logic:present name="breadCrumbsForm" property="selectedDewar" scope="session">
