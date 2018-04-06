@@ -1,18 +1,18 @@
 /** This file is part of ISPyB.
- * 
+ *
  * ISPyB is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * ISPyB is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
  ****************************************************************************************************/
 
@@ -272,9 +272,9 @@ public class GenericSampleChangerBiosaxsWebService {
 			@WebParam(name = "storageTemperature") String storageTemperature, @WebParam(name = "timePerFrame") String timePerFrame,
 			@WebParam(name = "timeStart") String timeStart, @WebParam(name = "timeEnd") String timeEnd,
 			@WebParam(name = "energy") String energy, @WebParam(name = "detectorDistance") String detectorDistance,
-			@WebParam(name = "snapshotCapillary") String snapshotCapillary, 
+			@WebParam(name = "snapshotCapillary") String snapshotCapillary,
 			@WebParam(name = "currentMachine") String currentMachine,
-			@WebParam(name = "beamCenterX") String beamCenterX, 
+			@WebParam(name = "beamCenterX") String beamCenterX,
 			@WebParam(name = "beamCenterY") String beamCenterY,
 			@WebParam(name = "radiationRelative") String radiationRelative,
 			@WebParam(name = "radiationAbsolute") String radiationAbsolute, @WebParam(name = "pixelSizeX") String pixelSizeX,
@@ -414,14 +414,14 @@ public class GenericSampleChangerBiosaxsWebService {
 			@WebParam(name = "rgGuinier") String rgGuinier, @WebParam(name = "rgStdev") String rgStdev,
 			@WebParam(name = "i0") String i0, @WebParam(name = "i0Stdev") String i0Stdev,
 
-			@WebParam(name = "firstPointUsed") String firstPointUsed, 
+			@WebParam(name = "firstPointUsed") String firstPointUsed,
 			@WebParam(name = "lastPointUsed") String lastPointUsed,
-			@WebParam(name = "quality") String quality, 
+			@WebParam(name = "quality") String quality,
 			@WebParam(name = "isagregated") String isagregated,
 
 			/** XSDataGnom **/
-			@WebParam(name = "rgGnom") String rgGnom, 
-			@WebParam(name = "dmax") String dmax, 
+			@WebParam(name = "rgGnom") String rgGnom,
+			@WebParam(name = "dmax") String dmax,
 			@WebParam(name = "total") String total,
 
 			/** Volume **/
@@ -509,7 +509,7 @@ public class GenericSampleChangerBiosaxsWebService {
 			System.out.println(" gnomOutputFilePath:\t" + gnomOutputFilePath);
 
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
-			
+
 			atsasPipeline3Service.addSubtraction(experimentId, runNumberList, rgStdev, i0, i0Stdev, firstPointUsed, lastPointUsed,
 					quality, isagregated, rgGuinier, rgGnom, dmax, total, volume, sampleOneDimensionalFiles,
 					bufferOneDimensionalFiles, sampleAverageFilePath, bestBufferFilePath, subtractedFilePath,
@@ -582,7 +582,7 @@ public class GenericSampleChangerBiosaxsWebService {
 	@WebResult(name = "getMacromoleculeByAcronym")
 	public List<Macromolecule3VO> getMacromoleculeByAcronym(
 			@WebParam(name = "code") String code,
-			@WebParam(name = "number") String number, 
+			@WebParam(name = "number") String number,
 			@WebParam(name = "macromolecule") String acronym) {
 
 		/** Logging **/
@@ -611,13 +611,13 @@ public class GenericSampleChangerBiosaxsWebService {
 		}
 		return null;
 	}
-	
-	
+
+
 	@WebResult(name = "macromolecules")
 	public String getMacromoleculesByProposal(
 			@WebParam(name = "code") String code,
 			@WebParam(name = "number") String number) {
-		
+
 		/** Logging **/
 		long id = 0;
 		try {
@@ -643,12 +643,12 @@ public class GenericSampleChangerBiosaxsWebService {
 		}
 		return null;
 	}
-	
+
 	@WebResult(name = "buffers")
 	public String getBuffersByProposal(
 			@WebParam(name = "code") String code,
 			@WebParam(name = "number") String number) {
-		
+
 		/** Logging **/
 		long id = 0;
 		try {
@@ -665,23 +665,25 @@ public class GenericSampleChangerBiosaxsWebService {
 		try {
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			List<Buffer3VO> buffers = atsasPipeline3Service.getBuffersByProposal(code, number);
-			logFinish("getBuffersByProposal", id);
+			id = this.logInit("getBuffersByProposal was called!!!!", new GsonBuilder().serializeNulls().create().toJson(buffers));
+			//logFinish("getBuffersByProposal", id);
 			return new GsonBuilder().serializeNulls().create().toJson(buffers);
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getBuffersByProposal", id, System.currentTimeMillis(),
 					e.getMessage(), e);
 			e.printStackTrace();
 		}
+		logFinish("getBuffersByProposal", id);
 		return null;
-		
+
 	}
-	
+
 	@WebResult(name = "buffers")
 	public String getBufferAdditives(
 			@WebParam(name = "code") String code,
 			@WebParam(name = "number") String number,
 			@WebParam(name = "buffer") String buffer) {
-		
+
 		/** Logging **/
 		long id = 0;
 		try {
@@ -707,14 +709,14 @@ public class GenericSampleChangerBiosaxsWebService {
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
-	
-	
+
+
 	@WebResult(name = "getAprioriInformationByAcronym")
 	public String getAprioriInformationByAcronym(
 			@WebParam(name = "code") String code,
-			@WebParam(name = "number") String number, 
+			@WebParam(name = "number") String number,
 			@WebParam(name = "macromolecule") String acronym) {
 
 		/** Logging **/
@@ -736,7 +738,7 @@ public class GenericSampleChangerBiosaxsWebService {
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			HashMap<String, Object> info = atsasPipeline3Service.getAprioriInformationByRunNumber(proposal, acronym);
 
-			
+
 			logFinish("getAprioriInformationByAcronym", id);
 			return new GsonBuilder().serializeNulls().create().toJson(info);
 		} catch (Exception e) {
@@ -764,7 +766,7 @@ public class GenericSampleChangerBiosaxsWebService {
 	@WebResult(name = "getContactDescriptioFilePathByAcronym")
 	public String getContactDescriptioFilePathByAcronym(
 			@WebParam(name = "code") String code,
-			@WebParam(name = "number") String number, 
+			@WebParam(name = "number") String number,
 			@WebParam(name = "macromolecule") String acronym) {
 
 		/** Logging **/
@@ -786,7 +788,7 @@ public class GenericSampleChangerBiosaxsWebService {
 
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			List<Macromolecule3VO> macromolecules = atsasPipeline3Service.getMacromoleculeByAcronym(proposal, acronym);
-			
+
 			List<String> result = new ArrayList<String>();
 			for (Macromolecule3VO macromolecule : macromolecules) {
 				if (macromolecule.getContactsDescriptionFilePath() != null){
@@ -795,7 +797,7 @@ public class GenericSampleChangerBiosaxsWebService {
 					}
 				}
 			}
-			
+
 			logFinish("getContactDescriptioFilePathByAcronym", id);
 			if (result.size() > 0) {
 				/** Parsing results as a comma separated string **/
@@ -994,10 +996,10 @@ public class GenericSampleChangerBiosaxsWebService {
 			params.put("aprioriPdbFilePath", String.valueOf(aprioriPdbFilePath));
 			params.put("alignedPdbFilePath", String.valueOf(alignedPdbFilePath));
 			id = this.logInit("addSuperposition", new Gson().toJson(params));
-			
+
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			atsasPipeline3Service.addSuperposition(experimentId, runNumber, abitioModelPdbFilePath, aprioriPdbFilePath, alignedPdbFilePath);
-			
+
 			logFinish("addSuperposition", id);
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addSuperposition", id, System.currentTimeMillis(),
@@ -1010,7 +1012,7 @@ public class GenericSampleChangerBiosaxsWebService {
 	@WebResult(name = "addRigidBodyModel")
 	public void addRigidBodyModel(
 			@WebParam(name = "experimentId") String experimentId,
-			@WebParam(name = "runNumber") String runNumber, 
+			@WebParam(name = "runNumber") String runNumber,
 			@WebParam(name = "fitFilePath") String fitFilePath,
 			@WebParam(name = "rigidBodyModelFilePath") String rigidBodyModelFilePath,
 			@WebParam(name = "logFilePath") String logFilePath,
@@ -1036,15 +1038,15 @@ public class GenericSampleChangerBiosaxsWebService {
 			params.put("crosscorrConfigFilePath", String.valueOf(crosscorrConfigFilePath));
 			params.put("contactConditionsFilePath", String.valueOf(contactConditionsFilePath));
 			params.put("masterSymmetry", String.valueOf(masterSymmetry));
-			
+
 			id = this.logInit("addRigidBodyModel", new Gson().toJson(params));
-			
+
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			atsasPipeline3Service.addRigidBodyModeling(experimentId, runNumber, fitFilePath, rigidBodyModelFilePath, logFilePath, curveConfigFilePath,
 					subunitConfigFilePath, crosscorrConfigFilePath, contactConditionsFilePath, masterSymmetry);
-			
+
 			logFinish("addRigidBodyModel", id);
-			
+
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "addRigidBodyModel", id, System.currentTimeMillis(),
 					e.getMessage(), e);
@@ -1052,8 +1054,8 @@ public class GenericSampleChangerBiosaxsWebService {
 			throw e;
 		}
 	}
-	
-	
+
+
 	@WebResult(name = "getProposalsByLoginName")
 	public String getProposalsByLoginName(
 			@WebParam(name = "userName") String userName
@@ -1068,9 +1070,9 @@ public class GenericSampleChangerBiosaxsWebService {
 			id = this.logInit("getProposalsByLoginName", new Gson().toJson(params));
 			Proposal3Service service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			List<Proposal3VO> proposals = service.findProposalByLoginName(userName);
-			
+
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
-			
+
 			for (Proposal3VO proposal3vo : proposals) {
 				HashMap<String, String> entry = new HashMap<String, String>();
 				entry.put("title", proposal3vo.getTitle());
@@ -1080,7 +1082,7 @@ public class GenericSampleChangerBiosaxsWebService {
 				entry.put("proposalId", proposal3vo.getProposalId().toString());
 				result.add(entry);
 			}
-			
+
 			logFinish("getProposalsByLoginName", id);
 			return new Gson().toJson(result);
 		} catch (Exception e) {
@@ -1090,8 +1092,8 @@ public class GenericSampleChangerBiosaxsWebService {
 			throw e;
 		}
 	}
-	
-	
+
+
 	@WebResult(name = "getExperimentListByProposal")
 	public String getExperimentListByProposal(
 			@WebParam(name = "code") String code, @WebParam(name = "number") String number
@@ -1105,12 +1107,12 @@ public class GenericSampleChangerBiosaxsWebService {
 			params.put("code", String.valueOf(code));
 			params.put("number", String.valueOf(number));
 			id = this.logInit("getExperimentListByProposal", new Gson().toJson(params));
-			
+
 			String loginname = code + number;
-			
+
 			Proposal3Service proposal3Service = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 			List<Proposal3VO> proposals = proposal3Service.findProposalByLoginName(loginname);
-			
+
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
 			if (proposals.size() > 0){
 				Experiment3Service service = (Experiment3Service) ejb3ServiceLocator.getLocalService(Experiment3Service.class);
@@ -1125,7 +1127,7 @@ public class GenericSampleChangerBiosaxsWebService {
 					}
 				}
 			}
-			
+
 			logFinish("getExperimentListByProposal", id);
 			return new Gson().toJson(result);
 		} catch (Exception e) {
@@ -1135,8 +1137,8 @@ public class GenericSampleChangerBiosaxsWebService {
 			throw e;
 		}
 	}
-	
-	
+
+
 	@WebResult(name = "getExperimentListByProposalId")
 	public String getExperimentListByProposalId(
 			@WebParam(name = "proposalId") String proposalId
@@ -1149,11 +1151,11 @@ public class GenericSampleChangerBiosaxsWebService {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("proposalId", String.valueOf(proposalId));
 			id = this.logInit("getExperimentListByProposalId", new Gson().toJson(params));
-			
+
 			Experiment3Service service = (Experiment3Service) ejb3ServiceLocator.getLocalService(Experiment3Service.class);
 			List<Experiment3VO> experiments = service.findByProposalId(Integer.valueOf(proposalId), ExperimentScope.MINIMAL);
 			ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
-			
+
 			for (Experiment3VO experiment : experiments) {
 				if (experiment.getType().toUpperCase().equals("TEMPLATE")){
 					HashMap<String, String> entry = new HashMap<String, String>();
@@ -1163,7 +1165,7 @@ public class GenericSampleChangerBiosaxsWebService {
 					result.add(entry);
 				}
 			}
-			
+
 			logFinish("getExperimentListByProposalId", id);
 			return new Gson().toJson(result);
 		} catch (Exception e) {
@@ -1173,8 +1175,8 @@ public class GenericSampleChangerBiosaxsWebService {
 			throw e;
 		}
 	}
-	
-	
+
+
 	@WebMethod(operationName = "getExperimentByProposalCode")
 	public String getExperimentByProposalCode(@WebParam(name = "code") String code, @WebParam(name = "number") String number)
 			throws Exception {
@@ -1214,7 +1216,7 @@ public class GenericSampleChangerBiosaxsWebService {
 		}
 		return null;
 	}
-	
+
 
 	/** Loggers **/
 	protected long logInit(String methodName) {

@@ -2,6 +2,7 @@ INSERT INTO SchemaStatus (scriptName, schemaStatus) VALUES ('2018_02_27_membrane
 
 USE pydb;
 ALTER TABLE Macromolecule ADD electronDensity FLOAT(7,5);
+ALTER TABLE Macromolecule ADD fastaSeq VARCHAR (20000);
 ALTER TABLE Buffer ADD electronDensity FLOAT(7,5);
 ALTER TABLE Additive ADD chemFormulaHead VARCHAR (25) default '';
 ALTER TABLE Additive ADD chemFormulaTail VARCHAR (25) default ''; 
