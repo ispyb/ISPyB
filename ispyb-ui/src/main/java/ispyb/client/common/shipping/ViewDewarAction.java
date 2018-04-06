@@ -387,7 +387,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			fieldNamesAndValues.put("TF_parcelBarcode", "*" + dewar.getBarCode() + "*");
 			fieldNamesAndValues.put("TF_shipmentName", shipping.getShippingName());
 			fieldNamesAndValues.put("TF_parcelsNumber", Integer.toString(shipping.getDewarVOs().size()));
-			fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode() + proposal.getNumber());
+			fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode() + "-" + proposal.getNumber());
 
 			// Session values (only if they exist)
 			if (session != null) {
@@ -630,7 +630,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			Integer currentReimbursed = 0;
 			Integer nbReimbursed = 0;
 			
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
 			 if (!listInfo.isEmpty()) {

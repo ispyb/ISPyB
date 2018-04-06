@@ -411,7 +411,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_shipmentName", shipping.getShippingName());
 		fieldNamesAndValues.put("TF_parcelsNumber",
 				Integer.toString(shipping.getDewarVOs().size()));
-		fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode()
+		fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode() + "-"
 				+ proposal.getNumber());
 
 		// Session values (only if they exist)
