@@ -22,6 +22,7 @@ package ispyb.server.mx.services.sample;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -103,5 +104,7 @@ public interface Protein3Service {
 	 * @throws Exception
 	 */
 	public Integer updateProposalId(final Integer newProposalId, final Integer oldProposalId) throws Exception;
+
+	public List<Map<String, Object>> getStatsByProposal(int proposalId);
 
 }

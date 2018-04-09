@@ -19,12 +19,13 @@
 package ispyb.server.mx.services.sample;
 
 
+import ispyb.server.mx.services.ws.rest.WsServiceBean;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
-
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -35,9 +36,11 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 /**
  * <p>
@@ -45,7 +48,7 @@ import org.hibernate.criterion.Restrictions;
  * </p>
  */
 @Stateless
-public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLocal {
+public class Protein3ServiceBean extends WsServiceBean implements Protein3Service, Protein3ServiceLocal {
 
 	private final static Logger LOG = Logger.getLogger(Protein3ServiceBean.class);
 
@@ -207,6 +210,12 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 		Protein3VO newVO = this.findByPk(vo.getProteinId(), true);
 		return newVO;
 	}
+	
+
+	private String getViewTableQuery(){
+		return this.getQueryFromResourceFile("/queries/ProteinServiceBean/getViewTableQuery.sql");
+	}
+	
 
 	/**
 	 * Check if user has access rights to create, change and remove Protein3 entities. If not set rollback only and
@@ -281,6 +290,17 @@ public class Protein3ServiceBean implements Protein3Service, Protein3ServiceLoca
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
+	}
+
+	
+	@Override
+	public List<Map<String, Object>>  getStatsByProposal(int proposalId) {
+		String mySQLQuery = getViewTableQuery() + " where proposalId = :proposalId";		
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);		
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
 	}
 	
 }
