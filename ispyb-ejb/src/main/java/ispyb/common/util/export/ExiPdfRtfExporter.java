@@ -360,10 +360,10 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setHeader(Document document) throws Exception {
 		HeaderFooter header;
-		String h = "Data Collections for Proposal: " + proposalDesc;
+		String h = "Session summary for " + proposalDesc;
 		if (slv != null) {
-			h += " on Beamline: " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
-					+ "  ---  Session start date: "
+			h += " on beamline " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
+					+ "  starting on "
 					+ (slv.getStartDate() == null ? "" : Formatter.formatDate(slv.getStartDate()));
 		}
 		header = new HeaderFooter(new Phrase(h, FONT_HELVETICA_10), false);
@@ -513,7 +513,11 @@ public class ExiPdfRtfExporter {
 			while (it2.hasNext() && i < nbRowsMax) {
 				Map<String, Object> dataCollectionMapData = it2.next();
 				LOG.info("dcMap=" + dataCollectionMapData.toString());
-				setDataCollectionMapData(document, dataCollectionMapData);
+				
+				// test if worflow not null
+				if (dataCollectionMapData.get("Workflow_workflowType") !=null && !dataCollectionMapData.get("Workflow_workflowType").toString().isEmpty()) {				
+					setDataCollectionMapData(document, dataCollectionMapData);
+				}
 				
 				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
 					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
