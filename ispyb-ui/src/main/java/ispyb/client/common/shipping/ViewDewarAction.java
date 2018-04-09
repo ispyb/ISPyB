@@ -251,15 +251,9 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 				proposalId = BreadCrumbsForm.getIt(request).getSelectedShipping().getProposalVO().getProposalId();
 				request.getSession().setAttribute(Constants.PROPOSAL_ID, proposalId);
 				if (proposalId != null) {
-					// old ProposalFacadeLocal _proposalFacade = ProposalFacadeUtil.getLocalHome().create();
-					// old ProposalLightValue proposal = _proposalFacade.findByPrimaryKeyLight(proposalId);
-					// Proposal3VO proposal = this.proposalService.findByPk(proposalId);
-					// request.getSession().setAttribute(Constants.PROPOSAL_CODE, proposal.getCode());
-					// request.getSession().setAttribute(Constants.PROPOSAL_NUMBER, proposal.getNumber());
 				}
 
 			} else {// User Role
-					// this.RetrieveSessionAttributes(request);
 				proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
 			}
 
@@ -273,8 +267,8 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			List<Dewar3VO> listInfo = searchDewars(mapping, "", "", proposalId, shippingId, null);
 
 			// -----------------------------------------------------
-			// Populate with Info
-			form.setListInfo(listInfo);
+			// Populate form
+			populateForm(listInfo, form);
 
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.INSPECT_MODE);
 
@@ -629,38 +623,13 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			}
 
 			List<Dewar3VO> listInfo = searchDewars(mapping, code, comments, mProposalId, shippingId, dewarId);
-			Integer currentReimbursed = 0;
-			Integer nbReimbursed = 0;
-			
-			
-			// -----------------------------------------------------
-			// Default selection : Try to select first Dewar
-			 if (!listInfo.isEmpty()) {
-				 for (Iterator iterator = listInfo.iterator(); iterator.hasNext();) {
-						Dewar3VO dewar3vo = (Dewar3VO) iterator.next();
-						if (dewar3vo.getIsReimbursed() != null && dewar3vo.getIsReimbursed().equals(true))
-							currentReimbursed ++;
-				}
-				 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
-				 if (defaultSelectedDewar.getSessionVO() != null) {
-					 nbReimbursed=defaultSelectedDewar.getSessionVO().getNbReimbDewars();
-					 form.setFedexCode(defaultSelectedDewar.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + defaultSelectedDewar.getSessionVO().getProposalVO().getNumber() + "/" 
-								+ defaultSelectedDewar.getSessionVO().getBeamlineName() + "/" + df.format(defaultSelectedDewar.getSessionVO().getStartDate()));
-				 } 				 
-			 } 
-			 	 
-			 form.setNbReimbursedDewars(nbReimbursed);
-			 form.setCurrentReimbursedDewars(currentReimbursed);
-			 form.setRemainingReimbursed(false);
-			 if (nbReimbursed != null && currentReimbursed < form.getNbReimbursedDewars())
-				 form.setRemainingReimbursed(true);
-			 
 			 
 			// -----------------------------------------------------
-			// Populate with Info
-			form.setListInfo(listInfo);
+			// Populate form
+			populateForm(listInfo, form);
 
 			FormUtils.setFormDisplayMode(request, actForm, FormUtils.EDIT_MODE);
+			
 		} catch (Exception e) {
 			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", e.toString()));
 			LOG.error(e.toString());
@@ -768,6 +737,36 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 		}
 		return null;
 	}
+	
+	private void populateForm(List<Dewar3VO> listInfo, ViewDewarForm form) {
+		Integer currentReimbursed = 0;
+		Integer nbReimbursed = 0;
+			
+		 if (!listInfo.isEmpty()) {
+			 for (Iterator<Dewar3VO> iterator = listInfo.iterator(); iterator.hasNext();) {
+					Dewar3VO dewar3vo = (Dewar3VO) iterator.next();
+					if (dewar3vo.getIsReimbursed() != null && dewar3vo.getIsReimbursed().equals(true))
+						currentReimbursed ++;
+			}
+			 Dewar3VO defaultSelectedDewar = (Dewar3VO)listInfo.get(0);
+			 if (defaultSelectedDewar.getSessionVO() != null) {
+				 nbReimbursed=defaultSelectedDewar.getSessionVO().getNbReimbDewars();
+				 form.setFedexCode(defaultSelectedDewar.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + defaultSelectedDewar.getSessionVO().getProposalVO().getNumber() + "/" 
+							+ defaultSelectedDewar.getSessionVO().getBeamlineName() + "/" + df.format(defaultSelectedDewar.getSessionVO().getStartDate()));
+			 } 				 
+		 } 
+		 	 
+		 form.setNbReimbursedDewars(nbReimbursed);
+		 form.setCurrentReimbursedDewars(currentReimbursed);
+		 form.setRemainingReimbursed(false);
+		 if (nbReimbursed != null && currentReimbursed < form.getNbReimbursedDewars())
+			 form.setRemainingReimbursed(true);		 
+		 
+		// -----------------------------------------------------
+		// Populate with Info
+		form.setListInfo(listInfo);
+	}
+
 
 	/**
 	 * getDateTime
