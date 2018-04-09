@@ -124,6 +124,8 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 	private Laboratory3Service laboratory3Service;
 
 	private DewarTransportHistory3Service dewarTransportHistory3Service;
+	
+	private SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
 	 * Initialize the needed services.
@@ -630,7 +632,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			Integer currentReimbursed = 0;
 			Integer nbReimbursed = 0;
 			
-			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+			
 			// -----------------------------------------------------
 			// Default selection : Try to select first Dewar
 			 if (!listInfo.isEmpty()) {
@@ -699,7 +701,6 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			// Retrieve Dewar information
 			Dewar3VO selectedDewar = DBTools.getSelectedDewar(new Integer(dewarId));
 			Dewar3VO info = selectedDewar;
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			form.setNbReimbursedDewars(info.getSessionVO().getNbReimbDewars());
 			form.setInfo(info);
 			form.setFedexCode(info.getSessionVO().getProposalVO().getCode().toUpperCase() + "-" + info.getSessionVO().getProposalVO().getNumber() + "/" 
