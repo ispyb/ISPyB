@@ -25,6 +25,7 @@ import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
 import ispyb.server.mx.services.ws.rest.datacollection.DataCollectionRestWsService;
 import ispyb.server.mx.services.ws.rest.datacollectiongroup.DataCollectionGroupRestWsService;
+import ispyb.server.mx.services.ws.rest.energyscan.EnergyScanRestWsService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.ws.rest.RestWebService;
@@ -84,6 +85,10 @@ public class MXRestWebService extends RestWebService{
 		return (DataCollectionGroupRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionGroupRestWsService.class);
 	}
 	
+	protected EnergyScanRestWsService getWebServiceEnergyScan3Service() throws NamingException {
+		return (EnergyScanRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(EnergyScanRestWsService.class);
+		
+	}
 	protected DataCollectionRestWsService getWebServiceDataCollection3Service() throws NamingException {
 		return (DataCollectionRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionRestWsService.class);
 	}

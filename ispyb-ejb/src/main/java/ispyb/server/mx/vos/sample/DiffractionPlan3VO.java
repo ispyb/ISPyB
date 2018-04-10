@@ -149,6 +149,9 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "minOscWidth")
 	protected Double minOscWidth;
 	
+	@Column(name = "axisRange")
+	protected Double axisRange;
+	
 
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER)
@@ -613,5 +616,13 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		
 		
 		return s;
+	}
+
+	public Double getAxisRange() {
+		return axisRange;
+	}
+
+	public void setAxisRange(Double axisRange) {
+		this.axisRange = axisRange;
 	}
 }
