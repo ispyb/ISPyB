@@ -220,8 +220,6 @@ public class ExiPdfRtfExporter {
 	
 	private DataCollection3Service dcService;
 	
-	private DataCollectionGroupRestWsService dcGroupService;
-	
 	private Image3Service imageService;
 	
 	private SpaceGroup3Service spacegroupService;
@@ -252,8 +250,6 @@ public class ExiPdfRtfExporter {
 				.getLocalService(Session3Service.class);
 		dcService = (DataCollection3Service) ejb3ServiceLocator
 				.getLocalService(DataCollection3Service.class);
-		dcGroupService = (DataCollectionGroupRestWsService) ejb3ServiceLocator
-				.getLocalService(DataCollectionGroupRestWsService.class);
 		imageService = (Image3Service) ejb3ServiceLocator
 				.getLocalService(Image3Service.class);
 		spacegroupService = (SpaceGroup3Service) ejb3ServiceLocator
@@ -267,7 +263,7 @@ public class ExiPdfRtfExporter {
 			SpaceGroup3VO spg = (SpaceGroup3VO) iterator.next();
 			spgMap.put(spg.getSpaceGroupName(), spg.getSpaceGroupNumber());
 		}
-		LOG.info("spgMap=" + spgMap.toString());
+		//LOG.info("spgMap=" + spgMap.toString());
 
 	}
 
