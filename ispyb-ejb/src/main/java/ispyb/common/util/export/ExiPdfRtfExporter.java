@@ -116,6 +116,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_DOC_SMALL = new Font(Font.HELVETICA, 6, Font.NORMAL, Color.BLACK);
 	
 	public final static Font FONT_DOC_BLUE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.BLUE);
+	public final static Font FONT_DOC_BIG_BLUE = new Font(Font.HELVETICA, 12, Font.BOLD, Color.BLUE);
+	
 	public final static Font FONT_DOC_ORANGE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.ORANGE);
 	public final static Font FONT_DOC_RED = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.RED);
 
@@ -144,6 +146,8 @@ public class ExiPdfRtfExporter {
 	public final static Font FONT_INDEXING_SUCCESS = new Font(Font.HELVETICA, 6, Font.BOLD, GREEN_COLOR);
 
 	public final static int NB_COL_DATACOLLECTION = 7;
+	
+	public final static int NB_COL_ENERGYSCAN = 6;
 	
 	public final static int NB_COL_DATA_ANALYSIS = 12;
 
@@ -199,18 +203,22 @@ public class ExiPdfRtfExporter {
 
 	// dataCollectionViewObject List
 	List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
+	
+	List<Map<String, Object>> energyScans = new ArrayList<Map<String, Object>>();
+	
+	DecimalFormat df1;
 
 	DecimalFormat df2;
 
 	DecimalFormat df3;
+	
+	DecimalFormat df4;
 
 	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 	
 	private Session3Service sessionService;
 	
 	private DataCollection3Service dcService;
-	
-	private DataCollectionGroupRestWsService dcGroupService;
 	
 	private Image3Service imageService;
 	
@@ -219,26 +227,29 @@ public class ExiPdfRtfExporter {
 	private Map <String, Integer> spgMap = new HashMap <String, Integer> ();
 		
 	public ExiPdfRtfExporter(int proposalId, String proposalDesc, Integer sessionId,
-			List<Map<String, Object>> dataCollections, Integer nbRowsMax) throws Exception {
+			List<Map<String, Object>> dataCollections, List<Map<String, Object>> energyScans, Integer nbRowsMax) throws Exception {
 		this.proposalDesc = proposalDesc;
 		this.sessionId = sessionId;
 		this.dataCollections = dataCollections;
+		this.energyScans = energyScans;
 		this.nbRowsMax = nbRowsMax;
 		init();
 	}
 
 	private void init() throws Exception {
+		df1 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+		df1.applyPattern("#####0.0");
 		df2 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 		df2.applyPattern("#####0.00");
 		df3 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 		df3.applyPattern("#####0.000");
+		df4 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+		df4.applyPattern("#####0.0000");
 
 		sessionService = (Session3Service) ejb3ServiceLocator
 				.getLocalService(Session3Service.class);
 		dcService = (DataCollection3Service) ejb3ServiceLocator
 				.getLocalService(DataCollection3Service.class);
-		dcGroupService = (DataCollectionGroupRestWsService) ejb3ServiceLocator
-				.getLocalService(DataCollectionGroupRestWsService.class);
 		imageService = (Image3Service) ejb3ServiceLocator
 				.getLocalService(Image3Service.class);
 		spacegroupService = (SpaceGroup3Service) ejb3ServiceLocator
@@ -252,7 +263,7 @@ public class ExiPdfRtfExporter {
 			SpaceGroup3VO spg = (SpaceGroup3VO) iterator.next();
 			spgMap.put(spg.getSpaceGroupName(), spg.getSpaceGroupNumber());
 		}
-		LOG.info("spgMap=" + spgMap.toString());
+		//LOG.info("spgMap=" + spgMap.toString());
 
 	}
 
@@ -292,13 +303,15 @@ public class ExiPdfRtfExporter {
 		// Session comments
 		setSessionComments(document);
 		// session title& info
-		setSessionTable(document);
+		setSessionTable(document);		
 
 		// ======================
 		// Data Collection table
 		// ======================
 		document.add(new Paragraph(" "));
 		setDataCollectionTable(document);
+		document.add(new Paragraph(" "));
+		setEnergyScanTable(document);
 
 		// ======================
 		// End of file
@@ -360,10 +373,10 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setHeader(Document document) throws Exception {
 		HeaderFooter header;
-		String h = "Data Collections for Proposal: " + proposalDesc;
+		String h = "Session summary for " + proposalDesc;
 		if (slv != null) {
-			h += " on Beamline: " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
-					+ "  ---  Session start date: "
+			h += " on beamline " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
+					+ "  starting on "
 					+ (slv.getStartDate() == null ? "" : Formatter.formatDate(slv.getStartDate()));
 		}
 		header = new HeaderFooter(new Phrase(h, FONT_HELVETICA_10), false);
@@ -506,14 +519,16 @@ public class ExiPdfRtfExporter {
 			Map<String, String> mapDataCollectionGroupIdCClass = new HashMap<String, String>();
 
 			// DataCollection Rows
-			//Iterator<Map<String, Object>> it = dataCollections.iterator();
 			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
 					
 			int i = 0;
 			while (it2.hasNext() && i < nbRowsMax) {
 				Map<String, Object> dataCollectionMapData = it2.next();
-				LOG.info("dcMap=" + dataCollectionMapData.toString());
-				setDataCollectionMapData(document, dataCollectionMapData);
+				
+				// test if worflow not null
+				if (dataCollectionMapData.get("Workflow_workflowType") !=null && !dataCollectionMapData.get("Workflow_workflowType").toString().isEmpty()) {				
+					setDataCollectionMapData(document, dataCollectionMapData);
+				}
 				
 				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
 					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
@@ -531,6 +546,33 @@ public class ExiPdfRtfExporter {
 	}
 	
 	/**
+	 * set the energyScan table
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setEnergyScanTable(Document document) throws Exception {
+				
+		document.add(new Paragraph("Energy scans:", FONT_TITLE));
+		document.add(new Paragraph(" "));
+		
+		if (energyScans.isEmpty()) {
+			document.add(new Paragraph("There is no energy scans in this report", FONT_DOC));
+		} else {
+			
+			document.add(new Paragraph(" "));
+			
+			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(energyScans);							
+			for (Iterator <Map<String, Object>> iterator = it2; it2.hasNext();) {
+				Map<String, Object> energyScanMapData = (Map<String, Object>) iterator.next();
+				setEnergyScanMapData(document, energyScanMapData);									
+			}
+			document.add(new Paragraph(" "));
+		}
+		document.add(new Paragraph(" "));						
+	}
+	
+	/**
 	 * set the dataCollection table
 	 * 
 	 * @param document
@@ -542,16 +584,13 @@ public class ExiPdfRtfExporter {
 		if (dataCollections.isEmpty()) {
 			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
 		} else {
-			//document.add(new Paragraph(" "));
-			
 			// DataCollection Rows
-			//Iterator<Map<String, Object>> it = dataCollections.iterator();
 			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
 
 			int i = 0;
 			while (it2.hasNext() && i < nbRowsMax) {
 				Map<String, Object> dataCollectionMapData = it2.next();
-				LOG.info("dcMap=" + dataCollectionMapData.toString());
+				//LOG.info("dcMap=" + dataCollectionMapData.toString());
 				setDataAnalysisMapData(document, dataCollectionMapData);				
 				i++;
 			}
@@ -598,7 +637,6 @@ public class ExiPdfRtfExporter {
 				+ 	"Run #:\n" 
 				+ 	"Images:\n" 
 				+ 	"Transmission:\n";
-		LOG.info("parag=" + parag);
 		p = new Paragraph(parag, FONT_DOC);
 		table.addCell(p);
 		
@@ -609,15 +647,14 @@ public class ExiPdfRtfExporter {
 				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionNumber", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n" 
-				+ getCellParam(dataCollectionMapItem, "transmission", df2) + "%\n";
-		LOG.info("parag=" + parag);
+				+ getCellParam(dataCollectionMapItem, "transmission", df1) + "%\n";
 		p = new Paragraph(parag, FONT_DOC_BOLD);
 		table.addCell(p);
 		
 		// 3 Cell
 		
 		parag = "Resolution (corner): \n"
-				+ 	"Wavelength: \n" 
+				+ 	"En(Wavelength): \n" 
 				+ 	"Omega range: \n" 
 				+ 	"Omega start: \n" 
 				+ 	"Exposure time: \n" 
@@ -630,12 +667,13 @@ public class ExiPdfRtfExporter {
 		// Cell 4
 		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 			+ " ("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + Constants.ANGSTROM + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
+		+  "("+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + ")" + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange", df2) + Constants.DEGREE + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart", df2) + Constants.DEGREE + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_exposureTime", df2) + "s \n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + "ph/sec \n" 
-		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + "ph/sec \n" ;
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + " ph/s \n" 
+		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + " ph/s \n";
 		
 		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
 		
@@ -670,12 +708,112 @@ public class ExiPdfRtfExporter {
 		// row3
 		if (dataCollectionMapItem.get("DataCollection_comments") != null && dataCollectionMapItem.get("DataCollection_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
-		else
+		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
+			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
+		else 
 			document.add(new Paragraph(" "));
 				
 		return;
 	}
 	
+	/**
+	 * set a line for a specified dataCollection in the dataCollection table
+	 * 
+	 * @param document
+	 * @param table
+	 * @param col
+	 * @param session
+	 * @param df2
+	 * @param df3
+	 * @throws Exception
+	 */
+	private void setEnergyScanMapData(Document document, Map<String, Object> energyScanMapItem) throws Exception {
+
+		// 1st row
+		String parag = "Energy Scan " + getCellParam(energyScanMapItem, "startTime", null) + "\n";
+		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
+		document.add(p);
+		parag = getCellParam(energyScanMapItem, "element", null) + "\n";
+		p = new Paragraph(parag, FONT_DOC_BIG_BLUE);
+		document.add(p);
+		
+	
+		//row3
+		Table table = new Table(NB_COL_ENERGYSCAN);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
+		table.setCellsFitPage(true);
+		table.setWidth(90);
+
+		// 1st Cell
+		parag = "Protein:\n" 
+				+ 	"Sample:\n" 
+				+ 	"Filename:\n" 
+				+ 	"Fluorescence Detector:\n" 
+				+ 	"Energy Scan Range:\n" 
+				+ 	"Edge Energy (theoretical):\n" 
+				+ 	"Flux @100%:\n" 
+				+ 	"Transmission:\n" 
+				+ 	"Beam Size Hor:\n" 
+				+ 	"Beam Size Ver:\n" 
+				+ 	"Exposure time:\n";
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell2
+		parag = getCellParam(energyScanMapItem, "acronym", null) + "\n" 
+				+ getCellParam(energyScanMapItem, "name", null) + "\n" 
+				+ getCellParam(energyScanMapItem, "filename", null) + "\n" 
+				+ getCellParam(energyScanMapItem, "fluorescenceDetector", null) + "\n" 
+				+ getCellParam(energyScanMapItem, "startEnergy", null) + "keV" + getCellParam(energyScanMapItem, "endEnergy", null) + "keV \n" 
+				+ getCellParam(energyScanMapItem, "edgeEnergy", null) + "keV \n" 
+				+ getCellParam(energyScanMapItem, "flux", df1) + "ph/s \n"
+				+ getCellParam(energyScanMapItem, "transmissionFactor", df1) + "% \n"
+				+ getCellParam(energyScanMapItem, "beamSizeHorizontal", df1) + Constants.MICRO + " \n"
+				+ getCellParam(energyScanMapItem, "beamSizeVertical", df1) + Constants.MICRO + " \n"
+				+ getCellParam(energyScanMapItem, "exposureTime", df3) + "s \n";
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+		
+		// 3 Cell
+		
+		parag = "Peak Energy: \n"
+				+ 	"Pk f': \n" 
+				+ 	"Pk f'': \n" 
+				+ 	"Inflection Energy: \n" 
+				+ 	"Ip f': \n" 
+				+ 	"Ip f'': \n" ;
+
+		table.addCell(new Paragraph(parag, FONT_DOC));
+		
+		
+		// Cell 4
+		parag = getCellParam(energyScanMapItem, "peakEnergy", df3) + "keV \n"
+			+ getCellParam(energyScanMapItem, "peakFPrime", df2) + " e- \n" 
+		+ 	getCellParam(energyScanMapItem, "peakFDoublePrime", df2) + " e- \n" 
+		+  "("+ getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n" 
+		+ 	getCellParam(energyScanMapItem, "inflectionFPrime", df2)  + " e- \n" 
+		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n" ;
+		
+		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
+		
+		// 5 Cell : thumbnail
+		
+		if (!getCellParam(energyScanMapItem, "lastImageId", null).isEmpty()) {
+			String thumbnailPath = getCellParam(energyScanMapItem, "jpegChoochFileFullPath", null);
+			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
+			cellThumbnail.setBorderWidth(0);
+			table.addCell(cellThumbnail);
+		} else {
+			table.addCell(" ");
+		}
+				
+		document.add(table);
+						
+		return;
+	}
+
 	/**
 	 * set a line for a specified dataCollection in the dataCollection table
 	 * 
@@ -708,7 +846,6 @@ public class ExiPdfRtfExporter {
 				+ 	"Prefix: \n\n" 
 				+ 	"Images: \n\n" ;
 
-		LOG.info("parag=" + parag);
 		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
@@ -717,7 +854,6 @@ public class ExiPdfRtfExporter {
 				+ 	getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
 				+ 	getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
 
-		LOG.info("parag=" + parag);
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
 		
@@ -725,7 +861,6 @@ public class ExiPdfRtfExporter {
 		parag = "Type: \n" 
 				+ "Res. (corner): \n" 
 				+ "Wavelength: \n" ; 
-		LOG.info("parag=" + parag);
 		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 
