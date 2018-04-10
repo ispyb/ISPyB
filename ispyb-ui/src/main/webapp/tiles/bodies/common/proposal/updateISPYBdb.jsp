@@ -68,8 +68,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
                                <layout:option value="IX"/>   
                                <layout:option value="IN"/>
                                <layout:option value="IM"/>
-                               <layout:option value="BM14"/>
-                               <layout:option value="BM14U"/>
+                               <layout:option value="IH-LS"/>
                                <layout:option value="BM161"/>
                                <layout:option value="SC"/>
                                <layout:option value="TC"/>                              

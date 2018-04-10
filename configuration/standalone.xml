@@ -533,7 +533,8 @@
             <buffer-cache name="default"/>
             <server name="default-server">
 				<ajp-listener name="ajp" socket-binding="ajp" max-parameters="20000"/>
-                <http-listener name="default" socket-binding="http" max-parameters="20000"/>
+                <http-listener name="default" socket-binding="http" proxy-address-forwarding="true" max-parameters="20000"/>
+
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>

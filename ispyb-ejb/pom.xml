@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.4.4</version>
+		<version>5.4.7</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
@@ -180,7 +180,7 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-			<version>1.3</version>
+			<version>1.4</version>
 		</dependency>
 		
 		<dependency>
@@ -282,6 +282,8 @@
 
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+  			 
+  			 <ispyb.shipping.reimburseddewars>true</ispyb.shipping.reimburseddewars>
   			
   		</properties>
   	</profile>
@@ -333,6 +335,7 @@
                 	
                 	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
                 	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                	  	<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
                 	  	
                 </properties>
   	</profile>
@@ -395,6 +398,7 @@
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 				
 				
   		</properties>
@@ -448,6 +452,8 @@
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 			
 			<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url> 
+			
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
   			
   		</properties>
   	</profile>
@@ -494,6 +500,8 @@
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
 			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 			  				
   		</properties>
   	</profile> 

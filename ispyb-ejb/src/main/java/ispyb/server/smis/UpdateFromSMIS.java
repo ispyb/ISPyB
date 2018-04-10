@@ -545,7 +545,7 @@ public class UpdateFromSMIS {
 						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
 								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
 							LOG.debug("laboratory already exists");
-							if (!person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail())){
+							if ( person3VO.getEmailAddress() == null || !person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail()) ){
 								person3VO.setEmailAddress(labContacts[i].getScientistEmail());
 								person.merge(person3VO);
 							}
@@ -981,6 +981,10 @@ public class UpdateFromSMIS {
 			if (Constants.SITE_IS_SOLEIL()) {
 				sesv.setVisit_number(visit_number);
 			}
+			
+			if (Constants.SITE_IS_ESRF()) {
+				sesv.setNbReimbDewars(sessionVO.getReimbursedDewars());
+			}
 			session.create(sesv);
 			LOG.debug("inserted a new session inside ISPyB db: " + sessionVO.getStartDate().getTime() + " start shift="
 					+ startShift + " nb shifts=" + nbShifts + " end date=" + ((Date) endDate).toString());
@@ -1036,6 +1040,12 @@ public class UpdateFromSMIS {
 						&& !sessionVO.getShifts().equals(ispybSession.getNbShifts())) {
 					changeTxt += ", nbShifts " + ispybSession.getNbShifts() + " => " + sessionVO.getShifts();
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
+					changeSession = true;
+				}
+				if (sessionVO.getReimbursedDewars() != null && ispybSession.getNbReimbDewars() != null
+						&& !sessionVO.getReimbursedDewars().equals(ispybSession.getNbReimbDewars())) {
+					changeTxt += ", getNbReimbDewars() " + ispybSession.getNbReimbDewars() + " => " + sessionVO.getReimbursedDewars();
+					ispybSession.setNbReimbDewars(new Integer(sessionVO.getReimbursedDewars()));
 					changeSession = true;
 				}
 				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {

@@ -239,6 +239,7 @@ public class DewarRestWebService extends RestWebService {
 			@FormParam("barCode") String barCode,
 			@FormParam("customValue") String customValue,
 			@FormParam("transportValue") String transportValue,
+			@FormParam("isReimbursed") Boolean isReimbursed,
 			@FormParam("trackingNumberFromSynchrotron") String trackingNumberFromSynchrotron,
 			@FormParam("trackingNumberToSynchrotron") String trackingNumberToSynchrotron)
 			throws Exception {
@@ -293,9 +294,17 @@ public class DewarRestWebService extends RestWebService {
 			} else {
 				dewar3vo.setTransportValue(null);
 			}
+			if (isReimbursed != null) {			
+				dewar3vo.setIsReimbursed(isReimbursed);				
+			} else {
+				dewar3vo.setIsReimbursed(false);	
+			}
 			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
 			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
-			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			//TODO : if sessionId != null set the new session ? possible to update the session ??
+			if (dewar3vo.getSessionVO() == null ) {
+				dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			}
 			getDewar3Service().update(dewar3vo);
 			this.logFinish("saveDewar", start, logger);
 			
@@ -310,6 +319,7 @@ public class DewarRestWebService extends RestWebService {
 
 
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
+		
 		Dewar3VO dewar = this.getDewar3Service().findByPk(dewarId, true, true);
 
 		// Retrieve shipment object ------------------------
@@ -462,9 +472,12 @@ public class DewarRestWebService extends RestWebService {
 
 		// default courier company (only if exists)
 		String defaultCourrierCompany = "unknown";
+		
+		
 		if (returnLabContact.getDefaultCourrierCompany() != null)
 			defaultCourrierCompany = returnLabContact
 					.getDefaultCourrierCompany();
+		
 		fieldNamesAndValues.put("TF_returnCourierCompany",
 				defaultCourrierCompany);
 
@@ -476,6 +489,12 @@ public class DewarRestWebService extends RestWebService {
 				Integer.toString(returnLabContact.getDewarAvgCustomsValue()));
 		fieldNamesAndValues.put("TF_returnTransportValue",
 				Integer.toString(returnLabContact.getDewarAvgTransportValue()));
+		
+		// reimbursed dewars
+		if (dewar.getIsReimbursed().booleanValue()) {
+			fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
+			fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
+		}
 
 		pdfFormFiller.setFields(fieldNamesAndValues);
 

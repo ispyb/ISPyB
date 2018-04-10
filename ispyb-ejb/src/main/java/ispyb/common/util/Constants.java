@@ -771,6 +771,8 @@ public final class Constants {
 	/* delivery agents names */
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_FEDEX = "Fedex";
+	
+	public static final String SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT = getProperty("ispyb.shipping.fedex.account");
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_TNT = "TNT";
 
@@ -934,7 +936,7 @@ public final class Constants {
 
 	public static final String TEMPLATE_XLS_FILENAME = getProperty("shipment.upload.template");
 
-	public static final String TEMPLATE_XLS_POPULATED_FILENAME = "ispyb-template5.1.xlt";
+	public static final String TEMPLATE_XLS_POPULATED_FILENAME = getProperty("shipment.upload.template");
 
 	public static final String TEMPLATE_XLS_POPULATED_FOR_EXPORT_FILENAME1 = "ispyb-template5.1.1_1.xls";
 

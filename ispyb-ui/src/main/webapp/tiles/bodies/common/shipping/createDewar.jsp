@@ -115,9 +115,14 @@ window.onload=setDewarStatus
 					<layout:space/>
 					
 					<!-- Issue 1076: if role in {manager, localContact, blom} then the user can change the status -->
-					<bean:define id="defaultDewarStatus"  name="viewDewarForm" property="info.dewarStatus" type="java.lang.String"></bean:define>
-					<html:text property="defaultDewarStatus" value="<%=defaultDewarStatus %>" style="display:none"></html:text>
-					
+					<logic:empty name="viewDewarForm" property="info.dewarStatus"> 
+						<html:text property="defaultDewarStatus" value="opened" style="display:none"></html:text>
+					</logic:empty>					
+					<logic:notEmpty name="viewDewarForm" property="info.dewarStatus"> 
+						<bean:define id="defaultDewarStatus"  name="viewDewarForm" property="info.dewarStatus" type="java.lang.String"></bean:define>
+						<html:text property="defaultDewarStatus" value="<%=defaultDewarStatus %>" style="display:none"></html:text>
+					</logic:notEmpty>
+														
 					<logic:notEmpty name="viewDewarForm" property="info.code">
 						<logic:equal name="viewDewarForm" property="role" value="<%=Constants.ROLE_BLOM%>">
 							<layout:select layoutId="dewarStatus" key="Status" property="info.dewarStatus" styleClass= "FIELD" value="info.dewarStatus" mode="E,E,I" onchange="<%= \"selectDewarStatus('\"+Constants.SHIPPING_STATUS_OPENED+\"', '\"+Constants.SHIPPING_STATUS_READY_TO_GO+\"');\" %>">
