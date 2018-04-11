@@ -181,7 +181,8 @@ public class ToolsForBLSampleWebService {
 	Double maxDimAccrossSpindleAxis, @WebParam(name = "radiationSensitivityBeta")
 	Double radiationSensitivityBeta, 
 	@WebParam(name = "radiationSensitivityGamma") Double radiationSensitivityGamma, 
-	@WebParam(name = "minOscWidth") Double minOscWidth
+	@WebParam(name = "minOscWidth") Double minOscWidth,
+	@WebParam(name = "axisRange") Double axisRange
 	) throws Exception {
 		DiffractionPlanWS3VO vo = new DiffractionPlanWS3VO(diffractionPlanId,  experimentKind, observedResolution,
 				minimalResolution, exposureTime, oscillationRange, maximalResolution, screeningResolution, radiationSensitivity,
@@ -189,7 +190,7 @@ public class ToolsForBLSampleWebService {
 				aimedMultiplicity, aimedResolution, anomalousData, complexity, estimateRadiationDamage, forcedSpaceGroup,
 				requiredCompleteness, requiredMultiplicity, requiredResolution, strategyOption, kappaStrategyOption,
 				numberOfPositions, minDimAccrossSpindleAxis, maxDimAccrossSpindleAxis, radiationSensitivityBeta,
-				radiationSensitivityGamma,minOscWidth);
+				radiationSensitivityGamma,minOscWidth, axisRange);
 		return storeOrUpdateDiffractionPlanValue(vo);
 	}
 
