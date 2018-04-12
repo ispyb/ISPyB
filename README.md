@@ -29,7 +29,7 @@ For example:
 <settings>
 	<proxies>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_http</id>
 			<active>true</active>
 			<protocol>http</protocol>
 			<host>proxy.esrf.fr</host>
@@ -37,7 +37,7 @@ For example:
 			<nonProxyHosts>localhost</nonProxyHosts>
 		</proxy>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_https</id>
 			<active>true</active>
 			<protocol>https</protocol>
 			<host>proxy.esrf.fr</host>
