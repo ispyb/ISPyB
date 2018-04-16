@@ -149,6 +149,8 @@ public class ExiPdfRtfExporter {
 	
 	public final static int NB_COL_ENERGYSCAN = 6;
 	
+	public final static int NB_COL_XRF = 4;
+	
 	public final static int NB_COL_DATA_ANALYSIS = 12;
 
 	public final static int SIZE_FONT = 8;
@@ -206,6 +208,8 @@ public class ExiPdfRtfExporter {
 	
 	List<Map<String, Object>> energyScans = new ArrayList<Map<String, Object>>();
 	
+	List<Map<String, Object>> xrfSpectrums = new ArrayList<Map<String, Object>>();
+	
 	DecimalFormat df1;
 
 	DecimalFormat df2;
@@ -227,11 +231,12 @@ public class ExiPdfRtfExporter {
 	private Map <String, Integer> spgMap = new HashMap <String, Integer> ();
 		
 	public ExiPdfRtfExporter(int proposalId, String proposalDesc, Integer sessionId,
-			List<Map<String, Object>> dataCollections, List<Map<String, Object>> energyScans, Integer nbRowsMax) throws Exception {
+			List<Map<String, Object>> dataCollections, List<Map<String, Object>> energyScans, List<Map<String, Object>> xrfSpectrums, Integer nbRowsMax) throws Exception {
 		this.proposalDesc = proposalDesc;
 		this.sessionId = sessionId;
 		this.dataCollections = dataCollections;
 		this.energyScans = energyScans;
+		this.xrfSpectrums = xrfSpectrums;
 		this.nbRowsMax = nbRowsMax;
 		init();
 	}
@@ -308,11 +313,11 @@ public class ExiPdfRtfExporter {
 		// ======================
 		// Data Collection table
 		// ======================
-		document.add(new Paragraph(" "));
 		setDataCollectionTable(document);
-		document.add(new Paragraph(" "));
+		
 		setEnergyScanTable(document);
-
+		
+		setXRFSpectrumTable(document);
 		// ======================
 		// End of file
 		// ======================
@@ -514,19 +519,21 @@ public class ExiPdfRtfExporter {
 		} else {
 			
 			document.add(new Paragraph(" "));
-						
+			LOG.info("dataCollections : " + dataCollections.size());			
 			// need the list of DCgroups for crystal class summary
 			Map<String, String> mapDataCollectionGroupIdCClass = new HashMap<String, String>();
 
 			// DataCollection Rows
-			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
-					
+			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
+			
 			int i = 0;
-			while (it2.hasNext() && i < nbRowsMax) {
-				Map<String, Object> dataCollectionMapData = it2.next();
+			
+			for (Iterator<Map<String, Object>> iterator = dataCollections.iterator(); iterator.hasNext();) {
+			//while (it2.hasNext() && i < nbRowsMax + 1) {
 				
-				// test if worflow not null
-				if (dataCollectionMapData.get("Workflow_workflowType") !=null && !dataCollectionMapData.get("Workflow_workflowType").toString().isEmpty()) {				
+				Map<String, Object> dataCollectionMapData = (Map<String, Object>) iterator.next();					
+				// test if images exist
+				if (dataCollectionMapData.get("DataCollection_numberOfImages") !=null && !dataCollectionMapData.get("DataCollection_numberOfImages").toString().isEmpty()) {				
 					setDataCollectionMapData(document, dataCollectionMapData);
 				}
 				
@@ -537,9 +544,11 @@ public class ExiPdfRtfExporter {
 					}
 				}					
 				i++;
+				if (i > nbRowsMax)
+					break;
 			}
 			//setCrystalClassSummary(document, mapDataCollectionGroupIdCClass);
-			document.add(new Paragraph(" "));
+			//document.add(new Paragraph(" "));
 		}
 		document.add(new Paragraph(" "));			
 			
@@ -561,11 +570,37 @@ public class ExiPdfRtfExporter {
 		} else {
 			
 			document.add(new Paragraph(" "));
+			LOG.info(" energyScans size =" + energyScans.size());
 			
-			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(energyScans);							
-			for (Iterator <Map<String, Object>> iterator = it2; it2.hasNext();) {
+			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(energyScans);		
+			
+			for (Iterator <Map<String, Object>> iterator = energyScans.iterator() ; iterator.hasNext();) {
 				Map<String, Object> energyScanMapData = (Map<String, Object>) iterator.next();
 				setEnergyScanMapData(document, energyScanMapData);									
+			}
+			document.add(new Paragraph(" "));
+		}
+		document.add(new Paragraph(" "));						
+	}
+	
+	private void setXRFSpectrumTable(Document document) throws Exception {
+		
+		document.add(new Paragraph("XRF spectra:", FONT_TITLE));
+		document.add(new Paragraph(" "));
+
+		if (xrfSpectrums.isEmpty()) {
+			document.add(new Paragraph("There is no XRF spectra in this report", FONT_DOC));
+		} else {
+			LOG.info(" xrfSpectrums size =" + xrfSpectrums.size());
+			document.add(new Paragraph(" "));
+			int i = 0;		
+			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(xrfSpectrums);							
+			for (Iterator<Map<String, Object>> iterator = xrfSpectrums.iterator(); iterator.hasNext();) {
+				Map<String, Object> xrfMapData = (Map<String, Object>) iterator.next();
+				setXRFSpectrumMapData(document, xrfMapData);		
+				LOG.info(" i = " + i);
+				LOG.info(" xrfMapData = " + xrfMapData.toString());
+				i++;
 			}
 			document.add(new Paragraph(" "));
 		}
@@ -708,23 +743,18 @@ public class ExiPdfRtfExporter {
 		// row3
 		if (dataCollectionMapItem.get("DataCollection_comments") != null && dataCollectionMapItem.get("DataCollection_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
+		
 		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
-		else 
-			document.add(new Paragraph(" "));
-				
+			
+		document.add(new Paragraph(" "));	
 		return;
 	}
 	
 	/**
-	 * set a line for a specified dataCollection in the dataCollection table
+	 * set a line for a specified energyScan in the EnargyScan table
 	 * 
 	 * @param document
-	 * @param table
-	 * @param col
-	 * @param session
-	 * @param df2
-	 * @param df3
 	 * @throws Exception
 	 */
 	private void setEnergyScanMapData(Document document, Map<String, Object> energyScanMapItem) throws Exception {
@@ -802,6 +832,65 @@ public class ExiPdfRtfExporter {
 		
 		if (!getCellParam(energyScanMapItem, "lastImageId", null).isEmpty()) {
 			String thumbnailPath = getCellParam(energyScanMapItem, "jpegChoochFileFullPath", null);
+			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
+			cellThumbnail.setBorderWidth(0);
+			table.addCell(cellThumbnail);
+		} else {
+			table.addCell(" ");
+		}
+				
+		document.add(table);
+						
+		return;
+	}
+	
+	/**
+	 * set a line for a specified XRFSpectrum in the XRFSpectrum table
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setXRFSpectrumMapData(Document document, Map<String, Object> xrfSpectrumItem) throws Exception {
+
+		// 1st row
+		String parag = "XRF Spectrum " + getCellParam(xrfSpectrumItem, "startTime", null) + "\n";
+		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
+		document.add(p);
+		
+		//row2		
+		parag = getCellParam(xrfSpectrumItem, "fittedDataFileFullPath", null) + "\n";
+		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
+		
+	
+		//row3
+		Table table = new Table(NB_COL_XRF);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
+		table.setCellsFitPage(true);
+		table.setWidth(90);
+
+		// 1st Cell
+		parag = "Protein:\n" 
+				+ 	"Sample:\n" 
+				+ 	"Filename:\n" 
+				+ 	"Energy:\n" ;
+		
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell2
+		parag = getCellParam(xrfSpectrumItem, "acronym", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "name", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "filename", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "energy", null) + "keV" + "\n" ;
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+				
+		// 5 Cell : thumbnail
+		
+		if (!getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null).isEmpty()) {
+			String thumbnailPath = getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null);
 			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
 			cellThumbnail.setBorderWidth(0);
 			table.addCell(cellThumbnail);
