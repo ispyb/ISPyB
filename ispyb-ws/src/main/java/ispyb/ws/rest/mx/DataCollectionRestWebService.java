@@ -417,9 +417,11 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		Integer id = new Integer(sessionId);
 		
 		List<Map<String, Object>> dataCollections = 
-				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionIdHavingImages(this.getProposalId(proposal), id);
 		
 		List<Map<String, Object>> energyScans = this.getWebServiceEnergyScan3Service().getViewBySessionId(this.getProposalId(proposal), id);
+		
+		List<Map<String, Object>> xrfSpectrums = this.getWebServiceXFEFluorescenSpectrum3Service().getViewBySessionId(this.getProposalId(proposal), id);
 		
 		Integer nbRowsMax = dataCollections.size();
 				
@@ -427,7 +429,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			nbRowsMax = new Integer(nbRows);
 		}
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, nbRowsMax);
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, xrfSpectrums, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
 
@@ -447,7 +449,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			nbRowsMax = new Integer(nbRows);
 		}
 		
-		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, null, nbRowsMax);
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, null, null, nbRowsMax);
 		
 		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
 
