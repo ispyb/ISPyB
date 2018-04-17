@@ -510,40 +510,32 @@ public class ExiPdfRtfExporter {
 	 * @throws Exception
 	 */
 	private void setDataCollectionTable(Document document) throws Exception {
-				
-		document.add(new Paragraph("Data Collections:", FONT_TITLE));
+		
 		document.add(new Paragraph(" "));
 		
 		if (dataCollections.isEmpty()) {
+			document.add(new Paragraph("Data Collections:", FONT_TITLE));
 			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
+			
 		} else {
 			
-			document.add(new Paragraph(" "));
-			LOG.info("dataCollections : " + dataCollections.size());			
+			document.add(new Paragraph(dataCollections.size() + " Data Collections:", FONT_TITLE));
+
 			// need the list of DCgroups for crystal class summary
 			Map<String, String> mapDataCollectionGroupIdCClass = new HashMap<String, String>();
 
 			// DataCollection Rows
-			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
-			
-			int i = 0;
-			
-			for (Iterator<Map<String, Object>> iterator = dataCollections.iterator(); iterator.hasNext();) {
-			//while (it2.hasNext() && i < nbRowsMax + 1) {
+			for (int i = dataCollections.size() - 1; i >= 0; i--) {
 				
-				Map<String, Object> dataCollectionMapData = (Map<String, Object>) iterator.next();					
-				// test if images exist
-				if (dataCollectionMapData.get("DataCollection_numberOfImages") !=null && !dataCollectionMapData.get("DataCollection_numberOfImages").toString().isEmpty()) {				
-					setDataCollectionMapData(document, dataCollectionMapData);
-				}
+				Map<String, Object> dataCollectionMapData = dataCollections.get(i);			
+				setDataCollectionMapData(document, dataCollectionMapData);
 				
 				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
 					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
 					if (!mapDataCollectionGroupIdCClass.containsKey(dcgId)){
 							mapDataCollectionGroupIdCClass.put(dcgId, getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null));
 					}
-				}					
-				i++;
+				}
 				if (i > nbRowsMax)
 					break;
 			}
@@ -562,37 +554,35 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setEnergyScanTable(Document document) throws Exception {
 				
-		document.add(new Paragraph("Energy scans:", FONT_TITLE));
 		document.add(new Paragraph(" "));
 		
 		if (energyScans.isEmpty()) {
+			document.add(new Paragraph("Energy scans:", FONT_TITLE));
 			document.add(new Paragraph("There is no energy scans in this report", FONT_DOC));
 		} else {
 			
-			document.add(new Paragraph(" "));
-			LOG.info(" energyScans size =" + energyScans.size());
-			
-			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(energyScans);		
-			
+			document.add(new Paragraph(energyScans.size() + " Energy scans:", FONT_TITLE));
+						
 			for (Iterator <Map<String, Object>> iterator = energyScans.iterator() ; iterator.hasNext();) {
 				Map<String, Object> energyScanMapData = (Map<String, Object>) iterator.next();
 				setEnergyScanMapData(document, energyScanMapData);									
 			}
-			document.add(new Paragraph(" "));
+			
 		}
 		document.add(new Paragraph(" "));						
 	}
 	
 	private void setXRFSpectrumTable(Document document) throws Exception {
 		
-		document.add(new Paragraph("XRF spectra:", FONT_TITLE));
+		
 		document.add(new Paragraph(" "));
 
 		if (xrfSpectrums.isEmpty()) {
+			document.add(new Paragraph("XRF spectra:", FONT_TITLE));
 			document.add(new Paragraph("There is no XRF spectra in this report", FONT_DOC));
+			
 		} else {
-			LOG.info(" xrfSpectrums size =" + xrfSpectrums.size());
-			document.add(new Paragraph(" "));
+			document.add(new Paragraph(xrfSpectrums.size() + " XRF spectra:", FONT_TITLE));
 			int i = 0;		
 			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(xrfSpectrums);							
 			for (Iterator<Map<String, Object>> iterator = xrfSpectrums.iterator(); iterator.hasNext();) {
@@ -602,7 +592,7 @@ public class ExiPdfRtfExporter {
 				LOG.info(" xrfMapData = " + xrfMapData.toString());
 				i++;
 			}
-			document.add(new Paragraph(" "));
+			
 		}
 		document.add(new Paragraph(" "));						
 	}
@@ -840,7 +830,8 @@ public class ExiPdfRtfExporter {
 		}
 				
 		document.add(table);
-						
+		document.add(new Paragraph(" "));
+		
 		return;
 	}
 	
@@ -899,7 +890,7 @@ public class ExiPdfRtfExporter {
 		}
 				
 		document.add(table);
-						
+		document.add(new Paragraph(" "));				
 		return;
 	}
 

@@ -265,52 +265,52 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 
-//	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-//	@GET
-//	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/pdf")
-//	@Produces({ "application/pdf" })
-//	public Response getDataCollectionsAnalysisReportBySessionIdPDF(@PathParam("token") String token,
-//			@PathParam("proposal") String proposal,
-//			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
-//
-//		String methodName = "getDataCollectionAnalysisReportyBySessionIdPdf";
-//		long start = this.logInit(methodName, logger, token, proposal, sessionId);
-//		try {
-//			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, false);
-//			this.logFinish(methodName, start, logger);
-//			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
-//			if (ses !=null)
-//				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
-//			else
-//				return this.downloadFile(byteToExport, "No_session.pdf");
-//						
-//		} catch (Exception e) {
-//			return this.logError(methodName, e, start, logger);
-//		}
-//	}
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsAnalysisReportBySessionIdPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
+
+		String methodName = "getDataCollectionAnalysisReportyBySessionIdPdf";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, false);
+			this.logFinish(methodName, start, logger);
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			if (ses !=null)
+				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
+			else
+				return this.downloadFile(byteToExport, "No_session.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 	
-//	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
-//	@GET
-//	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/rtf")
-//	@Produces({ "application/rtf" })
-//	public Response getDataCollectionsAnalysisReportBySessionIdRTF(@PathParam("token") String token,
-//			@PathParam("proposal") String proposal,
-//			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
-//
-//		String methodName = "getDataCollectionReportyBySessionIdRtf";
-//		long start = this.logInit(methodName, logger, token, proposal, sessionId);
-//		try {
-//			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, true);
-//			this.logFinish(methodName, start, logger);
-//			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
-//			if (ses !=null)
-//				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
-//			else
-//				return this.downloadFile(byteToExport, "No_session.pdf");		
-//		} catch (Exception e) {
-//			return this.logError(methodName, e, start, logger);
-//		}
-//	}
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/rtf")
+	@Produces({ "application/rtf" })
+	public Response getDataCollectionsAnalysisReportBySessionIdRTF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId, @QueryParam("nbRows") String nbRows) throws NamingException {
+
+		String methodName = "getDataCollectionReportyBySessionIdRtf";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			byte[] byteToExport = this.getAnalysisPdfRtf(sessionId, proposal, nbRows, true);
+			this.logFinish(methodName, start, logger);
+			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			if (ses !=null)
+				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
+			else
+				return this.downloadFile(byteToExport, "No_session.pdf");		
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 
 	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
@@ -417,7 +417,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		Integer id = new Integer(sessionId);
 		
 		List<Map<String, Object>> dataCollections = 
-				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionIdHavingImages(this.getProposalId(proposal), id);
 		
 		List<Map<String, Object>> energyScans = this.getWebServiceEnergyScan3Service().getViewBySessionId(this.getProposalId(proposal), id);
 		
@@ -436,23 +436,23 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		return byteToExport;
 	}
 	
-//	private byte [] getAnalysisPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf) throws NamingException, Exception {
-//		
-//		Integer id = new Integer(sessionId);
-//		
-//		List<Map<String, Object>> dataCollections = 
-//				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
-//
-//		Integer nbRowsMax = dataCollections.size();
-//		
-//		if (nbRows != null && !nbRows.isEmpty()) {
-//			nbRowsMax = new Integer(nbRows);
-//		}
-//		
-//		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, null, null, nbRowsMax);
-//		
-//		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
-//
-//		return byteToExport;
-//	}
+	private byte [] getAnalysisPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf) throws NamingException, Exception {
+		
+		Integer id = new Integer(sessionId);
+		
+		List<Map<String, Object>> dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
+
+		Integer nbRowsMax = dataCollections.size();
+		
+		if (nbRows != null && !nbRows.isEmpty()) {
+			nbRowsMax = new Integer(nbRows);
+		}
+		
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, null, null, nbRowsMax);
+		
+		byte [] byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
+
+		return byteToExport;
+	}
 }
