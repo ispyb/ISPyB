@@ -268,8 +268,6 @@ public class ExiPdfRtfExporter {
 			SpaceGroup3VO spg = (SpaceGroup3VO) iterator.next();
 			spgMap.put(spg.getSpaceGroupName(), spg.getSpaceGroupNumber());
 		}
-		//LOG.info("spgMap=" + spgMap.toString());
-
 	}
 
 	/**
@@ -368,8 +366,7 @@ public class ExiPdfRtfExporter {
 		
 		setEnergyScanTable(document, false);
 		
-		//setXRFSpectrumTable2(document);
-
+		setXRFSpectrumTable(document, false);
 
 		// ======================
 		// End of file
@@ -458,12 +455,8 @@ public class ExiPdfRtfExporter {
 		if (slv != null
 				&& (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX) || proposalCode
 						.equals(Constants.PROPOSAL_CODE_IX))) {
-			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { // session
-																					// title
-																					// only
-																					// for
-																					// FX
-																					// accounts
+			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { 
+				// session title only for FX accounts
 				document.add(new Paragraph("Session title:", FONT_TITLE));
 				document.add(new Paragraph(slv.getSessionTitle(), FONT_DOC));
 			}
@@ -476,12 +469,9 @@ public class ExiPdfRtfExporter {
 			sessionTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 			boolean hasData = false;
 			// print only if the value > 0
-			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { // structure
-																					// determinations
-																					// only
-																					// for
-																					// FX
-																					// accounts
+			
+			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { 
+				// structure determinations only for FX accounts
 				if (slv.getStructureDeterminations() != null && !slv.getStructureDeterminations().isNaN()
 						&& slv.getStructureDeterminations() != 0) {
 					hasData = true;
@@ -606,9 +596,7 @@ public class ExiPdfRtfExporter {
 					setXRFSpectrumMapData(document, xrfMapData);
 				else
 					setXRFSpectrumMapData2(document, xrfMapData);
-				LOG.info(" xrfMapData = " + xrfMapData.toString());
-			}
-			
+			}		
 		}
 		document.add(new Paragraph(" "));						
 	}
@@ -841,8 +829,7 @@ public class ExiPdfRtfExporter {
 		//row2		
 		parag = getCellParam(xrfSpectrumItem, "fittedDataFileFullPath", null) + "\n";
 		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
-		
-	
+			
 		//row3
 		Table table = new Table(NB_COL_XRF);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1207,18 +1194,7 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setXRFSpectrumMapData2(Document document, Map<String, Object> xrfSpectrumItem) throws Exception {
 
-		// 1st row
-		String parag = "XRF Spectrum " + getCellParam(xrfSpectrumItem, "startTime", null) + "\n";
-		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
-		document.add(p);
-		
-		//row2		
-		parag = getCellParam(xrfSpectrumItem, "fittedDataFileFullPath", null) + "\n";
-		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
-		
-	
-		//row3
-		Table table = new Table(NB_COL_XRF);
+		Table table = new Table(5);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
 		table.setBorder(0);
@@ -1226,24 +1202,32 @@ public class ExiPdfRtfExporter {
 		table.setWidth(90);
 
 		// 1st Cell
-		parag = "Protein:\n" 
-				+ 	"Sample:\n" 
-				+ 	"Filename:\n" 
+		String parag = "Date/Time:\n" 
 				+ 	"Energy:\n" ;
+		
+		Paragraph p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell2
+		parag = getCellParam(xrfSpectrumItem, "startTime", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "energy", null) + "keV" + "\n" ;
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+
+		// 3 Cell
+		parag = "Protein:\n" 
+				+ 	"Sample:\n" ;
 		
 		p = new Paragraph(parag, FONT_DOC);
 		table.addCell(p);
 		
-		// Cell2
+		// 4 Cell
 		parag = getCellParam(xrfSpectrumItem, "acronym", null) + "\n" 
-				+ getCellParam(xrfSpectrumItem, "name", null) + "\n" 
-				+ getCellParam(xrfSpectrumItem, "filename", null) + "\n" 
-				+ getCellParam(xrfSpectrumItem, "energy", null) + "keV" + "\n" ;
+				+ getCellParam(xrfSpectrumItem, "name", null) + "\n"  ;
 		p = new Paragraph(parag, FONT_DOC_BOLD);
 		table.addCell(p);
-				
-		// 5 Cell : thumbnail
-		
+	
+		// 5 Cell : thumbnail		
 		if (!getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null).isEmpty()) {
 			String thumbnailPath = getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null);
 			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
@@ -1347,7 +1331,9 @@ public class ExiPdfRtfExporter {
 				cell.setVerticalAlignment(Element.ALIGN_CENTER);
 				return cell;
 			} catch (IOException e) {
-				return new Cell(new Paragraph(image + " not found", FONT_DOC));
+				LOG.info(image + " not found");
+				return new Cell(new Paragraph("Image not found", FONT_DOC_BLUE));
+				
 			}
 		}
 		return new Cell(new Paragraph("", FONT_DOC));
@@ -1498,7 +1484,8 @@ public class ExiPdfRtfExporter {
 			for (Iterator<String> iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 				// select also no anom 		
-				if (type.contains("innerShell") && (new Integer(anomalousList.get(i).trim())).intValue() < 1) {
+				if (type.contains("innerShell") && (new Integer(anomalousList.get(i).trim())).intValue() < 1 
+						&& (rmergesList.size() >= i)) {
 					double rm = new Double(rmergesList.get(i)).doubleValue();
 					LOG.debug("rm = " + rm);
 					if (rm > 0 && rm < MIN_RMERGE) {
@@ -1578,8 +1565,7 @@ public class ExiPdfRtfExporter {
 				bestRmerge[16]= completenessList.get(overallIndex);
 				//TODO format to 2 figures after .
 				bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
-			}
-						
+			}						
 			LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		}
 		
