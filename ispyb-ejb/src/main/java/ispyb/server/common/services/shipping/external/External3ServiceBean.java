@@ -114,7 +114,6 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 									this.entityManager.merge(blSubSample3VO);
 								}
 							}
-
 						}
 					}
 				}

@@ -1499,16 +1499,30 @@ public class ExiPdfRtfExporter {
 				i=i+1;
 			}
 			
-			// select higher symmetry			
+			// select higher symmetry for rMerge < 10	
 			if (!indexSet.isEmpty()) {
 				String spgTemp;
-				int spgNb = 0;				
+				int spgNb = 0;		
+				double rMergeMin = 10;
+				
 				for (Iterator<Integer> iterator = indexSet.iterator(); iterator.hasNext();) {
 					Integer index = (Integer) iterator.next();
 					spgTemp = spaceGroupsList.get(index).trim();
+					double rMergeMinTemp = new Double(rmergesList.get(index)).doubleValue();
 					LOG.debug("index : " + index + " spgtemp: " + spgTemp);
-					if (spgMap.get(spgTemp)!= null && spgNb <= spgMap.get(spgTemp).intValue() ) {
+					
+					if (spgMap.get(spgTemp)!= null && spgNb == spgMap.get(spgTemp).intValue()) {
+						if (rMergeMinTemp < rMergeMin) {
+							rMergeMin = rMergeMinTemp;
+							spgNb = spgMap.get(spgTemp).intValue();
+							LOG.debug("index : " + index + " spgNb: " + spgMap.get(spgTemp));
+							indexRmergeMin = index;
+						}
+					}							
+					else if (spgMap.get(spgTemp)!= null && spgNb < spgMap.get(spgTemp).intValue() ) {					
+						
 						spgNb = spgMap.get(spgTemp).intValue();
+						rMergeMin = new Double(rmergesList.get(index)).doubleValue();
 						LOG.debug("index : " + index + " spgNb: " + spgMap.get(spgTemp));
 						indexRmergeMin = index;
 					}
