@@ -268,8 +268,6 @@ public class ExiPdfRtfExporter {
 			SpaceGroup3VO spg = (SpaceGroup3VO) iterator.next();
 			spgMap.put(spg.getSpaceGroupName(), spg.getSpaceGroupNumber());
 		}
-		//LOG.info("spgMap=" + spgMap.toString());
-
 	}
 
 	/**
@@ -295,7 +293,8 @@ public class ExiPdfRtfExporter {
 		// Header + footer
 		// =============================
 
-		setHeader(document);
+		String h = "Session summary for ";
+		setHeader(document, h);
 		setFooter(document);
 		document.open();
 
@@ -313,11 +312,11 @@ public class ExiPdfRtfExporter {
 		// ======================
 		// Data Collection table
 		// ======================
-		setDataCollectionTable(document);
+		setDataCollectionTable(document, true);
 		
-		setEnergyScanTable(document);
+		setEnergyScanTable(document, true);
 		
-		setXRFSpectrumTable(document);
+		setXRFSpectrumTable(document, true);
 		// ======================
 		// End of file
 		// ======================
@@ -341,8 +340,9 @@ public class ExiPdfRtfExporter {
 		// =============================
 		// Header + footer
 		// =============================
-
-		setHeader(document);
+		
+		String h = "Session results for ";
+		setHeader(document, h);
 		setFooter(document);
 		document.open();
 
@@ -361,7 +361,12 @@ public class ExiPdfRtfExporter {
 		// Data Collection analysis table
 		// ======================
 		document.add(new Paragraph(" "));
-		setDataAnalysisTable(document);
+		
+		setDataCollectionTable(document, false);
+		
+		setEnergyScanTable(document, false);
+		
+		setXRFSpectrumTable(document, false);
 
 		// ======================
 		// End of file
@@ -370,15 +375,16 @@ public class ExiPdfRtfExporter {
 		return baos;
 
 	}
+
 	/**
 	 * sets the header in the specified document
 	 * 
 	 * @param document
 	 * @throws Exception
 	 */
-	private void setHeader(Document document) throws Exception {
+	private void setHeader(Document document, String titlePrefix) throws Exception {
 		HeaderFooter header;
-		String h = "Session summary for " + proposalDesc;
+		String h = titlePrefix + proposalDesc;
 		if (slv != null) {
 			h += " on beamline " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
 					+ "  starting on "
@@ -449,12 +455,8 @@ public class ExiPdfRtfExporter {
 		if (slv != null
 				&& (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX) || proposalCode
 						.equals(Constants.PROPOSAL_CODE_IX))) {
-			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { // session
-																					// title
-																					// only
-																					// for
-																					// FX
-																					// accounts
+			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { 
+				// session title only for FX accounts
 				document.add(new Paragraph("Session title:", FONT_TITLE));
 				document.add(new Paragraph(slv.getSessionTitle(), FONT_DOC));
 			}
@@ -467,12 +469,9 @@ public class ExiPdfRtfExporter {
 			sessionTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 			boolean hasData = false;
 			// print only if the value > 0
-			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { // structure
-																					// determinations
-																					// only
-																					// for
-																					// FX
-																					// accounts
+			
+			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { 
+				// structure determinations only for FX accounts
 				if (slv.getStructureDeterminations() != null && !slv.getStructureDeterminations().isNaN()
 						&& slv.getStructureDeterminations() != 0) {
 					hasData = true;
@@ -509,7 +508,7 @@ public class ExiPdfRtfExporter {
 	 * @param document
 	 * @throws Exception
 	 */
-	private void setDataCollectionTable(Document document) throws Exception {
+	private void setDataCollectionTable(Document document, boolean isSummary) throws Exception {
 		
 		document.add(new Paragraph(" "));
 		
@@ -527,15 +526,20 @@ public class ExiPdfRtfExporter {
 			// DataCollection Rows
 			for (int i = dataCollections.size() - 1; i >= 0; i--) {
 				
-				Map<String, Object> dataCollectionMapData = dataCollections.get(i);			
-				setDataCollectionMapData(document, dataCollectionMapData);
+				Map<String, Object> dataCollectionMapData = dataCollections.get(i);	
 				
-				if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
-					String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
-					if (!mapDataCollectionGroupIdCClass.containsKey(dcgId)){
+				if (isSummary) {
+					setDataCollectionMapData(document, dataCollectionMapData);
+					if (getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null) != null) {
+						String dcgId = getCellParam(dataCollectionMapData, "DataCollectionGroup_dataCollectionGroupId", null);
+						if (!mapDataCollectionGroupIdCClass.containsKey(dcgId)){
 							mapDataCollectionGroupIdCClass.put(dcgId, getCellParam(dataCollectionMapData, "DataCollectionGroup_crystalClass", null));
+						}
 					}
 				}
+				else
+					setDataAnalysisMapData(document, dataCollectionMapData);
+								
 				if (i > nbRowsMax)
 					break;
 			}
@@ -552,11 +556,11 @@ public class ExiPdfRtfExporter {
 	 * @param document
 	 * @throws Exception
 	 */
-	private void setEnergyScanTable(Document document) throws Exception {
+	private void setEnergyScanTable(Document document, boolean isSummary) throws Exception {
 				
 		document.add(new Paragraph(" "));
 		
-		if (energyScans.isEmpty()) {
+		if (energyScans == null || energyScans.isEmpty()) {
 			document.add(new Paragraph("Energy scans:", FONT_TITLE));
 			document.add(new Paragraph("There is no energy scans in this report", FONT_DOC));
 		} else {
@@ -565,14 +569,17 @@ public class ExiPdfRtfExporter {
 						
 			for (Iterator <Map<String, Object>> iterator = energyScans.iterator() ; iterator.hasNext();) {
 				Map<String, Object> energyScanMapData = (Map<String, Object>) iterator.next();
-				setEnergyScanMapData(document, energyScanMapData);									
+				if (isSummary)
+					setEnergyScanMapData(document, energyScanMapData);			
+				else 
+					setEnergyScanMapData2(document, energyScanMapData);	
 			}
 			
 		}
 		document.add(new Paragraph(" "));						
 	}
 	
-	private void setXRFSpectrumTable(Document document) throws Exception {
+	private void setXRFSpectrumTable(Document document, boolean isSummary) throws Exception {
 		
 		
 		document.add(new Paragraph(" "));
@@ -583,46 +590,17 @@ public class ExiPdfRtfExporter {
 			
 		} else {
 			document.add(new Paragraph(xrfSpectrums.size() + " XRF spectra:", FONT_TITLE));
-			int i = 0;		
-			//Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(xrfSpectrums);							
 			for (Iterator<Map<String, Object>> iterator = xrfSpectrums.iterator(); iterator.hasNext();) {
 				Map<String, Object> xrfMapData = (Map<String, Object>) iterator.next();
-				setXRFSpectrumMapData(document, xrfMapData);		
-				LOG.info(" i = " + i);
-				LOG.info(" xrfMapData = " + xrfMapData.toString());
-				i++;
-			}
-			
+				if (isSummary)
+					setXRFSpectrumMapData(document, xrfMapData);
+				else
+					setXRFSpectrumMapData2(document, xrfMapData);
+			}		
 		}
 		document.add(new Paragraph(" "));						
 	}
 	
-	/**
-	 * set the dataCollection table
-	 * 
-	 * @param document
-	 * @throws Exception
-	 */
-	private void setDataAnalysisTable(Document document) throws Exception {
-		document.add(new Paragraph("Data Collections & Analysis results:", FONT_TITLE));
-		document.add(new Paragraph(" "));
-		if (dataCollections.isEmpty()) {
-			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
-		} else {
-			// DataCollection Rows
-			Iterator<Map<String, Object>> it2 = new ReverseListIterator <Map<String, Object>>(dataCollections);
-
-			int i = 0;
-			while (it2.hasNext() && i < nbRowsMax) {
-				Map<String, Object> dataCollectionMapData = it2.next();
-				//LOG.info("dcMap=" + dataCollectionMapData.toString());
-				setDataAnalysisMapData(document, dataCollectionMapData);				
-				i++;
-			}
-			document.add(new Paragraph(" "));
-		}
-	}
-
 	/**
 	 * set a line for a specified dataCollection in the dataCollection table
 	 * 
@@ -851,8 +829,7 @@ public class ExiPdfRtfExporter {
 		//row2		
 		parag = getCellParam(xrfSpectrumItem, "fittedDataFileFullPath", null) + "\n";
 		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
-		
-	
+			
 		//row3
 		Table table = new Table(NB_COL_XRF);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -922,7 +899,8 @@ public class ExiPdfRtfExporter {
 		table.getDefaultCell().setBorderWidth(0);
 
 		// 1st Cell
-		parag = "Protein: \n\n" 
+		parag = "Date/Time: \n\n" 
+				+ "Protein: \n\n" 
 				+ 	"Prefix: \n\n" 
 				+ 	"Images: \n\n" ;
 
@@ -930,7 +908,8 @@ public class ExiPdfRtfExporter {
 		table.addCell(p);
 		
 		// 2st Cell
-		parag = getCellParam(dataCollectionMapItem, "Protein_acronym", null)+ "\n\n" 
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_startTime", null)+ "\n\n" 
+				+ getCellParam(dataCollectionMapItem, "Protein_acronym", null)+ "\n\n" 
 				+ 	getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
 				+ 	getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
 
@@ -940,15 +919,17 @@ public class ExiPdfRtfExporter {
 		//  Cell 3
 		parag = "Type: \n" 
 				+ "Res. (corner): \n" 
-				+ "Wavelength: \n" ; 
+				+ "Energy (Wavelength): \n" ; 
 		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 
 		// Cell 4
-		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
+		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + " / " + getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df3) + Constants.ANGSTROM + "\n" ;
+					+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
+					+  "("+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + ")" + "\n" ;
+
 		
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
@@ -1116,6 +1097,153 @@ public class ExiPdfRtfExporter {
 	}
 	
 	/**
+	 * set a line for a specified energyScan in the EnargyScan table
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setEnergyScanMapData2(Document document, Map<String, Object> energyScanMapItem) throws Exception {
+
+		Table table = new Table(9);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
+		table.setCellsFitPage(true);
+		table.setWidth(90);
+		
+		// 1st Cell
+		String parag = "Date/Time: \n\n" 
+				+ "Element: \n\n" 
+				+ 	"En scan range: \n\n" ;
+
+		Paragraph p = new Paragraph(parag, FONT_DOC_SMALL);
+		table.addCell(p);
+		
+		// 2st Cell
+		parag = getCellParam(energyScanMapItem, "startTime", null)+ "\n\n" 
+				+  getCellParam(energyScanMapItem, "element", null)+  "\n\n" 
+				+ getCellParam(energyScanMapItem, "startEnergy", null) + "keV" + getCellParam(energyScanMapItem, "endEnergy", null) + "keV \n" ;
+
+		// 3 Cell
+		parag = "Protein:\n" 
+				+ 	"Sample:\n" 
+				+ 	"\n" ;
+		
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell4		
+		parag = getCellParam(energyScanMapItem, "acronym", null) + "\n" 
+				+ getCellParam(energyScanMapItem, "name", null) + "\n"
+				+ "\n" ;
+		
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+		
+		// 5 Cell : thumbnail
+		
+		if (!getCellParam(energyScanMapItem, "lastImageId", null).isEmpty()) {
+			String thumbnailPath = getCellParam(energyScanMapItem, "jpegChoochFileFullPath", null);
+			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT_SMALL);
+			cellThumbnail.setBorderWidth(0);
+			table.addCell(cellThumbnail);
+		} else {
+			table.addCell(" ");
+		}
+
+		
+		// Cell6		
+		parag = "Peak En: \n"
+				+ 	"Pk f': \n" 
+				+ 	"Pk f'': \n" ;
+
+		table.addCell(new Paragraph(parag, FONT_DOC));
+				
+		// Cell 7
+		parag = getCellParam(energyScanMapItem, "peakEnergy", df3) + "keV \n"
+			+ getCellParam(energyScanMapItem, "peakFPrime", df2) + " e- \n" 
+		+ 	getCellParam(energyScanMapItem, "peakFDoublePrime", df2) + " e- \n" ;
+		
+		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
+		
+		// Cell8		
+		parag = "Inflection Energy: \n" 
+				+ 	"Ip f': \n" 
+				+ 	"Ip f'': \n" ;
+
+		table.addCell(new Paragraph(parag, FONT_DOC));
+				
+		// Cell 9
+		parag = getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n" 
+		+ 	getCellParam(energyScanMapItem, "inflectionFPrime", df2)  + " e- \n" 
+		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n" ;
+		
+		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
+				
+		document.add(table);
+		document.add(new Paragraph(" "));
+		
+		return;
+	}
+	
+	/**
+	 * set a line for a specified XRFSpectrum in the XRFSpectrum table
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
+	private void setXRFSpectrumMapData2(Document document, Map<String, Object> xrfSpectrumItem) throws Exception {
+
+		Table table = new Table(5);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.getDefaultCell().setBorderWidth(0);
+		table.setBorder(0);
+		table.setCellsFitPage(true);
+		table.setWidth(90);
+
+		// 1st Cell
+		String parag = "Date/Time:\n" 
+				+ 	"Energy:\n" ;
+		
+		Paragraph p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// Cell2
+		parag = getCellParam(xrfSpectrumItem, "startTime", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "energy", null) + "keV" + "\n" ;
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+
+		// 3 Cell
+		parag = "Protein:\n" 
+				+ 	"Sample:\n" ;
+		
+		p = new Paragraph(parag, FONT_DOC);
+		table.addCell(p);
+		
+		// 4 Cell
+		parag = getCellParam(xrfSpectrumItem, "acronym", null) + "\n" 
+				+ getCellParam(xrfSpectrumItem, "name", null) + "\n"  ;
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		table.addCell(p);
+	
+		// 5 Cell : thumbnail		
+		if (!getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null).isEmpty()) {
+			String thumbnailPath = getCellParam(xrfSpectrumItem, "jpegScanFileFullPath", null);
+			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT);
+			cellThumbnail.setBorderWidth(0);
+			table.addCell(cellThumbnail);
+		} else {
+			table.addCell(" ");
+		}
+				
+		document.add(table);
+		document.add(new Paragraph(" "));				
+		return;
+	}
+
+	
+	/**
 	 * get the value or replace by blank if null to fill a cell paragraph
 	 * 
 	 * @param param
@@ -1203,7 +1331,9 @@ public class ExiPdfRtfExporter {
 				cell.setVerticalAlignment(Element.ALIGN_CENTER);
 				return cell;
 			} catch (IOException e) {
-				return new Cell(new Paragraph(image + " not found", FONT_DOC));
+				LOG.info(image + " not found");
+				return new Cell(new Paragraph("Image not found", FONT_DOC_BLUE));
+				
 			}
 		}
 		return new Cell(new Paragraph("", FONT_DOC));
@@ -1354,7 +1484,8 @@ public class ExiPdfRtfExporter {
 			for (Iterator<String> iterator = scalingStatisticsTypesList.iterator(); iterator.hasNext();) {
 				String type = (String) iterator.next();
 				// select also no anom 		
-				if (type.contains("innerShell") && (new Integer(anomalousList.get(i).trim())).intValue() < 1) {
+				if (type.contains("innerShell") && (new Integer(anomalousList.get(i).trim())).intValue() < 1 
+						&& (rmergesList.size() >= i)) {
 					double rm = new Double(rmergesList.get(i)).doubleValue();
 					LOG.debug("rm = " + rm);
 					if (rm > 0 && rm < MIN_RMERGE) {
@@ -1368,16 +1499,30 @@ public class ExiPdfRtfExporter {
 				i=i+1;
 			}
 			
-			// select higher symmetry			
+			// select higher symmetry for rMerge < 10	
 			if (!indexSet.isEmpty()) {
 				String spgTemp;
-				int spgNb = 0;				
+				int spgNb = 0;		
+				double rMergeMin = 10;
+				
 				for (Iterator<Integer> iterator = indexSet.iterator(); iterator.hasNext();) {
 					Integer index = (Integer) iterator.next();
 					spgTemp = spaceGroupsList.get(index).trim();
+					double rMergeMinTemp = new Double(rmergesList.get(index)).doubleValue();
 					LOG.debug("index : " + index + " spgtemp: " + spgTemp);
-					if (spgMap.get(spgTemp)!= null && spgNb <= spgMap.get(spgTemp).intValue() ) {
+					
+					if (spgMap.get(spgTemp)!= null && spgNb == spgMap.get(spgTemp).intValue()) {
+						if (rMergeMinTemp < rMergeMin) {
+							rMergeMin = rMergeMinTemp;
+							spgNb = spgMap.get(spgTemp).intValue();
+							LOG.debug("index : " + index + " spgNb: " + spgMap.get(spgTemp));
+							indexRmergeMin = index;
+						}
+					}							
+					else if (spgMap.get(spgTemp)!= null && spgNb < spgMap.get(spgTemp).intValue() ) {					
+						
 						spgNb = spgMap.get(spgTemp).intValue();
+						rMergeMin = new Double(rmergesList.get(index)).doubleValue();
 						LOG.debug("index : " + index + " spgNb: " + spgMap.get(spgTemp));
 						indexRmergeMin = index;
 					}
@@ -1434,8 +1579,7 @@ public class ExiPdfRtfExporter {
 				bestRmerge[16]= completenessList.get(overallIndex);
 				//TODO format to 2 figures after .
 				bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
-			}
-						
+			}						
 			LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		}
 		
