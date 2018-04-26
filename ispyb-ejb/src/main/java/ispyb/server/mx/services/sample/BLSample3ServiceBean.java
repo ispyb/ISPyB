@@ -90,7 +90,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
 			+ "Crystal.crystalId, Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
 			+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
-			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, Container.sampleChangerLocation  "
+			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, "
+			+ "Container.sampleChangerLocation, Container.code as containerCode "
 			+ "FROM BLSample, Crystal, Protein,Container "
 			+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
 			+ "Crystal.proteinId=Protein.proteinId AND "
@@ -540,6 +541,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Double cellGamma = (Double) o[j++];
 			Integer crystalDiffractionPlanId = (Integer) o[j++];
 			String containerSCLocation = (String) o[j++];
+			String containerCode = (String) o[j++];
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
 			
 			if (sampleDiffractionPlanId != null) {
@@ -552,7 +554,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			SampleInfo sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
 					 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 					 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-					 experimentType, containerSCLocation, diffPlanws) ;
+					 experimentType, containerSCLocation, containerCode, diffPlanws) ;
 			listVOs.add(sampleInfo);
 		}
 		if (listVOs == null)
@@ -1019,6 +1021,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Double cellGamma = (Double) o[j++];
 			Integer crystalDiffractionPlanId = (Integer) o[j++];
 			String containerSCLocation = (String) o[j++];
+			String containerCode = (String) o[j++];
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
 			
 			if (sampleDiffractionPlanId != null) {
@@ -1031,7 +1034,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
 						 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 						 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-						 experimentType, containerSCLocation, diffPlanws) ;
+						 experimentType, containerSCLocation, containerCode, diffPlanws) ;
 		}
 		return sampleInfo ;
 	}
