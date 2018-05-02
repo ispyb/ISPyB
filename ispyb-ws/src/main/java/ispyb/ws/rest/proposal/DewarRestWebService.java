@@ -491,7 +491,7 @@ public class DewarRestWebService extends RestWebService {
 				Integer.toString(returnLabContact.getDewarAvgTransportValue()));
 		
 		// reimbursed dewars
-		if (dewar.getIsReimbursed().booleanValue()) {
+		if (dewar.getIsReimbursed() != null && dewar.getIsReimbursed().booleanValue() == true) {
 			fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
 			fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
 		}
