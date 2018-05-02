@@ -19,6 +19,7 @@
 package ispyb.ws.soap.saxs;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,8 @@ import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 
 @WebService(name = "GenericSampleChangerBiosaxsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.biosaxs")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
@@ -665,9 +668,23 @@ public class GenericSampleChangerBiosaxsWebService {
 		try {
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			List<Buffer3VO> buffers = atsasPipeline3Service.getBuffersByProposal(code, number);
-			id = this.logInit("getBuffersByProposal was called!!!!", new GsonBuilder().serializeNulls().create().toJson(buffers));
-			//logFinish("getBuffersByProposal", id);
-			return new GsonBuilder().serializeNulls().create().toJson(buffers);
+
+			GsonBuilder builder = new GsonBuilder();
+			builder.setExclusionStrategies(new ExclusionStrategy() {
+				@Override
+				public boolean shouldSkipField(FieldAttributes f) {
+			        return (f.getDeclaringClass() == Buffer3VO.class && f.getName().equals("bufferhasadditive3VOs"));
+			    }
+			 
+			    public boolean shouldSkipClass(Class<?> clazz) {
+			        return false;
+			    }
+			});
+			builder.setPrettyPrinting();
+			Gson gson = builder.serializeNulls().create();
+			/*Serialize to JSON */
+	        String jsonString = gson.toJson(buffers); 
+			return jsonString;
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getBuffersByProposal", id, System.currentTimeMillis(),
 					e.getMessage(), e);
@@ -702,7 +719,22 @@ public class GenericSampleChangerBiosaxsWebService {
 			ATSASPipeline3Service atsasPipeline3Service = (ATSASPipeline3Service) ejb3ServiceLocator.getLocalService(ATSASPipeline3Service.class);
 			List<Additive3VO> additives = atsasPipeline3Service.getBufferAdditives(code, number, buffer);
 			logFinish("getBufferAdditives", id);
-			return new GsonBuilder().serializeNulls().create().toJson(additives);
+			GsonBuilder builder = new GsonBuilder();
+			builder.setExclusionStrategies(new ExclusionStrategy() {
+				@Override
+				public boolean shouldSkipField(FieldAttributes f) {
+			        return (f.getDeclaringClass() == Additive3VO.class && f.getName().equals("bufferhasadditive3VOs"));
+			    }
+			 
+			    public boolean shouldSkipClass(Class<?> clazz) {
+			        return false;
+			    }
+			});
+			builder.setPrettyPrinting();
+			Gson gson = builder.serializeNulls().create();
+			/*Serialize to JSON */
+	        String jsonString = gson.toJson(additives); 
+			return jsonString;
 		} catch (Exception e) {
 			LoggerFormatter.log(log, LoggerFormatter.Package.BIOSAXS_WS_ERROR, "getBufferAdditives", id, System.currentTimeMillis(),
 					e.getMessage(), e);
