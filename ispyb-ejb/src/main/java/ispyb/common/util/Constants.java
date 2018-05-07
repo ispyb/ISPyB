@@ -877,7 +877,7 @@ public final class Constants {
 //	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 //		"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressF", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
 
 
 	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
