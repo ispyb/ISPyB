@@ -154,7 +154,7 @@ public class BreadCrumbsForm extends ActionForm implements Serializable {
 			List lstUuids = null;
 
 			if (!isCrystal) { // Sample	
-				BLSample3VO targetSample = sampleService.findByPk(new Integer(id), false, false);
+				BLSample3VO targetSample = sampleService.findByPk(new Integer(id), false, false, false);
 			}
 
 		} catch (Exception e) {

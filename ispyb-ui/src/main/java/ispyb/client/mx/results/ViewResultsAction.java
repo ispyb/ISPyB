@@ -453,7 +453,7 @@ public class ViewResultsAction extends DispatchAction {
 
 			}
 			if (dataCollectionGroup.getBlSampleVOId() != null && dataCollectionGroup.getBlSampleVOId().intValue() != 0) {
-				BLSample3VO bslv = sampleService.findByPk(dataCollectionGroup.getBlSampleVOId(), false, false);
+				BLSample3VO bslv = sampleService.findByPk(dataCollectionGroup.getBlSampleVOId(), false, false, false);
 				BreadCrumbsForm.getIt(request).setSelectedSample(bslv);
 
 				Crystal3VO clv = bslv.getCrystalVO();
