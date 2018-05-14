@@ -134,7 +134,7 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
-	@JoinColumn(name = "blSampleImageId")
+	@JoinColumn(name = "blSampleId")
 	protected Set<BLSampleImage3VO> blsampleImageVOs;
 
 

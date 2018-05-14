@@ -20,6 +20,7 @@ package ispyb.server.mx.services.sample;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -468,7 +469,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 */
 	@SuppressWarnings("rawtypes")
 	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalFormId, final String beamlineLocation,
-			final String status) throws Exception{
+			final String status) throws Exception {
 		
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
@@ -485,7 +486,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 					listInfo = o;
 				}
 		
-				else{
+				else {
 					Query q = entityManager
 					.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
 							+ " AND " + "(Container.containerStatus LIKE '" + status
