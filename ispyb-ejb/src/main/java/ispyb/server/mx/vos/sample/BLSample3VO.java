@@ -440,14 +440,21 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	public BLSubSample3VO[] getBLSubSamplesTab() {
 		return this.blSubSampleVOs == null ? null : blSubSampleVOs.toArray(new BLSubSample3VO[this.blSubSampleVOs.size()]);
 	}
-	
-	
+		
 	public Set<BLSampleImage3VO> getBlsampleImageVOs() {
 		return blsampleImageVOs;
 	}
 
 	public void setBlsampleImageVOs(Set<BLSampleImage3VO> blsampleImageVOs) {
 		this.blsampleImageVOs = blsampleImageVOs;
+	}
+	
+	// if eager loaded and if we suppose only 1 BLsampleImage loaded, returns the imagePath 
+	public String getBlsampleImagePath() {
+		if (this.blsampleImageVOs != null && !this.blsampleImageVOs.isEmpty()) {
+			return ((BLSampleImage3VO) this.blsampleImageVOs.toArray()[0]).getImageFullPath();
+		}
+		return null;
 	}
 
 	/**

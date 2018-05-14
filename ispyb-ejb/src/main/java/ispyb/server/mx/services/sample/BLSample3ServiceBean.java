@@ -1044,8 +1044,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		
 		// we suppose that only 1 image is created for now for 1 BLSample 
 		Set<BLSampleImage3VO> blsampleImageVOs = this.findByPk(blSampleId, false, false, true).getBlsampleImageVOs();
-		if (blsampleImageVOs != null && !blsampleImageVOs.isEmpty()) {
-	 
+		if (blsampleImageVOs != null && !blsampleImageVOs.isEmpty()) {	 
 			BLSampleImage3VO vo = (BLSampleImage3VO) blsampleImageVOs.toArray()[0];	
 			return vo.getImageFullPath();
 		} else {
