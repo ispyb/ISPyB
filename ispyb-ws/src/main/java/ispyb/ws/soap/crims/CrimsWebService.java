@@ -50,6 +50,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -97,6 +98,12 @@ public class CrimsWebService {
 	private Proposal3Service getProposal3Service() throws NamingException{
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		return (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+		
+	}
+	
+	private Shipping3Service getShipping3Service() throws NamingException{
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		return (Shipping3Service) ejb3ServiceLocator.getLocalService(Shipping3Service.class);
 		
 	}
 	
@@ -277,7 +284,7 @@ public class CrimsWebService {
 		}
 		return null;
 	}
-
+	
 	@WebMethod
 	public String getDataCollectionByProposal(@WebParam(name = "proposalCode")
 	String proposalCode, @WebParam(name = "proposalNumber")

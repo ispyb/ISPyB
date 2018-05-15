@@ -78,11 +78,22 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		return FIND_BY_PK(fetchDewars);
 	}
 		
-	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean feacthSamples) {
+	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean fetchSamples) {
 		if (fetchDewars){
 			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
 					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
-					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ " WHERE vo.shippingId = :pk";
+		}
+		return FIND_BY_PK(fetchDewars);
+	}
+	
+	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean fetchSamples, boolean fetchSubSamples) {
+		if (fetchDewars){
+			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
+					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
+					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa " : "")
+					+ (fetchSubSamples ? " LEFT JOIN FETCH sa.blSubSampleVOs " : "")
 					+ " WHERE vo.shippingId = :pk";
 		}
 		return FIND_BY_PK(fetchDewars);
@@ -233,6 +244,17 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		checkCreateChangeRemoveAccess();
 		try {
 			return (Shipping3VO) entityManager.createQuery(FIND_BY_PK(withDewars, withcontainers, withSamples)).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}		
+	}
+	
+	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception {
+		
+		checkCreateChangeRemoveAccess();
+		try {
+			return (Shipping3VO) entityManager.createQuery(FIND_BY_PK(withDewars, withcontainers, withSamples, withSubSamples)).setParameter("pk", pk)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
