@@ -3,9 +3,11 @@ package ispyb.ws.rest.saxs;
 import ispyb.server.biosaxs.services.ExperimentSerializer;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
+import ispyb.server.biosaxs.services.utils.BiosaxsZipper;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.utils.comparator.SaxsDataCollectionComparator;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.test.services.ZipperTest;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 
@@ -107,6 +109,32 @@ public class ExperimentRestWebService extends SaxsRestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
+	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposalId}/saxs/experiment/{experimentId}/download")
+	@Produces("application/x-octet-stream")
+	public Response downloadExperiment(@PathParam("token") String token, @PathParam("proposalId") String proposalId,
+			@PathParam("experimentId") int experimentId) throws Exception {
+
+		String methodName = "downloadExperiment";
+		long id = this.logInit(methodName, logger, token, proposalId, experimentId);
+		try {
+			Experiment3VO experiment = this.getExperiment3Service().findById(experimentId, ExperimentScope.MEDIUM, this.getProposalId(proposalId));
+			if (experiment != null){
+				BiosaxsZipper zipper = new BiosaxsZipper(this.getAnalysis3Service(), this.getAbInitioModelling3Service(), this.getPrimaryDataProcessing3Service());
+				this.logFinish(methodName, id, logger);
+				return this.downloadFile(zipper.getFilesByExperimentId(experiment.getExperimentId()), experiment.getName() + ".zip");
+			}
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
+
+	
+	
 
 	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
