@@ -504,7 +504,7 @@ public class CreatePuckAction extends DispatchAction {
 					boolean sampleCreateMode = true;
 					BLSample3VO sampleFromDB = null;
 					if (samplePuck.getSampleId() != null && !samplePuck.getSampleId().equals("-1")) {
-						sampleFromDB = sampleService.findByPk(Integer.parseInt(samplePuck.getSampleId()), false, false);
+						sampleFromDB = sampleService.findByPk(Integer.parseInt(samplePuck.getSampleId()), false, false, false);
 						sampleCreateMode = false;
 					}
 					boolean sampleRowOK = true;

@@ -118,7 +118,7 @@ public class PrepareExpSample extends org.apache.struts.actions.DispatchAction {
 
 					blSampleId = new Integer(sampleIdstr);
 					LOG.debug("prepare sample : set sample in processing state with sampleId =" + blSampleId);
-					BLSample3VO info = sampleService.findByPk(blSampleId, false, false);
+					BLSample3VO info = sampleService.findByPk(blSampleId, false, false, false);
 					info.setBlSampleStatus(Constants.SHIPPING_STATUS_PROCESS);
 					sampleService.update(info);
 				}

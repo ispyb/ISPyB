@@ -83,7 +83,7 @@ public class EditDiffrationPlanAction extends AbstractSampleAction {
 			DiffractionPlan3Service difPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
 					.getLocalService(DiffractionPlan3Service.class);
 
-			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false);
+			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false, false);
 			form.setInfo(slv);
 			form.setTheCrystalId(slv.getCrystalVO().getCrystalId());
 			Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
@@ -108,7 +108,7 @@ public class EditDiffrationPlanAction extends AbstractSampleAction {
 
 				if (blsampleId.intValue() > 0) {
 					// Sample
-					BLSample3VO selectedSample = sampleService.findByPk(blsampleId, false, false);
+					BLSample3VO selectedSample = sampleService.findByPk(blsampleId, false, false, false);
 					selectedSample.setDiffractionPlanVO(newDiffractionPlan);
 					sampleService.update(selectedSample);
 

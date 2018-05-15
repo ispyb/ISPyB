@@ -57,7 +57,10 @@ public class SampleInfo implements Serializable, Cloneable{
 	
 	// container
 	protected String containerSampleChangerLocation;
-
+	protected String containerCode;
+	
+	// imagepath
+	protected String blsampleImagePath;
 	
 	public SampleInfo() {
 		super();
@@ -67,13 +70,14 @@ public class SampleInfo implements Serializable, Cloneable{
 			Double holderLength, String sampleLocation, String smiles, String proteinAcronym, Integer crystalId,
 			String crystalSpaceGroup, Double cellA, Double cellB, Double cellC, Double cellAlpha, 
 			Double cellBeta, Double cellGamma, Double minimalResolution, String experimentType,
-			String containerSampleChangerLocation, DiffractionPlanWS3VO diffractionPlan) {
+			String containerSampleChangerLocation, String containerCode, DiffractionPlanWS3VO diffractionPlan, String blsampleImagePath) {
 		super();
 		this.sampleId = sampleId;
 		this.sampleName = sampleName;
 		this.code = code;
 		this.holderLength = holderLength;
 		this.sampleLocation = sampleLocation;
+		this.containerCode = containerCode;
 		this.smiles = smiles;
 		this.proteinAcronym = proteinAcronym;
 		this.crystalId=crystalId;
@@ -88,10 +92,9 @@ public class SampleInfo implements Serializable, Cloneable{
 		this.minimalResolution = minimalResolution;
 		this.experimentType = experimentType;
 		this.containerSampleChangerLocation = containerSampleChangerLocation;
+		this.blsampleImagePath = blsampleImagePath;
 	}
 	
-	
-
 	public Integer getSampleId() {
 		return sampleId;
 	}
@@ -237,6 +240,14 @@ public class SampleInfo implements Serializable, Cloneable{
 		this.containerSampleChangerLocation = containerSampleChangerLocation;
 	}
 
+	public String getContainerCode() {
+		return containerCode;
+	}
+
+	public void setContainerCode(String containerCode) {
+		this.containerCode = containerCode;
+	}
+
 	public DiffractionPlanWS3VO getDiffractionPlan() {
 		return diffractionPlan;
 	}
@@ -244,9 +255,13 @@ public class SampleInfo implements Serializable, Cloneable{
 	public void setDiffractionPlan(DiffractionPlanWS3VO diffractionPlan) {
 		this.diffractionPlan = diffractionPlan;
 	}
-	
-	
-	
-	
+
+	public String getBlsampleImagePath() {
+		return blsampleImagePath;
+	}
+
+	public void setBlsampleImagePath(String blsampleImagePath) {
+		this.blsampleImagePath = blsampleImagePath;
+	}	
 
 }
