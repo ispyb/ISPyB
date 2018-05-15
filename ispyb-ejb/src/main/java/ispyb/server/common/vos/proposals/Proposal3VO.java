@@ -25,13 +25,19 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import ispyb.server.common.vos.ISPyBValueObject;
 import ispyb.server.common.vos.shipping.Shipping3VO;
@@ -90,7 +96,9 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "bltimeStamp")
 	protected Date timeStamp;
 
-	@Transient
+	@Fetch(value = FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") }, inverseJoinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") })
 	protected Set<Person3VO> participants;
 	
 	public Proposal3VO() {
