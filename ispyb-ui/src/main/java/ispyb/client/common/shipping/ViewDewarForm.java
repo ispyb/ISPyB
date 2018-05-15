@@ -61,9 +61,13 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 	
 	private Integer nbReimbursedDewars;
 	
+	private Integer currentReimbursedDewars;
+	
 	private boolean remainingReimbursed;
 
 	private String role;
+	
+	private String fedexCode;
 	
 	public ViewDewarForm() {
 	}
@@ -165,6 +169,20 @@ public class ViewDewarForm extends ActionForm implements Serializable {
 		this.remainingReimbursed = remainingReimbursed;
 	}
 
+	public String getFedexCode() {
+		return fedexCode;
+	}
 
+	public void setFedexCode(String fedexCode) {
+		this.fedexCode = fedexCode;
+	}
+
+	public Integer getCurrentReimbursedDewars() {
+		return currentReimbursedDewars;
+	}
+
+	public void setCurrentReimbursedDewars(Integer currentReimbursedDewars) {
+		this.currentReimbursedDewars = currentReimbursedDewars;
+	}
 	
 }

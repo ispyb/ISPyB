@@ -301,7 +301,10 @@ public class DewarRestWebService extends RestWebService {
 			}
 			dewar3vo.setTrackingNumberFromSynchrotron(trackingNumberFromSynchrotron);
 			dewar3vo.setTrackingNumberToSynchrotron(trackingNumberToSynchrotron);
-			dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			//TODO : if sessionId != null set the new session ? possible to update the session ??
+			if (dewar3vo.getSessionVO() == null ) {
+				dewar3vo.setSessionVO(getSession3Service().findByPk(sessionId, false, false, false));
+			}
 			getDewar3Service().update(dewar3vo);
 			this.logFinish("saveDewar", start, logger);
 			
@@ -408,7 +411,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_shipmentName", shipping.getShippingName());
 		fieldNamesAndValues.put("TF_parcelsNumber",
 				Integer.toString(shipping.getDewarVOs().size()));
-		fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode()
+		fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode() + "-"
 				+ proposal.getNumber());
 
 		// Session values (only if they exist)
@@ -488,7 +491,7 @@ public class DewarRestWebService extends RestWebService {
 				Integer.toString(returnLabContact.getDewarAvgTransportValue()));
 		
 		// reimbursed dewars
-		if (dewar.getIsReimbursed().booleanValue()) {
+		if (dewar.getIsReimbursed() != null && dewar.getIsReimbursed().booleanValue() == true) {
 			fieldNamesAndValues.put("TF_returnCourierCompany", Constants.SHIPPING_DELIVERY_AGENT_NAME_FEDEX);
 			fieldNamesAndValues.put("TF_returnCourierAccount", Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT);
 		}

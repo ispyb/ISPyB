@@ -69,22 +69,29 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<%-- Dewar --%>
 	<layout:panel key="Acknowledge the conditions and set the reimbursement status" align="left" styleClass="PANEL">
 		<layout:form action="/user/viewDewarAction.do" reqCode="setReimbursed">	
-
+		<bean:define name="viewDewarForm" property="fedexCode" id="fedexCode" 	type="java.lang.String"/>
 		<layout:grid cols="1"  borderSpacing="10">
-				<layout:column>
-				<p>Engagement
-				<br>
-				<br> By setting this dewar to reimbursed, the labels that will be generated for the sending will contain the fedex account that you should use to send your dewars.
-				<br> Please note that you MUST NOT use this account to ship more than the allowed number of dewars.
-				<br> In case of abuse, your proposal will no more be able to benefit from the dewar reimbursement.
+				<layout:column>				
+				<p><center><b>Acknowledge the conditions and set the reimbursement status</b></center>
+				<br><center><b>Declaration</b></center>
+				<br> By setting this dewar to reimbursed, the labels that will be generated for sending the dewar will use the ESRF FedEx account.
+				<br> You MUST NOT use this account to ship more than the allowed number of dewars, or any other equipment for this or any other experiment.
+				<br> Any abuse of this account will immediately result in your proposal being refused access to the dewar reimbursement procedure, and eventually to the ESRF beamlines.
 				<br>				
-				<br> Click on the following checkbox if you agree with these conditions and you want to have this dewar automatically reimbursed.
-				</p>
-				
+				<br>For ESRF reimbursement, you MUST: 
+				<br>
+				<br>- Copy and paste the following information into the FedEx request page:
+				<br>&nbsp;&nbsp;-> Account Number : <b><%=Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT%></b>
+				<br>&nbsp;&nbsp;-> Your Reference : <b><%=fedexCode%></b>
+				<br>
+				<br>- Tick the 'Include a return label' box.	
+				<br>
+				<br>
+				<br> Please click on the following checkbox if you agree with these conditions and you wish to have this dewar automatically reimbursed by the ESRF.				
+				</p>								
 				<layout:space/>
-						<layout:checkbox key="I agree and yes, please, set this dewar to reimbursed" value="1" property="info.isReimbursed" styleClass="FIELD" mode="E,E,E"/>	
-				<layout:space/>
-				
+						<layout:checkbox key="I agree, please set this dewar to reimbursed" value="1" property="info.isReimbursed" styleClass="FIELD" mode="E,E,E"/>	
+				<layout:space/>								
 				</layout:column> 
 			</layout:grid>
 				
