@@ -385,23 +385,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@Produces("text/plain")
 	public Response getAutoProcAttachment(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
-
-		String methodName = "getAutoProcAttachment";
-		long start = this.logInit(methodName, logger, token, proposal);
-		try {
-			/** Checking that attachment is linked to the proposal **/
-			if (this.checkProposalByAutoProcProgramAttachmentId(this.getProposalId(proposal), autoProcAttachmentId)){
-				AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
-				File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
-				this.logFinish(methodName, start, logger);
-				return this.downloadFile(file.getAbsolutePath());
-			}
-			else{
-				throw new Exception(NOT_ALLOWED);
-			}
-		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
+		return this.getFile(token, proposal, autoProcAttachmentId);
 	}
 	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
@@ -410,23 +394,7 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@Produces("application/pdf")
 	public Response getAutoProcAttachmentPdf(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
-
-		String methodName = "getAutoProcAttachment";
-		long start = this.logInit(methodName, logger, token, proposal);
-		try {
-			/** Checking that attachment is linked to the proposal **/
-			if (this.checkProposalByAutoProcProgramAttachmentId(this.getProposalId(proposal), autoProcAttachmentId)){
-				AutoProcProgramAttachment3VO attachment = this.getAutoProcProgramAttachment3Service().findByPk(autoProcAttachmentId);
-				File file = new File(attachment.getFilePath() + "/" + attachment.getFileName());
-				this.logFinish(methodName, start, logger);
-				return this.downloadFile(file.getAbsolutePath());
-			}
-			else{
-				throw new Exception(NOT_ALLOWED);
-			}
-		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
+		return this.getFile(token, proposal, autoProcAttachmentId);
 	}
 
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
@@ -435,8 +403,11 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@Produces("text/html")
 	public Response getAutoProcAttachmentHtml(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
-
-		String methodName = "getAutoProcAttachment";
+		return this.getFile(token, proposal, autoProcAttachmentId);
+	}
+	
+	private Response getFile(String token, String proposal,  int autoProcAttachmentId) {
+		String methodName = "getFile";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
 			/** Checking that attachment is linked to the proposal **/
