@@ -759,7 +759,7 @@ public class DataCollectionExporter {
 
 		Boolean hasFastDP = this.autoProcIntegrationService.getAutoProcFastDPStatus(dataCollectionVO.getDataCollectionId(),
 				Constants.AUTOPROC_FASTDP);
-		if (hasXia2Dails) {
+		if (hasFastDP) {
 			autoProcFastDPStatus = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
 		}
 
