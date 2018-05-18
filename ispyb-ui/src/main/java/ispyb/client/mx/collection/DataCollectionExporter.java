@@ -724,6 +724,8 @@ public class DataCollectionExporter {
 		String autoProcEdnaStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
 		String autoProcAutoPROCStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
 		String autoProcXia2DialsStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
+		String autoProcFastDPStatus = mRequest.getRealPath(Constants.IMAGE_FAILED);
+
 
 		Boolean hasFastproc = this.autoProcIntegrationService.getAutoProcStatus(dataCollectionVO.getDataCollectionId(),
 				Constants.AUTOPROC_FASTPROC);
@@ -755,11 +757,19 @@ public class DataCollectionExporter {
 			autoProcXia2DialsStatus = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
 		}
 
+		Boolean hasFastDP = this.autoProcIntegrationService.getAutoProcFastDPStatus(dataCollectionVO.getDataCollectionId(),
+				Constants.AUTOPROC_FASTDP);
+		if (hasXia2Dails) {
+			autoProcFastDPStatus = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
+		}
+
+
 		info.setAutoProcFastStatus(autoProcFastStatus);
 		info.setAutoProcParallelStatus(autoProcParallelStatus);
 		info.setAutoProcEdnaStatus(autoProcEdnaStatus);
 		info.setAutoProcAutoPROCStatus(autoProcAutoPROCStatus);
 		info.setAutoProcXia2DialsStatus(autoProcXia2DialsStatus);
+		info.setAutoProcFastDPStatus(autoProcFastDPStatus);
 
 		info.setScreeningInformation(screeningInfo);
 		info.setSampleRankingVO(sampleRankingVO);

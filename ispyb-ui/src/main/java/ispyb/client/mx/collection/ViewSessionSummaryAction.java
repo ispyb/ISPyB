@@ -1574,6 +1574,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					if (dcInfo.getAutoProcXia2DialsStatus().contains("Green")) {
 						result += " XIA2_DIALS " + "<img src='" + imgSuccess + "'  border='0' />";					
 					}
+
+					// Only show FAST DP status if successful
+					if (dcInfo.getAutoProcFastDPStatus().contains("Green")) {
+						result += " FASTDP " + "<img src='" + imgSuccess + "'  border='0' />";
+					}
 				}
 
 				listResults.add(new Param(KEY_SPACE_GROUP, "Space Group", autoProcValue.getSpaceGroup(), false));

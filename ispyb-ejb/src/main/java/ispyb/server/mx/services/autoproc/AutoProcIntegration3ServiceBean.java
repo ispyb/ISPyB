@@ -83,6 +83,17 @@ public class AutoProcIntegration3ServiceBean implements AutoProcIntegration3Serv
 			"apppa.autoProcProgramId = app.autoProcProgramId AND " +
 			"apppa.fileName like 'di%.mtz' ";
 
+	/* FAST DP don't create any XSCALE files so here we look for
+	 * a file with the prefix 'fast' and the suffix '.mtz.gz'.
+	 */
+	private static final String FIND_FASTDP_STATUS = "SELECT app.processingPrograms, api.autoProcIntegrationId, apppa.fileName " +
+			"FROM `AutoProcIntegration` api, AutoProcProgram app, AutoProcProgramAttachment apppa " +
+			"WHERE api.dataCollectionId = :dataCollectionId AND " +
+			"api.autoProcProgramId = app.autoProcProgramId AND " +
+			"app.processingPrograms like :processingProgram AND  " +
+			"apppa.autoProcProgramId = app.autoProcProgramId AND " +
+			"apppa.fileName like '%fast_dp%.mtz.gz' ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -222,6 +233,29 @@ public class AutoProcIntegration3ServiceBean implements AutoProcIntegration3Serv
 	 */
 	public Boolean getAutoProcXia2DialsStatus(final Integer dataCollectionId, final String processingProgram) throws Exception {
 		String query = FIND_XIA2_DIALS_STATUS ;
+		try{
+			List res = this.entityManager.createNativeQuery(query)
+					.setParameter("dataCollectionId", dataCollectionId)
+					.setParameter("processingProgram", processingProgram)
+					.getResultList();
+			if (res == null || res.isEmpty()){
+				return false;
+			}
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
+	/**
+	 * get the autoProcStatus for a FAST DP
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean getAutoProcFastDPStatus(final Integer dataCollectionId, final String processingProgram) throws Exception {
+		String query = FIND_FASTDP_STATUS ;
 		try{
 			List res = this.entityManager.createNativeQuery(query)
 					.setParameter("dataCollectionId", dataCollectionId)
