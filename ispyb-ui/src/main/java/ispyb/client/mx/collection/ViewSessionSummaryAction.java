@@ -1545,7 +1545,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					result += "EDNA_proc " + "<img src='" + img + "'  border='0' />";
 				}
 
-				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_MAXIV() || Constants.SITE_IS_SOLEIL()) {
+				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_SOLEIL()) {
 					// fastproc
 					if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
 						String img = imgFailed;
@@ -1574,7 +1574,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					if (dcInfo.getAutoProcXia2DialsStatus().contains("Green")) {
 						result += " XIA2_DIALS " + "<img src='" + imgSuccess + "'  border='0' />";					
 					}
+				}
 
+				if (Constants.SITE_IS_MAXIV()) {
 					// Only show FAST DP status if successful
 					if (dcInfo.getAutoProcFastDPStatus().contains("Green")) {
 						result += " FASTDP " + "<img src='" + imgSuccess + "'  border='0' />";
