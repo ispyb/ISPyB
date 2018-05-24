@@ -2828,6 +2828,20 @@ public class PdfRtfExporter {
 			p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
 			p.add(new Phrase("  "));
 		}
+
+		// fast_dp
+		if (dcInfo != null && dcInfo.getAutoProcFastDPStatus() != null) {
+			p.add(new Phrase("fast_dp ", FONT_DOC_BOLD));
+			p.add(getChunkImage(dcInfo.getAutoProcFastDPStatus()));
+			p.add(new Phrase("  "));
+		}
+
+		// autoPROC
+		if (dcInfo != null && dcInfo.getAutoProcAutoPROCStatus() != null) {
+			p.add(new Phrase("autoPROC ", FONT_DOC_BOLD));
+			p.add(getChunkImage(dcInfo.getAutoProcAutoPROCStatus())));
+			p.add(new Phrase("  "));
+		}
 		resultsCell.add(p);
 		return resultsCell;
 	}
