@@ -2839,7 +2839,7 @@ public class PdfRtfExporter {
 		// autoPROC
 		if (dcInfo != null && dcInfo.getAutoProcAutoPROCStatus() != null) {
 			p.add(new Phrase("autoPROC ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcAutoPROCStatus())));
+			p.add(getChunkImage(dcInfo.getAutoProcAutoPROCStatus()));
 			p.add(new Phrase("  "));
 		}
 		resultsCell.add(p);
