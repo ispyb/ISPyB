@@ -128,13 +128,13 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "blSampleId")
 	private Set<EnergyScan3VO> energyScanVOs;
 	
-	@Fetch(value = FetchMode.SELECT)
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	//@Fetch(value = FetchMode.SELECT)
+	@OneToMany//(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "blSampleId")
 	protected Set<BLSubSample3VO> blSubSampleVOs;
 	
-	@Fetch(value = FetchMode.SELECT)
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	//@Fetch(value = FetchMode.SELECT)
+	@OneToMany//(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "blSampleId")
 	protected Set<BLSampleImage3VO> blsampleImageVOs;
 

@@ -70,7 +70,7 @@ import ispyb.server.smis.UpdateFromSMIS;
  * @author BODIN
  * 
  */
-@WebService(name = "CrimsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.sample")
+@WebService(name = "CrimsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.crims")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
 @RolesAllowed({ "WebService", "User", "Industrial" })
@@ -263,13 +263,15 @@ public class CrimsWebService {
 		params.put("proposalCode", String.valueOf(proposalCode));
 		params.put("proposalNumber", String.valueOf(proposalNumber));
 		params.put("shipping", String.valueOf(json));
-		long id = this.logInit("storeShipping", new Gson().toJson(params));
+		long id = this.logInit("storeShippingFull", new Gson().toJson(params));
 		
 		try {
 //			checkUserIsCrims();
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			External3Service external3Service = (External3Service) ejb3ServiceLocator.getLocalService(External3Service.class);
+			LOG.debug("jso= " + json);
 			Shipping3VO shipping = new Gson().fromJson(json, Shipping3VO.class);
+			LOG.debug("ship= " + shipping);
 			Shipping3VO shipping3VO = external3Service.storeShippingFull(proposalCode, proposalNumber, shipping);
 			if (shipping3VO != null) {
 				String result = getGson().toJson(external3Service.getDataCollectionFromShippingId(shipping3VO.getShippingId()));

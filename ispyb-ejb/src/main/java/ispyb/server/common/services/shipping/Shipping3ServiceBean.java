@@ -28,6 +28,7 @@ import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 
+import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
@@ -51,6 +52,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * <p>
@@ -85,7 +89,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
 					+ " WHERE vo.shippingId = :pk";
 		}
-		return FIND_BY_PK(fetchDewars);
+		return FIND_BY_PK(false);
 	}
 	
 	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean fetchSamples, boolean fetchSubSamples) {
@@ -249,7 +253,18 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 			return null;
 		}		
 	}
-	
+
+	public String findSerialShippingByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception {
+		
+		checkCreateChangeRemoveAccess();
+		String st = null;
+		Shipping3VO vo = this.findByPk(pk, withDewars, withcontainers, withSamples, withSubSamples);
+		if (vo != null ) {
+			st = serialize( vo);			
+		}
+		return st;
+	}
+
 	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception {
 		
 		checkCreateChangeRemoveAccess();
@@ -624,6 +639,11 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 	}
 	
 	/* Private methods ------------------------------------------------------ */
+
+	public static String serialize(Shipping3VO shipping) {
+		Gson gson =  new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeNulls().create();		
+		return  gson.toJson(shipping);
+	}
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.

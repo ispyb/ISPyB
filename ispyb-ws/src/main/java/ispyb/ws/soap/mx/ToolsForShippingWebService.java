@@ -454,7 +454,11 @@ public class ToolsForShippingWebService {
 	
 	@WebMethod
 	@WebResult(name = "findShippingById")
-	public String findShippingById(@WebParam(name = "shippingId") Integer shippingId) throws Exception {
+	public String findShippingById(@WebParam(name = "shippingId") Integer shippingId, 
+			@WebParam(name = "withDewars") String withDewars,
+			@WebParam(name = "withContainers") String withContainers,
+			@WebParam(name = "withSamples") String withSamples,
+			@WebParam(name = "withSubSamples") String withSubSamples) throws Exception {
 				
 		try {
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
@@ -462,10 +466,8 @@ public class ToolsForShippingWebService {
 			
 			String ret = "no shipping found";
 			
-			Shipping3VO shipping = service.findByPk(shippingId, true, true, true, true);
-			if (shipping != null) {
-				ret = serialize(shipping);				
-			} 
+			//Shipping3VO shipping = service.findByPk(shippingId, true, true, true, true);
+			ret = service.findSerialShippingByPk(shippingId, new Boolean(withDewars), new Boolean(withContainers), new Boolean(withSamples), new Boolean(withSubSamples));
 			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
