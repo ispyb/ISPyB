@@ -2814,26 +2814,29 @@ public class PdfRtfExporter {
 			p.add(getChunkImage(dcInfo.getAutoProcEdnaStatus()));
 			p.add(new Phrase("  "));
 		}
+		if (!Constants.SITE_IS_MAXIV()) {
+			// fastproc
+			if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
+				p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
+				p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
+				p.add(new Phrase("  "));
+			}
 
-		// fastproc
-		if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
-			p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
-			p.add(new Phrase("  "));
+			// parallelproc
+			if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
+				p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
+				p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
+				p.add(new Phrase("  "));
+			}
 		}
 
-		// parallelproc
-		if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
-			p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
-			p.add(new Phrase("  "));
-		}
-
-		// fast_dp
-		if (dcInfo != null && dcInfo.getAutoProcFastDPStatus() != null) {
-			p.add(new Phrase("fast_dp ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcFastDPStatus()));
-			p.add(new Phrase("  "));
+		if (Constants.SITE_IS_MAXIV()) {
+			// fast_dp
+			if (dcInfo != null && dcInfo.getAutoProcFastDPStatus() != null) {
+				p.add(new Phrase("fast_dp ", FONT_DOC_BOLD));
+				p.add(getChunkImage(dcInfo.getAutoProcFastDPStatus()));
+				p.add(new Phrase("  "));
+			}
 		}
 
 		// autoPROC
