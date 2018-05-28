@@ -96,7 +96,8 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		if (fetchDewars){
 			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
 					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
-					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa " : "")
+					//+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa " : "")
+					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa LEFT JOIN FETCH sa.blsampleImageVOs " : "")
 					+ (fetchSubSamples ? " LEFT JOIN FETCH sa.blSubSampleVOs " : "")
 					+ " WHERE vo.shippingId = :pk";
 		}
