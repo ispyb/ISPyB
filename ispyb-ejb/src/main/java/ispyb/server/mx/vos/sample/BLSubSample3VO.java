@@ -83,7 +83,7 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 	protected String comments;
 	
 	@Column(name = "recordTimeStamp")
-	protected Date recordTimeStamp;
+	private Date recordTimeStamp;
 		
 	public BLSubSample3VO() {
 		super();
