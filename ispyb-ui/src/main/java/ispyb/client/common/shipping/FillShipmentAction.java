@@ -27,24 +27,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import ispyb.client.common.BreadCrumbsForm;
-import ispyb.client.common.util.Confidentiality;
-import ispyb.client.common.util.GSonUtils;
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.services.shipping.Dewar3Service;
-import ispyb.server.common.services.shipping.Shipping3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.mx.services.sample.BLSample3Service;
-import ispyb.server.mx.services.sample.Protein3Service;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,6 +40,25 @@ import org.apache.struts.actions.DispatchAction;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import ispyb.client.common.BreadCrumbsForm;
+import ispyb.client.common.util.Confidentiality;
+import ispyb.client.common.util.GSonUtils;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.services.shipping.Dewar3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.ContainerWS3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
 /**
  *  
@@ -217,7 +218,7 @@ public class FillShipmentAction   extends DispatchAction{
 			Shipping3VO shippingVO = shippingService.findByPk(shipmentId, false);
 			List<Dewar3VO> listDewar = dewarService.findByShippingId(shipmentId);
 			List<Dewar> listOfDewar = new ArrayList<Dewar>();
-			List<List<Container3VO>> listOfContainer = new ArrayList<List<Container3VO>>();
+			List<List<ContainerWS3VO>> listOfContainer = new ArrayList<List<ContainerWS3VO>>();
 			List<List<List<SamplePuck>>> listOfSamples = new ArrayList<List<List<SamplePuck>>>();
 			for (Iterator<Dewar3VO> iterator = listDewar.iterator(); iterator.hasNext();) {
 				Dewar3VO dewarVO = (Dewar3VO) iterator.next();
@@ -249,10 +250,13 @@ public class FillShipmentAction   extends DispatchAction{
 				dewar.setAlertMessage(alertMessage);
 				dewar.setTooltip(tooltip);
 				listOfDewar.add(dewar);
-				List<Container3VO> listContainers = containerService.findByDewarId(dewarVO.getDewarId());
+				List<ContainerWS3VO> listContainers = containerService.findWSByDewarId(dewarVO.getDewarId());
+				
+				
 				listOfContainer.add(listContainers);
 				List<List<SamplePuck>> listS = new ArrayList<List<SamplePuck>>();
-				for (Iterator<Container3VO> iterator2 = listContainers.iterator(); iterator2.hasNext();) {
+				
+				for (Iterator<ContainerWS3VO> iterator2 = listContainers.iterator(); iterator2.hasNext();) {
 					Container3VO containerVO = (Container3VO) iterator2.next();
 					List<BLSample3VO> listSamplesInContainer = sampleService.findByContainerId(containerVO.getContainerId());
 					List<SamplePuck> listSamples = new ArrayList<SamplePuck>();
