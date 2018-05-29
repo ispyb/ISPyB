@@ -80,6 +80,8 @@ public interface Shipping3Service {
 	
 	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception ;
 
+	public String findSerialShippingByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception ;
+
 	/**
 	 * Find all Shipping3 and set linked value objects if necessary.
 	 * 
