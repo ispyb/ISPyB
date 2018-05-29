@@ -57,8 +57,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	// Generic HQL request to find instances of Container3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK(boolean fetchSamples) {
-		return "from Container3VO vo " + (fetchSamples ? "left join fetch vo.sampleVOs " : "")
-					+ "where vo.containerId = :pk";
+		return "from Container3VO vo " 
+				+ (fetchSamples ? " LEFT JOIN FETCH vo.sampleVOs sa LEFT JOIN FETCH sa.blsampleImageVOs LEFT JOIN FETCH sa.blSubSampleVOs " : " ")
+				+ "where vo.containerId = :pk";
 	}
 
 	// Generic HQL request to find all instances of Container3
