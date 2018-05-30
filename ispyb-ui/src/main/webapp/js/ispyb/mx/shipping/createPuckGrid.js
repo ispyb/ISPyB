@@ -101,11 +101,11 @@ function CreatePuckGrid(args) {
 					name : 'radiationSensitivity',
 					mapping : 'radiationSensitivity'
 				}, {
-					name : 'requiredMultiplicity',
-					mapping : 'requiredMultiplicity'
+					name : 'aimedMultiplicity',
+					mapping : 'aimedMultiplicity'
 				}, {
-					name : 'requiredCompleteness',
-					mapping : 'requiredCompleteness'
+					name : 'aimedCompleteness',
+					mapping : 'aimedCompleteness'
 				}, {
 					name : 'unitCellA',
 					mapping : 'unitCellA'
@@ -139,6 +139,9 @@ function CreatePuckGrid(args) {
 				}, {
 					name : 'minOscWidth',
 					mapping : 'minOscWidth'
+				}, {
+					name : 'axisRange',
+					mapping : 'axisRange'
 				}],
 			idProperty : 'sampleId'
 		});
@@ -727,16 +730,16 @@ CreatePuckGrid.prototype._getColumns = function () {
 			allowBlank : true
 		}
 	}, {
-		text : 'Required<br>multiplicity',
-		dataIndex : 'requiredMultiplicity',
+		text : 'Aimed<br>multiplicity',
+		dataIndex : 'aimedMultiplicity',
 		flex : 0.05,
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
 		}
 	}, {
-		text : 'Required<br>completeness',
-		dataIndex : 'requiredCompleteness',
+		text : 'Aimed<br>completeness',
+		dataIndex : 'aimedCompleteness',
 		flex : 0.05,
 		editor : {
 			xtype : 'textfield',
@@ -789,6 +792,15 @@ CreatePuckGrid.prototype._getColumns = function () {
 		editor : {
 			xtype : 'textfield',
 			allowBlank : true
+		}
+	}, {
+		text : 'Axis<br>range',
+		dataIndex : 'axisRange',
+		flex : 0.1,
+		editor : {
+			xtype : 'textfield',
+			allowBlank : true,
+			maxLength : 10
 		}
 	}, 
 	 {
@@ -886,8 +898,8 @@ CreatePuckGrid.prototype.pasteSample = function (rowIndex) {
 		_this.grid.store.getAt(rowIndex).set('experimentType', _this.sampleToCopy.experimentType);
 		_this.grid.store.getAt(rowIndex).set('numberOfPositions', _this.sampleToCopy.numberOfPositions);
 		_this.grid.store.getAt(rowIndex).set('radiationSensitivity', _this.sampleToCopy.radiationSensitivity);
-		_this.grid.store.getAt(rowIndex).set('requiredCompleteness', _this.sampleToCopy.requiredCompleteness);
-		_this.grid.store.getAt(rowIndex).set('requiredMultiplicity', _this.sampleToCopy.requiredMultiplicity);
+		_this.grid.store.getAt(rowIndex).set('aimedCompleteness', _this.sampleToCopy.aimedCompleteness);
+		_this.grid.store.getAt(rowIndex).set('aimedMultiplicity', _this.sampleToCopy.aimedMultiplicity);
 
 		_this.grid.store.getAt(rowIndex).set('unitCellA', _this.sampleToCopy.unitCellA);
 		_this.grid.store.getAt(rowIndex).set('unitCellB', _this.sampleToCopy.unitCellB);
@@ -897,6 +909,7 @@ CreatePuckGrid.prototype.pasteSample = function (rowIndex) {
 		_this.grid.store.getAt(rowIndex).set('unitCellGamma', _this.sampleToCopy.unitCellGamma);
 		_this.grid.store.getAt(rowIndex).set('smiles', _this.sampleToCopy.smiles);
 		_this.grid.store.getAt(rowIndex).set('minOscWidth', _this.sampleToCopy.minOscWidth);
+		_this.grid.store.getAt(rowIndex).set('axisRange', _this.sampleToCopy.axisRange);
 		_this.grid.store.getAt(rowIndex).set('comments', _this.sampleToCopy.comments);
 		
 		_this.copyId = _this.copyId + 1;
