@@ -956,9 +956,10 @@ CreatePuckGrid.prototype.changeProteinAcronym = function (newValue, idRow) {
 		this.grid.store.getAt(idRow).set('experimentType',  crystal.diffractionPlanVO.experimentKind);
 		this.grid.store.getAt(idRow).set('numberOfPositions',  crystal.diffractionPlanVO.numberOfPositions);
 		this.grid.store.getAt(idRow).set('radiationSensitivity', crystal.diffractionPlanVO.radiationSensitivity);
-		this.grid.store.getAt(idRow).set('requiredCompleteness', crystal.diffractionPlanVO.requiredCompleteness);
-		this.grid.store.getAt(idRow).set('requiredMultiplicity', crystal.diffractionPlanVO.requiredMultiplicity);
+		this.grid.store.getAt(idRow).set('aimedCompleteness', crystal.diffractionPlanVO.aimedCompleteness);
+		this.grid.store.getAt(idRow).set('aimedMultiplicity', crystal.diffractionPlanVO.aimedMultiplicity);
 		this.grid.store.getAt(idRow).set('minOscWidth', crystal.diffractionPlanVO.minOscWidth);
+		this.grid.store.getAt(idRow).set('axisRange', crystal.diffractionPlanVO.axisRange);
 	}
 };
 
