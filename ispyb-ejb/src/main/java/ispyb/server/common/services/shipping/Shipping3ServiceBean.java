@@ -208,7 +208,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		Shipping3VO vo = findByPk(pk, false);
+		Shipping3VO vo = findByPk(pk, true);
 		delete(vo);
 	}
 
