@@ -574,23 +574,23 @@ public class CreatePuckAction extends DispatchAction {
 						sampleRowOK = false;
 					}
 
-					// requiredMultiplicity
-					Double requiredMultiplicity = null;
+					// aimedMultiplicity
+					Double aimedMultiplicity = null;
 					try {
-						if (samplePuck.getRequiredMultiplicity() != null && !samplePuck.getRequiredMultiplicity().isEmpty())
-							requiredMultiplicity = Double.parseDouble(samplePuck.getRequiredMultiplicity());
+						if (samplePuck.getAimedMultiplicity() != null && !samplePuck.getAimedMultiplicity().isEmpty())
+							aimedMultiplicity = Double.parseDouble(samplePuck.getAimedMultiplicity());
 					} catch (NumberFormatException ex) {
-						errors.add("requiredMultiplicity incorrect " + samplePuck.getRequiredMultiplicity());
+						errors.add("aimedMultiplicity incorrect " + samplePuck.getAimedMultiplicity());
 						sampleRowOK = false;
 					}
 
-					// requiredCompleteness
-					Double requiredCompleteness = null;
+					// aimedCompleteness
+					Double aimedCompleteness = null;
 					try {
-						if (samplePuck.getRequiredCompleteness() != null && !samplePuck.getRequiredCompleteness().isEmpty())
-							requiredCompleteness = Double.parseDouble(samplePuck.getRequiredCompleteness());
+						if (samplePuck.getAimedCompleteness() != null && !samplePuck.getAimedCompleteness().isEmpty())
+							aimedCompleteness = Double.parseDouble(samplePuck.getAimedCompleteness());
 					} catch (NumberFormatException ex) {
-						errors.add("requiredCompleteness incorrect " + samplePuck.getRequiredCompleteness());
+						errors.add("requiredCompleteness incorrect " + samplePuck.getAimedCompleteness());
 						sampleRowOK = false;
 					}
 
@@ -603,6 +603,17 @@ public class CreatePuckAction extends DispatchAction {
 						errors.add("minOscWidth incorrect " + samplePuck.getMinOscWidth());
 						sampleRowOK = false;
 					}
+					
+					// axisRange
+					Double axisRange = null;
+					try {
+						if (samplePuck.getAxisRange() != null && !samplePuck.getAxisRange().isEmpty())
+							axisRange = Double.parseDouble(samplePuck.getAxisRange());
+					} catch (NumberFormatException ex) {
+						errors.add("axisRange incorrect " + samplePuck.getAxisRange());
+						sampleRowOK = false;
+					}
+
 					// unitCellA
 					Double unitCellA = null;
 					try {
@@ -727,10 +738,11 @@ public class CreatePuckAction extends DispatchAction {
 								difPlan.setExposureTime((double) 0);
 								difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
 								difPlan.setRadiationSensitivity(radiationSensitivity);
-								difPlan.setRequiredCompleteness(requiredCompleteness);
-								difPlan.setRequiredMultiplicity(requiredMultiplicity);
+								difPlan.setAimedCompleteness(aimedCompleteness);
+								difPlan.setAimedMultiplicity(aimedMultiplicity);
 								difPlan.setNumberOfPositions(numberOfPositions);
 								difPlan.setExperimentKind(experimentType);
+								difPlan.setAxisRange(axisRange);
 								difPlan = difPlanService.create(difPlan);
 								listDifPlanCreated.add(difPlan);
 							} else { // update
@@ -743,23 +755,25 @@ public class CreatePuckAction extends DispatchAction {
 										difPlan.setExposureTime((double) 0);
 										difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
 										difPlan.setRadiationSensitivity(radiationSensitivity);
-										difPlan.setRequiredCompleteness(requiredCompleteness);
-										difPlan.setRequiredMultiplicity(requiredMultiplicity);
+										difPlan.setAimedCompleteness(aimedCompleteness);
+										difPlan.setAimedMultiplicity(aimedMultiplicity);
 										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
 										difPlan.setMinOscWidth(minOscWidth);
+										difPlan.setAxisRange(axisRange);
 										listDifPlanCreated.add(difPlan);
 									} else {
 										difPlan.setObservedResolution(preObservedResolution);
 										difPlan.setRequiredResolution(neededResolution);
 										difPlan.setPreferredBeamDiameter(preferredBeamDiameter);
 										difPlan.setRadiationSensitivity(radiationSensitivity);
-										difPlan.setRequiredCompleteness(requiredCompleteness);
-										difPlan.setRequiredMultiplicity(requiredMultiplicity);
+										difPlan.setAimedCompleteness(aimedCompleteness);
+										difPlan.setAimedMultiplicity(aimedMultiplicity);
 										difPlan.setNumberOfPositions(numberOfPositions);
 										difPlan.setExperimentKind(experimentType);
 										listDifPlanUpdated.add(difPlan);
 										difPlan.setMinOscWidth(minOscWidth);
+										difPlan.setAxisRange(axisRange);
 									}
 								}
 							}

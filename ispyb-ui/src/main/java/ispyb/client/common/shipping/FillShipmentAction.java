@@ -646,10 +646,10 @@ public class FillShipmentAction   extends DispatchAction{
 					SamplePuck newSamplePuck = new SamplePuck(null, samplePuck.getPosition(), samplePuck.getSampleName()+"_"+t,
 							samplePuck.getProteinAcronym(), samplePuck.getSpaceGroup(), samplePuck.getPreObservedResolution(), 
 							samplePuck.getNeededResolution(), samplePuck.getPreferredBeamDiameter(), samplePuck.getExperimentType(), 
-							samplePuck.getNumberOfPositions(),samplePuck.getRadiationSensitivity(),samplePuck.getRequiredCompleteness(),samplePuck.getRequiredMultiplicity(),
+							samplePuck.getNumberOfPositions(),samplePuck.getRadiationSensitivity(),samplePuck.getAimedCompleteness(),samplePuck.getAimedMultiplicity(),
 							samplePuck.getUnitCellA(), samplePuck.getUnitCellB(), samplePuck.getUnitCellC(), 
 							samplePuck.getUnitCellAlpha(), samplePuck.getUnitCellBeta(), samplePuck.getUnitCellGamma(), 
-							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode(), samplePuck.getMinOscWidth());
+							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode(), samplePuck.getMinOscWidth(), samplePuck.getAxisRange());
 					
 					newListSamples.add(newSamplePuck);
 				}
