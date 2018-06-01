@@ -5,7 +5,7 @@
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-parent</artifactId>
 
-	<version>5.8.2</version>
+	<version>5.8.3</version>
 
 
 	<packaging>pom</packaging>
