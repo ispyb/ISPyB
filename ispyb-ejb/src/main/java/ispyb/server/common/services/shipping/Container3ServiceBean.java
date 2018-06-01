@@ -20,7 +20,6 @@ package ispyb.server.common.services.shipping;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +37,6 @@ import org.hibernate.criterion.Restrictions;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.ContainerWS3VO;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
@@ -187,18 +185,6 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		return foundEntities;
 	}
 	
-	public List<ContainerWS3VO> findWSByDewarId(final Integer dewarId) throws Exception{
-		
-		List<ContainerWS3VO> result = new ArrayList<ContainerWS3VO>();
-
-		List<Container3VO> foundEntities = this.findByDewarId(dewarId);
-		for (Iterator<Container3VO> iterator = foundEntities.iterator(); iterator.hasNext();) {
-			ContainerWS3VO vo = new ContainerWS3VO ((Container3VO)iterator.next());
-			result.add(vo);
-		}
-		return result;
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess) throws Exception {
 		
