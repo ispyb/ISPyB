@@ -85,8 +85,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 			<layout:text key="Preferred beam diameter"		name="viewSampleForm" property="difPlanInfo.preferredBeamDiameter" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.preferredBeamDiameter"> &#181;m</logic:present></layout:text>
 			<layout:text key="Number of positions"		name="viewSampleForm" property="difPlanInfo.numberOfPositions" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.numberOfPositions"></logic:present></layout:text>
 			<layout:text key="Radiation sensitivity"		name="viewSampleForm" property="difPlanInfo.radiationSensitivity" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.radiationSensitivity"></logic:present></layout:text>
-			<layout:text key="Required completeness"		name="viewSampleForm" property="difPlanInfo.requiredCompleteness" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredCompleteness"></logic:present></layout:text>
-			<layout:text key="Required multiplicity"		name="viewSampleForm" property="difPlanInfo.requiredMultiplicity" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredMultiplicity"></logic:present></layout:text>
+			<layout:text key="Aimed completeness"		name="viewSampleForm" property="difPlanInfo.aimedCompleteness" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredCompleteness"></logic:present></layout:text>
+			<layout:text key="Aimed multiplicity"		name="viewSampleForm" property="difPlanInfo.aimedMultiplicity" styleClass="FIELD_DISPLAY" mode="I,I,I"><logic:present name="viewSampleForm" property="difPlanInfo.requiredMultiplicity"></logic:present></layout:text>
 			<layout:text key="Comments"					name="viewSampleForm" property="difPlanInfo.comments" styleClass="FIELD_DISPLAY" mode="I,I,I"/>
 	</layout:tab>
 

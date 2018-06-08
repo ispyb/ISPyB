@@ -799,7 +799,7 @@ public class ViewSampleAction extends DispatchAction {
 
 			if (sampleIdst != null) {
 
-				blsampleLightValue = sampleService.findByPk(blsampleId, false, false);
+				blsampleLightValue = sampleService.findByPk(blsampleId, false, false, false);
 
 				BreadCrumbsForm.getIt(request).setSelectedSample(blsampleLightValue);
 

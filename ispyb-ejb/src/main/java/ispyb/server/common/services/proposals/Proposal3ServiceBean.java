@@ -66,6 +66,10 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				+ (fetchShippings ? " left join fetch vo.shippingVOs " : "")
 				+ (fetchProteins ? " left join fetch vo.proteinVOs " : "") + "where vo.proposalId = :pk";
 	}
+	
+	private static final String FIND_WITH_PARTICIPANTS_BY_PK(Integer pk) {
+		return "from Proposal3VO vo left join fetch vo.participants where vo.proposalId = :pk";
+	}
 
 	// Generic HQL request to find all instances of Proposal
 	// TODO choose between left/inner join
@@ -172,6 +176,19 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	public Proposal3VO findByPk(final Integer pk) throws Exception {
 
 		Query query = entityManager.createQuery(FIND_BY_PK(pk, false, false, false))
+				.setParameter("pk", pk);
+		List listVOs = query.getResultList();
+		if (listVOs == null || listVOs.isEmpty())
+			return null;
+		
+		checkChangeRemoveAccess( (Proposal3VO) listVOs.toArray()[0]);
+		return (Proposal3VO) listVOs.toArray()[0];
+	}
+	
+	@WebMethod
+	public Proposal3VO findWithParticipantsByPk(final Integer pk) throws Exception {
+
+		Query query = entityManager.createQuery(FIND_WITH_PARTICIPANTS_BY_PK(pk))
 				.setParameter("pk", pk);
 		List listVOs = query.getResultList();
 		if (listVOs == null || listVOs.isEmpty())

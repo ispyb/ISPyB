@@ -32,7 +32,7 @@ public final class Constants {
 	private static Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	public enum SITE {
-		SOLEIL, EMBL, ESRF, GENERIC	
+		SOLEIL, EMBL, ESRF, MAXIV, GENERIC
 
 	}
 
@@ -120,9 +120,12 @@ public final class Constants {
 		if (SITE_IS_EMBL()) {
 			return SITE.EMBL;
 		}
-		if (SITE_IS_ESRF()) {
-			return SITE.ESRF;
+		if (SITE_IS_MAXIV()) {
+			return SITE.MAXIV;
 		}
+        if (SITE_IS_ESRF()) {
+            return SITE.ESRF;
+        }
 		return SITE.GENERIC;
 	}
 
@@ -771,6 +774,8 @@ public final class Constants {
 	/* delivery agents names */
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_FEDEX = "Fedex";
+	
+	public static final String SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT = getProperty("ispyb.shipping.fedex.account");
 
 	public static final String SHIPPING_DELIVERY_AGENT_NAME_TNT = "TNT";
 
@@ -851,7 +856,7 @@ public final class Constants {
 
 	public static final String[] BEAMLINE_LOCATION = BEAMLINE_LOCATION_DEFAULT;
 
-	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.capacity", "5"));
+	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.locations", "5"));
 
 	public static final String[] CONTAINER_TYPE = { "Spinepuck", "Unipuck", "Cane", "Other" }; 
 
@@ -875,7 +880,7 @@ public final class Constants {
 //	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 //		"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressF", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
 
 
 	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
@@ -934,7 +939,7 @@ public final class Constants {
 
 	public static final String TEMPLATE_XLS_FILENAME = getProperty("shipment.upload.template");
 
-	public static final String TEMPLATE_XLS_POPULATED_FILENAME = "ispyb-template5.1.xlt";
+	public static final String TEMPLATE_XLS_POPULATED_FILENAME = getProperty("shipment.upload.template");
 
 	public static final String TEMPLATE_XLS_POPULATED_FOR_EXPORT_FILENAME1 = "ispyb-template5.1.1_1.xls";
 

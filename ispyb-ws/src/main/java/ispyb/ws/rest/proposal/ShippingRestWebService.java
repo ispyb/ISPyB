@@ -161,7 +161,8 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("getShipping", logger, token, proposal, shippingId);
 		try {
-			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, true, true);
+			//Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, true, true);
+			Shipping3VO result = this.getShipping3Service().findByPk(shippingId, true, true, true, true);
 			this.logFinish("getShipping", id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {
@@ -298,7 +299,6 @@ public class ShippingRestWebService extends MXRestWebService {
 			return this.logError("getShipmentHistory", e, id, logger);
 		}
 	}
-	
 	
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})

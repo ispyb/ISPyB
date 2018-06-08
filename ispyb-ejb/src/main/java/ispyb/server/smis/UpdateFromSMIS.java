@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
@@ -284,11 +285,16 @@ public class UpdateFromSMIS {
 			case EMBL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 				break;
-			default:
+			case MAXIV:
+				nbDays = 14;
+				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
+				break;
+            default:
 			case SOLEIL:
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 				break;
-			}			
+			}
+
 			mainProposers_ = sws.findMainProposersForProposal(pk);
 			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
 			labContacts_ = sws.findParticipantsForProposal(pk);
@@ -468,11 +474,29 @@ public class UpdateFromSMIS {
 		// -----------------------------------------------------------------------------------
 		// the proposal, samples and sessions are created: load labcontacts (list of all people attached to the proposal: proposers and users)
 		// -----------------------------------------------------------------------------------
+		if (Constants.SITE_IS_MAXIV()) {
+			loadParticipants(labContacts);
+			loadParticipants(mainProposers);
+			// Adding the mainProposers
+
+			//Array<ProposalParticipantInfoLightVO> both = array(labContacts).append(array(mainProposers));
+			//labContacts = both.array();
+
+
+			List<ProposalParticipantInfoLightVO> listFromArray = Arrays.asList(labContacts);
+			List<ProposalParticipantInfoLightVO> tempList = new ArrayList<ProposalParticipantInfoLightVO>(listFromArray);
+			for (int i = 0; i < mainProposers.length; i++) {
+				tempList.add(mainProposers[i]);
+			}
+			ProposalParticipantInfoLightVO[] tempArray = new ProposalParticipantInfoLightVO[tempList.size()];
+			labContacts = tempList.toArray(tempArray);
+
+		}
 		if (labContacts != null && labContacts.length > 0) {
-			
+
 			LOG.info("Loading labcontacts ... ");
 			Set<Integer> proposalHasPersonIds = new HashSet<Integer>();
-			
+
 			for (int i = 0; i < labContacts.length; i++) {
 				
 				ProposalParticipantInfoLightVO labContact = labContacts[i];
@@ -545,7 +569,7 @@ public class UpdateFromSMIS {
 						if ( (previousLab.getLaboratoryExtPk() != null && previousLab.getLaboratoryExtPk().equals(currentLabo.getLaboratoryExtPk()))
 								|| previousLab.getAddress().equalsIgnoreCase(currentLabo.getAddress()) ){
 							LOG.debug("laboratory already exists");
-							if (!person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail())){
+							if ( person3VO.getEmailAddress() == null || !person3VO.getEmailAddress().equals(labContacts[i].getScientistEmail()) ){
 								person3VO.setEmailAddress(labContacts[i].getScientistEmail());
 								person.merge(person3VO);
 							}
@@ -791,6 +815,57 @@ public class UpdateFromSMIS {
 		}
 	}
 	
+	private static void loadParticipants(ProposalParticipantInfoLightVO[] participants)
+		    throws Exception
+	  {
+	    if ((participants != null) && (participants.length > 0)) {
+	      for (ProposalParticipantInfoLightVO participant : participants)
+	      {
+	        participant.getCategoryCode();
+	        String uoCode = participant.getCategoryCode();
+	        String proposalNumber = participant.getCategoryCounter() != null ? participant.getCategoryCounter().toString() : "";
+	        String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
+	        
+	        LOG.debug("Proposal found for participant : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
+	        LOG.debug("Bllogin : " + participant.getBllogin());
+	        
+	        List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+	        
+	        if (!listProposals.isEmpty())
+	        {
+	          LOG.debug("proposal already exists");
+	          Proposal3VO proposalVO = (Proposal3VO)listProposals.get(0);
+	          Person3VO personEnt = person.findByLogin(participant.getBllogin());
+	          if (personEnt == null) {
+	            personEnt = new Person3VO();
+	            personEnt.setLogin(participant.getBllogin());
+	          }
+	          
+	          personEnt.setGivenName(participant.getScientistFirstName());
+	          personEnt.setFamilyName(participant.getScientistName());
+	          //TODO: Add more details
+	          
+	          personEnt = person.merge(personEnt);
+	          
+	          Set<Person3VO> currentParticipants = proposalVO.getParticipants();
+	          
+	          boolean personExists = false;
+	          for (Person3VO person : currentParticipants) {
+	            if (person.getLogin() == personEnt.getLogin())
+	            {
+	              personExists = true;
+	              break;
+	            }
+	          }
+	          if (!personExists) {
+	            currentParticipants.add(personEnt);
+	          }
+	          proposal.update(proposalVO);
+	        }
+	      }
+	    }
+	  }
+	
 	private static void retrieveSampleSheet(Proposal3VO proplv, SampleSheetInfoLightVO value) throws Exception {
 
 		Protein3VO plv = new Protein3VO();
@@ -936,10 +1011,18 @@ public class UpdateFromSMIS {
 														// 8:30am,
 														// 4:30pm or 00:30am
 		startShift = Constants.SITE_IS_SOLEIL() ? 0 : startShift;
-		Integer daysToAdd = nbShifts / 3 + 1;
-		if ((startShift == 1 && nbShifts % 3 == 2) || (startShift == 2 && nbShifts % 3 != 0))
-			daysToAdd++;
-
+        Integer daysToAdd = 0;
+		if (Constants.SITE_IS_MAXIV()){
+            daysToAdd = nbShifts / 6 + 1;
+            if ((startShift == 1 && nbShifts % 6 == 5) || (startShift == 2 && nbShifts % 6 == 4) ||
+                    (startShift == 3 && nbShifts % 6 == 3) || (startShift == 4 && nbShifts % 6 == 2) ||
+                    (startShift == 5 && nbShifts % 6 == 1))
+                daysToAdd++;
+        } else {
+            daysToAdd = nbShifts / 3 + 1;
+            if ((startShift == 1 && nbShifts % 3 == 2) || (startShift == 2 && nbShifts % 3 != 0))
+                daysToAdd++;
+        }
 		// only new sessions are retrieved
 		String beamlineName = sessionVO.getBeamlineName();
 		Calendar endDateCal = Calendar.getInstance();
@@ -980,6 +1063,10 @@ public class UpdateFromSMIS {
 
 			if (Constants.SITE_IS_SOLEIL()) {
 				sesv.setVisit_number(visit_number);
+			}
+			
+			if (Constants.SITE_IS_ESRF()) {
+				sesv.setNbReimbDewars(sessionVO.getReimbursedDewars());
 			}
 			session.create(sesv);
 			LOG.debug("inserted a new session inside ISPyB db: " + sessionVO.getStartDate().getTime() + " start shift="
@@ -1036,6 +1123,12 @@ public class UpdateFromSMIS {
 						&& !sessionVO.getShifts().equals(ispybSession.getNbShifts())) {
 					changeTxt += ", nbShifts " + ispybSession.getNbShifts() + " => " + sessionVO.getShifts();
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
+					changeSession = true;
+				}
+				if (sessionVO.getReimbursedDewars() != null && ispybSession.getNbReimbDewars() != null
+						&& !sessionVO.getReimbursedDewars().equals(ispybSession.getNbReimbDewars())) {
+					changeTxt += ", getNbReimbDewars() " + ispybSession.getNbReimbDewars() + " => " + sessionVO.getReimbursedDewars();
+					ispybSession.setNbReimbDewars(new Integer(sessionVO.getReimbursedDewars()));
 					changeSession = true;
 				}
 				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {
@@ -1194,6 +1287,11 @@ public class UpdateFromSMIS {
 				LOG.debug("proposal is another technique");
 				propv.setType(Constants.PROPOSAL_OTHER);
 			}
+			break;
+			
+		case MAXIV:
+			propv.setType(Constants.PROPOSAL_MX);
+			
 			break;
 			
 		default:

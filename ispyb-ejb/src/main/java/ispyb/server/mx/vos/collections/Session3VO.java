@@ -18,12 +18,6 @@
  ****************************************************************************************************/
 package ispyb.server.mx.vos.collections;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.security.LdapConnection;
-import ispyb.server.common.vos.ISPyBValueObject;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,6 +26,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -41,7 +36,14 @@ import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OrderBy;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.ISPyBValueObject;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.security.LdapConnection;
 
 /**
  * Session3 value object mapping table Session
@@ -131,22 +133,25 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "protectedData")
 	protected String protectedData;
 
-	@OneToMany
+	@OneToMany//(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sessionId")
 	private Set<DataCollectionGroup3VO> dataCollectionGroupVOs;
 
-	@OneToMany
+	@OneToMany//(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sessionId")
 	@OrderBy(clause = "startTime DESC")
 	private Set<XFEFluorescenceSpectrum3VO> xfeSpectrumVOs;
 
-	@OneToMany
+	@OneToMany//(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sessionId")
 	@OrderBy(clause = "startTime DESC")
 	private Set<EnergyScan3VO> energyScanVOs;
 	
 	@Column(name = "externalId")
 	protected Integer externalId;
+	
+	@Column(name = "nbReimbDewars")
+	protected Integer nbReimbDewars;
 
 
 	// this link is not bidirectional so the following should not be declared
@@ -498,6 +503,14 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setExternalId(Integer externalId) {
 		this.externalId = externalId;
+	}
+
+	public Integer getNbReimbDewars() {
+		return nbReimbDewars;
+	}
+
+	public void setNbReimbDewars(Integer nbReimbDewars) {
+		this.nbReimbDewars = nbReimbDewars;
 	}
 
 	/**

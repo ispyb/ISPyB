@@ -74,7 +74,7 @@ public interface BLSample3Service {
 	 * @param withLink2
 	 * @return the Scientist value object
 	 */
-	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples) throws Exception;
+	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception;
 
 	/**
 	 * Find all BLSample3 and set linked value objects if necessary.
@@ -168,7 +168,7 @@ public interface BLSample3Service {
 	 */
 	public BLSample3VO loadEager(BLSample3VO vo) throws Exception;
 
-	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples) throws Exception;
+	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception;
 
 	public List<BLSample3VO> findByCrystalId(final Integer crystalId) throws Exception;
 

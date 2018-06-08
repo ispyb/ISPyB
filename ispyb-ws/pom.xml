@@ -4,7 +4,9 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.4.4</version>
+
+		<version>5.8.3</version>
+
 	</parent>
 	<artifactId>ispyb-ws</artifactId>
 	<packaging>war</packaging>

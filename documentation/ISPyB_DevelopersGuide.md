@@ -267,44 +267,7 @@ modify the `defaultTimeout` (300 by default):
 This is to avoid the transaction timeout when running the cron job in charge of
 the database update (WSClient).
 
-## Installation on ispyb production machine
 
-The production machine is `pyproserv`.
-
-Same as [Installation](#installation) except for xdoclet. There is no need to
-install them.
-
-jboss is on `/ispyb/jboss`.
-
-Special ispyb commands exist and should be used to start, stop, copy .ear,
-launch database update from smis.
-
-It is possible to have their full list and how to use them by typing `ispyb
-help`.
-
-For example:
-
-  * To stop jboss server: `ispyb stop jboss`
-
-  * To start jboss server: `ispyb start jboss`
-
-  * To copy new .ear: `ispyb deploy ispyb.ear`
-
-Only files in `jboss/server/default/conf` and in `jboss/server/default/deploy`
-can be updated.
-
-Backups repositories exist which store old versions of copied and replaced
-files: `/ispyb/backup-deploy` and `/ispyb/backup-conf`.
-
-Different logs can be found in `/usr/local/logs`:
-
-  * `jboss_console.log`: to see it use `tail –f jboss_console.log`
-
-  * `jboss_run.log`: keeps track of stops and restarts of jboss
-
-  * `ispyb_run.log`: keeps track of ispyb commands
-
-New folder for uploaded files in: `/nobackup.uploads/files` (up to 4 Go).
 
 ## Using Maven
 
@@ -404,7 +367,7 @@ Properties:
     `settings.xml`, so you can safely define them, and get rid of the
     `DoNotCommit.properties`.
 
-## Project Structure TODO
+## Project Structure
 
 ### Overview
 
@@ -819,11 +782,11 @@ You have to edit the following files of `ispyb-ui` module: `logon.jsp`,
 `unloggedLayout.jsp`. In these files use the `SITE_ATTRIBUTE` constant to
 define what should be displayed in your case.
 
-## Naming Conventions TODO
+## Naming Conventions 
 
 ### Packages
 
-#### Server Side TODO
+#### Server Side 
 
 All packages should have the prefix:
 
@@ -835,7 +798,7 @@ The Entity and Facade EJBs should have the prefix:
 
   * `ispyb.server.config.`: for configuration database
 
-#### Client Side TODO
+#### Client Side 
 
 All packages should have the prefix:
 
@@ -930,6 +893,7 @@ uniqueMember: uid=leal,ou=people,dc=esrf,dc=fr
 
 See the entries added in `standalone.xml` in [Installation](#installation).
 
+
 ### Simple authentication TODO
 
 One of the aims of ISPyB is the portability and therefore the possibility of
@@ -987,6 +951,19 @@ These are examples of both files:
     ifx999=password2
     manager=manager
     ```
+
+### Roles
+
+The roles are defined either directly in the properties file for simple authentication or in a particular group in the ldap authentication.
+
+The roles are :
+
+  * User : standard user which can be either a proposal account, or a user linked to several proposals through the table ProposalHasPerson.
+  * Manager : manager account can see all proposals.
+  * Localcontact : can see only the proposals where he/she is localcontact.
+  * Store : special role dedicated to the dewar tracking feature.
+  * WebService : used only to access through webservice.
+
 
 ### ISPyB Authorization and Authentication Model
 

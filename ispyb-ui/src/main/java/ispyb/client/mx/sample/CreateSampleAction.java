@@ -272,7 +272,7 @@ public class CreateSampleAction extends AbstractSampleAction
 				// Assign already existing Sample
 				if (blSampleId != null) {
 					LOG.debug("create sample : assign already existing sample with sampleId = " + blSampleId);
-					info = sampleService.findByPk(blSampleId, false, false);
+					info = sampleService.findByPk(blSampleId, false, false, false);
 					Container3VO clv = containerService.findByPk(containerId, false);
 					info.setContainerVO(clv);
 					sampleService.update(info);
@@ -364,7 +364,7 @@ public class CreateSampleAction extends AbstractSampleAction
 
 					blSampleId = new Integer(sampleIdstr);
 					LOG.debug("create sample : assign already existing sample with sampleId =" + blSampleId);
-					BLSample3VO info = sampleService.findByPk(blSampleId, false, false);
+					BLSample3VO info = sampleService.findByPk(blSampleId, false, false, false);
 					// set the location to null not to have several samples at the same location
 					// later edit the sample to give a correct location to it
 					info.setLocation(null);

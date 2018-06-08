@@ -87,6 +87,9 @@ public interface Proposal3Service {
 	public Proposal3VO findByPk(final Integer pk, final boolean fetchSessions, final boolean fetchProteins,
 			final boolean fetchShippings) throws Exception;
 
+	@WebMethod
+	public Proposal3VO findWithParticipantsByPk(final Integer pk) throws Exception;
+	
 	/**
 	 * Find all Proposal3 and set linked value objects if necessary.
 	 * 

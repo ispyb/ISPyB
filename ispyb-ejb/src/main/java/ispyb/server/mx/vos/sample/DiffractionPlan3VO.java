@@ -149,6 +149,9 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "minOscWidth")
 	protected Double minOscWidth;
 	
+	@Column(name = "axisRange")
+	protected Double axisRange;
+	
 
 	@Fetch(value = FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.EAGER)
@@ -169,7 +172,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 			String forcedSpaceGroup, Double requiredCompleteness, Double requiredMultiplicity,
 			Double requiredResolution, String strategyOption, String kappaStrategyOption, Integer numberOfPositions, 
 			Double minDimAccrossSpindleAxis, Double maxDimAccrossSpindleAxis, Double radiationSensitivityBeta, 
-			Double radiationSensitivityGamma, Double minOscWidth) {
+			Double radiationSensitivityGamma, Double minOscWidth, Double axisRange) {
 		super();
 		this.diffractionPlanId = diffractionPlanId;
 		this.experimentKind = experimentKind;
@@ -204,6 +207,8 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.radiationSensitivityBeta = radiationSensitivityBeta;
 		this.radiationSensitivityGamma = radiationSensitivityGamma;
 		this.minOscWidth = minOscWidth;
+		this.axisRange = axisRange;
+		
 	}
 
 	public DiffractionPlan3VO(DiffractionPlan3VO vo) {
@@ -240,6 +245,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.radiationSensitivityBeta = vo.getRadiationSensitivityBeta();
 		this.radiationSensitivityGamma = vo.getRadiationSensitivityGamma();
 		this.minOscWidth = vo.getMinOscWidth();
+		this.axisRange = vo.getAxisRange();
 	}
 
 	public void fillVOFromWS(DiffractionPlanWS3VO vo) {
@@ -276,6 +282,7 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		this.radiationSensitivityBeta = vo.getRadiationSensitivityBeta();
 		this.radiationSensitivityGamma = vo.getRadiationSensitivityGamma();
 		this.minOscWidth = vo.getMinOscWidth();
+		this.axisRange = vo.getAxisRange();
 
 	}
 
@@ -613,5 +620,13 @@ public class DiffractionPlan3VO extends ISPyBValueObject implements Cloneable {
 		
 		
 		return s;
+	}
+
+	public Double getAxisRange() {
+		return axisRange;
+	}
+
+	public void setAxisRange(Double axisRange) {
+		this.axisRange = axisRange;
 	}
 }

@@ -107,6 +107,9 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	@Column(name = "type")
 	protected String type;
+	
+	@Column(name = "isReimbursed")
+	protected Boolean isReimbursed;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "dewarId")
@@ -134,7 +137,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 			String dewarStatus, Date timeStamp, Boolean isStorageDewar, String barCode,
 //			Integer firstExperimentId,
 			Integer customsValue, Integer transportValue, String trackingNumberToSynchrotron,
-			String trackingNumberFromSynchrotron, String facilityCode, String type) {
+			String trackingNumberFromSynchrotron, String facilityCode, String type, Boolean isReimbursed) {
 		super();
 		this.dewarId = dewarId;
 		this.shippingVO = shippingVO;
@@ -152,6 +155,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 		this.trackingNumberFromSynchrotron = trackingNumberFromSynchrotron;
 		this.facilityCode = facilityCode;
 		this.type = type;
+		this.isReimbursed = isReimbursed;
 	}
 	
 	public Dewar3VO(Dewar3VO vo){
@@ -171,6 +175,7 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 		this.trackingNumberFromSynchrotron = vo.getTrackingNumberFromSynchrotron();
 		this.facilityCode = vo.getFacilityCode();
 		this.type = vo.getType();
+		this.isReimbursed = vo.getIsReimbursed();
 	}
 
 	@Override
@@ -312,6 +317,14 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Boolean getIsReimbursed() {
+		return isReimbursed;
+	}
+
+	public void setIsReimbursed(Boolean isReimbursed) {
+		this.isReimbursed = isReimbursed;
 	}
 
 	public Set<Container3VO> getContainerVOs() {

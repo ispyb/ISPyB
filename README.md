@@ -29,7 +29,7 @@ For example:
 <settings>
 	<proxies>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_http</id>
 			<active>true</active>
 			<protocol>http</protocol>
 			<host>proxy.esrf.fr</host>
@@ -37,7 +37,7 @@ For example:
 			<nonProxyHosts>localhost</nonProxyHosts>
 		</proxy>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_https</id>
 			<active>true</active>
 			<protocol>https</protocol>
 			<host>proxy.esrf.fr</host>
@@ -114,6 +114,9 @@ This corresponds to the ISPyB metadata and contains only the database structure.
 
 ispyb-ejb/db/scripts/schemaStatus.sql
 This corresponds to the entries present in SchemaStatus table and gives an overview of the executed update scripts.
+
+ispyb-ejb/db/scripts/ispybAutoprocAttachment.sql
+This corresponds to the type and names of different autoproc attachments.
 
 The creation scripts are normally updated for each tag, but if you are using the trunk version you may have to run the update scripts present in :
 ispyb-ejb/db/scripts/ahead

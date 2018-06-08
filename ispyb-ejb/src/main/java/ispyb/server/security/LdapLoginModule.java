@@ -57,6 +57,9 @@ import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 
+import static ispyb.common.util.Constants.SITE_IS_MAXIV;
+import static ispyb.common.util.Constants.getSite;
+
 /**
  * An implementation of LoginModule that authenticates against an LDAP server using JNDI, based on the configuration
  * properties.
@@ -165,7 +168,6 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 				/** if there's no Role for this username, so it will be a User **/
 				if (!userRoles.members().hasMoreElements())
 						userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
-				
 				return true;
 				
 			} catch (NamingException e) {
@@ -298,13 +300,38 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 
 				// Set up criteria to search on
 				// e.g. (&(objectClass=groupOfUniqueNames)(uniqueMember=uid=ifx999,ou=People,dc=esrf,dc=fr))
+
 				String filter = new StringBuffer().append("(&").append("(objectClass=groupOfUniqueNames)").append("(" + groupUniqueMemberName + "=").append(userDN).append(")").append(")").toString();
 				
 				switch (Constants.getSite()) {
 				case EMBL:
 					filter = new StringBuffer().append("(&").append("(objectClass=groupOfNames)").append("(" + groupUniqueMemberName + "=").append(userDN).append(")").append(")").toString();
 					break;
+				case MAXIV:
+						try {
 
+							SearchControls constraints = new SearchControls();
+							constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+							String[] attrIDs = { "distinguishedName"};
+							constraints.setReturningAttributes(attrIDs);
+							//First input parameter is search bas, it can be "CN=Users,DC=YourDomain,DC=com"
+							//Second Attribute can be uid=username
+							NamingEnumeration answer = ctx.search(Constants.LDAP_people, "sAMAccountName="
+									+ username, constraints);
+							if (answer.hasMore()) {
+								Attributes attrs = ((SearchResult) answer.next()).getAttributes();
+								String dn = attrs.get("distinguishedName").toString().replace("distinguishedName: ", "");
+								// (&(objectClass=group)(member=CN=Alberto Nardella,CN=Users,dc=maxlab,dc=lu,dc=se))
+								filter = new StringBuffer().append("(&").append("(objectClass=group)").append("(" + groupUniqueMemberName + "=").append(dn).append(")").append(")").toString();
+							}else{
+								throw new Exception("Invalid User");
+							}
+
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						break;
 				default:
 					break;
 				}
@@ -319,6 +346,8 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 					Attributes attrs = sr.getAttributes();
 
 					Attribute roles = attrs.get(groupAttrName);
+
+
 					
 					for (int r = 0; r < roles.size(); r++) {
 						
@@ -327,6 +356,24 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 						roleName = value.toString();
 						// fill roles array
 						if (roleName != null) {
+							if (Constants.SITE_IS_MAXIV()) {
+								if (roleName.equals("Staff")) {
+									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
+								} else if (roleName.equals("ispyb-manager")) {
+									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_ADMIN));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_BLOM));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_INDUSTRIAL));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_STORE));
+								} else if (roleName.equals("ispyb-biomax-contacts")) {
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+								} else if (roleName.contains("-group")){
+									userRoles.addMember(new SimplePrincipal("mx"+roleName.replace("-group", "")));
+									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
+								}
+							}
 							userRoles.addMember(new SimplePrincipal(roleName));
 						}
 
