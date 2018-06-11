@@ -62,7 +62,7 @@ public class BLSampleImage3VO extends ISPyBValueObject implements Cloneable {
 
 	@ManyToOne
 	@JoinColumn(name = "blSampleId")
-	protected BLSample3VO blsampleVO;
+	private BLSample3VO blsampleVO;
 
 	@Column(name = "micronsPerPixelX")
 	protected Double micronsPerPixelX;

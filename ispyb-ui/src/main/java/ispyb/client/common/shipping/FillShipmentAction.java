@@ -27,6 +27,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.actions.DispatchAction;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import ispyb.client.common.BreadCrumbsForm;
 import ispyb.client.common.util.Confidentiality;
 import ispyb.client.common.util.GSonUtils;
@@ -44,20 +58,6 @@ import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
  *  
@@ -217,6 +217,7 @@ public class FillShipmentAction   extends DispatchAction{
 			Shipping3VO shippingVO = shippingService.findByPk(shipmentId, false);
 			List<Dewar3VO> listDewar = dewarService.findByShippingId(shipmentId);
 			List<Dewar> listOfDewar = new ArrayList<Dewar>();
+			//List<List<ContainerWS3VO>> listOfContainer = new ArrayList<List<ContainerWS3VO>>();
 			List<List<Container3VO>> listOfContainer = new ArrayList<List<Container3VO>>();
 			List<List<List<SamplePuck>>> listOfSamples = new ArrayList<List<List<SamplePuck>>>();
 			for (Iterator<Dewar3VO> iterator = listDewar.iterator(); iterator.hasNext();) {
@@ -249,10 +250,12 @@ public class FillShipmentAction   extends DispatchAction{
 				dewar.setAlertMessage(alertMessage);
 				dewar.setTooltip(tooltip);
 				listOfDewar.add(dewar);
-				List<Container3VO> listContainers = containerService.findByDewarId(dewarVO.getDewarId());
+				//List<ContainerWS3VO> listContainers = containerService.findWSByDewarId(dewarVO.getDewarId());
+				List<Container3VO> listContainers = containerService.findByDewarId(dewarVO.getDewarId());				
 				listOfContainer.add(listContainers);
 				List<List<SamplePuck>> listS = new ArrayList<List<SamplePuck>>();
-				for (Iterator<Container3VO> iterator2 = listContainers.iterator(); iterator2.hasNext();) {
+				for (Iterator<Container3VO> iterator2 = listContainers.iterator(); iterator2.hasNext();) {				
+				//for (Iterator<ContainerWS3VO> iterator2 = listContainers.iterator(); iterator2.hasNext();) {
 					Container3VO containerVO = (Container3VO) iterator2.next();
 					List<BLSample3VO> listSamplesInContainer = sampleService.findByContainerId(containerVO.getContainerId());
 					List<SamplePuck> listSamples = new ArrayList<SamplePuck>();
@@ -642,10 +645,10 @@ public class FillShipmentAction   extends DispatchAction{
 					SamplePuck newSamplePuck = new SamplePuck(null, samplePuck.getPosition(), samplePuck.getSampleName()+"_"+t,
 							samplePuck.getProteinAcronym(), samplePuck.getSpaceGroup(), samplePuck.getPreObservedResolution(), 
 							samplePuck.getNeededResolution(), samplePuck.getPreferredBeamDiameter(), samplePuck.getExperimentType(), 
-							samplePuck.getNumberOfPositions(),samplePuck.getRadiationSensitivity(),samplePuck.getRequiredCompleteness(),samplePuck.getRequiredMultiplicity(),
+							samplePuck.getNumberOfPositions(),samplePuck.getRadiationSensitivity(),samplePuck.getAimedCompleteness(),samplePuck.getAimedMultiplicity(),
 							samplePuck.getUnitCellA(), samplePuck.getUnitCellB(), samplePuck.getUnitCellC(), 
 							samplePuck.getUnitCellAlpha(), samplePuck.getUnitCellBeta(), samplePuck.getUnitCellGamma(), 
-							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode(), samplePuck.getMinOscWidth());
+							samplePuck.getSmiles(), samplePuck.getComments(), samplePuck.getPinBarcode(), samplePuck.getMinOscWidth(), samplePuck.getAxisRange());
 					
 					newListSamples.add(newSamplePuck);
 				}

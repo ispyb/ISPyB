@@ -108,7 +108,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		if (fetchDewars){
 			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
 					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
-					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs sa LEFT JOIN FETCH sa.blsampleImageVOs LEFT JOIN FETCH sa.blSubSampleVOs " : " ")
 					+  " LEFT JOIN FETCH vo.sessions se "
 					+  " LEFT JOIN FETCH se.proposalVO proposal "
 					+ " WHERE proposal.proposalId = :proposalId";
@@ -208,7 +208,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		Shipping3VO vo = findByPk(pk, false);
+		Shipping3VO vo = findByPk(pk, true);
 		delete(vo);
 	}
 
