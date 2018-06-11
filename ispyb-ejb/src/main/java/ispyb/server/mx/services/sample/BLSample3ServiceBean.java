@@ -303,8 +303,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				.add(Restrictions.eq("containerId", containerId)).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();
 	}
-
-
+	
 	public List<BLSample3VO> findByCodeAndShippingId(final String dmCode, final Integer shippingId) throws Exception {
 		return this.findByShippingDewarContainer(shippingId, null, null, dmCode, null);
 	}

@@ -261,7 +261,8 @@ public class FillShipmentAction   extends DispatchAction{
 					List<SamplePuck> listSamples = new ArrayList<SamplePuck>();
 					if (listSamplesInContainer != null){
 						for (Iterator<BLSample3VO> iterator3 = listSamplesInContainer.iterator(); iterator3.hasNext();) {
-							BLSample3VO blSample3VO = (BLSample3VO) iterator3.next();
+							Integer sampleId = ((BLSample3VO) iterator3.next()).getBlSampleId();
+							BLSample3VO blSample3VO = sampleService.findByPk(sampleId, false, false, false);
 							listSamples.add(new SamplePuck(blSample3VO));
 						}
 						listS.add(listSamples);
@@ -275,9 +276,7 @@ public class FillShipmentAction   extends DispatchAction{
 			Object puckCodeToCopy = request.getSession().getAttribute(Constants.COPY_PUCK_CODE);
 			Object listSamples = request.getSession().getAttribute(Constants.COPY_PUCK_SAMPLES);
 			canPaste = puckCodeToCopy != null && listSamples != null;
-			
-			
-			
+						
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			//context path
 			data.put("contextPath", request.getContextPath());

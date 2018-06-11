@@ -94,6 +94,7 @@ var IspybCreatePuck = {
 			mainItems.push(puckHeadPanel.getPanel(data));
 			mainItems.push(createPuckGrid.getGrid(data));
 			// panel with annotations
+			var msg = "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks.";			
 			var subPanel = Ext.widget({
 				xtype : 'form',
 				layout : {
@@ -108,7 +109,7 @@ var IspybCreatePuck = {
 				items : [ {
 					xtype: 'component',
 					style: 'margin-top:10px',
-					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks. Be aware that only ID30B and BM14 can accommodate unipucks (16 samples), other ESRF MX beamlines only accommodate SPINE pucks (10 samples)."
+					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks."
 				}]
 			});
 			mainItems.push(subPanel);
