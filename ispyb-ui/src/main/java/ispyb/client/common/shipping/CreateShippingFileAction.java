@@ -282,7 +282,11 @@ public class CreateShippingFileAction extends DispatchAction {
 					String[][] values = parser.getAllValues();
 					int nbRows = values.length;
 					boolean isError = false;
-					for (int i = 0; i < nbRows; i++) {
+					int initCounter=0;
+					if (Constants.SITE_IS_MAXIV()){
+						initCounter = 1;
+					}
+					for (int i = initCounter; i < nbRows; i++) {
 						int nbCol = values[i].length;
 						if (nbCol != NB_COL) {
 							errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("error.user.shipping.upload.file.data",
