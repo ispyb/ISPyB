@@ -123,7 +123,7 @@ public class EditSampleAction extends AbstractSampleAction {
 			else
 				blsampleId = BreadCrumbsForm.getIt(request).getSelectedSample().getBlSampleId();
 			// ---------------------------------------------------------------------------------------------------
-			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false);
+			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false, false);
 
 			form.setEditMode(new Integer(1));
 
@@ -132,7 +132,7 @@ public class EditSampleAction extends AbstractSampleAction {
 			if (diffPlanId != null) {
 				DiffractionPlan3VO difPlanInfo = difPlanService.findByPk(diffPlanId, false, false);
 
-				BLSample3VO selectedSample = sampleService.findByPk(blsampleId, false, false);
+				BLSample3VO selectedSample = sampleService.findByPk(blsampleId, false, false, false);
 				Crystal3VO selectedCrystal = selectedSample.getCrystalVO();
 				Integer crystalId = selectedCrystal.getCrystalId();
 
@@ -259,7 +259,7 @@ public class EditSampleAction extends AbstractSampleAction {
 
 			// retrieve the object, change the fields and save it again
 
-			BLSample3VO slvFromDB = sampleService.findByPk(sampleId, false, false);
+			BLSample3VO slvFromDB = sampleService.findByPk(sampleId, false, false, false);
 			Crystal3VO crystalFromDB = crystalService.findByPk(form.getTheCrystalId(), false);
 			slvFromDB.setCrystalVO(crystalFromDB);
 			slvFromDB.setName(updatedSample.getName());
@@ -350,7 +350,7 @@ public class EditSampleAction extends AbstractSampleAction {
 					form.setDifPlanInfo(newDiffractionPlan);
 
 					if (sampleId.intValue() > 0) { // Sample
-						BLSample3VO selectedSample = sampleService.findByPk(sampleId, false, false);
+						BLSample3VO selectedSample = sampleService.findByPk(sampleId, false, false, false);
 						selectedSample.setDiffractionPlanVO(newDiffractionPlan);
 						sampleService.update(selectedSample);
 
@@ -436,7 +436,7 @@ public class EditSampleAction extends AbstractSampleAction {
 
 				if (!_sampleId.equals("")) {
 					sampleId = new Integer(_sampleId);
-					BLSample3VO selectedSample = sampleService.findByPk(sampleId, false, false);
+					BLSample3VO selectedSample = sampleService.findByPk(sampleId, false, false, false);
 					if (selectedSample != null) {
 						selectedSample.setDiffractionPlanVO(diffractionPlan);
 						sampleService.update(selectedSample);

@@ -28,6 +28,7 @@ import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
 
+import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.List;
@@ -51,6 +52,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * <p>
@@ -78,11 +82,23 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		return FIND_BY_PK(fetchDewars);
 	}
 		
-	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean feacthSamples) {
+	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean fetchSamples) {
 		if (fetchDewars){
 			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
 					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
-					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ " WHERE vo.shippingId = :pk";
+		}
+		return FIND_BY_PK(false);
+	}
+	
+	private static final String FIND_BY_PK(boolean fetchDewars, boolean fetchContainers, boolean fetchSamples, boolean fetchSubSamples) {
+		if (fetchDewars){
+			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
+					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
+					//+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa " : "")
+					+ (fetchSamples ? " LEFT JOIN FETCH co.sampleVOs sa LEFT JOIN FETCH sa.blsampleImageVOs " : "")
+					+ (fetchSubSamples ? " LEFT JOIN FETCH sa.blSubSampleVOs " : "")
 					+ " WHERE vo.shippingId = :pk";
 		}
 		return FIND_BY_PK(fetchDewars);
@@ -92,7 +108,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		if (fetchDewars){
 			return "FROM Shipping3VO vo LEFT JOIN FETCH vo.dewarVOs dewars " 
 					+ (fetchContainers ? " LEFT JOIN FETCH dewars.containerVOs co " : "")
-					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs " : "")
+					+ (feacthSamples ? " LEFT JOIN FETCH co.sampleVOs sa LEFT JOIN FETCH sa.blsampleImageVOs LEFT JOIN FETCH sa.blSubSampleVOs " : " ")
 					+  " LEFT JOIN FETCH vo.sessions se "
 					+  " LEFT JOIN FETCH se.proposalVO proposal "
 					+ " WHERE proposal.proposalId = :proposalId";
@@ -192,7 +208,7 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		Shipping3VO vo = findByPk(pk, false);
+		Shipping3VO vo = findByPk(pk, true);
 		delete(vo);
 	}
 
@@ -233,6 +249,28 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 		checkCreateChangeRemoveAccess();
 		try {
 			return (Shipping3VO) entityManager.createQuery(FIND_BY_PK(withDewars, withcontainers, withSamples)).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}		
+	}
+
+	public String findSerialShippingByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception {
+		
+		checkCreateChangeRemoveAccess();
+		String st = null;
+		Shipping3VO vo = this.findByPk(pk, withDewars, withcontainers, withSamples, withSubSamples);
+		if (vo != null ) {
+			st = serialize( vo);			
+		}
+		return st;
+	}
+
+	public Shipping3VO findByPk(final Integer pk, final boolean withDewars, final boolean withcontainers, final boolean withSamples, final boolean withSubSamples) throws Exception {
+		
+		checkCreateChangeRemoveAccess();
+		try {
+			return (Shipping3VO) entityManager.createQuery(FIND_BY_PK(withDewars, withcontainers, withSamples, withSubSamples)).setParameter("pk", pk)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -602,6 +640,11 @@ public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceL
 	}
 	
 	/* Private methods ------------------------------------------------------ */
+
+	public static String serialize(Shipping3VO shipping) {
+		Gson gson =  new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeNulls().create();		
+		return  gson.toJson(shipping);
+	}
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.

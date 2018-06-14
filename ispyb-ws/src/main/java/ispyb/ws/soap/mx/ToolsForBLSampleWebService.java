@@ -52,11 +52,14 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.mx.services.collections.Position3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
+import ispyb.server.mx.services.sample.BLSampleImage3Service;
 import ispyb.server.mx.services.sample.BLSubSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.DiffractionPlan3Service;
 import ispyb.server.mx.vos.collections.Position3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSampleImage3VO;
+import ispyb.server.mx.vos.sample.BLSampleImageWS3VO;
 import ispyb.server.mx.vos.sample.BLSampleWS3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.sample.BLSubSampleWS3VO;
@@ -204,7 +207,7 @@ public class ToolsForBLSampleWebService {
 			BLSampleWS3VO blSampleValue = null;
 			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 
-			blSampleValue = blSampleService.findForWSByPk(blSampleId, false, false);
+			blSampleValue = blSampleService.findForWSByPk(blSampleId, false, false, false);
 			long duration = System.currentTimeMillis() - startTime;
 			if (blSampleValue != null)
 				LOG.debug("findBLSample : " + blSampleValue.getBlSampleId() + " time = " + duration + " ms");
@@ -262,7 +265,7 @@ public class ToolsForBLSampleWebService {
 			Integer blSampleId = vo.getBlSampleId();
 			// load the object elsewhere there is an error with the childs
 			if (blSampleId != null && blSampleId > 0) {
-				blSampleVO = blSampleService.findByPk(blSampleId, false, false);
+				blSampleVO = blSampleService.findByPk(blSampleId, false, false,false);
 			}
 			blSampleVO.fillVOFromWS(vo);
 			blSampleVO.setCrystalVO(crystalVO);
@@ -516,7 +519,7 @@ public class ToolsForBLSampleWebService {
 
 			BLSample3VO sampleVO = null;
 			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
-				sampleVO = blsampleService.findByPk(vo.getBlSampleId(), false, false);
+				sampleVO = blsampleService.findByPk(vo.getBlSampleId(), false, false, false);
 			DiffractionPlan3VO diffractionPlanVO = null;
 			if (vo.getDiffractionPlanId() != null && vo.getDiffractionPlanId() > 0)
 				diffractionPlanVO = diffractionPlanService.findByPk(vo.getDiffractionPlanId(), false, false);
@@ -549,6 +552,61 @@ public class ToolsForBLSampleWebService {
 			throw e;
 		}
 	}
+	
+	@WebMethod
+	@WebResult(name = "blSubSampleId")
+	public Integer storeOrUpdateBLSampleImage(@WebParam(name = "blSampleImage")
+	BLSampleImageWS3VO vo) throws Exception {
+		try {
+			LOG.debug("storeOrUpdateBLSampleImage");
+			long startTime = System.currentTimeMillis();
+			if (vo == null)
+				return null;
+
+			if (vo.getBlSampleId() == null || vo.getBlSampleId() == 0) {
+				vo.setBlSampleId(null);
+			}
+
+			if (vo.getBlSampleId() == null) {
+				LOG.debug("WS PB : BLSampleId is null , could not create blSampleImage");
+				return errorCodeFK;
+			}
+
+			BLSampleImage3Service blSampleImageService = (BLSampleImage3Service) ejb3ServiceLocator
+					.getLocalService(BLSampleImage3Service.class);
+			BLSample3Service blsampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
+
+			BLSampleImage3VO sampleImage = new BLSampleImage3VO();
+
+			BLSample3VO sampleVO = null;
+			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
+				sampleVO = blsampleService.findByPk(vo.getBlSampleId(), false, false, false);
+			Integer blSampleImageId = vo.getBlSampleImageId();
+			
+			// load the object elsewhere there is an error with the childs
+			if (blSampleImageId != null && blSampleImageId > 0) {
+				sampleImage = blSampleImageService.findByPk(blSampleImageId);
+			}
+			sampleImage.fillVOFromWS(vo);
+			sampleImage.setBlsampleVO(sampleVO);
+
+			if (blSampleImageId == null || blSampleImageId == 0) {
+				vo.setBlSampleId(null);
+				sampleImage = blSampleImageService.create(sampleImage);
+			} else {
+				sampleImage = blSampleImageService.update(sampleImage);
+			}
+			blSampleImageId = sampleImage.getBlSampleImageId();
+			long duration = System.currentTimeMillis() - startTime;
+			LOG.debug("storeOrUpdateBLSampleImage : " + blSampleImageId + " time = " + duration + " ms");
+
+			return sampleImage.getBlSampleImageId();
+		} catch (Exception e) {
+			LOG.error("WS ERROR: storeOrUpdateBLSampleImage - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
+			throw e;
+		}
+	}
+
 
 	@WebMethod
 	@WebResult(name = "SampleInfo")

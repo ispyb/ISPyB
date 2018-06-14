@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -34,6 +36,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.log4j.Logger;
@@ -42,16 +45,7 @@ public class LdapConnection {
 
 	private final static Logger LOG = Logger.getLogger(LdapConnection.class);
 
-	/**
-	 * finder by "uid". uid is a LDAP attribute.
-	 * 
-	 * 
-	 * @param intMat
-	 * @return
-	 * @throws Exception
-	 */
-
-	private static final String LDAP_Employee_Identifier = "uid";
+	private static final String LDAP_Employee_Identifier = Constants.LDAP_Employee_Identifier;
 
 	private static final String LDAP_Employee_Resource = Constants.LDAP_Employee_Resource;
 
@@ -61,6 +55,12 @@ public class LdapConnection {
 
 	private static final String LDAP_people_AllOnSitefilter = "(&amp;(objectClass=esrfPerson)  (!(persCategory=B)) )";
 
+	private static final String LDAP_prefix = Constants.LDAP_prefix;
+	
+	private static final String LDAP_username = Constants.LDAP_username;
+	
+	private static final String LDAP_credential = Constants.LDAP_credential;
+	
 	public static EmployeeVO findByUniqueIdentifier(String intMat) throws Exception {
 		String searchAttribute = LDAP_Employee_Identifier;
 		return findOneEmployee(intMat, searchAttribute);
@@ -71,8 +71,7 @@ public class LdapConnection {
 		LdapContext ldapCtx;
 		EmployeeVO emp = null;
 		try {
-			InitialContext iniCtx = new InitialContext();
-			ldapCtx = (LdapContext) iniCtx.lookup(ldapEmployeeDirectory);
+			ldapCtx = getLDAPContext();
 			String people = LDAP_people;
 			Attributes matchAttrs = new BasicAttributes(true);
 			matchAttrs.put(new BasicAttribute(searchAttribute, value));
@@ -89,7 +88,6 @@ public class LdapConnection {
 			}
 			answer.close();
 			ldapCtx.close();
-			iniCtx.close();
 
 		} catch (NamingException e) {
 			LOG.error("LdapContext " + ldapEmployeeDirectory + " not bound. Exception: " + e.toString());
@@ -277,5 +275,28 @@ public class LdapConnection {
 		}
 		res = emailAddress;
 		return res;
+	}
+	
+	private static LdapContext getLDAPContext() throws NamingException{
+		LdapContext ldapContext = null;
+		
+		if(Constants.SITE_IS_MAXIV()){
+			Properties env = new Properties();
+			
+			env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
+			env.put("java.naming.provider.url", LDAP_Employee_Resource);
+			env.put(Context.SECURITY_AUTHENTICATION,"simple");
+			String userDN = LDAP_prefix + LDAP_username;
+			env.setProperty(Context.SECURITY_PRINCIPAL, userDN);
+			env.put(Context.SECURITY_CREDENTIALS, LDAP_credential);
+			
+			ldapContext = new InitialLdapContext(env, null);
+			
+		} else {
+			InitialContext iniCtx = new InitialContext();
+			ldapContext = (LdapContext) iniCtx.lookup(LDAP_Employee_Resource);
+		}
+		
+		return ldapContext;
 	}
 }

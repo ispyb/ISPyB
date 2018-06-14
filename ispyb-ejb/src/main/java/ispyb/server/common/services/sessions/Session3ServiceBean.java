@@ -851,8 +851,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		}
 
 		crit.addOrder(Order.desc("startDate"));
-
-		return crit.list();
+		List<Session3VO> ret = crit.list();
+		return ret;
 	}
 	
 	/**

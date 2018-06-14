@@ -82,3 +82,10 @@ ispyb-ui/.classpath
 deploy.bat
 deploy10.bat
 
+# Intelli J
+.idea
+*.iml
+ispyb-ejb/*.iml
+ispyb-ws/*.iml
+ispyb-ui/*.iml
+
