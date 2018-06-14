@@ -78,73 +78,7 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 (SELECT GROUP_CONCAT(numberOfImages) numberOfImages
   FROM DataCollection
 where DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as imagesCount,
-
-(SELECT GROUP_CONCAT(cnt) cnt
-  FROM DataCollection,
-(
-  SELECT dataCollectionId, COUNT(*) cnt
-    FROM Movie
-    GROUP BY Movie.dataCollectionId
-  
-) q
-where q.dataCollectionId = DataCollection.dataCollectionId 
-and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as movieCount,
-
-(SELECT GROUP_CONCAT(cnt) cnt
-  FROM DataCollection,
-(
-  SELECT dataCollectionId, COUNT(*) as cnt
-    FROM Movie, MotionCorrection
-    where MotionCorrection.movieId = Movie.movieId
-    GROUP BY Movie.dataCollectionId
-    
-) q
-where q.dataCollectionId = DataCollection.dataCollectionId 
-and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as motionCorrectionCount,
-
-(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
-  FROM DataCollection,
-(
-  SELECT dataCollectionId, COUNT(*) as cnt
-    FROM Movie, MotionCorrection
-    where MotionCorrection.movieId = Movie.movieId
-    GROUP BY Movie.dataCollectionId
-    
-) q
-where q.dataCollectionId = DataCollection.dataCollectionId 
-and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as motionCorrectionDataCollectionIds,
-
-(SELECT GROUP_CONCAT(cnt) cnt
-  FROM DataCollection,
-(
-    SELECT dataCollectionId, COUNT(*) as cnt
- 
-    FROM Movie, MotionCorrection, CTF
-    where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
-    GROUP BY Movie.dataCollectionId
-    
-) q
-where q.dataCollectionId = DataCollection.dataCollectionId 
-and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as CTFCount,
-
-
-(SELECT GROUP_CONCAT(DataCollection.dataCollectionId) 
-  FROM DataCollection,
-(
-    SELECT dataCollectionId, COUNT(*) as cnt
-    FROM Movie, MotionCorrection, CTF
-    where MotionCorrection.movieId = Movie.movieId and CTF.motionCorrectionId = MotionCorrection.motionCorrectionId
-    GROUP BY Movie.dataCollectionId
-    
-) q
-where q.dataCollectionId = DataCollection.dataCollectionId 
-and DataCollection.dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId
-) as CTFdataCollectionIds 
+) as imagesCount
 
 
 
