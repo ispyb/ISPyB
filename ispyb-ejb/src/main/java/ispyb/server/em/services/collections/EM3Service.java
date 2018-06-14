@@ -24,6 +24,7 @@ import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,4 +68,8 @@ public interface EM3Service {
 	MotionCorrection getMotionCorrectionByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception;
 
 	CTF getCTFByMovieId(int proposalId, int dataCollectionId, int movieId) throws Exception;
+
+	List<Map<String, Object>> getStatsByDataCollectionIds(int proposalId, String dataCollectionIdList);
+
+	Collection<? extends Map<String, Object>> getStatsByDataSessionIds(int proposalId, Integer id);
 }
