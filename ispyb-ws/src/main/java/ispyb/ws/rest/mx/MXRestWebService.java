@@ -1,5 +1,10 @@
 package ispyb.ws.rest.mx;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.NamingException;
+
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -16,6 +21,7 @@ import ispyb.server.mx.services.autoproc.PreparePhasingData3Service;
 import ispyb.server.mx.services.autoproc.SpaceGroup3Service;
 import ispyb.server.mx.services.autoproc.SubstructureDetermination3Service;
 import ispyb.server.mx.services.autoproc.phasingStep.PhasingStep3Service;
+import ispyb.server.mx.services.collections.Workflow3Service;
 import ispyb.server.mx.services.collections.workflowStep.WorkflowStep3Service;
 import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
@@ -24,14 +30,11 @@ import ispyb.server.mx.services.utils.reader.AutoProcessingData;
 import ispyb.server.mx.services.utils.reader.AutoProcessingDataParser;
 import ispyb.server.mx.services.ws.rest.datacollection.DataCollectionRestWsService;
 import ispyb.server.mx.services.ws.rest.datacollectiongroup.DataCollectionGroupRestWsService;
+import ispyb.server.mx.services.ws.rest.energyscan.EnergyScanRestWsService;
+import ispyb.server.mx.services.ws.rest.xfefluorescencespectrum.XFEFluorescenSpectrumRestWsService;
 import ispyb.server.mx.vos.autoproc.AutoProcIntegration3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.ws.rest.RestWebService;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.naming.NamingException;
 
 public class MXRestWebService extends RestWebService{
 
@@ -58,6 +61,10 @@ public class MXRestWebService extends RestWebService{
 		return (WorkflowStep3Service) Ejb3ServiceLocator.getInstance().getLocalService(WorkflowStep3Service.class);
 	}
 	
+	protected Workflow3Service getWorkflow3Service() throws NamingException {
+		return (Workflow3Service) Ejb3ServiceLocator.getInstance().getLocalService(Workflow3Service.class);
+	}
+	
 	
 	protected PhasingStep3Service getPhasingStep3Service() throws NamingException {
 		return (PhasingStep3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStep3Service.class);
@@ -79,6 +86,14 @@ public class MXRestWebService extends RestWebService{
 		return (DataCollectionGroupRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionGroupRestWsService.class);
 	}
 	
+	protected EnergyScanRestWsService getWebServiceEnergyScan3Service() throws NamingException {
+		return (EnergyScanRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(EnergyScanRestWsService.class);		
+	}
+	
+	protected XFEFluorescenSpectrumRestWsService getWebServiceXFEFluorescenSpectrum3Service() throws NamingException {
+		return (XFEFluorescenSpectrumRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(XFEFluorescenSpectrumRestWsService.class);		
+	}
+
 	protected DataCollectionRestWsService getWebServiceDataCollection3Service() throws NamingException {
 		return (DataCollectionRestWsService) Ejb3ServiceLocator.getInstance().getLocalService(DataCollectionRestWsService.class);
 	}

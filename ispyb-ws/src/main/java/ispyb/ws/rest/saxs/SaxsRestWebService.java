@@ -1,6 +1,7 @@
 package ispyb.ws.rest.saxs;
 
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
+import ispyb.server.biosaxs.services.core.analysis.abInitioModelling.AbInitioModelling3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
 import ispyb.server.biosaxs.services.core.measurement.Measurement3Service;
@@ -47,10 +48,13 @@ public class SaxsRestWebService extends RestWebService{
 	}
 
 	
-
 	protected PrimaryDataProcessing3Service getPrimaryDataProcessing3Service() throws NamingException {
 		return (PrimaryDataProcessing3Service) Ejb3ServiceLocator.getInstance().getLocalService(
 				PrimaryDataProcessing3Service.class);
+	}
+	
+	protected AbInitioModelling3Service getAbInitioModelling3Service() throws NamingException {
+		return (AbInitioModelling3Service) Ejb3ServiceLocator.getInstance().getLocalService(AbInitioModelling3Service.class);
 	}
 	
 	

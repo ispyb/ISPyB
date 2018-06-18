@@ -21,7 +21,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
-
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 
 <%	
@@ -88,9 +88,14 @@ If you want to make them permanent, then update the User Portal account. </font>
 			<layout:panel key="Contact person info" width="100%" align="left" styleClass="PANEL">
 				<layout:text key="person ID" 	property="person.personId"		styleClass="FIELD"	mode="H,H,H"/>
 				<layout:text key="person login"	property="person.login"			styleClass="FIELD"	mode="H,H,H"/>
-				
-				<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="I,I,I" isRequired="true"/>
-				<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="I,I,I" isRequired="true"/>
+				<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+					<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="E,E,I" isRequired="true"/>
+					<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="E,E,I" isRequired="true"/>
+				</c:if>
+				<c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
+					<layout:text key="Family name" 	property="person.familyName"   styleClass="FIELD" mode="I,I,I" isRequired="true"/>
+					<layout:text key="First name" 	property="person.givenName"    styleClass="FIELD" mode="I,I,I" isRequired="true"/>
+				</c:if>
 				<layout:text key="Telephone" 	property="person.phoneNumber"  styleClass="FIELD" mode="E,E,I"/>
 				<layout:text key="Fax" 			property="person.faxNumber"    styleClass="FIELD" mode="E,E,I"/>
 				<layout:text key="Email" 		property="person.emailAddress" styleClass="FIELD" mode="E,E,I"/>

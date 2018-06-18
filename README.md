@@ -14,19 +14,10 @@
 git clone https://github.com/ispyb/ISPyB.git
 ```
 
-2. ISPyB uses some local libraries located on /dependencies then some jars should be added to your local maven repository
+2. ISPyB needs the third party libraries provided in the `dependencies` directory.  These don't exist in a public repository, so install them to the local Maven repository so Maven can find them:
 
 ```
-cd dependencies
-mvn install:install-file -Dfile=securityfilter.jar -DgroupId=securityfilter -DartifactId=securityfilter -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=securityaes.jar -DgroupId=securityaes -DartifactId=securityaes -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=jhdf.jar -DgroupId=jhdf -DartifactId=jhdf -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=jhdf5.jar -DgroupId=jhdf5 -DartifactId=jhdf5 -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=jhdf5obj.jar -DgroupId=jhdf5obj -DartifactId=jhdf5obj -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=jhdfobj.jar -DgroupId=jhdfobj -DartifactId=jhdfobj -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=Struts-Layout-1.2.jar -DgroupId=struts-layout -DartifactId=struts-layout -Dversion=1.2 -Dpackaging=jar
-mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=ojdbc6 -DartifactId=ojdbc6 -Dversion=1.0 -Dpackaging=jar
-mvn install:install-file -Dfile=ispyb-WSclient-userportal-gen-1.3.jar -DgroupId=ispyb -DartifactId=ispyb-WSclient-userportal-gen -Dversion=1.3 -Dpackaging=jar
+cd dependencies && mvn initialize
 ```
 
 3. Configure the SITE property
@@ -38,7 +29,7 @@ For example:
 <settings>
 	<proxies>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_http</id>
 			<active>true</active>
 			<protocol>http</protocol>
 			<host>proxy.esrf.fr</host>
@@ -46,7 +37,7 @@ For example:
 			<nonProxyHosts>localhost</nonProxyHosts>
 		</proxy>
 		<proxy>
-			<id>esrf</id>
+			<id>esrf_https</id>
 			<active>true</active>
 			<protocol>https</protocol>
 			<host>proxy.esrf.fr</host>
@@ -123,6 +114,9 @@ This corresponds to the ISPyB metadata and contains only the database structure.
 
 ispyb-ejb/db/scripts/schemaStatus.sql
 This corresponds to the entries present in SchemaStatus table and gives an overview of the executed update scripts.
+
+ispyb-ejb/db/scripts/ispybAutoprocAttachment.sql
+This corresponds to the type and names of different autoproc attachments.
 
 The creation scripts are normally updated for each tag, but if you are using the trunk version you may have to run the update scripts present in :
 ispyb-ejb/db/scripts/ahead

@@ -793,6 +793,10 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		Session3VO otherVO = getLightSession3VO(vo);
 		Integer beamLineSetupId = null;
 		Integer proposalId = null;
+		String proposalName = null;
+		if (vo.getProposalVO() != null) {
+			proposalName = vo.getProposalVO().getProposalAccount();
+		}
 		beamLineSetupId = otherVO.getBeamLineSetupVOId();
 		proposalId = otherVO.getProposalVOId();
 		otherVO.setBeamLineSetupVO(null);
@@ -800,6 +804,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		SessionWS3VO wsSession = new SessionWS3VO(otherVO);
 		wsSession.setBeamLineSetupId(beamLineSetupId);
 		wsSession.setProposalId(proposalId);
+		wsSession.setProposalName(proposalName);
 		return wsSession;
 	}
 	
@@ -846,8 +851,8 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		}
 
 		crit.addOrder(Order.desc("startDate"));
-
-		return crit.list();
+		List<Session3VO> ret = crit.list();
+		return ret;
 	}
 	
 	/**

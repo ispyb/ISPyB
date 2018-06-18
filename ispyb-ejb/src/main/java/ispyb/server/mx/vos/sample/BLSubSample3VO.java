@@ -64,7 +64,7 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 
 	@ManyToOne
 	@JoinColumn(name = "positionId")
-	private Position3VO positionVO;
+	protected Position3VO positionVO;
 	
 	@ManyToOne
 	@JoinColumn(name = "position2Id")
@@ -83,7 +83,7 @@ public class BLSubSample3VO extends ISPyBValueObject implements Cloneable {
 	protected String comments;
 	
 	@Column(name = "recordTimeStamp")
-	protected Date recordTimeStamp;
+	private Date recordTimeStamp;
 		
 	public BLSubSample3VO() {
 		super();

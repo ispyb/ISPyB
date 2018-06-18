@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.4.4</version>
+		<version>5.8.3</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
@@ -180,7 +180,7 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-			<version>1.3</version>
+			<version>1.4</version>
 		</dependency>
 		
 		<dependency>
@@ -257,6 +257,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.locations>24</samplechanger.locations>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -267,6 +268,8 @@
   			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
   			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
   			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+
+			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
   			
   			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
 			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
@@ -282,6 +285,8 @@
 
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+  			 
+  			 <ispyb.shipping.reimburseddewars>true</ispyb.shipping.reimburseddewars>
   			
   		</properties>
   	</profile>
@@ -311,6 +316,7 @@
                         <protein.allowedToCreate>true</protein.allowedToCreate>
                         <shipping.container.capacity>16</shipping.container.capacity>
                         <samplechanger.container.capacity>16</samplechanger.container.capacity>
+						<samplechanger.locations>5</samplechanger.locations>
 
                         <dewar.label.template>ParcelLabelsTemplate_EMBL.pdf</dewar.label.template>
                         <shipment.upload.template>ispyb-template_shipment_EMBL.xls</shipment.upload.template>
@@ -333,6 +339,7 @@
                 	
                 	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
                 	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                	  	<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
                 	  	
                 </properties>
   	</profile>
@@ -366,6 +373,7 @@
 
 				<shipping.container.capacity>16</shipping.container.capacity>
 				<samplechanger.container.capacity>16</samplechanger.container.capacity>
+				<samplechanger.locations>5</samplechanger.locations>
 				
 				<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
 				<ispyb.path.mappingstyle>SOLEIL</ispyb.path.mappingstyle>
@@ -395,6 +403,7 @@
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+                <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 				
 				
   		</properties>
@@ -408,46 +417,58 @@
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
-  			
-  			<ldap.employee.resource>ldap://w-v-ad-test-0.maxiv.lu.se:389/</ldap.employee.resource>
-  			<ldap.base>dc=duotest,dc=lu,dc=se</ldap.base>
-  			<ldap.people>CN=Users,dc=duotest,dc=lu,dc=se</ldap.people>
-  			<ldap.attribute>samaccountname</ldap.attribute>
-  			<ldap.principalDNPrefix>duotest\\</ldap.principalDNPrefix>
-  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
-  			
-  			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
-  			
-  			<shipping.container.capacity>16</shipping.container.capacity>
+
+			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
+			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
+			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
+			<ldap.attribute>samaccountname</ldap.attribute>
+			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
+
+			<protein.allowedToCreate>true</protein.allowedToCreate>
+
+			<dewar.label.template>ParcelLabelsTemplate_MAXIV.pdf</dewar.label.template>
+			<shipment.upload.template>ispyb-template_shipment_MAXIV.xls</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template_shipment_MAXIV.xls</shipment.upload.populatedTemplate>
+
+			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
+			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
+
+			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
+			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
+			<ispyb.server.name.prod.ext>130.235.95.236</ispyb.server.name.prod.ext>
+			<ispyb.server.name.test>ispyb-test.maxiv.lu.se</ispyb.server.name.test>
+
+			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-				
-  			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
-  			<ispyb.bcm>mxcube</ispyb.bcm>
-  			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
-  			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
-			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
-			
-			<dictionary.site>MAX IV</dictionary.site> 
+			<samplechanger.locations>29</samplechanger.locations>
+
+			<ISPyB.dummy.family.name.lab.contact>BioMAX Lab Contact</ISPyB.dummy.family.name.lab.contact>
+			<ISPyB.dummy.given.name.lab.contact>Generic</ISPyB.dummy.given.name.lab.contact>
+
+			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+			<ispyb.path.mappingstyle>MAXIV</ispyb.path.mappingstyle>
+			<ispyb.bcm>mxcube</ispyb.bcm>
+
+			<mail.smtp.host>smtp.maxiv.lu.se</mail.smtp.host>
+			<mail.admin>ims@maxiv.lu.se</mail.admin>
+			<mail.dev>ims@maxiv.lu.se</mail.dev>
+			<mail.ispyb>ispyb@maxiv.lu.se</mail.ispyb>
+			<mail.stores>mx-dewars@maxiv.lu.se</mail.stores>
+
+			<mail.report.industry.from>mxind@maxiv.lu.se</mail.report.industry.from>
+			<mail.report.industry.cc>ix@maxiv.lu.se</mail.report.industry.cc>
+			<mail.report.industry.cc.fx12>ims@maxiv.lu.se </mail.report.industry.cc.fx12>
+
+			<dictionary.site>MAX IV</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
-			
+
 			<ispyb.authorisation.active>true</ispyb.authorisation.active>
-			 			 
+
 			<userportal.webservices.url>http://ovm-smis.esrf.fr:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+			<userportal.url>duo.maxiv.lu.se:3000</userportal.url>
 			
-			<userportal.url>duo-sandbox.maxiv.lu.se</userportal.url> 
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
   			
   		</properties>
   	</profile>
@@ -473,6 +494,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.locations>5</samplechanger.locations>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -494,6 +516,8 @@
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
 			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
 			  				
   		</properties>
   	</profile> 
@@ -502,3 +526,4 @@
 	
 
 </project>
+

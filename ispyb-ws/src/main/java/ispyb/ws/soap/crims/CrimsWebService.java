@@ -50,6 +50,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
 import ispyb.server.common.services.shipping.external.External3Service;
 import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -69,7 +70,7 @@ import ispyb.server.smis.UpdateFromSMIS;
  * @author BODIN
  * 
  */
-@WebService(name = "CrimsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.sample")
+@WebService(name = "CrimsWebService", serviceName = "ispybWS", targetNamespace = "http://ispyb.ejb3.webservices.crims")
 @SOAPBinding(style = Style.DOCUMENT, use = SOAPBinding.Use.LITERAL, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Stateless
 @RolesAllowed({ "WebService", "User", "Industrial" })
@@ -97,6 +98,12 @@ public class CrimsWebService {
 	private Proposal3Service getProposal3Service() throws NamingException{
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		return (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+		
+	}
+	
+	private Shipping3Service getShipping3Service() throws NamingException{
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		return (Shipping3Service) ejb3ServiceLocator.getLocalService(Shipping3Service.class);
 		
 	}
 	
@@ -245,7 +252,41 @@ public class CrimsWebService {
 		}
 		return null;
 	}
-
+	
+	// store also the Position of BLSubSamples
+	@WebMethod
+	public String storeShippingFull(@WebParam(name = "proposalCode")
+	String proposalCode, @WebParam(name = "proposalNumber")
+	String proposalNumber, @WebParam(name = "shipping")
+	String json) throws Exception {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("proposalCode", String.valueOf(proposalCode));
+		params.put("proposalNumber", String.valueOf(proposalNumber));
+		params.put("shipping", String.valueOf(json));
+		long id = this.logInit("storeShippingFull", new Gson().toJson(params));
+		
+		try {
+//			checkUserIsCrims();
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			External3Service external3Service = (External3Service) ejb3ServiceLocator.getLocalService(External3Service.class);
+			LOG.debug("jso= " + json);
+			Shipping3VO shipping = new Gson().fromJson(json, Shipping3VO.class);
+			LOG.debug("ship= " + shipping);
+			Shipping3VO shipping3VO = external3Service.storeShippingFull(proposalCode, proposalNumber, shipping);
+			if (shipping3VO != null) {
+				String result = getGson().toJson(external3Service.getDataCollectionFromShippingId(shipping3VO.getShippingId()));
+				this.logFinish("storeShipping", id);
+				return result;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LoggerFormatter.log(LOG, LoggerFormatter.Package.CRIMS_WS_ERROR, "storeShipping", id,
+					System.currentTimeMillis(), e.getMessage(), e);
+			throw e;
+		}
+		return null;
+	}
+	
 	@WebMethod
 	public String getDataCollectionByProposal(@WebParam(name = "proposalCode")
 	String proposalCode, @WebParam(name = "proposalNumber")

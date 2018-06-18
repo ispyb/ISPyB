@@ -1,23 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u2
--- http://www.phpmyadmin.net
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
 --
--- Host: pyproserv
--- Generation Time: Jun 09, 2017 at 03:32 PM
--- Server version: 5.5.40
--- PHP Version: 5.4.45-0+deb7u2
+-- Host: localhost:3306
+-- Generation Time: Mar 05, 2018 at 09:42 AM
+-- Server version: 10.1.23-MariaDB-9+deb9u1
+-- PHP Version: 7.0.19-1
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pydb`  version tag 17.06.06
+-- Database: `pydb` version 5.4.5
 --
 
 -- --------------------------------------------------------
@@ -26,14 +26,12 @@ SET time_zone = "+00:00";
 -- Table structure for table `SchemaStatus`
 --
 
-CREATE TABLE IF NOT EXISTS `SchemaStatus` (
-  `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `SchemaStatus` (
+  `schemaStatusId` int(11) NOT NULL,
   `scriptName` varchar(100) NOT NULL,
   `schemaStatus` varchar(10) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`schemaStatusId`),
-  UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `SchemaStatus`
@@ -71,8 +69,45 @@ INSERT INTO `SchemaStatus` (`schemaStatusId`, `scriptName`, `schemaStatus`, `rec
 (34, '2017_05_09_Axis_for_subwedge.sql', 'DONE', '2017-06-09 13:30:56'),
 (35, '2017_05_11_ProposalId_for_sample.sql', 'DONE', '2017-06-09 13:31:14'),
 (36, '2017_05_19_ProposalHasPerson_AutoIncrement.sql', 'DONE', '2017-06-09 13:31:29'),
-(37, '2017_06_06_ProcessingStatus_to_enumeration.sql', 'DONE', '2017-06-09 13:31:41');
+(37, '2017_06_06_ProcessingStatus_to_enumeration.sql', 'DONE', '2017-06-09 13:31:41'),
+(38, '2017_07_07_SAXS_datacollection.sql', 'DONE', '2017-07-06 08:55:23'),
+(39, '2017_07_05_Update_v_datacollection_summary.sql', 'DONE', '2017-07-11 15:18:34'),
+(44, '2017_07_07_view_autoproc.sql', 'DONE', '2017-07-11 15:20:16'),
+(45, '2017_07_12_remove_0000_timestamp.sql', 'DONE', '2017-07-11 15:21:38'),
+(50, '2017_08_31_new_workflow_types.sql', 'DONE', '2017-08-31 07:53:32'),
+(51, '2017_19_09_2017_imageDirectory_biosaxs.sql', 'DONE', '2017-09-19 13:20:53'),
+(52, '2017_09_21_new_diffractionplan_types.sql', 'DONE', '2017-09-21 07:27:52'),
+(54, '20171022_EM.sql', 'DONE', '2017-11-23 14:14:16'),
+(55, '2017_12_05_DataCollectionFileAttachment_fileType.sql', 'DONE', '2017-12-06 10:10:10'),
+(57, '2017_12_05_fluorescence_maps.sql', 'ONGOING', '2017-12-06 10:13:04'),
+(59, '2017_11_24_DataCollectionSummary_view.sql', 'DONE', '2017-12-06 10:16:08'),
+(60, '2017_12_08_sample_mx_view_update.sql', 'ONGOING', '2017-12-08 16:49:50'),
+(63, '2018_02_03_updateSessionTable.sql', 'DONE', '2018-02-01 15:15:59'),
+(65, '2018_02_06_updateDewarTable.sql', 'DONE', '2018-02-06 11:44:04'),
+(67, '2018_02_18_Dewar_summary_modification.sql', 'DONE', '2018-02-19 12:57:08'),
+(68, '2018_02_23_AutoProcintegrationView.sql', 'DONE', '2018-02-23 10:06:22'),
+(69, '2018_02_13_BLSample_subLocation.sql', 'DONE', '2018-02-27 16:02:21');
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `SchemaStatus`
+--
+ALTER TABLE `SchemaStatus`
+  ADD PRIMARY KEY (`schemaStatusId`),
+  ADD UNIQUE KEY `scriptName` (`scriptName`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `SchemaStatus`
+--
+ALTER TABLE `SchemaStatus`
+  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

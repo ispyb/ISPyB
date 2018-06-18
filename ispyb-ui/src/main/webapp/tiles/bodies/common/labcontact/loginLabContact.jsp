@@ -43,15 +43,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%-- Page --%>
 <layout:grid cols="1"  borderSpacing="5">
 
-<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-	<layout:panel key="Create a generic LabContact" align="left" styleClass="PANEL">
-		<layout:link href="<%=targetDummyLabContactForm%>" styleClass="PANEL_BREAD_CRUMBS_FIELD">
-			<img src="<%=request.getContextPath()%>/images/DummyLabContact.png" border=0 
-			onmouseover="return overlib('Create a generic LabContact');" onmouseout="return nd();">Create&nbsp;a&nbsp;generic&nbsp;LabContact
-		</layout:link>
-	</layout:panel>
-</c:if>
-
 <%-- Form to find a scientist ------------------------------------------------------- --%>
 <layout:panel key="New/Edit LabContact" align="left" styleClass="PANEL">
 	<layout:form action="/user/createLabContactAction.do" reqCode="login">	

@@ -171,7 +171,7 @@ public class Confidentiality extends DispatchAction {
 	public static boolean isAccessAllowedToSample(HttpServletRequest request, Integer sampleId) throws Exception {
 
 		BLSample3Service sampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
-		BLSample3VO sample = sampleService.findByPk(sampleId, false, false);
+		BLSample3VO sample = sampleService.findByPk(sampleId, false, false, false);
 		if (sample == null)
 			return false;
 		return Confidentiality.isAccessAllowed(request, sample.getCrystalVO().getProteinVO().getProposalVOId());

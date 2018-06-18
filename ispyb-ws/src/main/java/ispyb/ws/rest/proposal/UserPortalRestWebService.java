@@ -83,6 +83,36 @@ public class UserPortalRestWebService extends RestWebService{
 		}
 		return null;
 	}
+
+
+	/**
+	 * Examples of JSON can be found on src/main/resources/userportal
+	 *
+	 * @param startDate String
+	 * @param endDate String
+	 * @return
+	 * @throws Exception
+	 */
+	@RolesAllowed({"Manager"})
+	@POST
+	@Path("{token}/userportal/updatebydates")
+	@Produces({ "application/json" })
+	public Response updateProposalByDates(
+			@FormParam("startDate") String startDate,
+			@FormParam("endDate") String endDate)
+			throws Exception {
+
+		String methodName = "updateProposalByDates";
+		long id = this.logInit(methodName, logger, startDate, endDate);
+		try {
+			System.out.println("Updating proposals with a session between " +startDate +" and " +endDate);
+			UpdateFromSMIS.updateFromSMIS(startDate, endDate);
+			this.logFinish(methodName, id, logger);
+		} catch (Exception e) {
+			return this.logError("updateProposalFromUserPortal", e, id, logger);
+		}
+		return null;
+	}
 	
 
 

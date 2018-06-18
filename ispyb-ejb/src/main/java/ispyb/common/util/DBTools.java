@@ -131,7 +131,7 @@ public class DBTools {
 					// --- Samples ----------------------------
 					for (s = 0; s < samples.size(); s++) {
 						BLSample3VO lsample = (BLSample3VO) samples.get(s);
-						BLSample3VO sample = _sample.findByPk(lsample.getBlSampleId(), false, false);
+						BLSample3VO sample = _sample.findByPk(lsample.getBlSampleId(), false, false, false);
 						Crystal3VO crystal = _crystal.findByPk(sample.getCrystalVOId(), false);
 						Protein3VO protein = _protein.findByPk(crystal.getProteinVOId(), false);
 

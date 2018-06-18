@@ -427,8 +427,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 									<layout:text key="Preferred Beam Size Diameter (mm)" 	property="difPlanInfo.preferredBeamDiameter" 	styleClass="FIELD"	mode="E,E,E" />
 									<layout:text key="Number of positions" 	property="difPlanInfo.numberOfPositions" 	styleClass="FIELD"	mode="E,E,E" />
 									<layout:text key="Radiation sensitivity" 	property="difPlanInfo.radiationSensitivity" 	styleClass="FIELD"	mode="E,E,E" />
-									<layout:text key="Required completeness" 	property="difPlanInfo.requiredCompleteness" 	styleClass="FIELD"	mode="E,E,E" />
-									<layout:text key="Required multiplicity" 	property="difPlanInfo.requiredMultiplicity" 	styleClass="FIELD"	mode="E,E,E" />
+									<layout:text key="Aimed completeness" 	property="difPlanInfo.aimedCompleteness" 	styleClass="FIELD"	mode="E,E,E" />
+									<layout:text key="Aimed multiplicity" 	property="difPlanInfo.aimedMultiplicity" 	styleClass="FIELD"	mode="E,E,E" />
 
 									<layout:textarea key="Comments" 	property="difPlanInfo.comments"				styleClass="FIELD"	mode="E,E,E" rows="3"/>	
 								</layout:column>

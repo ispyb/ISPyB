@@ -574,7 +574,7 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 
 			if (request.getParameter("blSampleId") != null) {
 				Integer sampleId = Integer.parseInt(request.getParameter("blSampleId"));
-				BLSample3VO vo = sampleService.findByPk(sampleId, false, false);
+				BLSample3VO vo = sampleService.findByPk(sampleId, false, false, false);
 				BreadCrumbsForm.getItClean(request).setSelectedSample(vo);
 				return this.displayForAll(dataCollectionList, mapping, actForm, request, response);
 			}
@@ -673,7 +673,7 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 			}
 
 			// Get Sample
-			blsv = sampleService.findByPk(sampleId, false, false);
+			blsv = sampleService.findByPk(sampleId, false, false, false);
 			BreadCrumbsForm.getItClean(request).setSelectedSample(blsv);
 			// Get DataCollections
 			// if (isIndus) dataCollectionList = dataCollectionService.findBySample(sampleId, null, new Byte((byte) 0x1),
@@ -2180,7 +2180,7 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 				return;
 			}
 
-			blsv = sampleService.findByPk(sampleId, false, false);
+			blsv = sampleService.findByPk(sampleId, false, false, false);
 
 			// Get DataCollections
 			if (isIndus)

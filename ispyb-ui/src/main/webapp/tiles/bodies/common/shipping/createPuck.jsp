@@ -18,8 +18,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 --------------------------------------------------------------------------------------------------%>
 
 <%@ include file="../../mx/mx_css_include.jsp" %> 		
-<%@ include file="../../mx/mx_javascript_include.jsp" %> 
-	
+<%@ include file="../../mx/mx_javascript_include.jsp" %>
+
 <script type="text/javascript">
 		Ext.onReady(run);
 		Ext.Loader.setConfig({enabled: true});

@@ -23,6 +23,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 
 <layout:skin includeScript="true" />
@@ -107,7 +108,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<c:if test="${SITE_ATTRIBUTE ne 'ESRF' and SITE_ATTRIBUTE ne 'EMBL'}">
 		3- Associate data collections to samples in <%=Constants.BCM_NAME%>.<br>
 	</c:if> 
-	<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE ne 'EMBL'}"> 
+	<c:if test="${SITE_ATTRIBUTE eq 'ESRF' or SITE_ATTRIBUTE eq 'EMBL'}">
 		3- In MxCuBe, link the samples in the container to the crystals in the Sample Changer.<br>
 	</c:if>
 	<c:if test="${SITE_ATTRIBUTE eq 'SOLEIL'}"> 

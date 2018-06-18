@@ -32,6 +32,8 @@ import com.google.gson.JsonElement;
 @Remote
 public interface External3Service {
 	public Shipping3VO storeShipping(String proposalCode, String proposalNumber, Shipping3VO shipping) throws Exception;
+	
+	public Shipping3VO storeShippingFull(String proposalCode, String proposalNumber, Shipping3VO shipping) throws Exception;
 
 	public List<Map<String, Object>> getDataCollectionByProposal(String proposalCode, String proposalNumber);
 

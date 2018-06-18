@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import ispyb.common.util.Constants;
+import ispyb.common.util.Constants.SITE;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
 import ispyb.server.userportal.UserPortalUtils;
@@ -183,7 +184,14 @@ public class ScientistsFromSMIS {
 			if (ligne != null)
 				address += ligne + "\n";
 		}
-		laboratory.setAddress(address);
+		switch (Constants.getSite()) {
+			case MAXIV:
+				laboratory.setAddress(scientist.getLabAddress1());
+				break;
+			default:
+				laboratory.setAddress(address);
+		}
+
 
 		return laboratory;
 	}

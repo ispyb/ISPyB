@@ -493,7 +493,7 @@ public class ISPyBParser extends XLSParser {
 			// Now extract the workbook
 			workbook = new HSSFWorkbook(fs);
 			int nbDewars = shippingInformation.getListDewars().size();
-			int nbSheetsForDewar = 6;
+			int nbSheetsForDewar = 7;
 			int nbSheetstoCopy = (nbDewars == 0) ? 0 : (nbDewars * nbSheetsForDewar) - 1;
 
 			// Copy right number of sheets = 1 per dewar
