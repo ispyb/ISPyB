@@ -361,7 +361,8 @@ public class BiosaxsActions {
 	 * @throws Exception
 	 */
 	public List<Shipping3VO> findShipmentsByProposal(Integer proposalId) throws Exception {
-		return this.shippingService.findByProposal(proposalId, true);
+		//return this.shippingService.findByProposal(proposalId, true);
+		return this.shippingService.findByProposal(proposalId, true, true, true);
 	}
 
 	/**

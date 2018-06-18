@@ -233,6 +233,22 @@ under the License.
 		</properties>
 	</profile>
 	
+  <!--
+  <profile>
+    <id>ldap</id>
+    <properties>
+      <ldap.username>username</ldap.username>
+      <ldap.credential>*******</ldap.credential>
+    </properties>
+  </profile>
+  <profile>
+    <id>MAXIV</id>
+    <properties>
+        <ispyb.site>MAXIV</ispyb.site>
+    </properties>
+  </profile>
+  -->
+
 	<!--
 	<profile>	
 

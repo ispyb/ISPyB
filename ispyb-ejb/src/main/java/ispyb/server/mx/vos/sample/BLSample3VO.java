@@ -25,6 +25,7 @@ import ispyb.server.mx.vos.collections.EnergyScan3VO;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityResult;
@@ -127,9 +128,16 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	@JoinColumn(name = "blSampleId")
 	private Set<EnergyScan3VO> energyScanVOs;
 	
-	@OneToMany
+	@Fetch(value = FetchMode.SELECT)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "blSampleId")
-	private Set<BLSubSample3VO> blSubSampleVOs;
+	protected Set<BLSubSample3VO> blSubSampleVOs;
+	
+	@Fetch(value = FetchMode.SELECT)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	@JoinColumn(name = "blSampleId")
+	protected Set<BLSampleImage3VO> blsampleImageVOs;
+
 
 	public BLSample3VO() {
 		super();
@@ -432,6 +440,22 @@ public class BLSample3VO extends ISPyBValueObject implements Cloneable {
 	
 	public BLSubSample3VO[] getBLSubSamplesTab() {
 		return this.blSubSampleVOs == null ? null : blSubSampleVOs.toArray(new BLSubSample3VO[this.blSubSampleVOs.size()]);
+	}
+		
+	public Set<BLSampleImage3VO> getBlsampleImageVOs() {
+		return blsampleImageVOs;
+	}
+
+	public void setBlsampleImageVOs(Set<BLSampleImage3VO> blsampleImageVOs) {
+		this.blsampleImageVOs = blsampleImageVOs;
+	}
+	
+	// if eager loaded and if we suppose only 1 BLsampleImage loaded, returns the imagePath 
+	public String getBlsampleImagePath() {
+		if (this.blsampleImageVOs != null && !this.blsampleImageVOs.isEmpty()) {
+			return ((BLSampleImage3VO) this.blsampleImageVOs.toArray()[0]).getImageFullPath();
+		}
+		return null;
 	}
 
 	/**

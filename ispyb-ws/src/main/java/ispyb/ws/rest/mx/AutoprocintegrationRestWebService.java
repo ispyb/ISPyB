@@ -381,8 +381,29 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 	@Produces("text/plain")
 	public Response getAutoProcAttachment(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
+		return this.getFile(token, proposal, autoProcAttachmentId);
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/autoprocattachmentid/{autoProcAttachmentId}/getPdf")
+	@Produces("application/pdf")
+	public Response getAutoProcAttachmentPdf(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
+		return this.getFile(token, proposal, autoProcAttachmentId);
+	}
 
-		String methodName = "getAutoProcAttachment";
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/autoprocattachmentid/{autoProcAttachmentId}/getHtml")
+	@Produces("text/html")
+	public Response getAutoProcAttachmentHtml(@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("autoProcAttachmentId") int autoProcAttachmentId) {
+		return this.getFile(token, proposal, autoProcAttachmentId);
+	}
+	
+	private Response getFile(String token, String proposal,  int autoProcAttachmentId) {
+		String methodName = "getFile";
 		long start = this.logInit(methodName, logger, token, proposal);
 		try {
 			/** Checking that attachment is linked to the proposal **/
@@ -400,5 +421,4 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 		}
 	}
 	
-
 }

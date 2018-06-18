@@ -21,10 +21,9 @@ package ispyb.server.common.services.shipping;
 
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
-
 import java.util.List;
-
 import javax.ejb.Remote;
+import ispyb.server.common.vos.shipping.Container3VO;
 
 @Remote
 public interface Container3Service {
@@ -82,7 +81,7 @@ public interface Container3Service {
 	public List<Container3VO> findAll() throws Exception;
 
 	public List<Container3VO> findByDewarId(final Integer dewarId) throws Exception;
-
+	
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess)
 			throws Exception;
 

@@ -94,6 +94,7 @@ var IspybCreatePuck = {
 			mainItems.push(puckHeadPanel.getPanel(data));
 			mainItems.push(createPuckGrid.getGrid(data));
 			// panel with annotations
+			var msg = "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks.";			
 			var subPanel = Ext.widget({
 				xtype : 'form',
 				layout : {

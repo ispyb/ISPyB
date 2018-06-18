@@ -35,7 +35,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.ws.rest.shipment.ShipmentRestWsService;
 import ispyb.server.common.vos.shipping.Container3VO;
@@ -60,8 +59,10 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	// Generic HQL request to find instances of Container3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK(boolean fetchSamples) {
-		return "from Container3VO vo " + (fetchSamples ? "left join fetch vo.sampleVOs " : "")
-					+ "where vo.containerId = :pk";
+		return "from Container3VO vo " 
+			//	+ (fetchSamples ? "left join fetch vo.sampleVOs " : "")
+				+ (fetchSamples ? "	LEFT JOIN FETCH vo.sampleVOs sa LEFT JOIN FETCH sa.blSubSampleVOs LEFT JOIN FETCH sa.blsampleImageVOs  ": "") //  
+				+ " where vo.containerId = :pk";
 	}
 
 	// Generic HQL request to find all instances of Container3
@@ -190,7 +191,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		List<Container3VO> foundEntities = crit.list();
 		return foundEntities;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess) throws Exception {
 		
