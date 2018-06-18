@@ -99,7 +99,6 @@ public class SessionServiceBean extends WsServiceBean  implements SessionService
 	public List<Map<String, Object>> getSessionViewByProposalId(int proposalId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByProposalId);
-		System.out.println(query.getQueryString());
 		/** Setting the parameters **/
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
@@ -127,7 +126,6 @@ public class SessionServiceBean extends WsServiceBean  implements SessionService
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
 		query.setParameter("proposalId", proposalId);
-		System.out.println(query.getQueryString());
 		return executeSQLQuery(query);
 	}
 
@@ -136,7 +134,6 @@ public class SessionServiceBean extends WsServiceBean  implements SessionService
 		Session session = (Session) this.entityManager.getDelegate();
 		SQLQuery query = session.createSQLQuery(ByBeamlineOperator);
 		query.setParameter("beamlineOperator", "%" +  beamlineOperator + "%");
-		System.out.println(query.getQueryString());
 		return executeSQLQuery(query);
 	}
 
