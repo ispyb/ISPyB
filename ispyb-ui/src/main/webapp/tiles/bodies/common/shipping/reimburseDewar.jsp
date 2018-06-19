@@ -74,14 +74,14 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				<layout:column>				
 				<p><center><b>Acknowledge the conditions and set the reimbursement status</b></center>
 				<br><center><b>Declaration</b></center>
-				<br> By setting this dewar to reimbursed, the labels that will be generated for sending the dewar will use the ESRF FedEx account.
+				<br> By setting this dewar to reimbursed, the labels that will be generated for sending the dewar by courier will use the ESRF account.
 				<br> You MUST NOT use this account to ship more than the allowed number of dewars, or any other equipment for this or any other experiment.
 				<br> Any abuse of this account will immediately result in your proposal being refused access to the dewar reimbursement procedure, and eventually to the ESRF beamlines.
 				<br>				
 				<br>For ESRF reimbursement, you MUST: 
 				<br>
-				<br>- Copy and paste the following information into the FedEx request page:
-				<br>&nbsp;&nbsp;-> Account Number : <b><%=Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT%></b>
+				<br>- Copy and paste the following information into the courier service request form:
+				<br>&nbsp;&nbsp;-> FedEx Account Number : <b><%=Constants.SHIPPING_DELIVERY_AGENT_FEDEX_ACCOUNT%></b>
 				<br>&nbsp;&nbsp;-> Your Reference : <b><%=fedexCode%></b>
 				<br>
 				<br>- Tick the 'Include a return label' box.	
