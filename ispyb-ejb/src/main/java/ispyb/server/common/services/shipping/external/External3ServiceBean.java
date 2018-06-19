@@ -21,6 +21,7 @@ package ispyb.server.common.services.shipping.external;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +46,7 @@ import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.vos.collections.Position3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSampleImage3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
@@ -126,10 +128,13 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 	
 	@Override
 	public Shipping3VO storeShippingFull(String proposalCode, String proposalNumber, Shipping3VO shipping) throws Exception {
+		
 		List<Proposal3VO> proposals = proposal3service.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+		
 		if (proposals != null) {
 			if (proposals.size() > 0) {
 				Proposal3VO proposal = proposals.get(0);
+				
 				Set<Dewar3VO> dewars = shipping.getDewarVOs();
 				Shipping3VO shipping3VO = this.createShipping(shipping, proposal);
 				/** Creating dewars **/
@@ -171,6 +176,17 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 									this.entityManager.merge(blSubSample3VO);
 								}
 							}
+							blSample3VO = this.entityManager.merge(blSample3VO);
+							
+							/** creating blsampleImage **/
+							Set<BLSampleImage3VO> sampleImages = blSample3VO.getBlsampleImageVOs();
+							for (Iterator<BLSampleImage3VO> iterator = sampleImages.iterator(); iterator.hasNext();) {
+								BLSampleImage3VO blSampleImage3VO = (BLSampleImage3VO) iterator.next();
+								blSampleImage3VO = this.entityManager.merge(blSampleImage3VO);
+								blSampleImage3VO.setBlsampleVO(blSample3VO);
+								blSampleImage3VO = this.entityManager.merge(blSampleImage3VO);
+							}							
+							
 						}
 					}
 				}
