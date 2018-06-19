@@ -74,6 +74,8 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	private final String StatsByDataCollectionId = getStatsQuery() + " where dataCollectionId in (:dataCollectionIdList) and BLSession.proposalId=:proposalId";
 	
 	private final String StatsBySessionId = getStatsQuery() + " where BLSession.sessionId = :sessionId and BLSession.proposalId=:proposalId";
+	
+	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
 	
 	protected Logger log = LoggerFactory.getLogger(EM3ServiceBean.class);
@@ -574,6 +576,16 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		String queryString = StatsBySessionId.replace(":sessionId", String.valueOf(sessionId)).replace(":proposalId", String.valueOf(proposalId));
 		System.out.println(queryString);
 		SQLQuery query = session.createSQLQuery(queryString);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getStatsBySessionId(int proposalId, int sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(getStatsBySessionId);
+		System.out.println(getStatsBySessionId);
+		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
 	}
 

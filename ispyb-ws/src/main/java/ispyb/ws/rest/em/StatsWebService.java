@@ -76,4 +76,19 @@ public class StatsWebService extends MXRestWebService {
 		return null;
 	}
 	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/em/session/{sessionId}/stats")
+	@Produces({ "application/json" })
+	public Response getStatsBySessionId(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId) throws Exception {
+
+		log.info("getStatsBySessionId. technique=EM proposal={} sessionId={}", proposal, sessionId);
+
+		return this.sendResponse(getEMService().getStatsBySessionId(this.getProposalId(proposal), Integer.parseInt(sessionId)));
+
+	}
+	
 }
