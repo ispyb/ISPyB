@@ -1,5 +1,19 @@
 package ispyb.ws.rest.proposal;
 
+import generated.ws.smis.ProposalParticipantInfoLightVO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.vos.proposals.LabContact3VO;
+import ispyb.server.common.vos.proposals.Person3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.smis.ScientistsFromSMIS;
+import ispyb.ws.rest.mx.MXRestWebService;
+
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,24 +30,12 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import generated.ws.smis.ProposalParticipantInfoLightVO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.vos.proposals.LabContact3VO;
-import ispyb.server.common.vos.proposals.Person3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.server.common.vos.shipping.Dewar3VO;
-import ispyb.server.common.vos.shipping.Shipping3VO;
-import ispyb.server.smis.ScientistsFromSMIS;
-import ispyb.ws.rest.mx.MXRestWebService;
+import com.google.gson.reflect.TypeToken;
 
 @Path("/")
 public class ShippingRestWebService extends MXRestWebService {
 
 	private final static Logger logger = Logger.getLogger(ShippingRestWebService.class);
-
-	
 	
 
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
@@ -313,7 +315,7 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("savePuck", logger, token, proposal, shippingId, containerId,puck);
 		try {
-			this.getContainer3Service().savePuck(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
+			this.getContainer3Service().saveContainer(this.getGson().fromJson(puck, Container3VO.class), this.getProposalId(proposal));
 			this.logFinish("savePuck", id, logger);
 			return sendResponse(this.getContainer3Service().findByPk(containerId, true));
 		} catch (Exception e) {
@@ -321,6 +323,43 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 	}
 	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@POST
+	@Path("/{token}/proposal/{proposal}/shipping/{shippingId}/dewars/add")
+	@Produces({ "application/json" })
+	public Response addDewarToShipment(
+			@PathParam("token") String token, @PathParam("proposal") String proposal,
+			@PathParam("shippingId") Integer shippingId,
+			@FormParam("dewars") String dewars) throws Exception {
+
+		try {
+			Type listType = new TypeToken<List<Dewar3VO>>(){}.getType();
+			List<Dewar3VO> dewars3vo = this.getGson().fromJson(dewars, listType);
+			logger.info(dewars3vo);
+			for (Dewar3VO dewar3vo : dewars3vo) {
+				logger.info(String.format("\t %s %s", dewar3vo.getCode(), dewar3vo.getContainerVOs().size()));
+				for (Container3VO container : dewar3vo.getContainerVOs()) {
+					logger.info(String.format("\t\t %s %s", container.getCode(), container.getSampleVOs().size()));
+					for (BLSample3VO sample : container.getSampleVOs()) {
+						logger.info(String.format("\t\t\t %s %s", sample.getName(),sample.getCrystalVO().getCellA(), sample.getCrystalVO().getCellB()));
+					}
+				}
+			}
+			logger.info("Storing dewars");
+			this.getContainer3Service().saveDewarList(dewars3vo, this.getProposalId(proposal), shippingId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.sendError(e.getMessage());
+			
+		}
+		return this.sendOk();
+	}
+	
+	
+	
+	
+	
+
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/dewar/{dewarId}/puck/{containerId}/remove")

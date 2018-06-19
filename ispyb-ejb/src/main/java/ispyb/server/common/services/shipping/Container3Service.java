@@ -19,10 +19,10 @@
 
 package ispyb.server.common.services.shipping;
 
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
 import java.util.List;
-
 import javax.ejb.Remote;
-
 import ispyb.server.common.vos.shipping.Container3VO;
 
 @Remote
@@ -87,7 +87,23 @@ public interface Container3Service {
 
 	public List<Container3VO> findByCode(final Integer dewarId, final String code)throws Exception;
 
-	public Container3VO savePuck(Container3VO fromJson, int proposalId) throws Exception;
+	/**
+	 * It stores a container that already exist on the database
+	 * @param container3vo
+	 * @param proposalId
+	 * @return
+	 * @throws Exception
+	 */
+	public Container3VO saveContainer(Container3VO container3vo, int proposalId) throws Exception;
+
+	/**
+	 * Saves a list of containers
+	 * @param dewars3vo
+	 * @param proposalId
+	 * @return
+	 * @throws Exception
+	 */
+	public void saveDewarList(List<Dewar3VO> dewars3vo, int proposalId, Integer shippingId) throws Exception;
 
 	
 }
