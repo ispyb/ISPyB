@@ -62,10 +62,11 @@ public class StatsWebService extends MXRestWebService {
 		try {
 			List<Integer> ids = this.parseToInteger(sessionIdList);
 			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
-
-			for (Integer id : ids) {
+			
+			for (int i = 0; i < ids.size(); i++) {
+				int id = ids.get(i);
 				List<Map<String, Object>> result = this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
-				result.get(0).put("stats", getEMService().getStatsByDataSessionIds(this.getProposalId(proposal), id));
+				result.get(i).put("stats", getEMService().getStatsByDataSessionIds(this.getProposalId(proposal), id));
 				dataCollections.addAll(result);
 			}
 			return this.sendResponse(dataCollections, false);
