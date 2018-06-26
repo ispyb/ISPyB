@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -1915,7 +1914,45 @@ public class ViewResultsAction extends DispatchAction {
 		
 		return null;
 	}
-
+	
+	/**
+	 * 
+	 * @param mapping
+	 * @param actForm
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public void relaunchProcessing(ActionMapping mapping, ActionForm actForm, HttpServletRequest request, HttpServletResponse response) {
+	//public ActionForward relaunchProcessing(ActionMapping mapping, ActionForm actForm, HttpServletRequest request,
+	//		HttpServletResponse response) {
+		Integer collectionId = (Integer) request.getSession().getAttribute(Constants.DATA_COLLECTION_ID);
+		//DataCollection3VO dataCollection = dataCollectionService.findByPk(collectionId, false, false);
+		//String beamLineName = dataCollection.getDataCollectionGroupVO().getSessionVO().getBeamlineName();
+		String beamLineName = "p13";
+		LOG.debug("Starting processing for data collection: " + collectionId);
+		try {
+			String realXDSInputFilePath = PathUtils.FitPathToOS(Constants.DATA_XDS_INPUT_FILEPATH_START + "p13/xds_input_files/" + collectionId.toString() + "/XDS.INP");
+			LOG.debug("Path to XDS.INP file: " + realXDSInputFilePath);
+			String commands[] = new String[]{Constants.REPROCESSING_SCRIPT_PATH, realXDSInputFilePath, beamLineName};
+ 
+		    Runtime rt = Runtime.getRuntime();
+			Process process = null;
+			try{
+			    process = rt.exec(commands);
+			    //process.waitFor();
+			    }catch(Exception e){
+				      e.printStackTrace();
+			}
+			LOG.debug("New task submitted to the beamline " + beamLineName + "processing queue.");			
+			}
+		catch (Exception e) {
+				e.printStackTrace();
+			}
+		//return null;
+		//return mapping.findForward("success");
+	}
+	
 	// returns the auto proc attachment linked to the specified filename - null if not found
 	public static IspybAutoProcAttachment3VO getAutoProcAttachment(String fileName,
 			List<IspybAutoProcAttachment3VO> listOfAutoProcAttachment) {
@@ -2205,7 +2242,9 @@ public class ViewResultsAction extends DispatchAction {
 								if (stats.getRmerge() != null && stats.getRmerge() < rMerge_d && stats.getMeanIoverSigI() > iSigma_d)
 									existsUnderRmergeAndOverSigma = true;
 							}
-
+							
+							existsUnderRmergeAndOverSigma = true;
+							
 							if (!existsUnderRmergeAndOverSigma) {
 								a.remove();
 								nbRemoved = nbRemoved +1;
@@ -2599,6 +2638,8 @@ public class ViewResultsAction extends DispatchAction {
 							if (stats.getRmerge() != null && stats.getRmerge() < rMerge_d && stats.getMeanIoverSigI() > iSigma_d)
 								existsUnderRmergeAndOverSigma = true;
 						}
+						
+						existsUnderRmergeAndOverSigma = true;
 
 						if (!existsUnderRmergeAndOverSigma){
 							a.remove();

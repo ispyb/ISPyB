@@ -357,6 +357,9 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			PDFFormFiller pdfFormFiller = new PDFFormFiller();
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			// try {
+			System.out.println("PDF!!! " + Constants.TEMPLATE_PDF_PARCEL_LABELS_WORLDCOURIER_RELATIVE_PATH);
+			System.out.println("PDF!!! " + Constants.TEMPLATE_PDF_PARCEL_LABELS_RELATIVE_PATH);
+			 
 			if (returnLabContact.getDefaultCourrierCompany() != null
 					&& returnLabContact.getDefaultCourrierCompany().equals(
 							Constants.SHIPPING_DELIVERY_AGENT_NAME_WORLDCOURIER)) {

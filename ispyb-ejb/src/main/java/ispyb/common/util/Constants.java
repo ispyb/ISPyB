@@ -447,6 +447,9 @@ public final class Constants {
 	                                                     
 	public static final String DATA_PDB_FILEPATH_START = getProperty("ISPyB.uploaded.root.folder"); // Map file path starting by ...
 
+	public static final String DATA_XDS_INPUT_FILEPATH_START = getProperty("ISPyB.upload.folder.xds");
+	
+	public static final String REPROCESSING_SCRIPT_PATH = getProperty("ISPyB.reprocessing.script");
 	/*
 	 * image related constants There is a virtual directory called /data which has the same name as the inicial path of the images and
 	 * is protected from direct access It's only needed to concatenate these prefixs to the image directory in DB.

@@ -146,7 +146,9 @@ public class WorkflowRestWebService extends MXRestWebService {
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
 		try {
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
+			logger.debug("1 - " + workflowStep);
 			if (workflowStep != null){
+				logger.debug("2 - " +   workflowStep.getResultFilePath());
 				if (workflowStep.getResultFilePath() != null){
 					if (new File(workflowStep.getResultFilePath()).exists()){
 						byte[] encoded = Files.readAllBytes(Paths.get(workflowStep.getResultFilePath()));

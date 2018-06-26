@@ -98,19 +98,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		    <TR>
    				<TD vAlign=top align=right><IMG height=9 alt="" src="<%=request.getContextPath()%>/images/navbar_arrow2.gif" width=6 border=0></TD>
 				<TD vAlign=top align=left colSpan=2>
-					<A class=navbarparentselected href="http://photon-science.desy.de/e58/e176720/e179421/popup">Petra III ring status</A>
+					<A class=navbarparentselected href="http://photon-science.desy.de/e58/e176720/e179421/popup">Petra III status</A>
    				</TD>
-     		</TR>
-			<TR>
-	      		<TD vAlign=top align=right><IMG height=9 alt="" src="<%=request.getContextPath()%>/images/navbar_arrow2.gif" width=6 border=0></TD>
-   				<TD vAlign=top align=left colSpan=2>
-				<A class=navbarparentselected href="file:///tmp/mxcubeTest/mxcube_test_report.html">
-	   					Beamline info
-	   				</A>
-   				</TD>
-   				
-   				
-   				
      		</TR>
      	</c:if>	
 	</TBODY>

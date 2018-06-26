@@ -112,6 +112,7 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 							'autoProcProgramAttachmentId' : autoProcProgramAttachmentId
 						});
 			});
+	
 
 	// tabs
 	_this.tabs = Ext.create('Ext.tab.Panel', {
@@ -164,8 +165,7 @@ AutoProcRightPanel.prototype.getPanel = function(data) {
 					tooltip : 'Download all attachments for this autoprocessing',
 					icon : '../images/download.png',
 					href : 'viewResults.do?reqCode=downloadAttachment&autoProcId=' + _this.data.autoProcDetail.autoProcId
-
-				}],
+   				     }],
 				items : [_this.tabs]
 
 			});
@@ -205,7 +205,7 @@ AutoProcRightPanel.prototype.displayGraphAttachment = function(dataAttachment) {
 		activPanel = _this.truncatePanel;	
 	} else if (idx == 5) {
 		activPanel = _this.dimplePanel;
-	}
+	} 
 	if (activPanel != null) {
 		activPanel.displayGraphAttachment(dataAttachment);
 	}

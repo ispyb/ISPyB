@@ -1065,9 +1065,9 @@ public class UpdateFromSMIS {
 				sesv.setVisit_number(visit_number);
 			}
 			
-			if (Constants.SITE_IS_ESRF()) {
-				sesv.setNbReimbDewars(sessionVO.getReimbursedDewars());
-			}
+			//if (Constants.SITE_IS_ESRF()) {
+			//	sesv.setNbReimbDewars(sessionVO.getReimbursedDewars());
+			//}
 			session.create(sesv);
 			LOG.debug("inserted a new session inside ISPyB db: " + sessionVO.getStartDate().getTime() + " start shift="
 					+ startShift + " nb shifts=" + nbShifts + " end date=" + ((Date) endDate).toString());
@@ -1125,12 +1125,12 @@ public class UpdateFromSMIS {
 					ispybSession.setNbShifts(new Integer(sessionVO.getShifts()));
 					changeSession = true;
 				}
-				if (sessionVO.getReimbursedDewars() != null && ispybSession.getNbReimbDewars() != null
-						&& !sessionVO.getReimbursedDewars().equals(ispybSession.getNbReimbDewars())) {
-					changeTxt += ", getNbReimbDewars() " + ispybSession.getNbReimbDewars() + " => " + sessionVO.getReimbursedDewars();
-					ispybSession.setNbReimbDewars(new Integer(sessionVO.getReimbursedDewars()));
-					changeSession = true;
-				}
+				//if (sessionVO.getReimbursedDewars() != null && ispybSession.getNbReimbDewars() != null
+				//		&& !sessionVO.getReimbursedDewars().equals(ispybSession.getNbReimbDewars())) {
+				//	changeTxt += ", getNbReimbDewars() " + ispybSession.getNbReimbDewars() + " => " + sessionVO.getReimbursedDewars();
+				//	ispybSession.setNbReimbDewars(new Integer(sessionVO.getReimbursedDewars()));
+				//	changeSession = true;
+				//}
 				if (sessionVO.isCancelled() && ispybSession.getScheduled().equals(new Byte("1")) ) {
 					changeTxt += ", scheduled " + ispybSession.getScheduled() + " => " + sessionVO.isCancelled();
 					ispybSession.setScheduled(new Byte("9"));
@@ -1356,8 +1356,8 @@ public class UpdateFromSMIS {
 				LOG.info(labContact);
 				i++;
 			}
-		} catch (FinderException e) {
-			LOG.error(e.getMessage());
+		//} catch (FinderException e) {
+		//	LOG.error(e.getMessage());
 		} catch (NamingException e) {
 			LOG.error(e.getMessage());
 		}

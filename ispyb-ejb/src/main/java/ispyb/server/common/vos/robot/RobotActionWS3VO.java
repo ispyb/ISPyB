@@ -42,7 +42,7 @@ public class RobotActionWS3VO extends RobotAction3VO {
 	}
 
 	public Integer getSessionId() {
-		return sessionId;
+		return this.sessionId;
 	}
 
 	public void setSessionId(Integer sessionId) {
@@ -50,7 +50,7 @@ public class RobotActionWS3VO extends RobotAction3VO {
 	}
 
 	public Integer getBlSampleId() {
-		return blSampleId;
+		return this.blSampleId;
 	}
 	
 	public void setBlSampleId(Integer blSampleId) {

@@ -1,6 +1,5 @@
 USE `pydb`;
 
-insert into SchemaStatus (scriptName, schemaStatus) values ('2018_02_18_Dewar_summary_modification.sql','ONGOING');
 
 drop view v_dewar_summary;
 

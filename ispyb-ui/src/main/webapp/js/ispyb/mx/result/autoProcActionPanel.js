@@ -42,11 +42,8 @@ AutoProcActionPanel.prototype.getPanel = function(data) {
 	var items = [];
 	// panel containing the Rsymm and ISig value
 	_this.autoProcParamPanel = new AutoProcParamPanel();
-	
-				
 	items.push(_this.autoProcParamPanel.getPanel(data));
-	
-	
+
 	// main panel
 	_this.panel = Ext.widget({
 				xtype : 'form',
@@ -75,6 +72,7 @@ AutoProcActionPanel.prototype.addReport = function(data) {
 	if (_this.autoProcReportPanel == null && data && data.autoProcDetail) {
 		_this.autoProcReportPanel = new AutoProcReportPanel();
 		_this.panel.add(_this.autoProcReportPanel.getPanel(data));
+		
 		_this.panel.doLayout();
 	}
 };

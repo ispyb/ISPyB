@@ -621,6 +621,7 @@ public class ToolsForCollectionWebService {
 						+ "' wrong actualSampleSlotInContainer='" + dataCollectionGroup.getActualSampleSlotInContainer() + "'");
 				dataCollectionGroup.setActualSampleSlotInContainer(0);
 			}
+
 			if (dataCollectionGroup.getActualContainerSlotInSC() != null
 					&& (dataCollectionGroup.getActualContainerSlotInSC() < 0 || dataCollectionGroup.getActualContainerSlotInSC() > 1000000000)) {
 				LOG.debug("WS STORE OR UPDATE DATACOLLECTIONGROUP with dataCollectionGroupId='" + dataCollectionGroupId
@@ -1725,7 +1726,7 @@ public class ToolsForCollectionWebService {
 				LOG.debug(" WS PB : vo.getRobotActionId()Id is not null, robotAction not stored");
 				return null;
 			}
-
+			LOG.debug("id: " + vo + vo.getSessionId());
 			// if sessionId is null we return null, no creation 
 			if (vo.getSessionId() == null || vo.getSessionId() <= 0) {
 

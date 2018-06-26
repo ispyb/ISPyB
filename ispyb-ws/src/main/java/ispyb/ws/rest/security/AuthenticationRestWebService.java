@@ -73,6 +73,7 @@ public class AuthenticationRestWebService extends RestWebService {
 		
 		/** siteId is need in some cases to get the sessions when, for instance, user is local contact **/
 		String siteId = "";
+		logger.info("Site: " + site);
 		try {
 			List<String> roles = new ArrayList<String>();
 			if (!password.isEmpty()){
@@ -101,6 +102,7 @@ public class AuthenticationRestWebService extends RestWebService {
 				throw new Exception("Empty passwords are not allowed");
 			}
 
+			logger.info("Roles available: " + roles);
 			if (roles.size() > 0){
 				String token = generateRamdomUUID();
 				

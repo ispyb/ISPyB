@@ -293,7 +293,7 @@
 									<fileset dir="${common.lib.dir}">
 										<include name="*.jar" />
 									</fileset>
- 									<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" /> 
+ 									<pathelement location="/home/karpics/software/wildfly-9.0.2.Final/modules/system/layers/base/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" /> 
 								</path>
 								<echo message="user.home: ${xdoclet.client.path}" />
 								<echo message="java src:  ${basedir}/src/main/java}" />
