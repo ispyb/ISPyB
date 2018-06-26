@@ -62,10 +62,11 @@ public class StatsWebService extends MXRestWebService {
 		try {
 			List<Integer> ids = this.parseToInteger(sessionIdList);
 			List<Map<String, Object>> dataCollections = new ArrayList<Map<String, Object>>();
-
-			for (Integer id : ids) {
+			
+			for (int i = 0; i < ids.size(); i++) {
+				int id = ids.get(i);
 				List<Map<String, Object>> result = this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
-				result.get(0).put("stats", getEMService().getStatsByDataSessionIds(this.getProposalId(proposal), id));
+				result.get(i).put("stats", getEMService().getStatsByDataSessionIds(this.getProposalId(proposal), id));
 				dataCollections.addAll(result);
 			}
 			return this.sendResponse(dataCollections, false);
@@ -74,6 +75,21 @@ public class StatsWebService extends MXRestWebService {
 			
 		}
 		return null;
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/em/session/{sessionId}/stats")
+	@Produces({ "application/json" })
+	public Response getStatsBySessionId(
+			@PathParam("token") String token, 
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId) throws Exception {
+
+		log.info("getStatsBySessionId. technique=EM proposal={} sessionId={}", proposal, sessionId);
+
+		return this.sendResponse(getEMService().getStatsBySessionId(this.getProposalId(proposal), Integer.parseInt(sessionId)));
+
 	}
 	
 }

@@ -1,6 +1,7 @@
 package ispyb.ws.rest.mx;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -33,6 +34,20 @@ public class ProteinRestWebService extends MXRestWebService {
 			return this.sendResponse(proteins);
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/protein/stats")
+	@Produces({ "application/json" })
+	public Response getStatsByProposal(@PathParam("token") String token,
+			@PathParam("proposal") String proposal) throws Exception {
+
+		try {
+			return this.sendResponse(this.getProtein3Service().getStatsByProposal(this.getProposalId(proposal)));
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 	
