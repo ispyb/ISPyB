@@ -110,8 +110,7 @@ public class ToolsForEMDataCollection{
 			startTime = dt.parse(stringStartTime); 
 		}
 		catch(Exception exp){
-			exp.printStackTrace();
-			log.error(String.format("Error parsing date %s Expected format was yyyyy-mm-dd hh:mm:ss. startTime=stringStartTime", exp.getCause(), stringStartTime));
+			/** No action to be done **/
 		}
 		try {
 			log.info("addMovie. technique=EM proposal={} proteinAcronym={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);

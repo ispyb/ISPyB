@@ -335,6 +335,12 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			dataCollection.setNumberOfImages(Integer.parseInt(noImages));
 			dataCollection.setStartTime(startTime);
 			dataCollection.setXtalSnapshotFullPath1(gridSquareSnapshotFullPath);
+			try{
+				dataCollection.setXbeamPix(Double.valueOf(scannedPixelSize));
+			}
+			catch(Exception exp){
+				log.error("scannedPixelSize {} can not be converted into a double. technique=EM scannedPixelSize={}", scannedPixelSize, scannedPixelSize);
+			}
 			
 			try{
 				dataCollection.setVoltage(Float.valueOf(voltage));
