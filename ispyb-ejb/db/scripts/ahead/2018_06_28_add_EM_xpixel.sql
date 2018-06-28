@@ -58,6 +58,5 @@ VIEW `pydb`.`v_em_movie` AS
         LEFT JOIN `pydb`.`CTF` ON ((`pydb`.`CTF`.`motionCorrectionId` = `pydb`.`MotionCorrection`.`motionCorrectionId`)));
         
 UPDATE SchemaStatus SET schemaStatus = 'DONE' WHERE scriptName = '2018_06_28_add_EM_xpixel.sql';
-UPDATE `pydb`.`SchemaStatus` SET `scriptName`='2018_06_25_Extend_filePath.sql' WHERE `scriptName`='2018_08_25_Extend_filePath.sql';
-UPDATE `pydb`.`SchemaStatus` SET `scriptName`='2018_07_19_em_stats.sql' WHERE `scriptName`='2018_07_19_em_stats.sql';
+
 
