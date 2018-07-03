@@ -55,6 +55,12 @@ SELECT
         WHERE
             v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId) AS multiplicity,
     (SELECT 
+            GROUP_CONCAT(anomalousMultiplicity)
+        FROM
+            AutoProcScalingStatistics
+        WHERE
+            v_datacollection_summary_phasing_autoProcScalingId = AutoProcScalingStatistics.autoProcScalingId) AS anomalousMultiplicity,
+    (SELECT 
             GROUP_CONCAT(ccHalf)
         FROM
             AutoProcScalingStatistics
