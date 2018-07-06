@@ -2,7 +2,6 @@ USE `pydb`;
 
 INSERT INTO SchemaStatus (scriptName, schemaStatus) VALUES ('2018_07_06_Added_characterisation_start_angle.sql', 'ONGOING');
 
-USE `pydb`;
 CREATE 
      OR REPLACE ALGORITHM = MERGE 
     DEFINER = `pxadmin`@`%` 
