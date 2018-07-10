@@ -740,9 +740,10 @@ public class PdfRtfExporter {
 			String resolutionString = new String();
 
 			if (autoProcOverall != null && autoProcInner != null && autoProcOuter != null) {
-				completenessString += df2.format(autoProcInner.getCompleteness()) + "\n"
-						+ df2.format(autoProcOuter.getCompleteness()) + "\n"
-						+ df2.format(autoProcOverall.getCompleteness());
+				
+				completenessString += (autoProcInner.getCompleteness() == null ? "" : df2.format(autoProcInner.getCompleteness())) + "\n"
+						+ (autoProcOuter.getCompleteness() == null ? "" : df2.format(autoProcOuter.getCompleteness())) + "\n"
+						+ (autoProcOverall.getCompleteness() == null ? "" : df2.format(autoProcOverall.getCompleteness()));
 				rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner.getRmerge())) + "\n"
 						+ (autoProcOuter.getRmerge() == null ? "" : df2.format(autoProcOuter.getRmerge())) + "\n"
 						+ (autoProcOverall.getRmerge() == null ? "" : df2.format(autoProcOverall.getRmerge()));
@@ -2637,9 +2638,9 @@ public class PdfRtfExporter {
 						String resolutionString = new String();
 
 						if (autoProcOverall != null && autoProcInner != null && autoProcOuter != null) {
-							completenessString += df2.format(autoProcInner.getCompleteness()) + "\n"
-									+ df2.format(autoProcOuter.getCompleteness()) + "\n"
-									+ df2.format(autoProcOverall.getCompleteness());
+							completenessString += (autoProcInner.getCompleteness() == null ? "" : df2.format(autoProcInner.getCompleteness())) + "\n"
+						+ (autoProcOuter.getCompleteness() == null ? "" : df2.format(autoProcOuter.getCompleteness())) + "\n"
+						+ (autoProcOverall.getCompleteness() == null ? "" : df2.format(autoProcOverall.getCompleteness()));
 							rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner
 									.getRmerge()))
 									+ "\n"
@@ -2916,9 +2917,9 @@ public class PdfRtfExporter {
 				String resolutionString = new String();
 
 				if (autoProcOverall != null && autoProcInner != null && autoProcOuter != null) {
-					completenessString += df2.format(autoProcInner.getCompleteness()) + "\n"
-							+ df2.format(autoProcOuter.getCompleteness()) + "\n"
-							+ df2.format(autoProcOverall.getCompleteness());
+					completenessString += (autoProcInner.getCompleteness() == null ? "" : df2.format(autoProcInner.getCompleteness())) + "\n"
+						+ (autoProcOuter.getCompleteness() == null ? "" : df2.format(autoProcOuter.getCompleteness())) + "\n"
+						+ (autoProcOverall.getCompleteness() == null ? "" : df2.format(autoProcOverall.getCompleteness()));
 					rSymmString += (autoProcInner.getRmerge() == null ? "" : df2.format(autoProcInner.getRmerge()))
 							+ "\n" + (autoProcOuter.getRmerge() == null ? "" : df2.format(autoProcOuter.getRmerge()))
 							+ "\n"
