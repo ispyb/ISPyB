@@ -19,29 +19,6 @@
 
 package ispyb.client.mx.collection;
 
-import ispyb.client.mx.ranking.SampleRankingVO;
-import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
-import ispyb.common.util.Constants;
-import ispyb.common.util.Formatter;
-import ispyb.common.util.PathUtils;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
-import ispyb.server.mx.services.collections.WorkflowMesh3Service;
-import ispyb.server.mx.vos.autoproc.AutoProc3VO;
-import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
-import ispyb.server.mx.vos.collections.DataCollection3VO;
-import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
-import ispyb.server.mx.vos.collections.EnergyScan3VO;
-import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.Workflow3VO;
-import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
-import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
-import ispyb.server.mx.vos.screening.Screening3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
-import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
-
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,6 +41,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.Cell;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.HeaderFooter;
@@ -72,8 +50,32 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+
+import ispyb.client.mx.ranking.SampleRankingVO;
+import ispyb.client.mx.ranking.autoProcRanking.AutoProcRankingVO;
+import ispyb.common.util.Constants;
+import ispyb.common.util.Formatter;
+import ispyb.common.util.PathUtils;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
+import ispyb.server.mx.services.collections.WorkflowMesh3Service;
+import ispyb.server.mx.vos.autoproc.AutoProc3VO;
+import ispyb.server.mx.vos.autoproc.AutoProcScalingStatistics3VO;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
+import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
+import ispyb.server.mx.vos.collections.EnergyScan3VO;
+import ispyb.server.mx.vos.collections.IspybCrystalClass3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.collections.Workflow3VO;
+import ispyb.server.mx.vos.collections.WorkflowMesh3VO;
+import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
+import ispyb.server.mx.vos.screening.Screening3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutput3VO;
+import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
 
 /**
  * allows creation of PDF or RTF report - general report, available in the
@@ -1196,6 +1198,7 @@ public class PdfRtfExporter {
 				table = setDataCollectionHeader(document, table, true);
 				setDataCollectionData(document, table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], true, false, null, null);
+				
 				document.add(table);
 				i++;
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
@@ -1387,6 +1390,7 @@ public class PdfRtfExporter {
 			// param4
 			setCellParam(table, listParam, idParam++, 1);
 
+			// last rows
 			for (int i = 5; i < nbRows; i++) {
 				setCellParam(table, listParam, idParam++, 1);
 			}
@@ -1412,7 +1416,9 @@ public class PdfRtfExporter {
 				resultCell.setColspan(nbCol);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(resultCell);
-				document.add(table);
+				
+				addTable(document, table);
+				
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
@@ -1429,7 +1435,7 @@ public class PdfRtfExporter {
 				resultCell.setColspan(nbCol);
 				table.addCell(resultCell);
 
-				document.add(table);
+				addTable(document, table);
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
@@ -1445,7 +1451,7 @@ public class PdfRtfExporter {
 				resultCell.setColspan(nbCol);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(resultCell);
-				document.add(table);
+				addTable(document, table);
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setStrategyTable2(document, dcInfo);
@@ -1460,7 +1466,7 @@ public class PdfRtfExporter {
 						table.addCell(eCell);
 					}
 				}
-				document.add(table);
+				addTable(document, table);
 				document.add(new Paragraph(" ", FONT_SPACE));
 			}
 
@@ -1578,6 +1584,15 @@ public class PdfRtfExporter {
 			table.addCell(cellValue);
 		}
 	}
+	
+	private void setEmptyCell(Table table, int nb) throws Exception {
+		Cell emptyCell = new Cell(new Paragraph("empty", FONT_DOC));
+		for (int i = 0; i < nb; i++) {
+			table.addCell(emptyCell);
+		}
+				
+	}
+
 
 	/**
 	 * export ranking dataCollection
@@ -1726,6 +1741,7 @@ public class PdfRtfExporter {
 				table = setDataCollectionHeader(document, table, false);
 				setDataCollectionData(document, table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], false, false, null, null);
+				
 				document.add(table);
 				i++;
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
@@ -3302,4 +3318,14 @@ public class PdfRtfExporter {
 		}
 		return "";
 	}
+	
+
+	private static void addTable(Document document, Table table) throws DocumentException {
+		
+		//PdfPTable pdfTable = table.createPdfPTable();
+		//document.add(pdfTable);
+		//TODO find why classCast exception Table in SimpleTable
+		document.add(table);
+	}
+
 }
