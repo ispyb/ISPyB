@@ -585,7 +585,7 @@ public class ToolsForCollectionWebService {
 			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 			BLSample3VO blSampleVO = null;
 			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
-				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false, false);
 
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sessionVO = null;
@@ -790,7 +790,7 @@ public class ToolsForCollectionWebService {
 			BLSample3VO blSampleVO = null;
 			LOG.debug(" with sample " + vo.getBlSampleId());
 			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
-				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false, false);
 
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sessionVO = null;
@@ -867,7 +867,7 @@ public class ToolsForCollectionWebService {
 			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 			BLSample3VO blSampleVO = null;
 			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0) {
-				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false, false);
 				LOG.debug(" with sample " + blSampleVO.toString());
 			}
 
@@ -1513,8 +1513,8 @@ public class ToolsForCollectionWebService {
 				BLSample3VO sampleFromDB = null;
 				if (vo.getDataCollectionGroupVO() != null && vo.getDataCollectionGroupVO().getBlSampleVO() != null) {
 					BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
-					blSampleVO = blSampleService.findForWSByPk(vo.getDataCollectionGroupVO().getBlSampleVOId(), false, false);
-					sampleFromDB = blSampleService.findByPk(vo.getDataCollectionGroupVO().getBlSampleVOId(), false, false);
+					blSampleVO = blSampleService.findForWSByPk(vo.getDataCollectionGroupVO().getBlSampleVOId(), false, false, false);
+					sampleFromDB = blSampleService.findByPk(vo.getDataCollectionGroupVO().getBlSampleVOId(), false, false, false);
 				}
 				String spaceGroup = "";
 				Double cellA = null;
@@ -1743,7 +1743,7 @@ public class ToolsForCollectionWebService {
 			BLSample3Service blSampleService = (BLSample3Service) ejb3ServiceLocator.getLocalService(BLSample3Service.class);
 			BLSample3VO blSampleVO = null;
 			if (vo.getBlSampleId() != null && vo.getBlSampleId() > 0)
-				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false);
+				blSampleVO = blSampleService.findByPk(vo.getBlSampleId(), false, false, false);
 
 			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 			Session3VO sessionVO = null;

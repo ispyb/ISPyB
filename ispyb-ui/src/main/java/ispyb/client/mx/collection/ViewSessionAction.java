@@ -215,6 +215,7 @@ public class ViewSessionAction extends ParentIspybAction {
 							if (form.getNbSessionsToDisplay() == Constants.NB_SESSIONS_TO_DISPLAY) {
 								sessionList = sessionService.findFiltered(proposalId, Constants.NB_SESSIONS_TO_DISPLAY, null, null,
 										null, null, true, null);
+								LOG.debug("sessions displayed limited : nb sessions = " + sessionList.size());
 							} else {
 								sessionList = sessionService.findFiltered(proposalId, null, null, null, null, null, true, null);
 								LOG.debug("sessionsUsedForProposal: nb sessions = " + sessionList.size());

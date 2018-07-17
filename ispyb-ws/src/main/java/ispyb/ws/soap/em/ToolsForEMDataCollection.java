@@ -66,7 +66,7 @@ public class ToolsForEMDataCollection{
 	 * @param micrographSnapshotFullPath
 	 * @param xmlMetaDataFullPath
 	 * @param voltage STORED ON DATACOLLECTION.WAVELENGTH
-	 * @param sphericalAberration STORED ON BEAMLINESETIP.CS
+	 * @param sphericalAberration STORED ON BEAMLINESETUP.CS
 	 * @param amplitudeContrast 
 	 * @param magnification STORED ON DATACOLLECTION.MAGNIFICATION
 	 * @param scannedPixelSize
@@ -110,8 +110,7 @@ public class ToolsForEMDataCollection{
 			startTime = dt.parse(stringStartTime); 
 		}
 		catch(Exception exp){
-			exp.printStackTrace();
-			log.error("Error addMovie: {}", exp.getCause());
+			/** No action to be done **/
 		}
 		try {
 			log.info("addMovie. technique=EM proposal={} proteinAcronym={} sampleAcronym={} movieDirectory={} moviePath={} movieNumber={} micrographPath={} thumbnailMicrographPath={} xmlMetaDataPath={} voltage={} sphericalAberration={} magnification={} scannedPixelSize={} imagesCount={} dosePerImage={} positionX={} positionY={} beamLineName={} startTime={} gridSquareSnapshotFullPath={}", proposal, proteinAcronym, sampleAcronym, movieDirectory, movieFullPath, movieNumber, micrographFullPath, micrographSnapshotFullPath, xmlMetaDataFullPath, voltage,sphericalAberration,magnification,scannedPixelSize,imagesCount,dosePerImage,positionX, positionY,beamlineName, startTime, gridSquareSnapshotFullPath);

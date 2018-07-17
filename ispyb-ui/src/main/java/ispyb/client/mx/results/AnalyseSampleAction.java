@@ -160,7 +160,7 @@ public class AnalyseSampleAction extends DispatchAction {
 
 			Integer blsampleId = new Integer(request.getParameter(Constants.BLSAMPLE_ID));
 
-			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false);
+			BLSample3VO slv = sampleService.findByPk(blsampleId, false, false, false);
 
 			AnalyseSampleForm form = (AnalyseSampleForm) actForm;
 			form.setInfo(slv);
@@ -202,7 +202,7 @@ public class AnalyseSampleAction extends DispatchAction {
 			AnalyseSampleForm form = (AnalyseSampleForm) actForm;
 
 			// retrieve the object, change the fields and save it again
-			BLSample3VO slvFromDB = sampleService.findByPk(form.getInfo().getBlSampleId(), false, false);
+			BLSample3VO slvFromDB = sampleService.findByPk(form.getInfo().getBlSampleId(), false, false, false);
 
 			slvFromDB.setCompletionStage(form.getInfo().getCompletionStage());
 			slvFromDB.setStructureStage(form.getInfo().getStructureStage());
@@ -213,7 +213,7 @@ public class AnalyseSampleAction extends DispatchAction {
 			sampleService.update(slvFromDB);
 
 			// update also BMP to have a correct view
-			BLSample3VO fullValue = sampleService.findByPk(form.getInfo().getBlSampleId(), false, false);
+			BLSample3VO fullValue = sampleService.findByPk(form.getInfo().getBlSampleId(), false, false, false);
 
 			fullValue.setCompletionStage(form.getInfo().getCompletionStage());
 			fullValue.setStructureStage(form.getInfo().getStructureStage());

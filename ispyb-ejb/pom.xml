@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.4.5</version>
+		<version>5.10.3.5</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
@@ -257,7 +257,7 @@
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
-			<samplechanger.locations>5</samplechanger.locations>
+			<samplechanger.locations>24</samplechanger.locations>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
   			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
@@ -526,3 +526,4 @@
 	
 
 </project>
+

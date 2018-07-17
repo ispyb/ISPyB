@@ -174,6 +174,10 @@ public  class ParentWebService {
 		return Response.ok(getGson(serializeNulls).toJson(response)).header("Access-Control-Allow-Origin", "*").build();
 	}
 
+	protected Response sendOk() {
+		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
+	}
+	
 //	protected Response unauthorizedResponse() {
 //		return Response.status(401).header("Access-Control-Allow-Origin", "*").build();
 //	}

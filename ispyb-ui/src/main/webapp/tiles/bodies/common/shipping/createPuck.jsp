@@ -16,12 +16,9 @@ along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
 
 Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
 --------------------------------------------------------------------------------------------------%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page isELIgnored="false" %>
 
 <%@ include file="../../mx/mx_css_include.jsp" %> 		
 <%@ include file="../../mx/mx_javascript_include.jsp" %>
-
 
 <script type="text/javascript">
 		Ext.onReady(run);
@@ -29,12 +26,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 		var mainWindow;
 		function run() {
-<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-			IspybCreatePuck.start("createPuckPanel", true);
-</c:if>
-<c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
-            IspybCreatePuck.start("createPuckPanel", false);
-</c:if>
+			IspybCreatePuck.start("createPuckPanel");
 		}
 </script>
 

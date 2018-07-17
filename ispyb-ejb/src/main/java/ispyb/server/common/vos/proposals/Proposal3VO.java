@@ -96,10 +96,12 @@ public class Proposal3VO extends ISPyBValueObject implements Cloneable {
 	@Column(name = "bltimeStamp")
 	protected Date timeStamp;
 
-	@Fetch(value = FetchMode.SELECT)
-	@ManyToMany(fetch = FetchType.EAGER)
+	//@Fetch(value = FetchMode.SELECT)
+	@ManyToMany//(fetch = FetchType.EAGER)
+	//@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ProposalHasPerson", joinColumns = { @JoinColumn(name = "proposalId", referencedColumnName = "proposalId") }, inverseJoinColumns = { @JoinColumn(name = "personId", referencedColumnName = "personId") })
-	protected Set<Person3VO> participants;
+	//protected Set<Person3VO> participants;
+	private Set<Person3VO> participants;
 	
 	public Proposal3VO() {
 		super();

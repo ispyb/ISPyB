@@ -34,9 +34,8 @@ var createPuckGrid = null;
 var puckHeadPanel = null;
 
 var IspybCreatePuck = {
-	start : function (targetId, isMAXIV) {
+	start : function (targetId) {
 		this.tartgetId = targetId;
-		this.isMAXIV = isMAXIV
 		Ext.Loader.setPath('Ext.ux', '../js/external/ux');
 		Ext.require(['Ext.selection.CellModel', 'Ext.grid.*', 'Ext.data.*',
 						'Ext.ux.data.PagingMemoryProxy', 'Ext.util.*',
@@ -53,10 +52,10 @@ var IspybCreatePuck = {
 						'Ext.tip.*']);
 		Ext.QuickTips.init();
 
-		this.showCreatePuckPage(targetId, isMAXIV);
+		this.showCreatePuckPage(targetId);
 	},
 
-	showCreatePuckPage : function (targetId, isMAXIV) {
+	showCreatePuckPage : function (targetId) {
 		var _this = this;
 		// ajax call class
 		var shipping = new Shipping();
@@ -95,10 +94,7 @@ var IspybCreatePuck = {
 			mainItems.push(puckHeadPanel.getPanel(data));
 			mainItems.push(createPuckGrid.getGrid(data));
 			// panel with annotations
-			var msg = "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks. Be aware that only ID30B and BM14 can accommodate unipucks (16 samples), other ESRF MX beamlines only accommodate SPINE pucks (10 samples).";
-			if (isMAXIV){
-                msg = "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks.";
-			}
+			var msg = "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks.";			
 			var subPanel = Ext.widget({
 				xtype : 'form',
 				layout : {
@@ -113,7 +109,7 @@ var IspybCreatePuck = {
 				items : [ {
 					xtype: 'component',
 					style: 'margin-top:10px',
-					html: msg
+					html: "(*) mandatory field for each sample.<br/><span style='background-color: #ffcc66'>11 to 16 rows</span> of the table are only used in case of unipucks."
 				}]
 			});
 			mainItems.push(subPanel);

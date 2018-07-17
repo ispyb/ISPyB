@@ -59,7 +59,7 @@ public class BLSample3VOTest extends EJB3Test {
 
 	@Test
 	public void findByPk() throws Exception {
-		BLSample3VO blSample3VO = blSample3Service.findByPk(3120, false, false);
+		BLSample3VO blSample3VO = blSample3Service.findByPk(3120, false, false, false);
 		assertTrue(blSample3VO != null);
 	}
 

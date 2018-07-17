@@ -388,8 +388,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 			// Confidentiality (check if object proposalId matches)
 			Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
-			Proposal3VO pv = proposalService.findByPk(proposalId);
-
+			//Proposal3VO pv = proposalService.findByPk(proposalId);
+			Proposal3VO pv = proposalService.findWithParticipantsByPk(proposalId);
+			
 			// crystal classes
 			// Get an object list.
 			List<IspybCrystalClass3VO> listOfCrystalClass = (List<IspybCrystalClass3VO>) request.getSession()

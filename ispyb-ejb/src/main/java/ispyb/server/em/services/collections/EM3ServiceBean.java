@@ -41,6 +41,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +71,13 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	private final String ByDataCollectionId = getViewTableQuery() + " where Movie_dataCollectionId = :dataCollectionId and Proposal_proposalId=:proposalId";
 
+	private final String StatsByDataCollectionId = getStatsQuery() + " where dataCollectionId in (:dataCollectionIdList) and BLSession.proposalId=:proposalId";
+	
+	private final String StatsBySessionId = getStatsQuery() + " where BLSession.sessionId = :sessionId and BLSession.proposalId=:proposalId";
+	
+	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
+
+	
 	protected Logger log = LoggerFactory.getLogger(EM3ServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
@@ -101,6 +109,10 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	private String getViewTableQuery(){
 		return this.getQueryFromResourceFile("/queries/em/movie/getViewTableQuery.sql");
+	}
+	
+	private String getStatsQuery(){
+		return this.getQueryFromResourceFile("/queries/em/stats/getStatsQuery.sql");
 	}
 	
 	@Override
@@ -323,6 +335,12 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			dataCollection.setNumberOfImages(Integer.parseInt(noImages));
 			dataCollection.setStartTime(startTime);
 			dataCollection.setXtalSnapshotFullPath1(gridSquareSnapshotFullPath);
+			try{
+				dataCollection.setXbeamPix(Double.valueOf(scannedPixelSize));
+			}
+			catch(Exception exp){
+				log.error("scannedPixelSize {} can not be converted into a double. technique=EM scannedPixelSize={}", scannedPixelSize, scannedPixelSize);
+			}
 			
 			try{
 				dataCollection.setVoltage(Float.valueOf(voltage));
@@ -546,5 +564,37 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		return null;
 	}
 
+	@Override
+	public List<Map<String, Object>> getStatsByDataCollectionIds(int proposalId, String dataCollectionIdList) {
+		
+		
+		Session session = (Session) this.entityManager.getDelegate();
+		String queryString = StatsByDataCollectionId.replace(":dataCollectionIdList", dataCollectionIdList).replace(":proposalId", String.valueOf(proposalId));
+		System.out.println(queryString);
+		SQLQuery query = session.createSQLQuery(queryString);
+		return executeSQLQuery(query);
+		
+	}
+
+	@Override
+	public Collection<? extends Map<String, Object>> getStatsByDataSessionIds(int proposalId, Integer sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		String queryString = StatsBySessionId.replace(":sessionId", String.valueOf(sessionId)).replace(":proposalId", String.valueOf(proposalId));
+		System.out.println(queryString);
+		SQLQuery query = session.createSQLQuery(queryString);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getStatsBySessionId(int proposalId, int sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(getStatsBySessionId);
+		System.out.println(getStatsBySessionId);
+		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}
+
 
 }
+
