@@ -50,7 +50,6 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Table;
-import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
 
@@ -91,6 +90,8 @@ import ispyb.server.mx.vos.screening.ScreeningOutputLattice3VO;
 public class PdfRtfExporter {
 
 	private final static Logger LOG = Logger.getLogger(PdfRtfExporter.class);
+	
+	private Boolean isRTF;
 
 	// constants color
 	public final static Color GREEN_COLOR = new Color(17, 197, 3);
@@ -175,6 +176,11 @@ public class PdfRtfExporter {
 	public final static float CRYSTAL_IMAGE_HEIGHT = 174;
 
 	public final static float IMAGE_HEIGHT = 120;
+	
+	public final static float IMAGE_HEIGHT_ICON = 12;
+		
+	public final static float IMAGE_HEIGHT_SMALL = 50;
+	public final static float IMAGE_HEIGHT_SNAPSHOT = 60;
 
 	// public final static float CRYSTAL_IMAGE_WIDTH = 160;
 	// public final static float CRYSTAL_IMAGE_HEIGHT = 99;
@@ -271,9 +277,12 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
-			PdfWriter.getInstance(document, baos);
+			this.isRTF = false;
+			PdfWriter.getInstance(document, baos);			
 		} else {
+			this.isRTF = true;
 			RtfWriter2.getInstance(document, baos);
+			
 		}
 
 		// =============================
@@ -519,7 +528,7 @@ public class PdfRtfExporter {
 			document.add(new Paragraph("There is no data collection in this report", FONT_DOC));
 		} else {
 			Table table = new Table(NB_COL_DATACOLLECTION);
-			table = setDataCollectionHeader(document, table, true);
+			table = setDataCollectionHeader(true);
 			DecimalFormat df2 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 			df2.applyPattern("#####0.00");
 			DecimalFormat df3 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
@@ -553,7 +562,7 @@ public class PdfRtfExporter {
 						}
 					}
 				}
-				setDataCollectionData(document, table, col, sessionService, autoProcs[i], autoProcsOverall[i],
+				setDataCollectionData(table, col, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], true, true, screeningOutput, screeningOutputLattice);
 				i++;
 			}
@@ -568,7 +577,7 @@ public class PdfRtfExporter {
 	 * @param table
 	 * @throws Exception
 	 */
-	private Table setDataCollectionHeader(Document document, Table table, boolean withAutoProcessing) throws Exception {
+	private Table setDataCollectionHeader(boolean withAutoProcessing) throws Exception {
 		int nbCol = NB_COL_DATACOLLECTION;
 		boolean withoutAutoProc = !withAutoProcessing;
 		boolean withSampleName = name != null;
@@ -582,7 +591,7 @@ public class PdfRtfExporter {
 		if (isIfx) {
 			nbCol += 1;
 		}
-		table = new Table(nbCol);
+		Table table = new Table(nbCol);
 		int[] headersWidth = new int[nbCol];
 		int i = 0;
 		// image prefix
@@ -665,7 +674,7 @@ public class PdfRtfExporter {
 	 * @param df3
 	 * @throws Exception
 	 */
-	private void setDataCollectionData(Document document, Table table, DataCollection3VO col,
+	private void setDataCollectionData(Table table, DataCollection3VO col,
 			Session3Service sessionService, AutoProc3VO autoProcValue, AutoProcScalingStatistics3VO autoProcOverall,
 			AutoProcScalingStatistics3VO autoProcInner, AutoProcScalingStatistics3VO autoProcOuter,
 			boolean withAutoProcessing, boolean setEDNAInfo, ScreeningOutput3VO screeningOutput,
@@ -1145,8 +1154,10 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			this.isRTF = false;
 			PdfWriter.getInstance(document, baos);
 		} else {
+			this.isRTF = true;
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -1194,27 +1205,21 @@ public class PdfRtfExporter {
 				setDataCollectionGeneralInfo(document, dcValue, dcInfo);
 				Table table = new Table(NB_COL_DATACOLLECTION);
 				table.setCellsFitPage(true);
+				
 				// dataCollection table - one row
-				table = setDataCollectionHeader(document, table, true);
-				setDataCollectionData(document, table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
+				table = setDataCollectionHeader(true);
+				document.add(table);
+				setDataCollectionData( table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], true, false, null, null);
 				
-				document.add(table);
+				
 				i++;
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 				// Images
 				setImagesTable(document, dcInfo);
 				setEDNATable(document, dcInfo);
 				setStrategyTable(document, dcInfo);
-				// End of the page?
-				// mNbDataCollectionOnPage++;
-				// if (mNbDataCollectionOnPage ==
-				// NB_DATA_COLLECTION_PER_PAGE){// New Page
-				// document.newPage();
-				// mNbDataCollectionOnPage = 0;
-				// } else{ // Same Page
-				// document.add(new Paragraph(" ", VERY_SMALL_FONT));
-				// }
+
 			}
 		}
 
@@ -1293,117 +1298,129 @@ public class PdfRtfExporter {
 	private void setDetailSessionObjectTable(Document document, SessionDataObjectInformation sessionDataObject,
 			HttpServletRequest mRequest) {
 		try {
+
 			int nbCol = 6;
-			int nbRows = 5;
 			List<Param> listParam = sessionDataObject.getListParameters();
-			int idParam = 0;
 			int nbParam = listParam.size();
-			nbRows = Math.max(nbRows, nbParam);
 			boolean secondGraph = sessionDataObject.getGraph2Path() != null
 					&& !sessionDataObject.getGraph2Path().isEmpty();
 			if (secondGraph)
 				nbCol += 1;
 
-			Table table = new Table(nbCol);
+			Table emptyTable = new Table(nbCol);
 
 			int l = 0;
 
 			int[] headersWidth = new int[nbCol];
 
 			headersWidth[l++] = 10; // def
-			headersWidth[l++] = 6; // parameters title
-			headersWidth[l++] = 6; // parameters value
+			headersWidth[l++] = 8; // parameters title
+			headersWidth[l++] = 8; // parameters value
 			headersWidth[l++] = 12; // Thumbnail
 			headersWidth[l++] = 12; // Snapshot
-			headersWidth[l++] = 22; // Graph
+			headersWidth[l++] = 20; // Graph
 			if (secondGraph)
-				headersWidth[l++] = 22; // Graph2
-			table.setWidths(headersWidth);
+				headersWidth[l++] = 20; // Graph2
+			emptyTable.setWidths(headersWidth);
 
-			table.setWidth(100); // percentage
-			table.setPadding(1);
-			table.setCellsFitPage(true);
-			table.setTableFitsPage(true);
-			table.setBorderWidth(1);
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-			// no header
+			emptyTable.setWidth(100); // percentage
+			emptyTable.setPadding(5);
+			emptyTable.setCellsFitPage(true);
+			emptyTable.setTableFitsPage(true);
+			emptyTable.setBorderWidth(0);
+			emptyTable.setBorder(0);
+			emptyTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+			emptyTable.getDefaultCell().setBorder(0);
+			emptyTable.getDefaultCell().setBorderWidth(0);
+			
+			Table table = emptyTable;
+			
+			String parag ="";
 			// first Row
 			// firstCell: def : date
+			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			String collectTime = formatter.format(sessionDataObject.getDataTime());
-			Cell c = getCellValue(collectTime);
-			c.setBorderWidthBottom(0);
-			table.addCell(c);
-			// second Cell param
-			setCellParam(table, listParam, idParam++, 1);
-			// third Cell : thumbnail
+			parag = formatter.format(sessionDataObject.getDataTime()) + "\n" 
+					+ sessionDataObject.getImagePrefix() + " " + sessionDataObject.getRunNumber() + "\n" 
+					+ sessionDataObject.getExperimentType() + "\n" 
+					+ sessionDataObject.getSampleNameProtein() +"\n" 
+					+ sessionDataObject.getComments() + "\n" 
+					;
+			
+			Paragraph p = new Paragraph(parag, FONT_DOC_BOLD);
+			Cell cell = new Cell(p);
+			cell.setBorder(0);
+			cell.setHorizontalAlignment("LEFT");
+			table.addCell(cell);
+						
+			// Cell2 
+			parag ="";
+			for (int i = 0; i < nbParam; i++) {
+				parag = parag + listParam.get(i).getText() + ": \n";
+			}
+			p = new Paragraph(parag, FONT_DOC_PARAM_TITLE);
+			cell = new Cell(p);
+			cell.setBorder(0);
+			cell.setHorizontalAlignment("RIGHT");
+			table.addCell(cell);
+			
+			// Cell3
+			parag ="";			
+			for (int i = 0; i < nbParam; i++) {
+				parag = parag + listParam.get(i).getValue() + ": \n";
+			}
+			p = new Paragraph(parag, FONT_DOC);
+			cell = new Cell(p);
+			cell.setBorder(0);
+			cell.setHorizontalAlignment("LEFT");
+			table.addCell(cell);
+
+						
+			// Cell4 : thumbnail
 			Cell cellThumbnail = getCellImage(sessionDataObject.getImageThumbnailPath());
-			cellThumbnail.setRowspan(nbRows);
 			cellThumbnail.setBorderWidth(0);
 			table.addCell(cellThumbnail);
-			// 4 Cell : snapshot
+			
+			// 5 Cell : snapshot
 			Cell cellSnapshot = getCellImage(sessionDataObject.getCrystalSnapshotPath());
-			cellSnapshot.setRowspan(nbRows);
 			cellSnapshot.setBorderWidth(0);
 			table.addCell(cellSnapshot);
-			// 5 Cell : graph
+			
+			// 6 Cell : graph
 			Cell cellGraph = getCellGraph(sessionDataObject);
-			cellGraph.setRowspan(nbRows);
 			cellGraph.setBorderWidth(0);
 			table.addCell(cellGraph);
-			// 6 Cell : graph2
+			
+			// 7 Cell : graph2
 			if (secondGraph) {
 				Cell cellGraph2 = getCellImage(sessionDataObject.getGraph2Path());
-				cellGraph2.setRowspan(nbRows);
 				cellGraph2.setBorderWidth(0);
 				table.addCell(cellGraph2);
 			}
-
-			// second row
-			Cell c2 = getCellValue(sessionDataObject.getImagePrefix() + " " + sessionDataObject.getRunNumber());
-			c2.setBorderWidth(0);
-			table.addCell(c2);
-			// param2
-			setCellParam(table, listParam, idParam++, 1);
-
-			// third row
-			Cell c3 = getCellValue(sessionDataObject.getExperimentType());
-			c3.setBorderWidth(0);
-			table.addCell(c3);
-			// param3
-			setCellParam(table, listParam, idParam++, 1);
-
-			// 4 row
-			Cell c4 = getCellValue(sessionDataObject.getSampleNameProtein());
-			c4.setBorderWidth(0);
-			table.addCell(c4);
-			// param4
-			setCellParam(table, listParam, idParam++, 1);
-
-			// 5 row
-			Cell c5 = new Cell();
-			c5.setHorizontalAlignment(Element.ALIGN_LEFT);
-			c5.add(new Paragraph(sessionDataObject.getComments(), FONT_DOC_ITALIC));
-			c5.setBorderWidth(0);
-			c5.setRowspan(nbRows - 4);
-			table.addCell(c5);
-			// param4
-			setCellParam(table, listParam, idParam++, 1);
-
-			// last rows
-			for (int i = 5; i < nbRows; i++) {
-				setCellParam(table, listParam, idParam++, 1);
-			}
-
+			document.add(table);
+			
+			// 	other row
+			
+			document.add(new Paragraph(" ", VERY_SMALL_FONT));
+			
 			// results
+			table = new Table(1);
+			table.setBorderWidth(0);
+			table.setBorder(0);
+			
 			// workflow result status
 			if (sessionDataObject.isWorkflow()) {
+				parag ="";
 				Cell resultCell = getWorkflowResult(sessionDataObject.getWorkflow(), mRequest);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-				resultCell.setColspan(nbCol);
 				table.addCell(resultCell);
 			}
+			document.add(table);
+			
 			// collect OSC
+			table = new Table(1);
+			table.setBorderWidth(0);
+
 			if ((sessionDataObject.isDataCollection() && !sessionDataObject.getDataCollection()
 					.getDataCollectionGroupVO().getExperimentType().equals(Constants.EXPERIMENT_TYPE_CHARACTERIZATION))) {
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
@@ -1413,7 +1430,6 @@ public class PdfRtfExporter {
 						getSampleRankingVO(dataCollection.getDataCollectionId()),
 						getAutoProcRankingVO(dataCollection.getDataCollectionId()));
 				Cell resultCell = getAutoProcResultStatus(dcInfo);
-				resultCell.setColspan(nbCol);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(resultCell);
 				
@@ -1422,6 +1438,7 @@ public class PdfRtfExporter {
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
+				
 			} else if (sessionDataObject.isWorkflow() && sessionDataObject.getWorkflow().isMXPressEOIA()) { // MXPRESS
 																										// wf
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
@@ -1432,13 +1449,14 @@ public class PdfRtfExporter {
 						getAutoProcRankingVO(dataCollection.getDataCollectionId()));
 				Cell resultCell = getAutoProcResultStatus(dcInfo);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-				resultCell.setColspan(nbCol);
 				table.addCell(resultCell);
 
 				addTable(document, table);
+				
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
+				
 			} else if ((sessionDataObject.isDataCollection() && sessionDataObject.getDataCollection()
 					.getDataCollectionGroupVO().getExperimentType().equals(Constants.EXPERIMENT_TYPE_CHARACTERIZATION))) { // Characterization
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
@@ -1456,16 +1474,41 @@ public class PdfRtfExporter {
 
 				setStrategyTable2(document, dcInfo);
 			} else {
+				table = emptyTable;
+
+				//col 1
+				table.addCell(" ");
+				
+				// col2
+				parag ="";
 				List<Param> listResults = sessionDataObject.getListResults();
 				if (listResults != null) {
 					int nbResults = listResults.size();
 					for (int j = 0; j < nbResults; j++) {
-						setCellParam(table, listResults, j, 2);
-						Cell eCell = getEmptyCell(nbCol - 3);
-						eCell.setBorderWidth(0);
-						table.addCell(eCell);
+						parag = parag + setParamText(table, listResults, j) + ": \n";
 					}
 				}
+				p = new Paragraph(parag, FONT_DOC_PARAM_TITLE);
+				p.setAlignment("RIGHT");
+				table.addCell(p);
+
+				//col3
+				parag ="";
+				if (listResults != null) {
+					int nbResults = listResults.size();
+					for (int j = 0; j < nbResults; j++) {
+						parag = parag + setParamValue(table, listResults, j) + "\n";
+					}
+				}
+				p = new Paragraph(parag, FONT_DOC);
+				p.setAlignment("LEFT");
+				table.addCell(p);
+
+				// other cols
+				for (int i= 3; i< nbCol; i++) {
+					table.addCell(" ");
+				}
+				
 				addTable(document, table);
 				document.add(new Paragraph(" ", FONT_SPACE));
 			}
@@ -1497,13 +1540,18 @@ public class PdfRtfExporter {
 			if (wfStatus != null) {
 				if (wfStatus.equals("Failure")) {
 					img = mRequest.getRealPath(Constants.IMAGE_FAILED);
+					p.setFont(FONT_INDEXING_FAILED);
 				} else if (wfStatus.equals("Launched")) {
 					img = mRequest.getRealPath(Constants.IMAGE_LAUNCHED);
+					p.setFont(FONT_INDEXING_NOTDONE);
 				} else if (wfStatus.equals("Success")) {
 					img = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
+					p.setFont(FONT_INDEXING_SUCCESS);
 				}
 			}
-			p.add(getChunkImage(img));
+			if (! isRTF)
+				p.add(getChunkImage(img));
+			p.add(wfStatus);
 			p.add(new Phrase("  "));
 		}
 
@@ -1528,20 +1576,26 @@ public class PdfRtfExporter {
 		if (dcInfo != null && dcInfo.getScreeningIndexingSuccess() != null) {
 			p.add(new Phrase("Indexing ", FONT_DOC_BOLD));
 			String img = mRequest.getRealPath(Constants.IMAGE_FAILED);
+			p.setFont(FONT_INDEXING_FAILED);
 			if (dcInfo.getScreeningIndexingSuccess() == 1) {
 				img = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
+				p.setFont(FONT_INDEXING_SUCCESS);
 			}
-			p.add(getChunkImage(img));
+			if (!isRTF)
+				p.add(getChunkImage(img));
 			p.add(new Phrase("  "));
 		}
 
 		if (dcInfo != null && dcInfo.getScreeningStrategySuccess() != null) {
 			p.add(new Phrase("Strategy ", FONT_DOC_BOLD));
 			String img = mRequest.getRealPath(Constants.IMAGE_FAILED);
+			p.setFont(FONT_INDEXING_FAILED);
 			if (dcInfo.getScreeningStrategySuccess() == 1) {
 				img = mRequest.getRealPath(Constants.IMAGE_SUCCESS);
+				p.setFont(FONT_INDEXING_SUCCESS);
 			}
-			p.add(getChunkImage(img));
+			if (!isRTF)
+				p.add(getChunkImage(img));
 			p.add(new Phrase("  "));
 		}
 
@@ -1583,6 +1637,24 @@ public class PdfRtfExporter {
 			cellValue.setBorderWidth(0);
 			table.addCell(cellValue);
 		}
+	}
+	
+	private String setParamText(Table table, List<Param> listParam, int id) throws Exception {
+		String text = "";
+		if (id < listParam.size()) {
+			Param param = listParam.get(id);			
+			text = param.getText();
+		}
+		return text;
+	}
+	
+	private String setParamValue(Table table, List<Param> listParam, int id) throws Exception {
+		String text = "";
+		if (id < listParam.size()) {
+			Param param = listParam.get(id);			
+			text = param.getValue();
+		}
+		return text;
 	}
 	
 	private void setEmptyCell(Table table, int nb) throws Exception {
@@ -1655,8 +1727,8 @@ public class PdfRtfExporter {
 				Table table = new Table(NB_COL_DATACOLLECTION);
 				table.setCellsFitPage(true);
 				// dataCollection table - one row
-				table = setDataCollectionHeader(document, table, false);
-				setDataCollectionData(document, table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
+				table = setDataCollectionHeader(false);
+				setDataCollectionData(table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], false, false, null, null);
 				document.add(table);
 				i++;
@@ -1738,8 +1810,8 @@ public class PdfRtfExporter {
 				Table table = new Table(NB_COL_DATACOLLECTION);
 				table.setCellsFitPage(true);
 				// dataCollection table - one row
-				table = setDataCollectionHeader(document, table, false);
-				setDataCollectionData(document, table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
+				table = setDataCollectionHeader(false);
+				setDataCollectionData( table, dcValue, sessionService, autoProcs[i], autoProcsOverall[i],
 						autoProcsInner[i], autoProcsOuter[i], false, false, null, null);
 				
 				document.add(table);
@@ -2788,7 +2860,32 @@ public class PdfRtfExporter {
 				return new Cell(new Paragraph(image + " not found", FONT_DOC));
 			}
 		}
-		return new Cell(new Paragraph("", FONT_DOC));
+		return new Cell(new Paragraph("no path to image", FONT_DOC));
+	}
+	
+	/**
+	 * returns a cell with a given image inside
+	 * 
+	 * @param image
+	 * @return
+	 * @throws Exception
+	 */
+	private Cell getCellIcon(String image) throws Exception {
+		if (image != null && !image.equals("")) {
+			try {
+				Image jpg1 = Image.getInstance(image);
+				jpg1.scaleAbsolute(jpg1.getWidth() * IMAGE_HEIGHT / jpg1.getHeight(), IMAGE_HEIGHT);
+				Cell cell = new Cell(jpg1);
+				cell.setLeading(0);
+				cell.setBorderWidth(0);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setVerticalAlignment(Element.ALIGN_CENTER);
+				return cell;
+			} catch (IOException e) {
+				return new Cell(new Paragraph(image + " not found", FONT_DOC));
+			}
+		}
+		return new Cell(new Paragraph("no path to image", FONT_DOC));
 	}
 
 	/**
@@ -2828,21 +2925,28 @@ public class PdfRtfExporter {
 		// edna
 		if (dcInfo != null && dcInfo.getAutoProcEdnaStatus() != null) {
 			p.add(new Phrase("EDNA_proc ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcEdnaStatus()));
+			if (!isRTF)
+				p.add(getChunkImage(dcInfo.getAutoProcEdnaStatus()));
+			
+			p.add(dcInfo.getAutoProcEdnaStatus());
 			p.add(new Phrase("  "));
 		}
 
 		// fastproc
 		if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
 			p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
+			if (!isRTF)
+				p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
+			p.add(dcInfo.getAutoProcFastStatus());
 			p.add(new Phrase("  "));
 		}
 
 		// parallelproc
 		if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
 			p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
-			p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
+			if (!isRTF)
+				p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
+			p.add(dcInfo.getAutoProcParallelStatus());
 			p.add(new Phrase("  "));
 		}
 		resultsCell.add(p);
@@ -3053,7 +3157,7 @@ public class PdfRtfExporter {
 			document.add(new Paragraph("There is no collect in this report", FONT_DOC));
 		} else {
 			Table table = new Table(NB_COL_DATACOLLECTION);
-			table = setDataCollectionHeader(document, table, true);
+			table = setDataCollectionHeader(true);
 			DecimalFormat df2 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 			df2.applyPattern("#####0.00");
 			DecimalFormat df3 = (DecimalFormat) NumberFormat.getInstance(Locale.US);
@@ -3327,5 +3431,32 @@ public class PdfRtfExporter {
 		//TODO find why classCast exception Table in SimpleTable
 		document.add(table);
 	}
-
+	/**
+	 * returns a cell with a given image inside
+	 * 
+	 * @param image
+	 * @return
+	 * @throws Exception
+	 */
+	private Cell getCellImage(String imagePath, float image_size) throws Exception {
+		
+		if (imagePath != null ) {
+			String image = PathUtils.getPath(imagePath);
+			try {				
+				Image jpg1 = Image.getInstance(image);
+				jpg1.scaleAbsolute(jpg1.getWidth() * image_size / jpg1.getHeight(), image_size);
+				Cell cell = new Cell(jpg1);
+				cell.setLeading(0);
+				cell.setBorderWidth(0);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setVerticalAlignment(Element.ALIGN_CENTER);
+				return cell;
+			} catch (IOException e) {
+				LOG.info(image + " not found");
+				return new Cell(new Paragraph("Image not found", FONT_DOC));
+				
+			}
+		}
+		return new Cell(new Paragraph("", FONT_DOC));
+	}
 }
