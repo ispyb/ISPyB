@@ -277,12 +277,11 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
-			this.isRTF = false;
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);			
 		} else {
-			this.isRTF = true;
-			RtfWriter2.getInstance(document, baos);
-			
+			isRTF = new Boolean(true);
+			RtfWriter2.getInstance(document, baos);			
 		}
 
 		// =============================
@@ -1154,10 +1153,10 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
-			this.isRTF = false;
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
-			this.isRTF = true;
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -1241,8 +1240,10 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -1307,7 +1308,7 @@ public class PdfRtfExporter {
 			if (secondGraph)
 				nbCol += 1;
 
-			Table emptyTable = new Table(nbCol);
+			Table table1 = new Table(nbCol);
 
 			int l = 0;
 
@@ -1321,26 +1322,25 @@ public class PdfRtfExporter {
 			headersWidth[l++] = 20; // Graph
 			if (secondGraph)
 				headersWidth[l++] = 20; // Graph2
-			emptyTable.setWidths(headersWidth);
+			table1.setWidths(headersWidth);
 
-			emptyTable.setWidth(100); // percentage
-			emptyTable.setPadding(5);
-			emptyTable.setCellsFitPage(true);
-			emptyTable.setTableFitsPage(true);
-			emptyTable.setBorderWidth(0);
-			emptyTable.setBorder(0);
-			emptyTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-			emptyTable.getDefaultCell().setBorder(0);
-			emptyTable.getDefaultCell().setBorderWidth(0);
-			
-			Table table = emptyTable;
+			table1.setWidth(100); // percentage
+			table1.setPadding(5);
+			table1.setCellsFitPage(true);
+			table1.setTableFitsPage(true);
+			table1.setBorderWidth(0);
+			table1.setBorder(0);
+			table1.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+			table1.getDefaultCell().setBorder(0);
+			table1.getDefaultCell().setBorderWidth(0);
 			
 			String parag ="";
 			// first Row
 			// firstCell: def : date
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			parag = formatter.format(sessionDataObject.getDataTime()) + "\n" 
+			String date = formatter.format(sessionDataObject.getDataTime()) ;
+			parag = date + "\n" 
 					+ sessionDataObject.getImagePrefix() + " " + sessionDataObject.getRunNumber() + "\n" 
 					+ sessionDataObject.getExperimentType() + "\n" 
 					+ sessionDataObject.getSampleNameProtein() +"\n" 
@@ -1351,7 +1351,7 @@ public class PdfRtfExporter {
 			Cell cell = new Cell(p);
 			cell.setBorder(0);
 			cell.setHorizontalAlignment("LEFT");
-			table.addCell(cell);
+			table1.addCell(cell);
 						
 			// Cell2 
 			parag ="";
@@ -1362,79 +1362,82 @@ public class PdfRtfExporter {
 			cell = new Cell(p);
 			cell.setBorder(0);
 			cell.setHorizontalAlignment("RIGHT");
-			table.addCell(cell);
+			table1.addCell(cell);
 			
 			// Cell3
 			parag ="";			
 			for (int i = 0; i < nbParam; i++) {
-				parag = parag + listParam.get(i).getValue() + ": \n";
+				parag = parag + listParam.get(i).getValue() + "\n";
 			}
 			p = new Paragraph(parag, FONT_DOC);
 			cell = new Cell(p);
 			cell.setBorder(0);
 			cell.setHorizontalAlignment("LEFT");
-			table.addCell(cell);
-
+			table1.addCell(cell);
 						
 			// Cell4 : thumbnail
 			Cell cellThumbnail = getCellImage(sessionDataObject.getImageThumbnailPath());
 			cellThumbnail.setBorderWidth(0);
-			table.addCell(cellThumbnail);
+			table1.addCell(cellThumbnail);
 			
 			// 5 Cell : snapshot
 			Cell cellSnapshot = getCellImage(sessionDataObject.getCrystalSnapshotPath());
 			cellSnapshot.setBorderWidth(0);
-			table.addCell(cellSnapshot);
+			table1.addCell(cellSnapshot);
 			
 			// 6 Cell : graph
 			Cell cellGraph = getCellGraph(sessionDataObject);
 			cellGraph.setBorderWidth(0);
-			table.addCell(cellGraph);
+			table1.addCell(cellGraph);
 			
 			// 7 Cell : graph2
 			if (secondGraph) {
 				Cell cellGraph2 = getCellImage(sessionDataObject.getGraph2Path());
 				cellGraph2.setBorderWidth(0);
-				table.addCell(cellGraph2);
+				table1.addCell(cellGraph2);
 			}
-			document.add(table);
+			document.add(table1);
+			LOG.info("table 1 added for date : " + date);
 			
-			// 	other row
-			
-			document.add(new Paragraph(" ", VERY_SMALL_FONT));
-			
+			// 	other rows			
 			// results
-			table = new Table(1);
+					
+			// workflow result status
+			Table table = new Table(1);
 			table.setBorderWidth(0);
 			table.setBorder(0);
 			
-			// workflow result status
 			if (sessionDataObject.isWorkflow()) {
 				parag ="";
 				Cell resultCell = getWorkflowResult(sessionDataObject.getWorkflow(), mRequest);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				resultCell.setBorder(0);
 				table.addCell(resultCell);
+				document.add(table);
+				LOG.info("table WF added");
 			}
-			document.add(table);
-			
+						
 			// collect OSC
 			table = new Table(1);
 			table.setBorderWidth(0);
+			table.setBorder(0);
 
 			if ((sessionDataObject.isDataCollection() && !sessionDataObject.getDataCollection()
 					.getDataCollectionGroupVO().getExperimentType().equals(Constants.EXPERIMENT_TYPE_CHARACTERIZATION))) {
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
 						mRequest);
 				DataCollection3VO dataCollection = sessionDataObject.getDataCollection();
+				
 				DataCollectionInformation dcInfo = dcExporter.getDataCollectionInformation(dataCollection,
 						getSampleRankingVO(dataCollection.getDataCollectionId()),
 						getAutoProcRankingVO(dataCollection.getDataCollectionId()));
 				Cell resultCell = getAutoProcResultStatus(dcInfo);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				resultCell.setBorder(0);
 				table.addCell(resultCell);
 				
-				addTable(document, table);
-				
+				document.add(table);
+				LOG.info("table DC added");
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
@@ -1444,14 +1447,17 @@ public class PdfRtfExporter {
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
 						mRequest);
 				DataCollection3VO dataCollection = sessionDataObject.getListDataCollection().get(0);
+				
 				DataCollectionInformation dcInfo = dcExporter.getDataCollectionInformation(dataCollection,
 						getSampleRankingVO(dataCollection.getDataCollectionId()),
 						getAutoProcRankingVO(dataCollection.getDataCollectionId()));
 				Cell resultCell = getAutoProcResultStatus(dcInfo);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				resultCell.setBorder(0);
 				table.addCell(resultCell);
 
-				addTable(document, table);
+				document.add(table);
+				LOG.info("table WF MXPRESS added");
 				
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
@@ -1462,22 +1468,37 @@ public class PdfRtfExporter {
 				DataCollectionExporter dcExporter = new DataCollectionExporter(df2, df3, proposalCode, proposalNumber,
 						mRequest);
 				DataCollection3VO dataCollection = sessionDataObject.getDataCollection();
+				
 				DataCollectionInformation dcInfo = dcExporter.getDataCollectionInformation(dataCollection,
 						getSampleRankingVO(dataCollection.getDataCollectionId()),
 						getAutoProcRankingVO(dataCollection.getDataCollectionId()));
 				Cell resultCell = getCharacterizationResultStatus(dcInfo, mRequest);
-				resultCell.setColspan(nbCol);
 				resultCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				resultCell.setBorder(0);
 				table.addCell(resultCell);
-				addTable(document, table);
+				
+				document.add(table);
+				LOG.info("table CHARACT added");
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setStrategyTable2(document, dcInfo);
+				
 			} else {
-				table = emptyTable;
+				Table table2 = new Table(nbCol);
+				table2.setWidths(headersWidth);
 
+				table2.setWidth(100); // percentage
+				table2.setPadding(5);
+				table2.setCellsFitPage(true);
+				table2.setTableFitsPage(true);
+				table2.setBorderWidth(0);
+				table2.setBorder(0);
+				table2.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+				table2.getDefaultCell().setBorder(0);
+				table2.getDefaultCell().setBorderWidth(0);
+				
 				//col 1
-				table.addCell(" ");
+				table2.addCell(" ");
 				
 				// col2
 				parag ="";
@@ -1485,32 +1506,35 @@ public class PdfRtfExporter {
 				if (listResults != null) {
 					int nbResults = listResults.size();
 					for (int j = 0; j < nbResults; j++) {
-						parag = parag + setParamText(table, listResults, j) + ": \n";
+						parag = parag + setParamText(table2, listResults, j) + ": \n";
 					}
 				}
 				p = new Paragraph(parag, FONT_DOC_PARAM_TITLE);
 				p.setAlignment("RIGHT");
-				table.addCell(p);
+				table2.addCell(p);
 
 				//col3
 				parag ="";
 				if (listResults != null) {
 					int nbResults = listResults.size();
 					for (int j = 0; j < nbResults; j++) {
-						parag = parag + setParamValue(table, listResults, j) + "\n";
+						parag = parag + setParamValue(table2, listResults, j) + "\n";
 					}
 				}
 				p = new Paragraph(parag, FONT_DOC);
 				p.setAlignment("LEFT");
-				table.addCell(p);
+				table2.addCell(p);
 
 				// other cols
 				for (int i= 3; i< nbCol; i++) {
-					table.addCell(" ");
-				}
-				
-				addTable(document, table);
-				document.add(new Paragraph(" ", FONT_SPACE));
+					table2.addCell(" ");
+				}				
+				document.add(table2);		
+				LOG.info("table others added");
+				p = new Paragraph("______________________________________________________________________________________________________________________________________", FONT_SPACE);
+				p.setAlignment("CENTER");
+				document.add(p);
+				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 			}
 
 		} catch (Exception e) {
@@ -1678,8 +1702,10 @@ public class PdfRtfExporter {
 		// Document document = new Document(PageSize.A4);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -1761,8 +1787,10 @@ public class PdfRtfExporter {
 		// Document document = new Document(PageSize.A4);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -2467,8 +2495,10 @@ public class PdfRtfExporter {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -3089,8 +3119,10 @@ public class PdfRtfExporter {
 		Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (!rtfFormat) {
+			isRTF = new Boolean(false);
 			PdfWriter.getInstance(document, baos);
 		} else {
+			isRTF = new Boolean(true);
 			RtfWriter2.getInstance(document, baos);
 		}
 
@@ -3423,14 +3455,6 @@ public class PdfRtfExporter {
 		return "";
 	}
 	
-
-	private static void addTable(Document document, Table table) throws DocumentException {
-		
-		//PdfPTable pdfTable = table.createPdfPTable();
-		//document.add(pdfTable);
-		//TODO find why classCast exception Table in SimpleTable
-		document.add(table);
-	}
 	/**
 	 * returns a cell with a given image inside
 	 * 
