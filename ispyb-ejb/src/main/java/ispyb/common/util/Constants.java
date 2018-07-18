@@ -863,7 +863,7 @@ public final class Constants {
 	public static final String[] CONTAINER_TYPE_DEFAULT = { "Spinepuck", "Unipuck", "Cane", "Other" };
 
 	public static final String[] CONTAINER_TYPE = (SITE_IS_MAXIV()) ? CONTAINER_TYPE_MAXIV : CONTAINER_TYPE_DEFAULT;
-	
+
 	public static final String[] CONTAINER_CAPACITY_ESRF = { "10", "16", "6", "0" };
 
 	public static final String[] CONTAINER_CAPACITY_DLS = { "16", "6", "0" };
