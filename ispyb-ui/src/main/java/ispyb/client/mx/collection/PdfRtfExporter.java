@@ -1397,7 +1397,6 @@ public class PdfRtfExporter {
 				table1.addCell(cellGraph2);
 			}
 			document.add(table1);
-			LOG.info("table 1 added for date : " + date);
 			
 			// 	other rows			
 			// results
@@ -1414,7 +1413,6 @@ public class PdfRtfExporter {
 				resultCell.setBorder(0);
 				table.addCell(resultCell);
 				document.add(table);
-				LOG.info("table WF added");
 			}
 						
 			// collect OSC
@@ -1437,7 +1435,6 @@ public class PdfRtfExporter {
 				table.addCell(resultCell);
 				
 				document.add(table);
-				LOG.info("table DC added");
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setAutoProcResultsTable(document, dcInfo);
@@ -1457,7 +1454,6 @@ public class PdfRtfExporter {
 				table.addCell(resultCell);
 
 				document.add(table);
-				LOG.info("table WF MXPRESS added");
 				
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
@@ -1478,7 +1474,6 @@ public class PdfRtfExporter {
 				table.addCell(resultCell);
 				
 				document.add(table);
-				LOG.info("table CHARACT added");
 				document.add(new Paragraph(" ", VERY_SMALL_FONT));
 
 				setStrategyTable2(document, dcInfo);
@@ -1530,7 +1525,6 @@ public class PdfRtfExporter {
 					table2.addCell(" ");
 				}				
 				document.add(table2);		
-				LOG.info("table others added");
 				p = new Paragraph("______________________________________________________________________________________________________________________________________", FONT_SPACE);
 				p.setAlignment("CENTER");
 				document.add(p);
@@ -2953,30 +2947,53 @@ public class PdfRtfExporter {
 		Cell resultsCell = new Cell();
 		Paragraph p = new Paragraph();
 		// edna
+		
 		if (dcInfo != null && dcInfo.getAutoProcEdnaStatus() != null) {
+			if (dcInfo.getAutoProcEdnaStatus().contains("Green")){
+				p.setFont(FONT_INDEXING_SUCCESS);
+			} else {
+				p.setFont(FONT_INDEXING_FAILED);
+			}
+			
 			p.add(new Phrase("EDNA_proc ", FONT_DOC_BOLD));
 			if (!isRTF)
 				p.add(getChunkImage(dcInfo.getAutoProcEdnaStatus()));
 			
-			p.add(dcInfo.getAutoProcEdnaStatus());
+			
+			//p.add(dcInfo.getAutoProcEdnaStatus());
 			p.add(new Phrase("  "));
 		}
 
 		// fastproc
 		if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
+			
+			if (dcInfo.getAutoProcFastStatus().contains("Green")){
+				p.setFont(FONT_INDEXING_SUCCESS);
+			} else {
+				p.setFont(FONT_INDEXING_FAILED);
+			}
 			p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
+
 			if (!isRTF)
-				p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));
-			p.add(dcInfo.getAutoProcFastStatus());
+				p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));			
+
+			//p.add(dcInfo.getAutoProcFastStatus());
 			p.add(new Phrase("  "));
 		}
 
 		// parallelproc
 		if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
+			
+			if (dcInfo.getAutoProcParallelStatus().contains("Green")){
+				p.setFont(FONT_INDEXING_SUCCESS);
+			} else {
+				p.setFont(FONT_INDEXING_FAILED);
+			}
 			p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
 			if (!isRTF)
 				p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
-			p.add(dcInfo.getAutoProcParallelStatus());
+			
+			//p.add(dcInfo.getAutoProcParallelStatus());
 			p.add(new Phrase("  "));
 		}
 		resultsCell.add(p);
