@@ -287,8 +287,11 @@
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
   			 
   			 <ispyb.shipping.reimburseddewars>true</ispyb.shipping.reimburseddewars>
-  			
-  		</properties>
+			<shipment.upload.template>ispyb-template6.2_shipment.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment.xls</shipment.upload.populatedTemplate>
+
+
+		</properties>
   	</profile>
   	<profile>
   		<id>EMBL</id>
@@ -339,9 +342,12 @@
                 	
                 	  	<ispyb.userportal.link>SMIS</ispyb.userportal.link>
                 	  	<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-                	  	<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
-                	  	
-                </properties>
+                	  	<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
+			<shipment.upload.template>ispyb-template6.2_shipment.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment.xls</shipment.upload.populatedTemplate>
+
+
+		</properties>
   	</profile>
   	<profile>
   		<id>SOLEIL</id>
@@ -403,10 +409,13 @@
 				<ispyb.authorisation.active>false</ispyb.authorisation.active>
 				<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 				<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
-                <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
-				
-				
-  		</properties>
+                <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
+			<shipment.upload.template>ispyb-template6.2_shipment.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment.xls</shipment.upload.populatedTemplate>
+
+
+
+		</properties>
   	</profile> 
   	
   	<profile>
@@ -468,7 +477,10 @@
 			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 			<userportal.url>duo.maxiv.lu.se:3000</userportal.url>
 			
-            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
+
+			<shipment.upload.template>ispyb-template6.2_shipment_MAXIV.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment_MAXIV.xls</shipment.upload.populatedTemplate>
   			
   		</properties>
   	</profile>
@@ -517,9 +529,13 @@
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
 			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
 
-            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>               	  	
-			  				
-  		</properties>
+            <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
+
+			<shipment.upload.template>ispyb-template6.2_shipment.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment.xls</shipment.upload.populatedTemplate>
+
+
+		</properties>
   	</profile> 
   	
   </profiles>

@@ -2963,38 +2963,57 @@ public class PdfRtfExporter {
 			//p.add(dcInfo.getAutoProcEdnaStatus());
 			p.add(new Phrase("  "));
 		}
-
-		// fastproc
-		if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
+        
+		if (!Constants.SITE_IS_MAXIV()) {
+				// fastproc
+		    if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
 			
-			if (dcInfo.getAutoProcFastStatus().contains("Green")){
-				p.setFont(FONT_INDEXING_SUCCESS);
-			} else {
-				p.setFont(FONT_INDEXING_FAILED);
+			      if (dcInfo.getAutoProcFastStatus().contains("Green")){
+				       p.setFont(FONT_INDEXING_SUCCESS);
+			       } else {
+				     p.setFont(FONT_INDEXING_FAILED);
+			       }
+			     p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
+
+			    if (!isRTF)
+				    p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));			
+
+			    //p.add(dcInfo.getAutoProcFastStatus());
+			    p.add(new Phrase("  "));
+		      }
+
+		    // parallelproc
+		    if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
+			
+			      if (dcInfo.getAutoProcParallelStatus().contains("Green")){
+				      p.setFont(FONT_INDEXING_SUCCESS);
+			      } else {
+				      p.setFont(FONT_INDEXING_FAILED);
+			      }
+			      p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
+			      if (!isRTF)
+				    p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
+			
+			      //p.add(dcInfo.getAutoProcParallelStatus());
+			    p.add(new Phrase("  "));
+		      }
+    }
+
+		if (Constants.SITE_IS_MAXIV()) {
+			// fast_dp
+			if (dcInfo != null && dcInfo.getAutoProcFastDPStatus() != null) {
+				p.add(new Phrase("fast_dp ", FONT_DOC_BOLD));
+				p.add(getChunkImage(dcInfo.getAutoProcFastDPStatus()));
+				p.add(new Phrase("  "));
 			}
-			p.add(new Phrase("grenades_fastproc ", FONT_DOC_BOLD));
-
-			if (!isRTF)
-				p.add(getChunkImage(dcInfo.getAutoProcFastStatus()));			
-
-			//p.add(dcInfo.getAutoProcFastStatus());
-			p.add(new Phrase("  "));
-		}
-
-		// parallelproc
-		if (dcInfo != null && dcInfo.getAutoProcParallelStatus() != null) {
-			
-			if (dcInfo.getAutoProcParallelStatus().contains("Green")){
-				p.setFont(FONT_INDEXING_SUCCESS);
-			} else {
-				p.setFont(FONT_INDEXING_FAILED);
-			}
-			p.add(new Phrase("grenades_parallelproc ", FONT_DOC_BOLD));
-			if (!isRTF)
-				p.add(getChunkImage(dcInfo.getAutoProcParallelStatus()));
-			
-			//p.add(dcInfo.getAutoProcParallelStatus());
-			p.add(new Phrase("  "));
+      
+      	// autoPROC
+		   if (dcInfo != null && dcInfo.getAutoProcAutoPROCStatus() != null) {
+			    p.add(new Phrase("autoPROC ", FONT_DOC_BOLD));
+			    p.add(getChunkImage(dcInfo.getAutoProcAutoPROCStatus()));
+			    p.add(new Phrase("  "));
+		    }
+      
 		}
 		resultsCell.add(p);
 		return resultsCell;
