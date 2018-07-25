@@ -178,10 +178,13 @@ public class CrimsWebService {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("proposalCode", String.valueOf(proposalCode));
 			params.put("proposalNumber", String.valueOf(proposalNumber));
+			
+			LOG.info("params = " + params.toString());
+
 			id = this.logInit("findProteinAcronymsForProposal", new Gson().toJson(params));
 			
-			checkUserIsCrims();
-
+			//checkUserIsCrims();
+			
 			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 			Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 
@@ -190,12 +193,15 @@ public class CrimsWebService {
 			List<Proposal3VO> proposals = proposalService.findByCodeAndNumber(proposalCode, proposalNumber, false, true, false);
 			if (proposals != null && proposals.size() > 0) {
 				Proposal3VO proposal3VO = proposals.get(0);
+				LOG.info("proposal = " + proposal3VO.toString());
 				Set<Protein3VO> proteinVOs = proposal3VO.getProteinVOs();
+				LOG.info("proteinsVOs = " + proteinVOs.toString());
 				if (proteinVOs != null) {
 					List<Protein3VO> listProtein = new ArrayList<Protein3VO>(Arrays.asList(proteinVOs
 							.toArray(new Protein3VO[proteinVOs.size()])));
 					for (Iterator<Protein3VO> p = listProtein.iterator(); p.hasNext();) {
 						listProteinAcronyms.add(p.next().getAcronym());
+						LOG.info("listProteinAcronyms = " + listProteinAcronyms.toString());
 					}
 				}
 			}
