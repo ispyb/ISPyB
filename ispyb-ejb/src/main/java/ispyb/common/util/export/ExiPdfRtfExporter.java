@@ -655,25 +655,25 @@ public class ExiPdfRtfExporter {
 		table.addCell(p);
 		
 		// 3 Cell
-		
+		String axis = getCellParam(dataCollectionMapItem, "DataCollection_rotationAxis", null);
 		parag = "Resolution (corner): \n"
 				+ 	"En(Wavelength): \n" 
-				+ 	"Omega range: \n" 
-				+ 	"Omega start: \n" 
+				+ 	axis + " range: \n" 
+				+ 	axis + " start: \n" 
 				+ 	"Exposure time: \n" 
 				+ 	"Flux start: \n" 
 				+ 	"Flux end: \n" ;
 
 		table.addCell(new Paragraph(parag, FONT_DOC));
-		
-		
+				
 		// Cell 4
 		parag = getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 			+ " ("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
+		//+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
+		+	getEnergyFromWavelength(dataCollectionMapItem) + " KeV " 
 		+  "("+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + ")" + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisRange", df2) + Constants.DEGREE + "\n" 
-		+ 	getCellParam(dataCollectionMapItem, "DataCollection_omegaStart", df2) + Constants.DEGREE + "\n" 
+		+ 	getCellParam(dataCollectionMapItem, "DataCollection_axisStart", df2) + Constants.DEGREE + "\n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_exposureTime", df2) + "s \n" 
 		+ 	getCellParam(dataCollectionMapItem, "DataCollection_flux", null) + " ph/s \n" 
 		+	getCellParam(dataCollectionMapItem, "DataCollection_flux_end", null) + " ph/s \n";
@@ -927,7 +927,8 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + " / " + getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
-					+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
+					+	getEnergyFromWavelength(dataCollectionMapItem) + " KeV " 
+					//+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
 					+  "("+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + ")" + "\n" ;
 
 		
@@ -1603,6 +1604,15 @@ public class ExiPdfRtfExporter {
 			}
 		}
 		return chu;
+	}
+	
+	private String getEnergyFromWavelength(Map<String, Object> dataCollectionMapItem) {
+		Float wave = (Float) dataCollectionMapItem.get("DataCollection_wavelength");
+		String energy = "N/A";		
+	    if (wave != null) {        
+	           energy = df3.format(12.398/wave).toString(); 
+	    }
+	    return energy;
 	}
 
 }
