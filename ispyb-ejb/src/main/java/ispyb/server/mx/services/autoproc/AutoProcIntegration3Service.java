@@ -97,4 +97,13 @@ public interface AutoProcIntegration3Service {
 	 * @throws Exception
 	 */
 	public Boolean getAutoProcXia2DialsStatus(final Integer dataCollectionId, final String processingProgram) throws Exception;
+
+	/**
+	 * get the autoProcStatus for Fast DP
+	 * @param dataCollectionId
+	 * @param processingProgram
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean getAutoProcFastDPStatus(final Integer dataCollectionId, final String processingProgram) throws Exception;
 }
