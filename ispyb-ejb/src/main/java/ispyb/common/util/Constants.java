@@ -861,7 +861,11 @@ public final class Constants {
 
 	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.locations", "5"));
 
-	public static final String[] CONTAINER_TYPE = { "Spinepuck", "Unipuck", "Cane", "Other" }; 
+	public static final String[] CONTAINER_TYPE_MAXIV = { "Unipuck", "Other" };
+
+	public static final String[] CONTAINER_TYPE_DEFAULT = { "Spinepuck", "Unipuck", "Cane", "Other" };
+
+	public static final String[] CONTAINER_TYPE = (SITE_IS_MAXIV()) ? CONTAINER_TYPE_MAXIV : CONTAINER_TYPE_DEFAULT;
 
 	public static final String[] CONTAINER_CAPACITY_ESRF = { "10", "16", "6", "0" };
 
@@ -1240,6 +1244,8 @@ public final class Constants {
 	public static final String AUTOPROC_AUTOPROC = "autoPROC";
 
 	public static final String AUTOPROC_XIA2_DIALS = "XIA2_DIALS";
+
+	public static final String AUTOPROC_FASTDP = "fastdp";
 
 	public static final String EXPERIMENT_TYPE_CHARACTERIZATION = "Characterization";
 

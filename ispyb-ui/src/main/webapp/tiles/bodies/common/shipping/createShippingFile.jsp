@@ -23,7 +23,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@page import="ispyb.common.util.Constants"%>
+<%@ page import="ispyb.common.util.Constants"%>
+<%@ page isELIgnored="false" %>
 
 <%
 	String targetViewShippings					= request.getContextPath() + "/reader/genericShippingAction.do?reqCode=display";
@@ -59,30 +60,26 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		<ul>
 			<li><strong><font color="red">proposalCode</font></strong>: required</li>
 			<li><strong><font color="red">proposalNumber</font></strong>: required</li>
-			<c:choose>
-				<c:when test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-					<li><strong>visitNumber</strong>: not required for Max IV Laboratory</li>
-				</c:when>
-				<c:otherwise>
-					<li><strong>visitNumber</strong>: optional, information not integrated in ISPyB at the ESRF</li>
-				</c:otherwise>
-			</c:choose>
+            <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+                <li><strong>visitNumber</strong>: not required for Max IV Laboratory</li>
+            </c:if>
+            <c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
+                <li><strong>visitNumber</strong>: optional, information not integrated in ISPyB at the ESRF</li>
+            </c:if>
 			<li><strong><font color="red">shippingName</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong><font color="red">dewarCode</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong><font color="red">containerCode</font></strong>: required, &lt; 45 characters.</li>
 			<li><strong>preObsResolution</strong>: number, optional but highly recommended</li>
 			<li><strong>neededResolution</strong>: number, optional but highly recommended</li>
 			<li><strong>oscillationRange</strong>: number, optional but highly recommended</li>
-			<c:choose>
-				<c:when test="${SITE_ATTRIBUTE eq 'MAXIV'}">
-					<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 45 characters</li>
-					<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters</li>
-				</c:when>
-				<c:otherwise>
-					<li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 8 characters, has to correspond to an acronym already existing in your account (coming from your sample sheets described in the DUO for that proposal)</li>
-					<li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters, has to correspond to a protein name already existing in your account associated with the proteinAcronym above (coming from your sample sheets described in the SMIS for that proposal)</li>
-				</c:otherwise>
-			</c:choose>
+            <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+                <li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 45 characters</li>
+                <li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters</li>
+            </c:if>
+            <c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
+                <li><strong><font color="red">proteinAcronym</font></strong>: required, &lt; 8 characters, has to correspond to an acronym already existing in your account (coming from your sample sheets described in the DUO for that proposal)</li>
+                <li><strong><font color="red">proteinName</font></strong>: required, &lt; 255 characters, has to correspond to a protein name already existing in your account associated with the proteinAcronym above (coming from your sample sheets described in the SMIS for that proposal)</li>
+            </c:if>
 			
 			<li><strong>spaceGroup</strong>: optional but highly recommended, &lt; 20 characters</li>
 			<li><strong>sampleBarcode</strong>: optional , &lt; 45 charac.</li>
@@ -125,6 +122,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		</layout:grid>
 	</div>
 </c:if>
+
 <div id="panelSubmit" style="display: block;">
 	<layout:grid cols="1"  borderSpacing="1" >	
 		<layout:panel key="Submit your .csv file" align="left" styleClass="PANEL">
