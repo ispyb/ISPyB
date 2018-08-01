@@ -184,12 +184,13 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 							blSample3VO = this.entityManager.merge(blSample3VO);
 							
 							/** creating blsampleImage **/
-							
-							for (Iterator<BLSampleImage3VO> iterator = sampleImages.iterator(); iterator.hasNext();) {
-								BLSampleImage3VO blSampleImage3VO = (BLSampleImage3VO) iterator.next();
-								blSampleImage3VO.setBlsampleVO(blSample3VO);
-								blSampleImage3VO = this.entityManager.merge(blSampleImage3VO);
-							}							
+							if (sampleImages != null) {
+								for (Iterator<BLSampleImage3VO> iterator = sampleImages.iterator(); iterator.hasNext();) {
+									BLSampleImage3VO blSampleImage3VO = (BLSampleImage3VO) iterator.next();
+									blSampleImage3VO.setBlsampleVO(blSample3VO);
+									blSampleImage3VO = this.entityManager.merge(blSampleImage3VO);
+								}	
+							}
 							
 						}
 						container3vo = this.entityManager.merge(container3vo);
@@ -221,9 +222,10 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 					List<Crystal3VO> listCrystal = crystal3Service.findByProteinId(proteins.get(0).getProteinId()) ;
 					Crystal3VO newCrystal = UploadShipmentUtils.getCrystal(listCrystal, crystal3VO)    ;
 					if (newCrystal == null ) {
+						crystal3VO.setProteinVO(proteins.get(0));
 						newCrystal = crystal3Service.create(crystal3VO);
 					}
-					newCrystal.setProteinVO(proteins.get(0));
+					//newCrystal.setProteinVO(proteins.get(0));
 					if (newCrystal.getDiffractionPlanVO() != null) {
 						newCrystal.setDiffractionPlanVO(this.createDiffractionPlan(crystal3VO.getDiffractionPlanVO()));
 					}
