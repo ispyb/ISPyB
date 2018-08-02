@@ -45,11 +45,14 @@ public class Structure3VO implements java.io.Serializable {
 	protected Integer structureId;
 
 	protected Integer macromoleculeId;
+	
+	protected Integer crystalId;
+	
+	protected Integer blSampleId;
 
 	protected String filePath;
 
 	protected String name;
-
 
 	protected String structureType;
 
@@ -62,6 +65,8 @@ public class Structure3VO implements java.io.Serializable {
 	protected String symmetry;
 	
 	protected String multiplicity;
+	
+	protected String groupName;
 	
 	protected Date creationDate;
 	
@@ -172,6 +177,30 @@ public class Structure3VO implements java.io.Serializable {
 
 	public void setMultiplicity(String multiplicity) {
 		this.multiplicity = multiplicity;
+	}
+	@Column(name = "crystalId")
+	public Integer getCrystalId() {
+		return crystalId;
+	}
+
+	public void setCrystalId(Integer crystalId) {
+		this.crystalId = crystalId;
+	}
+	@Column(name = "blSampleId")
+	public Integer getBlSampleId() {
+		return blSampleId;
+	}
+
+	public void setBlSampleId(Integer blSampleId) {
+		this.blSampleId = blSampleId;
+	}
+	@Column(name = "groupName")
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 }
