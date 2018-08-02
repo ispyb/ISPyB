@@ -40,6 +40,8 @@ public interface AbInitioModelling3Service {
 	
 	public Model3VO merge(Model3VO model);
 
+	public Model3VO findModelById(Integer modelId);
+	
 	public ModelList3VO merge(ModelList3VO modelList3VO);
 
 	public AbInitioModel3VO merge(AbInitioModel3VO abInitioModel3VO);
