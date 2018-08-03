@@ -32,10 +32,7 @@ public class ModelReaderFactory extends PDBAbstractReaderFactory {
 					String filePath = model.getPdbFile();
 					if (filePath != null){
 						record.put("fileName", filePath);
-//						HashMap<String, String> map = PDBParser.getPDBContent(filePath, propertiesList.get(i));
 						record.put("XYZ", PDBParser.getPDBContent(filePath, propertiesList.get(i)));
-//						content.append(map.get("content"));
-//						count = count + Integer.parseInt(map.get("count"));
 					}
 				}
 				
