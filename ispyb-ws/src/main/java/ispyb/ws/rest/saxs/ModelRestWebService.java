@@ -22,7 +22,7 @@ public class ModelRestWebService extends SaxsRestWebService {
 			@PathParam("modelId") Integer modelId) throws Exception {
 		logger.info(String.format("getPDBByModelId. proposal=%s, subtractionId=%s, modelId=%s", proposal, subtractionId, modelId));		
 		try {
-			return downloadFile(this.getAbInitioModelling3Service().findModelById(modelId).getPdbFile());
+			return downloadFileAsAttachment(this.getAbInitioModelling3Service().findModelById(modelId).getPdbFile());
 		} catch (Exception e) {
 			return sendError(e.getMessage());
 		}
