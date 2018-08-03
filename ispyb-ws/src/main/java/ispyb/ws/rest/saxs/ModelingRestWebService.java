@@ -48,7 +48,6 @@ public class ModelingRestWebService extends SaxsRestWebService {
 			ArrayList<HashMap<String, String>> modelList = new Gson().fromJson(models, mapType);
 
 			HashMap<String, List<HashMap<String, Object>>> map = PDBFactoryProducer.get(modelList, superpositions);
-//			String json = BiosaxsDataAdapterCommon.getGson().toJson(map);
 			
 			this.logFinish(methodName, start, logger);
 			return this.sendResponse(map);
