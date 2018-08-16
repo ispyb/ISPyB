@@ -138,7 +138,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<%-------------------------------------------------------- Dewars ------------------------------------------------------%>
 	<c:set var="nbReimb"  value="${viewDewarForm.nbReimbursedDewars}" scope="request" />
 	<c:set var="currentReimb"  value="${viewDewarForm.currentReimbursedDewars}" scope="request"/>
-	<c:if test="${nbReimb > 0}">
+	<c:if test="${nbReimb > 0 || currentReimb > 0}">
 		<c:if test="${nbReimb >= currentReimb}">
 			<br><font color="green">You have selected ${currentReimb} reimbursed dewars out of ${nbReimb} allowed.</font>
 		</c:if>						

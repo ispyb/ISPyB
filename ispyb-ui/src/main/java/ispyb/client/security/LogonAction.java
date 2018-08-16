@@ -123,7 +123,7 @@ public class LogonAction extends Action {
 			/**************************************
 			 * AUTH USING LDAP
 			 **************************************/
-			if (Constants.SITE_AUTHENTICATION_METHOD.toString().trim().toUpperCase().equals("LDAP") && !Constants.SITE_IS_SOLEIL() && !Constants.SITE_IS_EMBL()) {
+			if (Constants.SITE_AUTHENTICATION_METHOD.toString().trim().toUpperCase().equals("LDAP") && !Constants.SITE_IS_MAXIV() && !Constants.SITE_IS_SOLEIL() && !Constants.SITE_IS_EMBL()) {
 				EmployeeVO employee = LdapConnection.findByUniqueIdentifier(userName);
 				userGivenName = employee.getGivenName() == null || employee.getGivenName().trim().equals("") ? "no given name"
 						: employee.getGivenName();

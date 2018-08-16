@@ -388,8 +388,9 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 			// Confidentiality (check if object proposalId matches)
 			Integer proposalId = (Integer) request.getSession().getAttribute(Constants.PROPOSAL_ID);
-			Proposal3VO pv = proposalService.findByPk(proposalId);
-
+			//Proposal3VO pv = proposalService.findByPk(proposalId);
+			Proposal3VO pv = proposalService.findWithParticipantsByPk(proposalId);
+			
 			// crystal classes
 			// Get an object list.
 			List<IspybCrystalClass3VO> listOfCrystalClass = (List<IspybCrystalClass3VO>) request.getSession()
@@ -1545,7 +1546,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					result += "EDNA_proc " + "<img src='" + img + "'  border='0' />";
 				}
 
-				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_MAXIV() || Constants.SITE_IS_SOLEIL()) {
+				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_SOLEIL()) {
 					// fastproc
 					if (dcInfo != null && dcInfo.getAutoProcFastStatus() != null) {
 						String img = imgFailed;
@@ -1565,7 +1566,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					}
 				}
 				
-				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_EMBL()) {
+				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_EMBL() || Constants.SITE_IS_MAXIV()) {
 					// Only show autoPROC status if successful
 					if (dcInfo.getAutoProcAutoPROCStatus().contains("Green")) {
 						result += " autoPROC " + "<img src='" + imgSuccess + "'  border='0' />";					
@@ -1573,6 +1574,13 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					// Only show XIA2_DIALS status if successful
 					if (dcInfo.getAutoProcXia2DialsStatus().contains("Green")) {
 						result += " XIA2_DIALS " + "<img src='" + imgSuccess + "'  border='0' />";					
+					}
+				}
+
+				if (Constants.SITE_IS_MAXIV()) {
+					// Only show FAST DP status if successful
+					if (dcInfo.getAutoProcFastDPStatus().contains("Green")) {
+						result += " FASTDP " + "<img src='" + imgSuccess + "'  border='0' />";
 					}
 				}
 

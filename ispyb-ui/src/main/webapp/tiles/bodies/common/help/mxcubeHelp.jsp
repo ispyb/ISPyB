@@ -17,6 +17,7 @@ along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
 Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
 --------------------------------------------------------------------------------------------------%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 <%@ page isELIgnored="false" %>
 
@@ -80,9 +81,13 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <c:if test="${BCM ne 'mxcube'}">
 <h4>Now, go to <%=Constants.BCM_NAME%> and associate the data collections to their respective samples.</h4>
 </c:if> 
-<c:if test="${BCM eq 'mxcube'}"> 
-<p align=center><img src="<%=request.getContextPath()%>/images/help/mxcube-scan.png"> </p>
-
+<c:if test="${BCM eq 'mxcube'}">
+	<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+		<p align=center><img src="<%=request.getContextPath()%>/images/help/mxcube3-samples.png"> </p>
+	</c:if>
+	<c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
+		<p align=center><img src="<%=request.getContextPath()%>/images/help/mxcube-scan.png"> </p>
+	</c:if>
 </c:if> 
 
 </body>

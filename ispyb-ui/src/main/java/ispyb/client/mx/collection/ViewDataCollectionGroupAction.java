@@ -208,7 +208,7 @@ public class ViewDataCollectionGroupAction extends ParentIspybAction {
 			}
 			ViewDataCollectionGroupForm form = (ViewDataCollectionGroupForm) actForm;
 			form.setSessionId(null);
-			BLSample3VO sample = sampleService.findByPk(sampleId, false, false);
+			BLSample3VO sample = sampleService.findByPk(sampleId, false, false, false);
 			// Fill the information bar
 			BreadCrumbsForm.getItClean(request).setSelectedSample(sample);
 
@@ -554,7 +554,7 @@ public class ViewDataCollectionGroupAction extends ParentIspybAction {
 				return;
 			}
 			request.getSession().setAttribute(Constants.BLSAMPLE_ID, sampleId);
-			BLSample3VO sample = sampleService.findByPk(sampleId, false, false);
+			BLSample3VO sample = sampleService.findByPk(sampleId, false, false, false);
 			// Fill the information bar
 			BreadCrumbsForm.getItClean(request).setSelectedSample(sample);
 

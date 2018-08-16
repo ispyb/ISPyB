@@ -1,1 +1,3 @@
-select * from v_saxs_datacollection 
+select v_saxs_datacollection.*,
+(select SubtractionToAbInitioModel.abinitioId from SubtractionToAbInitioModel where SubtractionToAbInitioModel.subtractionId = v_saxs_datacollection.Subtraction_subtractionId) as SubtractionToAbInitioModel_abinitioId
+from v_saxs_datacollection 

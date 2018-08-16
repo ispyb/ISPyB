@@ -32,21 +32,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		return getPrimaryDataProcessing3Service().getSubstractionById(Integer.parseInt(subtractionId));
 	}
 
-	private List<Subtraction3VO> getAbinitioModelsBySubtractionId(String proposal, String subtractionIdList)
-			throws NamingException {
-		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-		AbInitioModelling3Service abInitioModelling3Service = (AbInitioModelling3Service) ejb3ServiceLocator
-				.getLocalService(AbInitioModelling3Service.class);
-
-		List<Integer> list = parseToInteger(subtractionIdList);
-		List<Subtraction3VO> result = new ArrayList<Subtraction3VO>();
-		if (subtractionIdList != null) {
-			for (Integer subtractionId : list) {
-				result.addAll(abInitioModelling3Service.getAbinitioModelsBySubtractionId(subtractionId));
-			}
-		}
-		return result;
-	}
+	
 
 	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
@@ -174,7 +160,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		}
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/scattering")
 	@Produces("image/png")
@@ -188,7 +174,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/kratky")
 	@Produces("image/png")
@@ -201,7 +187,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/density")
 	@Produces("image/png")
@@ -215,7 +201,7 @@ public class SubtractionRestWebService extends SaxsRestWebService {
 		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 
-	@PermitAll
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/subtraction/{subtractionId}/image/guinier")
 	@Produces("image/png")

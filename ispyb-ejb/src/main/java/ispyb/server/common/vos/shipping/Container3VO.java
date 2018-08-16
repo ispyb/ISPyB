@@ -84,7 +84,7 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 	protected String containerStatus;
 
 	@Column(name = "bltimeStamp")
-	protected Date timeStamp;
+	private Date timeStamp;
 	
 	@Column(name = "barcode")
 	protected String barcode;

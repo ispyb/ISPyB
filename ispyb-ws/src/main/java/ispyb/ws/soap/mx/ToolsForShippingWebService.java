@@ -18,22 +18,7 @@
 
 package ispyb.ws.soap.mx;
 
-import ispyb.common.util.Constants;
-import ispyb.common.util.StringUtils;
-import ispyb.server.security.LdapSearchModule;
-import ispyb.server.common.services.proposals.Laboratory3Service;
-import ispyb.server.common.services.proposals.Person3Service;
-import ispyb.server.common.services.proposals.Proposal3Service;
-import ispyb.server.common.services.sessions.Session3Service;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.proposals.Laboratory3VO;
-import ispyb.server.common.vos.proposals.PersonWS3VO;
-import ispyb.server.common.vos.proposals.Proposal3VO;
-import ispyb.server.common.vos.proposals.ProposalWS3VO;
-import ispyb.server.mx.vos.collections.Session3VO;
-import ispyb.server.mx.vos.collections.SessionWS3VO;
-import ispyb.ws.soap.common.WSUtils;
-
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,11 +33,33 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
-import com.google.gson.Gson;
-
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import ispyb.common.util.Constants;
+import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.core.ExperimentScope;
+import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
+import ispyb.server.biosaxs.vos.utils.serializer.ExperimentExclusionStrategy;
+import ispyb.server.common.services.proposals.Laboratory3Service;
+import ispyb.server.common.services.proposals.Person3Service;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.services.shipping.Shipping3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.proposals.Laboratory3VO;
+import ispyb.server.common.vos.proposals.PersonWS3VO;
+import ispyb.server.common.vos.proposals.Proposal3VO;
+import ispyb.server.common.vos.proposals.ProposalWS3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.collections.Session3VO;
+import ispyb.server.mx.vos.collections.SessionWS3VO;
+import ispyb.server.security.LdapSearchModule;
+import ispyb.ws.soap.common.WSUtils;
 
 /**
  * Web services for Shipment / proposal
@@ -445,5 +452,37 @@ public class ToolsForShippingWebService {
 		}
 	}
 	
+	@WebMethod
+	@WebResult(name = "findShippingById")
+	public String findShippingById(@WebParam(name = "shippingId") Integer shippingId, 
+			@WebParam(name = "withDewars") String withDewars,
+			@WebParam(name = "withContainers") String withContainers,
+			@WebParam(name = "withSamples") String withSamples,
+			@WebParam(name = "withSubSamples") String withSubSamples) throws Exception {
+				
+		try {
+			Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+			Shipping3Service service = (Shipping3Service) ejb3ServiceLocator.getLocalService(Shipping3Service.class);
+			
+			String ret = "no shipping found";
+			
+			//Shipping3VO shipping = service.findByPk(shippingId, true, true, true, true);
+			ret = service.findSerialShippingByPk(shippingId, new Boolean(withDewars), new Boolean(withContainers), new Boolean(withSamples), new Boolean(withSubSamples));
+			return ret;
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error("WS ERROR: findShippingById - " + StringUtils.getCurrentDate() + " - ship: " + shippingId);
+			throw e;
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static String serialize(Shipping3VO shipping) {
+		Gson gson =  new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).serializeNulls().create();		
+		return  gson.toJson(shipping);
+	}
 
 }

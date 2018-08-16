@@ -18,37 +18,14 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.sample;
 
-import ispyb.server.common.services.shipping.Container3Service;
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
-import ispyb.server.common.vos.shipping.Container3VO;
-
-import ispyb.server.mx.vos.sample.BLSample3VO;
-import ispyb.server.mx.vos.sample.BLSampleInfo;
-import ispyb.server.mx.vos.sample.BLSampleWS3VO;
-import ispyb.server.mx.vos.sample.Crystal3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
-import ispyb.server.mx.vos.sample.DiffractionPlanWS3VO;
-import ispyb.server.mx.vos.sample.Protein3VO;
-import ispyb.server.mx.vos.sample.SampleInfo;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
-
-import ispyb.common.util.StringUtils;
-import ispyb.server.common.util.ejb.CastDecimalOrder;
-import ispyb.server.mx.vos.sample.BLSample3VO;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -61,7 +38,23 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import org.apache.log4j.Logger;
+import ispyb.common.util.StringUtils;
+import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.shipping.Container3Service;
+import ispyb.server.common.util.ejb.CastDecimalOrder;
+import ispyb.server.common.util.ejb.EJBAccessCallback;
+import ispyb.server.common.util.ejb.EJBAccessTemplate;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSampleImage3VO;
+import ispyb.server.mx.vos.sample.BLSampleInfo;
+import ispyb.server.mx.vos.sample.BLSampleWS3VO;
+import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
+import ispyb.server.mx.vos.sample.DiffractionPlanWS3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
+import ispyb.server.mx.vos.sample.SampleInfo;
 
 /**
  * <p>
@@ -74,9 +67,10 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	private final static Logger LOG = Logger.getLogger(BLSample3ServiceBean.class);
 
 	// Generic HQL request to find instances of BLSample3 by pk
-	private static final String FIND_BY_PK(boolean fetchEnergyScan, boolean fetchSubSamples) {
+	private static final String FIND_BY_PK(boolean fetchEnergyScan, boolean fetchSubSamples, boolean fetchSampleImages) {
 		return "from BLSample3VO vo " + (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
 		+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "")
+		+ (fetchSampleImages ? "left join fetch vo.blsampleImageVOs " : "")
 				+ "where vo.blSampleId = :pk";
 	}
 
@@ -90,7 +84,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
 			+ "Crystal.crystalId, Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
 			+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
-			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, Container.sampleChangerLocation  "
+			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, "
+			+ "Container.sampleChangerLocation, Container.code as containerCode "
 			+ "FROM BLSample, Crystal, Protein,Container "
 			+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
 			+ "Crystal.proteinId=Protein.proteinId AND "
@@ -143,7 +138,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		BLSample3VO vo = findByPk(pk, false, false);
+		BLSample3VO vo = findByPk(pk, false, false, false);
 		delete(vo);
 	}
 
@@ -168,11 +163,11 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * @param withLink2
 	 * @return the BLSample3 value object
 	 */
-	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples) throws Exception {
+	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception {
 	
 		checkCreateChangeRemoveAccess();
 		try {
-			return (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples)).setParameter("pk", pk)
+			return (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages)).setParameter("pk", pk)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -283,7 +278,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			BLSample3VO blSample = new BLSample3VO();
 			Integer blSampleId = (Integer) orders.get(i);
 			// load VOs
-			blSample = this.findByPk(blSampleId, false, false);
+			blSample = this.findByPk(blSampleId, false, false, false);
 			sampleList.add(blSample);
 		}
 		return sampleList;
@@ -308,8 +303,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				.add(Restrictions.eq("containerId", containerId)).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();
 	}
-
-
+	
 	public List<BLSample3VO> findByCodeAndShippingId(final String dmCode, final Integer shippingId) throws Exception {
 		return this.findByShippingDewarContainer(shippingId, null, null, dmCode, null);
 	}
@@ -342,7 +336,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
 
 		// sample
-		blSample = this.findByPk(blSampleId, false, false);
+		blSample = this.findByPk(blSampleId, false, false, true);
 		wsSample = getWSBLSampleVO(blSample);
 
 		// crystal
@@ -438,7 +432,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Integer containerId = (Integer) o[3];
 
 			// load VOs
-			blSample = this.findByPk(blSampleId, false, false);
+			blSample = this.findByPk(blSampleId, false, false, true);
+			String blSampleImage = getSampleImagepath(blSampleId);
 			wsSample = getWSBLSampleVO(blSample);
 
 			container = containerService.findByPk(containerId, false);
@@ -473,7 +468,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 */
 	@SuppressWarnings("rawtypes")
 	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalFormId, final String beamlineLocation,
-			final String status) throws Exception{
+			final String status) throws Exception {
 		
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
@@ -490,7 +485,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 					listInfo = o;
 				}
 		
-				else{
+				else {
 					Query q = entityManager
 					.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
 							+ " AND " + "(Container.containerStatus LIKE '" + status
@@ -540,7 +535,10 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Double cellGamma = (Double) o[j++];
 			Integer crystalDiffractionPlanId = (Integer) o[j++];
 			String containerSCLocation = (String) o[j++];
+			String containerCode = (String) o[j++];
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
+			
+			String blSampleImage = getSampleImagepath(blSampleId);
 			
 			if (sampleDiffractionPlanId != null) {
 				diffractionPlan = diffractionPlanService.findByPk(sampleDiffractionPlanId, false, false);
@@ -552,7 +550,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			SampleInfo sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
 					 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 					 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-					 experimentType, containerSCLocation, diffPlanws) ;
+					 experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage) ;
 			listVOs.add(sampleInfo);
 		}
 		if (listVOs == null)
@@ -610,7 +608,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				// Integer crystalId = (Integer) o[1];
 				// Integer proteinId = (Integer) o[2];
 				// Integer containerId = (Integer) o[3];
-				BLSample3VO blSample = this.findByPk(blSampleId, false, false);
+				BLSample3VO blSample = this.findByPk(blSampleId, false, false, true);
 				BLSampleWS3VO wsSample = getWSBLSampleVO(blSample);
 				tab[i] = wsSample;
 			}
@@ -741,11 +739,11 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * @return
 	 * @throws Exception
 	 */
-	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples) throws Exception {
+	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception {
 	
 		checkCreateChangeRemoveAccess();
 		try {
-			BLSample3VO found = (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples)).setParameter("pk", pk)
+			BLSample3VO found = (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages)).setParameter("pk", pk)
 					.getSingleResult();
 			BLSampleWS3VO sampleLight = getWSBLSampleVO(found);
 			return sampleLight;
@@ -792,7 +790,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	public BLSample3VO loadEager(BLSample3VO vo) throws Exception {
-		BLSample3VO newVO = this.findByPk(vo.getBlSampleId(), true, true);
+		BLSample3VO newVO = this.findByPk(vo.getBlSampleId(), true, true, true);
 		return newVO;
 	}
 
@@ -1019,7 +1017,9 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Double cellGamma = (Double) o[j++];
 			Integer crystalDiffractionPlanId = (Integer) o[j++];
 			String containerSCLocation = (String) o[j++];
+			String containerCode = (String) o[j++];
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
+			String blSampleImage = getSampleImagepath(blSampleId);
 			
 			if (sampleDiffractionPlanId != null) {
 				diffractionPlan = diffractionPlanService.findByPk(sampleDiffractionPlanId, false, false);
@@ -1031,7 +1031,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
 						 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
 						 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-						 experimentType, containerSCLocation, diffPlanws) ;
+						 experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage) ;
 		}
 		return sampleInfo ;
 	}
@@ -1039,6 +1039,19 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 
 	/* Private methods ------------------------------------------------------ */
 
+	private String getSampleImagepath(Integer blSampleId) throws Exception {
+		
+		// we suppose that only 1 image is created for now for 1 BLSample 
+		Set<BLSampleImage3VO> blsampleImageVOs = this.findByPk(blSampleId, false, false, true).getBlsampleImageVOs();
+		if (blsampleImageVOs != null && !blsampleImageVOs.isEmpty()) {	 
+			BLSampleImage3VO vo = (BLSampleImage3VO) blsampleImageVOs.toArray()[0];	
+			return vo.getImageFullPath();
+		} else {
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 

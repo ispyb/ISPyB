@@ -35,9 +35,11 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-
 import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.services.ws.rest.shipment.ShipmentRestWsService;
 import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.Dewar3VO;
+import ispyb.server.common.vos.shipping.Shipping3VO;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
@@ -57,8 +59,10 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	// Generic HQL request to find instances of Container3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK(boolean fetchSamples) {
-		return "from Container3VO vo " + (fetchSamples ? "left join fetch vo.sampleVOs " : "")
-					+ "where vo.containerId = :pk";
+		return "from Container3VO vo " 
+			//	+ (fetchSamples ? "left join fetch vo.sampleVOs " : "")
+				+ (fetchSamples ? "	LEFT JOIN FETCH vo.sampleVOs sa LEFT JOIN FETCH sa.blSubSampleVOs LEFT JOIN FETCH sa.blsampleImageVOs  ": "") //  
+				+ " where vo.containerId = :pk";
 	}
 
 	// Generic HQL request to find all instances of Container3
@@ -72,6 +76,10 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	
 	@EJB
 	private Crystal3Service crystal3Service;
+	
+	@EJB
+	private Shipping3Service shipment3Service;
+	
 
 	public Container3ServiceBean() {
 	};
@@ -183,7 +191,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		List<Container3VO> foundEntities = crit.list();
 		return foundEntities;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess) throws Exception {
 		
@@ -235,8 +243,11 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		return foundEntities;
 	}
 
+	/**
+	 * This method store a container that already exist on the database
+	 */
 	@Override
-	public Container3VO savePuck(Container3VO container, int proposalId) throws Exception {
+	public Container3VO saveContainer(Container3VO container, int proposalId) throws Exception {
 		Container3VO containerDB = this.findByPk(container.getContainerId(), true);
 		
 		containerDB.setSampleChangerLocation(container.getSampleChangerLocation());
@@ -244,6 +255,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		containerDB.setCode(container.getCode());
 		containerDB.setContainerType(container.getContainerType());
 		containerDB.setBeamlineLocation(container.getBeamlineLocation());
+		containerDB.setBarcode(container.getBarcode());
 		
 		Set<String> locations = new HashSet<String>();
 		/** Adding Sample **/
@@ -253,13 +265,17 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 			diff = entityManager.merge(diff);
 			
 			Crystal3VO crystal = sample.getCrystalVO();
-			
+			LOG.info(String.format("Crystal for sample %s is %s %s %s %s %s %s %s", sample.getName(), sample.getCrystalVO().getSpaceGroup(), sample.getCrystalVO().getCellA(),
+					sample.getCrystalVO().getCellB(), sample.getCrystalVO().getCellC(), sample.getCrystalVO().getCellAlpha(), sample.getCrystalVO().getCellBeta(), sample.getCrystalVO().getCellGamma()));
 			Crystal3VO searchCrystal = crystal3Service.findByAcronymAndCellParam(sample.getCrystalVO().getProteinVO().getAcronym(), crystal, proposalId); 
+			
 			if (searchCrystal != null ){
+				LOG.info(String.format("Crystal found %s", searchCrystal.getCrystalId()));
 				/** Crystal for this acronym and cell unit parameters already exist **/
 				sample.setCrystalVO(searchCrystal);
 			}
 			else{
+				LOG.info("Crystal is not found");
 				/** Crystal not found then we create a new one **/
 				crystal.setCrystalId(null);
 				Protein3VO protein = entityManager.find(Protein3VO.class, sample.getCrystalVO().getProteinVO().getProteinId());
@@ -275,22 +291,20 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		/** Retrieving container **/
 		containerDB = this.findByPk(container.getContainerId(), true);
 		
-		System.out.println("sample locations: " + locations.toString());
 		List<BLSample3VO> toBeRemoved = new ArrayList<BLSample3VO>();
 		
 		/** Locations of potentially removed samples **/
 		Set<String> totalLocations = new HashSet<String>();
-		for (BLSample3VO sample : containerDB.getSampleVOs()) {
-			if (!locations.contains(sample.getLocation())){
-				toBeRemoved.add(sample);
+		if (containerDB.getSampleVOs() != null){
+			for (BLSample3VO sample : containerDB.getSampleVOs()) {
+				if (!locations.contains(sample.getLocation())){
+					toBeRemoved.add(sample);
+				}
+				totalLocations.add(sample.getLocation());
 			}
-			totalLocations.add(sample.getLocation());
 		}
-		System.out.println("total locations: " + totalLocations.toString());
 		
-		System.out.println("to be removed: " + toBeRemoved.size());
 		for (BLSample3VO sample : toBeRemoved) {
-			System.out.println("Removing" + sample.getLocation());
 			entityManager.remove(sample);
 		}
 		
@@ -324,6 +338,94 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
+	}
+
+	/**
+	 * This methods checks if a dewarId exists in a list of Dewar3VO and return the dewar
+	 * @param dewars
+	 * @param dewarId
+	 * @return
+	 */
+	public Dewar3VO existsDewarId(final Set<Dewar3VO> dewars, final int dewarId){
+	    for (Dewar3VO dewar3vo : dewars) {
+	    	if (dewar3vo.getDewarId().equals(dewarId)){
+	    		return dewar3vo;
+	    	}
+		}
+	    return null;
+	}
+	
+	/** This method will save dewars into a shipping 
+	 * @throws Exception **/
+	@Override
+	public void saveDewarList(List<Dewar3VO> dewars3vo, int proposalId, Integer shippingId) throws Exception {
+		Shipping3VO shipment = this.shipment3Service.findByPk(shippingId, true);
+		if (shipment != null){
+			LOG.info(String.format("Shipment found %s. shippingId=%s", shipment.getShippingId(), shipment.getShippingName()));
+			if (shipment.getProposalVO().getProposalId().equals(proposalId)){
+				LOG.info(String.format("Shipment %s found on proposals. shippingId=%s numberOfDewars=%s", shipment.getShippingId(),shipment.getShippingId(), shipment.getDewarVOs().size()));
+				for (Dewar3VO dewar3vo : dewars3vo) {
+					if (dewar3vo.getDewarId() != null){
+						if (this.existsDewarId(shipment.getDewarVOs(), dewar3vo.getDewarId()) == null){
+							LOG.warn(String.format("Dewar already exist and will not be updated. dewarId=%s shippingId=%s", dewar3vo.getDewarId(), shippingId));
+						}
+						else{
+							LOG.error(String.format("Dewar already exist but not within this shipment. dewarId=%s shippingId=%s", dewar3vo.getDewarId(), shippingId));
+						}
+					}
+					else{
+						/** Dewar does not exist **/
+						Dewar3VO newDewar = new Dewar3VO();
+						newDewar.setShippingVO(shipment);
+						newDewar.setCode(dewar3vo.getCode());
+						newDewar.setComments(dewar3vo.getComments());
+						newDewar.setCustomsValue(dewar3vo.getCustomsValue());
+						newDewar.setDewarStatus(dewar3vo.getDewarStatus());
+						newDewar.setBarCode(dewar3vo.getBarCode());
+						newDewar.setIsStorageDewar(dewar3vo.getIsStorageDewar());
+						newDewar.setTrackingNumberFromSynchrotron(dewar3vo.getTrackingNumberFromSynchrotron());
+						newDewar.setTrackingNumberToSynchrotron(dewar3vo.getTrackingNumberToSynchrotron());
+						newDewar.setFacilityCode(dewar3vo.getFacilityCode());
+						newDewar.setType(dewar3vo.getType());
+						/** Creating dewar **/
+						LOG.info(String.format("Creating dewar with code=%s. code=%s type=%s id=%s", newDewar.getCode(), newDewar.getCode(), newDewar.getType(), newDewar.getDewarId()));
+						newDewar = this.entityManager.merge(newDewar);
+						LOG.info(String.format("Created dewar with code=%s. code=%s type=%s id=%s", newDewar.getCode(), newDewar.getCode(), newDewar.getType(), newDewar.getDewarId()));
+						
+						
+						/** Creating containers for the new dewar **/
+						LOG.info(String.format("Creating %s containers for new dewar. dewarId=%s", dewar3vo.getContainers().length, newDewar.getDewarId()));
+						for (Container3VO container : dewar3vo.getContainers()) {
+							LOG.info(String.format("Creating container %s. code=%s capacity=%s containerType=%s dewarId=%s", container.getCode(),container.getCode(), container.getCapacity(), container.getContainerType(), newDewar.getDewarId()));
+							/** Creating a new container with no samples **/
+							Container3VO newContainer = new Container3VO();
+							newContainer.setDewarVO(newDewar);
+							newContainer.setCode(container.getCode());
+							newContainer.setContainerType(container.getContainerType());
+							newContainer.setCapacity(container.getCapacity());
+							newContainer.setBeamlineLocation(container.getBeamlineLocation());
+							newContainer.setSampleChangerLocation(newContainer.getSampleChangerLocation());
+							newContainer.setBarcode(newContainer.getBarcode());
+							LOG.info(String.format("Creating container %s. code=%s containerId=%s dewarId=%s", newContainer.getCode(), newContainer.getCode(), newContainer.getContainerId(), newContainer.getDewarVO().getDewarId()));
+							newContainer = this.entityManager.merge(newContainer);
+							LOG.info(String.format("Created container %s. code=%s capacity=%s containerType=%s dewarId=%s", container.getCode(),container.getCode(), container.getCapacity(), container.getContainerType(), newDewar.getDewarId()));
+							
+							/** Set id to the new container **/
+							container.setContainerId(newContainer.getContainerId());
+							this.saveContainer(container, proposalId);
+							
+						}
+						
+					}
+				}
+			}
+			else{
+				LOG.error(String.format("Shipment not found in proposal. shippingId=%s proposal=%s", shippingId, proposalId));
+			}
+		}
+		else{
+			LOG.error(String.format("Shipment not found. shippingId=%s", shippingId));
+		}
 	}
 	
 }

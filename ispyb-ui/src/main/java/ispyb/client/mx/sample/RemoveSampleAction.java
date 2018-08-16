@@ -147,7 +147,7 @@ public class RemoveSampleAction extends DispatchAction {
 			Integer sampleId = new Integer(_sampleId);
 
 			// retrieve the object, change the fields and save it again
-			BLSample3VO currentSampleFromDB = sampleService.findByPk(sampleId, false, false);
+			BLSample3VO currentSampleFromDB = sampleService.findByPk(sampleId, false, false, false);
 
 			currentSampleFromDB.setContainerVO(null);
 

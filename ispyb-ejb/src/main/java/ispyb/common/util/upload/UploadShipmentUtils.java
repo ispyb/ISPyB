@@ -104,9 +104,9 @@ public class UploadShipmentUtils {
 	
 	private static final short radiationSensitivityCol =11;
 	
-	private static final short requiredCompletenessCol = 12;
+	private static final short aimedCompletenessCol = 12;
 	
-	private static final short requiredMultiplicityCol = 13;
+	private static final short aimedMultiplicityCol = 13;
 
 	private static final short unitCellACol = 14;
 
@@ -437,8 +437,8 @@ public class UploadShipmentUtils {
 					String spaceGroup = cellToString(sheet.getRow(i).getCell(spaceGroupCol)).toUpperCase().trim().replace(" ", "");
 					double unitCellA = cellToDouble(sheet.getRow(i).getCell(unitCellACol));
 					double radiationSensitivity = cellToDouble(sheet.getRow(i).getCell(radiationSensitivityCol));
-					double requiredCompleteness = cellToDouble(sheet.getRow(i).getCell(requiredCompletenessCol));
-					double requiredMultiplicity = cellToDouble(sheet.getRow(i).getCell(requiredMultiplicityCol));
+					double aimedCompleteness = cellToDouble(sheet.getRow(i).getCell(aimedCompletenessCol));
+					double aimedMultiplicity = cellToDouble(sheet.getRow(i).getCell(aimedMultiplicityCol));
 					double unitCellB = cellToDouble(sheet.getRow(i).getCell(unitCellBCol));
 					double unitCellC = cellToDouble(sheet.getRow(i).getCell(unitCellCCol));
 					double unitCellAlpha = cellToDouble(sheet.getRow(i).getCell(unitCellAlphaCol));
@@ -540,8 +540,8 @@ public class UploadShipmentUtils {
 									}
 									difPlan.setExperimentKind(experimentType);
 									difPlan.setRadiationSensitivity(radiationSensitivity);
-									difPlan.setRequiredCompleteness(requiredCompleteness);
-									difPlan.setRequiredMultiplicity(requiredMultiplicity);
+									difPlan.setAimedCompleteness(aimedCompleteness);
+									difPlan.setAimedMultiplicity(aimedMultiplicity);
 									difPlan.setMinOscWidth(minOscWidth);
 									difPlan = difPlanService.create(difPlan);
 
@@ -729,7 +729,7 @@ public class UploadShipmentUtils {
 	public static Crystal3VO getCrystal(List<Crystal3VO> listCrystal, Crystal3VO crystalVO) {
 		for (Iterator<Crystal3VO> c = listCrystal.iterator(); c.hasNext();) {
 			Crystal3VO crystal = c.next();
-			if (crystalVO.getProteinVOId().equals(crystal.getProteinVOId())
+			if (crystalVO.getProteinVOId() != null && crystalVO.getProteinVOId().equals(crystal.getProteinVOId())
 					&& crystal.getSpaceGroup() != null
 					&& crystal.getSpaceGroup().equals(crystalVO.getSpaceGroup())
 					&& ((crystalVO.getCellA() != null && crystalVO.getCellA().equals(crystal.getCellA())) || (crystalVO.getCellA() == null && crystal

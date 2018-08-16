@@ -38,8 +38,8 @@ public class SamplePuck {
 	protected String experimentType;
 	protected String numberOfPositions;
 	protected String radiationSensitivity;
-	protected String requiredCompleteness;
-	protected String requiredMultiplicity;
+	protected String aimedCompleteness;
+	protected String aimedMultiplicity;
 	protected String unitCellA;
 	protected String unitCellB;
 	protected String unitCellC;
@@ -49,7 +49,7 @@ public class SamplePuck {
 	protected String smiles;
 	protected String comments;
 	protected String minOscWidth;
-	
+	protected String axisRange;
 	
 	public SamplePuck() {
 		super();
@@ -61,11 +61,11 @@ public class SamplePuck {
 			String preferredBeamDiameter, String experimentType, 
 			String numberOfPositions,
 			String radiationSensitivity,
-			String requiredCompleteness,
-			String requiredMultiplicity,
+			String aimedCompleteness,
+			String aimedMultiplicity,
 			String unitCellA,
 			String unitCellB, String unitCellC, String unitCellAlpha,
-			String unitCellBeta, String unitCellGamma, String smiles, String comments, String pinBarcode, String minOscWidth) {
+			String unitCellBeta, String unitCellGamma, String smiles, String comments, String pinBarcode, String minOscWidth, String axisRange) {
 		super();
 		this.sampleId = sampleId;
 		this.position = position;
@@ -77,8 +77,8 @@ public class SamplePuck {
 		this.preferredBeamDiameter = preferredBeamDiameter;
 		this.numberOfPositions = numberOfPositions;
 		this.radiationSensitivity = radiationSensitivity;
-		this.requiredCompleteness = requiredCompleteness;
-		this.requiredMultiplicity = requiredMultiplicity;
+		this.aimedCompleteness = aimedCompleteness;
+		this.aimedMultiplicity = aimedMultiplicity;
 		this.experimentType = experimentType;
 		this.unitCellA = unitCellA;
 		this.unitCellB = unitCellB;
@@ -90,6 +90,7 @@ public class SamplePuck {
 		this.comments = comments;
 		this.pinBarcode = pinBarcode;
 		this.minOscWidth= minOscWidth;
+		this.axisRange = axisRange;
 	}
 	
 	public SamplePuck(BLSample3VO blSample3VO) {
@@ -123,18 +124,23 @@ public class SamplePuck {
 		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRadiationSensitivity() != null){
 			this.radiationSensitivity = blSample3VO.getDiffractionPlanVO().getRadiationSensitivity().toString();
 		}
-		this.requiredMultiplicity = "";
-		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredMultiplicity() != null){
-			this.requiredMultiplicity = blSample3VO.getDiffractionPlanVO().getRequiredMultiplicity().toString();
+		this.aimedMultiplicity = "";
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getAimedMultiplicity() != null){
+			this.aimedMultiplicity = blSample3VO.getDiffractionPlanVO().getAimedMultiplicity().toString();
 		}
-		this.requiredCompleteness = "";
-		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getRequiredCompleteness() != null){
-			this.requiredCompleteness = blSample3VO.getDiffractionPlanVO().getRequiredCompleteness().toString();
+		this.aimedCompleteness = "";
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getAimedCompleteness() != null){
+			this.aimedCompleteness = blSample3VO.getDiffractionPlanVO().getAimedCompleteness().toString();
 		}
 		this.minOscWidth = "";
 		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getMinOscWidth() != null){
 			this.minOscWidth = blSample3VO.getDiffractionPlanVO().getMinOscWidth().toString();
 		}
+		this.axisRange = "";
+		if(blSample3VO.getDiffractionPlanVO() != null && blSample3VO.getDiffractionPlanVO().getAxisRange() != null){
+			this.axisRange = blSample3VO.getDiffractionPlanVO().getAxisRange().toString();
+		}
+		
 		this.unitCellA = "";
 		if ( blSample3VO.getCrystalVO().getCellA() != null){
 			this.unitCellA =blSample3VO.getCrystalVO().getCellA().toString();
@@ -251,20 +257,28 @@ public class SamplePuck {
 		this.radiationSensitivity = radiationSensitivity;
 	}
 
-	public String getRequiredCompleteness() {
-		return requiredCompleteness;
+	public String getAimedCompleteness() {
+		return aimedCompleteness;
 	}
 
-	public void setRequiredCompleteness(String requiredCompleteness) {
-		this.requiredCompleteness = requiredCompleteness;
+	public void setAimedCompleteness(String aimedCompleteness) {
+		this.aimedCompleteness = aimedCompleteness;
 	}
 
-	public String getRequiredMultiplicity() {
-		return requiredMultiplicity;
+	public String getAimedMultiplicity() {
+		return aimedMultiplicity;
 	}
 
-	public void setRequiredMultiplicity(String requiredMultiplicity) {
-		this.requiredMultiplicity = requiredMultiplicity;
+	public void setAimedMultiplicity(String aimedMultiplicity) {
+		this.aimedMultiplicity = aimedMultiplicity;
+	}
+
+	public String getAxisRange() {
+		return axisRange;
+	}
+
+	public void setAxisRange(String axisRange) {
+		this.axisRange = axisRange;
 	}
 
 	public String getUnitCellA() {

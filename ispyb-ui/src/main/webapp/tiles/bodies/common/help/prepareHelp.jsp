@@ -17,6 +17,7 @@ along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
 Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Brenchereau, M. Bodin, A. De Maria Antolinos
 --------------------------------------------------------------------------------------------------%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 
 <%@ page isELIgnored="false" %>

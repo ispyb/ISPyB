@@ -22,7 +22,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://struts.application-servers.com/layout" prefix="layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page isELIgnored="false" %>
 <%@page import="ispyb.common.util.Constants"%>
 
 <%@ page isELIgnored="false" %>

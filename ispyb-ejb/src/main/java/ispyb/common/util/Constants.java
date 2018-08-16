@@ -32,7 +32,7 @@ public final class Constants {
 	private static Properties mProp = PropertyLoader.loadProperties("ISPyB");
 
 	public enum SITE {
-		SOLEIL, EMBL, ESRF, GENERIC	
+		SOLEIL, EMBL, ESRF, MAXIV, GENERIC
 
 	}
 
@@ -120,9 +120,12 @@ public final class Constants {
 		if (SITE_IS_EMBL()) {
 			return SITE.EMBL;
 		}
-		if (SITE_IS_ESRF()) {
-			return SITE.ESRF;
+		if (SITE_IS_MAXIV()) {
+			return SITE.MAXIV;
 		}
+        if (SITE_IS_ESRF()) {
+            return SITE.ESRF;
+        }
 		return SITE.GENERIC;
 	}
 
@@ -853,9 +856,13 @@ public final class Constants {
 
 	public static final String[] BEAMLINE_LOCATION = BEAMLINE_LOCATION_DEFAULT;
 
-	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.capacity", "5"));
+	public static final int LOCATIONS_IN_SC = Integer.parseInt(getProperty("samplechanger.locations", "5"));
 
-	public static final String[] CONTAINER_TYPE = { "Spinepuck", "Unipuck", "Cane", "Other" }; 
+	public static final String[] CONTAINER_TYPE_MAXIV = { "Unipuck", "Other" };
+
+	public static final String[] CONTAINER_TYPE_DEFAULT = { "Spinepuck", "Unipuck", "Cane", "Other" };
+
+	public static final String[] CONTAINER_TYPE = (SITE_IS_MAXIV()) ? CONTAINER_TYPE_MAXIV : CONTAINER_TYPE_DEFAULT;
 
 	public static final String[] CONTAINER_CAPACITY_ESRF = { "10", "16", "6", "0" };
 
@@ -877,7 +884,7 @@ public final class Constants {
 //	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressE_SAD", "MXScore", "MXPressM","OSC", "SAD",
 //		"MAD", "Fixed", "Ligand binding", "Refinement", "MAD - Inverse Beam", "SAD - Inverse Beam" };
 
-	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
+	public static final String[] LIST_EXPERIMENT_KIND_ESRF = { "Default", "MXPressE", "MXPressO", "MXPressF", "MXPressI", "MXPressE_SAD", "MXScore", "MXPressM", "MXPressP", "MXPressP_SAD" };
 
 
 	public static final String[] LIST_EXPERIMENT_KIND = (SITE_IS_ESRF()) ? LIST_EXPERIMENT_KIND_ESRF : LIST_EXPERIMENT_KIND_MAXIV;
@@ -1234,6 +1241,8 @@ public final class Constants {
 	public static final String AUTOPROC_AUTOPROC = "autoPROC";
 
 	public static final String AUTOPROC_XIA2_DIALS = "XIA2_DIALS";
+
+	public static final String AUTOPROC_FASTDP = "fastdp";
 
 	public static final String EXPERIMENT_TYPE_CHARACTERIZATION = "Characterization";
 
