@@ -395,13 +395,38 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 
 			// Return Lab Contact
 			LabContact3VO returnLabContact = sendingLabContact;
-			if (!form.getIsIdenticalReturnAddress()) {
-				LOG.debug("LabContact for return is different." + " Return LabContact Id will be : " + form.getReturnLabContactId());
-				returnLabContact = labCService.findByPk(form.getReturnLabContactId());
+			if (Constants.SITE_IS_MAXIV()) {
+				if (!form.getIsIdenticalReturnAddress()) {
+					LOG.debug("LabContact for return is different." + " Return LabContact Id will be : " + form.getReturnLabContactId());
+					returnLabContact = labCService.findByPk(form.getReturnLabContactId());
+				} else {
+					returnLabContact = sendingLabContact;
+				}
+
+				if (form.getLabContact().getBillingReference() != null)
+					returnLabContact.setBillingReference(form.getLabContact().getBillingReference());
+				if (form.getLabContact().getCourierAccount() != null)
+					returnLabContact.setCourierAccount(form.getLabContact().getCourierAccount());
+				if (form.getLabContact().getDefaultCourrierCompany() != null)
+					returnLabContact.setDefaultCourrierCompany(form.getLabContact().getDefaultCourrierCompany());
+				if (form.getLabContact().getDewarAvgCustomsValue() != null)
+					returnLabContact.setDewarAvgCustomsValue(form.getLabContact().getDewarAvgCustomsValue());
+				if (form.getLabContact().getDewarAvgTransportValue() != null)
+					returnLabContact.setDewarAvgTransportValue(form.getLabContact().getDewarAvgTransportValue());
+
+				returnLabContact = labCService.update(returnLabContact);
 				updatedShipping.setReturnLabContactVO(returnLabContact);
-			} else {
-				updatedShipping.setReturnLabContactVO(sendingLabContact);
 			}
+			else {
+				if (!form.getIsIdenticalReturnAddress()) {
+					LOG.debug("LabContact for return is different." + " Return LabContact Id will be : " + form.getReturnLabContactId());
+					returnLabContact = labCService.findByPk(form.getReturnLabContactId());
+					updatedShipping.setReturnLabContactVO(returnLabContact);
+				} else {
+					updatedShipping.setReturnLabContactVO(sendingLabContact);
+				}
+			}
+
 			Shipping3VO dbShipping = shippingService.findByPk(shippingId, true);
 
 			// Retrieve information from DB ---------------------------------------------------------------

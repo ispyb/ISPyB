@@ -449,4 +449,9 @@ public class AbInitioModelling3ServiceBean implements AbInitioModelling3Service,
 		}
 		return null;
 	}
+
+	@Override
+	public Model3VO findModelById(Integer modelId) {
+		return this.entityManager.find(Model3VO.class, modelId);
+	}
 }
