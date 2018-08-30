@@ -135,6 +135,12 @@ public class ExiPdfRtfExporter {
 	
 	public final static Font FONT_DOC_SMALL_BOLD = new Font(Font.HELVETICA, 6, Font.BOLD);
 	
+	public final static Font FONT_DOC_SMALL_BOLD_GREEN = new Font(Font.HELVETICA, 6, Font.BOLD, GREEN_COLOR );
+	
+	public final static Font FONT_DOC_SMALL_BOLD_RED = new Font(Font.HELVETICA, 6, Font.BOLD, RED_COLOR);
+	
+	public final static Font FONT_DOC_SMALL_BOLD_ORANGE = new Font(Font.HELVETICA, 6, Font.BOLD, Color.ORANGE);
+	
 	public final static Font FONT_DOC_SMALL_CENTERED = new Font(Font.HELVETICA, 6, Font.BOLD);
 
 	public final static Font FONT_DOC_PARAM_TITLE = new Font(Font.HELVETICA, 8, Font.NORMAL, LIGHT_GREY_COLOR);
@@ -705,7 +711,6 @@ public class ExiPdfRtfExporter {
 		} else {
 			table.addCell(" ");
 		}
-
 		document.add(table);
 		
 		// row3
@@ -714,7 +719,7 @@ public class ExiPdfRtfExporter {
 		
 		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
-			
+
 		document.add(new Paragraph(" "));	
 		return;
 	}
@@ -899,7 +904,7 @@ public class ExiPdfRtfExporter {
 		table.getDefaultCell().setBorderWidth(0);
 
 		// 1st Cell
-		parag = "Date/Time: \n\n" 
+		parag = "Date/Time: \n\n\n" 
 				+ "Protein: \n\n" 
 				+ 	"Prefix: \n\n" 
 				+ 	"Images: \n\n" ;
@@ -919,7 +924,8 @@ public class ExiPdfRtfExporter {
 		//  Cell 3
 		parag = "Type: \n" 
 				+ "Res. (corner): \n" 
-				+ "Energy (Wavelength): \n" ; 
+				+ "Energy: \n" 
+				+ "Wavelength: \n" ; 
 		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 
@@ -927,9 +933,9 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + " / " + getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
-					+	getEnergyFromWavelength(dataCollectionMapItem) + " KeV " 
+					+	getEnergyFromWavelength(dataCollectionMapItem) + " KeV \n" 
 					//+ 	getCellParam(dataCollectionMapItem, "DataCollection_voltage", df3) + " KeV " 
-					+  "("+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + ")" + "\n" ;
+					+ getCellParam(dataCollectionMapItem, "DataCollection_wavelength", df4) + Constants.ANGSTROM + "\n" ;
 
 		
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
@@ -996,22 +1002,22 @@ public class ExiPdfRtfExporter {
 
 			// cell parameters of innerShell
 			// Cell 10 a alpha
-			parag = "a \n" + bestRmerge[4]
-			+ "\n alpha \n" + bestRmerge[7] ;
+			parag = "a \n" + get2decimals(bestRmerge[4])
+			+ "\n alpha \n" + get2decimals(bestRmerge[7]) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 		
 			// Cell 11 b beta
-			parag = "b \n" + bestRmerge[5]
-			+ "\n beta \n" + bestRmerge[8] ;
+			parag = "b \n" + get2decimals(bestRmerge[5])
+			+ "\n beta \n" + get2decimals(bestRmerge[8]) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 
 			// Cell 12 
-			parag = "c \n" + bestRmerge[6]
-			+ "\n gamma \n" + bestRmerge[9] ;
+			parag = "c \n" + get2decimals(bestRmerge[6])
+			+ "\n gamma \n" + get2decimals(bestRmerge[9]) ;
 
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
@@ -1019,22 +1025,22 @@ public class ExiPdfRtfExporter {
 			
 		} else if (indexing != null && strategy != null){
 			// Cell 6
-			parag = "\nIndexed: \n "
-					+ "\nStrategy: \n";
+			parag = "\n\n "
+					+ "\n\n";
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 
 			// Cell 7	
 			p = new Paragraph(); 
-			Chunk chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
+			Chunk chu2 =  new Chunk( "Indexed", FONT_INDEXING_FAILED);	
 			if (indexing.booleanValue() ){
-				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);						
+				chu2 =  new Chunk( "Indexed", FONT_INDEXING_SUCCESS);						
 			} 
 			p.add(chu2);
 			
-			chu2 =  new Chunk( "KO", FONT_INDEXING_FAILED);	
+			chu2 =  new Chunk( "Strategy", FONT_INDEXING_FAILED);	
 			if (strategy.booleanValue() ){
-				chu2 =  new Chunk( "OK", FONT_INDEXING_SUCCESS);	
+				chu2 =  new Chunk( "Strategy", FONT_INDEXING_SUCCESS);	
 			}
 			p.add("\n");
 			p.add(chu2);			
@@ -1093,6 +1099,14 @@ public class ExiPdfRtfExporter {
 		containingTable.addCell(cell);
 		
 		document.add(containingTable);
+		// row3
+		if (dataCollectionMapItem.get("DataCollection_comments") != null && dataCollectionMapItem.get("DataCollection_comments") != "")
+			document.add(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
+		
+		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
+			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
+
+		document.add(new Paragraph("_______________________________________________________________________________________"));	
 						
 		return;
 	}
@@ -1105,6 +1119,10 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setEnergyScanMapData2(Document document, Map<String, Object> energyScanMapItem) throws Exception {
 
+		// row1
+		String parag = getCellParam(energyScanMapItem, "scanFileFullPath", null) + "\n" ;
+		document.add(new Paragraph(parag, FONT_DOC_SMALL));
+		
 		Table table = new Table(9);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
@@ -1112,11 +1130,13 @@ public class ExiPdfRtfExporter {
 		table.setCellsFitPage(true);
 		table.setWidth(90);
 		
+
 		// 1st Cell
-		String parag = "Date/Time: \n\n" 
+		parag = "Date/Time: \n\n" 
 				+ "Element: \n\n" 
 				+ 	"En scan range: \n\n" ;
 
+		//Paragraph p = new Paragraph(parag, FONT_DOC_SMALL);
 		Paragraph p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
@@ -1124,13 +1144,15 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(energyScanMapItem, "startTime", null)+ "\n\n" 
 				+  getCellParam(energyScanMapItem, "element", null)+  "\n\n" 
 				+ getCellParam(energyScanMapItem, "startEnergy", null) + "keV" + getCellParam(energyScanMapItem, "endEnergy", null) + "keV \n" ;
-
+		p = new Paragraph(parag, FONT_DOC_SMALL);
+		table.addCell(p);
+		
 		// 3 Cell
 		parag = "Protein:\n" 
 				+ 	"Sample:\n" 
 				+ 	"\n" ;
 		
-		p = new Paragraph(parag, FONT_DOC);
+		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
 		// Cell4		
@@ -1138,7 +1160,7 @@ public class ExiPdfRtfExporter {
 				+ getCellParam(energyScanMapItem, "name", null) + "\n"
 				+ "\n" ;
 		
-		p = new Paragraph(parag, FONT_DOC_BOLD);
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
 		
 		// 5 Cell : thumbnail
@@ -1158,28 +1180,28 @@ public class ExiPdfRtfExporter {
 				+ 	"Pk f': \n" 
 				+ 	"Pk f'': \n" ;
 
-		table.addCell(new Paragraph(parag, FONT_DOC));
+		table.addCell(new Paragraph(parag, FONT_DOC_SMALL));
 				
 		// Cell 7
 		parag = getCellParam(energyScanMapItem, "peakEnergy", df3) + "keV \n"
 			+ getCellParam(energyScanMapItem, "peakFPrime", df2) + " e- \n" 
 		+ 	getCellParam(energyScanMapItem, "peakFDoublePrime", df2) + " e- \n" ;
 		
-		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
+		table.addCell(new Paragraph(parag, FONT_DOC_SMALL_BOLD));
 		
 		// Cell8		
 		parag = "Inflection Energy: \n" 
 				+ 	"Ip f': \n" 
 				+ 	"Ip f'': \n" ;
 
-		table.addCell(new Paragraph(parag, FONT_DOC));
+		table.addCell(new Paragraph(parag, FONT_DOC_SMALL));
 				
 		// Cell 9
 		parag = getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n" 
 		+ 	getCellParam(energyScanMapItem, "inflectionFPrime", df2)  + " e- \n" 
 		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n" ;
 		
-		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
+		table.addCell(new Paragraph(parag, FONT_DOC_SMALL_BOLD));
 				
 		document.add(table);
 		document.add(new Paragraph(" "));
@@ -1206,26 +1228,26 @@ public class ExiPdfRtfExporter {
 		String parag = "Date/Time:\n" 
 				+ 	"Energy:\n" ;
 		
-		Paragraph p = new Paragraph(parag, FONT_DOC);
+		Paragraph p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
 		// Cell2
 		parag = getCellParam(xrfSpectrumItem, "startTime", null) + "\n" 
 				+ getCellParam(xrfSpectrumItem, "energy", null) + "keV" + "\n" ;
-		p = new Paragraph(parag, FONT_DOC_BOLD);
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
 
 		// 3 Cell
 		parag = "Protein:\n" 
 				+ 	"Sample:\n" ;
 		
-		p = new Paragraph(parag, FONT_DOC);
+		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
 		// 4 Cell
 		parag = getCellParam(xrfSpectrumItem, "acronym", null) + "\n" 
 				+ getCellParam(xrfSpectrumItem, "name", null) + "\n"  ;
-		p = new Paragraph(parag, FONT_DOC_BOLD);
+		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
 		table.addCell(p);
 	
 		// 5 Cell : thumbnail		
@@ -1593,13 +1615,12 @@ public class ExiPdfRtfExporter {
 		
 		if (completeness != null && !completeness.isEmpty()) {		
 			
-			chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD);	
-			chu.setBackground(BLUE_COLOR);
+			chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD_GREEN);	
 			if (completeness != null && new Double(completeness) < 90 ) {
 				if (new Double(completeness) < 50) {
-					chu.setBackground(RED_COLOR);
+					chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD_RED);	
 				} else {
-					chu.setBackground(LIGHT_YELLOW_COLOR);
+					chu =  new Chunk( completeness, FONT_DOC_SMALL_BOLD_ORANGE);	
 				}				
 			}
 		}
@@ -1614,5 +1635,16 @@ public class ExiPdfRtfExporter {
 	    }
 	    return energy;
 	}
-
+	
+	private String get2decimals(String value) {
+		String ret = "";
+		try {
+			Double paramValue = new Double(value);
+			ret = df2.format(paramValue);
+		} catch (NumberFormatException e) {
+			return "";
+		}
+		
+		return ret;
+	}
 }
