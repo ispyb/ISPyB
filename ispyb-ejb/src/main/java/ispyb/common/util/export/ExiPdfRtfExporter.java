@@ -922,7 +922,7 @@ public class ExiPdfRtfExporter {
 		table.addCell(p);
 		
 		//  Cell 3
-		parag = "Type: \n" 
+		parag = "Type: \n\n" 
 				+ "Res. (corner): \n" 
 				+ "Energy: \n" 
 				+ "Wavelength: \n" ; 
@@ -930,7 +930,7 @@ public class ExiPdfRtfExporter {
 		table.addCell(p);
 
 		// Cell 4
-		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + " / " + getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) + "\n" 
+		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + " / \n" + getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_resolution", df2) + Constants.ANGSTROM
 					+ "("+ getCellParam(dataCollectionMapItem, "DataCollection_resolutionAtCorner", df2) + Constants.ANGSTROM + ") \n" 
 					+	getEnergyFromWavelength(dataCollectionMapItem) + " KeV \n" 
@@ -994,30 +994,30 @@ public class ExiPdfRtfExporter {
 
 			// Cell 9 		
 			parag = "Rmerge \n" 
-					+ bestRmerge[15] + "\n"
-					+ bestRmerge[1] + "\n"
-					+ bestRmerge[11] + "\n"; 
+					+ getDecimalFormat(bestRmerge[15], df2) + "\n"
+					+ getDecimalFormat(bestRmerge[1], df2) + "\n"
+					+ getDecimalFormat(bestRmerge[11], df2) + "\n"; 
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 
 			// cell parameters of innerShell
 			// Cell 10 a alpha
-			parag = "a \n" + get2decimals(bestRmerge[4])
-			+ "\n alpha \n" + get2decimals(bestRmerge[7]) ;
+			parag = "a \n" + getDecimalFormat(bestRmerge[4], df2)
+			+ "\n alpha \n" + getDecimalFormat(bestRmerge[7], df2) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 		
 			// Cell 11 b beta
-			parag = "b \n" + get2decimals(bestRmerge[5])
-			+ "\n beta \n" + get2decimals(bestRmerge[8]) ;
+			parag = "b \n" + getDecimalFormat(bestRmerge[5], df2)
+			+ "\n beta \n" + getDecimalFormat(bestRmerge[8], df2) ;
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
 			table.addCell(p);
 
 			// Cell 12 
-			parag = "c \n" + get2decimals(bestRmerge[6])
-			+ "\n gamma \n" + get2decimals(bestRmerge[9]) ;
+			parag = "c \n" + getDecimalFormat(bestRmerge[6], df2)
+			+ "\n gamma \n" + getDecimalFormat(bestRmerge[9], df2) ;
 
 			p = new Paragraph(parag, FONT_DOC_SMALL_CENTERED);
 			p.setAlignment(Element.ALIGN_CENTER); 
@@ -1165,14 +1165,14 @@ public class ExiPdfRtfExporter {
 		
 		// 5 Cell : thumbnail
 		
-		if (!getCellParam(energyScanMapItem, "lastImageId", null).isEmpty()) {
+		//if (!getCellParam(energyScanMapItem, "lastImageId", null).isEmpty()) {
 			String thumbnailPath = getCellParam(energyScanMapItem, "jpegChoochFileFullPath", null);
 			Cell cellThumbnail = getCellImage(thumbnailPath, IMAGE_HEIGHT_SMALL);
 			cellThumbnail.setBorderWidth(0);
 			table.addCell(cellThumbnail);
-		} else {
-			table.addCell(" ");
-		}
+		//} else {
+		//	table.addCell(" ");
+		//}
 
 		
 		// Cell6		
@@ -1555,7 +1555,8 @@ public class ExiPdfRtfExporter {
 			bestRmerge[0] = spaceGroupsList.get(indexRmergeMin);
 			bestRmerge[1] = rmergesList.get(indexRmergeMin);
 			bestRmerge[2]= completenessList.get(indexRmergeMin);
-			bestRmerge[3] = resolutionsLimitLowList.get(indexRmergeMin) + "/" + resolutionsLimitHighList.get(indexRmergeMin);
+			bestRmerge[3] = getDecimalFormat(resolutionsLimitLowList.get(indexRmergeMin), df2) + "/" 
+			+ getDecimalFormat(resolutionsLimitHighList.get(indexRmergeMin), df2);
 			
 			List<String> tmpList = new ArrayList<String>(Arrays.asList(((String)dataCollectionMapItem.get("Autoprocessing_cell_a")).trim().split(",")));
 			bestRmerge[4] = tmpList.get(indexRmergeMin);
@@ -1581,7 +1582,8 @@ public class ExiPdfRtfExporter {
 				bestRmerge[10] = spaceGroupsList.get(outerIndex);
 				bestRmerge[11] = rmergesList.get(outerIndex);
 				bestRmerge[12]= completenessList.get(outerIndex);
-				bestRmerge[13] = resolutionsLimitLowList.get(outerIndex) + "/" + resolutionsLimitHighList.get(outerIndex);
+				bestRmerge[13] = getDecimalFormat(resolutionsLimitLowList.get(outerIndex), df2) + "/" 
+				+ getDecimalFormat(resolutionsLimitHighList.get(outerIndex), df2);
 			}
 		
 			//overall
@@ -1600,8 +1602,8 @@ public class ExiPdfRtfExporter {
 				bestRmerge[14] = spaceGroupsList.get(overallIndex);
 				bestRmerge[15] = rmergesList.get(overallIndex);
 				bestRmerge[16]= completenessList.get(overallIndex);
-				//TODO format to 2 figures after .
-				bestRmerge[17] = resolutionsLimitLowList.get(overallIndex) + "/" + resolutionsLimitHighList.get(overallIndex);
+				bestRmerge[17] = getDecimalFormat(resolutionsLimitLowList.get(overallIndex), df2) + "/" 
+				+ getDecimalFormat(resolutionsLimitHighList.get(overallIndex), df2);
 			}						
 			LOG.info("bestRmerge = "  + bestRmerge[0] + "- " + bestRmerge[1]+ "- " + bestRmerge[2]+ "- " + bestRmerge[3]);	
 		}
@@ -1636,11 +1638,13 @@ public class ExiPdfRtfExporter {
 	    return energy;
 	}
 	
-	private String get2decimals(String value) {
+	private String getDecimalFormat(String value, DecimalFormat df) {
 		String ret = "";
+		if (value == null || value.isEmpty()) 
+			return ret;
 		try {
 			Double paramValue = new Double(value);
-			ret = df2.format(paramValue);
+			ret = df.format(paramValue);
 		} catch (NumberFormatException e) {
 			return "";
 		}
