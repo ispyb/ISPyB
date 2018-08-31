@@ -120,6 +120,7 @@ public class ExiPdfRtfExporter {
 	
 	public final static Font FONT_DOC_ORANGE = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.ORANGE);
 	public final static Font FONT_DOC_RED = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.RED);
+	public final static Font FONT_DOC_GREEN = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.GREEN);
 
 	public final static Font FONT_DOC_ITALIC = new Font(Font.HELVETICA, 8, Font.ITALIC, Color.BLACK);
 
@@ -206,6 +207,9 @@ public class ExiPdfRtfExporter {
 	// nb row to export
 	Integer nbRowsMax;
 	
+	// filter param
+	String filterParam;
+	
 	private Session3VO slv;
 
 
@@ -240,6 +244,19 @@ public class ExiPdfRtfExporter {
 			List<Map<String, Object>> dataCollections, List<Map<String, Object>> energyScans, List<Map<String, Object>> xrfSpectrums, Integer nbRowsMax) throws Exception {
 		this.proposalDesc = proposalDesc;
 		this.sessionId = sessionId;
+		this.filterParam = null;
+		this.dataCollections = dataCollections;
+		this.energyScans = energyScans;
+		this.xrfSpectrums = xrfSpectrums;
+		this.nbRowsMax = nbRowsMax;
+		init();
+	}
+	
+	public ExiPdfRtfExporter(int proposalId, String proposalDesc, Integer sessionId, String filterParam,
+			List<Map<String, Object>> dataCollections, List<Map<String, Object>> energyScans, List<Map<String, Object>> xrfSpectrums, Integer nbRowsMax) throws Exception {
+		this.proposalDesc = proposalDesc;
+		this.sessionId = sessionId;
+		this.filterParam = filterParam;
 		this.dataCollections = dataCollections;
 		this.energyScans = energyScans;
 		this.xrfSpectrums = xrfSpectrums;
@@ -395,6 +412,8 @@ public class ExiPdfRtfExporter {
 			h += " on beamline " + (slv.getBeamlineName() == null ? "" : slv.getBeamlineName())
 					+ "  starting on "
 					+ (slv.getStartDate() == null ? "" : Formatter.formatDate(slv.getStartDate()));
+		} else if (filterParam != null) {
+			h += " for parameter: " + filterParam;
 		}
 		header = new HeaderFooter(new Phrase(h, FONT_HELVETICA_10), false);
 		header.setAlignment(Element.ALIGN_CENTER);
@@ -590,7 +609,7 @@ public class ExiPdfRtfExporter {
 		
 		document.add(new Paragraph(" "));
 
-		if (xrfSpectrums.isEmpty()) {
+		if (xrfSpectrums == null || xrfSpectrums.isEmpty()) {
 			document.add(new Paragraph("XRF spectra:", FONT_TITLE));
 			document.add(new Paragraph("There is no XRF spectra in this report", FONT_DOC));
 			
@@ -1106,6 +1125,11 @@ public class ExiPdfRtfExporter {
 		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
 
+		// row4
+		if (dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != null && dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != "") {		
+			document.add(new Paragraph("Phasing OK with space groups: " + dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing").toString(), FONT_DOC_GREEN));						
+		}
+		
 		document.add(new Paragraph("_______________________________________________________________________________________"));	
 						
 		return;

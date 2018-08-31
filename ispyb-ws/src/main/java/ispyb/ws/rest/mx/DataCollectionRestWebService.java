@@ -243,6 +243,30 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsReportByfilterParamPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("filterParam") String filterParam, @QueryParam("nbRows") String nbRows) throws NamingException {
+
+		String methodName = "getDataCollectionReportyByfilterParamPdf";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, false, false);
+			this.logFinish(methodName, start, logger);
+			
+			if (filterParam != null)
+				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".pdf");
+			else 
+				return this.downloadFile(byteToExport, "No_filterParam.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/rtf")
 	@Produces({ "application/rtf" })
 	public Response getDataCollectionsReportBySessionIdRTF(@PathParam("token") String token,
@@ -430,6 +454,31 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 		 
 		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, xrfSpectrums, nbRowsMax);
+		byte [] byteToExport;
+		
+		if (isAnalysis)
+			byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
+		else
+			byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
+		
+		return byteToExport;
+	}
+	
+	private byte [] getPdfRtf(String filterParam, String proposal, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
+		
+		
+		List<Map<String, Object>> dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionByProteinAcronym(this.getProposalId(proposal), filterParam);
+		
+		List<Map<String, Object>> energyScans = null;
+		
+		List<Map<String, Object>> xrfSpectrums = null;
+		
+		Integer nbRowsMax = dataCollections.size();
+		
+		Integer id = null;
+						 
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , filterParam, dataCollections, energyScans, xrfSpectrums, nbRowsMax);
 		byte [] byteToExport;
 		
 		if (isAnalysis)
