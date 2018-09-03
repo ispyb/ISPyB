@@ -216,6 +216,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+
+	/** reports section **/
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
@@ -258,7 +260,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			if (filterParam != null)
 				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".pdf");
 			else 
-				return this.downloadFile(byteToExport, "No_filterParam.pdf");
+				return this.downloadFile(byteToExport, "No_data.pdf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -268,7 +270,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/rtf")
-	@Produces({ "application/pdf" })
+	@Produces({ "application/rtf" })
 	public Response getDataCollectionsReportByfilterParamRTF(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
 			@PathParam("filterParam") String filterParam) throws NamingException {
@@ -276,13 +278,13 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionReportyByfilterParamPdf";
 		long start = this.logInit(methodName, logger, token, proposal, filterParam);
 		try {
-			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, false, false);
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, true, false);
 			this.logFinish(methodName, start, logger);
 			
 			if (filterParam != null)
-				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".pdf");
+				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".rtf");
 			else 
-				return this.downloadFile(byteToExport, "No_filterParam.pdf");
+				return this.downloadFile(byteToExport, "No_data.rtf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -353,7 +355,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			if (filterParam !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ filterParam + ".pdf");
 			else
-				return this.downloadFile(byteToExport, "No_session.pdf");
+				return this.downloadFile(byteToExport, "No_data.pdf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -377,7 +379,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			if (filterParam !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ filterParam + ".rtf");
 			else
-				return this.downloadFile(byteToExport, "No_session.pdf");		
+				return this.downloadFile(byteToExport, "No_data.rtf");		
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
@@ -400,12 +402,14 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			if (ses !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 			else
-				return this.downloadFile(byteToExport, "No_session.pdf");		
+				return this.downloadFile(byteToExport, "No_session.rtf");		
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
+
+	/** end of reports section **/
+		
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
