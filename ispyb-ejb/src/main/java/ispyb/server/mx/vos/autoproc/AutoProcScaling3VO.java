@@ -128,12 +128,38 @@ public class AutoProcScaling3VO extends ISPyBValueObject implements Cloneable {
 		this.autoProcScalingId = vo.getAutoProcScalingId();
 		this.autoProcVO = vo.getAutoProcVO();
 		this.recordTimeStamp = vo.getRecordTimeStamp();
+		this.resolutionEllipsoidAxis11 = vo.getResolutionEllipsoidAxis11();
+		this.resolutionEllipsoidAxis12 = vo.getResolutionEllipsoidAxis12();
+		this.resolutionEllipsoidAxis13 = vo.getResolutionEllipsoidAxis13();
+		this.resolutionEllipsoidAxis21 = vo.getResolutionEllipsoidAxis21();
+		this.resolutionEllipsoidAxis22 = vo.getResolutionEllipsoidAxis22();
+		this.resolutionEllipsoidAxis23 = vo.getResolutionEllipsoidAxis23();
+		this.resolutionEllipsoidAxis31 = vo.getResolutionEllipsoidAxis31();
+		this.resolutionEllipsoidAxis32 = vo.getResolutionEllipsoidAxis32();
+		this.resolutionEllipsoidAxis33 = vo.getResolutionEllipsoidAxis33();
+		this.resolutionEllipsoidValue1 =  vo.getResolutionEllipsoidValue1();
+		this.resolutionEllipsoidValue2 =  vo.getResolutionEllipsoidValue2();
+		this.resolutionEllipsoidValue3 =  vo.getResolutionEllipsoidValue3();
+
 	}
 	
 	public void fillVOFromWS(AutoProcScalingWS3VO vo) {
 		this.autoProcScalingId = vo.getAutoProcScalingId();
 		this.autoProcVO = null;
 		this.recordTimeStamp = vo.getRecordTimeStamp();
+		this.resolutionEllipsoidAxis11 = vo.getResolutionEllipsoidAxis11();
+		this.resolutionEllipsoidAxis12 = vo.getResolutionEllipsoidAxis12();
+		this.resolutionEllipsoidAxis13 = vo.getResolutionEllipsoidAxis13();
+		this.resolutionEllipsoidAxis21 = vo.getResolutionEllipsoidAxis21();
+		this.resolutionEllipsoidAxis22 = vo.getResolutionEllipsoidAxis22();
+		this.resolutionEllipsoidAxis23 = vo.getResolutionEllipsoidAxis23();
+		this.resolutionEllipsoidAxis31 = vo.getResolutionEllipsoidAxis31();
+		this.resolutionEllipsoidAxis32 = vo.getResolutionEllipsoidAxis32();
+		this.resolutionEllipsoidAxis33 = vo.getResolutionEllipsoidAxis33();
+		this.resolutionEllipsoidValue1 =  vo.getResolutionEllipsoidValue1();
+		this.resolutionEllipsoidValue2 =  vo.getResolutionEllipsoidValue2();
+		this.resolutionEllipsoidValue3 =  vo.getResolutionEllipsoidValue3();
+
 	}
 
 	@Override
