@@ -40,11 +40,29 @@ public class AutoProcScalingWS3VO extends AutoProcScaling3VO{
 	}
 	
 	public AutoProcScalingWS3VO(Integer autoProcScalingId, Integer autoProcId,
-			Date recordTimeStamp) {
+			Date recordTimeStamp,
+			Float resolutionEllipsoidAxis11, Float resolutionEllipsoidAxis12, Float resolutionEllipsoidAxis13, 
+			Float resolutionEllipsoidAxis21, Float resolutionEllipsoidAxis22, Float resolutionEllipsoidAxis23, 
+			Float resolutionEllipsoidAxis31, Float resolutionEllipsoidAxis32, Float resolutionEllipsoidAxis33,
+			Float resolutionEllipsoidValue1, Float resolutionEllipsoidValue2, Float resolutionEllipsoidValue3) {
 		super();
 		this.autoProcScalingId = autoProcScalingId;
 		this.autoProcId = autoProcId;
 		this.recordTimeStamp = recordTimeStamp;
+		this.recordTimeStamp = recordTimeStamp;
+		this.resolutionEllipsoidAxis11 = resolutionEllipsoidAxis11;
+		this.resolutionEllipsoidAxis12 = resolutionEllipsoidAxis12;
+		this.resolutionEllipsoidAxis13 = resolutionEllipsoidAxis13;
+		this.resolutionEllipsoidAxis21 = resolutionEllipsoidAxis21;
+		this.resolutionEllipsoidAxis22 = resolutionEllipsoidAxis22;
+		this.resolutionEllipsoidAxis23 = resolutionEllipsoidAxis23;
+		this.resolutionEllipsoidAxis31 = resolutionEllipsoidAxis31;
+		this.resolutionEllipsoidAxis32 = resolutionEllipsoidAxis32;
+		this.resolutionEllipsoidAxis33 = resolutionEllipsoidAxis33;
+		this.resolutionEllipsoidValue1 =  resolutionEllipsoidValue1;
+		this.resolutionEllipsoidValue2 =  resolutionEllipsoidValue2;
+		this.resolutionEllipsoidValue3 =  resolutionEllipsoidValue3;
+
 	}
 
 	public Integer getAutoProcId() {
