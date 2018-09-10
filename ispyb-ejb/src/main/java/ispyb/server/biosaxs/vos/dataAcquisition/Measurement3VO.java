@@ -63,6 +63,7 @@ public class Measurement3VO implements java.io.Serializable {
 	protected String transmission;
 	protected String waitTime;
 	protected String imageDirectory;
+	protected String pathToH5;
 	
 	
 	@Column(name = "imageDirectory")
@@ -208,6 +209,16 @@ public class Measurement3VO implements java.io.Serializable {
 		this.transmission = transmission;
 	}
 
+	@Column(name = "pathToH5", nullable = true)
+	public String getPathToH5() {
+		return pathToH5;
+	}
+
+
+	public void setPathToH5(String pathToH5) {
+		this.pathToH5 = pathToH5;
+	}
+	
 	@Column(name = "waitTime", nullable = true)
 	public String getWaitTime() {
 		return waitTime;

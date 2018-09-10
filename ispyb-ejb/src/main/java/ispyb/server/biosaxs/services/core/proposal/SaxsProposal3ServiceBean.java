@@ -37,6 +37,7 @@ import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
 import ispyb.server.biosaxs.vos.assembly.AssemblyHasMacromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 
 @Stateless
@@ -86,7 +87,27 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 		criteria.where(builder.equal(projectRoot.get("proposalId"), proposalId));
 		return entityManager.createQuery(criteria).getResultList();
 	}
-
+/*
+	@Override
+	public List<Additive3VO> findAdditivesByProposalId(int proposalId) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Additive3VO> criteria = builder.createQuery(Additive3VO.class);
+		Root<Additive3VO> projectRoot = criteria.from(Additive3VO.class);
+		criteria.select(projectRoot);
+		criteria.where(builder.equal(projectRoot.get("proposalId"), proposalId));
+		return entityManager.createQuery(criteria).getResultList();
+	}
+*/
+	@Override
+	public List<Additive3VO> findAdditivesByBufferId(int bufferId) {
+		StringBuilder ejbQLQuery = new StringBuilder("SELECT DISTINCT(additive) FROM Additive3VO additive ");
+		ejbQLQuery.append("LEFT JOIN FETCH additive.bufferhasadditive3VOs b ");
+		ejbQLQuery.append("LEFT JOIN FETCH b.buffer3VO ");
+		ejbQLQuery.append("WHERE b.buffer3VO.bufferId = :bufferId ");
+		TypedQuery<Additive3VO> query = entityManager.createQuery(ejbQLQuery.toString(), Additive3VO.class).setParameter("bufferId",
+				bufferId);
+		return query.getResultList();
+	}
 	@Override
 	public Macromolecule3VO merge(Macromolecule3VO macromolecule3vo) {
 		return entityManager.merge(macromolecule3vo);
@@ -95,6 +116,11 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 	@Override
 	public Buffer3VO merge(Buffer3VO buffer3vo) {
 		return entityManager.merge(buffer3vo);
+	}
+
+	@Override
+	public Additive3VO merge(Additive3VO additive3vo) {
+		return entityManager.merge(additive3vo);
 	}
 
 	@Override
@@ -137,6 +163,7 @@ public class SaxsProposal3ServiceBean implements SaxsProposal3Service, SaxsPropo
 				proposalId);
 		return query.getResultList();
 	}
+
 
 	@Override
 	public List<Assembly3VO> test(String queryString) {

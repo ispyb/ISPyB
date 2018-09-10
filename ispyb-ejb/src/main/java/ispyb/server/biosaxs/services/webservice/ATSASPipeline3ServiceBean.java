@@ -38,6 +38,7 @@ import ispyb.server.biosaxs.vos.advanced.Superposition3VO;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Measurement3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
@@ -1060,5 +1061,14 @@ public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySam
 	public List<Buffer3VO> getBuffersByProposal(String code, String number) throws Exception {
 		ProposalWS3VO proposal = proposalService.findForWSByCodeAndNumber(code, number);
 		return this.saxsProposal3Service.findBuffersByProposalId(proposal.getProposalId());
+	}
+	
+	@Override
+	public List<Additive3VO> getBufferAdditives(String code, String number, String buffer) throws Exception {
+		ProposalWS3VO proposal = proposalService.findForWSByCodeAndNumber(code, number);
+		List<Additive3VO> additives = new ArrayList<Additive3VO>();
+		additives = saxsProposal3Service.findAdditivesByBufferId(Integer.parseInt(buffer));
+		return additives;
+		//return this.saxsProposal3Service.findBuffersByProposalId(proposal.getProposalId());
 	}
 }

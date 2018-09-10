@@ -57,6 +57,7 @@ public class Buffer3VO implements java.io.Serializable {
 //	protected Set<Specimen3VO> specimen3VOs = new HashSet<Specimen3VO>(0);
 //	protected Set<Specimen3VO> sampleplatewell3VO = new HashSet<Specimen3VO>(0);
 	protected String comments;
+	protected Float electronDensity;
 
 	public Buffer3VO() {
 	}
@@ -176,6 +177,15 @@ public class Buffer3VO implements java.io.Serializable {
 	
 	public String toString() {
 		return String.format("Buffer: %s name: %s acronym: %s ", this.bufferId, this.name, this.acronym);
+	}
+	
+	@Column(name = "electronDensity")
+	public Float getElectronDensity() {
+	      return electronDensity;
+	}
+
+	public void setElectronDensity(Float electronDensity) {
+	    this.electronDensity = electronDensity;
 	}
 	
 //	@XmlTransient
