@@ -1,0 +1,17 @@
+before_script:
+  - docker info
+
+build_image:
+  stage: build
+  script:
+    - docker build . -t docker.maxiv.lu.se/ispyb-test
+    - docker push docker.maxiv.lu.se/ispyb-test
+  only:
+    - master
+
+deploy_image:
+  stage: deploy
+  script:
+  - "curl -H 'Authorization: Bearer gOj9o8s3RapHiThfNbImaFYMDoOKTG' -k --request POST https://ansible.maxiv.lu.se/api/v2/job_templates/9/launch/"
+  only:
+    - master

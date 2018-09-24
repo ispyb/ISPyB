@@ -112,6 +112,16 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
    				
    				
      		</TR>
-     	</c:if>	
+     	</c:if>
+		<c:if test="${SITE_ATTRIBUTE == 'MAXIV'}">
+			<TR>
+				<TD vAlign=top align=right><IMG height=9 alt="" src="<%=request.getContextPath()%>/images/navbar_arrow2.gif" width=6 border=0></TD>
+				<TD vAlign=top align=left colSpan=2>
+					<A class=navbarparentselected href="https://www.lunduniversity.lu.se/about/contact-us/processing-of-personal-data-at-lund-university">
+					GDPR
+					</A>
+				</TD>
+			</TR>
+		</c:if>
 	</TBODY>
 </TABLE>

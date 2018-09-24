@@ -21,6 +21,7 @@ package ispyb.server.common.services.shipping.external;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
+import ispyb.common.util.upload.UploadShipmentUtils;
 import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
 import ispyb.server.biosaxs.services.sql.SqlTableMapper;
 import ispyb.server.common.services.proposals.Proposal3Service;
@@ -42,9 +44,11 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.vos.collections.Position3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
+import ispyb.server.mx.vos.sample.BLSampleImage3VO;
 import ispyb.server.mx.vos.sample.BLSubSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
@@ -71,6 +75,9 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 
 	@EJB
 	private Protein3Service protein3Service;
+	
+	@EJB
+	private Crystal3Service crystal3Service;
 
 	@Override
 	public Shipping3VO storeShipping(String proposalCode, String proposalNumber, Shipping3VO shipping) throws Exception {
@@ -92,7 +99,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 						for (BLSample3VO blSample3VO : samples) {
 							/** Creating crystals **/
 							if (blSample3VO.getCrystalVO() != null) {
-								Crystal3VO crystal3VO = this.createCrystal(blSample3VO, proposals.get(0));
+								Crystal3VO crystal3VO = this.createCrystal(blSample3VO.getCrystalVO(), proposals.get(0));
 								blSample3VO.setCrystalVO(crystal3VO);
 								blSample3VO.setContainerVO(container3vo);
 							}
@@ -126,27 +133,30 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 	
 	@Override
 	public Shipping3VO storeShippingFull(String proposalCode, String proposalNumber, Shipping3VO shipping) throws Exception {
+		
 		List<Proposal3VO> proposals = proposal3service.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
+		
 		if (proposals != null) {
 			if (proposals.size() > 0) {
 				Proposal3VO proposal = proposals.get(0);
+				
 				Set<Dewar3VO> dewars = shipping.getDewarVOs();
 				Shipping3VO shipping3VO = this.createShipping(shipping, proposal);
+				
 				/** Creating dewars **/
 				for (Dewar3VO dewar3vo : dewars) {
 					Container3VO[] containers = dewar3vo.getContainers();
 					dewar3vo = this.createDewar(dewar3vo, shipping3VO);
+					
 					for (Container3VO container3vo : containers) {
 						Set<BLSample3VO> samples = container3vo.getSampleVOs();
-						container3vo.setSampleVOs(new HashSet<BLSample3VO>());
-						container3vo.setDewarVO(dewar3vo);
-						container3vo = this.entityManager.merge(container3vo);
+						container3vo = this.createContainer(container3vo, dewar3vo);
+						
 						for (BLSample3VO blSample3VO : samples) {
 							/** Creating crystals **/
 							if (blSample3VO.getCrystalVO() != null) {
-								Crystal3VO crystal3VO = this.createCrystal(blSample3VO, proposals.get(0));
+								Crystal3VO crystal3VO = this.createCrystal(blSample3VO.getCrystalVO(), proposals.get(0));
 								blSample3VO.setCrystalVO(crystal3VO);
-								blSample3VO.setContainerVO(container3vo);
 							}
 							/** Creating Diffraction Pla **/
 							if (blSample3VO.getDiffractionPlanVO() != null) {
@@ -155,8 +165,9 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 							}
 
 							Set<BLSubSample3VO> subSamples = blSample3VO.getBlSubSampleVOs();
-							blSample3VO.setBlSubSampleVOs(new HashSet<BLSubSample3VO>());
-							blSample3VO = this.entityManager.merge(blSample3VO);
+							Set<BLSampleImage3VO> sampleImages = blSample3VO.getBlsampleImageVOs();
+							
+							this.createSample(blSample3VO, container3vo);
 
 							/** Creating the subsamples **/
 							if (subSamples != null) {
@@ -167,11 +178,22 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 										Position3VO position = this.createPosition(blSubSample3VO.getPositionVO());
 										blSubSample3VO.setPositionVO(position);
 									}
-									blSubSample3VO.setBlSampleVO(blSample3VO);
-									this.entityManager.merge(blSubSample3VO);
+									createSubSample(blSubSample3VO, blSample3VO);
 								}
 							}
+							blSample3VO = this.entityManager.merge(blSample3VO);
+							
+							/** creating blsampleImage **/
+							if (sampleImages != null) {
+								for (Iterator<BLSampleImage3VO> iterator = sampleImages.iterator(); iterator.hasNext();) {
+									BLSampleImage3VO blSampleImage3VO = (BLSampleImage3VO) iterator.next();
+									blSampleImage3VO.setBlsampleVO(blSample3VO);
+									blSampleImage3VO = this.entityManager.merge(blSampleImage3VO);
+								}	
+							}
+							
 						}
+						container3vo = this.entityManager.merge(container3vo);
 					}
 				}
 				return shipping3VO;
@@ -190,21 +212,26 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 		return this.entityManager.merge(pos);
 	}
 
-	private Crystal3VO createCrystal(BLSample3VO blSample3VO, Proposal3VO proposal) throws Exception {
-		Crystal3VO crystal3VO = blSample3VO.getCrystalVO();
+	private Crystal3VO createCrystal(Crystal3VO crystal3VO, Proposal3VO proposal) throws Exception {
 		if (crystal3VO.getProteinVO() != null) {
 			Protein3VO aux = crystal3VO.getProteinVO();
 			List<Protein3VO> proteins = protein3Service.findByAcronymAndProposalId(proposal.getProposalId(), aux.getAcronym());
 			if (proteins != null) {
-				if (proteins.size() > 0) {
-					crystal3VO.setProteinVO(proteins.get(0));
-					if (crystal3VO.getDiffractionPlanVO() != null) {
-						crystal3VO.setDiffractionPlanVO(this.createDiffractionPlan(crystal3VO.getDiffractionPlanVO()));
-					}
+				if (proteins.size() > 0) {					
 					//TODO check if crystal already exist before creating a new one
-					// use UploadShipmentUtils.getCrystal(List<Crystal3VO> listCrystal, Crystal3VO crystalVO) 
-					return this.entityManager.merge(crystal3VO);
+					List<Crystal3VO> listCrystal = crystal3Service.findByProteinId(proteins.get(0).getProteinId()) ;
+					Crystal3VO newCrystal = UploadShipmentUtils.getCrystal(listCrystal, crystal3VO)    ;
+					if (newCrystal == null ) {
+						crystal3VO.setProteinVO(proteins.get(0));
+						newCrystal = crystal3Service.create(crystal3VO);
+					}
+					//newCrystal.setProteinVO(proteins.get(0));
+					if (newCrystal.getDiffractionPlanVO() != null) {
+						newCrystal.setDiffractionPlanVO(this.createDiffractionPlan(crystal3VO.getDiffractionPlanVO()));
+					}
+					return this.entityManager.merge(newCrystal);
 				} else {
+					LOG.info("No protein found: " + aux.getAcronym());
 					System.out.println("No protein found: " + aux.getAcronym());
 				}
 			}
@@ -213,7 +240,27 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 		}
 		return null;
 	}
+	
+	private BLSubSample3VO createSubSample(BLSubSample3VO blSubSample3VO, BLSample3VO blSample3VO) {
 
+		blSubSample3VO.setBlSampleVO(blSample3VO);
+		return this.entityManager.merge(blSubSample3VO);
+	}
+
+	private BLSample3VO createSample(BLSample3VO blSample3VO, Container3VO cont3vo) {
+
+		blSample3VO.setBlSubSampleVOs(new HashSet<BLSubSample3VO>());
+		blSample3VO.setBlsampleImageVOs(new HashSet<BLSampleImage3VO>());
+		blSample3VO.setContainerVO(cont3vo);
+		return this.entityManager.merge(blSample3VO);
+	}
+
+	private Container3VO createContainer(Container3VO cont3vo, Dewar3VO dewar3vo) {
+		cont3vo.setSampleVOs(new HashSet<BLSample3VO>());
+		cont3vo.setDewarVO(dewar3vo);
+		return this.entityManager.merge(cont3vo);
+	}
+	
 	private Dewar3VO createDewar(Dewar3VO dewar3vo, Shipping3VO shipping3vo) {
 		dewar3vo.setContainerVOs(new HashSet<Container3VO>());
 		dewar3vo.setShippingVO(shipping3vo);
