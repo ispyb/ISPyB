@@ -1,23 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 4.6.6deb4
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Mar 05, 2018 at 09:42 AM
--- Server version: 10.1.23-MariaDB-9+deb9u1
--- PHP Version: 7.0.19-1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pydb` version 5.4.5
+-- Database: `pydb` version 5.13
 --
 
 -- --------------------------------------------------------
@@ -86,7 +69,18 @@ INSERT INTO `SchemaStatus` (`schemaStatusId`, `scriptName`, `schemaStatus`, `rec
 (65, '2018_02_06_updateDewarTable.sql', 'DONE', '2018-02-06 11:44:04'),
 (67, '2018_02_18_Dewar_summary_modification.sql', 'DONE', '2018-02-19 12:57:08'),
 (68, '2018_02_23_AutoProcintegrationView.sql', 'DONE', '2018-02-23 10:06:22'),
-(69, '2018_02_13_BLSample_subLocation.sql', 'DONE', '2018-02-27 16:02:21');
+(69, '2018_02_13_BLSample_subLocation.sql', 'DONE', '2018-02-27 16:02:21'),
+(70, '2018_03_13_updateCollations.sql', 'DONE', '2018-03-13 09:47:07'),
+(71, '2018_05_02_added_MXPRESSF.sql', 'DONE', '2018-05-02 14:29:37'),
+(72, '2018_07_19_em_stats.sql', 'DONE', '2018-06-19 17:45:51'),
+(73, '2018_06_25_Extend_filePath.sql', 'DONE', '2018-06-28 07:38:35'),
+(74, '2018_06_28_add_EM_xpixel.sql', 'DONE', '2018-06-28 07:46:51'),
+(75, '2018_06_28_Fix_month_name_scripts.sql', 'DONE', '2018-06-28 07:50:27'),
+(76, '2018_06_28_added_xpixel_to_datacollection.sql', 'DONE', '2018-06-28 09:07:42'),
+(77, '2018_07_06_Added_characterisation_start_angle.sql', 'DONE', '2018-07-06 13:50:36'),
+(78, '2018_09_04_Added_anisotropic_fields.sql', 'DONE', '2018-09-04 12:03:01'),
+(80, '2018_02_27_membranes_update.sql', 'DONE', '2018-09-10 08:08:08'),
+(82, '2018_09_13_BeamCalendar.sql', 'DONE', '2018-09-24 15:41:33');
 
 --
 -- Indexes for dumped tables
@@ -107,7 +101,7 @@ ALTER TABLE `SchemaStatus`
 -- AUTO_INCREMENT for table `SchemaStatus`
 --
 ALTER TABLE `SchemaStatus`
-  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
