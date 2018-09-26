@@ -111,7 +111,7 @@ public class MacromoleculeRestWebService extends SaxsRestWebService {
 			return this.logError(methodName, e, id, logger);
 		}
 	}
-	
+
 	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/saxs/macromolecule/{macromoleculeId}/contactfile/remove")

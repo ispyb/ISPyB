@@ -23,6 +23,7 @@ import ispyb.server.biosaxs.vos.assembly.Assembly3VO;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
+import ispyb.server.biosaxs.vos.dataAcquisition.Additive3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 
 import java.util.List;
@@ -43,7 +44,13 @@ public interface SaxsProposal3Service {
 	/** BUFFER **/
 	public abstract List<Buffer3VO> findBuffersByProposalId(int proposalId);
 
+	//public abstract List<Additive3VO> findAdditivesByProposalId(int proposalId);
+	
+	public abstract List<Additive3VO> findAdditivesByBufferId(int proposalId);
+
 	public abstract Buffer3VO merge(Buffer3VO buffer3VO);
+
+	public abstract Additive3VO merge(Additive3VO additive3VO);
 
 	/** ASSEMBLY **/
 	public abstract void createAssembly(int assemblyId, List<Integer> macromolecules);

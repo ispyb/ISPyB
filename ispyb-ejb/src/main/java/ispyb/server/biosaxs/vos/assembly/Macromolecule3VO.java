@@ -59,6 +59,7 @@ public class Macromolecule3VO implements java.io.Serializable {
 	protected String comments;
 	protected String symmetry;
 	protected Date creationDate;
+	protected Float electronDensity;
 
 	protected String refractiveIndex;
 	protected String solventViscosity;
@@ -257,7 +258,15 @@ public class Macromolecule3VO implements java.io.Serializable {
 	public void setSolventViscosity(String solventViscosity) {
 		this.solventViscosity = solventViscosity;
 	}
+	
+	@Column(name = "electronDensity")
+	public Float getElectronDensity() {
+	      return electronDensity;
+	}
 
+	public void setElectronDensity(Float electronDensity) {
+	    this.electronDensity = electronDensity;
+	}
 	
 	
 }
