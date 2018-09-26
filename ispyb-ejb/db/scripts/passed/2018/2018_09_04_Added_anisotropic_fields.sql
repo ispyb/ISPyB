@@ -6,7 +6,7 @@ ALTER TABLE AutoProcScalingStatistics
   ADD completenessSpherical float NULL DEFAULT NULL COMMENT 'Completeness calculated assuming isotropic diffraction',
   ADD completenessEllipsoidal float NULL DEFAULT NULL COMMENT 'Completeness calculated allowing for anisotropic diffraction',
   ADD anomalousCompletenessSpherical float NULL DEFAULT NULL COMMENT 'Anomalous completeness calculated assuming isotropic diffraction',
-  ADD anomalousCompletenessEllipsoidal float NULL DEFAULT NULLL COMMENT 'Anisotropic completeness calculated allowing for anisotropic diffraction';
+  ADD anomalousCompletenessEllipsoidal float NULL DEFAULT NULL COMMENT 'Anisotropic completeness calculated allowing for anisotropic diffraction';
   
 ALTER TABLE AutoProcScaling 
   ADD resolutionEllipsoidAxis11 float NULL DEFAULT NULL COMMENT 'Eigenvector for first diffraction limit, coord 1',
