@@ -286,7 +286,7 @@ public class UpdateFromSMIS {
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 				break;
 			case MAXIV:
-				nbDays = 14;
+				nbDays = 90;
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 				break;
             default:
