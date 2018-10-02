@@ -845,7 +845,10 @@ public class UpdateFromSMIS {
 	          //TODO: Add more details
 	          
 	          personEnt = person.merge(personEnt);
-	          
+
+	          // reload all the proposal info to avoid lazyloading error
+	          proposalVO = proposal.findWithParticipantsByPk(proposalVO.getProposalId());
+
 	          Set<Person3VO> currentParticipants = proposalVO.getParticipants();
 	          
 	          boolean personExists = false;
