@@ -126,7 +126,7 @@ AprioriRigidBodyGrid.prototype.getPanel = function() {
 			text : 'Add Modeling Option (PDB)',
 			icon : '../images/add.png',
 			handler : function() {
-				_this.onUploadFile.notify('PDB', 'Upload PDB File Texst');
+				_this.onUploadFile.notify('PDB', 'Upload PDB File');
 			}
 		}
 

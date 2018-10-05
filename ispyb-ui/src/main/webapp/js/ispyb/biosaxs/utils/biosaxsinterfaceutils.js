@@ -698,14 +698,6 @@ var BUI = {
 
 		return text;
 	},
-	showInfo : function(message) {
-		Ext.Msg.show({
-			title : 'Info',
-			msg : message,
-			icon : Ext.Msg.INFO,
-			animEl : 'elId'
-		});
-	},
 	showWarning : function(message) {
 		Ext.Msg.show({
 			title : 'Warning',
