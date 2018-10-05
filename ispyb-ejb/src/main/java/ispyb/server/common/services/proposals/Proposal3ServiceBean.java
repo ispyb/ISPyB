@@ -60,9 +60,6 @@ import ispyb.server.common.vos.proposals.ProposalWS3VO;
 @Stateless
 public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceLocal {
 	
-	
-	private final static Logger logger = Logger.getLogger(Proposal3ServiceBean.class);
-	
 	private static final String FIND_BY_PK(Integer pk, boolean fetchSessions, boolean fetchProteins,
 			boolean fetchShippings) {
 		return "from Proposal3VO vo  " + (fetchSessions ? " left join fetch vo.sessionVOs " : "")
@@ -382,7 +379,8 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		return this.updateProposalFromIds(newPropId, oldPropId);
 
 	}
-		
+	
+	
 	@Override
 	public Proposal3VO findProposalById(int proposalId) {
 		return entityManager.find(Proposal3VO.class, proposalId);
@@ -405,16 +403,13 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				}
 			}
 		}
-		logger.info("--------- 1");
+
 		List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
 		/**
 		 * If user is a proposal it is linked by proposalCode and proposalNumber in the proposal table
 		 */
 		proposals.addAll(this.findProposalByCodeAndNumber(userName));
-		
-		
-		logger.info("--------- 2");
-		logger.info(proposals);
+
 		/**
 		 * In case login name is a user we look for it on Persons though proposalHasPerson
 		 */
@@ -431,7 +426,6 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 				proposalsId.add(proposal.getProposalId());
 			}
 		}		
-		logger.info(result);
 		return result;
 	}
 

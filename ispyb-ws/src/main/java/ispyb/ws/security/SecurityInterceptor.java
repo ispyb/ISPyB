@@ -76,12 +76,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 							return;
 						}
 						if (login.isUser() || login.isIndustrial()){
-							logger.info("444444444");
-							logger.info(requestContext.getUriInfo().getPathParameters());
-							return;
-							/** special case to display the list of proposal, with no proposalname present in the url **/
-							
-							/**
+							/** special case to display the list of proposal, with no proposalname present in the url **/ 
 							if (!requestContext.getUriInfo().getPathParameters().containsKey("proposal")){
 								return;
 							}
@@ -93,7 +88,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 									logger.info(String.format("Proposal %s not allowed for %s", proposalname, login.getUsername()));
 									requestContext.abortWith(ACCESS_DENIED);
 								}
-							} **/
+							}
 						}
 					} else {
 						logger.info("Token Expired");
