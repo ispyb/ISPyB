@@ -125,12 +125,21 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 	@Column(name = "isa")
 	protected Float ISa;
 	
+	@Column(name = "completenessSpherical")
+	protected Float completenessSpherical;
+		
+	@Column(name = "anomalousCompletenessSpherical")
+	protected Float anomalousCompletenessSpherical;
 	
+	@Column(name = "completenessEllipsoidal")
+	protected Float completenessEllipsoidal;
+		
+	@Column(name = "anomalousCompletenessEllipsoidal")
+	protected Float anomalousCompletenessEllipsoidal;
+		
 	public AutoProcScalingStatistics3VO(){
 		super();
-	}
-	
-	
+	}	
 
 	public AutoProcScalingStatistics3VO(Integer autoProcScalingStatisticsId,
 			AutoProcScaling3VO autoProcScalingVO, String scalingStatisticsType,
@@ -142,7 +151,9 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 			Integer nTotalUniqueObservations, Float meanIoverSigI,
 			Float completeness, Float multiplicity,
 			Float anomalousCompleteness, Float anomalousMultiplicity,
-			Date recordTimeStamp, Boolean anomalous, Float ccHalf) {
+			Date recordTimeStamp, Boolean anomalous, Float ccHalf, Float Isa,
+			Float completenessSpherical, Float anomalousCompletenessSpherical,
+			Float completenessEllipsoidal, Float anomalousCompletenessEllipsoidal) {
 		super();
 		this.autoProcScalingStatisticsId = autoProcScalingStatisticsId;
 		this.autoProcScalingVO = autoProcScalingVO;
@@ -166,6 +177,11 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.recordTimeStamp = recordTimeStamp;
 		this.anomalous = anomalous;
 		this.ccHalf = ccHalf;
+		this.ISa = Isa;
+		this.completenessSpherical = completenessSpherical;
+		this.anomalousCompletenessSpherical = anomalousCompletenessSpherical;
+		this.completenessEllipsoidal = completenessEllipsoidal;
+		this.anomalousCompletenessEllipsoidal = anomalousCompletenessEllipsoidal;
 	}
 	
 	public AutoProcScalingStatistics3VO(AutoProcScalingStatistics3VO vo) {
@@ -193,6 +209,11 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.anomalous = vo.getAnomalous();
 		this.ccHalf = vo.getCcHalf();
 		this.ISa = vo.getISa();
+		this.completenessSpherical = vo.getCompletenessSpherical();
+		this.anomalousCompletenessSpherical = vo.getAnomalousCompletenessSpherical();
+		this.completenessEllipsoidal = vo.getCompletenessEllipsoidal();
+		this.anomalousCompletenessEllipsoidal = vo.getAnomalousCompletenessEllipsoidal();
+
 	}
 	
 	public void fillVOFromWS(AutoProcScalingStatisticsWS3VO vo) {
@@ -221,8 +242,12 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 		this.ccAno = vo.getCcAno();
 		this.sigAno = vo.getSigAno();
 		this.ISa = vo.getISa();
-	}
+		this.completenessSpherical = vo.getCompletenessSpherical();
+		this.anomalousCompletenessSpherical = vo.getAnomalousCompletenessSpherical();
+		this.completenessEllipsoidal = vo.getCompletenessEllipsoidal();
+		this.anomalousCompletenessEllipsoidal = vo.getAnomalousCompletenessEllipsoidal();
 
+	}
 
 
 	@Override
@@ -422,6 +447,39 @@ public class AutoProcScalingStatistics3VO extends ISPyBValueObject implements Cl
 	public void setCcHalf(Float ccHalf) {
 		this.ccHalf = ccHalf;
 	}
+	
+	public Float getCompletenessSpherical() {
+		return completenessSpherical;
+	}
+
+	public void setCompletenessSpherical(Float completenessSpherical) {
+		this.completenessSpherical = completenessSpherical;
+	}
+
+	public Float getAnomalousCompletenessSpherical() {
+		return anomalousCompletenessSpherical;
+	}
+
+	public void setAnomalousCompletenessSpherical(Float anomalousCompletenessSpherical) {
+		this.anomalousCompletenessSpherical = anomalousCompletenessSpherical;
+	}
+
+	public Float getCompletenessEllipsoidal() {
+		return completenessEllipsoidal;
+	}
+
+	public void setCompletenessEllipsoidal(Float completenessEllipsoidal) {
+		this.completenessEllipsoidal = completenessEllipsoidal;
+	}
+
+	public Float getAnomalousCompletenessEllipsoidal() {
+		return anomalousCompletenessEllipsoidal;
+	}
+
+	public void setAnomalousCompletenessEllipsoidal(Float anomalousCompletenessEllipsoidal) {
+		this.anomalousCompletenessEllipsoidal = anomalousCompletenessEllipsoidal;
+	}
+
 
 	/**
 	 * Checks the values of this value object for correctness and
