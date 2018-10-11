@@ -741,7 +741,7 @@ private boolean validate(ViewShippingForm form, ActionErrors errors) {
 
 The site profile is defined in the `pom.xml` in `ispyb-ejb` module. The site
 profile contains all the properties linked to a specific profile. See the
-example of the `NEWSITE` profile in the `pom.xml`.
+example of the `GENERIC` profile in the `pom.xml`.
 
 For example it defines the `ispyb.site` property which value will be loaded
 and used in the Constants class (`SITE_IS_ESRF()` or `SITE_IS_SOLEIL()`, or
@@ -760,16 +760,16 @@ like:
 <profiles>
   <!-- ... -->
   <profile>
-    <id>NEWSITE</id>
+    <id>GENERIC</id>
     <properties>
-      <ispyb.site>NEWSITE</ispyb.site>
+      <ispyb.site>GENERIC</ispyb.site>
       <jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
     </properties>
   </profile>
 </profiles>
 <!-- ... -->
 <activeProfiles>
-<activeProfile>NEWSITE</activeProfile>
+<activeProfile>GENERIC</activeProfile>
 </activeProfiles>
 <!-- ... -->
 ```

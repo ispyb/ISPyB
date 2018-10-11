@@ -484,10 +484,10 @@
   	</profile>
   	
   	<profile>
-  		<id>NEWSITE</id>
+  		<id>GENERIC</id>
   		
   		<properties>
-  			<ispyb.site>NEWSITE</ispyb.site>
+  			<ispyb.site>GENERIC</ispyb.site>
   			
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
