@@ -84,9 +84,6 @@ public class Structure3VO implements java.io.Serializable {
 	public Structure3VO() {
 	}
 
-	public Structure3VO(Integer macromoleculeId) {
-		// this.macromoleculeId = macromoleculeId;
-	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

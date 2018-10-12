@@ -304,51 +304,6 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 		return specimenIdToSpecimen3VO;
 	}
 
-	/**
-	 * Gets the plates. This should be changed depending on the bm configuration
-	 * 
-	 * @param samples
-	 *            the samples
-	 * @param storageTemperature
-	 *            the storage temperature
-	 * @return the plates
-	 */
-//	private HashMap<String, Sampleplate3VO> parsePlates(ArrayList<HashMap<String, String>> samples, String storageTemperature) {
-//		/** There is always three Plates **/
-//		HashMap<String, Sampleplate3VO> platePositionToSamplePlate3VO = new HashMap<String, Sampleplate3VO>();
-//
-//		/** Plate 1 **/
-//		Platetype3VO type = this.plateType3Service.findById(1);
-//		Sampleplate3VO samplePlate_1 = new Sampleplate3VO();
-//		samplePlate_1.setStorageTemperature(storageTemperature);
-//		samplePlate_1.setName(type.getName());
-//		samplePlate_1.setSlotPositionRow("1");
-//		samplePlate_1.setSlotPositionColumn("1");
-//		samplePlate_1.setPlatetype3VO(type);
-//		platePositionToSamplePlate3VO.put("1", samplePlate_1);
-//
-//		/** Plate 2 **/
-//		Platetype3VO type_2 = this.plateType3Service.findById(2);
-//		Sampleplate3VO samplePlate_2 = new Sampleplate3VO();
-//		samplePlate_2.setStorageTemperature(storageTemperature);
-//		samplePlate_2.setName(type_2.getName());
-//		samplePlate_2.setPlatetype3VO(type_2);
-//		samplePlate_2.setSlotPositionRow("1");
-//		samplePlate_2.setSlotPositionColumn("2");
-//		platePositionToSamplePlate3VO.put("2", samplePlate_2);
-//
-//		/** Plate 3 **/
-//		Platetype3VO type_3 = this.plateType3Service.findById(4);
-//		Sampleplate3VO samplePlate_3 = new Sampleplate3VO();
-//		samplePlate_3.setStorageTemperature(storageTemperature);
-//		samplePlate_3.setName(type_3.getName());
-//		samplePlate_3.setSlotPositionRow("1");
-//		samplePlate_3.setSlotPositionColumn("3");
-//		samplePlate_3.setPlatetype3VO(type_3);
-//		platePositionToSamplePlate3VO.put("3", samplePlate_3);
-//
-//		return platePositionToSamplePlate3VO;
-//	}
 
 	/**
 	 * Parses the specimen.
@@ -372,10 +327,8 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 		String transmission = sample.get("transmission");
 		String viscosity = sample.get("viscosity");
 		String flow = sample.get("flow");
-		String code = sample.get("code");
 
 		Measurement3VO measurement = new Measurement3VO();
-//		measurement.setCode(code);
 		measurement.setWaitTime(waittime);
 		measurement.setVolumeToLoad(volumeToLoad);
 		measurement.setComment(comments);
@@ -422,19 +375,6 @@ public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 				measurement.setExtraFlowTime(extraFlowTime);
 				measurement.setExposureTemperature(exposureTemperature);
 				
-//				try{
-					/** Code should be runNumber otherwise set as acronym + concentration **/
-//					if (sample.get("code") != null){
-//						measurement.setCode(sample.get("code"));
-//					}
-//					else{
-//						measurement.setCode(specimen.getMacromolecule3VO().getAcronym() + "_" + specimen.getConcentration());
-//					}
-//				}
-//				catch(Exception exp){
-//					exp.printStackTrace();
-//					System.out.println("It has not been possible to set the code to the measurement");
-//				}
 
 				/** Buffer **/
 				Specimen3VO buffer = sample3vOs.get(sample.get("buffername"));

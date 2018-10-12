@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.core.structure.Structure3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
@@ -155,5 +156,9 @@ public class MXRestWebService extends RestWebService{
 	
 	protected PhasingStatistics3Service getPhasingStatistics3Service() throws NamingException {
 		return (PhasingStatistics3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStatistics3Service.class);
+	}
+	
+	protected Structure3Service getStruture3Service() throws NamingException {
+		return (Structure3Service) Ejb3ServiceLocator.getInstance().getLocalService(Structure3Service.class);
 	}
 }
