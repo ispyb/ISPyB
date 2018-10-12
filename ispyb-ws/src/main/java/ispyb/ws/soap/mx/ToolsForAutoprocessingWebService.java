@@ -243,9 +243,26 @@ public class ToolsForAutoprocessingWebService {
 	@WebMethod
 	@WebResult(name = "autoProcScalingId")
 	public Integer storeOrUpdateAutoProcScaling(Integer autoProcScalingId,
-			@WebParam(name = "autoProcId") Integer autoProcId, @WebParam(name = "recordTimeStamp") Date recordTimeStamp)
+			@WebParam(name = "autoProcId") Integer autoProcId, @WebParam(name = "recordTimeStamp") Date recordTimeStamp,
+			@WebParam(name = "resolutionEllipsoidAxis11") Float resolutionEllipsoidAxis11, 
+			@WebParam(name = "resolutionEllipsoidAxis12") Float resolutionEllipsoidAxis12,
+			@WebParam(name = "resolutionEllipsoidAxis13") Float resolutionEllipsoidAxis13,
+			@WebParam(name = "resolutionEllipsoidAxis21") Float resolutionEllipsoidAxis21, 
+			@WebParam(name = "resolutionEllipsoidAxis22") Float resolutionEllipsoidAxis22,
+			@WebParam(name = "resolutionEllipsoidAxis23") Float resolutionEllipsoidAxis23,
+			@WebParam(name = "resolutionEllipsoidAxis31") Float resolutionEllipsoidAxis31, 
+			@WebParam(name = "resolutionEllipsoidAxis32") Float resolutionEllipsoidAxis32,
+			@WebParam(name = "resolutionEllipsoidAxis33") Float resolutionEllipsoidAxis33,
+			@WebParam(name = "resolutionEllipsoidValue1") Float resolutionEllipsoidValue1, 
+			@WebParam(name = "resolutionEllipsoidValue2") Float resolutionEllipsoidValue2,
+			@WebParam(name = "resolutionEllipsoidValue3") Float resolutionEllipsoidValue3			
+			)
 			throws Exception {
-		AutoProcScalingWS3VO vo = new AutoProcScalingWS3VO(autoProcScalingId, autoProcId, recordTimeStamp);
+		AutoProcScalingWS3VO vo = new AutoProcScalingWS3VO(autoProcScalingId, autoProcId, recordTimeStamp,
+				resolutionEllipsoidAxis11, resolutionEllipsoidAxis12, resolutionEllipsoidAxis13,
+				resolutionEllipsoidAxis21, resolutionEllipsoidAxis22, resolutionEllipsoidAxis23,
+				resolutionEllipsoidAxis31, resolutionEllipsoidAxis32, resolutionEllipsoidAxis33,
+				resolutionEllipsoidValue1, resolutionEllipsoidValue2, resolutionEllipsoidValue3);
 		return storeOrUpdateAutoProcScalingValue(vo);
 	}
 
@@ -369,7 +386,8 @@ public class ToolsForAutoprocessingWebService {
 			@WebParam(name = "fractionalPartialBias") Float fractionalPartialBias,
 			@WebParam(name = "nTotalObservations") Integer nTotalObservations,
 			@WebParam(name = "nTotalUniqueObservations") Integer nTotalUniqueObservations,
-			@WebParam(name = "meanIoverSigI") Float meanIoverSigI, @WebParam(name = "completeness") Float completeness,
+			@WebParam(name = "meanIoverSigI") Float meanIoverSigI, 
+			@WebParam(name = "completeness") Float completeness,
 			@WebParam(name = "multiplicity") Float multiplicity,
 			@WebParam(name = "anomalousCompleteness") Float anomalousCompleteness,
 			@WebParam(name = "anomalousMultiplicity") Float anomalousMultiplicity,
@@ -378,7 +396,11 @@ public class ToolsForAutoprocessingWebService {
 			@WebParam(name = "ccHalf") Float ccHalf,
 			@WebParam(name = "sigAno") Float sigAno,
 			@WebParam(name = "ccAno") Float ccAno,
-			@WebParam(name = "isa") Float isa)
+			@WebParam(name = "isa") Float isa, 
+			@WebParam(name = "completenessSpherical") Float completenessSpherical,
+			@WebParam(name = "anomalousCompletenessSpherical") Float anomalousCompletenessSpherical, 
+			@WebParam(name = "completenessEllipsoidal") Float completenessEllipsoidal,
+			@WebParam(name = "anomalousCompletenessEllipsoidal") Float anomalousCompletenessEllipsoidal)
 			throws Exception {
 		LOG.info("storeOrUpdateAutoProcScalingStatistics");
 		
@@ -386,7 +408,8 @@ public class ToolsForAutoprocessingWebService {
 				scalingStatisticsType, comments, resolutionLimitLow, resolutionLimitHigh, rmerge,
 				rmeasWithinIplusIminus, rmeasAllIplusIminus, rpimWithinIplusIminus, rpimAllIplusIminus,
 				fractionalPartialBias, nTotalObservations, nTotalUniqueObservations, meanIoverSigI, completeness,
-				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf, sigAno, ccAno, isa);
+				multiplicity, anomalousCompleteness, anomalousMultiplicity, recordTimeStamp, anomalous, ccHalf, sigAno, ccAno, isa
+				, completenessSpherical, anomalousCompletenessSpherical,  completenessEllipsoidal, anomalousCompletenessEllipsoidal);
 		return storeOrUpdateAutoProcScalingStatisticValue(vo);
 	}
 
