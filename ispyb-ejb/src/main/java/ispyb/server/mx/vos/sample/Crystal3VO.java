@@ -21,18 +21,22 @@ package ispyb.server.mx.vos.sample;
 
 import ispyb.common.util.Constants;
 import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.common.vos.ISPyBValueObject;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Crystal3 value object mapping table Crystal
@@ -113,6 +117,10 @@ public class Crystal3VO extends ISPyBValueObject implements Cloneable {
 	@OneToMany
 	@JoinColumn(name = "crystalId")
 	private Set<BLSample3VO> sampleVOs;
+	
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JoinColumn(name = "crystalId")
+	protected Set<Structure3VO> structure3VOs;
 
 	public Crystal3VO() {
 		super();
@@ -417,6 +425,14 @@ public class Crystal3VO extends ISPyBValueObject implements Cloneable {
 			acronym += Constants.PROTEIN_ACRONYM_SPACE_GROUP_SEPARATOR + "Undefined";
 		}
 		return acronym;
+	}
+
+	public Set<Structure3VO> getStructure3VOs() {
+		return structure3VOs;
+	}
+
+	public void setStructure3VOs(Set<Structure3VO> structure3vOs) {
+		structure3VOs = structure3vOs;
 	}
 
 }

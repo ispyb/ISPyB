@@ -34,6 +34,8 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -45,6 +47,8 @@ import ispyb.common.util.beamlines.EMBLBeamlineEnum;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
 import ispyb.common.util.beamlines.MAXIVBeamlineEnum;
 import ispyb.common.util.beamlines.SOLEILBeamlineEnum;
+import ispyb.server.biosaxs.services.core.structure.Structure3Service;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
@@ -433,6 +437,47 @@ public class ToolsForBLSampleWebService {
 			throw e;
 		}
 	}
+	
+	/**
+	 * returns the pdb filePath for a given dataCollectionId
+	 * 
+	 * @param code
+	 * @param number
+	 * @return
+	 * @throws Exception
+	 */
+	@WebMethod
+	@WebResult(name = "structures")
+	public String getStructuresByDataCollectionId(
+	@WebParam(name = "dataCollectionId")Integer dataCollectionId) throws Exception {
+		try {
+			Structure3Service structure3service = (Structure3Service) ejb3ServiceLocator.getLocalService(Structure3Service.class);
+			List<Structure3VO> structures = structure3service.getStructuresByDataCollectionId(dataCollectionId);
+			return convertStructuresToCSV(structures);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private String convertStructuresToCSV(List<Structure3VO> structures) {
+
+		try {
+			StringBuilder sb = new StringBuilder();
+			for (Structure3VO structure3vo : structures) {
+				sb.append(structure3vo.getGroupName());
+				sb.append(",");
+				sb.append(structure3vo.getType());
+				sb.append(",");
+				sb.append(structure3vo.getFilePath());
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 
 	/**
 	 * Returns the list of protein acronyms for a given proposal

@@ -39,6 +39,30 @@ public class FileUploadForm {
 	@FormParam("fileName")
 	private String fileName;
 	
+	@FormParam("groupName")
+	private String groupName;
+
+	@FormParam("type")
+	private String type;
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
+	
 }
 
 

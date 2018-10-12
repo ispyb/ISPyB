@@ -4,7 +4,6 @@ import ispyb.server.biosaxs.services.ExperimentSerializer;
 import ispyb.server.biosaxs.services.core.ExperimentScope;
 import ispyb.server.biosaxs.vos.dataAcquisition.Experiment3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
-import ispyb.ws.rest.RestWebService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
