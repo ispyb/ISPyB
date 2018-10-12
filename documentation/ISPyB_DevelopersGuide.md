@@ -343,9 +343,9 @@ are for now 2 types of profiles:
 
   * Environment profiles
 
-    `ispyb.env-DEV`, `ispyb.env-ALT`, and `ispyb.env-PROD` define the way the
-    application is deployed: for example with `ispyb.env-DEV`, the javascript
-    is not minimized.
+    `ispyb.env-development`, `ispyb.env-test`, and `ispyb.env-production`
+    define the way the application is deployed: for example with
+    `ispyb.env-development`, the javascript is not minimized.
 
   * Site profiles (see [Profiles: site specific files and
     configuration](#profiles-site-specific-files-and-configuration))

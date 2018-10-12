@@ -204,27 +204,27 @@
 		
 	</dependencies>
 	
-	  <!--  profiles to separate dev to prod properties -->
-  <!--  the dev properties have to be set according to your own dev environment -->
+	  <!--  profiles to separate development to production properties -->
+  <!--  the development properties have to be set according to your own development environment -->
   <profiles>
     <profile>
-  		<id>ispyb.env-PROD</id>
+  		<id>ispyb.env-production</id>
   		<activation>
         	<activeByDefault>true</activeByDefault>
       	</activation>
   		
   		<properties>
-  		  	<ispyb.env>PROD</ispyb.env>  		
+  		  	<ispyb.env>production</ispyb.env>  		
   			<js.minimized>true</js.minimized>
   			<js.alternative.path.enabled>false</js.alternative.path.enabled>
   			<js.alternative.path> </js.alternative.path>
   		</properties>
   	</profile>
      <profile>
-  		<id>ispyb.env-DEV</id>
+  		<id>ispyb.env-development</id>
   		<properties>
   			<js.minimized>false</js.minimized>
-  			<ispyb.env>DEV</ispyb.env>
+  			<ispyb.env>development</ispyb.env>
   			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
   			<js.alternative.path.enabled>true</js.alternative.path.enabled>
   			<data.path>/work/ademaria/data/pyarch/</data.path>
@@ -350,7 +350,7 @@
   	<profile>
   		<id>ispyb.site-SOLEIL</id>
   		<properties>
-				<ispyb.env>PROD</ispyb.env>
+				<ispyb.env>production</ispyb.env>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path></js.alternative.path>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
