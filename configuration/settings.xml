@@ -254,7 +254,7 @@ under the License.
 
 		<id>ispyb.site-ESRF</id>
 		<properties>
-			<ispyb.site>ESRFsettings</ispyb.site>
+			<ispyb.site>ESRF</ispyb.site>
 		</properties>
     </profile>
 	

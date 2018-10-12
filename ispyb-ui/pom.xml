@@ -388,6 +388,10 @@
 		<profile>
 			<id>ispyb.env-production</id>
 			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>production</value>
+				</property>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 
@@ -400,6 +404,12 @@
 		
 		<profile>
 			<id>ispyb.env-development</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>development</value>
+				</property>
+			</activation>
 			<properties>
 				<js.minimized>false</js.minimized>
 				<ispyb.env>development</ispyb.env>
@@ -412,6 +422,10 @@
 		<profile>
 			<id>ispyb.site-ESRF</id>
 			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ESRF</value>
+				</property>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			
@@ -425,10 +439,22 @@
 
 		<profile>
 			<id>ispyb.site-EMBL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>EMBL</value>
+				</property>
+			</activation>
 		</profile>
 
 		<profile>
 			<id>ispyb.site-SOLEIL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>SOLEIL</value>
+				</property>
+			</activation>
 
 			<build>
 				<plugins>
@@ -475,6 +501,12 @@
 
 		<profile>
 			<id>ispyb.site-MAXIV</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>MAXIV</value>
+				</property>
+			</activation>
 		</profile>
 
 	</profiles>

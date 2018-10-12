@@ -210,6 +210,10 @@
     <profile>
   		<id>ispyb.env-production</id>
   		<activation>
+			<property>
+				<name>ispyb.env</name>
+				<value>production</value>
+			</property>
         	<activeByDefault>true</activeByDefault>
       	</activation>
   		
@@ -222,6 +226,12 @@
   	</profile>
      <profile>
   		<id>ispyb.env-development</id>
+		<activation>
+			<property>
+				<name>ispyb.env</name>
+				<value>development</value>
+			</property>
+		</activation>
   		<properties>
   			<js.minimized>false</js.minimized>
   			<ispyb.env>development</ispyb.env>
@@ -230,10 +240,25 @@
   			<data.path>/work/ademaria/data/pyarch/</data.path>
   		</properties>
   	</profile>
+	<profile>
+		<id>ispyb.env-test</id>
+		<activation>
+			<property>
+				<name>ispyb.env</name>
+				<value>test</value>
+			</property>
+		</activation>
+	</profile>
 
   <!--  profiles to separate site dependent properties -->  
   	<profile>
   		<id>ispyb.site-ESRF</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>ESRF</value>
+			</property>
+		</activation>
   		
   		<properties>
   			<ispyb.site>ESRF</ispyb.site>
@@ -295,6 +320,12 @@
   	</profile>
   	<profile>
   		<id>ispyb.site-EMBL</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>EMBL</value>
+			</property>
+		</activation>
   		<properties>
  			<ispyb.site>EMBL</ispyb.site>
                         <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
@@ -349,6 +380,12 @@
   	</profile>
   	<profile>
   		<id>ispyb.site-SOLEIL</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>SOLEIL</value>
+			</property>
+		</activation>
   		<properties>
 				<ispyb.env>production</ispyb.env>
 				<js.minimized>true</js.minimized>
@@ -418,6 +455,12 @@
   	
   	<profile>
   		<id>ispyb.site-MAXIV</id>  		
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>MAXIV</value>
+			</property>
+		</activation>
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
@@ -485,6 +528,12 @@
   	
   	<profile>
   		<id>ispyb.site-GENERIC</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>GENERIC</value>
+			</property>
+		</activation>
   		
   		<properties>
   			<ispyb.site>GENERIC</ispyb.site>

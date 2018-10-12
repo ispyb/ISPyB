@@ -332,6 +332,10 @@
 		<profile>
 			<id>ispyb.site-ESRF</id>
 			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ESRF</value>
+				</property>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 
