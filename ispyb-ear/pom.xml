@@ -92,7 +92,7 @@
 	
 	<profiles>
 		<profile>
-			<id>SOLEIL</id>
+			<id>ispyb.site-SOLEIL</id>
 			<!-- Add dependencies and MANIFEST to declare in Class-Path the .jar needed by securityfilter to solve classloading issue -->
 			<dependencies>
 				<dependency>

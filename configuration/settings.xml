@@ -220,7 +220,7 @@ under the License.
     -->
 	
 	<profile>
-      <id>GENERIC</id>
+      <id>ispyb.site-GENERIC</id>
 		<properties>
 			<ispyb.site>GENERIC</ispyb.site>
 			<smis.ws.usr>xxx</smis.ws.usr>
@@ -242,7 +242,7 @@ under the License.
     </properties>
   </profile>
   <profile>
-    <id>MAXIV</id>
+    <id>ispyb.site-MAXIV</id>
     <properties>
         <ispyb.site>MAXIV</ispyb.site>
     </properties>
@@ -252,7 +252,7 @@ under the License.
 	<!--
 	<profile>	
 
-		<id>ESRF</id>
+		<id>ispyb.site-ESRF</id>
 		<properties>
 			<ispyb.site>ESRFsettings</ispyb.site>
 		</properties>
@@ -260,7 +260,7 @@ under the License.
 	
 	<profile>	
 		
-		<id>EMBL</id>
+		<id>ispyb.site-EMBL</id>
 		<properties>
 			<ispyb.site>EMBL</ispyb.site>
 		</properties>
@@ -307,7 +307,7 @@ under the License.
    | List of profiles that are active for all builds.
    |   -->
   <activeProfiles>
-    <activeProfile>ESRF</activeProfile>
+    <activeProfile>ispyb.site-ESRF</activeProfile>
   </activeProfiles>
 
 </settings>

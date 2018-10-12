@@ -229,7 +229,7 @@ under the License.
     -->
 	
 	<profile>
-      <id>ESRF</id>
+      <id>ispyb.site-ESRF</id>
 		<properties>
 			 <!-- RFC: ispyb.site is already on pom.xml and could be moved to ispyb-parent/pom.xml -->
 			 <!-- <ispyb.site>ESRF</ispyb.site> -->
@@ -243,7 +243,7 @@ under the License.
 	<!--
 	<profile>	
 
-		<id>ESRF</id>
+		<id>ispyb.site-ESRF</id>
 		<properties>
 			<ispyb.site>ESRFsettings</ispyb.site>
 		</properties>
@@ -251,7 +251,7 @@ under the License.
 	
 	<profile>	
 		
-		<id>EMBL</id>
+		<id>ispyb.site-EMBL</id>
 		<properties>
 			<ispyb.site>EMBL</ispyb.site>
 		</properties>
@@ -298,7 +298,7 @@ under the License.
    | List of profiles that are active for all builds.
    |   -->
   <activeProfiles>
-    <activeProfile>ESRF</activeProfile>
+    <activeProfile>ispyb.site-ESRF</activeProfile>
   </activeProfiles>
 
 </settings>

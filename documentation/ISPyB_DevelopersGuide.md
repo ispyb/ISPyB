@@ -336,20 +336,22 @@ classes built from wsdl.
 Customize the `bindings.xml` file in `src/main/resources` to the correct wsdl
 location.
 
-### Site and deployment customization
+### Environment and Site Customization
 
 In the `pom.xml` of `ispyb-ui` and `ispyb-ejb` you will find profiles, there
 are for now 2 types of profiles:
 
-  * Deployment profiles
+  * Environment profiles
 
-    `DEV`, `ALT`, and `PROD` define the way the application is deployed: for
-    example with `DEV`, the javascript is not minimized.
+    `ispyb.env-DEV`, `ispyb.env-ALT`, and `ispyb.env-PROD` define the way the
+    application is deployed: for example with `ispyb.env-DEV`, the javascript
+    is not minimized.
 
-  * Site configuration profiles (see [Profiles: site specific files and
+  * Site profiles (see [Profiles: site specific files and
     configuration](#profiles-site-specific-files-and-configuration))
 
-    `ESRF`, `EMBL`, `SOLEIL`, `MAXIV` profiles contains the properties
+    `ispyb.site-ESRF`, `ispyb.site-EMBL`, `ispyb.site-SOLEIL`,
+    `ispyb.site-MAXIV` profiles contains the properties
     previously defined in the `ISPyB_XXX.properties`.
 
     These profiles with their properties are defined in the `ispyb-ejb/pom.xml`
@@ -760,7 +762,7 @@ like:
 <profiles>
   <!-- ... -->
   <profile>
-    <id>GENERIC</id>
+    <id>ispyb.site-GENERIC</id>
     <properties>
       <ispyb.site>GENERIC</ispyb.site>
       <jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
@@ -769,7 +771,7 @@ like:
 </profiles>
 <!-- ... -->
 <activeProfiles>
-<activeProfile>GENERIC</activeProfile>
+<activeProfile>ispyb.site-GENERIC</activeProfile>
 </activeProfiles>
 <!-- ... -->
 ```

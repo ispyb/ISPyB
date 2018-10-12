@@ -208,7 +208,7 @@
   <!--  the dev properties have to be set according to your own dev environment -->
   <profiles>
     <profile>
-  		<id>PROD</id>
+  		<id>ispyb.env-PROD</id>
   		<activation>
         	<activeByDefault>true</activeByDefault>
       	</activation>
@@ -221,7 +221,7 @@
   		</properties>
   	</profile>
      <profile>
-  		<id>DEV</id>
+  		<id>ispyb.env-DEV</id>
   		<properties>
   			<js.minimized>false</js.minimized>
   			<ispyb.env>DEV</ispyb.env>
@@ -233,7 +233,7 @@
 
   <!--  profiles to separate site dependent properties -->  
   	<profile>
-  		<id>ESRF</id>
+  		<id>ispyb.site-ESRF</id>
   		
   		<properties>
   			<ispyb.site>ESRF</ispyb.site>
@@ -294,7 +294,7 @@
 		</properties>
   	</profile>
   	<profile>
-  		<id>EMBL</id>
+  		<id>ispyb.site-EMBL</id>
   		<properties>
  			<ispyb.site>EMBL</ispyb.site>
                         <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
@@ -348,7 +348,7 @@
 		</properties>
   	</profile>
   	<profile>
-  		<id>SOLEIL</id>
+  		<id>ispyb.site-SOLEIL</id>
   		<properties>
 				<ispyb.env>PROD</ispyb.env>
 				<js.minimized>true</js.minimized>
@@ -417,7 +417,7 @@
   	</profile> 
   	
   	<profile>
-  		<id>MAXIV</id>  		
+  		<id>ispyb.site-MAXIV</id>  		
   		<properties>
   			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
@@ -484,7 +484,7 @@
   	</profile>
   	
   	<profile>
-  		<id>GENERIC</id>
+  		<id>ispyb.site-GENERIC</id>
   		
   		<properties>
   			<ispyb.site>GENERIC</ispyb.site>

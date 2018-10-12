@@ -330,7 +330,7 @@
 		<profiles>
 		<!-- profiles to separate site dependent properties -->
 		<profile>
-			<id>ESRF</id>
+			<id>ispyb.site-ESRF</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>

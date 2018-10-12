@@ -386,7 +386,7 @@
 	<profiles>
 	
 		<profile>
-			<id>PROD</id>
+			<id>ispyb.env-PROD</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -399,7 +399,7 @@
 		</profile>
 		
 		<profile>
-			<id>DEV</id>
+			<id>ispyb.env-DEV</id>
 			<properties>
 				<js.minimized>false</js.minimized>
 				<ispyb.env>DEV</ispyb.env>
@@ -410,7 +410,7 @@
 		<!-- profiles to separate site dependent properties : the properties are 
 			stored in pom.xml of ispyb-ejb module -->
 		<profile>
-			<id>ESRF</id>
+			<id>ispyb.site-ESRF</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -424,11 +424,11 @@
 		</profile>
 
 		<profile>
-			<id>EMBL</id>
+			<id>ispyb.site-EMBL</id>
 		</profile>
 
 		<profile>
-			<id>SOLEIL</id>
+			<id>ispyb.site-SOLEIL</id>
 
 			<build>
 				<plugins>
@@ -474,7 +474,7 @@
 		</profile>
 
 		<profile>
-			<id>MAXIV</id>
+			<id>ispyb.site-MAXIV</id>
 		</profile>
 
 	</profiles>

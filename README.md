@@ -47,7 +47,7 @@ For example:
 	</proxies>
 	<profiles>
 		<profile>
-			<id>ESRF</id>
+			<id>ispyb.site-ESRF</id>
 			<properties>
 				<ispyb.site>ESRF</ispyb.site>
 				<smis.ws.usr>******</smis.ws.usr>
@@ -57,7 +57,7 @@ For example:
 		</profile>
 	</profiles>
 	<activeProfiles>
-		<activeProfile>ESRF</activeProfile>
+		<activeProfile>ispyb.site-ESRF</activeProfile>
 	</activeProfiles>
 </settings>
 ```
