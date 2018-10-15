@@ -179,8 +179,8 @@
 		
 		<dependency>
 			<groupId>ispyb</groupId>
-			<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-			<version>1.4</version>
+			<artifactId>ispyb-userportal-gen</artifactId>
+			<version>1.5</version>
 		</dependency>
 		
 		<dependency>
