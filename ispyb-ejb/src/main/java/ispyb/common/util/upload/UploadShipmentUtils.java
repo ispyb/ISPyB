@@ -424,7 +424,8 @@ public class UploadShipmentUtils {
 					
 					// --- Retrieve interesting values from spreadsheet
 					String puckCode = cellToString(sheet.getRow(puckRow).getCell(puckCol));
-					String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
+					//String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
+					String proteinName ="";
 					String proteinAcronym = cellToString(sheet.getRow(i).getCell(proteinAcronymCol));
 					String samplePos = cellToString(sheet.getRow(i).getCell(samplePosCol));
 					String sampleName = cellToString(sheet.getRow(i).getCell(sampleNameCol));
