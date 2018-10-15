@@ -214,7 +214,6 @@
 				<name>ispyb.env</name>
 				<value>production</value>
 			</property>
-        	<activeByDefault>true</activeByDefault>
       	</activation>
   		
   		<properties>

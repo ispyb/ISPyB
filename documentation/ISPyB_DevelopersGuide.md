@@ -271,7 +271,7 @@ the database update (WSClient).
 
 ## Using Maven
 
-### Install maven 3.1.1
+### Install maven 3.3.1
 
 RFC: `ispyb.site` is already on `pom.xml` and could be moved to
 `ispyb-parent/pom.xml`.
@@ -338,14 +338,29 @@ location.
 
 ### Environment and Site Customization
 
-In the `pom.xml` of `ispyb-ui` and `ispyb-ejb` you will find profiles, there
-are for now 2 types of profiles:
+ISPyB is customized by its environment and site.
 
-  * Environment profiles
+There are three environments (previously known as deployment modes)
+for which ISPyB can be built and run: `production`, `development`, and
+`test`.  The default environment is `development`.  Each environment has
+a corresponding Maven profile named `ispyb.env-<environment>`, where
+`<environment>` is the name of the environment.  These profiles allow
+per-environment customization (e.g., JavaScript could be minified in the
+`production` environment, but not in the `development` environment).  The
+environment can be set via the `ispyb.env` system property; the allowed
+values are the environment names.  By default, `ispyb.env` is set to the
+name of the default environment: `development`.
 
-    `ispyb.env-development`, `ispyb.env-test`, and `ispyb.env-production`
-    define the way the application is deployed: for example with
-    `ispyb.env-development`, the javascript is not minimized.
+To change the environment for the user invoking Maven, add
+`-Dispyb.env=<environment>`, where `<environment>` is the name of the
+desired environment, to the `MAVEN_OPTS` environment variable.
+
+To change the environment for an invocation of Maven, add
+`-Dispyb.env=<environment>`, where `<environment>` is the name of
+the desired environment, to the Maven command line (e.g., `mvn
+-Dispyb.env=production clean install`).
+
+In the `pom.xml` of `ispyb-ui` and `ispyb-ejb`, you will find site profiles:
 
   * Site profiles (see [Profiles: site specific files and
     configuration](#profiles-site-specific-files-and-configuration))
@@ -739,7 +754,11 @@ private boolean validate(ViewShippingForm form, ActionErrors errors) {
 }
 ```
 
-## Profiles: site specific files and configuration
+## Profiles: environment- and site-specific files and configuration
+
+The environment profiles are defined in the `pom.xml` file of the `ispyb-ejb`
+module. Each environment profile contains all the properties for a specific
+environment.
 
 The site profile is defined in the `pom.xml` in `ispyb-ejb` module. The site
 profile contains all the properties linked to a specific profile. See the
