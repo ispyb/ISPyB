@@ -81,6 +81,30 @@ public class DataCollectionGroupRestWsServiceBean extends WsServiceBean implemen
 	}
 
 	@Override
+	public List<Map<String, Object>> getViewDataCollectionBySampleName(int proposalId, String name) {
+		String mySQLQuery = getViewTableQuery() + " where BLSession_proposalId = :proposalId and BLSample_name = :name";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("name", name);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getViewDataCollectionByImagePrefix(int proposalId, String prefix) {
+		String mySQLQuery = getViewTableQuery() + " where BLSession_proposalId = :proposalId and DataCollection_imagePrefix = :prefix";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("prefix", prefix);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
+	}
+
+	@Override
 	public Collection<? extends Map<String, Object>> getViewDataCollectionByDataCollectionId(int proposalId, int dataCollectionId) {
 		String mySQLQuery = getViewTableQuery() + " where DataCollection_dataCollectionId = :dataCollectionId and BLSession_proposalId = :proposalId ";
 		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";

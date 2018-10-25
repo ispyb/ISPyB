@@ -177,7 +177,7 @@ public interface BLSample3Service {
 	public List<BLSample3VO> findByCode(final String code) throws Exception;
 
 	public List<BLSample3VO> findByStatus(final String status) throws Exception;
-
+	
 	public List<BLSample3VO> findFiltered(final Integer proposalId, final Integer proteinId, final String acronym,
 			final Integer crystalId, final String name, final String code, final String statusByte,
 			final Byte isInSampleChanger, final Integer shippingId, final String sortType) throws Exception;
@@ -217,5 +217,6 @@ public interface BLSample3Service {
 	public void resetIsInSampleChanger(final Integer proposalId) throws Exception;
 	
 	public SampleInfo findForWSSampleInfo(final Integer sampleId) throws Exception ;
+
 
 }

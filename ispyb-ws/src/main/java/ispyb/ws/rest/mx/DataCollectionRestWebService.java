@@ -216,6 +216,8 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+
+	/** reports section **/
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
@@ -235,6 +237,54 @@ public class DataCollectionRestWebService extends MXRestWebService {
 				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
 			else
 				return this.downloadFile(byteToExport, "No_session.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsReportByfilterParamPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("filterParam") String filterParam) throws NamingException {
+
+		String methodName = "getDataCollectionReportyByfilterParamPdf";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, false, false);
+			this.logFinish(methodName, start, logger);
+			
+			if (filterParam != null)
+				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".pdf");
+			else 
+				return this.downloadFile(byteToExport, "No_data.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/rtf")
+	@Produces({ "application/rtf" })
+	public Response getDataCollectionsReportByfilterParamRTF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("filterParam") String filterParam) throws NamingException {
+
+		String methodName = "getDataCollectionReportyByfilterParamPdf";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, true, false);
+			this.logFinish(methodName, start, logger);
+			
+			if (filterParam != null)
+				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".rtf");
+			else 
+				return this.downloadFile(byteToExport, "No_data.rtf");
 						
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
@@ -291,6 +341,52 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/analysisreport/pdf")
+	@Produces({ "application/pdf" })
+	public Response getDataCollectionsAnalysisReportByFilterParamPDF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("filterParam") String filterParam)  throws NamingException {
+
+		String methodName = "getDataCollectionAnalysisReportyByFilterParamPdf";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, false, true);
+			this.logFinish(methodName, start, logger);
+			if (filterParam !=null)
+				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ filterParam + ".pdf");
+			else
+				return this.downloadFile(byteToExport, "No_data.pdf");
+						
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/analysisreport/rtf")
+	@Produces({ "application/rtf" })
+	public Response getDataCollectionsAnalysisReportByFilterParamRTF(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("filterParam") String filterParam) throws NamingException {
+
+		String methodName = "getDataCollectionReportyByFilterParamRtf";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getPdfRtf(filterParam, proposal, true, true);
+			this.logFinish(methodName, start, logger);
+
+			if (filterParam !=null)
+				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ filterParam + ".rtf");
+			else
+				return this.downloadFile(byteToExport, "No_data.rtf");		
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/analysisreport/rtf")
 	@Produces({ "application/rtf" })
 	public Response getDataCollectionsAnalysisReportBySessionIdRTF(@PathParam("token") String token,
@@ -306,13 +402,14 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			if (ses !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 			else
-				return this.downloadFile(byteToExport, "No_session.pdf");		
+				return this.downloadFile(byteToExport, "No_session.rtf");		
 		} catch (Exception e) {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
 
-	
+	/** end of reports section **/
+		
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP
@@ -430,6 +527,41 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 		 
 		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, xrfSpectrums, nbRowsMax);
+		byte [] byteToExport;
+		
+		if (isAnalysis)
+			byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
+		else
+			byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
+		
+		return byteToExport;
+	}
+	
+	private byte [] getPdfRtf(String filterParam, String proposal, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
+		
+		
+		List<Map<String, Object>> dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionByProteinAcronym(this.getProposalId(proposal), filterParam);
+		
+		if (dataCollections == null || dataCollections.isEmpty()) {
+			dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySampleName(this.getProposalId(proposal), filterParam);
+		}
+		
+		if (dataCollections == null || dataCollections.isEmpty()) {
+			dataCollections = 
+				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionByImagePrefix(this.getProposalId(proposal), filterParam);
+		}
+		
+		List<Map<String, Object>> energyScans = null;
+		
+		List<Map<String, Object>> xrfSpectrums = null;
+		
+		Integer nbRowsMax = dataCollections.size();
+		
+		Integer id = null;
+						 
+		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , filterParam, dataCollections, energyScans, xrfSpectrums, nbRowsMax);
 		byte [] byteToExport;
 		
 		if (isAnalysis)

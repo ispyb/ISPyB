@@ -424,7 +424,8 @@ public class UploadShipmentUtils {
 					
 					// --- Retrieve interesting values from spreadsheet
 					String puckCode = cellToString(sheet.getRow(puckRow).getCell(puckCol));
-					String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
+					//String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
+					String proteinName ="";
 					String proteinAcronym = cellToString(sheet.getRow(i).getCell(proteinAcronymCol));
 					String samplePos = cellToString(sheet.getRow(i).getCell(samplePosCol));
 					String sampleName = cellToString(sheet.getRow(i).getCell(sampleNameCol));
@@ -729,7 +730,7 @@ public class UploadShipmentUtils {
 	public static Crystal3VO getCrystal(List<Crystal3VO> listCrystal, Crystal3VO crystalVO) {
 		for (Iterator<Crystal3VO> c = listCrystal.iterator(); c.hasNext();) {
 			Crystal3VO crystal = c.next();
-			if (crystalVO.getProteinVOId().equals(crystal.getProteinVOId())
+			if (crystalVO.getProteinVOId() != null && crystalVO.getProteinVOId().equals(crystal.getProteinVOId())
 					&& crystal.getSpaceGroup() != null
 					&& crystal.getSpaceGroup().equals(crystalVO.getSpaceGroup())
 					&& ((crystalVO.getCellA() != null && crystalVO.getCellA().equals(crystal.getCellA())) || (crystalVO.getCellA() == null && crystal

@@ -1,5 +1,8 @@
 package ispyb.ws.rest.saxs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ispyb.server.biosaxs.services.core.analysis.Analysis3Service;
 import ispyb.server.biosaxs.services.core.analysis.abInitioModelling.AbInitioModelling3Service;
 import ispyb.server.biosaxs.services.core.analysis.primaryDataProcessing.PrimaryDataProcessing3Service;
@@ -10,6 +13,7 @@ import ispyb.server.biosaxs.services.core.robot.Robot3Service;
 import ispyb.server.biosaxs.services.stats.Stats3Service;
 import ispyb.server.biosaxs.services.webUserInterface.WebUserInterfaceService;
 import ispyb.server.biosaxs.services.ws.rest.datacollection.SaxsDataCollectionRestWsService;
+import ispyb.server.biosaxs.vos.datacollection.Subtraction3VO;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.ws.rest.RestWebService;
 
@@ -62,5 +66,21 @@ public class SaxsRestWebService extends RestWebService{
 	protected WebUserInterfaceService getWebUserInterfaceService() throws NamingException {
 		return (WebUserInterfaceService) Ejb3ServiceLocator.getInstance()
 				.getLocalService(WebUserInterfaceService.class);
+	}
+	
+	protected List<Subtraction3VO> getAbinitioModelsBySubtractionId(String proposal, String subtractionIdList)
+			throws NamingException {
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		AbInitioModelling3Service abInitioModelling3Service = (AbInitioModelling3Service) ejb3ServiceLocator
+				.getLocalService(AbInitioModelling3Service.class);
+
+		List<Integer> list = parseToInteger(subtractionIdList);
+		List<Subtraction3VO> result = new ArrayList<Subtraction3VO>();
+		if (subtractionIdList != null) {
+			for (Integer subtractionId : list) {
+				result.addAll(abInitioModelling3Service.getAbinitioModelsBySubtractionId(subtractionId));
+			}
+		}
+		return result;
 	}
 }
