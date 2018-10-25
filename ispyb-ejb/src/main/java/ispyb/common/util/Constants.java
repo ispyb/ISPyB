@@ -176,6 +176,12 @@ public final class Constants {
 	public static final String ACCESS_DENIED = "Access not authorised.";
 	
 	/*
+	 * adminVar keys
+	 */
+	
+	public static final Integer UPDATE_NB_DAYS_PK = 5;
+	
+	/*
 	 * proposal s types
 	 */
 	public static final String PROPOSAL_MX = "MX";

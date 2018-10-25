@@ -37,6 +37,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
+import ispyb.common.util.Constants;
 import ispyb.server.common.services.admin.AdminVar3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.admin.AdminVar3VO;
@@ -65,8 +66,6 @@ public class UpdateFromSMISWebService extends ParentWebService{
 
 	static String DATE_FORMAT = "dd/MM/yyyy";
 	
-	static Integer UPDATE_NB_DAYS_PK = 5;
-	
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
 	public String echo() {
@@ -91,7 +90,7 @@ public class UpdateFromSMISWebService extends ParentWebService{
 			AdminVar3Service adminVarService = (AdminVar3Service) ejb3ServiceLocator
 					.getLocalService(AdminVar3Service.class);
 
-			AdminVar3VO adminVar = adminVarService.findByPk(UPDATE_NB_DAYS_PK);
+			AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_NB_DAYS_PK);
 			if (adminVar != null)
 				nbDays = new Integer(adminVar.getValue());
 			
