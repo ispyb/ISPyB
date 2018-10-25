@@ -37,6 +37,9 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.jboss.ws.api.annotation.WebContext;
 
+import ispyb.server.common.services.admin.AdminVar3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.admin.AdminVar3VO;
 import ispyb.server.mx.vos.collections.SessionWS3VO;
 import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.ws.ParentWebService;
@@ -57,8 +60,12 @@ import ispyb.ws.ParentWebService;
 
 public class UpdateFromSMISWebService extends ParentWebService{
 	private final static Logger logger = Logger.getLogger(UpdateFromSMISWebService.class);
+	
+	private final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
 	static String DATE_FORMAT = "dd/MM/yyyy";
+	
+	static Integer UPDATE_NB_DAYS_PK = 5;
 	
 	@WebMethod(operationName = "echo")
 	@WebResult(name = "echo")
@@ -79,8 +86,16 @@ public class UpdateFromSMISWebService extends ParentWebService{
 		try {
 			Calendar cal = Calendar.getInstance();
 			Date today = cal.getTime();
+			Integer nbDays = 4;
 			
-			cal.roll(Calendar.DATE, -4);			
+			AdminVar3Service adminVarService = (AdminVar3Service) ejb3ServiceLocator
+					.getLocalService(AdminVar3Service.class);
+
+			AdminVar3VO adminVar = adminVarService.findByPk(UPDATE_NB_DAYS_PK);
+			if (adminVar != null)
+				nbDays = new Integer(adminVar.getValue());
+			
+			cal.roll(Calendar.DATE, -nbDays);			
 			Date startDate = cal.getTime();
 
 			SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
