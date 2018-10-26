@@ -509,7 +509,7 @@ public class MAXIVWebService implements SMISWebService {
 		try{
 			CloseableHttpResponse response = httpclient.execute(httpGet);
 			//System.out.println(response.getStatusLine());
-			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent())));
+			String jsonStr = IOUtils.toString(new InputStreamReader((response.getEntity().getContent()), "UTF-8"));
 			LOG.debug("readJsonObjectFromUrl: JSON string: " + jsonStr);
 			jsonObj = new JSONObject(jsonStr);
 		}
