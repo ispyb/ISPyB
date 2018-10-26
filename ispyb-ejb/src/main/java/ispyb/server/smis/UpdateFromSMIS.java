@@ -529,10 +529,11 @@ public class UpdateFromSMIS {
 					siteId = labContacts[i].getSiteId().toString();
 					currentPerson = person.findBySiteId(siteId);
 				} else {
-					List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);					
+					currentPerson = person.findByLogin(labContacts[i].getBllogin());
+					/*List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);
 					if (persons != null && !persons.isEmpty()) {
 						currentPerson = persons.get(0);
-					}
+					}*/
 				}
 									
 				if (currentPerson != null) {
