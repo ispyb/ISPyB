@@ -66,6 +66,9 @@ public class PhasingProgramAttachment3VO extends ISPyBValueObject implements Clo
 	@Column(name = "filePath")
 	protected String filePath;
 	
+	@Column(name = "input")
+	protected Byte input;	
+	
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 	
@@ -187,5 +190,13 @@ public class PhasingProgramAttachment3VO extends ISPyBValueObject implements Clo
 		"recordTimeStamp="+this.recordTimeStamp;
 		
 		return s;
+	}
+
+	public Byte getInput() {
+		return input;
+	}
+
+	public void setInput(Byte input) {
+		this.input = input;
 	}
 }

@@ -40,10 +40,10 @@
 						</goals>
 						<configuration>
 							<groupId>ispyb</groupId>
-							<artifactId>ispyb-WSclient-userportal-gen</artifactId>
-							<version>1.4</version>
+							<artifactId>ispyb-userportal-gen</artifactId>
+							<version>1.5</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../dependencies/ispyb-WSclient-userportal-gen-1.4.jar</file>
+							<file>${basedir}/../dependencies/ispyb-userportal-gen-1.5.jar</file>
 						</configuration>
 					</execution>
 					<execution>
