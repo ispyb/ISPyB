@@ -359,7 +359,8 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 							if (Constants.SITE_IS_MAXIV()) {
 								if (roleName.equals("Staff")) {
 									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
-								} else if (roleName.equals("ispyb-manager")) {
+								} else if (roleName.equals("ispyb-manager")
+										|| roleName.equals("Information Management") || roleName.equals("biomax")) {
 									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_ADMIN));
