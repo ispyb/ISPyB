@@ -85,8 +85,9 @@ public class MAXIVLoginModule {
                             roleName = value.toString();
                             // fill roles array
                             if (roleName != null) {
-                                if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts")) {
-                                    myRoles.add(Constants.ROLE_MANAGER);
+								if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
+                                		roleName.equals("Information Management") || roleName.equals("biomax")) {
+									myRoles.add(Constants.ROLE_MANAGER);
                                     myRoles.add(Constants.ROLE_LOCALCONTACT);
                                     myRoles.add(Constants.ROLE_ADMIN);
                                     myRoles.add(Constants.ROLE_BLOM);
