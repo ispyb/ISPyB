@@ -42,8 +42,7 @@ public class TrackingEmail {
 	public static boolean sendArrivalEmailToLabContact(boolean inTest, String emailStores, String emailMxInd, String dewarBarCode,
 			Timestamp dateTime, String location) throws Exception {
 
-		// LOG.debug("Dewar Tracking / sendArrivalEmailToLabContact for dewar barcode
-		// '"+dewarBarCode+"'");
+		LOG.debug("Dewar Tracking / sendArrivalEmailToLabContact for dewar barcode "+dewarBarCode);
 
 		try {
 			// Get dewar info
