@@ -19,6 +19,19 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.log4j.Logger;
 
 import org.json.JSONArray;
@@ -502,8 +515,8 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private JSONObject readJsonObjectFromUrl(String url){
 		JSONObject jsonObj = null;
-				
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+
+		CloseableHttpClient httpclient = getHttpClient();
 		HttpGet httpGet = new HttpGet(url.toString());
 		
 		try{
@@ -524,8 +537,8 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private JSONArray readJsonArrayFromUrl(String url){
 		JSONArray jsonArr = null;
-				
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+
+		CloseableHttpClient httpclient = getHttpClient();
 		HttpGet httpGet = new HttpGet(url.toString());
 		
 		try{
@@ -550,7 +563,7 @@ public class MAXIVWebService implements SMISWebService {
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Users/login");
 		
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		CloseableHttpClient httpclient = getHttpClient();
 		HttpPost httpPost = new HttpPost(url.toString());
 		
 		try{
@@ -718,5 +731,45 @@ public class MAXIVWebService implements SMISWebService {
 	    }
 		
 		return filter.toString();
+	}
+
+	private static SSLContext buildSSLContext()
+			throws NoSuchAlgorithmException, KeyManagementException,
+			KeyStoreException {
+		SSLContext sslcontext = SSLContexts.custom()
+				.setSecureRandom(new SecureRandom())
+				.loadTrustMaterial(null, new TrustStrategy() {
+
+					public boolean isTrusted(X509Certificate[] chain, String authType)
+							throws CertificateException {
+						return true;
+					}
+				})
+				.build();
+		return sslcontext;
+	}
+
+	private CloseableHttpClient getHttpClient(){
+		CloseableHttpClient httpclient = null;
+		try {
+			// Trust all certs
+			SSLContext sslcontext = buildSSLContext();
+
+			// Allow TLSv1 protocol only
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+					sslcontext,
+					new String[]{"TLSv1"},
+					null,
+					SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+
+			httpclient = HttpClients.custom()
+					.setSSLSocketFactory(sslsf)
+					.build();
+		} catch (Exception ex) {
+			LOG.debug("readJsonObjectFromUrl: "+ ex.getMessage());
+			httpclient = HttpClients.createDefault();
+		}
+		return httpclient;
 	}
 }
