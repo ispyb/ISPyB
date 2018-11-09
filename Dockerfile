@@ -40,4 +40,8 @@ COPY --from=builder /var/ispyb.ear /opt/jboss/wildfly/standalone/deployments/
 COPY configuration/standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
 ADD configuration/mysql /opt/jboss/wildfly/modules/system/layers/base/com/mysql
 
+# Import DUO certificate
+COPY certs/duo_maxiv_lu_se.crt /etc/ssl/certs/duo_maxiv_lu_se.crt
+RUN keytool -import -alias duo -keystore  /usr/lib/jvm/jre/lib/security/cacerts -file /etc/ssl/certs/duo_maxiv_lu_se.crt
+
 ENTRYPOINT ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
