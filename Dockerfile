@@ -42,6 +42,6 @@ ADD configuration/mysql /opt/jboss/wildfly/modules/system/layers/base/com/mysql
 
 # Import DUO certificate
 COPY certs/duo_maxiv_lu_se.crt /etc/ssl/certs/duo_maxiv_lu_se.crt
-RUN keytool -import -alias duo -keystore  /usr/lib/jvm/jre/lib/security/cacerts -file /etc/ssl/certs/duo_maxiv_lu_se.crt
+RUN keytool -import -alias duo -keystore  /usr/lib/jvm/jre/lib/security/cacerts -file /etc/ssl/certs/duo_maxiv_lu_se.crt -storepass changeit -noprompt
 
 ENTRYPOINT ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
