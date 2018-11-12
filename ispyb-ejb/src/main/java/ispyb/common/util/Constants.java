@@ -179,7 +179,8 @@ public final class Constants {
 	 * adminVar keys
 	 */
 	
-	public static final Integer UPDATE_NB_DAYS_PK = 5;
+	public static final Integer UPDATE_DAILY_NB_DAYS_PK = 5;
+	public static final Integer UPDATE_PROPOSAL_NB_DAYS_WINDOW_PK = 6;
 	
 	/*
 	 * proposal s types

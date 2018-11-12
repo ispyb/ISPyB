@@ -90,7 +90,7 @@ public class UpdateFromSMISWebService extends ParentWebService{
 			AdminVar3Service adminVarService = (AdminVar3Service) ejb3ServiceLocator
 					.getLocalService(AdminVar3Service.class);
 
-			AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_NB_DAYS_PK);
+			AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_DAILY_NB_DAYS_PK);
 			if (adminVar != null)
 				nbDays = new Integer(adminVar.getValue());
 			
