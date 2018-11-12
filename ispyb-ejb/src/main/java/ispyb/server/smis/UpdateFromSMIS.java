@@ -85,18 +85,18 @@ public class UpdateFromSMIS {
 	private static Crystal3Service crystal;
 	private static BeamLineSetup3Service setup;
 	private static LabContact3Service labContactService;
+	private static AdminVar3Service adminVarService;
 
 	public static void updateFromSMIS() throws Exception {
+		
+		initServices();
 
 		Calendar cal = Calendar.getInstance();
 		Date today = cal.getTime();
 		
-		Integer nbDays = 3;
-		
-		AdminVar3Service adminVarService = (AdminVar3Service) ejb3ServiceLocator
-				.getLocalService(AdminVar3Service.class);
+		Integer nbDays = 3;		
 
-		AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_NB_DAYS_PK);
+		AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_DAILY_NB_DAYS_PK);
 		if (adminVar != null)
 			nbDays = new Integer(adminVar.getValue());
 		
@@ -126,6 +126,8 @@ public class UpdateFromSMIS {
 		crystal = (Crystal3Service) ejb3ServiceLocator.getLocalService(Crystal3Service.class);
 		setup = (BeamLineSetup3Service) ejb3ServiceLocator.getLocalService(BeamLineSetup3Service.class);
 		labContactService = (LabContact3Service) ejb3ServiceLocator.getLocalService(LabContact3Service.class);
+		adminVarService = (AdminVar3Service) ejb3ServiceLocator
+				.getLocalService(AdminVar3Service.class);
 	}
 
 	public static void updateFromSMIS(String startDateStr, String endDateStr) throws Exception {
@@ -272,11 +274,15 @@ public class UpdateFromSMIS {
 
 	public static void updateThisProposalFromSMISPk(Long pk) throws Exception {
 
-		Integer nbDays = 365;
-
 		initServices();
 
-		LOG.debug("--------------------- ws created looking for proposalPk =  " + pk);
+		Integer nbDays = 365;
+		
+		AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_PROPOSAL_NB_DAYS_WINDOW_PK);
+		if (adminVar != null)
+			nbDays = new Integer(adminVar.getValue());
+
+		LOG.debug("---------------- ws created looking for proposalPk =  " + pk + "  for nbdays = " + nbDays);
 
 		List<ExpSessionInfoLightVO> smisSessions_;
 		List<ProposalParticipantInfoLightVO> mainProposers_ ;
