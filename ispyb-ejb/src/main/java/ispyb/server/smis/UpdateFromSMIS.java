@@ -46,6 +46,7 @@ import ispyb.common.util.IspybDateUtils;
 import ispyb.common.util.StringUtils;
 import ispyb.server.biosaxs.services.core.proposal.SaxsProposal3Service;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.common.services.admin.AdminVar3Service;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Laboratory3Service;
 import ispyb.server.common.services.proposals.Person3Service;
@@ -53,6 +54,7 @@ import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.proposals.ProposalHasPerson3Service;
 import ispyb.server.common.services.sessions.Session3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.admin.AdminVar3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Laboratory3VO;
 import ispyb.server.common.vos.proposals.Person3VO;
@@ -88,18 +90,28 @@ public class UpdateFromSMIS {
 
 		Calendar cal = Calendar.getInstance();
 		Date today = cal.getTime();
-		cal.roll(Calendar.DATE, -3);
 		
-		Date yesterday = cal.getTime();
+		Integer nbDays = 3;
+		
+		AdminVar3Service adminVarService = (AdminVar3Service) ejb3ServiceLocator
+				.getLocalService(AdminVar3Service.class);
+
+		AdminVar3VO adminVar = adminVarService.findByPk(Constants.UPDATE_NB_DAYS_PK);
+		if (adminVar != null)
+			nbDays = new Integer(adminVar.getValue());
+		
+		cal.roll(Calendar.DATE, -nbDays);			
+		
+		Date start = cal.getTime();
 
 		SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
 		String endDateStr = simple.format(today);
-		String startDateStr = simple.format(yesterday);
+		String startDateStr = simple.format(start);
 
 		if (startDateStr == null || startDateStr.length() == 0) {
 			startDateStr = simple.format(today);
 		}
-		LOG.info("updateFromSMIS from :" + startDateStr + endDateStr);
+		LOG.info("updateFromSMIS from: " + startDateStr + " to: " + endDateStr);
 		updateFromSMIS(startDateStr, endDateStr);
 	}
 
@@ -143,7 +155,7 @@ public class UpdateFromSMIS {
 		int nbFoundESRF = 0;
 		if (newProposalPks != null && newProposalPks.size() > 0) {
 
-			LOG.debug("Nb of new proposals found : " + newProposalPks.size());
+			LOG.info("Nb of new proposals found : " + newProposalPks.size());
 
 			for (Iterator<Long> iterator = newProposalPks.iterator(); iterator.hasNext();) {
 				Long pk = (Long) iterator.next();
@@ -275,7 +287,7 @@ public class UpdateFromSMIS {
 
 			// Get the service
 			SMISWebService sws = SMISWebServiceGenerator.getWs();
-			LOG.info("Update of ISPyB from User Portal using soap WS");
+			LOG.info("Update of ISPyB from User Portal using soap WS, proposal in user portal pk = " + pk);
 			
 			switch (Constants.getSite()) {
 			case ESRF:
