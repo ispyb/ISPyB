@@ -280,6 +280,7 @@ public class UploadShipmentUtils {
 
 	public static String[] importFromXls(InputStream file, Integer shippingId, boolean deleteAllShipment,
 			List<String> allowedSpaceGroups) throws Exception {
+		System.out.println("Start 1");
 		String msgError = "";
 		String msgWarning = "";
 		Protein3Service proteinService = (Protein3Service) ejb3ServiceLocator.getLocalService(Protein3Service.class);
@@ -298,7 +299,7 @@ public class UploadShipmentUtils {
 
 		HSSFWorkbook workbook = null;
 		Integer sheetProposalId = DBTools.getProposalIdFromShipping(shippingId);
-
+		System.out.println("Start 1" + sheetProposalId);
 		String courrierName = "";
 		String shippingDate = "";
 		String trackingNumber = "";
@@ -306,7 +307,7 @@ public class UploadShipmentUtils {
 		POIFSFileSystem fs = new POIFSFileSystem(file);
 		// Now extract the workbook
 		workbook = new HSSFWorkbook(fs);
-
+		System.out.println("Start 2");
 		// Working through each of the worksheets in the spreadsheet
 		// ASSUMPTION: one excel file = one shipment
 		for (int sheetNum = 0; sheetNum < workbook.getNumberOfSheets(); sheetNum++) {
@@ -416,15 +417,18 @@ public class UploadShipmentUtils {
 				// TBD: need to add sanity check that this puck has not already been put in the dewar!
 				
 				Set<BLSample3VO> sampleVOs = new HashSet();
-				
+				System.out.println("Start 3");
 				// count the samples to decide if SPINE or UNIPUCK
 				int nbSamplesInPuck = 0;
 
-				for (int i = dataRow; i < dataRow + Constants.BASKET_SAMPLE_CAPACITY; i += 1) {
-					
+				for (int i = dataRow; i < dataRow + Constants.BASKET_SAMPLE_CAPACITY; i += 1) {					
 					// --- Retrieve interesting values from spreadsheet
+					
+					
+					
 					String puckCode = cellToString(sheet.getRow(puckRow).getCell(puckCol));
-					String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
+					String proteinName ="";
+					//String proteinName = cellToString(sheet.getRow(i).getCell(proteinNameCol));
 					String proteinAcronym = cellToString(sheet.getRow(i).getCell(proteinAcronymCol));
 					String samplePos = cellToString(sheet.getRow(i).getCell(samplePosCol));
 					String sampleName = cellToString(sheet.getRow(i).getCell(sampleNameCol));
@@ -450,8 +454,8 @@ public class UploadShipmentUtils {
 
 					// Fill in values by default
 					// Protein Name
-					if (proteinName.equalsIgnoreCase(""))
-						proteinName = proteinAcronym;
+					//if (proteinName.equalsIgnoreCase(""))
+					//	proteinName = proteinAcronym;
 
 					// --- Check the Sheet is not empty for this line and all required fields are present ---
 					boolean sampleRowOK = true;

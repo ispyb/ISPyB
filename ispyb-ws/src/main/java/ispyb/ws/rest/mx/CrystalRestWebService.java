@@ -1,20 +1,29 @@
 package ispyb.ws.rest.mx;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.util.StringUtil;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import file.FileUploadForm;
+import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.mx.vos.autoproc.GeometryClassname3VO;
 import ispyb.server.mx.vos.autoproc.SpaceGroup3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
@@ -82,6 +91,29 @@ public class CrystalRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/crystal/proteinid/{proteinid}/list")
+	@Produces({ "application/json" })
+	public Response getCrystalByProteinId(@PathParam("token") String token,@PathParam("proposal") String proposal,@PathParam("proteinid") Integer proteinId) {
+
+		String methodName = "getCrystalByProteinId";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(this.getProposalId(proposal));
+			List<Crystal3VO> filtered =  new ArrayList<Crystal3VO>();
+			for (Crystal3VO crystal3vo : crystals) {
+				if (crystal3vo.getProteinVO().getProteinId().equals(proteinId)){
+					filtered.add(crystal3vo);
+				}
+			}
+			return this.sendResponse(filtered);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+	
 	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
@@ -183,4 +215,83 @@ public class CrystalRestWebService extends MXRestWebService {
 	}			
 
 
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/mx/crystal/{crystalid}/structure/save")
+	@Consumes("multipart/form-data")	
+	@Produces({ "application/json" })
+	public Response saveStructure(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("crystalid") Integer crystalId,
+			@MultipartForm FileUploadForm form) throws IllegalStateException, IOException{
+				
+		try {
+			if (form.getInputStream() != null){
+				String filePath = this.copyFileToDisk(proposal, form);
+				logger.info("saveStructure. Copying to disk. filepath=" + filePath);
+				Crystal3VO crystal = this.getCrystal3Service().findByPk(crystalId, true);
+				if (crystal != null){
+					Structure3VO structure = new Structure3VO();
+					structure.setCrystalId(crystalId);
+					structure.setType(form.getType());
+					structure.setGroupName(form.getGroupName());
+					structure.setFilePath(filePath);
+					structure.setName(new File(filePath).getName());					
+					this.getExperiment3Service().saveStructure(structure);
+				}
+				else{
+					throw new Exception("Crystal with id: " + crystalId + " does not exist");
+				}
+				return this.sendResponse(Status.OK);
+			}
+			else{
+				throw new Exception("File is empty");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(String.format("saveStructure. ", e.getMessage()));
+			return this.sendError(e.getMessage());
+		}		
+	}
+	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/crystal/{crystalid}/structure/{structureId}/delete")
+	@Consumes("multipart/form-data")	
+	@Produces({ "application/json" })
+	public Response removeStructure(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("crystalid") Integer crystalId,
+			@PathParam("structureId") Integer structureId) throws IllegalStateException, IOException{
+				
+		try {
+				logger.info(String.format("removeStructure. crystalId=%s structureId=%s token=%s", crystalId, structureId, token));
+				Crystal3VO crystal = this.getCrystal3Service().findByPk(crystalId, true);
+				if (crystal != null){
+										
+					Structure3VO structure = this.getExperiment3Service().findStructureById(structureId);
+					/** Check that structure belongs to crystal **/
+					if (structure.getCrystalId().equals(crystal.getCrystalId())){
+						/** Checks that proposal corresponds to crystal **/
+						if (crystal.getProteinVO().getProposalVOId().equals(this.getProposalId(proposal))){
+							this.getExperiment3Service().removeStructure(structureId);
+							logger.info(String.format("Structure has been removed. crystalId=%s structureId=%s token=%s", crystalId, structureId, token));
+						}
+					}
+				}
+				else{
+					throw new Exception("Crystal with id: " + crystalId + " does not exist");
+				}
+				return this.sendResponse(Status.OK);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(String.format("saveStructure. ", e.getMessage()));
+			return this.sendError(e.getMessage());
+		}		
+	}
 }

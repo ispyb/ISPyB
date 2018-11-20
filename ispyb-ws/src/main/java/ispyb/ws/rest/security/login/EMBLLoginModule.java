@@ -71,17 +71,14 @@ public class EMBLLoginModule{
 	
 		
 	private static List<String> authenticateAA(String username, String password, Properties properties) throws NamingException {
-		logger.info("1");
 		List<String> myRoles = new ArrayList<String>();
 //		InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
 		InitialLdapContext ctx = new InitialLdapContext(properties, null);
 		// Set up search constraints
-		logger.info("2");
 		SearchControls cons = new SearchControls();
 		cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		// Search
 		NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, getFilter(username),cons);
-		logger.info("3");
 		while (answer.hasMore()) {
 			SearchResult sr = answer.next();
 			Attributes attrs = sr.getAttributes();
@@ -97,7 +94,6 @@ public class EMBLLoginModule{
 
 			}
 		}
-		logger.info("4 " + myRoles);
 		if (myRoles.size() == 0){
 			myRoles.add("User");
 		}
@@ -112,7 +108,7 @@ public class EMBLLoginModule{
 		}
 		catch(Exception e){
 			logger.info("Failed to authenticate as staff (internal");
-			e.printStackTrace();
+			//race();
 		}
 		logger.info("Trying to authenticate as user");
 		try {
@@ -120,7 +116,7 @@ public class EMBLLoginModule{
 		}
 		catch(Exception e){
 			logger.info("Failed to authenticate as staff (internal");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}

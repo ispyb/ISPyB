@@ -143,14 +143,20 @@ public class WorkflowRestWebService extends MXRestWebService {
 			@PathParam("workflowStepId") int workflowStepId) {
 
 		String methodName = "getWorkflowStepResultById";
+		logger.debug("Start..");
 		long start = this.logInit(methodName, logger, token, proposal, workflowStepId);
+		
 		try {
+			logger.debug(workflowStepId + proposal + this.getProposalId(proposal)); 
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
+			logger.debug(workflowStep);
 			if (workflowStep != null){
 				if (workflowStep.getResultFilePath() != null){
+					logger.debug(workflowStep.getResultFilePath());
 					if (new File(workflowStep.getResultFilePath()).exists()){
 						byte[] encoded = Files.readAllBytes(Paths.get(workflowStep.getResultFilePath()));
 						this.logFinish(methodName, start, logger);
+						logger.debug(new String(encoded));
 						return this.sendResponse(new String(encoded));
 					}
 				}

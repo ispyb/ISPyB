@@ -146,7 +146,9 @@ public class ShippingRestWebService extends MXRestWebService {
 		long id = this.logInit("listShipping", logger, token, proposal);
 		try {
 			// TODO: This query has to be replaced by a view!!
+			logger.info("ship---- " + proposal + this.getProposalId(proposal));
 			List<Map<String, Object>> result = this.getShipping3Service().getShippingByProposalId(this.getProposalId(proposal));
+			logger.info("ship---- " + result);
 			this.logFinish("listShipping", id, logger);
 			return sendResponse(result);
 		} catch (Exception e) {

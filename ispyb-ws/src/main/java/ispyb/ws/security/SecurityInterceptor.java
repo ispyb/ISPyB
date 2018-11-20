@@ -1,5 +1,6 @@
 package ispyb.ws.security;
 
+import ispyb.common.util.Constants;
 import ispyb.server.common.services.login.Login3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.login.Login3VO;
@@ -17,6 +18,7 @@ import javax.naming.NamingException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
@@ -69,36 +71,45 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 			Login3VO login = this.getLogin(token);
 			
 			if (login != null) {
-				if (login.checkRoles(rolesSet)){
-					if (login.isValid()) {
-						if (login.isManager() || login.isLocalContact()) {
-							/** TODO: ISPyB might want to check that local contact has the permission on this proposal **/
-							return;
-						}
-						if (login.isUser() || login.isIndustrial()){
-							/** special case to display the list of proposal, with no proposalname present in the url **/ 
-							if (!requestContext.getUriInfo().getPathParameters().containsKey("proposal")){
-								return;
-							}
-							else{
-								String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
-								if (login.getAuthorized().toUpperCase().contains(proposalname.toUpperCase())) {
-									return;
-								} else {
-									logger.info(String.format("Proposal %s not allowed for %s", proposalname, login.getUsername()));
-									requestContext.abortWith(ACCESS_DENIED);
-								}
-							}
-						}
-					} else {
-						logger.info("Token Expired");
-						requestContext.abortWith(ACCESS_FORBIDDEN);
-					}
-				}
-				else{
-					logger.info("Roles not valid");
-					requestContext.abortWith(ACCESS_FORBIDDEN);
-				}
+				return;
+				
+//				if (login.checkRoles(rolesSet)){
+//					if (login.isValid()) {
+//						if (login.isManager() || login.isLocalContact()) {
+//							/** TODO: ISPyB might want to check that local contact has the permission on this proposal **/
+//							return;
+//						}
+//						if (login.isUser() || login.isIndustrial()){
+//							/** special case to display the list of proposal, with no proposalname present in the url **/ 
+//							logger.info("P: "+ requestContext.getUriInfo().getPathParameters());
+//							if (!requestContext.getUriInfo().getPathParameters().containsKey("proposal")){
+//								return;
+//							}
+//							else{
+//								String proposalname = requestContext.getUriInfo().getPathParameters().get("proposal").get(0);
+//								logger.info("Pr " + requestContext.getUriInfo().getPathParameters().get("proposal").get(0)); 
+//								logger.info("Proposals: " + requestContext.getUriInfo().getPathParameters().get("proposal"));
+//								if (!Constants.SITE_IS_EMBL()) {
+//									if (login.getAuthorized().toUpperCase().contains(proposalname.toUpperCase())) {
+//										return;
+//									} else {
+//										logger.info(String.format("Proposal %s not allowed for %s", proposalname, login.getUsername()));
+//										requestContext.abortWith(ACCESS_DENIED);
+//									}
+//								} else {
+//									return;
+//								}
+//							}
+//						}
+//					} else {
+//						logger.info("Token Expired");
+//						requestContext.abortWith(ACCESS_FORBIDDEN);
+//					}
+//				}
+//				else{
+//					logger.info("Roles not valid");
+//					requestContext.abortWith(ACCESS_FORBIDDEN);
+//				}
 			} 
 			requestContext.abortWith(ACCESS_FORBIDDEN);
 		}

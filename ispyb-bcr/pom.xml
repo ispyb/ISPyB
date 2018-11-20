@@ -6,8 +6,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.13</version>
-
+		<version>5.14.1</version>
 	</parent>
 	<artifactId>ispyb-bcr</artifactId>
 	<packaging>war</packaging>
@@ -242,7 +241,7 @@
 			<artifactId>jboss-javaee-7.0</artifactId>
 			<version>1.0.0.Final</version>
 			<type>pom</type>
-			<scope>import</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 
@@ -340,6 +339,16 @@
 				<ispyb.site>ESRF</ispyb.site>
 			</properties>
 		</profile>
+                <profile>
+                        <id>EMBL</id>
+                        <activation>
+                                <activeByDefault>true</activeByDefault>
+                        </activation>
+
+                        <properties>
+                                <ispyb.site>EMBL</ispyb.site>
+                        </properties>
+                </profile>
 	</profiles>
 	  
 </project>

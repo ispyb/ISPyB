@@ -127,12 +127,17 @@ public  class ParentWebService {
 	}
 	
 	protected String copyFileToDisk(String proposal, FileUploadForm form) throws Exception {
-		int proposalId = this.getProposalId(proposal);
-		String filePath = this.getTargetFolder(proposalId) + "/" + form.getFileName();
+		return this.copyFileToDisk(proposal, form, form.getFileName());
 		
-		log.info("Copying file " + form.getFileName() + " to " + filePath );
+	}
+	
+	protected String copyFileToDisk(String proposal, FileUploadForm form, String fileName) throws Exception {
+		int proposalId = this.getProposalId(proposal);
+		String filePath = this.getTargetFolder(proposalId) + "/" + fileName;
+		log.info("Copying file " + fileName + " to " + filePath );
 		File file = new File(filePath);
 		FileOutputStream fileOut = new FileOutputStream(file.getAbsolutePath());
+		
 		fileOut.write(IOUtils.toByteArray(form.getInputStream()));
 		fileOut.close();
 		log.info("File has been copied on " + filePath);
@@ -178,10 +183,6 @@ public  class ParentWebService {
 		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 	}
 	
-//	protected Response unauthorizedResponse() {
-//		return Response.status(401).header("Access-Control-Allow-Origin", "*").build();
-//	}
-
 	protected External3Service getExternal3Service() throws NamingException {
 		return (External3Service) Ejb3ServiceLocator.getInstance().getLocalService(External3Service.class);
 	}
@@ -277,6 +278,7 @@ public  class ParentWebService {
 	 * @throws Exception
 	 */
 	protected int getProposalId(String proposal) throws Exception {
+		
 		List<Proposal3VO> proposals = this.getProposal3Service().findProposalByLoginName(proposal);
 		if (proposals != null) {
 			if (proposals.size() > 0) {

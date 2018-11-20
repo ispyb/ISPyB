@@ -30,6 +30,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -1550,7 +1551,6 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 						if (Constants.SITE_IS_EMBL()) {
 							bls = EMBLBeamlineEnum.getAllBeamlinesForName(beamLineSearch[i]);
 						}
-
 						if (bls != null)
 							list.addAll(bls);
 					}
@@ -1721,6 +1721,7 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 			if (Constants.SITE_IS_MAXIV()) {
 				beamlineList = MAXIVBeamlineEnum.getBeamlineNames();
 			}
+			LOG.debug("Beamlines ---- 1.1" + Arrays.toString(beamlineList));
 			data.put("beamlines", beamlineList);
 			// isManager
 			data.put("isManager", true);
@@ -1810,6 +1811,7 @@ public class ViewDataCollectionAction extends ParentIspybAction {
 			if (Constants.SITE_IS_MAXIV()) {
 				beamlineList = MAXIVBeamlineEnum.getBeamlineNames();
 			}
+			LOG.debug("Bemlines --- 2 " + beamlineList.toString());
 			data.put("beamlines", beamlineList);
 			// displayImage
 			data.put("displayImage", displayImage);

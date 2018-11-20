@@ -7,6 +7,7 @@ import ispyb.server.mx.vos.collections.EnergyScan3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,18 +33,19 @@ public class EnergyScanRestWebService extends RestWebService {
 	public Response getEnergyScanBySessionId(
 			@PathParam("token") String token, 
 			@PathParam("proposal") String proposal,
-			@PathParam("sessionId") int sessionId) throws Exception {
-		
-		String methodName = "getEnergyScanBySessionId";
-		long id = this.logInit(methodName, logger, token, proposal, sessionId);
+			@PathParam("sessionId") String sessionIdList) throws Exception {
 		try{
-			List<Map<String, Object>> result = getEnergyScanService().getViewBySessionId(this.getProposalId(proposal), sessionId);
-			this.logFinish(methodName, id, logger);
+			List<Integer> ids = this.parseToInteger(sessionIdList);
+			List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+			for (Integer sessionId : ids) {
+				result.addAll(this.getEnergyScanService().getViewBySessionId(this.getProposalId(proposal), sessionId));
+			}
 			return sendResponse(result );
 		}
 		catch(Exception e){
-			return this.logError(methodName, e, id, logger);
+			e.printStackTrace();
 		}
+		return null;
 	}
     
     private EnergyScan3VO getEnergyById(int energyscanId, String proposal) throws NamingException, Exception{

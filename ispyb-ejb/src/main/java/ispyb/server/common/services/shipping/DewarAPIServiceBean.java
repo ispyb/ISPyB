@@ -182,7 +182,7 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 
 			int dewarId;
 			int shippingId;
-			int fisrtExperimentId;
+			int sessionId;
 			int proposalId;
 //			String parcelName;
 //			String shippingName;
@@ -234,13 +234,28 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 			}
 
 			// Get beamLineName and localContact
+			// old ISPyB web pages : dewar is attached to session
+			// EXI : shipment is attached to session
+			
 			try {
-				Dewar3VO dewars = dewarService.findByPk(dewarId, false, false);
-				fisrtExperimentId = dewars.getSessionVO().getSessionId();
-				Session3VO sessions = sessionService.findByPk(fisrtExperimentId, false, false, false);
-				dewarAPI.setBeamLineName(sessions.getBeamlineName());
-				dewarAPI.setLocalContact(sessions.getBeamlineOperator());
-				dewarAPI.setStartDate(sessions.getStartDate());
+				Dewar3VO dewar = dewarService.findByPk(dewarId, false, false);
+				
+				if (dewar.getSessionVO().getSessionId() != null ) {
+					sessionId = dewar.getSessionVO().getSessionId();
+					
+				} else if (dewar.getShippingVO().getFirstExp().getSessionId() != null) {
+					sessionId = dewar.getShippingVO().getFirstExp().getSessionId();
+					
+				} else {
+					sessionId = dewar.getSessionVO().getSessionId();
+				}
+								
+				Session3VO session = sessionService.findByPk(sessionId, false, false, false);
+				
+				dewarAPI.setBeamLineName(session.getBeamlineName());
+				dewarAPI.setLocalContact(session.getBeamlineOperator());
+				dewarAPI.setStartDate(session.getStartDate());
+				
 			} catch (Exception e) {
 				LOG.debug("Dewar Tracking (fetchDewar): cannot find session info for barcode '" + dewarBarCode + "'");
 				// e.printStackTrace();

@@ -289,6 +289,10 @@ public class Experiment3ServiceBean  extends WsServiceBean implements Experiment
 
 	@Override
 	public void saveStructure(Integer macromoleculeId, String fileName, String filePath, String type, String symmetry, String multiplicity) {
+		this.saveStructure(macromoleculeId, null, fileName, filePath, type, symmetry, multiplicity);
+	}
+		
+	public void saveStructure(Integer macromoleculeId, Integer crystalId, String fileName, String filePath, String type, String symmetry, String multiplicity) {
 		Structure3VO structure = new Structure3VO();
 		structure.setMacromoleculeId(macromoleculeId);
 		structure.setFilePath(filePath);
@@ -299,6 +303,7 @@ public class Experiment3ServiceBean  extends WsServiceBean implements Experiment
 		structure.setCreationDate(GregorianCalendar.getInstance().getTime());
 		entityManager.merge(structure);
 	}
+	
 
 	@Override
 	public void removeStructure(int structureId) {

@@ -60,7 +60,7 @@ public class ProposalRestWebService extends MXRestWebService{
 		try {
 			ArrayList<HashMap<String, List<?>>> multiple = new ArrayList<HashMap<String, List<?>>>();				
 			HashMap<String, List<?>> results = new HashMap<String, List<?>>();
-			
+			logger.info("getProposaInfos 1 " + proposal);
 			if (proposal == null || proposal.isEmpty()) {					
 				List<Map<String, Object>> proposals = this.getProposalsFromToken(token);
 				results.put("proposal", proposals);
@@ -68,16 +68,21 @@ public class ProposalRestWebService extends MXRestWebService{
 			} else {
 						
 				int proposalId = this.getProposalId(proposal);
-
+				logger.info("getProposaInfos 2 " + proposalId);
 				List<Macromolecule3VO> macromolecules = this.getSaxsProposal3Service().findMacromoleculesByProposalId(proposalId);
 				List<Buffer3VO> buffers = this.getSaxsProposal3Service().findBuffersByProposalId(proposalId);
 
 				List<StockSolution3VO> stockSolutions = this.getSaxsProposal3Service().findStockSolutionsByProposalId(
 						proposalId);
 				List<Platetype3VO> plateTypes = this.getPlateType3Service().findAll();
-				List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
-				proposals.add(this.getProposal3Service().findProposalById(proposalId));
-				
+				//List<Proposal3VO> proposals = new ArrayList<Proposal3VO>();
+				//proposals.add(this.getProposal3Service().findProposalById(proposalId));
+				//logger.info("getProposaInfos 1 " + proposals);
+				List<Map<String, Object>> proposals = this.getProposalsFromToken(token);
+				logger.info("getProposaInfos 3 " + proposals);
+				//logger.info(this.listProposals(token, ));
+				//Login3VO login3VO = this.getLogin3Service().findByToken(token);
+				//
 				List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
 				List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
 				
