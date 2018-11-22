@@ -132,7 +132,7 @@ public class UpdateFromSMIS {
 
 	public static void updateFromSMIS(String startDateStr, String endDateStr) throws Exception {
 
-		LOG.debug("update ISPyB database start date = " + startDateStr + " end date = " + endDateStr);
+		LOG.info("Update of ISPyB database start date = " + startDateStr + " end date = " + endDateStr);
 		
 		List<Long> newProposalPks = null;
 		
