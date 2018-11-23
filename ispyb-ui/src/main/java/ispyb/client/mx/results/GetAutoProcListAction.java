@@ -137,8 +137,6 @@ public class GetAutoProcListAction extends DispatchAction {
 					if (stats.getRmerge() != null && stats.getRmerge() < rMerge_d && stats.getMeanIoverSigI() > iSigma_d)
 						existsUnderRmergeAndOverSigma = true;
 				}
-				existsUnderRmergeAndOverSigma = true;
-				
 
 				if (!existsUnderRmergeAndOverSigma){
 					i.remove();

@@ -388,7 +388,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	
 	@Override
 	public List<Proposal3VO> findProposalByLoginName(String loginName, String site) {
-		LOG.info("findProposalByLoginName: " + loginName + site);
+
 		String userName = loginName;
 		if (site != null){
 			if (site.equals(Constants.SITE_ESRF) || site.equals(Constants.SITE_MAXIV)) {
@@ -408,13 +408,11 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 		/**
 		 * If user is a proposal it is linked by proposalCode and proposalNumber in the proposal table
 		 */
-		LOG.info("1 " + this.findProposalByCodeAndNumber(userName));
 		proposals.addAll(this.findProposalByCodeAndNumber(userName));
 
 		/**
 		 * In case login name is a user we look for it on Persons though proposalHasPerson
 		 */
-		LOG.info("2 " + this.findProposalByPerson(loginName));
 		proposals.addAll(this.findProposalByPerson(loginName));
 
 		/**

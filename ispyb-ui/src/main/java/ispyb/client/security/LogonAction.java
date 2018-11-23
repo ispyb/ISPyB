@@ -140,12 +140,6 @@ public class LogonAction extends Action {
 			session.setAttribute(Constants.LDAP_GivenName, userGivenName);
 			session.setAttribute(Constants.LDAP_LastName, userLastName);
 			session.setAttribute(Constants.LDAP_siteNumber, userSiteNumber);
-
-			String userRolesNames2 = "";
-                        for (RoleDO roleDO : userRoles) {
-				userRolesNames2 = userRolesNames2 + roleDO.getName() + " - "+ roleDO.getValue() + ", ";
-			}
-			LOG.info("LDAP authentication roles: " + userRolesNames2);
 			
 			/**************************************
 			 * TODO: MX initialization to be moved
@@ -182,7 +176,6 @@ public class LogonAction extends Action {
 				}
 			}
 			session.setAttribute(Constants.PROPOSALS, proposals);
-                        LOG.info("userRoles size: " + userRoles.size());
 
 			if (userRoles.size() > 1) {
 				// forward to page where user can select which Role he want to use

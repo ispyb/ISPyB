@@ -333,8 +333,8 @@
                         <dictionary.site>The EMBL</dictionary.site>
                         <dictionary.bcm>mxCuBE</dictionary.bcm>
 
-                        <smis.ws.usr>mx0000</smis.ws.usr>
-                        <smis.ws.pwd>test</smis.ws.pwd>
+                        <smis.ws.usr></smis.ws.usr>
+                        <smis.ws.pwd></smis.ws.pwd>
 
                         <userportal.webservices.url>http://smis.embl-hamburg.de:8080/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
                         <ispyb.authorisation.active>false</ispyb.authorisation.active>

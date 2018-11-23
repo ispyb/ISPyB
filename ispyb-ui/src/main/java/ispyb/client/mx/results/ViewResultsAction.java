@@ -2243,8 +2243,6 @@ public class ViewResultsAction extends DispatchAction {
 									existsUnderRmergeAndOverSigma = true;
 							}
 							
-							existsUnderRmergeAndOverSigma = true;
-							
 							if (!existsUnderRmergeAndOverSigma) {
 								a.remove();
 								nbRemoved = nbRemoved +1;
@@ -2639,8 +2637,6 @@ public class ViewResultsAction extends DispatchAction {
 								existsUnderRmergeAndOverSigma = true;
 						}
 						
-						existsUnderRmergeAndOverSigma = true;
-
 						if (!existsUnderRmergeAndOverSigma){
 							a.remove();
 							nbRemoved = nbRemoved+1;

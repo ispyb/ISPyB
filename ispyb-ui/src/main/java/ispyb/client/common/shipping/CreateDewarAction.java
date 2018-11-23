@@ -104,7 +104,7 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 	 * @throws Exception
 	 */
 	private void initServices() throws Exception {
-		LOG.debug("1");
+
 		this.sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
 		this.proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
 		this.dewarService = (Dewar3Service) ejb3ServiceLocator.getLocalService(Dewar3Service.class);
@@ -117,7 +117,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 		this.initServices();
-		LOG.debug("2");
 		return super.execute(mapping, form, request, response);
 	}
 
@@ -141,7 +140,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 		ActionMessages errors = new ActionMessages();
 
 		try {
-			LOG.debug("3");
 			// ---------------------------------------------------------------------------------------------------
 			// Retrieve Attributes
 			ViewDewarForm form = (ViewDewarForm) actForm; // Parameters submited by form
@@ -224,7 +222,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 		ActionMessages errors = new ActionMessages();
 
 		try {
-			LOG.debug("4");
 			// ---------------------------------------------------------------------------------------------------
 			// Retrieve Attributes
 			ViewDewarForm form = (ViewDewarForm) actForm; // Parameters submited by form
@@ -291,7 +288,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 		ActionMessages messages = new ActionMessages();
 
 		try {
-			LOG.debug("5");
 			// ---------------------------------------------------------------------------------------------------
 			// Retrieve Attributes
 			ViewDewarForm form = (ViewDewarForm) actForm; // Parameters submited by form
@@ -457,7 +453,6 @@ public class CreateDewarAction extends org.apache.struts.actions.DispatchAction 
 		ActionMessages errors = new ActionMessages();
 
 		try {
-			LOG.debug("6");
 			// ---------------------------------------------------------------------------------------------------
 			// Retrieve Attributes
 			ViewDewarForm form = (ViewDewarForm) actForm; // Parameters submited by form
