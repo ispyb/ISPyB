@@ -19,6 +19,8 @@
  ******************************************************************************/
 // main autoProcessing panel, composed with the list of autoProcs, the actionPanel (rsymm, ISig and the reports)
 // the data (right and left panel) and the status of autoProc and the interrupted autoProc
+
+
 function AutoprocessingPanel(args) {
 	var _this = this;
 	this.width = "800";
@@ -70,8 +72,10 @@ AutoprocessingPanel.prototype.getPanel = function(data) {
 	
 	
 	 // reprocessing panel
-    _this.reprocessingPanel = new ReprocessingPanel();
-    items.push(_this.reprocessingPanel.getPanel(data));
+	if (data && data.hasReprocessing) {
+		_this.reprocessingPanel = new ReprocessingPanel();
+		items.push(_this.reprocessingPanel.getPanel(data));
+	}
 
 	// if we have some autoProc, add the Rymm and ISig panel, (and reports if autoProc is selected)
 	if (data && data.autoProcList) {

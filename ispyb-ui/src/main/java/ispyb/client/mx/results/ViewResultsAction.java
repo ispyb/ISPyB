@@ -2564,6 +2564,7 @@ public class ViewResultsAction extends DispatchAction {
 			// booleans to fix which tab will be selected by default
 			boolean isEDNACharacterisation = false;
 			boolean isAutoprocessing = false;
+			boolean hasReprocessing = false;
 
 			String rMerge = (String) request.getSession().getAttribute(Constants.RSYMM);
 			String iSigma = (String) request.getSession().getAttribute(Constants.ISIGMA);
@@ -2948,6 +2949,10 @@ public class ViewResultsAction extends DispatchAction {
 						}
 					}
 				}
+				
+				if (Constants.SITE_IS_EMBL()) {
+					hasReprocessing = true;
+				}
 			}
 
 			//
@@ -2984,6 +2989,8 @@ public class ViewResultsAction extends DispatchAction {
 			data.put("DenzonContentPresent", DenzonContentPresent);
 			// fullDenzoPath
 			data.put("fullDenzoPath", fullDenzoPath);
+			// reprocessing enabled
+			data.put("hasReprocessing", hasReprocessing);
 			// data => Gson
 			GSonUtils.sendToJs(response, data, "dd-MM-yyyy HH:mm:ss");
 		} catch (Exception e) {
