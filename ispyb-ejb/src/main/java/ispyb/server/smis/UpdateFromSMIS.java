@@ -304,7 +304,6 @@ public class UpdateFromSMIS {
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPk(pk);
 				break;
 			case MAXIV:
-				nbDays = 14;
 				smisSessions_ = sws.findRecentSessionsInfoLightForProposalPkAndDays(pk, nbDays);
 				break;
             default:
@@ -548,10 +547,11 @@ public class UpdateFromSMIS {
 					siteId = labContacts[i].getSiteId().toString();
 					currentPerson = person.findBySiteId(siteId);
 				} else {
-					List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);					
+					currentPerson = person.findByLogin(labContacts[i].getBllogin());
+					/*List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);
 					if (persons != null && !persons.isEmpty()) {
 						currentPerson = persons.get(0);
-					}
+					}*/
 				}
 									
 				if (currentPerson != null) {
@@ -864,12 +864,17 @@ public class UpdateFromSMIS {
 	          //TODO: Add more details
 	          
 	          personEnt = person.merge(personEnt);
-	          
+
+	            // reload all the proposal info to avoid lazyloading error in proposalVO.getParticipants(). Only for MAX IV
+				if (Constants.SITE_IS_MAXIV()) {
+			  		proposalVO = proposal.findWithParticipantsByPk(proposalVO.getProposalId());
+			  }
+			  
 	          Set<Person3VO> currentParticipants = proposalVO.getParticipants();
 	          
 	          boolean personExists = false;
 	          for (Person3VO person : currentParticipants) {
-	            if (person.getLogin() == personEnt.getLogin())
+	            if (person.getLogin().equals(personEnt.getLogin()))
 	            {
 	              personExists = true;
 	              break;

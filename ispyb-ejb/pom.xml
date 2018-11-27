@@ -428,7 +428,7 @@
 
 			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
 			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
-			<ldap.people>CN=Users,dc=maxlab,dc=lu,dc=se</ldap.people>
+			<ldap.people>dc=maxlab,dc=lu,dc=se</ldap.people>
 			<ldap.attribute>samaccountname</ldap.attribute>
 			<ldap.principalDNPrefix>maxlab\\</ldap.principalDNPrefix>
 

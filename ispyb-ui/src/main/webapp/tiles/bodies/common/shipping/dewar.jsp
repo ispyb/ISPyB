@@ -25,7 +25,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 
 <%@page import="java.util.Calendar,java.util.GregorianCalendar"%>
 <%@page import="ispyb.common.util.Constants"%>
-
+<%@ page isELIgnored="false" %>
 <layout:skin includeScript="true" />
 
 <layout:panel key="Search Dewars" align="left" styleClass="PANEL">
@@ -34,10 +34,16 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 			<layout:column>
 					<layout:text key="Label" 		property="dewarName" 	styleClass="FIELD" 	mode="E,E,E"/>
 					<layout:text key="Comments" 	property="comments" 	styleClass="FIELD"	mode="E,E,E"/>
-					
+
+					<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+						<logic:equal name="genericViewDewarForm" property="role" value="<%=Constants.ROLE_MANAGER%>">
+							<layout:text key="Barcode" 				property="barCode" 	 	styleClass="FIELD"	mode="E,E,E"/>
+						</logic:equal>
+					</c:if>
 					<logic:equal name="genericViewDewarForm" property="role" value="<%=Constants.ROLE_STORE%>">
 						<layout:text key="Barcode" 				property="barCode" 	 	styleClass="FIELD"	mode="E,E,E"/>
 					</logic:equal>
+
 					<layout:space/>
 					
 					<layout:date key="Experiment date between DD-MM-YYYY :" property="experimentDateStart" styleClass="FIELD" mode="E,E,E"
