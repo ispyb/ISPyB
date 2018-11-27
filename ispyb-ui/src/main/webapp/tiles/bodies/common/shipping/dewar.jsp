@@ -76,6 +76,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 							<layout:option key="<%=Constants.DEWAR_P12%>" 		 value="<%=Constants.DEWAR_P12%>" />
 							<layout:option key="<%=Constants.DEWAR_P13%>" 		 value="<%=Constants.DEWAR_P13%>" />
 							<layout:option key="<%=Constants.DEWAR_P14%>" 		 value="<%=Constants.DEWAR_P14%>" />
+							<layout:option key="<%=Constants.DEWAR_PE2%>" 		 value="<%=Constants.DEWAR_PE2%>" />
 						</c:if>		
 						<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
 							<layout:option key="<%=Constants.DEWAR_I9113%>" 		 value="<%=Constants.DEWAR_I9113%>" />

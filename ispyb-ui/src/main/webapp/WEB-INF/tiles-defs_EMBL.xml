@@ -1214,9 +1214,25 @@
 		<put name="body" value="/tiles/bodies/mx/sample/uploadPdbFile.jsp" />
 	</definition>
 	
+	<!-- pdb file upload  -->	
+	<definition name="user.sample.viewUploadXDSInputFile.page" extends="site.main.layout" >
+		<put name="title" value="XDS Input File Upload" />
+		<put name="body" value="/tiles/bodies/mx/sample/uploadXDSInputFile.jsp" />
+	</definition>
+	
 	<definition name="user.sample.viewDisplayPdbFile.page" extends="site.main.layout" >
 		<put name="title" value="Pdb File Display" />
 		<put name="body" value="/tiles/bodies/mx/sample/displayPdbFile.jsp" />
+	</definition>
+	
+	<definition name="user.sample.viewUploadPdbFileSAXS.page" extends="site.main.empty" >
+		<put name="title" value="SAXS Pdb File Upload" />
+		<put name="body" value="/tiles/bodies/biosaxs/uploadPdbFileSAXS.jsp" />
+	</definition>
+	
+	<definition name="user.sample.viewUploadXDSInputFile.page" extends="site.main.empty" >
+		<put name="title" value="XDS Input File Upload" />
+		<put name="body" value="/tiles/bodies/mx/sample/uploadXDSInputFile.jsp" />
 	</definition>
     
 	<!-- =======================================================  -->

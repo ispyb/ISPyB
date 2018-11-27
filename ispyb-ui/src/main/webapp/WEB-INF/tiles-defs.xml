@@ -1254,7 +1254,11 @@
 		<put name="body" value="/tiles/bodies/biosaxs/uploadPdbFileSAXS.jsp" />
 	</definition>
 	
-    
+    <definition name="user.sample.viewUploadXDSInputFile.page" extends="site.main.empty" >
+		<put name="title" value="XDS Input File Upload" />
+		<put name="body" value="/tiles/bodies/mx/sample/uploadXDSInputFile.jsp" />
+	</definition>
+	
 	<!-- =======================================================  -->
 	<!--   Results pages                                          -->
 	<!-- =======================================================  -->
