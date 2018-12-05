@@ -1,6 +1,6 @@
 
 --
--- Database: `pydb` version 5.13
+-- Database: `pydb` version 5.14.3
 --
 
 -- --------------------------------------------------------
@@ -80,7 +80,14 @@ INSERT INTO `SchemaStatus` (`schemaStatusId`, `scriptName`, `schemaStatus`, `rec
 (77, '2018_07_06_Added_characterisation_start_angle.sql', 'DONE', '2018-07-06 13:50:36'),
 (78, '2018_09_04_Added_anisotropic_fields.sql', 'DONE', '2018-09-04 12:03:01'),
 (80, '2018_02_27_membranes_update.sql', 'DONE', '2018-09-10 08:08:08'),
-(82, '2018_09_13_BeamCalendar.sql', 'DONE', '2018-09-24 15:41:33');
+(82, '2018_09_13_BeamCalendar.sql', 'DONE', '2018-09-24 15:41:33'),
+(83, '2018_09_26_Comment_anisotropic_fields.sql', 'DONE', '2018-09-26 09:56:38'),
+(84, '2018_09_26_update_pathToH5.sql', 'DONE', '2018-09-27 08:29:35'),
+(85, '2018_10_26_new_admin_var.sql', 'DONE', '2018-10-25 14:22:45'),
+(87, '2018_11_06_Phasing_group_name.sql', 'DONE', '2018-11-06 08:53:50'),
+(88, '2018_11_12_new_admin_var.sql', 'DONE', '2018-11-12 15:53:05'),
+(89, '2018_11_27_updateCollations.sql', 'DONE', '2018-11-28 10:10:06'),
+(91, '2018_12_04_EnergyScan_and_XFEFluorescenceSpectrum_add_axisPosition.sql', 'DONE', '2018-12-05 08:33:06');
 
 --
 -- Indexes for dumped tables
@@ -101,7 +108,4 @@ ALTER TABLE `SchemaStatus`
 -- AUTO_INCREMENT for table `SchemaStatus`
 --
 ALTER TABLE `SchemaStatus`
-  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
