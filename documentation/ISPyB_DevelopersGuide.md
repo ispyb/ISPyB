@@ -360,21 +360,21 @@ To change the environment for an invocation of Maven, add
 the desired environment, to the Maven command line (e.g., `mvn
 -Dispyb.env=production clean install`).
 
-In the `pom.xml` of `ispyb-ui` and `ispyb-ejb`, you will find site profiles:
+There are five sites for customizing ISPyB: `ESRF`, `EMBL`, `SOLEIL`,
+`MAXIV`, and `GENERIC`.  The default site is `GENERIC`.  Each site has a
+corresponding Maven profile named `ispyb.site-<site>`, where `<site>` is
+the name of the site.  These profiles allow per-site customization (e.g.,
+the ISPyB root folder location).  The site can be set via the `ispyb.site`
+system property; the allowed values are the site names.  By default,
+`ispyb.site` is set to the name of the default site: `GENERIC`.
 
-  * Site profiles (see [Profiles: site specific files and
-    configuration](#profiles-site-specific-files-and-configuration))
+To change the site for the user invoking Maven, add `-Dispyb.site=<site>`,
+where `<site>` is the name of the desired site, to the `MAVEN_OPTS`
+environment variable.
 
-    `ispyb.site-ESRF`, `ispyb.site-EMBL`, `ispyb.site-SOLEIL`,
-    `ispyb.site-MAXIV` profiles contains the properties
-    previously defined in the `ISPyB_XXX.properties`.
-
-    These profiles with their properties are defined in the `ispyb-ejb/pom.xml`
-    only because the other modules are dependent on this one.
-
-    The profile is defined in the maven `settings.xml`
-    (see [Profiles: site specific files and
-    configuration](#profiles-site-specific-files-and-configuration)).
+To change the site for an invocation of Maven, add `-Dispyb.site=<site>`,
+where `<site>` is the name of the desired site, to the Maven command line
+(e.g., `mvn -Dispyb.site=ESRF clean install`).
 
 Properties:
 
@@ -773,8 +773,9 @@ module, and the correct values depend on the site where it is installed.
 The values of the `ISPyB.properties` are replaced by those in the `pom.xml`
 profile.
 
-You have to add in your maven `settings.xml` the active profile and its name
-like:
+To override site properties for the user running Maven, add properties to
+the `ispyb.site-<site>` profile, where `<site>` is the name of the desired
+site, in the user's `settings.xml` file:
 
 ```xml
 <!-- ... -->
@@ -788,10 +789,6 @@ like:
     </properties>
   </profile>
 </profiles>
-<!-- ... -->
-<activeProfiles>
-<activeProfile>ispyb.site-GENERIC</activeProfile>
-</activeProfiles>
 <!-- ... -->
 ```
 

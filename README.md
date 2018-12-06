@@ -56,9 +56,6 @@ For example:
 			</properties>
 		</profile>
 	</profiles>
-	<activeProfiles>
-		<activeProfile>ispyb.site-ESRF</activeProfile>
-	</activeProfiles>
 </settings>
 ```
 

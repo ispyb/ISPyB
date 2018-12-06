@@ -336,7 +336,6 @@
 					<name>ispyb.site</name>
 					<value>ESRF</value>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 
 			<properties>

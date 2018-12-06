@@ -298,7 +298,14 @@ under the License.
    | List of profiles that are active for all builds.
    |   -->
   <activeProfiles>
-    <activeProfile>ispyb.site-ESRF</activeProfile>
+    <!--
+     | Activate the user-jdcasey profile.
+    <activeProfile>user-jdcasey</activeProfile>
+    -->
+    <!--
+     | Activate the user-brett profile.
+    <activeProfile>user-brett</activeProfile>
+    -->
   </activeProfiles>
 
 </settings>
