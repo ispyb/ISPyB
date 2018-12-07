@@ -337,10 +337,6 @@
 					<value>ESRF</value>
 				</property>
 			</activation>
-
-			<properties>
-				<ispyb.site>ESRF</ispyb.site>
-			</properties>
 		</profile>
 	</profiles>
 	  

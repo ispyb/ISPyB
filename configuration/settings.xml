@@ -222,7 +222,6 @@ under the License.
 	<profile>
       <id>ispyb.site-GENERIC</id>
 		<properties>
-			<ispyb.site>GENERIC</ispyb.site>
 			<smis.ws.usr>xxx</smis.ws.usr>
 			<smis.ws.pwd>******</smis.ws.pwd>
 			<ispyb.ws.usr>xxxxxx</ispyb.ws.usr>
@@ -244,7 +243,6 @@ under the License.
   <profile>
     <id>ispyb.site-MAXIV</id>
     <properties>
-        <ispyb.site>MAXIV</ispyb.site>
     </properties>
   </profile>
   -->
@@ -254,7 +252,6 @@ under the License.
 
 		<id>ispyb.site-ESRF</id>
 		<properties>
-			<ispyb.site>ESRF</ispyb.site>
 		</properties>
     </profile>
 	
@@ -262,7 +259,6 @@ under the License.
 		
 		<id>ispyb.site-EMBL</id>
 		<properties>
-			<ispyb.site>EMBL</ispyb.site>
 		</properties>
     </profile>
 

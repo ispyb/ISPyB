@@ -49,7 +49,6 @@ For example:
 		<profile>
 			<id>ispyb.site-ESRF</id>
 			<properties>
-				<ispyb.site>ESRF</ispyb.site>
 				<smis.ws.usr>******</smis.ws.usr>
 				<smis.ws.pwd>******</smis.ws.pwd>
 				<jboss.home>/opt/wildfly</jboss.home>

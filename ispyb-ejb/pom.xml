@@ -258,7 +258,6 @@
 		</activation>
   		
   		<properties>
-  			<ispyb.site>ESRF</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -324,7 +323,6 @@
 			</property>
 		</activation>
   		<properties>
- 			<ispyb.site>EMBL</ispyb.site>
                         <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
                         <ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
                         <ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -388,7 +386,6 @@
 				<js.alternative.path></js.alternative.path>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 				
-				<ispyb.site>SOLEIL</ispyb.site>
 				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
 				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
 				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
@@ -458,7 +455,6 @@
 			</property>
 		</activation>
   		<properties>
-  			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -532,8 +528,6 @@
 		</activation>
   		
   		<properties>
-  			<ispyb.site>GENERIC</ispyb.site>
-  			
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>

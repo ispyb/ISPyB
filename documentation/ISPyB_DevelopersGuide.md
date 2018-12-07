@@ -784,7 +784,6 @@ site, in the user's `settings.xml` file:
   <profile>
     <id>ispyb.site-GENERIC</id>
     <properties>
-      <ispyb.site>GENERIC</ispyb.site>
       <jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
     </properties>
   </profile>
