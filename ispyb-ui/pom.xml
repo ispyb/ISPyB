@@ -395,7 +395,6 @@
 			</activation>
 
 			<properties>
-				<ispyb.env>production</ispyb.env>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 			</properties>
@@ -411,7 +410,6 @@
 			</activation>
 			<properties>
 				<js.minimized>false</js.minimized>
-				<ispyb.env>development</ispyb.env>
 				<js.alternative.path.enabled>true</js.alternative.path.enabled>				
 			</properties>
 		</profile>

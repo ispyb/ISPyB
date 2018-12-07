@@ -217,7 +217,6 @@
       	</activation>
   		
   		<properties>
-  		  	<ispyb.env>production</ispyb.env>  		
   			<js.minimized>true</js.minimized>
   			<js.alternative.path.enabled>false</js.alternative.path.enabled>
   			<js.alternative.path> </js.alternative.path>
@@ -233,7 +232,6 @@
 		</activation>
   		<properties>
   			<js.minimized>false</js.minimized>
-  			<ispyb.env>development</ispyb.env>
   			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
   			<js.alternative.path.enabled>true</js.alternative.path.enabled>
   			<data.path>/work/ademaria/data/pyarch/</data.path>
@@ -386,7 +384,6 @@
 			</property>
 		</activation>
   		<properties>
-				<ispyb.env>production</ispyb.env>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path></js.alternative.path>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
