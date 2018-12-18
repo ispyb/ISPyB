@@ -943,6 +943,7 @@ public class ToolsForAutoprocessingWebService {
 			phasingProgramRun.setPhasingStartTime(vo.getPhasingStartTime());
 			phasingProgramRun.setPhasingEndTime(vo.getPhasingEndTime());
 			phasingProgramRun.setPhasingEnvironment(vo.getPhasingEnvironment());
+			phasingProgramRun.setPhasingDirectory(vo.getPhasingDirectory());
 			phasingProgramRun.setRecordTimeStamp(StringUtils.getCurrentTimeStamp());
 			if (phasingProgramRunId == null || phasingProgramRunId == 0) {
 				phasingProgramRun.setPhasingProgramRunId(null);
