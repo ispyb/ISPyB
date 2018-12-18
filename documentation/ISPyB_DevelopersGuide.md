@@ -273,9 +273,6 @@ the database update (WSClient).
 
 ### Install maven 3.3.1
 
-RFC: `ispyb.site` is already on `pom.xml` and could be moved to
-`ispyb-parent/pom.xml`.
-
 Configure your own `settings.xml` (copy the one from `maven/conf` and update
 them for you).
 

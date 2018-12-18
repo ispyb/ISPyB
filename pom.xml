@@ -93,6 +93,80 @@
 
 
 	<profiles>
+		<!-- Environment profiles -->
+		<profile>
+			<id>ispyb.env-production</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>production</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.env-development</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>development</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.env-test</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>test</value>
+				</property>
+			</activation>
+		</profile>
+		<!-- Site profiles -->
+		<profile>
+			<id>ispyb.site-ESRF</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ESRF</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-EMBL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>EMBL</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-SOLEIL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>SOLEIL</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-MAXIV</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>MAXIV</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-GENERIC</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>GENERIC</value>
+				</property>
+			</activation>
+		</profile>
 	    <profile>
      <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
      <!-- Use this profile for any OpenShift specific customization your app will need. -->

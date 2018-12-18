@@ -326,18 +326,4 @@
 
 </plugins>
 	</build>
-	
-		<profiles>
-		<!-- profiles to separate site dependent properties -->
-		<profile>
-			<id>ispyb.site-ESRF</id>
-			<activation>
-				<property>
-					<name>ispyb.site</name>
-					<value>ESRF</value>
-				</property>
-			</activation>
-		</profile>
-	</profiles>
-	  
 </project>

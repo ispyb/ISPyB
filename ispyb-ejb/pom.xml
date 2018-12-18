@@ -204,8 +204,7 @@
 		
 	</dependencies>
 	
-	  <!--  profiles to separate development to production properties -->
-  <!--  the development properties have to be set according to your own development environment -->
+	  <!--  profiles to separate environment properties -->
   <profiles>
     <profile>
   		<id>ispyb.env-production</id>
@@ -237,15 +236,6 @@
   			<data.path>/work/ademaria/data/pyarch/</data.path>
   		</properties>
   	</profile>
-	<profile>
-		<id>ispyb.env-test</id>
-		<activation>
-			<property>
-				<name>ispyb.env</name>
-				<value>test</value>
-			</property>
-		</activation>
-	</profile>
 
   <!--  profiles to separate site dependent properties -->  
   	<profile>

@@ -381,8 +381,7 @@
 		</plugins>
 	</build>
 
-	<!-- profiles to separate development to production properties -->
-	<!-- the development properties have to be set according to your own development environment -->
+	<!-- profiles to separate environment properties -->
 	<profiles>
 	
 		<profile>
@@ -431,16 +430,6 @@
 			</properties>
 			
 
-		</profile>
-
-		<profile>
-			<id>ispyb.site-EMBL</id>
-			<activation>
-				<property>
-					<name>ispyb.site</name>
-					<value>EMBL</value>
-				</property>
-			</activation>
 		</profile>
 
 		<profile>
@@ -494,17 +483,6 @@
 
 			</properties>
 		</profile>
-
-		<profile>
-			<id>ispyb.site-MAXIV</id>
-			<activation>
-				<property>
-					<name>ispyb.site</name>
-					<value>MAXIV</value>
-				</property>
-			</activation>
-		</profile>
-
 	</profiles>
 
 </project>
