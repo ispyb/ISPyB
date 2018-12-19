@@ -1,4 +1,4 @@
-# ISPyB Project [![Build Status](https://travis-ci.org/antolinos/ispyb.png)](https://travis-ci.org/antolinos/ispyb)
+# ISPyB Project
 
 
 1. [Installing](#installing)
