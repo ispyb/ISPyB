@@ -1,6 +1,5 @@
 # ISPyB Project
 
-
 1. [Installing](#installing)
 2. [Versioning](#versioning)
 3. [Database creation and update](#database-creation-and-update)
@@ -58,10 +57,7 @@ For example:
 </settings>
 ```
 
-
-
 These properties will set the profile to be used in the ispyb-ejb pom.xml to configure ISPyB.
-
 
 4. Build the project by using maven
 ```
@@ -77,7 +73,7 @@ mvn clean install -Dispyb.site=ESRF -Dispyb.env=test
 If the build has succeed a summary repost should appear:
 ```
 [INFO] Reactor Summary:
-[INFO] 
+[INFO]
 [INFO] ispyb-parent ...................................... SUCCESS [0.251s]
 [INFO] ispyb-ejb3 ........................................ SUCCESS [10.243s]
 [INFO] ispyb-ws .......................................... SUCCESS [1.751s]
@@ -85,7 +81,6 @@ If the build has succeed a summary repost should appear:
 [INFO] ispyb-ear ......................................... SUCCESS [5.048s]
 [INFO] ispyb-bcr ......................................... SUCCESS [2.217s]
 [INFO] ispyb-bcr-ear ..................................... SUCCESS [1.806s]
-
 ```
 
 ## Versioning
@@ -103,7 +98,6 @@ Otherwise
 ```
 mvn versions:revert
 ```
-
 
 ## Database creation and update
 Run the creation scripts present in the module ispyb-ejb, to run the scripts you will need a user “pxadmin” with full permissions.
@@ -146,14 +140,13 @@ You can look for examples in ispyb-ejb/db/scripts/passed/2017
 ### Database schema
 
 Please do not forget to update the database schema :
- https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb 
- 
-This schema can be updated using MySQLWorkbench (free tool from MySQL).
+ https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb
 
+This schema can be updated using MySQLWorkbench (free tool from MySQL).
 
 ### Graylog
 
-Download [biz.paluch.logging](http://logging.paluch.biz) that provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1. 
+Download [biz.paluch.logging](http://logging.paluch.biz) that provides logging to logstash using the Graylog Extended Logging Format (GELF) 1.0 and 1.1.
 
 Then create a custom handler on standalone.xml
 ```
@@ -184,6 +177,3 @@ I had some problems with the unvalid messages because of timestapPatter. It was 
 ```
 <property name="timestampPattern" value="yyyy-MM-dd"/>
 ```
-
-
-
