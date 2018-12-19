@@ -523,38 +523,38 @@
   			<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+  			<ispyb.root.folder>${java.io.tmpdir}/${user.name}/ispyb/</ispyb.root.folder>
+  			<ispyb.uploaded.root.folder>${ispyb.root.folder}upload/</ispyb.uploaded.root.folder>
   			
-  			<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+  			<ispyb.server.name.prod>localhost</ispyb.server.name.prod>
+  			<ispyb.server.name.prod.alias>localhost</ispyb.server.name.prod.alias>
+  			<ispyb.server.name.prod.ext>127.0.0.1</ispyb.server.name.prod.ext>
+  			<ispyb.server.name.test>localhost</ispyb.server.name.test>
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
 			<samplechanger.locations>5</samplechanger.locations>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+  			<ispyb.path.mappingstyle>GENERIC</ispyb.path.mappingstyle>
   			<ispyb.bcm>mxcube</ispyb.bcm>
   			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			<mail.smtp.host>localhost</mail.smtp.host>
+  			<mail.admin>${user.name}@localhost</mail.admin>
+  			<mail.dev>${user.name}@localhost</mail.dev>
+  			<mail.ispyb>${user.name}@localhost</mail.ispyb>
+  			<mail.stores>${user.name}@localhost</mail.stores>
   			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
+  			<mail.report.industry.from>${user.name}@localhost</mail.report.industry.from>
+			<mail.report.industry.cc>${user.name}@localhost</mail.report.industry.cc>
 			
-			<dictionary.site>The ESRF</dictionary.site> 
+			<dictionary.site>GENERIC</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
 			
 			<ispyb.authorisation.active>false</ispyb.authorisation.active>
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
-			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+			<ispyb.upload.folder.json>${ispyb.uploaded.root.folder}json/</ispyb.upload.folder.json>
 
             <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
 
