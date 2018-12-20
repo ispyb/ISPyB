@@ -14,7 +14,7 @@
    git clone https://github.com/ispyb/ISPyB.git
    ```
 
-2. ISPyB needs the third party libraries provided in the `dependencies`
+2. ISPyB needs the third-party libraries provided in the `dependencies`
    directory.  These don't exist in a public repository, so install them to
    the local Maven repository so Maven can find them:
 
@@ -74,14 +74,14 @@
    ```
 
    By default the configuration `ispyb.site=GENERIC` and
-   `ispyb.env=development` will be activated. To activate your own
-   configuration use :
+   `ispyb.env=development` will be activated.  To activate your own
+   configuration use:
 
    ```
    mvn clean install -Dispyb.site=ESRF -Dispyb.env=test
    ```
 
-   If the build has succeed a summary repost should appear:
+   If the build has succeed a summary report should appear:
 
    ```
    [INFO] Reactor Summary:
@@ -123,7 +123,7 @@ scripts you will need a user `pxadmin` with full permissions.
 `ispyb-ejb/db/scripts/pyconfig.sql`: This corresponds to the menu
 options, and contains both structure and data.
 
-`ispyb-ejb/db/scripts /pydb.sql`: This corresponds to the ISPyB metadata
+`ispyb-ejb/db/scripts/pydb.sql`: This corresponds to the ISPyB metadata
 and contains only the database structure.
 
 `ispyb-ejb/db/scripts/schemaStatus.sql`: This corresponds to the entries
@@ -152,7 +152,7 @@ insert into SchemaStatus (scriptName, schemaStatus) values ('2017_06_06_blabla.s
 then the update script
 
 ```sql
-....
+...
 ```
 
 and the last line must be:
@@ -161,7 +161,7 @@ and the last line must be:
 update SchemaStatus set schemaStatus = 'DONE' where scriptName = '2017_06_06_blabla.sql';
 ```
 
-This allows to keep the `SchemaStus` table uptodate and to know
+This allows to keep the `SchemaStatus` table up to date and to know
 which scripts have been run.  You can look for examples in
 `ispyb-ejb/db/scripts/passed/2017`.
 
@@ -204,8 +204,8 @@ Then create a custom handler on `standalone.xml`
 	</logger>
 ```
 
-I had some problems with the unvalid messages because of
-`timestapPatter`. It was fixed by using:
+I had some problems with the invalid messages because of
+`timestampPattern`. It was fixed by using:
 
 ```xml
 <property name="timestampPattern" value="yyyy-MM-dd"/>
