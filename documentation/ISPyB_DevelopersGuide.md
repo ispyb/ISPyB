@@ -31,6 +31,8 @@ authentication with the web services added**
   * [UML data model](#uml-data-model)
   * [Using junit testing TODO](#using-junit-testing-todo)
   * [Some hints](#some-hints)
+  * [Versioning](#versioning)
+  * [Graylog](#graylog)
 
 ## Software required
 
@@ -780,6 +782,12 @@ site, in the user's `settings.xml` file:
   <!-- ... -->
   <profile>
     <id>ispyb.site-GENERIC</id>
+    <activation>
+      <property>
+        <name>ispyb.site</name>
+        <value>GENERIC</value>
+      </property>
+    </activation>
     <properties>
       <jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
     </properties>
@@ -1103,4 +1111,64 @@ Run JBoss with the option:
 
 ```
 -b 0.0.0.0
+```
+
+## Versioning
+
+If you are an ISPyB project maintainer, this is how a new version can be
+made.
+
+Use `versions:set` from the versions-maven plugin:
+
+```
+mvn versions:set -DnewVersion=5.0.0
+```
+
+If you are happy with the change:
+
+```
+mvn versions:commit
+```
+
+Otherwise:
+
+```
+mvn versions:revert
+```
+
+## Graylog
+
+To log to Logstash[logstash], download [Logstash/Gelf
+Loggers][logstash-gelf] which provides logging using the Graylog
+Extended Logging Format (GELF) 1.0 and 1.1.
+
+[logstash]: https://www.elastic.co/products/logstash
+[logstash-gelf]: https://logging.paluch.biz/
+
+Create a custom handler in WildFly's
+`standalone/configuration/standalone.xml`:
+
+```xml
+<profile>
+  <subsystem xmlns="urn:jboss:domain:logging:2.0">
+  ...
+  <custom-handler name="GelfLogger" class="biz.paluch.logging.gelf.wildfly.WildFlyGelfLogHandler" module="biz.paluch.logging">
+    <level name="INFO"/>
+    <properties>
+        <property name="host" value="udp:graylog-dau.esrf.fr"/>
+        <property name="port" value="12201"/>
+        <property name="version" value="1.0"/>
+        <property name="facility" value="ispyb-test"/>
+        <property name="timestampPattern" value="yyyy-MM-dd"/>
+    </properties>
+  </custom-handler>
+  ...
+  <logger category="ispyb">
+    <level name="INFO"/>
+    <handlers>
+        <handler name="ISPYB"/>
+        <handler name="GelfLogger"/>
+    </handlers>
+  </logger>
+</profile>
 ```
