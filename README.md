@@ -61,7 +61,7 @@ permissions):
 2. `ispyb-ejb/db/scripts/pydb.sql`: This corresponds to the ISPyB metadata
    and contains only the database structure.
 
-3. `ispyb-ejb/db/scripts/schemaStatus.sql`: This corresponds to the
+3. `ispyb-ejb/db/scripts/schemastatus.sql`: This corresponds to the
    `SchemaStatus` table and contains both structure and data.  The entries
    indicate which update scripts have been run.
 
