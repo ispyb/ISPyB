@@ -6,7 +6,7 @@
 4. [Database schema](#database-schema)
 5. [Graylog on Widlfly 8.2](#graylog)
 
-# Installing
+## Installing
 
 1. Clone or fork the ISPyB repository and then clone it by typing:
 
@@ -165,14 +165,14 @@ This allows to keep the `SchemaStatus` table up to date and to know
 which scripts have been run.  You can look for examples in
 `ispyb-ejb/db/scripts/passed/2017`.
 
-### Database schema
+## Database schema
 
 Please do not forget to update the [database
 schema](https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb).
 
 This schema can be updated using MySQLWorkbench (free tool from MySQL).
 
-### Graylog
+## Graylog
 
 Download [biz.paluch.logging](http://logging.paluch.biz) that provides
 logging to logstash using the Graylog Extended Logging Format (GELF) 1.0
