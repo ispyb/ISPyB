@@ -66,7 +66,7 @@ permissions):
    indicate which update scripts have been run.
 
 4. `ispyb-ejb/db/scripts/ispybAutoprocAttachment.sql`: This corresponds to
-   the type and names of different autoproc attachments.
+   the type and names of different autoPROC attachments.
 
 The creation scripts are normally updated for each tag, but if you are
 using the master branch, you may have to run the update scripts in
