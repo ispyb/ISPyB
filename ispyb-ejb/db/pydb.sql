@@ -2765,19 +2765,6 @@ CREATE TABLE `ScheduleComponent` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `SchemaStatus`
---
-
-CREATE TABLE `SchemaStatus` (
-  `schemaStatusId` int(11) NOT NULL,
-  `scriptName` varchar(100) NOT NULL,
-  `schemaStatus` varchar(10) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Screen`
 --
 
@@ -6498,13 +6485,6 @@ ALTER TABLE `ScheduleComponent`
   ADD KEY `ScheduleComponent_idx1` (`scheduleId`);
 
 --
--- Indexes for table `SchemaStatus`
---
-ALTER TABLE `SchemaStatus`
-  ADD PRIMARY KEY (`schemaStatusId`),
-  ADD UNIQUE KEY `scriptName` (`scriptName`);
-
---
 -- Indexes for table `Screen`
 --
 ALTER TABLE `Screen`
@@ -7498,11 +7478,6 @@ ALTER TABLE `Schedule`
 --
 ALTER TABLE `ScheduleComponent`
   MODIFY `scheduleComponentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `SchemaStatus`
---
-ALTER TABLE `SchemaStatus`
-  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 --
 -- AUTO_INCREMENT for table `Screen`
 --
