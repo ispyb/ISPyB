@@ -1695,21 +1695,6 @@ CREATE TABLE `InstructionSet` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `IspybAutoProcAttachment`
---
-
-CREATE TABLE `IspybAutoProcAttachment` (
-  `autoProcAttachmentId` int(11) NOT NULL,
-  `fileName` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `step` enum('XDS','XSCALE','SCALA','SCALEPACK','TRUNCATE','DIMPLE') DEFAULT 'XDS' COMMENT 'step where the file is generated',
-  `fileCategory` enum('input','output','log','correction') DEFAULT 'output',
-  `hasGraph` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB autoProcAttachment files values';
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `IspybCrystalClass`
 --
 
@@ -5999,12 +5984,6 @@ ALTER TABLE `InstructionSet`
   ADD PRIMARY KEY (`instructionSetId`);
 
 --
--- Indexes for table `IspybAutoProcAttachment`
---
-ALTER TABLE `IspybAutoProcAttachment`
-  ADD PRIMARY KEY (`autoProcAttachmentId`);
-
---
 -- Indexes for table `IspybCrystalClass`
 --
 ALTER TABLE `IspybCrystalClass`
@@ -7203,11 +7182,6 @@ ALTER TABLE `Instruction`
 --
 ALTER TABLE `InstructionSet`
   MODIFY `instructionSetId` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `IspybAutoProcAttachment`
---
-ALTER TABLE `IspybAutoProcAttachment`
-  MODIFY `autoProcAttachmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT for table `IspybCrystalClass`
 --
