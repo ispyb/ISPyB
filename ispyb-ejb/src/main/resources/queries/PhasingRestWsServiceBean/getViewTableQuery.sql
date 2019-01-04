@@ -18,6 +18,20 @@ FROM `PhasingProgramAttachment`
 WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.pdb%')) 
 ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `pdb`,
 
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.fileName)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.map%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `mapFileName` , 
+
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.fileName)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.pdb%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `pdbFileName` , 
+
+(SELECT GROUP_CONCAT(PhasingProgramAttachment.fileName)
+FROM `PhasingProgramAttachment` 
+WHERE ((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun_phasingProgramRunId`) AND (`PhasingProgramAttachment`.`fileName` LIKE '%.csv%')) 
+ORDER BY `PhasingProgramAttachment`.`phasingProgramAttachmentId`) AS `csvFileName` , 
 
 (SELECT GROUP_CONCAT(PhasingProgramAttachment.phasingProgramAttachmentId)
 FROM `PhasingProgramAttachment` 

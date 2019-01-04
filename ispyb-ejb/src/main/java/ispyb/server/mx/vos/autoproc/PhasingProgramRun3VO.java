@@ -81,6 +81,9 @@ public class PhasingProgramRun3VO extends ISPyBValueObject implements Cloneable 
 	@Column(name = "phasingEnvironment")
 	protected String phasingEnvironment;
 	
+	@Column(name = "phasingDirectory")
+	protected String phasingDirectory;
+
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 	
@@ -175,6 +178,14 @@ public class PhasingProgramRun3VO extends ISPyBValueObject implements Cloneable 
 
 	public void setPhasingEnvironment(String phasingEnvironment) {
 		this.phasingEnvironment = phasingEnvironment;
+	}
+
+	public String getPhasingDirectory() {
+		return phasingEnvironment;
+	}
+
+	public void setPhasingDirectory(String phasingDirectory) {
+		this.phasingDirectory = phasingDirectory;
 	}
 
 	public Date getRecordTimeStamp() {

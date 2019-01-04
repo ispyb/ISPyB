@@ -118,6 +118,10 @@
       type="ispyb.client.mx.collection.ViewDataCollectionForm"
     />
     <form-bean
+      name="uploadXDSInputFileForm"
+      type="ispyb.client.mx.results.UploadXDSInputFileForm"
+    />
+    <form-bean
       name="sendMailForm"
       type="ispyb.client.common.help.SendMailForm"
     />
@@ -3217,6 +3221,31 @@
       <forward
         name="shippingCreateFilePage"
         path="user.shipping.file.page"
+        redirect="false"
+      />
+      <forward
+        name="error"
+        path="site.default.error.page"
+        redirect="false"
+      />
+    </action>
+    <action
+      path="/user/uploadXDSInputFile"
+      type="ispyb.client.mx.results.UploadXDSInputFileAction"
+      name="uploadXDSInputFileForm"
+      scope="request"
+      parameter="reqCode"
+      unknown="false"
+      validate="false"
+    >
+      <forward
+        name="viewUploadXDSInputFile"
+        path="user.sample.viewUploadXDSInputFile.page"
+        redirect="false"
+      />
+      <forward
+        name="viewDisplayXDSInputFile"
+        path="user.sample.viewDisplayXDSInputFile.page"
         redirect="false"
       />
       <forward

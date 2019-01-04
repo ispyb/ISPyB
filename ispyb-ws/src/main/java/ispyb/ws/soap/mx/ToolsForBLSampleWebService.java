@@ -318,9 +318,7 @@ public class ToolsForBLSampleWebService {
 			String status = Constants.PROCESSING_STATUS;
 			String beamlineLoc = beamlineLocation;
 			if (Constants.SITE_IS_ESRF()) {
-				System.out.println("----- findSampleInfoLightForProposal");
 				ESRFBeamlineEnum bl = ESRFBeamlineEnum.retrieveBeamlineWithName(beamlineLocation);
-				System.out.println(bl.toString());
 				beamlineLoc = bl.getBeamlineName();
 			}
 			if (Constants.SITE_IS_EMBL()) {
