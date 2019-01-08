@@ -65,7 +65,13 @@ These properties will set the profile to be used in the ispyb-ejb pom.xml to con
 
 4. Build the project by using maven
 ```
-mvn clean install
+mvn clean install 
+```
+By default the configuration ispyb.site=GENERIC and ispyb.env=development will be activated. To activate your own configuration use :
+
+```
+mvn clean install -Dispyb.site=ESRF -Dispyb.env=test
+
 ```
 
 If the build has succeed a summary repost should appear:
