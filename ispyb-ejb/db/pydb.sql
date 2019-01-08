@@ -1695,21 +1695,6 @@ CREATE TABLE `InstructionSet` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `IspybAutoProcAttachment`
---
-
-CREATE TABLE `IspybAutoProcAttachment` (
-  `autoProcAttachmentId` int(11) NOT NULL,
-  `fileName` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `step` enum('XDS','XSCALE','SCALA','SCALEPACK','TRUNCATE','DIMPLE') DEFAULT 'XDS' COMMENT 'step where the file is generated',
-  `fileCategory` enum('input','output','log','correction') DEFAULT 'output',
-  `hasGraph` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB autoProcAttachment files values';
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `IspybCrystalClass`
 --
 
@@ -2760,19 +2745,6 @@ CREATE TABLE `ScheduleComponent` (
   `scheduleId` int(11) UNSIGNED NOT NULL,
   `inspectionTypeId` int(11) UNSIGNED DEFAULT NULL,
   `offset_hours` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `SchemaStatus`
---
-
-CREATE TABLE `SchemaStatus` (
-  `schemaStatusId` int(11) NOT NULL,
-  `scriptName` varchar(100) NOT NULL,
-  `schemaStatus` varchar(10) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -6012,12 +5984,6 @@ ALTER TABLE `InstructionSet`
   ADD PRIMARY KEY (`instructionSetId`);
 
 --
--- Indexes for table `IspybAutoProcAttachment`
---
-ALTER TABLE `IspybAutoProcAttachment`
-  ADD PRIMARY KEY (`autoProcAttachmentId`);
-
---
 -- Indexes for table `IspybCrystalClass`
 --
 ALTER TABLE `IspybCrystalClass`
@@ -6496,13 +6462,6 @@ ALTER TABLE `ScheduleComponent`
   ADD PRIMARY KEY (`scheduleComponentId`),
   ADD KEY `ScheduleComponent_fk2` (`inspectionTypeId`),
   ADD KEY `ScheduleComponent_idx1` (`scheduleId`);
-
---
--- Indexes for table `SchemaStatus`
---
-ALTER TABLE `SchemaStatus`
-  ADD PRIMARY KEY (`schemaStatusId`),
-  ADD UNIQUE KEY `scriptName` (`scriptName`);
 
 --
 -- Indexes for table `Screen`
@@ -7224,11 +7183,6 @@ ALTER TABLE `Instruction`
 ALTER TABLE `InstructionSet`
   MODIFY `instructionSetId` int(10) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `IspybAutoProcAttachment`
---
-ALTER TABLE `IspybAutoProcAttachment`
-  MODIFY `autoProcAttachmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
---
 -- AUTO_INCREMENT for table `IspybCrystalClass`
 --
 ALTER TABLE `IspybCrystalClass`
@@ -7498,11 +7452,6 @@ ALTER TABLE `Schedule`
 --
 ALTER TABLE `ScheduleComponent`
   MODIFY `scheduleComponentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `SchemaStatus`
---
-ALTER TABLE `SchemaStatus`
-  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 --
 -- AUTO_INCREMENT for table `Screen`
 --
