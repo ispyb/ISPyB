@@ -28,8 +28,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 // 				java.util.Properties buildProperties = new java.util.Properties();
 // 				java.io.InputStream buildPropertiesInputStream = getServletContext().getResourceAsStream("/WEB-INF/classes/ISPyB_common.properties");
 // 				buildProperties.load(buildPropertiesInputStream);
-// 				if ( buildProperties.getProperty("ispyb.deployment.mode") != null){
-// 					if ( buildProperties.getProperty("ispyb.deployment.mode").toString().equals("DEV")){
+// 				if ( buildProperties.getProperty("ispyb.env") != null){
+// 					if ( buildProperties.getProperty("ispyb.env").toString().equals("development")){
 // 						java.util.Properties devProperties = new java.util.Properties();
 // 						java.io.InputStream devInputStream = getServletContext().getResourceAsStream("/WEB-INF/classes/ISPyB_dev_ESRF.properties");
 // 						devProperties.load(devInputStream);

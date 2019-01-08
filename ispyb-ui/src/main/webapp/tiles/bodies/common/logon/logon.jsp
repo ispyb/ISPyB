@@ -123,7 +123,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
   		<layout:panel key="Messages" align="center" styleClass="PANEL_LOGON" width="270px">
 	  		<layout:grid cols="1" styleClass="SEARCH_GRID"  borderSpacing="5">	
 	      		<layout:column>
-  					<%=adminVar.getValue("infoMessage")%>
+  					<%
+  						String infoMessage = adminVar.getValue(Constants.MESSAGE_INFO);
+  						if (infoMessage.equals("unknown var")) infoMessage = "";
+  					%>
+  					<%=infoMessage%>
   				</layout:column>
   			</layout:grid> 
 		 </layout:panel>

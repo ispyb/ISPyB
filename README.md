@@ -47,18 +47,14 @@ For example:
 	</proxies>
 	<profiles>
 		<profile>
-			<id>ESRF</id>
+			<id>ispyb.site-ESRF</id>
 			<properties>
-				<ispyb.site>ESRF</ispyb.site>
 				<smis.ws.usr>******</smis.ws.usr>
 				<smis.ws.pwd>******</smis.ws.pwd>
 				<jboss.home>/opt/wildfly</jboss.home>
 			</properties>
 		</profile>
 	</profiles>
-	<activeProfiles>
-		<activeProfile>ESRF</activeProfile>
-	</activeProfiles>
 </settings>
 ```
 

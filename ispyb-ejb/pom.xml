@@ -204,27 +204,33 @@
 		
 	</dependencies>
 	
-	  <!--  profiles to separate dev to prod properties -->
-  <!--  the dev properties have to be set according to your own dev environment -->
+	  <!--  profiles to separate environment properties -->
   <profiles>
     <profile>
-  		<id>PROD</id>
+  		<id>ispyb.env-production</id>
   		<activation>
-        	<activeByDefault>true</activeByDefault>
+			<property>
+				<name>ispyb.env</name>
+				<value>production</value>
+			</property>
       	</activation>
   		
   		<properties>
-  		  	<ispyb.deployment.mode>PROD</ispyb.deployment.mode>  		
   			<js.minimized>true</js.minimized>
   			<js.alternative.path.enabled>false</js.alternative.path.enabled>
   			<js.alternative.path> </js.alternative.path>
   		</properties>
   	</profile>
      <profile>
-  		<id>DEV</id>
+  		<id>ispyb.env-development</id>
+		<activation>
+			<property>
+				<name>ispyb.env</name>
+				<value>development</value>
+			</property>
+		</activation>
   		<properties>
   			<js.minimized>false</js.minimized>
-  			<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
   			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
   			<js.alternative.path.enabled>true</js.alternative.path.enabled>
   			<data.path>/work/ademaria/data/pyarch/</data.path>
@@ -233,10 +239,15 @@
 
   <!--  profiles to separate site dependent properties -->  
   	<profile>
-  		<id>ESRF</id>
+  		<id>ispyb.site-ESRF</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>ESRF</value>
+			</property>
+		</activation>
   		
   		<properties>
-  			<ispyb.site>ESRF</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -294,9 +305,14 @@
 		</properties>
   	</profile>
   	<profile>
-  		<id>EMBL</id>
+  		<id>ispyb.site-EMBL</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>EMBL</value>
+			</property>
+		</activation>
   		<properties>
- 			<ispyb.site>EMBL</ispyb.site>
                         <ispyb.dbDialect>MYSQL</ispyb.dbDialect>
                         <ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
                         <ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -348,14 +364,18 @@
 		</properties>
   	</profile>
   	<profile>
-  		<id>SOLEIL</id>
+  		<id>ispyb.site-SOLEIL</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>SOLEIL</value>
+			</property>
+		</activation>
   		<properties>
-				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path></js.alternative.path>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 				
-				<ispyb.site>SOLEIL</ispyb.site>
 				<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
 				<ispyb.dbJndiName>java:/mysql/ispyb_db</ispyb.dbJndiName>
 				<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
@@ -417,9 +437,14 @@
   	</profile> 
   	
   	<profile>
-  		<id>MAXIV</id>  		
+  		<id>ispyb.site-MAXIV</id>  		
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>MAXIV</value>
+			</property>
+		</activation>
   		<properties>
-  			<ispyb.site>MAXIV</ispyb.site>
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
@@ -484,48 +509,52 @@
   	</profile>
   	
   	<profile>
-  		<id>NEWSITE</id>
+  		<id>ispyb.site-GENERIC</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>GENERIC</value>
+			</property>
+		</activation>
   		
   		<properties>
-  			<ispyb.site>NEWSITE</ispyb.site>
-  			
   			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
   			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
   			<ispyb.authentication.method>SIMPLE</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
   			  			
-  			<ispyb.root.folder>/data/pyarch/</ispyb.root.folder>
-  			<ispyb.uploaded.root.folder>/data/pyarch/pdb/</ispyb.uploaded.root.folder>
+  			<ispyb.root.folder>${java.io.tmpdir}/${user.name}/ispyb/</ispyb.root.folder>
+  			<ispyb.uploaded.root.folder>${ispyb.root.folder}upload/</ispyb.uploaded.root.folder>
   			
-  			<ispyb.server.name.prod>wwws.esrf.fr</ispyb.server.name.prod>
-  			<ispyb.server.name.prod.alias>ispyb.esrf.fr</ispyb.server.name.prod.alias>
-  			<ispyb.server.name.prod.ext>160.103.210.124</ispyb.server.name.prod.ext>
-  			<ispyb.server.name.test>ispyvalid.esrf.fr</ispyb.server.name.test>
+  			<ispyb.server.name.prod>localhost</ispyb.server.name.prod>
+  			<ispyb.server.name.prod.alias>localhost</ispyb.server.name.prod.alias>
+  			<ispyb.server.name.prod.ext>127.0.0.1</ispyb.server.name.prod.ext>
+  			<ispyb.server.name.test>localhost</ispyb.server.name.test>
   			
   			<shipping.container.capacity>16</shipping.container.capacity>
 			<samplechanger.container.capacity>16</samplechanger.container.capacity>
 			<samplechanger.locations>5</samplechanger.locations>
 				
   			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
-  			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+  			<ispyb.path.mappingstyle>GENERIC</ispyb.path.mappingstyle>
   			<ispyb.bcm>mxcube</ispyb.bcm>
   			
-  			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
-  			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			<mail.smtp.host>localhost</mail.smtp.host>
+  			<mail.admin>${user.name}@localhost</mail.admin>
+  			<mail.dev>${user.name}@localhost</mail.dev>
+  			<mail.ispyb>${user.name}@localhost</mail.ispyb>
+  			<mail.stores>${user.name}@localhost</mail.stores>
   			
-  			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
-			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
+  			<mail.report.industry.from>${user.name}@localhost</mail.report.industry.from>
+			<mail.report.industry.cc>${user.name}@localhost</mail.report.industry.cc>
 			
-			<dictionary.site>The ESRF</dictionary.site> 
+			<dictionary.site>GENERIC</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
 			
 			<ispyb.authorisation.active>false</ispyb.authorisation.active>
 			
 			<ispyb.userportal.link>JSON</ispyb.userportal.link>
-			<ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>
+			<ispyb.upload.folder.json>${ispyb.uploaded.root.folder}json/</ispyb.upload.folder.json>
 
             <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
 

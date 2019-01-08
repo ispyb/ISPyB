@@ -271,10 +271,7 @@ the database update (WSClient).
 
 ## Using Maven
 
-### Install maven 3.1.1
-
-RFC: `ispyb.site` is already on `pom.xml` and could be moved to
-`ispyb-parent/pom.xml`.
+### Install maven 3.3.1
 
 Configure your own `settings.xml` (copy the one from `maven/conf` and update
 them for you).
@@ -336,28 +333,45 @@ classes built from wsdl.
 Customize the `bindings.xml` file in `src/main/resources` to the correct wsdl
 location.
 
-### Site and deployment customization
+### Environment and Site Customization
 
-In the `pom.xml` of `ispyb-ui` and `ispyb-ejb` you will find profiles, there
-are for now 2 types of profiles:
+ISPyB is customized by its environment and site.
 
-  * Deployment profiles
+There are three environments (previously known as deployment modes)
+for which ISPyB can be built and run: `production`, `development`, and
+`test`.  The default environment is `development`.  Each environment has
+a corresponding Maven profile named `ispyb.env-<environment>`, where
+`<environment>` is the name of the environment.  These profiles allow
+per-environment customization (e.g., JavaScript could be minified in the
+`production` environment, but not in the `development` environment).  The
+environment can be set via the `ispyb.env` system property; the allowed
+values are the environment names.  By default, `ispyb.env` is set to the
+name of the default environment: `development`.
 
-    `DEV`, `ALT`, and `PROD` define the way the application is deployed: for
-    example with `DEV`, the javascript is not minimized.
+To change the environment for the user invoking Maven, add
+`-Dispyb.env=<environment>`, where `<environment>` is the name of the
+desired environment, to the `MAVEN_OPTS` environment variable.
 
-  * Site configuration profiles (see [Profiles: site specific files and
-    configuration](#profiles-site-specific-files-and-configuration))
+To change the environment for an invocation of Maven, add
+`-Dispyb.env=<environment>`, where `<environment>` is the name of
+the desired environment, to the Maven command line (e.g., `mvn
+-Dispyb.env=production clean install`).
 
-    `ESRF`, `EMBL`, `SOLEIL`, `MAXIV` profiles contains the properties
-    previously defined in the `ISPyB_XXX.properties`.
+There are five sites for customizing ISPyB: `ESRF`, `EMBL`, `SOLEIL`,
+`MAXIV`, and `GENERIC`.  The default site is `GENERIC`.  Each site has a
+corresponding Maven profile named `ispyb.site-<site>`, where `<site>` is
+the name of the site.  These profiles allow per-site customization (e.g.,
+the ISPyB root folder location).  The site can be set via the `ispyb.site`
+system property; the allowed values are the site names.  By default,
+`ispyb.site` is set to the name of the default site: `GENERIC`.
 
-    These profiles with their properties are defined in the `ispyb-ejb/pom.xml`
-    only because the other modules are dependent on this one.
+To change the site for the user invoking Maven, add `-Dispyb.site=<site>`,
+where `<site>` is the name of the desired site, to the `MAVEN_OPTS`
+environment variable.
 
-    The profile is defined in the maven `settings.xml`
-    (see [Profiles: site specific files and
-    configuration](#profiles-site-specific-files-and-configuration)).
+To change the site for an invocation of Maven, add `-Dispyb.site=<site>`,
+where `<site>` is the name of the desired site, to the Maven command line
+(e.g., `mvn -Dispyb.site=ESRF clean install`).
 
 Properties:
 
@@ -737,11 +751,15 @@ private boolean validate(ViewShippingForm form, ActionErrors errors) {
 }
 ```
 
-## Profiles: site specific files and configuration
+## Profiles: environment- and site-specific files and configuration
+
+The environment profiles are defined in the `pom.xml` file of the `ispyb-ejb`
+module. Each environment profile contains all the properties for a specific
+environment.
 
 The site profile is defined in the `pom.xml` in `ispyb-ejb` module. The site
 profile contains all the properties linked to a specific profile. See the
-example of the `NEWSITE` profile in the `pom.xml`.
+example of the `GENERIC` profile in the `pom.xml`.
 
 For example it defines the `ispyb.site` property which value will be loaded
 and used in the Constants class (`SITE_IS_ESRF()` or `SITE_IS_SOLEIL()`, or
@@ -752,25 +770,21 @@ module, and the correct values depend on the site where it is installed.
 The values of the `ISPyB.properties` are replaced by those in the `pom.xml`
 profile.
 
-You have to add in your maven `settings.xml` the active profile and its name
-like:
+To override site properties for the user running Maven, add properties to
+the `ispyb.site-<site>` profile, where `<site>` is the name of the desired
+site, in the user's `settings.xml` file:
 
 ```xml
 <!-- ... -->
 <profiles>
   <!-- ... -->
   <profile>
-    <id>NEWSITE</id>
+    <id>ispyb.site-GENERIC</id>
     <properties>
-      <ispyb.site>NEWSITE</ispyb.site>
       <jboss.home>C:/java/appServers/wildfly-8.2.0.Final</jboss.home>
     </properties>
   </profile>
 </profiles>
-<!-- ... -->
-<activeProfiles>
-<activeProfile>NEWSITE</activeProfile>
-</activeProfiles>
 <!-- ... -->
 ```
 
