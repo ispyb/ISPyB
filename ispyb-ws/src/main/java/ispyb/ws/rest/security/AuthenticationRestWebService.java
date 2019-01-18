@@ -8,6 +8,7 @@ import ispyb.ws.rest.security.login.EMBLLoginModule;
 import ispyb.ws.rest.security.login.ESRFLoginModule;
 import ispyb.ws.rest.security.login.SOLEILLLoginModule;
 import ispyb.ws.rest.security.login.MAXIVLoginModule;
+import ispyb.ws.rest.security.login.PropertyLoginModule;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -91,6 +92,9 @@ public class AuthenticationRestWebService extends RestWebService {
 						break;
 					case "MAXIV":
 						roles = MAXIVLoginModule.authenticate(login, password);
+						break;
+					case "GENERIC":
+						roles = PropertyLoginModule.authenticate(login, password);
 						break;
 					default:
 						throw new Exception("Site is not defined");

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-parent</artifactId>
-	<version>5.14.6</version>
+	<version>5.15</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>ispyb-ejb</module>
@@ -93,6 +93,80 @@
 
 
 	<profiles>
+		<!-- Environment profiles -->
+		<profile>
+			<id>ispyb.env-production</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>production</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.env-development</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>development</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.env-test</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>test</value>
+				</property>
+			</activation>
+		</profile>
+		<!-- Site profiles -->
+		<profile>
+			<id>ispyb.site-ESRF</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ESRF</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-EMBL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>EMBL</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-SOLEIL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>SOLEIL</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-MAXIV</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>MAXIV</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-GENERIC</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>GENERIC</value>
+				</property>
+			</activation>
+		</profile>
 	    <profile>
      <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
      <!-- Use this profile for any OpenShift specific customization your app will need. -->
@@ -119,6 +193,26 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M2</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.3.1,)</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation processors -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

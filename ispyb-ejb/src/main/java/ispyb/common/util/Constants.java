@@ -97,6 +97,8 @@ public final class Constants {
 
 	public static final String SITE_MAXIV = "MAXIV";
 
+	public static final String SITE_GENERIC = "GENERIC";
+
 	public static final boolean SITE_IS_ESRF() {
 		return getProperty(SITE_PROPERTY).equals(SITE_ESRF);
 	}
@@ -111,6 +113,10 @@ public final class Constants {
 
 	public static final boolean SITE_IS_SOLEIL() {
 		return getProperty(SITE_PROPERTY).equals(SITE_SOLEIL); // && DATABASE_IS_ORACLE(); //TODO
+	}
+
+	public static final boolean SITE_IS_GENERIC() {
+		return getProperty(SITE_PROPERTY).equals(SITE_GENERIC);
 	}
 
 	public static final SITE getSite() {

@@ -201,5 +201,28 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	</TABLE>
 </c:if>
 
+<c:if test="${SITE_ATTRIBUTE eq 'GENERIC'}">
+	<!-- ****************** begin Body of the page: menu left + content + footer *********************** -->
+	<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+	  <TBODY>
+	    <TR>
+	      <!-- MENU LEFT (navigation + additional links) -->
+	      <TD class=navbartable vAlign=top width=150>
+	      <!-- MENU LEFT: navigation -->
+	        <tiles:insert attribute="left_menu" />
+	      <!-- end of Nav -->
+	      </TD>
+	      <TD><IMG height=1 alt="" src="<%=request.getContextPath()%>/images/pixel_clear.gif" width=10 border=0></TD>
+	      <TD class=margintop vAlign=top>
+	        <!-- ******** BEGIN CONTENT AREA ******** -->
+	        <tiles:insert attribute="body" />
+	        <!-- ******** END CONTENT AREA ******** -->
+	      </TD>
+	    </TR>
+	    <!-- Footer -->
+	  </TBODY>
+	</TABLE>
+</c:if>
+
 </BODY>
 </HTML>
