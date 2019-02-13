@@ -34,22 +34,22 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
       </P>
    	<c:if test="${SITE_ATTRIBUTE eq 'ESRF'}">
       <P class=small>
-      		Copyright © 2004 ISPyB All rights reserved. <br/>
+      		Copyright ï¿½ 2004 ISPyB All rights reserved. <br/>
       </P>
     </c:if>
     <c:if test="${SITE_ATTRIBUTE eq 'DLS'}">
       <P class=small>
-      		Copyright © 2008 ISPyB All rights reserved. <br/>
+      		Copyright ï¿½ 2008 ISPyB All rights reserved. <br/>
       </P>
     </c:if>
     <c:if test="${SITE_ATTRIBUTE eq 'EMBL' or SITE_ATTRIBUTE eq 'ALBA'}">
       <P class=small>
-      		Copyright © 2014 ISPyB All rights reserved. <br/>
+      		Copyright ï¿½ 2014 ISPyB All rights reserved. <br/>
       </P>
     </c:if>    
     <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
       <P class=small>
-      		Copyright © 2014 ISPyB All rights reserved. <br/>
+      		Copyright ï¿½ 2014 ISPyB All rights reserved. <br/>
       </P>
       	<!-- Piwik -->
 		<script type="text/javascript">
@@ -57,19 +57,19 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		  _paq.push(['trackPageView']);
 		  _paq.push(['enableLinkTracking']);
 		  (function() {
-		    var u="https://piwik.maxlab.lu.se:20443/piwik/";
+		    var u="https://piwik.maxiv.lu.se/piwik/";
 		    _paq.push(['setTrackerUrl', u+'piwik.php']);
 		    _paq.push(['setSiteId', 2]);
 		    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 		    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
 		  })();
 		</script>
-		<noscript><p><img src=https://piwik.maxlab.lu.se:20443/piwik//piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+		<noscript><p><img src=https://piwik.maxiv.lu.se/piwik/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
 		<!-- End Piwik Code -->
     </c:if>    
     <c:if test="${SITE_ATTRIBUTE eq 'SOLEIL'}">
       <P class=small>
-      		Copyright © 2014 ISPyB All rights reserved. <br/>
+      		Copyright ï¿½ 2014 ISPyB All rights reserved. <br/>
       </P>
     </c:if>
 </DIV>
