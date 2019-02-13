@@ -128,36 +128,21 @@ public class MAXIVWebService implements SMISWebService {
 	
 	public List<ProposalParticipantInfoLightVO> findMainProposersForProposal(Long propId) {
 		List<ProposalParticipantInfoLightVO> proposers = new ArrayList<ProposalParticipantInfoLightVO>();
-		
- 		JSONObject jsonProposal = getProposalForId(propId);
-		
+
+		ArrayList<JSONObject>  jsonProposalAuthors = new ArrayList<JSONObject>();
+		try {
+			jsonProposalAuthors = getProposalAuthorsForPropid(propId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		JSONObject jsonProposal = getProposalForId(propId);
+
 		//Get all co-proposer ids
 		ArrayList<Integer> writers = new ArrayList<Integer>();
-		
-		Integer proposerId = (Integer)jsonProposal.get("proposer");
-		writers.add(proposerId);
-		if(jsonProposal.get("principal") != JSONObject.NULL && !writers.contains(jsonProposal.get("principal")))
-			writers.add((Integer)jsonProposal.get("principal"));
-		if(jsonProposal.get("cowriter1") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter1")))
-			writers.add((Integer)jsonProposal.get("cowriter1"));
-		if(jsonProposal.get("cowriter2") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter2")))
-			writers.add((Integer)jsonProposal.get("cowriter2"));
-		if(jsonProposal.get("cowriter3") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter3")))
-			writers.add((Integer)jsonProposal.get("cowriter3"));
-		if(jsonProposal.get("cowriter4") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter4")))
-			writers.add((Integer)jsonProposal.get("cowriter4"));
-		if(jsonProposal.get("cowriter5") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter5")))
-			writers.add((Integer)jsonProposal.get("cowriter5"));
-		if(jsonProposal.get("cowriter6") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter6")))
-			writers.add((Integer)jsonProposal.get("cowriter6"));
-		if(jsonProposal.get("cowriter7") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter7")))
-			writers.add((Integer)jsonProposal.get("cowriter7"));
-		if(jsonProposal.get("cowriter8") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter8")))
-			writers.add((Integer)jsonProposal.get("cowriter8"));
-		if(jsonProposal.get("cowriter9") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter9")))
-			writers.add((Integer)jsonProposal.get("cowriter9"));
-		if(jsonProposal.get("cowriter10") != JSONObject.NULL && !writers.contains(jsonProposal.get("cowriter10")))
-			writers.add((Integer)jsonProposal.get("cowriter10"));
+		for (JSONObject jsonProposalAuthor : jsonProposalAuthors) {
+			writers.add((Integer)jsonProposalAuthor.get("userid"));
+		}
 
 		for(Integer writerId : writers) {
 			JSONObject jsonParticipant = getUserForId(writerId);
@@ -420,6 +405,23 @@ public class MAXIVWebService implements SMISWebService {
 		
 		return proposal;
 	}
+
+	private ArrayList<JSONObject> getProposalAuthorsForPropid(Long propId)throws Exception {
+		ArrayList<JSONObject> authors = new ArrayList<JSONObject>();
+
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+				.append(propId).append("/authors").append("?access_token=").append(this.getToken());
+
+		JSONArray jsonAuthors = readJsonArrayFromUrl(url.toString());
+
+		int len = jsonAuthors.length();
+		for (int i = 0; i < len; i++) {
+			JSONObject jsonAuthor = (JSONObject) jsonAuthors.get(i);
+			authors.add(jsonAuthor);
+		}
+
+		return authors;
+	}
 	
 	private ArrayList<JSONObject> getBeamlinesForProposal(Long propId){
 		ArrayList<JSONObject> beamlines = new ArrayList<JSONObject>();
@@ -623,7 +625,6 @@ public class MAXIVWebService implements SMISWebService {
 
         return filter.toString();
     }
-
 
     private String getFilter(String startDateStr, String endDateStr, String beamline) throws Exception {
         StringBuilder filter = new StringBuilder();
