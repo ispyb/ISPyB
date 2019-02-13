@@ -65,6 +65,9 @@ public class PathUtils {
 		boolean isWindows = (System.getProperty("os.name").indexOf("Win") != -1) ? true : false;
 
 		String imageDir = getImageDirPath(dataCollectionVO);
+		if (Constants.SITE_IS_MAXIV()) {
+			imageDir.replace("/data/visitors/","/mxn/groups/ispybstorage/visitors/").replace("/raw/", "/process/");
+		}
 		String fullDNAPath = imageDir + Constants.IMG_DNA_URL_SUFIX;
 		if (isWindows) {
 			fullDNAPath = fullDNAPath.replace(Constants.DATA_FILEPATH_START, Constants.DATA_FILEPATH_WINDOWS_MAPPING);
