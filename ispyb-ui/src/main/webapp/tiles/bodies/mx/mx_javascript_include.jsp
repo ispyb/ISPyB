@@ -195,6 +195,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<script type="text/javascript" src="<%=jsWebserverURLResult%>interruptedAutoProcPanel.js"></script>
 	<script type="text/javascript" src="<%=jsWebserverURLResult%>denzoPanel.js"></script>
 	<script type="text/javascript" src="<%=jsWebserverURLResult%>cumulativeIntensityDistributionChart.js"></script>
+	<script type="text/javascript" src="<%=jsWebserverURLResult%>reprocessingPanel.js"></script>
 	
 </c:otherwise>
 </c:choose>	

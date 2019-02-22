@@ -20,7 +20,6 @@ package ispyb.server.mx.services.sample;
 
 import ispyb.server.common.util.ejb.EJBAccessCallback;
 import ispyb.server.common.util.ejb.EJBAccessTemplate;
-
 import ispyb.server.mx.vos.sample.Crystal3VO;
 
 import java.util.List;
@@ -46,13 +45,14 @@ import javax.persistence.Query;
 import org.apache.axis.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 
-import ispyb.server.common.exceptions.AccessDeniedException;
 
+import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.Crystal3ServiceLocal;
 
@@ -198,13 +198,9 @@ public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLoca
 
 		Session session = (Session) this.entityManager.getDelegate();
 
-		Criteria crit = session.createCriteria(Crystal3VO.class);
+		Criteria crit = session.createCriteria(Crystal3VO.class).setFetchMode("structure3VOs", FetchMode.JOIN);
 
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
-
-//		if (proteinId != null) {
-//			crit.add(Restrictions.eq("proteinId", proteinId));
-//		}
 
 		if (acronym != null && !spaceGroup.isEmpty()) {
 			crit.add(Restrictions.like("spaceGroup", spaceGroup));

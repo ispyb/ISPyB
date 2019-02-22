@@ -220,9 +220,8 @@ under the License.
     -->
 	
 	<profile>
-      <id>NEWSITE</id>
+      <id>ispyb.site-GENERIC</id>
 		<properties>
-			<ispyb.site>NEWSITE</ispyb.site>
 			<smis.ws.usr>xxx</smis.ws.usr>
 			<smis.ws.pwd>******</smis.ws.pwd>
 			<ispyb.ws.usr>xxxxxx</ispyb.ws.usr>
@@ -242,9 +241,8 @@ under the License.
     </properties>
   </profile>
   <profile>
-    <id>MAXIV</id>
+    <id>ispyb.site-MAXIV</id>
     <properties>
-        <ispyb.site>MAXIV</ispyb.site>
     </properties>
   </profile>
   -->
@@ -252,17 +250,15 @@ under the License.
 	<!--
 	<profile>	
 
-		<id>ESRF</id>
+		<id>ispyb.site-ESRF</id>
 		<properties>
-			<ispyb.site>ESRFsettings</ispyb.site>
 		</properties>
     </profile>
 	
 	<profile>	
 		
-		<id>EMBL</id>
+		<id>ispyb.site-EMBL</id>
 		<properties>
-			<ispyb.site>EMBL</ispyb.site>
 		</properties>
     </profile>
 
@@ -307,7 +303,14 @@ under the License.
    | List of profiles that are active for all builds.
    |   -->
   <activeProfiles>
-    <activeProfile>ESRF</activeProfile>
+    <!--
+     | Activate the user-jdcasey profile.
+    <activeProfile>user-jdcasey</activeProfile>
+    -->
+    <!--
+     | Activate the user-brett profile.
+    <activeProfile>user-brett</activeProfile>
+    -->
   </activeProfiles>
 
 </settings>

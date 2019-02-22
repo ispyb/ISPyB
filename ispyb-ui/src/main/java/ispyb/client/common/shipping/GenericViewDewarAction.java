@@ -305,8 +305,12 @@ public class GenericViewDewarAction extends DispatchAction {
 			String comments = form.getComments();
 			if (comments != null)
 				comments = comments.replace('*', '%');
-			List<Dewar3VO> listDewars = dewarService.findFiltered(mProposalId, null, null, label, comments, date1,
-					date2, form.getDewarStatus(), form.getStorageLocation(), true, false);
+			String barCode = form.getBarCode();
+			if (barCode != null)
+				barCode = barCode.replace('*', '%');
+			List<Dewar3VO> listDewars = dewarService.findFiltered(mProposalId, null, null, label, barCode,
+					comments, date1, date2, form.getDewarStatus(),
+					form.getStorageLocation(), null, null, false, true, false);
 
 			// listDewars = dewarService.findByCustomQuery(mProposalId, form.getDewarName(), form.getComments(),
 			// form.getBarCode(), form.getDewarStatus(), form.getStorageLocation(), date1, date2,

@@ -86,6 +86,9 @@ public class PhasingStepVO extends ISPyBValueObject implements Cloneable {
 	@Column(name="highRes")	
 	protected String highRes;
 	
+	@Column(name="groupName")	
+	protected String groupName;
+	
 	@Column(name = "recordTimeStamp")
 	protected Date recordTimeStamp;
 	
@@ -228,6 +231,16 @@ public class PhasingStepVO extends ISPyBValueObject implements Cloneable {
 
 	public void setRecordTimeStamp(Date recordTimeStamp) {
 		this.recordTimeStamp = recordTimeStamp;
+	}
+
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 }

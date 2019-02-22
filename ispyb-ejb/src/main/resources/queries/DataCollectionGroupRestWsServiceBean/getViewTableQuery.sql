@@ -58,6 +58,18 @@ GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
     and PhasingStep.phasingStepType = 'MODELBUILDING'
 ) as SpaceGroupModelResolvedByPhasing,
 				 
+(SELECT GROUP_CONCAT(DISTINCT(spaceGroupShortName))
+	FROM `PhasingStep`  
+	LEFT JOIN `SpaceGroup` ON `PhasingStep`.`spaceGroupId` = `SpaceGroup`.`spaceGroupId`     
+    LEFT JOIN `AutoProcScaling` ON `AutoProcScaling`.`autoProcScalingId` = `PhasingStep`.`autoProcScalingId`     
+	LEFT JOIN `AutoProcScaling_has_Int` ON `AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`  
+    LEFT JOIN `AutoProcIntegration` ON `AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId` 
+	LEFT JOIN `DataCollection` ON `DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId` 
+    LEFT JOIN `DataCollectionGroup` ON `DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId` 
+	where `DataCollectionGroup`.`dataCollectionGroupId` = v_datacollection_summary.DataCollection_dataCollectionGroupId     
+    and PhasingStep.phasingStepType = 'REFINEMENT'
+) as SpaceGroupModelResolvedByMr,
+
 (select SUM(numberOfImages) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfImages,
 (select count(*) FROM DataCollection where dataCollectionGroupId = v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId) as totalNumberOfDataCollections,
 (select MAX(imageId) FROM Image where dataCollectionId = v_datacollection_summary.DataCollection_dataCollectionId) as lastImageId,

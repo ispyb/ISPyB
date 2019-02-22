@@ -56,8 +56,9 @@ public class EMBLLoginModule{
 	
 	private static Properties getVisitorConnectionProperties(String username, String password){
 		Properties env = EMBLLoginModule.getConnectionProperties(username, password);
-		env.put("java.naming.security.principal", "uid=" + username + ",ou=visitor,ou=people,dc=embl-hamburg,dc=de");
+		env.put("java.naming.security.principal", "uid=" + username + ",ou=Visitor,ou=People,dc=embl-hamburg,dc=de");
 		env.put("principalDNSuffix", ",ou=visitor,ou=people,dc=embl-hamburg,dc=de");
+		env.put("useTls", "false");
 		return env;
 	}
 	
@@ -69,7 +70,7 @@ public class EMBLLoginModule{
 	}
 	
 		
-	private static List<String> authenticate(String username, String password, Properties properties) throws NamingException {
+	private static List<String> authenticateAA(String username, String password, Properties properties) throws NamingException {
 		List<String> myRoles = new ArrayList<String>();
 //		InitialLdapContext ctx = new InitialLdapContext(getConnectionProperties(username, password), null);
 		InitialLdapContext ctx = new InitialLdapContext(properties, null);
@@ -93,20 +94,31 @@ public class EMBLLoginModule{
 
 			}
 		}
+		if (myRoles.size() == 0){
+			myRoles.add("User");
+		}
+		
 		return myRoles;
 	}
 	
 	public static List<String> authenticate(String username, String password) throws NamingException {
 		try{
 			logger.info("Trying to authenticate as staff (internal)");
-			return authenticate(username, password, EMBLLoginModule.getInternalConnectionProperties(username, password));
+			return authenticateAA(username, password, EMBLLoginModule.getInternalConnectionProperties(username, password));
+		}
+		catch(Exception e){
+			logger.info("Failed to authenticate as staff (internal");
+			//race();
+		}
+		logger.info("Trying to authenticate as user");
+		try {
+			return authenticateAA(username, password, EMBLLoginModule.getVisitorConnectionProperties(username, password));
 		}
 		catch(Exception e){
 			logger.info("Failed to authenticate as staff (internal");
 			//e.printStackTrace();
 		}
-		logger.info("Trying to authenticate as user");
-		return authenticate(username, password, EMBLLoginModule.getVisitorConnectionProperties(username, password));
+		return null;
 	}
 }
 
