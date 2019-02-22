@@ -2,12 +2,14 @@ package ispyb.ws.rest.mx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
 
 import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
 import ispyb.server.biosaxs.services.core.structure.Structure3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
 import ispyb.server.mx.services.autoproc.AutoProcProgram3Service;
@@ -53,7 +55,8 @@ public class MXRestWebService extends RestWebService{
 			}
 		}
 		return new AutoProcessingDataParser(lists);
-	}
+	}	
+	
 	
 	protected Experiment3Service getExperiment3Service() throws NamingException {
 		return (Experiment3Service) Ejb3ServiceLocator.getInstance().getLocalService(Experiment3Service.class);
