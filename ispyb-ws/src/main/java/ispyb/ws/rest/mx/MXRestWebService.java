@@ -2,10 +2,12 @@ package ispyb.ws.rest.mx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
 
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
 import ispyb.server.mx.services.autoproc.AutoProcProgram3Service;
@@ -51,7 +53,8 @@ public class MXRestWebService extends RestWebService{
 			}
 		}
 		return new AutoProcessingDataParser(lists);
-	}
+	}	
+	
 	
 	protected Crystal3Service getCrystal3Service() throws NamingException {
 		return (Crystal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Crystal3Service.class);

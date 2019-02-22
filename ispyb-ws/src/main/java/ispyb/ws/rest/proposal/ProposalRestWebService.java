@@ -5,7 +5,6 @@ import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
 import ispyb.server.common.exceptions.AccessDeniedException;
-import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -171,26 +170,6 @@ public class ProposalRestWebService extends MXRestWebService{
 		}
 	}
 	
-	private List<Map<String, Object>> getProposalsFromToken (String token) throws Exception {
-		Login3VO login3VO = this.getLogin3Service().findByToken(token);
-		List<Map<String, Object>> proposals = new ArrayList<Map<String,Object>>(); 
-		
-		if (login3VO != null){
-			if (login3VO.isValid()){
-				
-				if (login3VO.isLocalContact() || login3VO.isManager()){
-					proposals = this.getProposal3Service().findProposals();
-				}
-				else{
-					proposals = this.getProposal3Service().findProposals(login3VO.getUsername());
-				}				
-			}
-		}	else {		
-			throw new Exception("Token is not valid");
-		}
-		return (proposals);
-
-	}
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
