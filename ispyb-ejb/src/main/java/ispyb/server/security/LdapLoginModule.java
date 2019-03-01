@@ -307,6 +307,8 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 				case EMBL:
 					filter = new StringBuffer().append("(&").append("(objectClass=groupOfNames)").append("(" + groupUniqueMemberName + "=").append(userDN).append(")").append(")").toString();
 					break;
+				case ALBA:
+					filter = new StringBuffer().append("(&").append("(objectClass=posixGroup)").append("(" + groupUniqueMemberName + "=").append(username).append(")").append(")").toString();
 				case MAXIV:
 						try {
 
