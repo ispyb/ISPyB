@@ -159,6 +159,15 @@
 			</activation>
 		</profile>
 		<profile>
+			<id>ispyb.site-ALBA</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ALBA</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
 			<id>ispyb.site-GENERIC</id>
 			<activation>
 				<property>

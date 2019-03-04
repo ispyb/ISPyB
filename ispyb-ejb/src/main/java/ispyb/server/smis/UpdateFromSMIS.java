@@ -197,6 +197,10 @@ public class UpdateFromSMIS {
 				SMISWebService wsSOLEIL = SMISWebServiceGenerator.getWs();
 				pk = wsSOLEIL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
 				break;
+			case ALBA:
+				SMISWebService wsALBA = SMISWebServiceGenerator.getWs();
+				pk = wsALBA.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
+				break;
 			case EMBL:
 		
 				SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
@@ -697,7 +701,26 @@ public class UpdateFromSMIS {
 						LOG.debug("Update person with bllogin");
 					}
 				}
-				
+
+				if (Constants.getSite().equals(SITE.ALBA)) {
+					// Create a new person record for the experiment if existing login doesn't match
+					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
+						Person3VO newPerson = new Person3VO();
+						newPerson.setEmailAddress(mainProp.getScientistEmail());
+						newPerson.setGivenName(mainProp.getScientistFirstName());
+						newPerson.setFamilyName(mainProp.getScientistName());
+						newPerson.setLogin(mainProp.getBllogin());
+						newPerson.setSiteId(mainProp.getSiteId() != null ? mainProp.getSiteId().toString() : null);
+						newPerson.setLaboratoryVO(currentPerson.getLaboratoryVO());
+
+						newPerson = person.merge(newPerson);
+						proposalVO.setPersonVO(newPerson);
+						proposal.update(proposalVO);
+
+						LOG.debug("Created new person record with id " + newPerson.getPersonId());
+					}
+				}
+
 				// fill the siteId if it was null before
 				if (StringUtils.matchString(currentFamilyName, familyName)
 						&& StringUtils.matchString(currentGivenName, givenName) && (siteId != null) && (currentSiteId==null) ) {

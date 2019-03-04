@@ -507,6 +507,68 @@
   			
   		</properties>
   	</profile>
+	<profile>
+		<id>ispyb.site-ALBA</id>
+		<activation>
+			<property>
+				<name>ispyb.site</name>
+				<value>ALBA</value>
+			</property>
+		</activation>
+		<properties>
+			<ispyb.dbDialect>MYSQL</ispyb.dbDialect>
+			<ispyb.dbJndiName.direct>java:jboss/ispyb_db_direct</ispyb.dbJndiName.direct>
+			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
+			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
+
+			<ldap.employee.resource>ldap://xxxx.cells.es:xxxx/</ldap.employee.resource>
+			<ldap.people>ou=xxxx,dc=xxxx,dc=xxxx</ldap.people>
+            <ldap.attribute>xxxx</ldap.attribute>
+
+			<ispyb.root.folder>/storagebls</ispyb.root.folder>
+			<ispyb.uploaded.root.folder>/home/web/ispybtest/</ispyb.uploaded.root.folder>
+			<ispyb.upload.folder.pdf>/home/web/ispybtest/</ispyb.upload.folder.pdf>
+
+			<ispyb.server.name.prod>xxxx.cells.es</ispyb.server.name.prod>
+			<ispyb.server.name.prod.alias>ispyb.cells.es</ispyb.server.name.prod.alias>
+			<ispyb.server.name.prod.ext>xxx.xxx.xxx.xxx</ispyb.server.name.prod.ext>
+			<ispyb.server.name.test>xxxx.cells.es</ispyb.server.name.test>
+
+			<protein.allowedToCreate>true</protein.allowedToCreate>
+
+			<shipping.container.capacity>16</shipping.container.capacity>
+			<samplechanger.container.capacity>16</samplechanger.container.capacity>
+			<samplechanger.locations>9</samplechanger.locations>
+
+			<ispyb.dataprocessing.denzo>true</ispyb.dataprocessing.denzo>
+			<ispyb.path.mappingstyle>ESRF</ispyb.path.mappingstyle>
+			<ispyb.bcm>mxcube</ispyb.bcm>
+
+			<mail.smtp.host>xxxx.cells.es</mail.smtp.host>
+			<mail.admin>xxxx@cells.es</mail.admin>
+			<mail.dev>xxxx@cells.es</mail.dev>
+			<mail.ispyb>xxxx@cells.es</mail.ispyb>
+			<mail.stores>xxxx@cells.es</mail.stores>
+
+			<mail.report.industry.from>xxxx@cells.es</mail.report.industry.from>
+			<mail.report.industry.cc>xxxx@cells.es</mail.report.industry.cc>
+			<mail.report.industry.cc.fx12>xxxx@cells.es</mail.report.industry.cc.fx12>
+
+			<dictionary.site>ALBA</dictionary.site>
+			<dictionary.bcm>mxCuBE</dictionary.bcm>
+
+			<ispyb.authorisation.active>true</ispyb.authorisation.active>
+
+			<userportal.webservices.url>http://xxxxxxxx/SMISWebServiceService?wsdl</userportal.webservices.url>
+			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
+			<userportal.url>https://useroffice.cells.es</userportal.url>
+
+			<ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
+
+			<shipment.upload.template>ispyb-template6.2_shipment.xlt</shipment.upload.template>
+			<shipment.upload.populatedTemplate>ispyb-template6.2_shipment.xls</shipment.upload.populatedTemplate>
+		</properties>
+	</profile>
   	
   	<profile>
   		<id>ispyb.site-GENERIC</id>

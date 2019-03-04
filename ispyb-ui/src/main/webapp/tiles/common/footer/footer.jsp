@@ -27,6 +27,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
           <A href="http://www.spineurope.org/" target=_blank>SPINE</A> | 
           <A href="http://www.ebi.ac.uk/pdbe/" target=_blank>MSD</A> | 
           <a href="http://www.maxiv.se/">MAX IV</a> |
+          <A href="http://www.cells.es/">ALBA</A> |
           <c:if test="${SITE_ATTRIBUTE eq 'DLS'}">
            	| <A href="http://www.diamond.ac.uk/" target=_blank>DLS</A> 
           </c:if>
