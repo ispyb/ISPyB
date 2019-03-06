@@ -198,11 +198,14 @@ public class UpdateFromSMIS {
 				pk = wsSOLEIL.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));
 				break;
 			case EMBL:
-		
 				SMISWebService wsEMBL = SMISWebServiceGenerator.getWs();
 				pk = wsEMBL.getProposalPK("SAXS", 225L);
-				System.out.println("GREAT!!! " + pk.toString());			
-		
+				System.out.println("GREAT!!! " + pk.toString());
+				break;
+			case MAXIV:
+				/*SMISWebService wsMAXIV = SMISWebServiceGenerator.getWs();
+				pk = wsMAXIV.getProposalPK(myProposal.getCode(), Long.parseLong(myProposal.getNumber()));*/
+				pk = Long.parseLong(myProposal.getNumber());
 				break;
 			default:
 				break;
