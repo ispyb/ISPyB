@@ -343,6 +343,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 				if (Constants.SITE_IS_MAXIV()) {
 					NamingEnumeration<SearchResult> answer1 = ctx.search("CN=Users," +groupCtxDN, filter, cons);
 					NamingEnumeration<SearchResult> answer2 = ctx.search("OU=DUOactive," +groupCtxDN, filter, cons);
+					NamingEnumeration<SearchResult> answer3 = ctx.search("OU=DUO," +groupCtxDN, filter, cons);
 
 					while (answer1.hasMore()) {
 						SearchResult sr = answer1.next();
@@ -382,6 +383,42 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 
 					while (answer2.hasMore()) {
 						SearchResult sr = answer2.next();
+						Attributes attrs = sr.getAttributes();
+						Attribute roles = attrs.get(groupAttrName);
+
+						for (int r = 0; r < roles.size(); r++) {
+
+							Object value = roles.get(r);
+							String roleName = null;
+							roleName = value.toString();
+							// fill roles array
+							if (roleName != null) {
+								if (roleName.equals("Staff")) {
+									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
+								} else if (roleName.equals("ispyb-manager")
+										|| roleName.equals("Information Management") || roleName.equals("biomax")) {
+									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_ADMIN));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_BLOM));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_INDUSTRIAL));
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_STORE));
+								} else if (roleName.equals("ispyb-biomax-contacts")) {
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
+									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+								} else if (roleName.contains("-group")) {
+									userRoles.addMember(new SimplePrincipal("mx" + roleName.replace("-group", "")));
+									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
+								}
+
+								userRoles.addMember(new SimplePrincipal(roleName));
+							}
+
+						}
+					}
+
+					while (answer3.hasMore()) {
+						SearchResult sr = answer3.next();
 						Attributes attrs = sr.getAttributes();
 						Attribute roles = attrs.get(groupAttrName);
 
