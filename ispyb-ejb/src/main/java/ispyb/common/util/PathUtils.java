@@ -32,6 +32,7 @@ import java.io.File;
  */
 public class PathUtils {
 
+
 	public static String getImageDirPath(DataCollection3VO dcValue) throws Exception {
 
 		String imgPrefix = dcValue.getImagePrefix();
