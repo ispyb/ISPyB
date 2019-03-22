@@ -221,6 +221,21 @@
   			<js.alternative.path> </js.alternative.path>
   		</properties>
   	</profile>
+	  <profile>
+		  <id>ispyb.env-test</id>
+		  <activation>
+			  <property>
+				  <name>ispyb.env</name>
+				  <value>test</value>
+			  </property>
+		  </activation>
+
+		  <properties>
+			  <js.minimized>false</js.minimized>
+			  <js.alternative.path.enabled>false</js.alternative.path.enabled>
+			  <js.alternative.path> </js.alternative.path>
+		  </properties>
+	  </profile>
      <profile>
   		<id>ispyb.env-development</id>
 		<activation>
@@ -464,6 +479,7 @@
 
 			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
 			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
+			<ispyb.upload.folder.pdf>/data/ispyb/pyarch/pdb/pdf/</ispyb.upload.folder.pdf>
 
 			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
 			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
@@ -499,6 +515,7 @@
 			<userportal.webservices.url>https://smis.esrf.fr/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 			<userportal.url>duo.maxiv.lu.se:3000</userportal.url>
+			<ispyb.upload.folder.json>/data/ispyb/pyarch/pdb/json/</ispyb.upload.folder.json>
 			
             <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
 
