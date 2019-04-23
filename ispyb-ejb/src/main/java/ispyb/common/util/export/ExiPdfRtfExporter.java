@@ -437,20 +437,18 @@ public class ExiPdfRtfExporter {
 	}
 
 	/**
-	 * set the crystallographer - only for IFX proposal
+	 * set the crystallographer
 	 * 
 	 * @param document
 	 * @throws Exception
 	 */
 	private void setCrystallographer(Document document) throws Exception {
-		// Crystallographer added only for IFX proposal in case of MXPress
-		// experiment
-		if (proposalDesc.toLowerCase().contains(Constants.PROPOSAL_CODE_FX) && slv != null) {
+		if (slv != null) {
 			String beamlineOp = "";
 			if (slv.getBeamlineOperator() != null) {
 				beamlineOp = slv.getBeamlineOperator();
 			}
-			document.add(new Paragraph("Crystallographer:", FONT_TITLE));
+			document.add(new Paragraph("Crystallographer/local contact:", FONT_TITLE));
 			document.add(new Paragraph(beamlineOp, FONT_DOC));
 		}
 	}
@@ -469,8 +467,7 @@ public class ExiPdfRtfExporter {
 	}
 
 	/***
-	 * sets the sessions informations in the pdf document for fx or ix accounts
-	 * (Issue 1049)
+	 * sets the sessions informations in the pdf document
 	 * 
 	 * @param document
 	 * @throws Exception
@@ -480,11 +477,7 @@ public class ExiPdfRtfExporter {
 		if (slv != null
 				&& (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX) || proposalCode
 						.equals(Constants.PROPOSAL_CODE_IX))) {
-			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) { 
-				// session title only for FX accounts
-				document.add(new Paragraph("Session title:", FONT_TITLE));
-				document.add(new Paragraph(slv.getSessionTitle(), FONT_DOC));
-			}
+			
 			Table sessionTable = new Table(2);
 			// sessionTable.setWidth(50); // percentage
 			sessionTable.setPadding(3);
@@ -645,11 +638,16 @@ public class ExiPdfRtfExporter {
 		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
 		document.add(p);
 		
-		//row2		
+		//row2	
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null);
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		document.add(p);
+		
+		//row3		
 		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory", null);
 		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
 	
-		//row3
+		//row4
 		Table table = new Table(NB_COL_DATACOLLECTION);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
@@ -661,10 +659,9 @@ public class ExiPdfRtfExporter {
 		parag = "Workflow:\n" 
 				+ "Protein:\n" 
 				+ 	"Sample:\n" 
-				+ 	"Prefix:\n" 
 				+ 	"Run #:\n" 
 				+ 	"Images:\n" 
-				+ 	"Transmission:\n";
+				+ 	"Transmission:\n\n";
 		p = new Paragraph(parag, FONT_DOC);
 		table.addCell(p);
 		
@@ -672,7 +669,6 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(dataCollectionMapItem, "Workflow_workflowType", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "Protein_acronym", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "BLSample_name", null) + "\n" 
-				+ getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionNumber", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n" 
 				+ getCellParam(dataCollectionMapItem, "transmission", df1) + "%\n";
@@ -732,12 +728,21 @@ public class ExiPdfRtfExporter {
 		}
 		document.add(table);
 		
-		// row3
+		// row5
 		if (dataCollectionMapItem.get("DataCollection_comments") != null && dataCollectionMapItem.get("DataCollection_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollection_comments").toString(), FONT_DOC));
 		
 		else if (dataCollectionMapItem.get("DataCollectionGroup_comments") != null && dataCollectionMapItem.get("DataCollectionGroup_comments") != "")
 			document.add(new Paragraph(dataCollectionMapItem.get("DataCollectionGroup_comments").toString(), FONT_DOC));
+		
+		// row6
+		if (dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != null && dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != "") {		
+			document.add(new Paragraph("Phasing OK with space groups: " + dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing").toString(), FONT_DOC_GREEN));						
+		}
+		// row7
+		if (dataCollectionMapItem.get("SpaceGroupModelResolvedByMr") != null && dataCollectionMapItem.get("SpaceGroupModelResolvedByMr") != "") {		
+					document.add(new Paragraph("MR OK with space groups: " + dataCollectionMapItem.get("SpaceGroupModelResolvedByMr").toString(), FONT_DOC_GREEN));						
+		}
 
 		document.add(new Paragraph(" "));	
 		return;
@@ -908,10 +913,26 @@ public class ExiPdfRtfExporter {
 	 */
 	private void setDataAnalysisMapData(Document document, Map<String, Object> dataCollectionMapItem) throws Exception {
 	
-		//row 1
+		// 1st row
 		String parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) 
 				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime", null);
 		Paragraph p = new Paragraph(parag, FONT_DOC_BLUE);
+		document.add(p);
+		
+		//row2	
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null);
+		p = new Paragraph(parag, FONT_DOC_BOLD);
+		document.add(p);
+		
+		//row3		
+		parag = getCellParam(dataCollectionMapItem,"DataCollection_imageDirectory", null);
+		document.add(new Paragraph(parag, FONT_DOC_ITALIC));	
+		
+		//row 4
+		
+		parag = getCellParam(dataCollectionMapItem, "DataCollectionGroup_experimentType", null) 
+				+ " " + getCellParam(dataCollectionMapItem, "DataCollection_startTime", null);
+		p = new Paragraph(parag, FONT_DOC_BLUE);
 		//document.add(p);
 
 		Table table = new Table(NB_COL_DATA_ANALYSIS);
@@ -923,18 +944,16 @@ public class ExiPdfRtfExporter {
 		table.getDefaultCell().setBorderWidth(0);
 
 		// 1st Cell
-		parag = "Date/Time: \n\n\n" 
+		parag = "Run #: \n\n\n" 
 				+ "Protein: \n\n" 
-				+ 	"Prefix: \n\n" 
 				+ 	"Images: \n\n" ;
 
 		p = new Paragraph(parag, FONT_DOC_SMALL);
 		table.addCell(p);
 		
 		// 2st Cell
-		parag = getCellParam(dataCollectionMapItem, "DataCollection_startTime", null)+ "\n\n" 
+		parag = getCellParam(dataCollectionMapItem, "DataCollection_dataCollectionNumber", null) + "\n"  
 				+ getCellParam(dataCollectionMapItem, "Protein_acronym", null)+ "\n\n" 
-				+ 	getCellParam(dataCollectionMapItem, "DataCollection_imagePrefix", null) + "\n\n" 
 				+ 	getCellParam(dataCollectionMapItem, "DataCollection_numberOfImages", null) + "\n\n" ;
 
 		p = new Paragraph(parag, FONT_DOC_SMALL_BOLD);
@@ -1005,7 +1024,10 @@ public class ExiPdfRtfExporter {
 
 			// Cell 8 
 			parag = "Res. \n" 
-					+ bestRmerge[17]+ "\n " 
+//					+ getDecimalFormat(bestRmerge[17], df1) + "\n " 
+//					+ getDecimalFormat(bestRmerge[3], df1) + "\n " 
+//					+ getDecimalFormat(bestRmerge[13], df1) + "\n " ;
+					+ bestRmerge[17] + "\n " 
 					+ bestRmerge[3] + "\n"
 					+ bestRmerge[13] + "\n" ; 
 			p = new Paragraph(parag, FONT_DOC_SMALL);
@@ -1013,9 +1035,9 @@ public class ExiPdfRtfExporter {
 
 			// Cell 9 		
 			parag = "Rmerge \n" 
-					+ getDecimalFormat(bestRmerge[15], df2) + "\n"
-					+ getDecimalFormat(bestRmerge[1], df2) + "\n"
-					+ getDecimalFormat(bestRmerge[11], df2) + "\n"; 
+					+ getDecimalFormat(bestRmerge[15], df1) + "\n"
+					+ getDecimalFormat(bestRmerge[1], df1) + "\n"
+					+ getDecimalFormat(bestRmerge[11], df1) + "\n"; 
 			p = new Paragraph(parag, FONT_DOC_SMALL);
 			table.addCell(p);
 
@@ -1128,6 +1150,10 @@ public class ExiPdfRtfExporter {
 		// row4
 		if (dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != null && dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing") != "") {		
 			document.add(new Paragraph("Phasing OK with space groups: " + dataCollectionMapItem.get("SpaceGroupModelResolvedByPhasing").toString(), FONT_DOC_GREEN));						
+		}
+		// row5
+		if (dataCollectionMapItem.get("SpaceGroupModelResolvedByMr") != null && dataCollectionMapItem.get("SpaceGroupModelResolvedByMr") != "") {		
+					document.add(new Paragraph("MR OK with space groups: " + dataCollectionMapItem.get("SpaceGroupModelResolvedByMr").toString(), FONT_DOC_GREEN));						
 		}
 		
 		document.add(new Paragraph("_______________________________________________________________________________________"));	

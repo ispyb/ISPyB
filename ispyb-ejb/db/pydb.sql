@@ -1,100 +1,134 @@
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
 --
--- Database: `pydb` version 5.13
+-- Database: `pydb` version  5.14.3
 --
 
----------------------------------------------------------
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AbInitioModel`
+--
 
 CREATE TABLE `AbInitioModel` (
-  `abInitioModelId` int(10) NOT NULL AUTO_INCREMENT,
+  `abInitioModelId` int(10) NOT NULL,
   `modelListId` int(10) DEFAULT NULL,
   `averagedModelId` int(10) DEFAULT NULL,
   `rapidShapeDeterminationModelId` int(10) DEFAULT NULL,
   `shapeDeterminationModelId` int(10) DEFAULT NULL,
   `comments` varchar(512) DEFAULT NULL,
-  `creationTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`abInitioModelId`),
-  KEY `AbInitioModelToModelList` (`modelListId`),
-  KEY `AverageToModel` (`averagedModelId`),
-  KEY `AbInitioModelToRapid` (`rapidShapeDeterminationModelId`),
-  KEY `SahpeDeterminationToAbiniti` (`shapeDeterminationModelId`),
-  CONSTRAINT `AbInitioModelToModelList` FOREIGN KEY (`modelListId`) REFERENCES `ModelList` (`modelListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `AbInitioModelToRapid` FOREIGN KEY (`rapidShapeDeterminationModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `AverageToModel` FOREIGN KEY (`averagedModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SahpeDeterminationToAbiniti` FOREIGN KEY (`shapeDeterminationModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=40650 DEFAULT CHARSET=latin1;
+  `creationTime` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Additive`
+--
 
 CREATE TABLE `Additive` (
-  `additiveId` int(11) NOT NULL AUTO_INCREMENT,
+  `additiveId` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `additiveType` varchar(45) DEFAULT NULL,
   `comments` varchar(512) DEFAULT NULL,
   `chemFormulaHead` varchar(25) DEFAULT '',
-  `chemFormulaTail` varchar(25) DEFAULT '',
-  PRIMARY KEY (`additiveId`)
+  `chemFormulaTail` varchar(25) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AdminActivity`
+--
+
 CREATE TABLE `AdminActivity` (
-  `adminActivityId` int(11) NOT NULL AUTO_INCREMENT,
+  `adminActivityId` int(11) NOT NULL,
   `username` varchar(45) NOT NULL DEFAULT '',
   `action` varchar(45) DEFAULT NULL,
   `comments` varchar(100) DEFAULT NULL,
-  `dateTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`adminActivityId`),
-  UNIQUE KEY `username` (`username`),
-  KEY `AdminActivity_FKAction` (`action`)
-) ENGINE=InnoDB AUTO_INCREMENT=2154 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `AdminVar` (
-  `varId` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
-  `value` varchar(1024) DEFAULT NULL,
-  PRIMARY KEY (`varId`),
-  KEY `AdminVar_FKIndexName` (`name`),
-  KEY `AdminVar_FKIndexValue` (`value`(767))
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='ISPyB administration values';
-
-CREATE TABLE `Aperture` (
-  `apertureId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sizeX` float DEFAULT NULL,
-  PRIMARY KEY (`apertureId`)
+  `dateTime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `Assembly` (
-  `assemblyId` int(10) NOT NULL AUTO_INCREMENT,
-  `macromoleculeId` int(10) NOT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  `comments` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`assemblyId`),
-  KEY `AssemblyToMacromolecule` (`macromoleculeId`),
-  CONSTRAINT `AssemblyToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
-CREATE TABLE `AssemblyHasMacromolecule` (
-  `AssemblyHasMacromoleculeId` int(10) NOT NULL AUTO_INCREMENT,
+--
+-- Table structure for table `AdminVar`
+--
+
+CREATE TABLE `AdminVar` (
+  `varId` int(11) NOT NULL,
+  `name` varchar(32) DEFAULT NULL,
+  `value` varchar(1024) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB administration values';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Aperture`
+--
+
+CREATE TABLE `Aperture` (
+  `apertureId` int(10) UNSIGNED NOT NULL,
+  `sizeX` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Assembly`
+--
+
+CREATE TABLE `Assembly` (
   `assemblyId` int(10) NOT NULL,
   `macromoleculeId` int(10) NOT NULL,
-  PRIMARY KEY (`AssemblyHasMacromoleculeId`),
-  KEY `AssemblyHasMacromoleculeToAssembly` (`assemblyId`),
-  KEY `AssemblyHasMacromoleculeToAssemblyRegion` (`macromoleculeId`),
-  CONSTRAINT `AssemblyHasMacromoleculeToAssembly` FOREIGN KEY (`assemblyId`) REFERENCES `Assembly` (`assemblyId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `AssemblyHasMacromoleculeToAssemblyRegion` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+  `creationDate` datetime DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AssemblyHasMacromolecule`
+--
+
+CREATE TABLE `AssemblyHasMacromolecule` (
+  `AssemblyHasMacromoleculeId` int(10) NOT NULL,
+  `assemblyId` int(10) NOT NULL,
+  `macromoleculeId` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AssemblyRegion`
+--
 
 CREATE TABLE `AssemblyRegion` (
-  `assemblyRegionId` int(10) NOT NULL AUTO_INCREMENT,
+  `assemblyRegionId` int(10) NOT NULL,
   `assemblyHasMacromoleculeId` int(10) NOT NULL,
   `assemblyRegionType` varchar(45) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `fromResiduesBases` varchar(45) DEFAULT NULL,
-  `toResiduesBases` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`assemblyRegionId`),
-  KEY `AssemblyRegionToAssemblyHasMacromolecule` (`assemblyHasMacromoleculeId`),
-  CONSTRAINT `AssemblyRegionToAssemblyHasMacromolecule` FOREIGN KEY (`assemblyHasMacromoleculeId`) REFERENCES `AssemblyHasMacromolecule` (`AssemblyHasMacromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `toResiduesBases` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProc`
+--
+
 CREATE TABLE `AutoProc` (
-  `autoProcId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcProgramId` int(10) unsigned DEFAULT NULL COMMENT 'Related program item',
+  `autoProcId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcProgramId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related program item',
   `spaceGroup` varchar(45) DEFAULT NULL COMMENT 'Space group',
   `refinedCell_a` float DEFAULT NULL COMMENT 'Refined cell',
   `refinedCell_b` float DEFAULT NULL COMMENT 'Refined cell',
@@ -102,17 +136,21 @@ CREATE TABLE `AutoProc` (
   `refinedCell_alpha` float DEFAULT NULL COMMENT 'Refined cell',
   `refinedCell_beta` float DEFAULT NULL COMMENT 'Refined cell',
   `refinedCell_gamma` float DEFAULT NULL COMMENT 'Refined cell',
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`autoProcId`),
-  KEY `AutoProc_FKIndex1` (`autoProcProgramId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1711080 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcIntegration`
+--
 
 CREATE TABLE `AutoProcIntegration` (
-  `autoProcIntegrationId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `dataCollectionId` int(11) unsigned NOT NULL COMMENT 'DataCollection item',
-  `autoProcProgramId` int(10) unsigned DEFAULT NULL COMMENT 'Related program item',
-  `startImageNumber` int(10) unsigned DEFAULT NULL COMMENT 'start image number',
-  `endImageNumber` int(10) unsigned DEFAULT NULL COMMENT 'end image number',
+  `autoProcIntegrationId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `dataCollectionId` int(11) UNSIGNED NOT NULL COMMENT 'DataCollection item',
+  `autoProcProgramId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related program item',
+  `startImageNumber` int(10) UNSIGNED DEFAULT NULL COMMENT 'start image number',
+  `endImageNumber` int(10) UNSIGNED DEFAULT NULL COMMENT 'end image number',
   `refinedDetectorDistance` float DEFAULT NULL COMMENT 'Refined DataCollection.detectorDistance',
   `refinedXBeam` float DEFAULT NULL COMMENT 'Refined DataCollection.xBeam',
   `refinedYBeam` float DEFAULT NULL COMMENT 'Refined DataCollection.yBeam',
@@ -129,17 +167,18 @@ CREATE TABLE `AutoProcIntegration` (
   `cell_beta` float DEFAULT NULL COMMENT 'Unit cell',
   `cell_gamma` float DEFAULT NULL COMMENT 'Unit cell',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `anomalous` tinyint(1) DEFAULT '0' COMMENT 'boolean type:0 noanoum - 1 anoum',
-  PRIMARY KEY (`autoProcIntegrationId`),
-  KEY `AutoProcIntegrationIdx1` (`dataCollectionId`),
-  KEY `AutoProcIntegration_FKIndex1` (`autoProcProgramId`),
-  CONSTRAINT `AutoProcIntegration_ibfk_1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `AutoProcIntegration_ibfk_2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1907660 DEFAULT CHARSET=latin1;
+  `anomalous` tinyint(1) DEFAULT '0' COMMENT 'boolean type:0 noanoum - 1 anoum'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcProgram`
+--
 
 CREATE TABLE `AutoProcProgram` (
-  `autoProcProgramId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `dataCollectionId` int(11) unsigned DEFAULT NULL,
+  `autoProcProgramId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `dataCollectionId` int(11) UNSIGNED DEFAULT NULL,
   `processingCommandLine` varchar(255) DEFAULT NULL COMMENT 'Command line for running the automatic processing',
   `processingPrograms` varchar(255) DEFAULT NULL COMMENT 'Processing programs (comma separated)',
   `processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1') DEFAULT NULL COMMENT 'success (1) / fail (0)',
@@ -147,49 +186,57 @@ CREATE TABLE `AutoProcProgram` (
   `processingStartTime` datetime DEFAULT NULL COMMENT 'Processing start time',
   `processingEndTime` datetime DEFAULT NULL COMMENT 'Processing end time',
   `processingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`autoProcProgramId`),
-  KEY `fk_AutoProcProgram_1_idx` (`dataCollectionId`),
-  CONSTRAINT `AutoProcProgram_FK1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1781341 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcProgramAttachment`
+--
 
 CREATE TABLE `AutoProcProgramAttachment` (
-  `autoProcProgramAttachmentId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcProgramId` int(10) unsigned NOT NULL COMMENT 'Related autoProcProgram item',
+  `autoProcProgramAttachmentId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcProgramId` int(10) UNSIGNED NOT NULL COMMENT 'Related autoProcProgram item',
   `fileType` enum('Log','Result','Graph') DEFAULT NULL COMMENT 'Type of file Attachment',
   `fileName` varchar(255) DEFAULT NULL COMMENT 'Attachment filename',
   `filePath` varchar(255) DEFAULT NULL COMMENT 'Attachment filepath to disk storage',
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`autoProcProgramAttachmentId`),
-  KEY `AutoProcProgramAttachmentIdx1` (`autoProcProgramId`),
-  CONSTRAINT `AutoProcProgramAttachmentFk1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17810881 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcScaling`
+--
 
 CREATE TABLE `AutoProcScaling` (
-  `autoProcScalingId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcId` int(10) unsigned DEFAULT NULL COMMENT 'Related autoProc item (used by foreign key)',
+  `autoProcScalingId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related autoProc item (used by foreign key)',
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  `resolutionEllipsoidAxis11` float DEFAULT NULL,
-  `resolutionEllipsoidAxis12` float DEFAULT NULL,
-  `resolutionEllipsoidAxis13` float DEFAULT NULL,
-  `resolutionEllipsoidAxis21` float DEFAULT NULL,
-  `resolutionEllipsoidAxis23` float DEFAULT NULL,
-  `resolutionEllipsoidAxis31` float DEFAULT NULL,
-  `resolutionEllipsoidAxis32` float DEFAULT NULL,
-  `resolutionEllipsoidAxis33` float DEFAULT NULL,
-  `resolutionEllipsoidValue1` float DEFAULT NULL,
-  `resolutionEllipsoidValue2` float DEFAULT NULL,
-  `resolutionEllipsoidValue3` float DEFAULT NULL,
-  `resolutionEllipsoidAxis22` float DEFAULT NULL,
-  PRIMARY KEY (`autoProcScalingId`),
-  KEY `AutoProcScalingFk1` (`autoProcId`),
-  KEY `AutoProcScalingIdx1` (`autoProcScalingId`,`autoProcId`),
-  CONSTRAINT `AutoProcScalingFk1` FOREIGN KEY (`autoProcId`) REFERENCES `AutoProc` (`autoProcId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1711090 DEFAULT CHARSET=latin1;
+  `resolutionEllipsoidAxis11` float DEFAULT NULL COMMENT 'Eigenvector for first diffraction limit, coord 1',
+  `resolutionEllipsoidAxis12` float DEFAULT NULL COMMENT 'Eigenvector for first diffraction limit, coord 2',
+  `resolutionEllipsoidAxis13` float DEFAULT NULL COMMENT 'Eigenvector for first diffraction limit, coord 3',
+  `resolutionEllipsoidAxis21` float DEFAULT NULL COMMENT 'Eigenvector for second diffraction limit, coord 1',
+  `resolutionEllipsoidAxis23` float DEFAULT NULL COMMENT 'Eigenvector for second diffraction limit, coord 3',
+  `resolutionEllipsoidAxis31` float DEFAULT NULL COMMENT 'Eigenvector for third diffraction limit, coord 1',
+  `resolutionEllipsoidAxis32` float DEFAULT NULL COMMENT 'Eigenvector for third diffraction limit, coord 2',
+  `resolutionEllipsoidAxis33` float DEFAULT NULL COMMENT 'Eigenvector for third diffraction limit, coord 3',
+  `resolutionEllipsoidValue1` float DEFAULT NULL COMMENT 'First (anisotropic) diffraction limit',
+  `resolutionEllipsoidValue2` float DEFAULT NULL COMMENT 'Second (anisotropic) diffraction limit',
+  `resolutionEllipsoidValue3` float DEFAULT NULL COMMENT 'Third (anisotropic) diffraction limit',
+  `resolutionEllipsoidAxis22` float DEFAULT NULL COMMENT 'Eigenvector for second diffraction limit, coord 2'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcScalingStatistics`
+--
 
 CREATE TABLE `AutoProcScalingStatistics` (
-  `autoProcScalingStatisticsId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcScalingId` int(10) unsigned DEFAULT NULL COMMENT 'Related autoProcScaling item (used by foreign key)',
+  `autoProcScalingStatisticsId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcScalingId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related autoProcScaling item (used by foreign key)',
   `scalingStatisticsType` enum('overall','innerShell','outerShell') NOT NULL DEFAULT 'overall' COMMENT 'Scaling statistics type',
   `comments` varchar(255) DEFAULT NULL COMMENT 'Comments...',
   `resolutionLimitLow` float DEFAULT NULL COMMENT 'Low resolution limit',
@@ -213,391 +260,109 @@ CREATE TABLE `AutoProcScalingStatistics` (
   `ccAno` float DEFAULT NULL,
   `sigAno` varchar(45) DEFAULT NULL,
   `isa` varchar(45) DEFAULT NULL,
-  `completenessSpherical` float DEFAULT NULL,
-  `completenessEllipsoidal` float DEFAULT NULL,
-  `anomalousCompletenessSpherical` float DEFAULT NULL,
-  `anomalousCompletenessEllipsoidal` float DEFAULT NULL,
-  PRIMARY KEY (`autoProcScalingStatisticsId`),
-  KEY `AutoProcScalingStatisticsIdx1` (`autoProcScalingId`),
-  KEY `AutoProcScalingStatistics_FKindexType` (`scalingStatisticsType`),
-  CONSTRAINT `AutoProcScalingStatisticsFk1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5208275 DEFAULT CHARSET=latin1;
+  `completenessSpherical` float DEFAULT NULL COMMENT 'Completeness calculated assuming isotropic diffraction',
+  `completenessEllipsoidal` float DEFAULT NULL COMMENT 'Completeness calculated allowing for anisotropic diffraction',
+  `anomalousCompletenessSpherical` float DEFAULT NULL COMMENT 'Anomalous completeness calculated assuming isotropic diffraction',
+  `anomalousCompletenessEllipsoidal` float DEFAULT NULL COMMENT 'Anisotropic completeness calculated allowing for anisotropic diffraction'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcScaling_has_Int`
+--
 
 CREATE TABLE `AutoProcScaling_has_Int` (
-  `autoProcScaling_has_IntId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcScalingId` int(10) unsigned DEFAULT NULL COMMENT 'AutoProcScaling item',
-  `autoProcIntegrationId` int(10) unsigned NOT NULL COMMENT 'AutoProcIntegration item',
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`autoProcScaling_has_IntId`),
-  KEY `AutoProcScl_has_IntIdx1` (`autoProcScalingId`),
-  KEY `AutoProcScal_has_IntIdx2` (`autoProcIntegrationId`),
-  KEY `AutoProcScalingHasInt_FKIndex3` (`autoProcScalingId`,`autoProcIntegrationId`),
-  CONSTRAINT `AutoProcScaling_has_IntFk1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `AutoProcScaling_has_IntFk2` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1711025 DEFAULT CHARSET=latin1;
+  `autoProcScaling_has_IntId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcScalingId` int(10) UNSIGNED DEFAULT NULL COMMENT 'AutoProcScaling item',
+  `autoProcIntegrationId` int(10) UNSIGNED NOT NULL COMMENT 'AutoProcIntegration item',
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `AutoProcStatus`
+--
 
 CREATE TABLE `AutoProcStatus` (
-  `autoProcStatusId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `autoProcIntegrationId` int(10) unsigned NOT NULL,
+  `autoProcStatusId` int(11) NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `autoProcIntegrationId` int(10) UNSIGNED NOT NULL,
   `step` enum('Indexing','Integration','Correction','Scaling','Importing') NOT NULL COMMENT 'autoprocessing step',
   `status` enum('Launched','Successful','Failed') NOT NULL COMMENT 'autoprocessing status',
   `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`autoProcStatusId`),
-  KEY `AutoProcStatus_FKIndex1` (`autoProcIntegrationId`),
-  CONSTRAINT `AutoProcStatus_ibfk_1` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2520127 DEFAULT CHARSET=latin1 COMMENT='AutoProcStatus table is linked to AutoProcIntegration';
+  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='AutoProcStatus table is linked to AutoProcIntegration';
 
-CREATE TABLE `BF_automationError` (
-  `automationErrorId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `errorType` varchar(40) NOT NULL,
-  `solution` text,
-  PRIMARY KEY (`automationErrorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
-CREATE TABLE `BF_automationFault` (
-  `automationFaultId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `automationErrorId` int(10) unsigned DEFAULT NULL,
-  `containerId` int(10) unsigned DEFAULT NULL,
-  `severity` enum('1','2','3') DEFAULT NULL,
-  `stacktrace` text,
-  `resolved` tinyint(1) DEFAULT NULL,
-  `faultTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`automationFaultId`),
-  KEY `BF_automationFault_ibfk1` (`automationErrorId`),
-  KEY `BF_automationFault_ibfk2` (`containerId`),
-  CONSTRAINT `BF_automationFault_ibfk1` FOREIGN KEY (`automationErrorId`) REFERENCES `BF_automationError` (`automationErrorId`),
-  CONSTRAINT `BF_automationFault_ibfk2` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_component` (
-  `componentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `systemId` int(10) unsigned DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`componentId`),
-  KEY `bf_component_FK1` (`systemId`),
-  CONSTRAINT `bf_component_FK1` FOREIGN KEY (`systemId`) REFERENCES `BF_system` (`systemId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_component_beamline` (
-  `component_beamlineId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `componentId` int(10) unsigned DEFAULT NULL,
-  `beamlinename` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`component_beamlineId`),
-  KEY `bf_component_beamline_FK1` (`componentId`),
-  CONSTRAINT `bf_component_beamline_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_fault` (
-  `faultId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(10) unsigned NOT NULL,
-  `owner` varchar(50) DEFAULT NULL,
-  `subcomponentId` int(10) unsigned DEFAULT NULL,
-  `starttime` datetime DEFAULT NULL,
-  `endtime` datetime DEFAULT NULL,
-  `beamtimelost` tinyint(1) DEFAULT NULL,
-  `beamtimelost_starttime` datetime DEFAULT NULL,
-  `beamtimelost_endtime` datetime DEFAULT NULL,
-  `title` varchar(200) DEFAULT NULL,
-  `description` text,
-  `resolved` tinyint(1) DEFAULT NULL,
-  `resolution` text,
-  `assignee` varchar(50) DEFAULT NULL,
-  `attachment` varchar(200) DEFAULT NULL,
-  `eLogId` int(11) DEFAULT NULL,
-  `personId` int(10) unsigned DEFAULT NULL,
-  `assigneeId` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`faultId`),
-  KEY `bf_fault_FK1` (`sessionId`),
-  KEY `bf_fault_FK2` (`subcomponentId`),
-  KEY `bf_fault_FK3` (`personId`),
-  KEY `bf_fault_FK4` (`assigneeId`),
-  CONSTRAINT `bf_fault_FK1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`),
-  CONSTRAINT `bf_fault_FK2` FOREIGN KEY (`subcomponentId`) REFERENCES `BF_subcomponent` (`subcomponentId`),
-  CONSTRAINT `bf_fault_FK3` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
-  CONSTRAINT `bf_fault_FK4` FOREIGN KEY (`assigneeId`) REFERENCES `Person` (`personId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_subcomponent` (
-  `subcomponentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `componentId` int(10) unsigned DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`subcomponentId`),
-  KEY `bf_subcomponent_FK1` (`componentId`),
-  CONSTRAINT `bf_subcomponent_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_subcomponent_beamline` (
-  `subcomponent_beamlineId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `subcomponentId` int(10) unsigned DEFAULT NULL,
-  `beamlinename` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`subcomponent_beamlineId`),
-  KEY `bf_subcomponent_beamline_FK1` (`subcomponentId`),
-  CONSTRAINT `bf_subcomponent_beamline_FK1` FOREIGN KEY (`subcomponentId`) REFERENCES `BF_subcomponent` (`subcomponentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_system` (
-  `systemId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`systemId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BF_system_beamline` (
-  `system_beamlineId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `systemId` int(10) unsigned DEFAULT NULL,
-  `beamlineName` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`system_beamlineId`),
-  KEY `bf_system_beamline_FK1` (`systemId`),
-  CONSTRAINT `bf_system_beamline_FK1` FOREIGN KEY (`systemId`) REFERENCES `BF_system` (`systemId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSample` (
-  `blSampleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `diffractionPlanId` int(10) unsigned DEFAULT NULL,
-  `crystalId` int(10) unsigned DEFAULT NULL,
-  `containerId` int(10) unsigned DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `code` varchar(45) DEFAULT NULL,
-  `location` varchar(45) DEFAULT NULL,
-  `holderLength` double DEFAULT NULL,
-  `loopLength` double DEFAULT NULL,
-  `loopType` varchar(45) DEFAULT NULL,
-  `wireWidth` double DEFAULT NULL,
-  `comments` varchar(1024) DEFAULT NULL,
-  `completionStage` varchar(45) DEFAULT NULL,
-  `structureStage` varchar(45) DEFAULT NULL,
-  `publicationStage` varchar(45) DEFAULT NULL,
-  `publicationComments` varchar(255) DEFAULT NULL,
-  `blSampleStatus` varchar(20) DEFAULT NULL,
-  `isInSampleChanger` tinyint(1) DEFAULT NULL,
-  `lastKnownCenteringPosition` varchar(255) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  `SMILES` varchar(400) DEFAULT NULL COMMENT 'the symbolic description of the structure of a chemical compound',
-  `lastImageURL` varchar(255) DEFAULT NULL,
-  `positionId` int(11) unsigned DEFAULT NULL,
-  `blSubSampleId` int(11) unsigned DEFAULT NULL,
-  `screenComponentGroupId` int(11) unsigned DEFAULT NULL,
-  `volume` float DEFAULT NULL,
-  `dimension1` double DEFAULT NULL,
-  `dimension2` double DEFAULT NULL,
-  `dimension3` double DEFAULT NULL,
-  `shape` varchar(15) DEFAULT NULL,
-  `subLocation` smallint(5) unsigned DEFAULT NULL COMMENT 'Indicates the sample''s location on a multi-sample pin, where 1 is closest to the pin base',
-  PRIMARY KEY (`blSampleId`),
-  KEY `BLSample_FKIndex1` (`containerId`),
-  KEY `BLSample_FKIndex2` (`crystalId`),
-  KEY `BLSample_FKIndex3` (`diffractionPlanId`),
-  KEY `crystalId` (`crystalId`,`containerId`),
-  KEY `BLSample_Index1` (`name`) USING BTREE,
-  KEY `BLSample_FKIndex_Status` (`blSampleStatus`),
-  KEY `BLSampleImage_idx1` (`blSubSampleId`),
-  KEY `BLSample_fk5` (`screenComponentGroupId`),
-  CONSTRAINT `BLSample_ibfk_1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSample_ibfk_2` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSample_ibfk_3` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=631405 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleGroup` (
-  `blSampleGroupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`blSampleGroupId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleGroup_has_BLSample` (
-  `blSampleGroupId` int(11) unsigned NOT NULL,
-  `blSampleId` int(11) unsigned NOT NULL,
-  `order` mediumint(9) DEFAULT NULL,
-  `type` enum('background','container','sample','calibrant') DEFAULT NULL,
-  PRIMARY KEY (`blSampleGroupId`,`blSampleId`),
-  KEY `BLSampleGroup_has_BLSample_ibfk2` (`blSampleId`),
-  CONSTRAINT `BLSampleGroup_has_BLSample_ibfk1` FOREIGN KEY (`blSampleGroupId`) REFERENCES `BLSampleGroup` (`blSampleGroupId`),
-  CONSTRAINT `BLSampleGroup_has_BLSample_ibfk2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleImage` (
-  `blSampleImageId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `blSampleId` int(11) unsigned NOT NULL,
-  `micronsPerPixelX` float DEFAULT NULL,
-  `micronsPerPixelY` float DEFAULT NULL,
-  `imageFullPath` varchar(255) DEFAULT NULL,
-  `blSampleImageScoreId` int(11) DEFAULT NULL,
-  `comments` varchar(255) DEFAULT NULL,
-  `blTimeStamp` datetime DEFAULT NULL,
-  `containerInspectionId` int(11) unsigned DEFAULT NULL,
-  `modifiedTimeStamp` datetime DEFAULT NULL,
-  PRIMARY KEY (`blSampleImageId`),
-  KEY `BLSampleImage_fk2` (`containerInspectionId`),
-  KEY `BLSampleImage_idx1` (`blSampleId`),
-  CONSTRAINT `BLSampleImage_fk1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSampleImage_fk2` FOREIGN KEY (`containerInspectionId`) REFERENCES `ContainerInspection` (`containerInspectionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleImageAnalysis` (
-  `blSampleImageAnalysisId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `blSampleImageId` int(11) unsigned DEFAULT NULL,
-  `oavSnapshotBefore` varchar(255) DEFAULT NULL,
-  `oavSnapshotAfter` varchar(255) DEFAULT NULL,
-  `deltaX` int(11) DEFAULT NULL,
-  `deltaY` int(11) DEFAULT NULL,
-  `goodnessOfFit` float DEFAULT NULL,
-  `scaleFactor` float DEFAULT NULL,
-  `resultCode` varchar(15) DEFAULT NULL,
-  `matchStartTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `matchEndTimeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`blSampleImageAnalysisId`),
-  KEY `BLSampleImageAnalysis_ibfk1` (`blSampleImageId`),
-  CONSTRAINT `BLSampleImageAnalysis_ibfk1` FOREIGN KEY (`blSampleImageId`) REFERENCES `BLSampleImage` (`blSampleImageId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleImageScore` (
-  `blSampleImageScoreId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  `score` float DEFAULT NULL,
-  `colour` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`blSampleImageScoreId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSampleType_has_Component` (
-  `blSampleTypeId` int(10) unsigned NOT NULL,
-  `componentId` int(10) unsigned NOT NULL,
-  `abundance` float DEFAULT NULL,
-  PRIMARY KEY (`blSampleTypeId`,`componentId`),
-  KEY `blSampleType_has_Component_fk2` (`componentId`),
-  CONSTRAINT `blSampleType_has_Component_fk1` FOREIGN KEY (`blSampleTypeId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `blSampleType_has_Component_fk2` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSample_has_DiffractionPlan` (
-  `blSampleId` int(11) unsigned NOT NULL,
-  `diffractionPlanId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`blSampleId`,`diffractionPlanId`),
-  KEY `BLSample_has_DiffractionPlan_ibfk2` (`diffractionPlanId`),
-  CONSTRAINT `BLSample_has_DiffractionPlan_ibfk1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`),
-  CONSTRAINT `BLSample_has_DiffractionPlan_ibfk2` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSample_has_EnergyScan` (
-  `blSampleId` int(10) unsigned NOT NULL DEFAULT '0',
-  `energyScanId` int(10) unsigned NOT NULL DEFAULT '0',
-  `blSampleHasEnergyScanId` int(10) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`blSampleHasEnergyScanId`),
-  KEY `BLSample_has_EnergyScan_FKIndex1` (`blSampleId`),
-  KEY `BLSample_has_EnergyScan_FKIndex2` (`energyScanId`),
-  CONSTRAINT `BLSample_has_EnergyScan_ibfk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSample_has_EnergyScan_ibfk_2` FOREIGN KEY (`energyScanId`) REFERENCES `EnergyScan` (`energyScanId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSession` (
-  `sessionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `expSessionPk` int(11) unsigned DEFAULT NULL COMMENT 'smis session Pk ',
-  `beamLineSetupId` int(10) unsigned DEFAULT NULL,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
-  `beamCalendarId` int(10) unsigned DEFAULT NULL,
-  `projectCode` varchar(45) DEFAULT NULL,
-  `startDate` datetime DEFAULT NULL,
-  `endDate` datetime DEFAULT NULL,
-  `beamLineName` varchar(45) DEFAULT NULL,
-  `scheduled` tinyint(1) DEFAULT NULL,
-  `nbShifts` int(10) unsigned DEFAULT NULL,
-  `comments` varchar(2000) DEFAULT NULL,
-  `beamLineOperator` varchar(255) DEFAULT NULL,
-  `visit_number` int(10) unsigned DEFAULT '0',
-  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `usedFlag` tinyint(1) DEFAULT NULL COMMENT 'indicates if session has Datacollections or XFE or EnergyScans attached',
-  `sessionTitle` varchar(255) DEFAULT NULL COMMENT 'fx accounts only',
-  `structureDeterminations` float DEFAULT NULL,
-  `dewarTransport` float DEFAULT NULL,
-  `databackupFrance` float DEFAULT NULL COMMENT 'data backup and express delivery France',
-  `databackupEurope` float DEFAULT NULL COMMENT 'data backup and express delivery Europe',
-  `operatorSiteNumber` varchar(10) DEFAULT NULL COMMENT 'matricule site',
-  `lastUpdate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'last update timestamp: by default the end of the session, the last collect...',
-  `protectedData` varchar(1024) DEFAULT NULL COMMENT 'indicates if the data are protected or not',
-  `externalId` binary(16) DEFAULT NULL,
-  `nbReimbDewars` int(10) DEFAULT NULL,
-  PRIMARY KEY (`sessionId`),
-  KEY `Session_FKIndex1` (`proposalId`),
-  KEY `Session_FKIndex2` (`beamLineSetupId`),
-  KEY `Session_FKIndexStartDate` (`startDate`),
-  KEY `Session_FKIndexEndDate` (`endDate`),
-  KEY `Session_FKIndexBeamLineName` (`beamLineName`),
-  KEY `BLSession_FKIndexOperatorSiteNumber` (`operatorSiteNumber`),
-  KEY `BLSession_ibfk_3` (`beamCalendarId`),
-  CONSTRAINT `BLSession_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSession_ibfk_2` FOREIGN KEY (`beamLineSetupId`) REFERENCES `BeamLineSetup` (`beamLineSetupId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSession_ibfk_3` FOREIGN KEY (`beamCalendarId`) REFERENCES `BeamCalendar` (`beamCalendarId`)
-) ENGINE=InnoDB AUTO_INCREMENT=61426 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSession_has_SCPosition` (
-  `blsessionhasscpositionid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `blsessionid` int(11) unsigned NOT NULL,
-  `scContainer` smallint(5) unsigned DEFAULT NULL COMMENT 'Position of container within sample changer',
-  `containerPosition` smallint(5) unsigned DEFAULT NULL COMMENT 'Position of sample within container',
-  PRIMARY KEY (`blsessionhasscpositionid`),
-  KEY `blsession_has_scposition_FK1` (`blsessionid`),
-  CONSTRAINT `blsession_has_scposition_FK1` FOREIGN KEY (`blsessionid`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BLSubSample` (
-  `blSubSampleId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `blSampleId` int(10) unsigned NOT NULL COMMENT 'sample',
-  `diffractionPlanId` int(10) unsigned DEFAULT NULL COMMENT 'eventually diffractionPlan',
-  `positionId` int(11) unsigned DEFAULT NULL COMMENT 'position of the subsample',
-  `position2Id` int(11) unsigned DEFAULT NULL,
-  `blSubSampleUUID` varchar(45) DEFAULT NULL COMMENT 'uuid of the blsubsample',
-  `imgFileName` varchar(255) DEFAULT NULL COMMENT 'image filename',
-  `imgFilePath` varchar(1024) DEFAULT NULL COMMENT 'url image',
-  `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  `motorPositionId` int(11) unsigned DEFAULT NULL COMMENT 'motor position',
-  PRIMARY KEY (`blSubSampleId`),
-  KEY `BLSubSample_FKIndex1` (`blSampleId`),
-  KEY `BLSubSample_FKIndex2` (`diffractionPlanId`),
-  KEY `BLSubSample_FKIndex3` (`positionId`),
-  KEY `BLSubSample_FKIndex5` (`position2Id`),
-  KEY `BLSubSample_motorPositionfk_1` (`motorPositionId`),
-  CONSTRAINT `BLSubSample_blSamplefk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSubSample_diffractionPlanfk_1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSubSample_motorPositionfk_1` FOREIGN KEY (`motorPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSubSample_positionfk_1` FOREIGN KEY (`positionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `BLSubSample_positionfk_2` FOREIGN KEY (`position2Id`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
+-- Table structure for table `BeamApertures`
+--
 
 CREATE TABLE `BeamApertures` (
-  `beamAperturesid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `beamlineStatsId` int(11) unsigned DEFAULT NULL,
+  `beamAperturesid` int(11) UNSIGNED NOT NULL,
+  `beamlineStatsId` int(11) UNSIGNED DEFAULT NULL,
   `flux` double DEFAULT NULL,
   `x` float DEFAULT NULL,
   `y` float DEFAULT NULL,
-  `apertureSize` smallint(5) unsigned DEFAULT NULL,
-  PRIMARY KEY (`beamAperturesid`),
-  KEY `beamapertures_FK1` (`beamlineStatsId`),
-  CONSTRAINT `beamapertures_FK1` FOREIGN KEY (`beamlineStatsId`) REFERENCES `BeamlineStats` (`beamlineStatsId`) ON DELETE CASCADE
+  `apertureSize` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BeamCalendar`
+--
+
 CREATE TABLE `BeamCalendar` (
-  `beamCalendarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `beamCalendarId` int(10) UNSIGNED NOT NULL,
   `run` varchar(7) NOT NULL,
   `beamStatus` varchar(24) NOT NULL,
   `startDate` datetime NOT NULL,
-  `endDate` datetime NOT NULL,
-  PRIMARY KEY (`beamCalendarId`)
+  `endDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BeamCentres`
+--
+
 CREATE TABLE `BeamCentres` (
-  `beamCentresid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `beamlineStatsId` int(11) unsigned DEFAULT NULL,
+  `beamCentresid` int(11) UNSIGNED NOT NULL,
+  `beamlineStatsId` int(11) UNSIGNED DEFAULT NULL,
   `x` float DEFAULT NULL,
   `y` float DEFAULT NULL,
-  `zoom` tinyint(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`beamCentresid`),
-  KEY `beamCentres_FK1` (`beamlineStatsId`),
-  CONSTRAINT `beamCentres_FK1` FOREIGN KEY (`beamlineStatsId`) REFERENCES `BeamlineStats` (`beamlineStatsId`) ON DELETE CASCADE
+  `zoom` tinyint(3) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BeamlineAction`
+--
+
+CREATE TABLE `BeamlineAction` (
+  `beamlineActionId` int(11) UNSIGNED NOT NULL,
+  `sessionId` int(11) UNSIGNED DEFAULT NULL,
+  `startTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `message` varchar(255) DEFAULT NULL,
+  `parameter` varchar(50) DEFAULT NULL,
+  `value` varchar(30) DEFAULT NULL,
+  `loglevel` enum('DEBUG','CRITICAL','INFO') DEFAULT NULL,
+  `status` enum('PAUSED','RUNNING','TERMINATED','COMPLETE','ERROR','EPICSFAIL') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BeamLineSetup`
+--
+
 CREATE TABLE `BeamLineSetup` (
-  `beamLineSetupId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `beamLineSetupId` int(10) UNSIGNED NOT NULL,
   `synchrotronMode` varchar(255) DEFAULT NULL,
   `undulatorType1` varchar(45) DEFAULT NULL,
   `undulatorType2` varchar(45) DEFAULT NULL,
@@ -616,27 +381,17 @@ CREATE TABLE `BeamLineSetup` (
   `goniostatMinOscillationWidth` double DEFAULT NULL,
   `minTransmission` double DEFAULT NULL,
   `CS` float DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`beamLineSetupId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1463429 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `BeamlineAction` (
-  `beamlineActionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(11) unsigned DEFAULT NULL,
-  `startTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `message` varchar(255) DEFAULT NULL,
-  `parameter` varchar(50) DEFAULT NULL,
-  `value` varchar(30) DEFAULT NULL,
-  `loglevel` enum('DEBUG','CRITICAL','INFO') DEFAULT NULL,
-  `status` enum('PAUSED','RUNNING','TERMINATED','COMPLETE','ERROR','EPICSFAIL') DEFAULT NULL,
-  PRIMARY KEY (`beamlineActionId`),
-  KEY `BeamlineAction_ibfk1` (`sessionId`),
-  CONSTRAINT `BeamlineAction_ibfk1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`)
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BeamlineStats`
+--
+
 CREATE TABLE `BeamlineStats` (
-  `beamlineStatsId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `beamlineStatsId` int(11) UNSIGNED NOT NULL,
   `beamline` varchar(10) DEFAULT NULL,
   `recordTimeStamp` datetime DEFAULT NULL,
   `ringCurrent` float DEFAULT NULL,
@@ -646,12 +401,364 @@ CREATE TABLE `BeamlineStats` (
   `beamH` float DEFAULT NULL,
   `flux` double DEFAULT NULL,
   `scanFileW` varchar(255) DEFAULT NULL,
-  `scanFileH` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`beamlineStatsId`)
+  `scanFileH` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_automationError`
+--
+
+CREATE TABLE `BF_automationError` (
+  `automationErrorId` int(10) UNSIGNED NOT NULL,
+  `errorType` varchar(40) NOT NULL,
+  `solution` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_automationFault`
+--
+
+CREATE TABLE `BF_automationFault` (
+  `automationFaultId` int(10) UNSIGNED NOT NULL,
+  `automationErrorId` int(10) UNSIGNED DEFAULT NULL,
+  `containerId` int(10) UNSIGNED DEFAULT NULL,
+  `severity` enum('1','2','3') DEFAULT NULL,
+  `stacktrace` text,
+  `resolved` tinyint(1) DEFAULT NULL,
+  `faultTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_component`
+--
+
+CREATE TABLE `BF_component` (
+  `componentId` int(10) UNSIGNED NOT NULL,
+  `systemId` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_component_beamline`
+--
+
+CREATE TABLE `BF_component_beamline` (
+  `component_beamlineId` int(10) UNSIGNED NOT NULL,
+  `componentId` int(10) UNSIGNED DEFAULT NULL,
+  `beamlinename` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_fault`
+--
+
+CREATE TABLE `BF_fault` (
+  `faultId` int(10) UNSIGNED NOT NULL,
+  `sessionId` int(10) UNSIGNED NOT NULL,
+  `owner` varchar(50) DEFAULT NULL,
+  `subcomponentId` int(10) UNSIGNED DEFAULT NULL,
+  `starttime` datetime DEFAULT NULL,
+  `endtime` datetime DEFAULT NULL,
+  `beamtimelost` tinyint(1) DEFAULT NULL,
+  `beamtimelost_starttime` datetime DEFAULT NULL,
+  `beamtimelost_endtime` datetime DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `description` text,
+  `resolved` tinyint(1) DEFAULT NULL,
+  `resolution` text,
+  `assignee` varchar(50) DEFAULT NULL,
+  `attachment` varchar(200) DEFAULT NULL,
+  `eLogId` int(11) DEFAULT NULL,
+  `personId` int(10) UNSIGNED DEFAULT NULL,
+  `assigneeId` int(10) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_subcomponent`
+--
+
+CREATE TABLE `BF_subcomponent` (
+  `subcomponentId` int(10) UNSIGNED NOT NULL,
+  `componentId` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_subcomponent_beamline`
+--
+
+CREATE TABLE `BF_subcomponent_beamline` (
+  `subcomponent_beamlineId` int(10) UNSIGNED NOT NULL,
+  `subcomponentId` int(10) UNSIGNED DEFAULT NULL,
+  `beamlinename` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_system`
+--
+
+CREATE TABLE `BF_system` (
+  `systemId` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BF_system_beamline`
+--
+
+CREATE TABLE `BF_system_beamline` (
+  `system_beamlineId` int(10) UNSIGNED NOT NULL,
+  `systemId` int(10) UNSIGNED DEFAULT NULL,
+  `beamlineName` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSample`
+--
+
+CREATE TABLE `BLSample` (
+  `blSampleId` int(10) UNSIGNED NOT NULL,
+  `diffractionPlanId` int(10) UNSIGNED DEFAULT NULL,
+  `crystalId` int(10) UNSIGNED DEFAULT NULL,
+  `containerId` int(10) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  `location` varchar(45) DEFAULT NULL,
+  `holderLength` double DEFAULT NULL,
+  `loopLength` double DEFAULT NULL,
+  `loopType` varchar(45) DEFAULT NULL,
+  `wireWidth` double DEFAULT NULL,
+  `comments` varchar(1024) DEFAULT NULL,
+  `completionStage` varchar(45) DEFAULT NULL,
+  `structureStage` varchar(45) DEFAULT NULL,
+  `publicationStage` varchar(45) DEFAULT NULL,
+  `publicationComments` varchar(255) DEFAULT NULL,
+  `blSampleStatus` varchar(20) DEFAULT NULL,
+  `isInSampleChanger` tinyint(1) DEFAULT NULL,
+  `lastKnownCenteringPosition` varchar(255) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `SMILES` varchar(400) DEFAULT NULL COMMENT 'the symbolic description of the structure of a chemical compound',
+  `lastImageURL` varchar(255) DEFAULT NULL,
+  `positionId` int(11) UNSIGNED DEFAULT NULL,
+  `blSubSampleId` int(11) UNSIGNED DEFAULT NULL,
+  `screenComponentGroupId` int(11) UNSIGNED DEFAULT NULL,
+  `volume` float DEFAULT NULL,
+  `dimension1` double DEFAULT NULL,
+  `dimension2` double DEFAULT NULL,
+  `dimension3` double DEFAULT NULL,
+  `shape` varchar(15) DEFAULT NULL,
+  `subLocation` smallint(5) UNSIGNED DEFAULT NULL COMMENT 'Indicates the sample''s location on a multi-sample pin, where 1 is closest to the pin base'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleGroup`
+--
+
+CREATE TABLE `BLSampleGroup` (
+  `blSampleGroupId` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleGroup_has_BLSample`
+--
+
+CREATE TABLE `BLSampleGroup_has_BLSample` (
+  `blSampleGroupId` int(11) UNSIGNED NOT NULL,
+  `blSampleId` int(11) UNSIGNED NOT NULL,
+  `order` mediumint(9) DEFAULT NULL,
+  `type` enum('background','container','sample','calibrant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleImage`
+--
+
+CREATE TABLE `BLSampleImage` (
+  `blSampleImageId` int(11) UNSIGNED NOT NULL,
+  `blSampleId` int(11) UNSIGNED NOT NULL,
+  `micronsPerPixelX` float DEFAULT NULL,
+  `micronsPerPixelY` float DEFAULT NULL,
+  `imageFullPath` varchar(255) DEFAULT NULL,
+  `blSampleImageScoreId` int(11) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `blTimeStamp` datetime DEFAULT NULL,
+  `containerInspectionId` int(11) UNSIGNED DEFAULT NULL,
+  `modifiedTimeStamp` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleImageAnalysis`
+--
+
+CREATE TABLE `BLSampleImageAnalysis` (
+  `blSampleImageAnalysisId` int(11) UNSIGNED NOT NULL,
+  `blSampleImageId` int(11) UNSIGNED DEFAULT NULL,
+  `oavSnapshotBefore` varchar(255) DEFAULT NULL,
+  `oavSnapshotAfter` varchar(255) DEFAULT NULL,
+  `deltaX` int(11) DEFAULT NULL,
+  `deltaY` int(11) DEFAULT NULL,
+  `goodnessOfFit` float DEFAULT NULL,
+  `scaleFactor` float DEFAULT NULL,
+  `resultCode` varchar(15) DEFAULT NULL,
+  `matchStartTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `matchEndTimeStamp` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleImageScore`
+--
+
+CREATE TABLE `BLSampleImageScore` (
+  `blSampleImageScoreId` int(11) UNSIGNED NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `score` float DEFAULT NULL,
+  `colour` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSampleType_has_Component`
+--
+
+CREATE TABLE `BLSampleType_has_Component` (
+  `blSampleTypeId` int(10) UNSIGNED NOT NULL,
+  `componentId` int(10) UNSIGNED NOT NULL,
+  `abundance` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSample_has_DiffractionPlan`
+--
+
+CREATE TABLE `BLSample_has_DiffractionPlan` (
+  `blSampleId` int(11) UNSIGNED NOT NULL,
+  `diffractionPlanId` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSample_has_EnergyScan`
+--
+
+CREATE TABLE `BLSample_has_EnergyScan` (
+  `blSampleId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `energyScanId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `blSampleHasEnergyScanId` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSession`
+--
+
+CREATE TABLE `BLSession` (
+  `sessionId` int(10) UNSIGNED NOT NULL,
+  `expSessionPk` int(11) UNSIGNED DEFAULT NULL COMMENT 'smis session Pk ',
+  `beamLineSetupId` int(10) UNSIGNED DEFAULT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `beamCalendarId` int(10) UNSIGNED DEFAULT NULL,
+  `projectCode` varchar(45) DEFAULT NULL,
+  `startDate` datetime DEFAULT NULL,
+  `endDate` datetime DEFAULT NULL,
+  `beamLineName` varchar(45) DEFAULT NULL,
+  `scheduled` tinyint(1) DEFAULT NULL,
+  `nbShifts` int(10) UNSIGNED DEFAULT NULL,
+  `comments` varchar(2000) DEFAULT NULL,
+  `beamLineOperator` varchar(255) DEFAULT NULL,
+  `visit_number` int(10) UNSIGNED DEFAULT '0',
+  `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `usedFlag` tinyint(1) DEFAULT NULL COMMENT 'indicates if session has Datacollections or XFE or EnergyScans attached',
+  `sessionTitle` varchar(255) DEFAULT NULL COMMENT 'fx accounts only',
+  `structureDeterminations` float DEFAULT NULL,
+  `dewarTransport` float DEFAULT NULL,
+  `databackupFrance` float DEFAULT NULL COMMENT 'data backup and express delivery France',
+  `databackupEurope` float DEFAULT NULL COMMENT 'data backup and express delivery Europe',
+  `operatorSiteNumber` varchar(10) DEFAULT NULL COMMENT 'matricule site',
+  `lastUpdate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'last update timestamp: by default the end of the session, the last collect...',
+  `protectedData` varchar(1024) DEFAULT NULL COMMENT 'indicates if the data are protected or not',
+  `externalId` binary(16) DEFAULT NULL,
+  `nbReimbDewars` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSession_has_SCPosition`
+--
+
+CREATE TABLE `BLSession_has_SCPosition` (
+  `blsessionhasscpositionid` int(11) UNSIGNED NOT NULL,
+  `blsessionid` int(11) UNSIGNED NOT NULL,
+  `scContainer` smallint(5) UNSIGNED DEFAULT NULL COMMENT 'Position of container within sample changer',
+  `containerPosition` smallint(5) UNSIGNED DEFAULT NULL COMMENT 'Position of sample within container'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BLSubSample`
+--
+
+CREATE TABLE `BLSubSample` (
+  `blSubSampleId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `blSampleId` int(10) UNSIGNED NOT NULL COMMENT 'sample',
+  `diffractionPlanId` int(10) UNSIGNED DEFAULT NULL COMMENT 'eventually diffractionPlan',
+  `positionId` int(11) UNSIGNED DEFAULT NULL COMMENT 'position of the subsample',
+  `position2Id` int(11) UNSIGNED DEFAULT NULL,
+  `blSubSampleUUID` varchar(45) DEFAULT NULL COMMENT 'uuid of the blsubsample',
+  `imgFileName` varchar(255) DEFAULT NULL COMMENT 'image filename',
+  `imgFilePath` varchar(1024) DEFAULT NULL COMMENT 'url image',
+  `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
+  `motorPositionId` int(11) UNSIGNED DEFAULT NULL COMMENT 'motor position'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Buffer`
+--
+
 CREATE TABLE `Buffer` (
-  `bufferId` int(10) NOT NULL AUTO_INCREMENT,
+  `bufferId` int(10) NOT NULL,
   `proposalId` int(10) NOT NULL DEFAULT '-1',
   `safetyLevelId` int(10) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
@@ -659,179 +766,184 @@ CREATE TABLE `Buffer` (
   `pH` varchar(45) DEFAULT NULL,
   `composition` varchar(45) DEFAULT NULL,
   `comments` varchar(512) DEFAULT NULL,
-  `BLSessionId` int(11) unsigned DEFAULT NULL,
-  `electronDensity` float(7,5) DEFAULT NULL,
-  PRIMARY KEY (`bufferId`),
-  KEY `BufferToSafetyLevel` (`safetyLevelId`),
-  CONSTRAINT `BufferToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7480 DEFAULT CHARSET=latin1;
+  `BLSessionId` int(11) UNSIGNED DEFAULT NULL,
+  `electronDensity` float(7,5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BufferHasAdditive`
+--
 
 CREATE TABLE `BufferHasAdditive` (
-  `bufferHasAdditiveId` int(10) NOT NULL AUTO_INCREMENT,
+  `bufferHasAdditiveId` int(10) NOT NULL,
   `bufferId` int(10) NOT NULL,
   `additiveId` int(10) NOT NULL,
   `measurementUnitId` int(10) DEFAULT NULL,
-  `quantity` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`bufferHasAdditiveId`),
-  KEY `BufferHasAdditiveToBuffer` (`bufferId`),
-  KEY `BufferHasAdditiveToAdditive` (`additiveId`),
-  KEY `BufferHasAdditiveToUnit` (`measurementUnitId`),
-  CONSTRAINT `BufferHasAdditiveToAdditive` FOREIGN KEY (`additiveId`) REFERENCES `Additive` (`additiveId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `BufferHasAdditiveToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `BufferHasAdditiveToUnit` FOREIGN KEY (`measurementUnitId`) REFERENCES `MeasurementUnit` (`measurementUnitId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `quantity` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `CTF` (
-  `CTFid` int(11) NOT NULL AUTO_INCREMENT,
-  `motionCorrectionId` int(11) NOT NULL,
-  `spectraImageThumbnailFullPath` varchar(512) DEFAULT NULL,
-  `spectraImageFullPath` varchar(512) DEFAULT NULL,
-  `defocusU` varchar(45) DEFAULT NULL,
-  `defocusV` varchar(45) DEFAULT NULL,
-  `angle` varchar(45) DEFAULT NULL,
-  `crossCorrelationCoefficient` varchar(45) DEFAULT NULL,
-  `resolutionLimit` varchar(45) DEFAULT NULL,
-  `estimatedBfactor` varchar(45) DEFAULT NULL,
-  `logFilePath` varchar(512) DEFAULT NULL,
-  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`CTFid`),
-  KEY `fk_CTF_1_idx` (`motionCorrectionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5348 DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CalendarHash`
+--
 
 CREATE TABLE `CalendarHash` (
-  `calendarHashId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `calendarHashId` int(10) UNSIGNED NOT NULL,
   `ckey` varchar(50) DEFAULT NULL,
   `hash` varchar(128) DEFAULT NULL,
-  `beamline` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`calendarHashId`)
+  `beamline` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Lets people get to their calendars without logging in using a private (hash) url';
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ComponentSubType`
+--
+
 CREATE TABLE `ComponentSubType` (
-  `componentSubTypeId` int(11) unsigned NOT NULL,
+  `componentSubTypeId` int(11) UNSIGNED NOT NULL,
   `name` varchar(31) NOT NULL,
-  `hasPh` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`componentSubTypeId`)
+  `hasPh` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ComponentType`
+--
 
 CREATE TABLE `ComponentType` (
-  `componentTypeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(31) NOT NULL,
-  PRIMARY KEY (`componentTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `componentTypeId` int(11) UNSIGNED NOT NULL,
+  `name` varchar(31) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Component_has_SubType`
+--
 
 CREATE TABLE `Component_has_SubType` (
-  `componentId` int(10) unsigned NOT NULL,
-  `componentSubTypeId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`componentId`,`componentSubTypeId`),
-  KEY `component_has_SubType_fk2` (`componentSubTypeId`),
-  CONSTRAINT `component_has_SubType_fk1` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE,
-  CONSTRAINT `component_has_SubType_fk2` FOREIGN KEY (`componentSubTypeId`) REFERENCES `ComponentSubType` (`componentSubTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `componentId` int(10) UNSIGNED NOT NULL,
+  `componentSubTypeId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ConcentrationType`
+--
 
 CREATE TABLE `ConcentrationType` (
-  `concentrationTypeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `concentrationTypeId` int(11) UNSIGNED NOT NULL,
   `name` varchar(31) NOT NULL,
-  `symbol` varchar(8) NOT NULL,
-  PRIMARY KEY (`concentrationTypeId`)
+  `symbol` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Container`
+--
+
 CREATE TABLE `Container` (
-  `containerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `dewarId` int(10) unsigned DEFAULT NULL,
+  `containerId` int(10) UNSIGNED NOT NULL,
+  `dewarId` int(10) UNSIGNED DEFAULT NULL,
   `code` varchar(45) DEFAULT NULL,
   `containerType` varchar(20) DEFAULT NULL,
-  `capacity` int(10) unsigned DEFAULT NULL,
+  `capacity` int(10) UNSIGNED DEFAULT NULL,
   `beamlineLocation` varchar(20) DEFAULT NULL,
   `sampleChangerLocation` varchar(20) DEFAULT NULL,
   `containerStatus` varchar(45) DEFAULT NULL,
   `bltimeStamp` datetime DEFAULT NULL,
   `barcode` varchar(45) DEFAULT NULL,
-  `sessionId` int(10) unsigned DEFAULT NULL,
-  `ownerId` int(10) unsigned DEFAULT NULL,
-  `screenId` int(11) unsigned DEFAULT NULL,
-  `scheduleId` int(11) unsigned DEFAULT NULL,
-  `imagerId` int(11) unsigned DEFAULT NULL,
+  `sessionId` int(10) UNSIGNED DEFAULT NULL,
+  `ownerId` int(10) UNSIGNED DEFAULT NULL,
+  `screenId` int(11) UNSIGNED DEFAULT NULL,
+  `scheduleId` int(11) UNSIGNED DEFAULT NULL,
+  `imagerId` int(11) UNSIGNED DEFAULT NULL,
   `scLocationUpdated` datetime DEFAULT NULL,
-  `requestedImagerId` int(11) unsigned DEFAULT NULL,
+  `requestedImagerId` int(11) UNSIGNED DEFAULT NULL,
   `requestedReturn` tinyint(1) DEFAULT '0' COMMENT 'True for requesting return, False means container will be disposed',
   `comments` varchar(255) DEFAULT NULL,
   `experimentType` varchar(20) DEFAULT NULL,
-  `storageTemperature` float DEFAULT NULL,
-  PRIMARY KEY (`containerId`),
-  UNIQUE KEY `Container_UNIndex1` (`barcode`),
-  KEY `Container_FKIndex1` (`dewarId`),
-  KEY `Container_FKIndex` (`beamlineLocation`),
-  KEY `Container_FKIndexStatus` (`containerStatus`),
-  KEY `Container_ibfk6` (`sessionId`),
-  KEY `Container_ibfk5` (`ownerId`),
-  CONSTRAINT `Container_ibfk5` FOREIGN KEY (`ownerId`) REFERENCES `Person` (`personId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Container_ibfk6` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Container_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=345543 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `ContainerHistory` (
-  `containerHistoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `containerId` int(10) unsigned DEFAULT NULL,
-  `location` varchar(45) DEFAULT NULL,
-  `blTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`containerHistoryId`),
-  KEY `ContainerHistory_ibfk1` (`containerId`),
-  CONSTRAINT `ContainerHistory_ibfk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `storageTemperature` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ContainerHistory`
+--
+
+CREATE TABLE `ContainerHistory` (
+  `containerHistoryId` int(11) UNSIGNED NOT NULL,
+  `containerId` int(10) UNSIGNED DEFAULT NULL,
+  `location` varchar(45) DEFAULT NULL,
+  `blTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ContainerInspection`
+--
+
 CREATE TABLE `ContainerInspection` (
-  `containerInspectionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `containerId` int(11) unsigned NOT NULL,
-  `inspectionTypeId` int(11) unsigned NOT NULL,
-  `imagerId` int(11) unsigned DEFAULT NULL,
+  `containerInspectionId` int(11) UNSIGNED NOT NULL,
+  `containerId` int(11) UNSIGNED NOT NULL,
+  `inspectionTypeId` int(11) UNSIGNED NOT NULL,
+  `imagerId` int(11) UNSIGNED DEFAULT NULL,
   `temperature` float DEFAULT NULL,
   `blTimeStamp` datetime DEFAULT NULL,
-  `scheduleComponentid` int(11) unsigned DEFAULT NULL,
+  `scheduleComponentid` int(11) UNSIGNED DEFAULT NULL,
   `state` varchar(20) DEFAULT NULL,
   `priority` smallint(6) DEFAULT NULL,
   `manual` tinyint(1) DEFAULT NULL,
   `scheduledTimeStamp` datetime DEFAULT NULL,
-  `completedTimeStamp` datetime DEFAULT NULL,
-  PRIMARY KEY (`containerInspectionId`),
-  KEY `ContainerInspection_fk4` (`scheduleComponentid`),
-  KEY `ContainerInspection_idx1` (`containerId`),
-  KEY `ContainerInspection_idx2` (`inspectionTypeId`),
-  KEY `ContainerInspection_idx3` (`imagerId`),
-  CONSTRAINT `ContainerInspection_fk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ContainerInspection_fk2` FOREIGN KEY (`inspectionTypeId`) REFERENCES `InspectionType` (`inspectionTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ContainerInspection_fk3` FOREIGN KEY (`imagerId`) REFERENCES `Imager` (`imagerId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ContainerInspection_fk4` FOREIGN KEY (`scheduleComponentid`) REFERENCES `ScheduleComponent` (`scheduleComponentId`)
+  `completedTimeStamp` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ContainerQueue`
+--
 
 CREATE TABLE `ContainerQueue` (
-  `containerQueueId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `containerId` int(10) unsigned DEFAULT NULL,
-  `personId` int(10) unsigned DEFAULT NULL,
+  `containerQueueId` int(11) UNSIGNED NOT NULL,
+  `containerId` int(10) UNSIGNED DEFAULT NULL,
+  `personId` int(10) UNSIGNED DEFAULT NULL,
   `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `completedTimeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`containerQueueId`),
-  KEY `ContainerQueue_ibfk1` (`containerId`),
-  KEY `ContainerQueue_ibfk2` (`personId`),
-  CONSTRAINT `ContainerQueue_ibfk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ContainerQueue_ibfk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON UPDATE CASCADE
+  `completedTimeStamp` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ContainerQueueSample`
+--
 
 CREATE TABLE `ContainerQueueSample` (
-  `containerQueueSampleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `containerQueueId` int(11) unsigned DEFAULT NULL,
-  `blSubSampleId` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`containerQueueSampleId`),
-  KEY `ContainerQueueSample_ibfk1` (`containerQueueId`),
-  KEY `ContainerQueueSample_ibfk2` (`blSubSampleId`),
-  CONSTRAINT `ContainerQueueSample_ibfk1` FOREIGN KEY (`containerQueueId`) REFERENCES `ContainerQueue` (`containerQueueId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ContainerQueueSample_ibfk2` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `containerQueueSampleId` int(11) UNSIGNED NOT NULL,
+  `containerQueueId` int(11) UNSIGNED DEFAULT NULL,
+  `blSubSampleId` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Crystal`
+--
+
 CREATE TABLE `Crystal` (
-  `crystalId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `diffractionPlanId` int(10) unsigned DEFAULT NULL,
-  `proteinId` int(10) unsigned NOT NULL DEFAULT '0',
+  `crystalId` int(10) UNSIGNED NOT NULL,
+  `diffractionPlanId` int(10) UNSIGNED DEFAULT NULL,
+  `proteinId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `crystalUUID` varchar(45) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `spaceGroup` varchar(20) DEFAULT NULL,
@@ -851,44 +963,73 @@ CREATE TABLE `Crystal` (
   `pdbFilePath` varchar(1024) DEFAULT NULL COMMENT 'pdb file path',
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   `abundance` float DEFAULT NULL,
-  `packingFraction` float DEFAULT NULL,
-  PRIMARY KEY (`crystalId`),
-  KEY `Crystal_FKIndex1` (`proteinId`),
-  KEY `Crystal_FKIndex2` (`diffractionPlanId`),
-  CONSTRAINT `Crystal_ibfk_1` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Crystal_ibfk_2` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=556548 DEFAULT CHARSET=latin1;
+  `packingFraction` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Crystal_has_UUID`
+--
 
 CREATE TABLE `Crystal_has_UUID` (
-  `crystal_has_UUID_Id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `crystalId` int(10) unsigned NOT NULL,
+  `crystal_has_UUID_Id` int(10) UNSIGNED NOT NULL,
+  `crystalId` int(10) UNSIGNED NOT NULL,
   `UUID` varchar(45) DEFAULT NULL,
-  `imageURL` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`crystal_has_UUID_Id`),
-  KEY `Crystal_has_UUID_FKIndex1` (`crystalId`),
-  KEY `Crystal_has_UUID_FKIndex2` (`UUID`),
-  CONSTRAINT `ibfk_1` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=93158 DEFAULT CHARSET=latin1;
+  `imageURL` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CTF`
+--
+
+CREATE TABLE `CTF` (
+  `CTFid` int(11) NOT NULL,
+  `motionCorrectionId` int(11) NOT NULL,
+  `spectraImageThumbnailFullPath` varchar(512) DEFAULT NULL,
+  `spectraImageFullPath` varchar(512) DEFAULT NULL,
+  `defocusU` varchar(45) DEFAULT NULL,
+  `defocusV` varchar(45) DEFAULT NULL,
+  `angle` varchar(45) DEFAULT NULL,
+  `crossCorrelationCoefficient` varchar(45) DEFAULT NULL,
+  `resolutionLimit` varchar(45) DEFAULT NULL,
+  `estimatedBfactor` varchar(45) DEFAULT NULL,
+  `logFilePath` varchar(512) DEFAULT NULL,
+  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataAcquisition`
+--
 
 CREATE TABLE `DataAcquisition` (
-  `dataAcquisitionId` int(10) NOT NULL AUTO_INCREMENT,
+  `dataAcquisitionId` int(10) NOT NULL,
   `sampleCellId` int(10) NOT NULL,
   `framesCount` varchar(45) DEFAULT NULL,
   `energy` varchar(45) DEFAULT NULL,
   `waitTime` varchar(45) DEFAULT NULL,
-  `detectorDistance` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`dataAcquisitionId`)
+  `detectorDistance` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataCollection`
+--
+
 CREATE TABLE `DataCollection` (
-  `dataCollectionId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `dataCollectionId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
   `dataCollectionGroupId` int(11) NOT NULL COMMENT 'references DataCollectionGroup table',
-  `strategySubWedgeOrigId` int(10) unsigned DEFAULT NULL COMMENT 'references ScreeningStrategySubWedge table',
+  `strategySubWedgeOrigId` int(10) UNSIGNED DEFAULT NULL COMMENT 'references ScreeningStrategySubWedge table',
   `detectorId` int(11) DEFAULT NULL COMMENT 'references Detector table',
-  `blSubSampleId` int(11) unsigned DEFAULT NULL,
-  `startPositionId` int(11) unsigned DEFAULT NULL,
-  `endPositionId` int(11) unsigned DEFAULT NULL,
-  `dataCollectionNumber` int(10) unsigned DEFAULT NULL,
+  `blSubSampleId` int(11) UNSIGNED DEFAULT NULL,
+  `startPositionId` int(11) UNSIGNED DEFAULT NULL,
+  `endPositionId` int(11) UNSIGNED DEFAULT NULL,
+  `dataCollectionNumber` int(10) UNSIGNED DEFAULT NULL,
   `startTime` datetime DEFAULT NULL COMMENT 'Start time of the dataCollection',
   `endTime` datetime DEFAULT NULL COMMENT 'end time of the dataCollection',
   `runStatus` varchar(45) DEFAULT NULL,
@@ -896,9 +1037,9 @@ CREATE TABLE `DataCollection` (
   `axisEnd` float DEFAULT NULL,
   `axisRange` float DEFAULT NULL,
   `overlap` float DEFAULT NULL,
-  `numberOfImages` int(10) unsigned DEFAULT NULL,
-  `startImageNumber` int(10) unsigned DEFAULT NULL,
-  `numberOfPasses` int(10) unsigned DEFAULT NULL,
+  `numberOfImages` int(10) UNSIGNED DEFAULT NULL,
+  `startImageNumber` int(10) UNSIGNED DEFAULT NULL,
+  `numberOfPasses` int(10) UNSIGNED DEFAULT NULL,
   `exposureTime` float DEFAULT NULL,
   `imageDirectory` varchar(255) DEFAULT NULL,
   `imagePrefix` varchar(100) DEFAULT NULL,
@@ -912,7 +1053,7 @@ CREATE TABLE `DataCollection` (
   `xBeamPix` float DEFAULT NULL COMMENT 'Beam size in pixels',
   `yBeamPix` float DEFAULT NULL COMMENT 'Beam size in pixels',
   `comments` varchar(1024) DEFAULT NULL,
-  `printableForReport` tinyint(1) unsigned DEFAULT '1',
+  `printableForReport` tinyint(1) UNSIGNED DEFAULT '1',
   `slitGapVertical` float DEFAULT NULL,
   `slitGapHorizontal` float DEFAULT NULL,
   `transmission` float DEFAULT NULL,
@@ -942,22 +1083,22 @@ CREATE TABLE `DataCollection` (
   `bestWilsonPlotPath` varchar(255) DEFAULT NULL,
   `imageQualityIndicatorsPlotPath` varchar(512) DEFAULT NULL,
   `imageQualityIndicatorsCSVPath` varchar(512) DEFAULT NULL,
-  `blSampleId` int(11) unsigned DEFAULT NULL,
-  `sessionId` int(11) unsigned DEFAULT '0',
+  `blSampleId` int(11) UNSIGNED DEFAULT NULL,
+  `sessionId` int(11) UNSIGNED DEFAULT '0',
   `experimentType` varchar(24) DEFAULT NULL,
   `crystalClass` varchar(20) DEFAULT NULL,
   `chiStart` float DEFAULT NULL,
   `detectorMode` varchar(255) DEFAULT NULL,
   `actualSampleBarcode` varchar(45) DEFAULT NULL,
-  `actualSampleSlotInContainer` int(11) unsigned DEFAULT NULL,
+  `actualSampleSlotInContainer` int(11) UNSIGNED DEFAULT NULL,
   `actualContainerBarcode` varchar(45) DEFAULT NULL,
-  `actualContainerSlotInSC` int(11) unsigned DEFAULT NULL,
-  `positionId` int(11) unsigned DEFAULT NULL,
+  `actualContainerSlotInSC` int(11) UNSIGNED DEFAULT NULL,
+  `positionId` int(11) UNSIGNED DEFAULT NULL,
   `focalSpotSizeAtSampleX` float DEFAULT NULL,
   `polarisation` float DEFAULT NULL,
   `focalSpotSizeAtSampleY` float DEFAULT NULL,
-  `apertureId` int(11) unsigned DEFAULT NULL,
-  `screeningOrigId` int(11) unsigned DEFAULT NULL,
+  `apertureId` int(11) UNSIGNED DEFAULT NULL,
+  `screeningOrigId` int(11) UNSIGNED DEFAULT NULL,
   `processedDataFile` varchar(255) DEFAULT NULL,
   `datFullPath` varchar(255) DEFAULT NULL,
   `magnification` int(11) DEFAULT NULL COMMENT 'Unit: X',
@@ -978,40 +1119,34 @@ CREATE TABLE `DataCollection` (
   `c3aperture` float DEFAULT NULL COMMENT 'Unit: um',
   `c1lens` float DEFAULT NULL COMMENT 'Unit: %',
   `c2lens` float DEFAULT NULL COMMENT 'Unit: %',
-  `c3lens` float DEFAULT NULL COMMENT 'Unit: %',
-  PRIMARY KEY (`dataCollectionId`),
-  KEY `DataCollection_FKIndex1` (`dataCollectionGroupId`),
-  KEY `DataCollection_FKIndex2` (`strategySubWedgeOrigId`),
-  KEY `DataCollection_FKIndex3` (`detectorId`),
-  KEY `DataCollection_FKIndexStartTime` (`startTime`),
-  KEY `DataCollection_FKIndexImageDirectory` (`imageDirectory`),
-  KEY `DataCollection_FKIndexDCNumber` (`dataCollectionNumber`),
-  KEY `DataCollection_FKIndexImagePrefix` (`imagePrefix`),
-  KEY `startPositionId` (`startPositionId`),
-  KEY `endPositionId` (`endPositionId`),
-  KEY `blSubSampleId` (`blSubSampleId`),
-  CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollection_ibfk_8` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2180441 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `DataCollectionFileAttachment` (
-  `dataCollectionFileAttachmentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(11) unsigned NOT NULL,
-  `fileFullPath` varchar(255) NOT NULL,
-  `fileType` enum('snapshot','log','xy','recip') DEFAULT NULL COMMENT 'snapshot: image file, usually of the sample. \r\nlog: a text file with logging info. \r\nxy: x and y data in text format. \r\nrecip: a compressed csv file with reciprocal space coordinates.',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`dataCollectionFileAttachmentId`),
-  KEY `dataCollectionFileAttachmentId_fk1` (`dataCollectionId`),
-  CONSTRAINT `dataCollectionFileAttachmentId_fk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `c3lens` float DEFAULT NULL COMMENT 'Unit: %'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataCollectionFileAttachment`
+--
+
+CREATE TABLE `DataCollectionFileAttachment` (
+  `dataCollectionFileAttachmentId` int(11) UNSIGNED NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED NOT NULL,
+  `fileFullPath` varchar(255) NOT NULL,
+  `fileType` enum('snapshot','log','xy','recip') DEFAULT NULL COMMENT 'snapshot: image file, usually of the sample. \r\nlog: a text file with logging info. \r\nxy: x and y data in text format. \r\nrecip: a compressed csv file with reciprocal space coordinates.',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataCollectionGroup`
+--
+
 CREATE TABLE `DataCollectionGroup` (
-  `dataCollectionGroupId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `blSampleId` int(10) unsigned DEFAULT NULL COMMENT 'references BLSample table',
-  `sessionId` int(10) unsigned NOT NULL COMMENT 'references Session table',
-  `workflowId` int(11) unsigned DEFAULT NULL,
+  `dataCollectionGroupId` int(11) NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `blSampleId` int(10) UNSIGNED DEFAULT NULL COMMENT 'references BLSample table',
+  `sessionId` int(10) UNSIGNED NOT NULL COMMENT 'references Session table',
+  `workflowId` int(11) UNSIGNED DEFAULT NULL,
   `experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration') DEFAULT NULL COMMENT 'Experiment type flag',
   `startTime` datetime DEFAULT NULL COMMENT 'Start time of the dataCollectionGroup',
   `endTime` datetime DEFAULT NULL COMMENT 'end time of the dataCollectionGroup',
@@ -1019,54 +1154,63 @@ CREATE TABLE `DataCollectionGroup` (
   `comments` varchar(1024) DEFAULT NULL COMMENT 'comments',
   `detectorMode` varchar(255) DEFAULT NULL COMMENT 'Detector mode',
   `actualSampleBarcode` varchar(45) DEFAULT NULL COMMENT 'Actual sample barcode',
-  `actualSampleSlotInContainer` int(10) unsigned DEFAULT NULL COMMENT 'Actual sample slot number in container',
+  `actualSampleSlotInContainer` int(10) UNSIGNED DEFAULT NULL COMMENT 'Actual sample slot number in container',
   `actualContainerBarcode` varchar(45) DEFAULT NULL COMMENT 'Actual container barcode',
-  `actualContainerSlotInSC` int(10) unsigned DEFAULT NULL COMMENT 'Actual container slot number in sample changer',
-  `xtalSnapshotFullPath` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`dataCollectionGroupId`),
-  KEY `DataCollectionGroup_FKIndex1` (`blSampleId`),
-  KEY `DataCollectionGroup_FKIndex2` (`sessionId`),
-  KEY `workflowId` (`workflowId`),
-  CONSTRAINT `DataCollectionGroup_ibfk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `DataCollectionGroup_ibfk_2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `DataCollectionGroup_ibfk_3` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1721508 DEFAULT CHARSET=latin1 COMMENT='a dataCollectionGroup is a group of dataCollection for a spe';
+  `actualContainerSlotInSC` int(10) UNSIGNED DEFAULT NULL COMMENT 'Actual container slot number in sample changer',
+  `xtalSnapshotFullPath` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='a dataCollectionGroup is a group of dataCollection for a spe';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataCollectionPlanGroup`
+--
 
 CREATE TABLE `DataCollectionPlanGroup` (
-  `dataCollectionPlanGroupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(11) unsigned DEFAULT NULL,
-  `blSampleId` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`dataCollectionPlanGroupId`),
-  KEY `DataCollectionPlanGroup_ibfk1` (`sessionId`),
-  KEY `DataCollectionPlanGroup_ibfk2` (`blSampleId`),
-  CONSTRAINT `DataCollectionPlanGroup_ibfk1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON UPDATE CASCADE,
-  CONSTRAINT `DataCollectionPlanGroup_ibfk2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON UPDATE CASCADE
+  `dataCollectionPlanGroupId` int(11) UNSIGNED NOT NULL,
+  `sessionId` int(11) UNSIGNED DEFAULT NULL,
+  `blSampleId` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `DataReductionStatus` (
-  `dataReductionStatusId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(11) unsigned NOT NULL,
-  `status` varchar(15) DEFAULT NULL,
-  `filename` varchar(255) DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`dataReductionStatusId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DatamatrixInSampleChanger`
+--
 
 CREATE TABLE `DatamatrixInSampleChanger` (
-  `datamatrixInSampleChangerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `datamatrixInSampleChangerId` int(10) UNSIGNED NOT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `beamLineName` varchar(45) DEFAULT NULL,
   `datamatrixCode` varchar(45) DEFAULT NULL,
   `locationInContainer` int(11) DEFAULT NULL,
   `containerLocationInSC` int(11) DEFAULT NULL,
   `containerDatamatrixCode` varchar(45) DEFAULT NULL,
-  `bltimeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`datamatrixInSampleChangerId`),
-  KEY `DatamatrixInSampleChanger_FKIndex1` (`proposalId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19089089 DEFAULT CHARSET=latin1;
+  `bltimeStamp` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DataReductionStatus`
+--
+
+CREATE TABLE `DataReductionStatus` (
+  `dataReductionStatusId` int(11) UNSIGNED NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED NOT NULL,
+  `status` varchar(15) DEFAULT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Detector`
+--
 
 CREATE TABLE `Detector` (
-  `detectorId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `detectorId` int(11) NOT NULL COMMENT 'Primary key (auto-incremented)',
   `detectorType` varchar(255) DEFAULT NULL,
   `detectorManufacturer` varchar(255) DEFAULT NULL,
   `detectorModel` varchar(255) DEFAULT NULL,
@@ -1086,15 +1230,18 @@ CREATE TABLE `Detector` (
   `detectorMinResolution` float DEFAULT NULL,
   `CS` float DEFAULT NULL COMMENT 'Unit: mm',
   `density` float DEFAULT NULL,
-  `composition` varchar(16) DEFAULT NULL,
-  PRIMARY KEY (`detectorId`),
-  UNIQUE KEY `Detector_ibuk1` (`detectorSerialNumber`),
-  KEY `Detector_FKIndex1` (`detectorType`,`detectorManufacturer`,`detectorModel`,`detectorPixelSizeHorizontal`,`detectorPixelSizeVertical`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=latin1 COMMENT='Detector table is linked to a dataCollection';
+  `composition` varchar(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Detector table is linked to a dataCollection';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Dewar`
+--
 
 CREATE TABLE `Dewar` (
-  `dewarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `shippingId` int(10) unsigned DEFAULT NULL,
+  `dewarId` int(10) UNSIGNED NOT NULL,
+  `shippingId` int(10) UNSIGNED DEFAULT NULL,
   `code` varchar(45) DEFAULT NULL,
   `comments` tinytext,
   `storageLocation` varchar(45) DEFAULT NULL,
@@ -1102,55 +1249,66 @@ CREATE TABLE `Dewar` (
   `bltimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `isStorageDewar` tinyint(1) DEFAULT '0',
   `barCode` varchar(45) DEFAULT NULL,
-  `firstExperimentId` int(10) unsigned DEFAULT NULL,
-  `customsValue` int(11) unsigned DEFAULT NULL,
-  `transportValue` int(11) unsigned DEFAULT NULL,
+  `firstExperimentId` int(10) UNSIGNED DEFAULT NULL,
+  `customsValue` int(11) UNSIGNED DEFAULT NULL,
+  `transportValue` int(11) UNSIGNED DEFAULT NULL,
   `trackingNumberToSynchrotron` varchar(30) DEFAULT NULL,
   `trackingNumberFromSynchrotron` varchar(30) DEFAULT NULL,
   `facilityCode` varchar(20) DEFAULT NULL COMMENT 'Unique barcode assigned to each dewar',
   `isReimbursed` tinyint(1) DEFAULT '0' COMMENT 'set this dewar as reimbursed by the user office',
-  `type` enum('Dewar','Toolbox') NOT NULL DEFAULT 'Dewar',
-  PRIMARY KEY (`dewarId`),
-  UNIQUE KEY `barCode` (`barCode`),
-  KEY `Dewar_FKIndex1` (`shippingId`),
-  KEY `Dewar_FKIndex2` (`firstExperimentId`),
-  KEY `Dewar_FKIndexStatus` (`dewarStatus`),
-  KEY `Dewar_FKIndexCode` (`code`),
-  CONSTRAINT `Dewar_ibfk_1` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Dewar_ibfk_2` FOREIGN KEY (`firstExperimentId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=313844 DEFAULT CHARSET=latin1;
+  `type` enum('Dewar','Toolbox') NOT NULL DEFAULT 'Dewar'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DewarLocation`
+--
 
 CREATE TABLE `DewarLocation` (
-  `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `eventId` int(10) UNSIGNED NOT NULL,
   `dewarNumber` varchar(128) NOT NULL COMMENT 'Dewar number',
   `userId` varchar(128) DEFAULT NULL COMMENT 'User who locates the dewar',
   `dateTime` datetime DEFAULT NULL COMMENT 'Date and time of locatization',
   `locationName` varchar(128) DEFAULT NULL COMMENT 'Location of the dewar',
   `courierName` varchar(128) DEFAULT NULL COMMENT 'Carrier name who''s shipping back the dewar',
-  `courierTrackingNumber` varchar(128) DEFAULT NULL COMMENT 'Tracking number of the shippment',
-  PRIMARY KEY (`eventId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16069 DEFAULT CHARSET=latin1 COMMENT='ISPyB Dewar location table';
+  `courierTrackingNumber` varchar(128) DEFAULT NULL COMMENT 'Tracking number of the shippment'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB Dewar location table';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DewarLocationList`
+--
 
 CREATE TABLE `DewarLocationList` (
-  `locationId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `locationName` varchar(128) NOT NULL DEFAULT '' COMMENT 'Location',
-  PRIMARY KEY (`locationId`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='List of locations for dewars';
+  `locationId` int(10) UNSIGNED NOT NULL,
+  `locationName` varchar(128) NOT NULL DEFAULT '' COMMENT 'Location'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of locations for dewars';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DewarTransportHistory`
+--
 
 CREATE TABLE `DewarTransportHistory` (
-  `DewarTransportHistoryId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `dewarId` int(10) unsigned DEFAULT NULL,
+  `DewarTransportHistoryId` int(10) UNSIGNED NOT NULL,
+  `dewarId` int(10) UNSIGNED DEFAULT NULL,
   `dewarStatus` varchar(45) NOT NULL,
   `storageLocation` varchar(45) DEFAULT NULL,
-  `arrivalDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`DewarTransportHistoryId`),
-  KEY `DewarTransportHistory_FKIndex1` (`dewarId`),
-  CONSTRAINT `DewarTransportHistory_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=42029 DEFAULT CHARSET=latin1;
+  `arrivalDate` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DiffractionPlan`
+--
 
 CREATE TABLE `DiffractionPlan` (
-  `diffractionPlanId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `xmlDocumentId` int(10) unsigned DEFAULT NULL,
+  `diffractionPlanId` int(10) UNSIGNED NOT NULL,
+  `xmlDocumentId` int(10) UNSIGNED DEFAULT NULL,
   `experimentKind` enum('Default','MXPressE','MXPressF','MXPressO','MXPressP','MXPressP_SAD','MXPressI','MXPressE_SAD','MXScore','MXPressM','MAD','SAD','Fixed','Ligand binding','Refinement','OSC','MAD - Inverse Beam','SAD - Inverse Beam') DEFAULT NULL,
   `observedResolution` float DEFAULT NULL,
   `minimalResolution` float DEFAULT NULL,
@@ -1185,7 +1343,7 @@ CREATE TABLE `DiffractionPlan` (
   `minOscWidth` float DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   `diffractionPlanUUID` varchar(1000) DEFAULT NULL,
-  `dataCollectionPlanGroupId` int(11) unsigned DEFAULT NULL,
+  `dataCollectionPlanGroupId` int(11) UNSIGNED DEFAULT NULL,
   `detectorId` int(11) DEFAULT NULL,
   `distance` double DEFAULT NULL,
   `orientation` double DEFAULT NULL,
@@ -1199,39 +1357,51 @@ CREATE TABLE `DiffractionPlan` (
   `axisStart` float DEFAULT NULL COMMENT 'degrees',
   `axisRange` float DEFAULT NULL COMMENT 'degrees',
   `numberOfImages` mediumint(9) DEFAULT NULL COMMENT 'The number of images requested',
-  `presetForProposalId` int(10) unsigned DEFAULT NULL COMMENT 'Indicates this plan is available to all sessions on given proposal',
-  `beamLineName` varchar(45) DEFAULT NULL COMMENT 'Indicates this plan is available to all sessions on given beamline',
-  PRIMARY KEY (`diffractionPlanId`)
-) ENGINE=InnoDB AUTO_INCREMENT=754600 DEFAULT CHARSET=latin1;
+  `presetForProposalId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Indicates this plan is available to all sessions on given proposal',
+  `beamLineName` varchar(45) DEFAULT NULL COMMENT 'Indicates this plan is available to all sessions on given beamline'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `DiffractionPlan_has_Detector`
+--
 
 CREATE TABLE `DiffractionPlan_has_Detector` (
-  `diffractionPlanId` int(11) unsigned NOT NULL,
+  `diffractionPlanId` int(11) UNSIGNED NOT NULL,
   `detectorId` int(11) NOT NULL,
   `exposureTime` double DEFAULT NULL,
   `distance` double DEFAULT NULL,
-  `orientation` double DEFAULT NULL,
-  PRIMARY KEY (`diffractionPlanId`,`detectorId`),
-  KEY `DiffractionPlan_has_Detector_ibfk2` (`detectorId`),
-  CONSTRAINT `DiffractionPlan_has_Detector_ibfk1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`),
-  CONSTRAINT `DiffractionPlan_has_Detector_ibfk2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`)
+  `orientation` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `EMMicroscope`
+--
+
 CREATE TABLE `EMMicroscope` (
-  `emMicroscopeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `emMicroscopeId` int(11) UNSIGNED NOT NULL,
   `instrumentName` varchar(100) NOT NULL,
   `voltage` float DEFAULT NULL,
   `CS` float DEFAULT NULL COMMENT 'Unit: mm',
   `detectorPixelSize` float DEFAULT NULL,
   `C2aperture` float DEFAULT NULL,
   `ObjAperture` float DEFAULT NULL,
-  `C2lens` float DEFAULT NULL,
-  PRIMARY KEY (`emMicroscopeId`)
+  `C2lens` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `EnergyScan`
+--
+
 CREATE TABLE `EnergyScan` (
-  `energyScanId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(10) unsigned NOT NULL,
-  `blSampleId` int(10) unsigned DEFAULT NULL,
+  `energyScanId` int(10) UNSIGNED NOT NULL,
+  `sessionId` int(10) UNSIGNED NOT NULL,
+  `blSampleId` int(10) UNSIGNED DEFAULT NULL,
   `fluorescenceDetector` varchar(255) DEFAULT NULL,
   `scanFileFullPath` varchar(255) DEFAULT NULL,
   `choochFileFullPath` varchar(255) DEFAULT NULL,
@@ -1241,6 +1411,7 @@ CREATE TABLE `EnergyScan` (
   `endEnergy` float DEFAULT NULL,
   `transmissionFactor` float DEFAULT NULL,
   `exposureTime` float DEFAULT NULL,
+  `axisPosition` float DEFAULT NULL,
   `synchrotronCurrent` float DEFAULT NULL,
   `temperature` float DEFAULT NULL,
   `peakEnergy` float DEFAULT NULL,
@@ -1261,19 +1432,18 @@ CREATE TABLE `EnergyScan` (
   `flux` double DEFAULT NULL COMMENT 'flux measured before the energyScan',
   `flux_end` double DEFAULT NULL COMMENT 'flux measured after the energyScan',
   `workingDirectory` varchar(45) DEFAULT NULL,
-  `blSubSampleId` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`energyScanId`),
-  KEY `EnergyScan_FKIndex2` (`sessionId`),
-  KEY `ES_ibfk_2` (`blSampleId`),
-  KEY `ES_ibfk_3` (`blSubSampleId`),
-  CONSTRAINT `ES_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ES_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ES_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14716 DEFAULT CHARSET=latin1;
+  `blSubSampleId` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Experiment`
+--
 
 CREATE TABLE `Experiment` (
-  `experimentId` int(11) NOT NULL AUTO_INCREMENT,
-  `sessionId` int(10) unsigned DEFAULT NULL,
+  `experimentId` int(11) NOT NULL,
+  `sessionId` int(10) UNSIGNED DEFAULT NULL,
   `proposalId` int(10) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `creationDate` datetime DEFAULT NULL,
@@ -1281,95 +1451,116 @@ CREATE TABLE `Experiment` (
   `sourceFilePath` varchar(256) DEFAULT NULL,
   `dataAcquisitionFilePath` varchar(256) DEFAULT NULL COMMENT 'The file path pointing to the data acquisition. Eventually it may be a compressed file with all the files or just the folder',
   `status` varchar(45) DEFAULT NULL,
-  `comments` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`experimentId`),
-  KEY `fk_Experiment_To_session_idx` (`sessionId`),
-  CONSTRAINT `fk_Experiment_To_session` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=18425 DEFAULT CHARSET=latin1;
+  `comments` varchar(512) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ExperimentKindDetails`
+--
 
 CREATE TABLE `ExperimentKindDetails` (
-  `experimentKindId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `diffractionPlanId` int(10) unsigned NOT NULL,
-  `exposureIndex` int(10) unsigned DEFAULT NULL,
+  `experimentKindId` int(10) UNSIGNED NOT NULL,
+  `diffractionPlanId` int(10) UNSIGNED NOT NULL,
+  `exposureIndex` int(10) UNSIGNED DEFAULT NULL,
   `dataCollectionType` varchar(45) DEFAULT NULL,
   `dataCollectionKind` varchar(45) DEFAULT NULL,
-  `wedgeValue` float DEFAULT NULL,
-  PRIMARY KEY (`experimentKindId`),
-  KEY `ExperimentKindDetails_FKIndex1` (`diffractionPlanId`),
-  CONSTRAINT `EKD_ibfk_1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
+  `wedgeValue` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FitStructureToExperimentalData`
+--
 
 CREATE TABLE `FitStructureToExperimentalData` (
-  `fitStructureToExperimentalDataId` int(11) NOT NULL AUTO_INCREMENT,
+  `fitStructureToExperimentalDataId` int(11) NOT NULL,
   `structureId` int(10) DEFAULT NULL,
   `subtractionId` int(10) DEFAULT NULL,
-  `workflowId` int(10) unsigned DEFAULT NULL,
+  `workflowId` int(10) UNSIGNED DEFAULT NULL,
   `fitFilePath` varchar(255) DEFAULT NULL,
   `logFilePath` varchar(255) DEFAULT NULL,
   `outputFilePath` varchar(255) DEFAULT NULL,
   `creationDate` datetime DEFAULT NULL,
-  `comments` varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (`fitStructureToExperimentalDataId`),
-  KEY `fk_FitStructureToExperimentalData_1` (`structureId`),
-  KEY `fk_FitStructureToExperimentalData_2` (`workflowId`),
-  KEY `fk_FitStructureToExperimentalData_3` (`subtractionId`),
-  CONSTRAINT `fk_FitStructureToExperimentalData_1` FOREIGN KEY (`structureId`) REFERENCES `Structure` (`structureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_FitStructureToExperimentalData_2` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_FitStructureToExperimentalData_3` FOREIGN KEY (`subtractionId`) REFERENCES `Subtraction` (`subtractionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `comments` varchar(2048) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Frame`
+--
 
 CREATE TABLE `Frame` (
-  `frameId` int(10) NOT NULL AUTO_INCREMENT,
+  `frameId` int(10) NOT NULL,
   `filePath` varchar(255) DEFAULT NULL,
   `comments` varchar(45) DEFAULT NULL,
   `creationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `frameSetId` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`frameId`),
-  KEY `FILE` (`filePath`)
-) ENGINE=InnoDB AUTO_INCREMENT=1836295 DEFAULT CHARSET=latin1;
+  `frameSetId` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FrameList`
+--
 
 CREATE TABLE `FrameList` (
-  `frameListId` int(10) NOT NULL AUTO_INCREMENT,
-  `comments` int(10) DEFAULT NULL,
-  PRIMARY KEY (`frameListId`)
-) ENGINE=InnoDB AUTO_INCREMENT=226501 DEFAULT CHARSET=latin1;
+  `frameListId` int(10) NOT NULL,
+  `comments` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FrameSet`
+--
 
 CREATE TABLE `FrameSet` (
-  `frameSetId` int(10) NOT NULL AUTO_INCREMENT,
+  `frameSetId` int(10) NOT NULL,
   `runId` int(10) NOT NULL,
   `frameListId` int(10) DEFAULT NULL,
   `detectorId` int(10) DEFAULT NULL,
   `detectorDistance` varchar(45) DEFAULT NULL,
   `filePath` varchar(255) DEFAULT NULL,
-  `internalPath` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`frameSetId`),
-  KEY `FramesetToRun` (`runId`),
-  KEY `FrameSetToFrameList` (`frameListId`),
-  CONSTRAINT `FrameSetToFrameList` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FramesetToRun` FOREIGN KEY (`runId`) REFERENCES `Run` (`runId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4209 DEFAULT CHARSET=latin1;
+  `internalPath` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FrameToList`
+--
 
 CREATE TABLE `FrameToList` (
-  `frameToListId` int(10) NOT NULL AUTO_INCREMENT,
+  `frameToListId` int(10) NOT NULL,
   `frameListId` int(10) NOT NULL,
-  `frameId` int(10) NOT NULL,
-  PRIMARY KEY (`frameToListId`),
-  KEY `FrameToLisToFrameList` (`frameListId`),
-  KEY `FrameToListToFrame` (`frameId`),
-  CONSTRAINT `FrameToLisToFrameList` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FrameToListToFrame` FOREIGN KEY (`frameId`) REFERENCES `Frame` (`frameId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2805367 DEFAULT CHARSET=latin1;
+  `frameId` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `GeometryClassname`
+--
 
 CREATE TABLE `GeometryClassname` (
-  `geometryClassnameId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `geometryClassnameId` int(11) UNSIGNED NOT NULL,
   `geometryClassname` varchar(45) DEFAULT NULL,
-  `geometryOrder` int(2) NOT NULL,
-  PRIMARY KEY (`geometryClassnameId`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+  `geometryOrder` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `GridInfo`
+--
 
 CREATE TABLE `GridInfo` (
-  `gridInfoId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `workflowMeshId` int(11) unsigned DEFAULT NULL,
+  `gridInfoId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `workflowMeshId` int(11) UNSIGNED DEFAULT NULL,
   `xOffset` double DEFAULT NULL,
   `yOffset` double DEFAULT NULL,
   `dx_mm` double DEFAULT NULL,
@@ -1383,19 +1574,20 @@ CREATE TABLE `GridInfo` (
   `pixelspermicronX` float DEFAULT NULL,
   `pixelspermicronY` float DEFAULT NULL,
   `snapshot_offsetxpixel` float DEFAULT NULL,
-  `snapshot_offsetypixel` float DEFAULT NULL,
-  PRIMARY KEY (`gridInfoId`),
-  KEY `workflowMeshId` (`workflowMeshId`),
-  KEY `GridInfo_ibfk_2` (`dataCollectionGroupId`),
-  CONSTRAINT `GridInfo_ibfk_1` FOREIGN KEY (`workflowMeshId`) REFERENCES `WorkflowMesh` (`workflowMeshId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `GridInfo_ibfk_2` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=163341 DEFAULT CHARSET=latin1;
+  `snapshot_offsetypixel` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Image`
+--
 
 CREATE TABLE `Image` (
-  `imageId` int(12) unsigned NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(11) unsigned NOT NULL DEFAULT '0',
-  `motorPositionId` int(11) unsigned DEFAULT NULL,
-  `imageNumber` int(10) unsigned DEFAULT NULL,
+  `imageId` int(12) UNSIGNED NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `motorPositionId` int(11) UNSIGNED DEFAULT NULL,
+  `imageNumber` int(10) UNSIGNED DEFAULT NULL,
   `fileName` varchar(255) DEFAULT NULL,
   `fileLocation` varchar(255) DEFAULT NULL,
   `measuredIntensity` float DEFAULT NULL,
@@ -1406,20 +1598,19 @@ CREATE TABLE `Image` (
   `synchrotronCurrent` float DEFAULT NULL,
   `comments` varchar(1024) DEFAULT NULL,
   `machineMessage` varchar(1024) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`imageId`),
-  KEY `Image_FKIndex1` (`dataCollectionId`),
-  KEY `Image_FKIndex2` (`imageNumber`),
-  KEY `Image_Index3` (`fileLocation`,`fileName`) USING BTREE,
-  KEY `motorPositionId` (`motorPositionId`),
-  CONSTRAINT `Image_ibfk_1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Image_ibfk_3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=53491586 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ImageQualityIndicators`
+--
 
 CREATE TABLE `ImageQualityIndicators` (
-  `imageQualityIndicatorsId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `imageQualityIndicatorsId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
   `imageId` int(12) DEFAULT NULL,
-  `autoProcProgramId` int(10) unsigned NOT NULL COMMENT 'Foreign key to the AutoProcProgram table',
+  `autoProcProgramId` int(10) UNSIGNED NOT NULL COMMENT 'Foreign key to the AutoProcProgram table',
   `spotTotal` int(10) DEFAULT NULL COMMENT 'Total number of spots',
   `inResTotal` int(10) DEFAULT NULL COMMENT 'Total number of spots in resolution range',
   `goodBraggCandidates` int(10) DEFAULT NULL COMMENT 'Total number of Bragg diffraction spots',
@@ -1433,102 +1624,127 @@ CREATE TABLE `ImageQualityIndicators` (
   `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
   `totalIntegratedSignal` double DEFAULT NULL,
   `dozor_score` double DEFAULT NULL COMMENT 'dozor_score',
-  `dataCollectionId` int(11) unsigned DEFAULT NULL,
-  `imageNumber` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`imageQualityIndicatorsId`),
-  KEY `ImageQualityIndicatorsIdx1` (`imageId`),
-  KEY `AutoProcProgramIdx1` (`autoProcProgramId`),
-  CONSTRAINT `AutoProcProgramFk1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2854180 DEFAULT CHARSET=latin1;
+  `dataCollectionId` int(11) UNSIGNED DEFAULT NULL,
+  `imageNumber` mediumint(8) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Imager`
+--
 
 CREATE TABLE `Imager` (
-  `imagerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `imagerId` int(11) UNSIGNED NOT NULL,
   `name` varchar(45) NOT NULL,
   `temperature` float DEFAULT NULL,
   `serial` varchar(45) DEFAULT NULL,
-  `capacity` smallint(6) DEFAULT NULL,
-  PRIMARY KEY (`imagerId`)
+  `capacity` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `InputParameterWorkflow`
+--
+
 CREATE TABLE `InputParameterWorkflow` (
-  `inputParameterId` int(10) NOT NULL AUTO_INCREMENT,
+  `inputParameterId` int(10) NOT NULL,
   `workflowId` int(10) NOT NULL,
   `parameterType` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
-  `comments` varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (`inputParameterId`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `comments` varchar(2048) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `InspectionType`
+--
 
 CREATE TABLE `InspectionType` (
-  `inspectionTypeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`inspectionTypeId`)
+  `inspectionTypeId` int(11) UNSIGNED NOT NULL,
+  `name` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Instruction`
+--
 
 CREATE TABLE `Instruction` (
-  `instructionId` int(10) NOT NULL AUTO_INCREMENT,
+  `instructionId` int(10) NOT NULL,
   `instructionSetId` int(10) NOT NULL,
   `order` int(11) NOT NULL,
-  `comments` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`instructionId`),
-  KEY `InstructionToInstructionSet` (`instructionSetId`),
-  CONSTRAINT `InstructionToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `comments` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `InstructionSet`
+--
 
 CREATE TABLE `InstructionSet` (
-  `instructionSetId` int(10) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`instructionSetId`)
+  `instructionSetId` int(10) NOT NULL,
+  `type` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `IspybAutoProcAttachment` (
-  `autoProcAttachmentId` int(11) NOT NULL AUTO_INCREMENT,
-  `fileName` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `step` enum('XDS','XSCALE','SCALA','SCALEPACK','TRUNCATE','DIMPLE') DEFAULT 'XDS' COMMENT 'step where the file is generated',
-  `fileCategory` enum('input','output','log','correction') DEFAULT 'output',
-  `hasGraph` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`autoProcAttachmentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1 COMMENT='ISPyB autoProcAttachment files values';
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `IspybCrystalClass`
+--
 
 CREATE TABLE `IspybCrystalClass` (
-  `crystalClassId` int(11) NOT NULL AUTO_INCREMENT,
+  `crystalClassId` int(11) NOT NULL,
   `crystalClass_code` varchar(20) NOT NULL,
-  `crystalClass_name` varchar(255) NOT NULL,
-  PRIMARY KEY (`crystalClassId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COMMENT='ISPyB crystal class values';
+  `crystalClass_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB crystal class values';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `IspybReference`
+--
 
 CREATE TABLE `IspybReference` (
-  `referenceId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `referenceId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
   `referenceName` varchar(255) DEFAULT NULL COMMENT 'reference name',
   `referenceUrl` varchar(1024) DEFAULT NULL COMMENT 'url of the reference',
   `referenceBibtext` blob COMMENT 'bibtext value of the reference',
-  `beamline` enum('All','ID14-4','ID23-1','ID23-2','ID29','ID30A-1','ID30A-2','XRF','AllXRF','Mesh') DEFAULT NULL COMMENT 'beamline involved',
-  PRIMARY KEY (`referenceId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+  `beamline` enum('All','ID14-4','ID23-1','ID23-2','ID29','ID30A-1','ID30A-2','XRF','AllXRF','Mesh') DEFAULT NULL COMMENT 'beamline involved'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `LabContact`
+--
 
 CREATE TABLE `LabContact` (
-  `labContactId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL,
+  `labContactId` int(10) UNSIGNED NOT NULL,
+  `personId` int(10) UNSIGNED NOT NULL,
   `cardName` varchar(40) NOT NULL,
-  `proposalId` int(10) unsigned NOT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL,
   `defaultCourrierCompany` varchar(45) DEFAULT NULL,
   `courierAccount` varchar(45) DEFAULT NULL,
   `billingReference` varchar(45) DEFAULT NULL,
-  `dewarAvgCustomsValue` int(10) unsigned NOT NULL DEFAULT '0',
-  `dewarAvgTransportValue` int(10) unsigned NOT NULL DEFAULT '0',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`labContactId`),
-  UNIQUE KEY `personAndProposal` (`personId`,`proposalId`),
-  UNIQUE KEY `cardNameAndProposal` (`cardName`,`proposalId`),
-  KEY `LabContact_FKIndex1` (`proposalId`),
-  CONSTRAINT `LabContact_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
-  CONSTRAINT `LabContact_ibfk_2` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`)
-) ENGINE=InnoDB AUTO_INCREMENT=262060 DEFAULT CHARSET=latin1;
+  `dewarAvgCustomsValue` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `dewarAvgTransportValue` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Laboratory`
+--
 
 CREATE TABLE `Laboratory` (
-  `laboratoryId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `laboratoryId` int(10) UNSIGNED NOT NULL,
   `laboratoryUUID` varchar(45) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -1537,35 +1753,294 @@ CREATE TABLE `Laboratory` (
   `url` varchar(255) DEFAULT NULL,
   `organization` varchar(45) DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  `laboratoryExtPk` int(10) DEFAULT NULL,
-  PRIMARY KEY (`laboratoryId`)
-) ENGINE=InnoDB AUTO_INCREMENT=312756 DEFAULT CHARSET=latin1;
+  `laboratoryExtPk` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Log4Stat`
+--
 
 CREATE TABLE `Log4Stat` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `priority` varchar(15) DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   `msg` varchar(255) DEFAULT NULL,
   `detail` varchar(255) DEFAULT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19789 DEFAULT CHARSET=latin1;
+  `value` varchar(255) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Login`
+--
 
 CREATE TABLE `Login` (
-  `loginId` int(11) NOT NULL AUTO_INCREMENT,
+  `loginId` int(11) NOT NULL,
   `token` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `roles` varchar(1024) NOT NULL,
   `siteId` varchar(45) DEFAULT NULL,
   `authorized` varchar(1024) DEFAULT NULL,
-  `expirationTime` datetime NOT NULL,
-  PRIMARY KEY (`loginId`),
-  KEY `Token` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=29197 DEFAULT CHARSET=latin1;
+  `expirationTime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Macromolecule`
+--
+
+CREATE TABLE `Macromolecule` (
+  `macromoleculeId` int(11) NOT NULL,
+  `proposalId` int(10) UNSIGNED DEFAULT NULL,
+  `safetyLevelId` int(10) DEFAULT NULL,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `acronym` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `extintionCoefficient` varchar(45) DEFAULT NULL,
+  `molecularMass` varchar(45) DEFAULT NULL,
+  `sequence` varchar(1000) DEFAULT NULL,
+  `contactsDescriptionFilePath` varchar(255) DEFAULT NULL,
+  `symmetry` varchar(45) DEFAULT NULL,
+  `comments` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `refractiveIndex` varchar(45) DEFAULT NULL,
+  `solventViscosity` varchar(45) DEFAULT NULL,
+  `creationDate` datetime DEFAULT NULL,
+  `electronDensity` float(7,5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MacromoleculeRegion`
+--
+
+CREATE TABLE `MacromoleculeRegion` (
+  `macromoleculeRegionId` int(10) NOT NULL,
+  `macromoleculeId` int(10) NOT NULL,
+  `regionType` varchar(45) DEFAULT NULL,
+  `id` varchar(45) DEFAULT NULL,
+  `count` varchar(45) DEFAULT NULL,
+  `sequence` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Measurement`
+--
+
+CREATE TABLE `Measurement` (
+  `measurementId` int(10) NOT NULL,
+  `specimenId` int(10) NOT NULL,
+  `runId` int(10) DEFAULT NULL,
+  `code` varchar(100) DEFAULT NULL,
+  `imageDirectory` varchar(512) DEFAULT NULL,
+  `priorityLevelId` int(10) DEFAULT NULL,
+  `exposureTemperature` varchar(45) DEFAULT NULL,
+  `viscosity` varchar(45) DEFAULT NULL,
+  `flow` tinyint(1) DEFAULT NULL,
+  `extraFlowTime` varchar(45) DEFAULT NULL,
+  `volumeToLoad` varchar(45) DEFAULT NULL,
+  `waitTime` varchar(45) DEFAULT NULL,
+  `transmission` varchar(45) DEFAULT NULL,
+  `comments` varchar(512) DEFAULT NULL,
+  `pathToH5` varchar(512) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MeasurementToDataCollection`
+--
+
+CREATE TABLE `MeasurementToDataCollection` (
+  `measurementToDataCollectionId` int(10) NOT NULL,
+  `dataCollectionId` int(10) DEFAULT NULL,
+  `measurementId` int(10) DEFAULT NULL,
+  `dataCollectionOrder` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MeasurementUnit`
+--
+
+CREATE TABLE `MeasurementUnit` (
+  `measurementUnitId` int(10) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `unitType` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Merge`
+--
+
+CREATE TABLE `Merge` (
+  `mergeId` int(10) NOT NULL,
+  `measurementId` int(10) DEFAULT NULL,
+  `frameListId` int(10) DEFAULT NULL,
+  `discardedFrameNameList` varchar(1024) DEFAULT NULL,
+  `averageFilePath` varchar(255) DEFAULT NULL,
+  `framesCount` varchar(45) DEFAULT NULL,
+  `framesMerge` varchar(45) DEFAULT NULL,
+  `creationDate` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MixtureToStructure`
+--
+
+CREATE TABLE `MixtureToStructure` (
+  `fitToStructureId` int(11) NOT NULL,
+  `structureId` int(10) NOT NULL,
+  `mixtureId` int(10) NOT NULL,
+  `volumeFraction` varchar(45) DEFAULT NULL,
+  `creationDate` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Model`
+--
+
+CREATE TABLE `Model` (
+  `modelId` int(10) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `pdbFile` varchar(255) DEFAULT NULL,
+  `fitFile` varchar(255) DEFAULT NULL,
+  `firFile` varchar(255) DEFAULT NULL,
+  `logFile` varchar(255) DEFAULT NULL,
+  `rFactor` varchar(45) DEFAULT NULL,
+  `chiSqrt` varchar(45) DEFAULT NULL,
+  `volume` varchar(45) DEFAULT NULL,
+  `rg` varchar(45) DEFAULT NULL,
+  `dMax` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ModelBuilding`
+--
+
+CREATE TABLE `ModelBuilding` (
+  `modelBuildingId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Related phasing analysis item',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Related program item',
+  `spaceGroupId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related spaceGroup',
+  `lowRes` double DEFAULT NULL,
+  `highRes` double DEFAULT NULL,
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ModelList`
+--
+
+CREATE TABLE `ModelList` (
+  `modelListId` int(10) NOT NULL,
+  `nsdFilePath` varchar(255) DEFAULT NULL,
+  `chi2RgFilePath` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ModelToList`
+--
+
+CREATE TABLE `ModelToList` (
+  `modelToListId` int(10) NOT NULL,
+  `modelId` int(10) NOT NULL,
+  `modelListId` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MotionCorrection`
+--
+
+CREATE TABLE `MotionCorrection` (
+  `motionCorrectionId` int(11) NOT NULL,
+  `movieId` int(11) DEFAULT NULL,
+  `firstFrame` varchar(45) DEFAULT NULL,
+  `lastFrame` varchar(45) DEFAULT NULL,
+  `dosePerFrame` varchar(45) DEFAULT NULL,
+  `doseWeight` varchar(45) DEFAULT NULL,
+  `totalMotion` varchar(45) DEFAULT NULL,
+  `averageMotionPerFrame` varchar(45) DEFAULT NULL,
+  `driftPlotFullPath` varchar(512) DEFAULT NULL,
+  `micrographFullPath` varchar(512) DEFAULT NULL,
+  `micrographSnapshotFullPath` varchar(512) DEFAULT NULL,
+  `correctedDoseMicrographFullPath` varchar(512) DEFAULT NULL,
+  `patchesUsed` varchar(45) DEFAULT NULL,
+  `logFileFullPath` varchar(512) DEFAULT NULL,
+  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MotorPosition`
+--
+
+CREATE TABLE `MotorPosition` (
+  `motorPositionId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phiX` double DEFAULT NULL,
+  `phiY` double DEFAULT NULL,
+  `phiZ` double DEFAULT NULL,
+  `sampX` double DEFAULT NULL,
+  `sampY` double DEFAULT NULL,
+  `omega` double DEFAULT NULL,
+  `kappa` double DEFAULT NULL,
+  `phi` double DEFAULT NULL,
+  `chi` double DEFAULT NULL,
+  `gridIndexY` int(11) DEFAULT NULL,
+  `gridIndexZ` int(11) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Movie`
+--
+
+CREATE TABLE `Movie` (
+  `movieId` int(11) NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED DEFAULT NULL,
+  `movieNumber` int(11) DEFAULT NULL,
+  `movieFullPath` varchar(255) DEFAULT NULL,
+  `positionX` varchar(45) DEFAULT NULL,
+  `positionY` varchar(45) DEFAULT NULL,
+  `micrographFullPath` varchar(255) DEFAULT NULL,
+  `micrographSnapshotFullPath` varchar(255) DEFAULT NULL,
+  `xmlMetaDataFullPath` varchar(255) DEFAULT NULL,
+  `dosePerImage` varchar(45) DEFAULT NULL,
+  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MXMRRun`
+--
 
 CREATE TABLE `MXMRRun` (
-  `mxMRRunId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `autoProcScalingId` int(11) unsigned NOT NULL,
+  `mxMRRunId` int(11) UNSIGNED NOT NULL,
+  `autoProcScalingId` int(11) UNSIGNED NOT NULL,
   `success` tinyint(1) DEFAULT '0' COMMENT 'Indicates whether the program completed. 1 for success, 0 for failure.',
   `message` varchar(255) DEFAULT NULL COMMENT 'A short summary of the findings, success or failure.',
   `pipeline` varchar(50) DEFAULT NULL,
@@ -1581,243 +2056,58 @@ CREATE TABLE `MXMRRun` (
   `rFreeValueStart` float DEFAULT NULL,
   `rFreeValueEnd` float DEFAULT NULL,
   `starttime` datetime DEFAULT NULL,
-  `endtime` datetime DEFAULT NULL,
-  PRIMARY KEY (`mxMRRunId`),
-  KEY `mxMRRun_FK1` (`autoProcScalingId`),
-  CONSTRAINT `mxMRRun_FK1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`)
+  `endtime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `MXMRRunBlob`
+--
 
 CREATE TABLE `MXMRRunBlob` (
-  `mxMRRunBlobId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `mxMRRunId` int(11) unsigned NOT NULL,
+  `mxMRRunBlobId` int(11) UNSIGNED NOT NULL,
+  `mxMRRunId` int(11) UNSIGNED NOT NULL,
   `view1` varchar(255) DEFAULT NULL,
   `view2` varchar(255) DEFAULT NULL,
-  `view3` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`mxMRRunBlobId`),
-  KEY `mxMRRunBlob_FK1` (`mxMRRunId`),
-  CONSTRAINT `mxMRRunBlob_FK1` FOREIGN KEY (`mxMRRunId`) REFERENCES `MXMRRun` (`mxMRRunId`)
+  `view3` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `Macromolecule` (
-  `macromoleculeId` int(11) NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned DEFAULT NULL,
-  `safetyLevelId` int(10) DEFAULT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `acronym` varchar(45) DEFAULT NULL,
-  `extintionCoefficient` varchar(45) DEFAULT NULL,
-  `molecularMass` varchar(45) DEFAULT NULL,
-  `sequence` varchar(1000) DEFAULT NULL,
-  `contactsDescriptionFilePath` varchar(255) DEFAULT NULL,
-  `symmetry` varchar(45) DEFAULT NULL,
-  `comments` varchar(1024) DEFAULT NULL,
-  `refractiveIndex` varchar(45) DEFAULT NULL,
-  `solventViscosity` varchar(45) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  `electronDensity` float(7,5) DEFAULT NULL,
-  PRIMARY KEY (`macromoleculeId`),
-  KEY `MacromoleculeToSafetyLevel` (`safetyLevelId`),
-  CONSTRAINT `MacromoleculeToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=60962 DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
-CREATE TABLE `MacromoleculeRegion` (
-  `macromoleculeRegionId` int(10) NOT NULL AUTO_INCREMENT,
-  `macromoleculeId` int(10) NOT NULL,
-  `regionType` varchar(45) DEFAULT NULL,
-  `id` varchar(45) DEFAULT NULL,
-  `count` varchar(45) DEFAULT NULL,
-  `sequence` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`macromoleculeRegionId`),
-  KEY `MacromoleculeRegionInformationToMacromolecule` (`macromoleculeId`),
-  CONSTRAINT `MacromoleculeRegionInformationToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+--
+-- Table structure for table `Particle`
+--
+
+CREATE TABLE `Particle` (
+  `particleId` int(11) UNSIGNED NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED NOT NULL,
+  `x` float DEFAULT NULL,
+  `y` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `Measurement` (
-  `measurementId` int(10) NOT NULL AUTO_INCREMENT,
-  `specimenId` int(10) NOT NULL,
-  `runId` int(10) DEFAULT NULL,
-  `code` varchar(100) DEFAULT NULL,
-  `imageDirectory` varchar(512) DEFAULT NULL,
-  `priorityLevelId` int(10) DEFAULT NULL,
-  `exposureTemperature` varchar(45) DEFAULT NULL,
-  `viscosity` varchar(45) DEFAULT NULL,
-  `flow` tinyint(1) DEFAULT NULL,
-  `extraFlowTime` varchar(45) DEFAULT NULL,
-  `volumeToLoad` varchar(45) DEFAULT NULL,
-  `waitTime` varchar(45) DEFAULT NULL,
-  `transmission` varchar(45) DEFAULT NULL,
-  `comments` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`measurementId`),
-  KEY `SpecimenToSamplePlateWell` (`specimenId`),
-  KEY `MeasurementToRun` (`runId`),
-  CONSTRAINT `MeasurementToRun` FOREIGN KEY (`runId`) REFERENCES `Run` (`runId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SpecimenToSamplePlateWell` FOREIGN KEY (`specimenId`) REFERENCES `Specimen` (`specimenId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=291103 DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
-CREATE TABLE `MeasurementToDataCollection` (
-  `measurementToDataCollectionId` int(10) NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(10) DEFAULT NULL,
-  `measurementId` int(10) DEFAULT NULL,
-  `dataCollectionOrder` int(10) DEFAULT NULL,
-  PRIMARY KEY (`measurementToDataCollectionId`),
-  KEY `MeasurementToDataCollectionToDataCollection` (`dataCollectionId`),
-  KEY `MeasurementToDataCollectionToMeasurement` (`measurementId`),
-  CONSTRAINT `MeasurementToDataCollectionToDataCollection` FOREIGN KEY (`dataCollectionId`) REFERENCES `SaxsDataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `MeasurementToDataCollectionToMeasurement` FOREIGN KEY (`measurementId`) REFERENCES `Measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=291103 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `MeasurementUnit` (
-  `measurementUnitId` int(10) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `unitType` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`measurementUnitId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `Merge` (
-  `mergeId` int(10) NOT NULL AUTO_INCREMENT,
-  `measurementId` int(10) DEFAULT NULL,
-  `frameListId` int(10) DEFAULT NULL,
-  `discardedFrameNameList` varchar(1024) DEFAULT NULL,
-  `averageFilePath` varchar(255) DEFAULT NULL,
-  `framesCount` varchar(45) DEFAULT NULL,
-  `framesMerge` varchar(45) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`mergeId`),
-  KEY `MergeToMeasurement` (`measurementId`),
-  KEY `MergeToListOfFrames` (`frameListId`),
-  CONSTRAINT `MergeToListOfFrames` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `MergeToMeasurement` FOREIGN KEY (`measurementId`) REFERENCES `Measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=151259 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `MixtureToStructure` (
-  `fitToStructureId` int(11) NOT NULL AUTO_INCREMENT,
-  `structureId` int(10) NOT NULL,
-  `mixtureId` int(10) NOT NULL,
-  `volumeFraction` varchar(45) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`fitToStructureId`),
-  KEY `fk_FitToStructure_1` (`structureId`),
-  KEY `fk_FitToStructure_2` (`mixtureId`),
-  CONSTRAINT `fk_FitToStructure_1` FOREIGN KEY (`structureId`) REFERENCES `Structure` (`structureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_FitToStructure_2` FOREIGN KEY (`mixtureId`) REFERENCES `FitStructureToExperimentalData` (`fitStructureToExperimentalDataId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `Model` (
-  `modelId` int(10) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  `pdbFile` varchar(255) DEFAULT NULL,
-  `fitFile` varchar(255) DEFAULT NULL,
-  `firFile` varchar(255) DEFAULT NULL,
-  `logFile` varchar(255) DEFAULT NULL,
-  `rFactor` varchar(45) DEFAULT NULL,
-  `chiSqrt` varchar(45) DEFAULT NULL,
-  `volume` varchar(45) DEFAULT NULL,
-  `rg` varchar(45) DEFAULT NULL,
-  `dMax` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`modelId`)
-) ENGINE=InnoDB AUTO_INCREMENT=653393 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `ModelBuilding` (
-  `modelBuildingId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
-  `phasingProgramRunId` int(11) unsigned NOT NULL COMMENT 'Related program item',
-  `spaceGroupId` int(10) unsigned DEFAULT NULL COMMENT 'Related spaceGroup',
-  `lowRes` double DEFAULT NULL,
-  `highRes` double DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`modelBuildingId`),
-  KEY `ModelBuilding_FKIndex1` (`phasingAnalysisId`),
-  KEY `ModelBuilding_FKIndex2` (`phasingProgramRunId`),
-  KEY `ModelBuilding_FKIndex3` (`spaceGroupId`),
-  CONSTRAINT `ModelBuilding_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ModelBuilding_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ModelBuilding_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `ModelList` (
-  `modelListId` int(10) NOT NULL AUTO_INCREMENT,
-  `nsdFilePath` varchar(255) DEFAULT NULL,
-  `chi2RgFilePath` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`modelListId`)
-) ENGINE=InnoDB AUTO_INCREMENT=43748 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `ModelToList` (
-  `modelToListId` int(10) NOT NULL AUTO_INCREMENT,
-  `modelId` int(10) NOT NULL,
-  `modelListId` int(10) NOT NULL,
-  PRIMARY KEY (`modelToListId`),
-  KEY `ModelToListToList` (`modelListId`),
-  KEY `ModelToListToModel` (`modelId`),
-  CONSTRAINT `ModelToListToList` FOREIGN KEY (`modelListId`) REFERENCES `ModelList` (`modelListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `ModelToListToModel` FOREIGN KEY (`modelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=530477 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `MotionCorrection` (
-  `motionCorrectionId` int(11) NOT NULL AUTO_INCREMENT,
-  `movieId` int(11) DEFAULT NULL,
-  `firstFrame` varchar(45) DEFAULT NULL,
-  `lastFrame` varchar(45) DEFAULT NULL,
-  `dosePerFrame` varchar(45) DEFAULT NULL,
-  `doseWeight` varchar(45) DEFAULT NULL,
-  `totalMotion` varchar(45) DEFAULT NULL,
-  `averageMotionPerFrame` varchar(45) DEFAULT NULL,
-  `driftPlotFullPath` varchar(512) DEFAULT NULL,
-  `micrographFullPath` varchar(512) DEFAULT NULL,
-  `micrographSnapshotFullPath` varchar(512) DEFAULT NULL,
-  `correctedDoseMicrographFullPath` varchar(512) DEFAULT NULL,
-  `patchesUsed` varchar(45) DEFAULT NULL,
-  `logFileFullPath` varchar(512) DEFAULT NULL,
-  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`motionCorrectionId`),
-  KEY `fk_MotionCorrection_1_idx` (`movieId`),
-  KEY `movieId` (`movieId`),
-  CONSTRAINT `fk_MotionCorrection_1` FOREIGN KEY (`movieId`) REFERENCES `Movie` (`movieId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5389 DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `MotorPosition` (
-  `motorPositionId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phiX` double DEFAULT NULL,
-  `phiY` double DEFAULT NULL,
-  `phiZ` double DEFAULT NULL,
-  `sampX` double DEFAULT NULL,
-  `sampY` double DEFAULT NULL,
-  `omega` double DEFAULT NULL,
-  `kappa` double DEFAULT NULL,
-  `phi` double DEFAULT NULL,
-  `chi` double DEFAULT NULL,
-  `gridIndexY` int(11) DEFAULT NULL,
-  `gridIndexZ` int(11) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`motorPositionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4098632 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `Movie` (
-  `movieId` int(11) NOT NULL AUTO_INCREMENT,
-  `dataCollectionId` int(11) unsigned DEFAULT NULL,
-  `movieNumber` int(11) DEFAULT NULL,
-  `movieFullPath` varchar(255) DEFAULT NULL,
-  `positionX` varchar(45) DEFAULT NULL,
-  `positionY` varchar(45) DEFAULT NULL,
-  `micrographFullPath` varchar(255) DEFAULT NULL,
-  `micrographSnapshotFullPath` varchar(255) DEFAULT NULL,
-  `xmlMetaDataFullPath` varchar(255) DEFAULT NULL,
-  `dosePerImage` varchar(45) DEFAULT NULL,
-  `createdTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`movieId`),
-  KEY `dataCollectionToMovie_idx` (`dataCollectionId`),
-  CONSTRAINT `dataCollectionToMovie` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5917 DEFAULT CHARSET=utf8mb4;
+--
+-- Table structure for table `PDB`
+--
 
 CREATE TABLE `PDB` (
-  `pdbId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `pdbId` int(11) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `contents` mediumtext,
-  `code` varchar(4) DEFAULT NULL,
-  PRIMARY KEY (`pdbId`)
+  `code` varchar(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PDBEntry`
+--
+
 CREATE TABLE `PDBEntry` (
-  `pdbEntryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `autoProcProgramId` int(11) unsigned DEFAULT NULL,
+  `pdbEntryId` int(11) UNSIGNED NOT NULL,
+  `autoProcProgramId` int(11) UNSIGNED DEFAULT NULL,
   `code` varchar(4) DEFAULT NULL,
   `cell_a` float DEFAULT NULL,
   `cell_b` float DEFAULT NULL,
@@ -1835,51 +2125,43 @@ CREATE TABLE `PDBEntry` (
   `autoProcCount` smallint(6) DEFAULT NULL,
   `dataCollectionCount` smallint(6) DEFAULT NULL,
   `beamlineMatch` tinyint(1) DEFAULT NULL,
-  `authorMatch` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`pdbEntryId`),
-  KEY `pdbEntryIdx1` (`autoProcProgramId`),
-  CONSTRAINT `pdbEntry_FK1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE
+  `authorMatch` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PDBEntry_has_AutoProcProgram`
+--
 
 CREATE TABLE `PDBEntry_has_AutoProcProgram` (
-  `pdbEntryHasAutoProcId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `pdbEntryId` int(11) unsigned NOT NULL,
-  `autoProcProgramId` int(11) unsigned NOT NULL,
-  `distance` float DEFAULT NULL,
-  PRIMARY KEY (`pdbEntryHasAutoProcId`),
-  KEY `pdbEntry_AutoProcProgramIdx1` (`pdbEntryId`),
-  KEY `pdbEntry_AutoProcProgramIdx2` (`autoProcProgramId`),
-  CONSTRAINT `pdbEntry_AutoProcProgram_FK1` FOREIGN KEY (`pdbEntryId`) REFERENCES `PDBEntry` (`pdbEntryId`) ON DELETE CASCADE,
-  CONSTRAINT `pdbEntry_AutoProcProgram_FK2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE
+  `pdbEntryHasAutoProcId` int(11) UNSIGNED NOT NULL,
+  `pdbEntryId` int(11) UNSIGNED NOT NULL,
+  `autoProcProgramId` int(11) UNSIGNED NOT NULL,
+  `distance` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `PHPSession` (
-  `id` varchar(50) NOT NULL,
-  `accessDate` datetime DEFAULT NULL,
-  `data` varchar(4000) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
-CREATE TABLE `Particle` (
-  `particleId` int(11) unsigned NOT NULL,
-  `dataCollectionId` int(11) unsigned NOT NULL,
-  `x` float DEFAULT NULL,
-  `y` float DEFAULT NULL,
-  PRIMARY KEY (`particleId`),
-  KEY `Particle_FKIND1` (`dataCollectionId`),
-  CONSTRAINT `Particle_FK1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
+-- Table structure for table `Permission`
+--
 
 CREATE TABLE `Permission` (
-  `permissionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `permissionId` int(11) UNSIGNED NOT NULL,
   `type` varchar(15) NOT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`permissionId`)
+  `description` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Person`
+--
+
 CREATE TABLE `Person` (
-  `personId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `laboratoryId` int(10) unsigned DEFAULT NULL,
+  `personId` int(10) UNSIGNED NOT NULL,
+  `laboratoryId` int(10) UNSIGNED DEFAULT NULL,
   `siteId` int(11) DEFAULT NULL,
   `personUUID` varchar(45) DEFAULT NULL,
   `familyName` varchar(100) DEFAULT NULL,
@@ -1892,55 +2174,63 @@ CREATE TABLE `Person` (
   `faxNumber` varchar(45) DEFAULT NULL,
   `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
   `externalId` binary(16) DEFAULT NULL,
-  `cache` text,
-  PRIMARY KEY (`personId`),
-  KEY `Person_FKIndex1` (`laboratoryId`),
-  KEY `Person_FKIndexFamilyName` (`familyName`),
-  KEY `Person_FKIndex_Login` (`login`),
-  KEY `siteId` (`siteId`),
-  CONSTRAINT `Person_ibfk_1` FOREIGN KEY (`laboratoryId`) REFERENCES `Laboratory` (`laboratoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=400565 DEFAULT CHARSET=latin1;
+  `cache` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Phasing`
+--
 
 CREATE TABLE `Phasing` (
-  `phasingId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
-  `phasingProgramRunId` int(11) unsigned NOT NULL COMMENT 'Related program item',
-  `spaceGroupId` int(10) unsigned DEFAULT NULL COMMENT 'Related spaceGroup',
+  `phasingId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Related phasing analysis item',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Related program item',
+  `spaceGroupId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related spaceGroup',
   `method` enum('solvent flattening','solvent flipping') DEFAULT NULL COMMENT 'phasing method',
   `solventContent` double DEFAULT NULL,
   `enantiomorph` tinyint(1) DEFAULT NULL COMMENT '0 or 1',
   `lowRes` double DEFAULT NULL,
   `highRes` double DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`phasingId`),
-  KEY `Phasing_FKIndex1` (`phasingAnalysisId`),
-  KEY `Phasing_FKIndex2` (`phasingProgramRunId`),
-  KEY `Phasing_FKIndex3` (`spaceGroupId`),
-  CONSTRAINT `Phasing_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Phasing_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Phasing_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=106310 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingAnalysis`
+--
 
 CREATE TABLE `PhasingAnalysis` (
-  `phasingAnalysisId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`phasingAnalysisId`)
-) ENGINE=InnoDB AUTO_INCREMENT=135302 DEFAULT CHARSET=latin1;
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingProgramAttachment`
+--
 
 CREATE TABLE `PhasingProgramAttachment` (
-  `phasingProgramAttachmentId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingProgramRunId` int(11) unsigned NOT NULL COMMENT 'Related program item',
+  `phasingProgramAttachmentId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Related program item',
   `fileType` enum('DSIGMA_RESOLUTION','OCCUPANCY_SITENUMBER','CONTRAST_CYCLE','CCALL_CCWEAK','IMAGE','Map','Logfile','PDB','CSV','INS','RES','TXT') DEFAULT NULL COMMENT 'file type',
   `fileName` varchar(45) DEFAULT NULL COMMENT 'file name',
   `filePath` varchar(255) DEFAULT NULL COMMENT 'file path',
-  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`phasingProgramAttachmentId`),
-  KEY `PhasingProgramAttachment_FKIndex1` (`phasingProgramRunId`),
-  CONSTRAINT `Phasing_phasingProgramAttachmentfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=337490 DEFAULT CHARSET=latin1;
+  `input` tinyint(1) DEFAULT NULL,
+  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingProgramRun`
+--
 
 CREATE TABLE `PhasingProgramRun` (
-  `phasingProgramRunId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
   `phasingCommandLine` varchar(255) DEFAULT NULL COMMENT 'Command line for phasing',
   `phasingPrograms` varchar(255) DEFAULT NULL COMMENT 'Phasing programs (comma separated)',
   `phasingStatus` tinyint(1) DEFAULT NULL COMMENT 'success (1) / fail (0)',
@@ -1948,15 +2238,20 @@ CREATE TABLE `PhasingProgramRun` (
   `phasingStartTime` datetime DEFAULT NULL COMMENT 'Processing start time',
   `phasingEndTime` datetime DEFAULT NULL COMMENT 'Processing end time',
   `phasingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
-  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`phasingProgramRunId`)
-) ENGINE=InnoDB AUTO_INCREMENT=456485 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingStatistics`
+--
 
 CREATE TABLE `PhasingStatistics` (
-  `phasingStatisticsId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingHasScalingId1` int(11) unsigned DEFAULT NULL COMMENT 'the dataset in question',
-  `phasingHasScalingId2` int(11) unsigned DEFAULT NULL COMMENT 'if this is MIT or MAD, which scaling are being compared, null otherwise',
-  `phasingStepId` int(10) unsigned DEFAULT NULL,
+  `phasingStatisticsId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingHasScalingId1` int(11) UNSIGNED DEFAULT NULL COMMENT 'the dataset in question',
+  `phasingHasScalingId2` int(11) UNSIGNED DEFAULT NULL COMMENT 'if this is MIT or MAD, which scaling are being compared, null otherwise',
+  `phasingStepId` int(10) UNSIGNED DEFAULT NULL,
   `numberOfBins` int(11) DEFAULT NULL COMMENT 'the total number of bins',
   `binNumber` int(11) DEFAULT NULL COMMENT 'binNumber, 999 for overall',
   `lowRes` double DEFAULT NULL COMMENT 'low resolution cutoff of this binfloat',
@@ -1964,272 +2259,322 @@ CREATE TABLE `PhasingStatistics` (
   `metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model') DEFAULT NULL COMMENT 'metric',
   `statisticsValue` double DEFAULT NULL COMMENT 'the statistics value',
   `nReflections` int(11) DEFAULT NULL,
-  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`phasingStatisticsId`),
-  KEY `PhasingStatistics_FKIndex1` (`phasingHasScalingId1`),
-  KEY `PhasingStatistics_FKIndex2` (`phasingHasScalingId2`),
-  KEY `fk_PhasingStatistics_phasingStep_idx` (`phasingStepId`),
-  CONSTRAINT `PhasingStatistics_phasingHasScalingfk_1` FOREIGN KEY (`phasingHasScalingId1`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PhasingStatistics_phasingHasScalingfk_2` FOREIGN KEY (`phasingHasScalingId2`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_PhasingStatistics_phasingStep` FOREIGN KEY (`phasingStepId`) REFERENCES `PhasingStep` (`phasingStepId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=821230 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PhasingStep`
+--
 
 CREATE TABLE `PhasingStep` (
-  `phasingStepId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `previousPhasingStepId` int(10) unsigned DEFAULT NULL,
-  `programRunId` int(10) unsigned DEFAULT NULL,
-  `spaceGroupId` int(10) unsigned DEFAULT NULL,
-  `autoProcScalingId` int(10) unsigned DEFAULT NULL,
-  `phasingAnalysisId` int(10) unsigned DEFAULT NULL,
+  `phasingStepId` int(10) UNSIGNED NOT NULL,
+  `previousPhasingStepId` int(10) UNSIGNED DEFAULT NULL,
+  `programRunId` int(10) UNSIGNED DEFAULT NULL,
+  `spaceGroupId` int(10) UNSIGNED DEFAULT NULL,
+  `autoProcScalingId` int(10) UNSIGNED DEFAULT NULL,
+  `phasingAnalysisId` int(10) UNSIGNED DEFAULT NULL,
   `phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT') DEFAULT NULL,
   `method` varchar(45) DEFAULT NULL,
   `solventContent` varchar(45) DEFAULT NULL,
   `enantiomorph` varchar(45) DEFAULT NULL,
   `lowRes` varchar(45) DEFAULT NULL,
   `highRes` varchar(45) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`phasingStepId`),
-  KEY `FK_programRun_id` (`programRunId`),
-  KEY `FK_spacegroup_id` (`spaceGroupId`),
-  KEY `FK_autoprocScaling_id` (`autoProcScalingId`),
-  KEY `FK_phasingAnalysis_id` (`phasingAnalysisId`),
-  CONSTRAINT `FK_autoprocScaling` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_program` FOREIGN KEY (`programRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_spacegroup` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=321114 DEFAULT CHARSET=latin1;
+  `groupName` varchar(45) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Phasing_has_Scaling`
+--
 
 CREATE TABLE `Phasing_has_Scaling` (
-  `phasingHasScalingId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
-  `autoProcScalingId` int(10) unsigned NOT NULL COMMENT 'Related autoProcScaling item',
+  `phasingHasScalingId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Related phasing analysis item',
+  `autoProcScalingId` int(10) UNSIGNED NOT NULL COMMENT 'Related autoProcScaling item',
   `datasetNumber` int(11) DEFAULT NULL COMMENT 'serial number of the dataset and always reserve 0 for the reference',
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`phasingHasScalingId`),
-  KEY `PhasingHasScaling_FKIndex1` (`phasingAnalysisId`),
-  KEY `PhasingHasScaling_FKIndex2` (`autoProcScalingId`),
-  CONSTRAINT `PhasingHasScaling_autoProcScalingfk_1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PhasingHasScaling_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=135302 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PHPSession`
+--
+
+CREATE TABLE `PHPSession` (
+  `id` varchar(50) NOT NULL,
+  `accessDate` datetime DEFAULT NULL,
+  `data` varchar(4000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PlateGroup`
+--
 
 CREATE TABLE `PlateGroup` (
-  `plateGroupId` int(10) NOT NULL AUTO_INCREMENT,
+  `plateGroupId` int(10) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `storageTemperature` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`plateGroupId`)
-) ENGINE=InnoDB AUTO_INCREMENT=13801 DEFAULT CHARSET=latin1;
+  `storageTemperature` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PlateType`
+--
 
 CREATE TABLE `PlateType` (
-  `PlateTypeId` int(10) NOT NULL AUTO_INCREMENT,
+  `PlateTypeId` int(10) NOT NULL,
   `experimentId` int(10) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `description` varchar(45) DEFAULT NULL,
   `shape` varchar(45) DEFAULT NULL,
   `rowCount` int(11) DEFAULT NULL,
-  `columnCount` int(11) DEFAULT NULL,
-  PRIMARY KEY (`PlateTypeId`),
-  KEY `PlateTypeToExperiment` (`experimentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `columnCount` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Position`
+--
 
 CREATE TABLE `Position` (
-  `positionId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `relativePositionId` int(11) unsigned DEFAULT NULL COMMENT 'relative position, null otherwise',
+  `positionId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `relativePositionId` int(11) UNSIGNED DEFAULT NULL COMMENT 'relative position, null otherwise',
   `posX` double DEFAULT NULL,
   `posY` double DEFAULT NULL,
   `posZ` double DEFAULT NULL,
   `scale` double DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`positionId`),
-  KEY `Position_FKIndex1` (`relativePositionId`),
-  CONSTRAINT `Position_relativePositionfk_1` FOREIGN KEY (`relativePositionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PreparePhasingData`
+--
 
 CREATE TABLE `PreparePhasingData` (
-  `preparePhasingDataId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
-  `phasingProgramRunId` int(11) unsigned NOT NULL COMMENT 'Related program item',
-  `spaceGroupId` int(10) unsigned DEFAULT NULL COMMENT 'Related spaceGroup',
+  `preparePhasingDataId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Related phasing analysis item',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Related program item',
+  `spaceGroupId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related spaceGroup',
   `lowRes` double DEFAULT NULL,
   `highRes` double DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`preparePhasingDataId`),
-  KEY `PreparePhasingData_FKIndex1` (`phasingAnalysisId`),
-  KEY `PreparePhasingData_FKIndex2` (`phasingProgramRunId`),
-  KEY `PreparePhasingData_FKIndex3` (`spaceGroupId`),
-  CONSTRAINT `PreparePhasingData_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PreparePhasingData_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PreparePhasingData_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14499 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project`
+--
 
 CREATE TABLE `Project` (
-  `projectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(11) unsigned DEFAULT NULL,
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `personId` int(11) UNSIGNED DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `acronym` varchar(100) DEFAULT NULL,
-  `owner` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`projectId`),
-  KEY `Project_FK1` (`personId`),
-  CONSTRAINT `Project_FK1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`)
+  `owner` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_BLSample`
+--
 
 CREATE TABLE `Project_has_BLSample` (
-  `projectId` int(11) unsigned NOT NULL,
-  `blSampleId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`blSampleId`),
-  KEY `Project_has_BLSample_FK2` (`blSampleId`),
-  CONSTRAINT `Project_has_BLSample_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Project_has_BLSample_FK2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `blSampleId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_DCGroup`
+--
 
 CREATE TABLE `Project_has_DCGroup` (
-  `projectId` int(11) unsigned NOT NULL,
-  `dataCollectionGroupId` int(11) NOT NULL,
-  PRIMARY KEY (`projectId`,`dataCollectionGroupId`),
-  KEY `Project_has_DCGroup_FK2` (`dataCollectionGroupId`),
-  CONSTRAINT `Project_has_DCGroup_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Project_has_DCGroup_FK2` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `dataCollectionGroupId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_EnergyScan`
+--
 
 CREATE TABLE `Project_has_EnergyScan` (
-  `projectId` int(11) unsigned NOT NULL,
-  `energyScanId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`energyScanId`),
-  KEY `project_has_energyscan_FK2` (`energyScanId`),
-  CONSTRAINT `project_has_energyscan_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `project_has_energyscan_FK2` FOREIGN KEY (`energyScanId`) REFERENCES `EnergyScan` (`energyScanId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `energyScanId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_Person`
+--
 
 CREATE TABLE `Project_has_Person` (
-  `projectId` int(11) unsigned NOT NULL,
-  `personId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`personId`),
-  KEY `project_has_person_FK2` (`personId`),
-  CONSTRAINT `project_has_person_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
-  CONSTRAINT `project_has_person_FK2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `personId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_Protein`
+--
 
 CREATE TABLE `Project_has_Protein` (
-  `projectId` int(11) unsigned NOT NULL,
-  `proteinId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`proteinId`),
-  KEY `project_has_protein_FK2` (`proteinId`),
-  CONSTRAINT `project_has_protein_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
-  CONSTRAINT `project_has_protein_FK2` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `proteinId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_Session`
+--
 
 CREATE TABLE `Project_has_Session` (
-  `projectId` int(11) unsigned NOT NULL,
-  `sessionId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`sessionId`),
-  KEY `project_has_session_FK2` (`sessionId`),
-  CONSTRAINT `project_has_session_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `project_has_session_FK2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `sessionId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_Shipping`
+--
 
 CREATE TABLE `Project_has_Shipping` (
-  `projectId` int(11) unsigned NOT NULL,
-  `shippingId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`shippingId`),
-  KEY `project_has_shipping_FK2` (`shippingId`),
-  CONSTRAINT `project_has_shipping_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
-  CONSTRAINT `project_has_shipping_FK2` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `shippingId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_User`
+--
 
 CREATE TABLE `Project_has_User` (
-  `projecthasuserid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `projectid` int(11) unsigned NOT NULL,
-  `username` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`projecthasuserid`),
-  KEY `Project_Has_user_FK1` (`projectid`),
-  CONSTRAINT `Project_Has_user_FK1` FOREIGN KEY (`projectid`) REFERENCES `Project` (`projectId`)
+  `projecthasuserid` int(11) UNSIGNED NOT NULL,
+  `projectid` int(11) UNSIGNED NOT NULL,
+  `username` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Project_has_XFEFSpectrum`
+--
 
 CREATE TABLE `Project_has_XFEFSpectrum` (
-  `projectId` int(11) unsigned NOT NULL,
-  `xfeFluorescenceSpectrumId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`projectId`,`xfeFluorescenceSpectrumId`),
-  KEY `project_has_xfefspectrum_FK2` (`xfeFluorescenceSpectrumId`),
-  CONSTRAINT `project_has_xfefspectrum_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
-  CONSTRAINT `project_has_xfefspectrum_FK2` FOREIGN KEY (`xfeFluorescenceSpectrumId`) REFERENCES `XFEFluorescenceSpectrum` (`xfeFluorescenceSpectrumId`) ON DELETE CASCADE
+  `projectId` int(11) UNSIGNED NOT NULL,
+  `xfeFluorescenceSpectrumId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Proposal`
+--
+
 CREATE TABLE `Proposal` (
-  `proposalId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proposalId` int(10) UNSIGNED NOT NULL,
+  `personId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `proposalCode` varchar(45) DEFAULT NULL,
   `proposalNumber` varchar(45) DEFAULT NULL,
   `proposalType` varchar(2) DEFAULT NULL COMMENT 'Proposal type: MX, BX',
   `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `externalId` binary(16) DEFAULT NULL,
-  PRIMARY KEY (`proposalId`),
-  KEY `Proposal_FKIndex1` (`personId`),
-  KEY `Proposal_FKIndexCodeNumber` (`proposalCode`,`proposalNumber`),
-  CONSTRAINT `Proposal_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8419 DEFAULT CHARSET=latin1;
+  `externalId` binary(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ProposalHasPerson`
+--
 
 CREATE TABLE `ProposalHasPerson` (
-  `proposalHasPersonId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL,
-  `personId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`proposalHasPersonId`),
-  KEY `fk_ProposalHasPerson_Proposal` (`proposalId`),
-  KEY `fk_ProposalHasPerson_Personal` (`personId`),
-  CONSTRAINT `fk_ProposalHasPerson_Personal` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ProposalHasPerson_Proposal` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4458 DEFAULT CHARSET=latin1;
+  `proposalHasPersonId` int(10) UNSIGNED NOT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL,
+  `personId` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Protein`
+--
 
 CREATE TABLE `Protein` (
-  `proteinId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `proteinId` int(10) UNSIGNED NOT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `acronym` varchar(45) DEFAULT NULL,
   `safetyLevel` enum('GREEN','YELLOW','RED') DEFAULT NULL,
   `molecularMass` double DEFAULT NULL,
   `proteinType` varchar(45) DEFAULT NULL,
   `sequence` text,
-  `personId` int(10) unsigned DEFAULT NULL,
+  `personId` int(10) UNSIGNED DEFAULT NULL,
   `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isCreatedBySampleSheet` tinyint(1) DEFAULT '0',
   `externalId` binary(16) DEFAULT NULL,
-  `componentTypeId` int(11) unsigned DEFAULT NULL,
+  `componentTypeId` int(11) UNSIGNED DEFAULT NULL,
   `modId` varchar(20) DEFAULT NULL,
-  `concentrationTypeId` int(11) unsigned DEFAULT NULL,
-  `global` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`proteinId`),
-  KEY `Protein_FKIndex1` (`proposalId`),
-  KEY `ProteinAcronym_Index` (`proposalId`,`acronym`),
-  KEY `Protein_FKIndex2` (`personId`),
-  KEY `Protein_Index2` (`acronym`) USING BTREE,
-  KEY `protein_fk3` (`componentTypeId`),
-  CONSTRAINT `Protein_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `protein_fk3` FOREIGN KEY (`componentTypeId`) REFERENCES `ComponentType` (`componentTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=376114 DEFAULT CHARSET=latin1;
+  `concentrationTypeId` int(11) UNSIGNED DEFAULT NULL,
+  `global` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Protein_has_Lattice`
+--
 
 CREATE TABLE `Protein_has_Lattice` (
-  `proteinId` int(10) unsigned NOT NULL,
+  `proteinId` int(10) UNSIGNED NOT NULL,
   `cell_a` double DEFAULT NULL,
   `cell_b` double DEFAULT NULL,
   `cell_c` double DEFAULT NULL,
   `cell_alpha` double DEFAULT NULL,
   `cell_beta` double DEFAULT NULL,
-  `cell_gamma` double DEFAULT NULL,
-  PRIMARY KEY (`proteinId`),
-  CONSTRAINT `Protein_has_Lattice_ibfk1` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`)
+  `cell_gamma` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Protein_has_PDB`
+--
 
 CREATE TABLE `Protein_has_PDB` (
-  `proteinhaspdbid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `proteinid` int(11) unsigned NOT NULL,
-  `pdbid` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`proteinhaspdbid`),
-  KEY `Protein_Has_PDB_fk1` (`proteinid`),
-  KEY `Protein_Has_PDB_fk2` (`pdbid`),
-  CONSTRAINT `Protein_Has_PDB_fk1` FOREIGN KEY (`proteinid`) REFERENCES `Protein` (`proteinId`),
-  CONSTRAINT `Protein_Has_PDB_fk2` FOREIGN KEY (`pdbid`) REFERENCES `PDB` (`pdbId`)
+  `proteinhaspdbid` int(11) UNSIGNED NOT NULL,
+  `proteinid` int(11) UNSIGNED NOT NULL,
+  `pdbid` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `RigidBodyModeling`
+--
+
 CREATE TABLE `RigidBodyModeling` (
-  `rigidBodyModelingId` int(11) NOT NULL AUTO_INCREMENT,
+  `rigidBodyModelingId` int(11) NOT NULL,
   `subtractionId` int(11) NOT NULL,
   `fitFilePath` varchar(255) DEFAULT NULL,
   `rigidBodyModelFilePath` varchar(255) DEFAULT NULL,
@@ -2239,15 +2584,19 @@ CREATE TABLE `RigidBodyModeling` (
   `crossCorrConfigFilePath` varchar(255) DEFAULT NULL,
   `contactDescriptionFilePath` varchar(255) DEFAULT NULL,
   `symmetry` varchar(255) DEFAULT NULL,
-  `creationDate` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`rigidBodyModelingId`),
-  KEY `fk_RigidBodyModeling_1` (`subtractionId`)
+  `creationDate` varchar(45) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `RobotAction`
+--
+
 CREATE TABLE `RobotAction` (
-  `robotActionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `blsessionId` int(11) unsigned NOT NULL,
-  `blsampleId` int(11) unsigned DEFAULT NULL,
+  `robotActionId` int(11) UNSIGNED NOT NULL,
+  `blsessionId` int(11) UNSIGNED NOT NULL,
+  `blsampleId` int(11) UNSIGNED DEFAULT NULL,
   `actionType` enum('LOAD','UNLOAD','DISPOSE','STORE','WASH','ANNEAL') DEFAULT NULL,
   `startTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `endTimestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -2257,16 +2606,17 @@ CREATE TABLE `RobotAction` (
   `dewarLocation` smallint(6) DEFAULT NULL,
   `sampleBarcode` varchar(45) DEFAULT NULL,
   `xtalSnapshotBefore` varchar(255) DEFAULT NULL,
-  `xtalSnapshotAfter` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`robotActionId`),
-  KEY `RobotAction_FK1` (`blsessionId`),
-  KEY `RobotAction_FK2` (`blsampleId`),
-  CONSTRAINT `RobotAction_FK1` FOREIGN KEY (`blsessionId`) REFERENCES `BLSession` (`sessionId`),
-  CONSTRAINT `RobotAction_FK2` FOREIGN KEY (`blsampleId`) REFERENCES `BLSample` (`blSampleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='Robot actions as reported by MXCube';
+  `xtalSnapshotAfter` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Robot actions as reported by MXCube';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Run`
+--
 
 CREATE TABLE `Run` (
-  `runId` int(10) NOT NULL AUTO_INCREMENT,
+  `runId` int(10) NOT NULL,
   `timePerFrame` varchar(45) DEFAULT NULL,
   `timeStart` varchar(45) DEFAULT NULL,
   `timeEnd` varchar(45) DEFAULT NULL,
@@ -2284,174 +2634,185 @@ CREATE TABLE `Run` (
   `pixelSizeY` varchar(45) DEFAULT NULL,
   `radiationRelative` varchar(45) DEFAULT NULL,
   `radiationAbsolute` varchar(45) DEFAULT NULL,
-  `normalization` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`runId`)
-) ENGINE=InnoDB AUTO_INCREMENT=134836 DEFAULT CHARSET=latin1;
+  `normalization` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `SW_onceToken` (
-  `onceTokenId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `token` varchar(128) DEFAULT NULL,
-  `personId` int(10) unsigned DEFAULT NULL,
-  `proposalId` int(10) unsigned DEFAULT NULL,
-  `validity` varchar(200) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`onceTokenId`),
-  KEY `SW_onceToken_fk1` (`personId`),
-  KEY `SW_onceToken_fk2` (`proposalId`),
-  CONSTRAINT `SW_onceToken_fk1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
-  CONSTRAINT `SW_onceToken_fk2` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='One-time use tokens needed for token auth in order to grant access to file downloads and webcams (and some images)';
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SafetyLevel`
+--
 
 CREATE TABLE `SafetyLevel` (
-  `safetyLevelId` int(10) NOT NULL AUTO_INCREMENT,
+  `safetyLevelId` int(10) NOT NULL,
   `code` varchar(45) DEFAULT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`safetyLevelId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `description` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SamplePlate`
+--
 
 CREATE TABLE `SamplePlate` (
-  `samplePlateId` int(10) NOT NULL AUTO_INCREMENT,
+  `samplePlateId` int(10) NOT NULL,
   `experimentId` int(10) NOT NULL,
   `plateGroupId` int(10) DEFAULT NULL,
   `plateTypeId` int(10) DEFAULT NULL,
   `instructionSetId` int(10) DEFAULT NULL,
-  `boxId` int(10) unsigned DEFAULT NULL,
+  `boxId` int(10) UNSIGNED DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `slotPositionRow` varchar(45) DEFAULT NULL,
   `slotPositionColumn` varchar(45) DEFAULT NULL,
-  `storageTemperature` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`samplePlateId`),
-  KEY `PlateToPtateGroup` (`plateGroupId`),
-  KEY `SamplePlateToType` (`plateTypeId`),
-  KEY `SamplePlateToExperiment` (`experimentId`),
-  KEY `SamplePlateToInstructionSet` (`instructionSetId`),
-  CONSTRAINT `PlateToPtateGroup` FOREIGN KEY (`plateGroupId`) REFERENCES `PlateGroup` (`plateGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateToType` FOREIGN KEY (`plateTypeId`) REFERENCES `PlateType` (`PlateTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=41401 DEFAULT CHARSET=latin1;
+  `storageTemperature` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SamplePlatePosition`
+--
 
 CREATE TABLE `SamplePlatePosition` (
-  `samplePlatePositionId` int(10) NOT NULL AUTO_INCREMENT,
+  `samplePlatePositionId` int(10) NOT NULL,
   `samplePlateId` int(10) NOT NULL,
   `rowNumber` int(11) DEFAULT NULL,
   `columnNumber` int(11) DEFAULT NULL,
-  `volume` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`samplePlatePositionId`),
-  KEY `PlatePositionToPlate` (`samplePlateId`),
-  CONSTRAINT `PlatePositionToPlate` FOREIGN KEY (`samplePlateId`) REFERENCES `SamplePlate` (`samplePlateId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=117475 DEFAULT CHARSET=latin1;
+  `volume` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SaxsDataCollection`
+--
 
 CREATE TABLE `SaxsDataCollection` (
-  `dataCollectionId` int(10) NOT NULL AUTO_INCREMENT,
+  `dataCollectionId` int(10) NOT NULL,
   `experimentId` int(10) NOT NULL,
-  `comments` varchar(5120) DEFAULT NULL,
-  PRIMARY KEY (`dataCollectionId`),
-  KEY `SaxsDataCollectionToExperiment` (`experimentId`),
-  CONSTRAINT `SaxsDataCollectionToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=97035 DEFAULT CHARSET=latin1;
+  `comments` varchar(5120) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScanParametersModel`
+--
 
 CREATE TABLE `ScanParametersModel` (
-  `scanParametersModelId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `scanParametersServiceId` int(10) unsigned DEFAULT NULL,
-  `dataCollectionPlanId` int(11) unsigned DEFAULT NULL,
-  `modelNumber` tinyint(3) unsigned DEFAULT NULL,
+  `scanParametersModelId` int(11) UNSIGNED NOT NULL,
+  `scanParametersServiceId` int(10) UNSIGNED DEFAULT NULL,
+  `dataCollectionPlanId` int(11) UNSIGNED DEFAULT NULL,
+  `modelNumber` tinyint(3) UNSIGNED DEFAULT NULL,
   `start` double DEFAULT NULL,
   `stop` double DEFAULT NULL,
   `step` double DEFAULT NULL,
-  `array` text,
-  PRIMARY KEY (`scanParametersModelId`),
-  KEY `PDF_Model_ibfk1` (`scanParametersServiceId`),
-  KEY `PDF_Model_ibfk2` (`dataCollectionPlanId`),
-  CONSTRAINT `PDF_Model_ibfk1` FOREIGN KEY (`scanParametersServiceId`) REFERENCES `ScanParametersService` (`scanParametersServiceId`) ON UPDATE CASCADE,
-  CONSTRAINT `PDF_Model_ibfk2` FOREIGN KEY (`dataCollectionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON UPDATE CASCADE
+  `array` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScanParametersService`
+--
 
 CREATE TABLE `ScanParametersService` (
-  `scanParametersServiceId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `scanParametersServiceId` int(10) UNSIGNED NOT NULL,
   `name` varchar(45) DEFAULT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`scanParametersServiceId`)
+  `description` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Schedule`
+--
 
 CREATE TABLE `Schedule` (
-  `scheduleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`scheduleId`)
+  `scheduleId` int(11) UNSIGNED NOT NULL,
+  `name` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScheduleComponent`
+--
 
 CREATE TABLE `ScheduleComponent` (
-  `scheduleComponentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `scheduleId` int(11) unsigned NOT NULL,
-  `inspectionTypeId` int(11) unsigned DEFAULT NULL,
-  `offset_hours` int(11) DEFAULT NULL,
-  PRIMARY KEY (`scheduleComponentId`),
-  KEY `ScheduleComponent_fk2` (`inspectionTypeId`),
-  KEY `ScheduleComponent_idx1` (`scheduleId`),
-  CONSTRAINT `ScheduleComponent_fk1` FOREIGN KEY (`scheduleId`) REFERENCES `Schedule` (`scheduleId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ScheduleComponent_fk2` FOREIGN KEY (`inspectionTypeId`) REFERENCES `InspectionType` (`inspectionTypeId`) ON DELETE CASCADE
+  `scheduleComponentId` int(11) UNSIGNED NOT NULL,
+  `scheduleId` int(11) UNSIGNED NOT NULL,
+  `inspectionTypeId` int(11) UNSIGNED DEFAULT NULL,
+  `offset_hours` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `SchemaStatus` (
-  `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT,
-  `scriptName` varchar(100) NOT NULL,
-  `schemaStatus` varchar(10) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`schemaStatusId`),
-  UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Screen`
+--
 
 CREATE TABLE `Screen` (
-  `screenId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `screenId` int(11) UNSIGNED NOT NULL,
   `name` varchar(45) DEFAULT NULL,
-  `proposalId` int(10) unsigned DEFAULT NULL,
-  `global` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`screenId`),
-  KEY `Screen_fk1` (`proposalId`),
-  CONSTRAINT `Screen_fk1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`)
+  `proposalId` int(10) UNSIGNED DEFAULT NULL,
+  `global` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreenComponent`
+--
 
 CREATE TABLE `ScreenComponent` (
-  `screenComponentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `screenComponentGroupId` int(11) unsigned NOT NULL,
-  `componentId` int(11) unsigned DEFAULT NULL,
+  `screenComponentId` int(11) UNSIGNED NOT NULL,
+  `screenComponentGroupId` int(11) UNSIGNED NOT NULL,
+  `componentId` int(11) UNSIGNED DEFAULT NULL,
   `concentration` float DEFAULT NULL,
-  `pH` float DEFAULT NULL,
-  PRIMARY KEY (`screenComponentId`),
-  KEY `ScreenComponent_fk1` (`screenComponentGroupId`),
-  KEY `ScreenComponent_fk2` (`componentId`),
-  CONSTRAINT `ScreenComponent_fk1` FOREIGN KEY (`screenComponentGroupId`) REFERENCES `ScreenComponentGroup` (`screenComponentGroupId`),
-  CONSTRAINT `ScreenComponent_fk2` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`)
+  `pH` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreenComponentGroup`
+--
 
 CREATE TABLE `ScreenComponentGroup` (
-  `screenComponentGroupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `screenId` int(11) unsigned NOT NULL,
-  `position` smallint(6) DEFAULT NULL,
-  PRIMARY KEY (`screenComponentGroupId`),
-  KEY `ScreenComponentGroup_fk1` (`screenId`),
-  CONSTRAINT `ScreenComponentGroup_fk1` FOREIGN KEY (`screenId`) REFERENCES `Screen` (`screenId`)
+  `screenComponentGroupId` int(11) UNSIGNED NOT NULL,
+  `screenId` int(11) UNSIGNED NOT NULL,
+  `position` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Screening`
+--
+
 CREATE TABLE `Screening` (
-  `screeningId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `diffractionPlanId` int(10) unsigned DEFAULT NULL COMMENT 'references DiffractionPlan',
+  `screeningId` int(10) UNSIGNED NOT NULL,
+  `diffractionPlanId` int(10) UNSIGNED DEFAULT NULL COMMENT 'references DiffractionPlan',
   `dataCollectionGroupId` int(11) DEFAULT NULL,
-  `dataCollectionId` int(11) unsigned DEFAULT NULL,
+  `dataCollectionId` int(11) UNSIGNED DEFAULT NULL,
   `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `programVersion` varchar(45) DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
   `shortComments` varchar(20) DEFAULT NULL,
-  `xmlSampleInformation` longblob,
-  PRIMARY KEY (`screeningId`),
-  KEY `Screening_FKIndexDiffractionPlanId` (`diffractionPlanId`),
-  KEY `dcgroupId` (`dataCollectionGroupId`),
-  CONSTRAINT `Screening_ibfk_1` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=472616 DEFAULT CHARSET=latin1;
+  `xmlSampleInformation` longblob
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningInput`
+--
 
 CREATE TABLE `ScreeningInput` (
-  `screeningInputId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningInputId` int(10) UNSIGNED NOT NULL,
+  `screeningId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `diffractionPlanId` int(10) DEFAULT NULL COMMENT 'references DiffractionPlan table',
   `beamX` float DEFAULT NULL,
   `beamY` float DEFAULT NULL,
@@ -2459,25 +2820,28 @@ CREATE TABLE `ScreeningInput` (
   `minimumFractionIndexed` float DEFAULT NULL,
   `maximumFractionRejected` float DEFAULT NULL,
   `minimumSignalToNoise` float DEFAULT NULL,
-  `xmlSampleInformation` longblob,
-  PRIMARY KEY (`screeningInputId`),
-  KEY `ScreeningInput_FKIndex1` (`screeningId`),
-  CONSTRAINT `ScreeningInput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=97571 DEFAULT CHARSET=latin1;
+  `xmlSampleInformation` longblob
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningOutput`
+--
 
 CREATE TABLE `ScreeningOutput` (
-  `screeningOutputId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningOutputId` int(10) UNSIGNED NOT NULL,
+  `screeningId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `statusDescription` varchar(1024) DEFAULT NULL,
-  `rejectedReflections` int(10) unsigned DEFAULT NULL,
+  `rejectedReflections` int(10) UNSIGNED DEFAULT NULL,
   `resolutionObtained` float DEFAULT NULL,
   `spotDeviationR` float DEFAULT NULL,
   `spotDeviationTheta` float DEFAULT NULL,
   `beamShiftX` float DEFAULT NULL,
   `beamShiftY` float DEFAULT NULL,
-  `numSpotsFound` int(10) unsigned DEFAULT NULL,
-  `numSpotsUsed` int(10) unsigned DEFAULT NULL,
-  `numSpotsRejected` int(10) unsigned DEFAULT NULL,
+  `numSpotsFound` int(10) UNSIGNED DEFAULT NULL,
+  `numSpotsUsed` int(10) UNSIGNED DEFAULT NULL,
+  `numSpotsRejected` int(10) UNSIGNED DEFAULT NULL,
   `mosaicity` float DEFAULT NULL,
   `iOverSigma` float DEFAULT NULL,
   `diffractionRings` tinyint(1) DEFAULT NULL,
@@ -2491,15 +2855,18 @@ CREATE TABLE `ScreeningOutput` (
   `totalNumberOfImages` int(11) DEFAULT NULL,
   `rFriedel` double DEFAULT NULL,
   `indexingSuccess` tinyint(1) NOT NULL DEFAULT '0',
-  `screeningSuccess` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`screeningOutputId`),
-  KEY `ScreeningOutput_FKIndex1` (`screeningId`),
-  CONSTRAINT `ScreeningOutput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=472556 DEFAULT CHARSET=latin1;
+  `screeningSuccess` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningOutputLattice`
+--
 
 CREATE TABLE `ScreeningOutputLattice` (
-  `screeningOutputLatticeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningOutputLatticeId` int(10) UNSIGNED NOT NULL,
+  `screeningOutputId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `spaceGroup` varchar(45) DEFAULT NULL,
   `pointGroup` varchar(45) DEFAULT NULL,
   `bravaisLattice` varchar(45) DEFAULT NULL,
@@ -2519,36 +2886,45 @@ CREATE TABLE `ScreeningOutputLattice` (
   `unitCell_beta` float DEFAULT NULL,
   `unitCell_gamma` float DEFAULT NULL,
   `bltimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `labelitIndexing` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`screeningOutputLatticeId`),
-  KEY `ScreeningOutputLattice_FKIndex1` (`screeningOutputId`),
-  CONSTRAINT `ScreeningOutputLattice_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=321974 DEFAULT CHARSET=latin1;
+  `labelitIndexing` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningRank`
+--
 
 CREATE TABLE `ScreeningRank` (
-  `screeningRankId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningRankSetId` int(10) unsigned NOT NULL DEFAULT '0',
-  `screeningId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningRankId` int(10) UNSIGNED NOT NULL,
+  `screeningRankSetId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `screeningId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `rankValue` float DEFAULT NULL,
-  `rankInformation` varchar(1024) DEFAULT NULL,
-  PRIMARY KEY (`screeningRankId`),
-  KEY `ScreeningRank_FKIndex1` (`screeningId`),
-  KEY `ScreeningRank_FKIndex2` (`screeningRankSetId`),
-  CONSTRAINT `ScreeningRank_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ScreeningRank_ibfk_2` FOREIGN KEY (`screeningRankSetId`) REFERENCES `ScreeningRankSet` (`screeningRankSetId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6239 DEFAULT CHARSET=latin1;
+  `rankInformation` varchar(1024) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningRankSet`
+--
 
 CREATE TABLE `ScreeningRankSet` (
-  `screeningRankSetId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `screeningRankSetId` int(10) UNSIGNED NOT NULL,
   `rankEngine` varchar(255) DEFAULT NULL,
   `rankingProjectFileName` varchar(255) DEFAULT NULL,
-  `rankingSummaryFileName` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`screeningRankSetId`)
-) ENGINE=InnoDB AUTO_INCREMENT=993 DEFAULT CHARSET=latin1;
+  `rankingSummaryFileName` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningStrategy`
+--
 
 CREATE TABLE `ScreeningStrategy` (
-  `screeningStrategyId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `screeningOutputId` int(10) unsigned NOT NULL DEFAULT '0',
+  `screeningStrategyId` int(10) UNSIGNED NOT NULL,
+  `screeningOutputId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `phiStart` float DEFAULT NULL,
   `phiEnd` float DEFAULT NULL,
   `rotation` float DEFAULT NULL,
@@ -2559,16 +2935,19 @@ CREATE TABLE `ScreeningStrategy` (
   `anomalous` tinyint(1) NOT NULL DEFAULT '0',
   `program` varchar(45) DEFAULT NULL,
   `rankingResolution` float DEFAULT NULL,
-  `transmission` float DEFAULT NULL COMMENT 'Transmission for the strategy as given by the strategy program.',
-  PRIMARY KEY (`screeningStrategyId`),
-  KEY `ScreeningStrategy_FKIndex1` (`screeningOutputId`),
-  CONSTRAINT `ScreeningStrategy_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=249165 DEFAULT CHARSET=latin1;
+  `transmission` float DEFAULT NULL COMMENT 'Transmission for the strategy as given by the strategy program.'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningStrategySubWedge`
+--
 
 CREATE TABLE `ScreeningStrategySubWedge` (
-  `screeningStrategySubWedgeId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
-  `screeningStrategyWedgeId` int(10) unsigned DEFAULT NULL COMMENT 'Foreign key to parent table',
-  `subWedgeNumber` int(10) unsigned DEFAULT NULL COMMENT 'The number of this subwedge within the wedge',
+  `screeningStrategySubWedgeId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key',
+  `screeningStrategyWedgeId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Foreign key to parent table',
+  `subWedgeNumber` int(10) UNSIGNED DEFAULT NULL COMMENT 'The number of this subwedge within the wedge',
   `rotationAxis` varchar(45) DEFAULT NULL COMMENT 'Angle where subwedge starts',
   `axisStart` float DEFAULT NULL COMMENT 'Angle where subwedge ends',
   `axisEnd` float DEFAULT NULL COMMENT 'Exposure time for subwedge',
@@ -2578,57 +2957,67 @@ CREATE TABLE `ScreeningStrategySubWedge` (
   `completeness` float DEFAULT NULL,
   `multiplicity` float DEFAULT NULL,
   `doseTotal` float DEFAULT NULL COMMENT 'Total dose for this subwedge',
-  `numberOfImages` int(10) unsigned DEFAULT NULL COMMENT 'Number of images for this subwedge',
+  `numberOfImages` int(10) UNSIGNED DEFAULT NULL COMMENT 'Number of images for this subwedge',
   `comments` varchar(255) DEFAULT NULL,
-  `resolution` float DEFAULT NULL,
-  PRIMARY KEY (`screeningStrategySubWedgeId`),
-  KEY `ScreeningStrategySubWedge_FK1` (`screeningStrategyWedgeId`),
-  CONSTRAINT `ScreeningStrategySubWedge_FK1` FOREIGN KEY (`screeningStrategyWedgeId`) REFERENCES `ScreeningStrategyWedge` (`screeningStrategyWedgeId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=257824 DEFAULT CHARSET=latin1;
+  `resolution` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ScreeningStrategyWedge`
+--
 
 CREATE TABLE `ScreeningStrategyWedge` (
-  `screeningStrategyWedgeId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
-  `screeningStrategyId` int(10) unsigned DEFAULT NULL COMMENT 'Foreign key to parent table',
-  `wedgeNumber` int(10) unsigned DEFAULT NULL COMMENT 'The number of this wedge within the strategy',
+  `screeningStrategyWedgeId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key',
+  `screeningStrategyId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Foreign key to parent table',
+  `wedgeNumber` int(10) UNSIGNED DEFAULT NULL COMMENT 'The number of this wedge within the strategy',
   `resolution` float DEFAULT NULL,
   `completeness` float DEFAULT NULL,
   `multiplicity` float DEFAULT NULL,
   `doseTotal` float DEFAULT NULL COMMENT 'Total dose for this wedge',
-  `numberOfImages` int(10) unsigned DEFAULT NULL COMMENT 'Number of images for this wedge',
+  `numberOfImages` int(10) UNSIGNED DEFAULT NULL COMMENT 'Number of images for this wedge',
   `phi` float DEFAULT NULL,
   `kappa` float DEFAULT NULL,
   `chi` float DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
-  `wavelength` double DEFAULT NULL,
-  PRIMARY KEY (`screeningStrategyWedgeId`),
-  KEY `ScreeningStrategyWedge_IBFK_1` (`screeningStrategyId`),
-  CONSTRAINT `ScreeningStrategyWedge_IBFK_1` FOREIGN KEY (`screeningStrategyId`) REFERENCES `ScreeningStrategy` (`screeningStrategyId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=244162 DEFAULT CHARSET=latin1;
+  `wavelength` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SessionType`
+--
 
 CREATE TABLE `SessionType` (
-  `sessionTypeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(10) unsigned NOT NULL,
-  `typeName` varchar(31) NOT NULL,
-  PRIMARY KEY (`sessionTypeId`),
-  KEY `SessionType_FKIndex1` (`sessionId`),
-  CONSTRAINT `SessionType_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `sessionTypeId` int(10) UNSIGNED NOT NULL,
+  `sessionId` int(10) UNSIGNED NOT NULL,
+  `typeName` varchar(31) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Session_has_Person`
+--
 
 CREATE TABLE `Session_has_Person` (
-  `sessionId` int(10) unsigned NOT NULL DEFAULT '0',
-  `personId` int(10) unsigned NOT NULL DEFAULT '0',
+  `sessionId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `personId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `role` enum('Local Contact','Local Contact 2','Staff','Team Leader','Co-Investigator','Principal Investigator','Alternate Contact') DEFAULT NULL,
-  `remote` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`sessionId`,`personId`),
-  KEY `Session_has_Person_FKIndex1` (`sessionId`),
-  KEY `Session_has_Person_FKIndex2` (`personId`),
-  CONSTRAINT `Session_has_Person_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Session_has_Person_ibfk_2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `remote` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Shipping`
+--
+
 CREATE TABLE `Shipping` (
-  `shippingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `proposalId` int(10) unsigned NOT NULL DEFAULT '0',
+  `shippingId` int(10) UNSIGNED NOT NULL,
+  `proposalId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `shippingName` varchar(45) DEFAULT NULL,
   `deliveryAgent_agentName` varchar(45) DEFAULT NULL,
   `deliveryAgent_shippingDate` date DEFAULT NULL,
@@ -2637,57 +3026,55 @@ CREATE TABLE `Shipping` (
   `deliveryAgent_flightCode` varchar(45) DEFAULT NULL,
   `shippingStatus` varchar(45) DEFAULT NULL,
   `bltimeStamp` datetime DEFAULT NULL,
-  `laboratoryId` int(10) unsigned DEFAULT NULL,
+  `laboratoryId` int(10) UNSIGNED DEFAULT NULL,
   `isStorageShipping` tinyint(1) DEFAULT '0',
   `creationDate` datetime DEFAULT NULL,
   `comments` varchar(255) DEFAULT NULL,
-  `sendingLabContactId` int(10) unsigned DEFAULT NULL,
-  `returnLabContactId` int(10) unsigned DEFAULT NULL,
+  `sendingLabContactId` int(10) UNSIGNED DEFAULT NULL,
+  `returnLabContactId` int(10) UNSIGNED DEFAULT NULL,
   `returnCourier` varchar(45) DEFAULT NULL,
   `dateOfShippingToUser` datetime DEFAULT NULL,
   `shippingType` varchar(45) DEFAULT NULL,
-  `safetyLevel` varchar(8) DEFAULT NULL,
-  PRIMARY KEY (`shippingId`),
-  KEY `Shipping_FKIndex1` (`proposalId`),
-  KEY `laboratoryId` (`laboratoryId`),
-  KEY `Shipping_FKIndex2` (`sendingLabContactId`),
-  KEY `Shipping_FKIndex3` (`returnLabContactId`),
-  KEY `Shipping_FKIndexCreationDate` (`creationDate`),
-  KEY `Shipping_FKIndexName` (`shippingName`),
-  KEY `Shipping_FKIndexStatus` (`shippingStatus`),
-  CONSTRAINT `Shipping_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Shipping_ibfk_2` FOREIGN KEY (`sendingLabContactId`) REFERENCES `LabContact` (`labContactId`),
-  CONSTRAINT `Shipping_ibfk_3` FOREIGN KEY (`returnLabContactId`) REFERENCES `LabContact` (`labContactId`)
-) ENGINE=InnoDB AUTO_INCREMENT=309226 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `ShippingHasSession` (
-  `shippingId` int(10) unsigned NOT NULL,
-  `sessionId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`shippingId`,`sessionId`),
-  KEY `ShippingHasSession_FKIndex1` (`shippingId`),
-  KEY `ShippingHasSession_FKIndex2` (`sessionId`),
-  CONSTRAINT `ShippingHasSession_ibfk_1` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`),
-  CONSTRAINT `ShippingHasSession_ibfk_2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`)
+  `safetyLevel` varchar(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ShippingHasSession`
+--
+
+CREATE TABLE `ShippingHasSession` (
+  `shippingId` int(10) UNSIGNED NOT NULL,
+  `sessionId` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SpaceGroup`
+--
+
 CREATE TABLE `SpaceGroup` (
-  `spaceGroupId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
-  `geometryClassnameId` int(11) unsigned DEFAULT NULL,
-  `spaceGroupNumber` int(10) unsigned DEFAULT NULL COMMENT 'ccp4 number pr IUCR',
+  `spaceGroupId` int(10) UNSIGNED NOT NULL COMMENT 'Primary key',
+  `geometryClassnameId` int(11) UNSIGNED DEFAULT NULL,
+  `spaceGroupNumber` int(10) UNSIGNED DEFAULT NULL COMMENT 'ccp4 number pr IUCR',
   `spaceGroupShortName` varchar(45) DEFAULT NULL COMMENT 'short name without blank',
   `spaceGroupName` varchar(45) DEFAULT NULL COMMENT 'verbose name',
   `bravaisLattice` varchar(45) DEFAULT NULL COMMENT 'short name',
   `bravaisLatticeName` varchar(45) DEFAULT NULL COMMENT 'verbose name',
   `pointGroup` varchar(45) DEFAULT NULL COMMENT 'point group',
-  `MX_used` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 if used in the crystal form',
-  PRIMARY KEY (`spaceGroupId`),
-  KEY `SpaceGroup_FKShortName` (`spaceGroupShortName`),
-  KEY `geometryClassnameId` (`geometryClassnameId`),
-  CONSTRAINT `SpaceGroup_ibfk_1` FOREIGN KEY (`geometryClassnameId`) REFERENCES `GeometryClassname` (`geometryClassnameId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=latin1;
+  `MX_used` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 if used in the crystal form'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Specimen`
+--
 
 CREATE TABLE `Specimen` (
-  `specimenId` int(10) NOT NULL AUTO_INCREMENT,
+  `specimenId` int(10) NOT NULL,
   `experimentId` int(10) NOT NULL,
   `bufferId` int(10) DEFAULT NULL,
   `macromoleculeId` int(10) DEFAULT NULL,
@@ -2697,60 +3084,53 @@ CREATE TABLE `Specimen` (
   `code` varchar(255) DEFAULT NULL,
   `concentration` varchar(45) DEFAULT NULL,
   `volume` varchar(45) DEFAULT NULL,
-  `comments` varchar(5120) DEFAULT NULL,
-  PRIMARY KEY (`specimenId`),
-  KEY `SamplePlateWellToBuffer` (`bufferId`),
-  KEY `SamplePlateWellToMacromolecule` (`macromoleculeId`),
-  KEY `SamplePlateWellToSamplePlatePosition` (`samplePlatePositionId`),
-  KEY `SamplePlateWellToSafetyLevel` (`safetyLevelId`),
-  KEY `SamplePlateWellToExperiment` (`experimentId`),
-  KEY `SampleToStockSolution` (`stockSolutionId`),
-  CONSTRAINT `SamplePlateWellToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateWellToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateWellToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateWellToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SamplePlateWellToSamplePlatePosition` FOREIGN KEY (`samplePlatePositionId`) REFERENCES `SamplePlatePosition` (`samplePlatePositionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `SampleToStockSolution` FOREIGN KEY (`stockSolutionId`) REFERENCES `StockSolution` (`stockSolutionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=120322 DEFAULT CHARSET=latin1;
+  `comments` varchar(5120) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `StockSolution`
+--
 
 CREATE TABLE `StockSolution` (
-  `stockSolutionId` int(10) NOT NULL AUTO_INCREMENT,
+  `stockSolutionId` int(10) NOT NULL,
   `proposalId` int(10) NOT NULL DEFAULT '-1',
   `bufferId` int(10) NOT NULL,
   `macromoleculeId` int(10) DEFAULT NULL,
   `instructionSetId` int(10) DEFAULT NULL,
-  `boxId` int(10) unsigned DEFAULT NULL,
+  `boxId` int(10) UNSIGNED DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `storageTemperature` varchar(55) DEFAULT NULL,
   `volume` varchar(55) DEFAULT NULL,
   `concentration` varchar(55) DEFAULT NULL,
-  `comments` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`stockSolutionId`),
-  KEY `StockSolutionToBuffer` (`bufferId`),
-  KEY `StockSolutionToMacromolecule` (`macromoleculeId`),
-  KEY `StockSolutionToInstructionSet` (`instructionSetId`),
-  CONSTRAINT `StockSolutionToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `StockSolutionToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `StockSolutionToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=latin1;
+  `comments` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Stoichiometry`
+--
 
 CREATE TABLE `Stoichiometry` (
-  `stoichiometryId` int(10) NOT NULL AUTO_INCREMENT,
+  `stoichiometryId` int(10) NOT NULL,
   `hostMacromoleculeId` int(10) NOT NULL,
   `macromoleculeId` int(10) NOT NULL,
-  `ratio` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`stoichiometryId`),
-  KEY `StoichiometryToHost` (`hostMacromoleculeId`),
-  KEY `StoichiometryToMacromolecule` (`macromoleculeId`),
-  CONSTRAINT `StoichiometryToHost` FOREIGN KEY (`hostMacromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `StoichiometryToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+  `ratio` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Structure`
+--
 
 CREATE TABLE `Structure` (
-  `structureId` int(10) NOT NULL AUTO_INCREMENT,
+  `structureId` int(10) NOT NULL,
   `macromoleculeId` int(10) DEFAULT NULL,
-  `crystalId` int(10) unsigned DEFAULT NULL,
-  `blSampleId` int(10) unsigned DEFAULT NULL,
+  `crystalId` int(10) UNSIGNED DEFAULT NULL,
+  `blSampleId` int(10) UNSIGNED DEFAULT NULL,
   `filePath` varchar(2048) DEFAULT NULL,
   `structureType` varchar(45) DEFAULT NULL,
   `fromResiduesBases` varchar(45) DEFAULT NULL,
@@ -2760,36 +3140,34 @@ CREATE TABLE `Structure` (
   `name` varchar(255) DEFAULT NULL,
   `symmetry` varchar(45) DEFAULT NULL,
   `multiplicity` varchar(45) DEFAULT NULL,
-  `groupName` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`structureId`),
-  KEY `StructureToMacromolecule` (`macromoleculeId`),
-  KEY `StructureToCrystal_idx` (`crystalId`),
-  KEY `StructureToBlSample_idx` (`blSampleId`),
-  CONSTRAINT `StructureToBlSample` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `StructureToCrystal` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `StructureToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=latin1;
+  `groupName` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SubstructureDetermination`
+--
 
 CREATE TABLE `SubstructureDetermination` (
-  `substructureDeterminationId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `phasingAnalysisId` int(11) unsigned NOT NULL COMMENT 'Related phasing analysis item',
-  `phasingProgramRunId` int(11) unsigned NOT NULL COMMENT 'Related program item',
-  `spaceGroupId` int(10) unsigned DEFAULT NULL COMMENT 'Related spaceGroup',
+  `substructureDeterminationId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `phasingAnalysisId` int(11) UNSIGNED NOT NULL COMMENT 'Related phasing analysis item',
+  `phasingProgramRunId` int(11) UNSIGNED NOT NULL COMMENT 'Related program item',
+  `spaceGroupId` int(10) UNSIGNED DEFAULT NULL COMMENT 'Related spaceGroup',
   `method` enum('SAD','MAD','SIR','SIRAS','MR','MIR','MIRAS','RIP','RIPAS') DEFAULT NULL COMMENT 'phasing method',
   `lowRes` double DEFAULT NULL,
   `highRes` double DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`substructureDeterminationId`),
-  KEY `SubstructureDetermination_FKIndex1` (`phasingAnalysisId`),
-  KEY `SubstructureDetermination_FKIndex2` (`phasingProgramRunId`),
-  KEY `SubstructureDetermination_FKIndex3` (`spaceGroupId`),
-  CONSTRAINT `SubstructureDetermination_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `SubstructureDetermination_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `SubstructureDetermination_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14495 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Subtraction`
+--
 
 CREATE TABLE `Subtraction` (
-  `subtractionId` int(10) NOT NULL AUTO_INCREMENT,
+  `subtractionId` int(10) NOT NULL,
   `dataCollectionId` int(10) NOT NULL,
   `rg` varchar(45) DEFAULT NULL,
   `rgStdev` varchar(45) DEFAULT NULL,
@@ -2815,77 +3193,1611 @@ CREATE TABLE `Subtraction` (
   `sampleOneDimensionalFiles` int(10) DEFAULT NULL,
   `bufferOnedimensionalFiles` int(10) DEFAULT NULL,
   `sampleAverageFilePath` varchar(255) DEFAULT NULL,
-  `bufferAverageFilePath` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`subtractionId`),
-  KEY `EdnaAnalysisToMeasurement` (`dataCollectionId`),
-  KEY `fk_Subtraction_1` (`sampleOneDimensionalFiles`),
-  KEY `fk_Subtraction_2` (`bufferOnedimensionalFiles`),
-  CONSTRAINT `EdnaAnalysisToMeasurement0` FOREIGN KEY (`dataCollectionId`) REFERENCES `SaxsDataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Subtraction_1` FOREIGN KEY (`sampleOneDimensionalFiles`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Subtraction_2` FOREIGN KEY (`bufferOnedimensionalFiles`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=62321 DEFAULT CHARSET=latin1;
+  `bufferAverageFilePath` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SubtractionToAbInitioModel`
+--
 
 CREATE TABLE `SubtractionToAbInitioModel` (
-  `subtractionToAbInitioModelId` int(10) NOT NULL AUTO_INCREMENT,
+  `subtractionToAbInitioModelId` int(10) NOT NULL,
   `abInitioId` int(10) DEFAULT NULL,
-  `subtractionId` int(10) DEFAULT NULL,
-  PRIMARY KEY (`subtractionToAbInitioModelId`),
-  KEY `substractionToAbInitioModelToAbinitioModel` (`abInitioId`),
-  KEY `ubstractionToSubstraction` (`subtractionId`),
-  CONSTRAINT `substractionToAbInitioModelToAbinitioModel` FOREIGN KEY (`abInitioId`) REFERENCES `AbInitioModel` (`abInitioModelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `substractionToSubstraction` FOREIGN KEY (`subtractionId`) REFERENCES `Subtraction` (`subtractionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=40654 DEFAULT CHARSET=latin1;
+  `subtractionId` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Superposition`
+--
 
 CREATE TABLE `Superposition` (
-  `superpositionId` int(11) NOT NULL AUTO_INCREMENT,
+  `superpositionId` int(11) NOT NULL,
   `subtractionId` int(11) NOT NULL,
   `abinitioModelPdbFilePath` varchar(255) DEFAULT NULL,
   `aprioriPdbFilePath` varchar(255) DEFAULT NULL,
   `alignedPdbFilePath` varchar(255) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  PRIMARY KEY (`superpositionId`),
-  KEY `fk_Superposition_1` (`subtractionId`)
+  `creationDate` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SW_onceToken`
+--
+
+CREATE TABLE `SW_onceToken` (
+  `onceTokenId` int(11) UNSIGNED NOT NULL,
+  `token` varchar(128) DEFAULT NULL,
+  `personId` int(10) UNSIGNED DEFAULT NULL,
+  `proposalId` int(10) UNSIGNED DEFAULT NULL,
+  `validity` varchar(200) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='One-time use tokens needed for token auth in order to grant access to file downloads and webcams (and some images)';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `UntrustedRegion`
+--
+
 CREATE TABLE `UntrustedRegion` (
-  `untrustedRegionId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `untrustedRegionId` int(11) NOT NULL COMMENT 'Primary key (auto-incremented)',
   `detectorId` int(11) NOT NULL,
   `x1` int(11) NOT NULL,
   `x2` int(11) NOT NULL,
   `y1` int(11) NOT NULL,
-  `y2` int(11) NOT NULL,
-  PRIMARY KEY (`untrustedRegionId`),
-  KEY `UntrustedRegion_FKIndex1` (`detectorId`),
-  CONSTRAINT `UntrustedRegion_ibfk_1` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `y2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Untrsuted region linked to a detector';
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `UserGroup`
+--
+
 CREATE TABLE `UserGroup` (
-  `userGroupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(31) NOT NULL,
-  PRIMARY KEY (`userGroupId`),
-  UNIQUE KEY `UserGroup_idx1` (`name`)
+  `userGroupId` int(11) UNSIGNED NOT NULL,
+  `name` varchar(31) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `UserGroup_has_Permission`
+--
 
 CREATE TABLE `UserGroup_has_Permission` (
-  `userGroupId` int(11) unsigned NOT NULL,
-  `permissionId` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`userGroupId`,`permissionId`),
-  KEY `UserGroup_has_Permission_fk2` (`permissionId`),
-  CONSTRAINT `UserGroup_has_Permission_fk1` FOREIGN KEY (`userGroupId`) REFERENCES `UserGroup` (`userGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `UserGroup_has_Permission_fk2` FOREIGN KEY (`permissionId`) REFERENCES `Permission` (`permissionId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `userGroupId` int(11) UNSIGNED NOT NULL,
+  `permissionId` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `UserGroup_has_Person`
+--
 
 CREATE TABLE `UserGroup_has_Person` (
-  `userGroupId` int(11) unsigned NOT NULL,
-  `personId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`userGroupId`,`personId`),
-  KEY `userGroup_has_Person_fk2` (`personId`),
-  CONSTRAINT `userGroup_has_Person_fk1` FOREIGN KEY (`userGroupId`) REFERENCES `UserGroup` (`userGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `userGroup_has_Person_fk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `userGroupId` int(11) UNSIGNED NOT NULL,
+  `personId` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `V_AnalysisInfo`
+-- (See below for the actual view)
+--
+CREATE TABLE `V_AnalysisInfo` (
+`experimentCreationDate` datetime
+,`timeStart` varchar(45)
+,`dataCollectionId` int(10)
+,`measurementId` int(10)
+,`proposalId` int(10) unsigned
+,`proposalCode` varchar(45)
+,`proposalNumber` varchar(45)
+,`priorityLevelId` int(10)
+,`code` varchar(100)
+,`exposureTemperature` varchar(45)
+,`transmission` varchar(45)
+,`measurementComments` varchar(512)
+,`experimentComments` varchar(512)
+,`experimentId` int(11)
+,`experimentType` varchar(128)
+,`conc` varchar(45)
+,`bufferAcronym` varchar(45)
+,`macromoleculeAcronym` varchar(45)
+,`bufferId` int(10)
+,`macromoleculeId` int(11)
+,`subtractedFilePath` varchar(255)
+,`rgGuinier` varchar(45)
+,`firstPointUsed` varchar(45)
+,`lastPointUsed` varchar(45)
+,`I0` varchar(45)
+,`isagregated` varchar(45)
+,`subtractionId` bigint(11)
+,`rgGnom` varchar(45)
+,`total` varchar(45)
+,`dmax` varchar(45)
+,`volume` varchar(45)
+,`i0stdev` varchar(45)
+,`quality` varchar(45)
+,`substractionCreationTime` datetime
+,`bufferBeforeMeasurementId` bigint(11)
+,`bufferAfterMeasurementId` bigint(11)
+,`bufferBeforeFramesMerged` varchar(45)
+,`bufferBeforeMergeId` bigint(11)
+,`bufferBeforeAverageFilePath` varchar(255)
+,`sampleMeasurementId` bigint(11)
+,`sampleMergeId` bigint(11)
+,`averageFilePath` varchar(255)
+,`framesMerge` varchar(45)
+,`framesCount` varchar(45)
+,`bufferAfterFramesMerged` varchar(45)
+,`bufferAfterMergeId` bigint(11)
+,`bufferAfterAverageFilePath` varchar(255)
+,`modelListId1` bigint(11)
+,`nsdFilePath` varchar(255)
+,`modelListId2` bigint(11)
+,`chi2RgFilePath` varchar(255)
+,`averagedModel` varchar(255)
+,`averagedModelId` bigint(11)
+,`rapidShapeDeterminationModel` varchar(255)
+,`rapidShapeDeterminationModelId` bigint(11)
+,`shapeDeterminationModel` varchar(255)
+,`shapeDeterminationModelId` bigint(11)
+,`abInitioModelId` bigint(11)
+,`comments` varchar(512)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection` (
+`dataCollectionId` int(11) unsigned
+,`dataCollectionGroupId` int(11)
+,`strategySubWedgeOrigId` int(10) unsigned
+,`detectorId` int(11)
+,`blSubSampleId` int(11) unsigned
+,`dataCollectionNumber` int(10) unsigned
+,`startTime` datetime
+,`endTime` datetime
+,`runStatus` varchar(45)
+,`axisStart` float
+,`axisEnd` float
+,`axisRange` float
+,`overlap` float
+,`numberOfImages` int(10) unsigned
+,`startImageNumber` int(10) unsigned
+,`numberOfPasses` int(10) unsigned
+,`exposureTime` float
+,`imageDirectory` varchar(255)
+,`imagePrefix` varchar(100)
+,`imageSuffix` varchar(45)
+,`fileTemplate` varchar(255)
+,`wavelength` float
+,`resolution` float
+,`detectorDistance` float
+,`xBeam` float
+,`yBeam` float
+,`xBeamPix` float
+,`yBeamPix` float
+,`comments` varchar(1024)
+,`printableForReport` tinyint(1) unsigned
+,`slitGapVertical` float
+,`slitGapHorizontal` float
+,`transmission` float
+,`synchrotronMode` varchar(20)
+,`xtalSnapshotFullPath1` varchar(255)
+,`xtalSnapshotFullPath2` varchar(255)
+,`xtalSnapshotFullPath3` varchar(255)
+,`xtalSnapshotFullPath4` varchar(255)
+,`rotationAxis` enum('Omega','Kappa','Phi')
+,`phiStart` float
+,`kappaStart` float
+,`omegaStart` float
+,`resolutionAtCorner` float
+,`detector2Theta` float
+,`undulatorGap1` float
+,`undulatorGap2` float
+,`undulatorGap3` float
+,`beamSizeAtSampleX` float
+,`beamSizeAtSampleY` float
+,`centeringMethod` varchar(255)
+,`averageTemperature` float
+,`actualCenteringPosition` varchar(255)
+,`beamShape` varchar(45)
+,`flux` double
+,`flux_end` double
+,`totalAbsorbedDose` double
+,`bestWilsonPlotPath` varchar(255)
+,`imageQualityIndicatorsPlotPath` varchar(512)
+,`imageQualityIndicatorsCSVPath` varchar(512)
+,`sessionId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`workflowId` int(11) unsigned
+,`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`autoProcScalingId` int(10) unsigned
+,`cell_a` float
+,`cell_b` float
+,`cell_c` float
+,`cell_alpha` float
+,`cell_beta` float
+,`cell_gamma` float
+,`anomalous` tinyint(1)
+,`scalingStatisticsType` enum('overall','innerShell','outerShell')
+,`resolutionLimitHigh` float
+,`resolutionLimitLow` float
+,`completeness` float
+,`AutoProc_spaceGroup` varchar(45)
+,`autoProcId` int(10) unsigned
+,`rMerge` float
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`AutoProcProgram_processingPrograms` varchar(255)
+,`AutoProcProgram_processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`AutoProcProgram_autoProcProgramId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_autoprocintegration`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_autoprocintegration` (
+`v_datacollection_summary_phasing_autoProcIntegrationId` int(10) unsigned
+,`v_datacollection_summary_phasing_dataCollectionId` int(11) unsigned
+,`v_datacollection_summary_phasing_cell_a` float
+,`v_datacollection_summary_phasing_cell_b` float
+,`v_datacollection_summary_phasing_cell_c` float
+,`v_datacollection_summary_phasing_cell_alpha` float
+,`v_datacollection_summary_phasing_cell_beta` float
+,`v_datacollection_summary_phasing_cell_gamma` float
+,`v_datacollection_summary_phasing_anomalous` tinyint(1)
+,`v_datacollection_summary_phasing_autoproc_space_group` varchar(45)
+,`v_datacollection_summary_phasing_autoproc_autoprocId` int(10) unsigned
+,`v_datacollection_summary_phasing_autoProcScalingId` int(10) unsigned
+,`v_datacollection_processingPrograms` varchar(255)
+,`v_datacollection_summary_phasing_autoProcProgramId` int(10) unsigned
+,`v_datacollection_processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`v_datacollection_processingStartTime` datetime
+,`v_datacollection_processingEndTime` datetime
+,`v_datacollection_summary_session_sessionId` int(10) unsigned
+,`v_datacollection_summary_session_proposalId` int(10) unsigned
+,`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`PhasingStep_phasing_phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT')
+,`SpaceGroup_spaceGroupShortName` varchar(45)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_acronym` varchar(45)
+,`BLSample_name` varchar(100)
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_imagePrefix` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_phasing`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_phasing` (
+`phasingStepId` int(10) unsigned
+,`previousPhasingStepId` int(10) unsigned
+,`phasingAnalysisId` int(10) unsigned
+,`autoProcIntegrationId` int(10) unsigned
+,`dataCollectionId` int(11) unsigned
+,`anomalous` tinyint(1)
+,`spaceGroup` varchar(45)
+,`autoProcId` int(10) unsigned
+,`phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT')
+,`method` varchar(45)
+,`solventContent` varchar(45)
+,`enantiomorph` varchar(45)
+,`lowRes` varchar(45)
+,`highRes` varchar(45)
+,`autoProcScalingId` int(10) unsigned
+,`spaceGroupShortName` varchar(45)
+,`processingPrograms` varchar(255)
+,`processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`phasingPrograms` varchar(255)
+,`phasingStatus` tinyint(1)
+,`phasingStartTime` datetime
+,`phasingEndTime` datetime
+,`sessionId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`name` varchar(100)
+,`code` varchar(45)
+,`acronym` varchar(45)
+,`proteinId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_phasing_program_run`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_phasing_program_run` (
+`phasingStepId` int(10) unsigned
+,`previousPhasingStepId` int(10) unsigned
+,`phasingAnalysisId` int(10) unsigned
+,`autoProcIntegrationId` int(10) unsigned
+,`dataCollectionId` int(11) unsigned
+,`autoProcId` int(10) unsigned
+,`phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT')
+,`method` varchar(45)
+,`autoProcScalingId` int(10) unsigned
+,`spaceGroupShortName` varchar(45)
+,`phasingPrograms` varchar(255)
+,`phasingStatus` tinyint(1)
+,`sessionId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`name` varchar(100)
+,`code` varchar(45)
+,`acronym` varchar(45)
+,`proteinId` int(10) unsigned
+,`phasingProgramAttachmentId` int(11) unsigned
+,`fileType` enum('DSIGMA_RESOLUTION','OCCUPANCY_SITENUMBER','CONTRAST_CYCLE','CCALL_CCWEAK','IMAGE','Map','Logfile','PDB','CSV','INS','RES','TXT')
+,`fileName` varchar(45)
+,`filePath` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_summary` (
+`DataCollectionGroup_dataCollectionGroupId` int(11)
+,`DataCollectionGroup_blSampleId` int(10) unsigned
+,`DataCollectionGroup_sessionId` int(10) unsigned
+,`DataCollectionGroup_workflowId` int(11) unsigned
+,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_startTime` datetime
+,`DataCollectionGroup_endTime` datetime
+,`DataCollectionGroup_comments` varchar(1024)
+,`DataCollectionGroup_actualSampleBarcode` varchar(45)
+,`DataCollectionGroup_xtalSnapshotFullPath` varchar(255)
+,`DataCollectionGroup_crystalClass` varchar(20)
+,`BLSample_blSampleId` int(10) unsigned
+,`BLSample_crystalId` int(10) unsigned
+,`BLSample_name` varchar(100)
+,`BLSample_code` varchar(45)
+,`BLSample_location` varchar(45)
+,`BLSample_blSampleStatus` varchar(20)
+,`BLSample_comments` varchar(1024)
+,`Container_containerId` int(10) unsigned
+,`BLSession_sessionId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+,`BLSession_protectedData` varchar(1024)
+,`Dewar_dewarId` int(10) unsigned
+,`Dewar_code` varchar(45)
+,`Dewar_storageLocation` varchar(45)
+,`Container_containerType` varchar(20)
+,`Container_code` varchar(45)
+,`Container_capacity` int(10) unsigned
+,`Container_beamlineLocation` varchar(20)
+,`Container_sampleChangerLocation` varchar(20)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_name` varchar(255)
+,`Protein_acronym` varchar(45)
+,`DataCollection_dataCollectionId` int(11) unsigned
+,`DataCollection_dataCollectionGroupId` int(11)
+,`DataCollection_startTime` datetime
+,`DataCollection_endTime` datetime
+,`DataCollection_runStatus` varchar(45)
+,`DataCollection_numberOfImages` int(10) unsigned
+,`DataCollection_startImageNumber` int(10) unsigned
+,`DataCollection_numberOfPasses` int(10) unsigned
+,`DataCollection_exposureTime` float
+,`DataCollection_imageDirectory` varchar(255)
+,`DataCollection_wavelength` float
+,`DataCollection_resolution` float
+,`DataCollection_detectorDistance` float
+,`DataCollection_xBeam` float
+,`transmission` float
+,`DataCollection_yBeam` float
+,`DataCollection_imagePrefix` varchar(100)
+,`DataCollection_comments` varchar(1024)
+,`DataCollection_xtalSnapshotFullPath1` varchar(255)
+,`DataCollection_xtalSnapshotFullPath2` varchar(255)
+,`DataCollection_xtalSnapshotFullPath3` varchar(255)
+,`DataCollection_xtalSnapshotFullPath4` varchar(255)
+,`DataCollection_phiStart` float
+,`DataCollection_kappaStart` float
+,`DataCollection_omegaStart` float
+,`DataCollection_flux` double
+,`DataCollection_flux_end` double
+,`DataCollection_resolutionAtCorner` float
+,`DataCollection_bestWilsonPlotPath` varchar(255)
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_axisRange` float
+,`DataCollection_axisStart` float
+,`DataCollection_axisEnd` float
+,`DataCollection_rotationAxis` enum('Omega','Kappa','Phi')
+,`DataCollection_undulatorGap1` float
+,`DataCollection_undulatorGap2` float
+,`DataCollection_undulatorGap3` float
+,`beamSizeAtSampleX` float
+,`beamSizeAtSampleY` float
+,`DataCollection_slitGapVertical` float
+,`DataCollection_slitGapHorizontal` float
+,`DataCollection_beamShape` varchar(45)
+,`DataCollection_voltage` float
+,`DataCollection_xBeamPix` float
+,`Workflow_workflowTitle` varchar(255)
+,`Workflow_workflowType` enum('Characterisation','Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC','EnergyInterleavedMAD','MXPressF','MXPressH','MXPressP','MXPressP_SAD','MXPressR','MXPressR_180','MXPressR_dehydration','MeshAndCollect','MeshAndCollectFromFile')
+,`Workflow_status` varchar(255)
+,`Workflow_workflowId` int(11) unsigned
+,`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`autoProcScalingId` int(10) unsigned
+,`cell_a` float
+,`cell_b` float
+,`cell_c` float
+,`cell_alpha` float
+,`cell_beta` float
+,`cell_gamma` float
+,`anomalous` tinyint(1)
+,`scalingStatisticsType` enum('overall','innerShell','outerShell')
+,`resolutionLimitHigh` float
+,`resolutionLimitLow` float
+,`completeness` float
+,`AutoProc_spaceGroup` varchar(45)
+,`autoProcId` int(10) unsigned
+,`rMerge` float
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`AutoProcProgram_processingPrograms` varchar(255)
+,`AutoProcProgram_processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`AutoProcProgram_autoProcProgramId` int(10) unsigned
+,`Screening_screeningId` int(10) unsigned
+,`Screening_dataCollectionId` int(11) unsigned
+,`Screening_dataCollectionGroupId` int(11)
+,`ScreeningOutput_strategySuccess` tinyint(1)
+,`ScreeningOutput_indexingSuccess` tinyint(1)
+,`ScreeningOutput_rankingResolution` double
+,`ScreeningOutput_mosaicity` float
+,`ScreeningOutputLattice_spaceGroup` varchar(45)
+,`ScreeningOutputLattice_unitCell_a` float
+,`ScreeningOutputLattice_unitCell_b` float
+,`ScreeningOutputLattice_unitCell_c` float
+,`ScreeningOutputLattice_unitCell_alpha` float
+,`ScreeningOutputLattice_unitCell_beta` float
+,`ScreeningOutputLattice_unitCell_gamma` float
+,`ScreeningOutput_totalExposureTime` double
+,`ScreeningOutput_totalRotationRange` double
+,`ScreeningOutput_totalNumberOfImages` int(11)
+,`ScreeningStrategySubWedge_exposureTime` float
+,`ScreeningStrategySubWedge_transmission` float
+,`ScreeningStrategySubWedge_oscillationRange` float
+,`ScreeningStrategySubWedge_numberOfImages` int(10) unsigned
+,`ScreeningStrategySubWedge_multiplicity` float
+,`ScreeningStrategySubWedge_completeness` float
+,`ScreeningStrategySubWedge_axisStart` float
+,`Shipping_shippingId` int(10) unsigned
+,`Shipping_shippingName` varchar(45)
+,`Shipping_shippingStatus` varchar(45)
+,`diffractionPlanId` int(10) unsigned
+,`experimentKind` enum('Default','MXPressE','MXPressF','MXPressO','MXPressP','MXPressP_SAD','MXPressI','MXPressE_SAD','MXScore','MXPressM','MAD','SAD','Fixed','Ligand binding','Refinement','OSC','MAD - Inverse Beam','SAD - Inverse Beam')
+,`observedResolution` float
+,`minimalResolution` float
+,`exposureTime` float
+,`oscillationRange` float
+,`maximalResolution` float
+,`screeningResolution` float
+,`radiationSensitivity` float
+,`anomalousScatterer` varchar(255)
+,`preferredBeamSizeX` float
+,`preferredBeamSizeY` float
+,`preferredBeamDiameter` float
+,`DiffractipnPlan_comments` varchar(1024)
+,`aimedCompleteness` double
+,`aimedIOverSigmaAtHighestRes` double
+,`aimedMultiplicity` double
+,`aimedResolution` double
+,`anomalousData` tinyint(1)
+,`complexity` varchar(45)
+,`estimateRadiationDamage` tinyint(1)
+,`forcedSpaceGroup` varchar(45)
+,`requiredCompleteness` double
+,`requiredMultiplicity` double
+,`requiredResolution` double
+,`strategyOption` varchar(45)
+,`kappaStrategyOption` varchar(45)
+,`numberOfPositions` int(11)
+,`minDimAccrossSpindleAxis` double
+,`maxDimAccrossSpindleAxis` double
+,`radiationSensitivityBeta` double
+,`radiationSensitivityGamma` double
+,`minOscWidth` float
+,`Detector_detectorType` varchar(255)
+,`Detector_detectorManufacturer` varchar(255)
+,`Detector_detectorModel` varchar(255)
+,`Detector_detectorPixelSizeHorizontal` float
+,`Detector_detectorPixelSizeVertical` float
+,`Detector_detectorSerialNumber` varchar(30)
+,`Detector_detectorDistanceMin` double
+,`Detector_detectorDistanceMax` double
+,`Detector_trustedPixelValueRangeLower` double
+,`Detector_trustedPixelValueRangeUpper` double
+,`Detector_sensorThickness` float
+,`Detector_overload` float
+,`Detector_XGeoCorr` varchar(255)
+,`Detector_YGeoCorr` varchar(255)
+,`Detector_detectorMode` varchar(255)
+,`BeamLineSetup_undulatorType1` varchar(45)
+,`BeamLineSetup_undulatorType2` varchar(45)
+,`BeamLineSetup_undulatorType3` varchar(45)
+,`BeamLineSetup_synchrotronName` varchar(255)
+,`BeamLineSetup_synchrotronMode` varchar(255)
+,`BeamLineSetup_polarisation` float
+,`BeamLineSetup_focusingOptic` varchar(255)
+,`BeamLineSetup_beamDivergenceHorizontal` float
+,`BeamLineSetup_beamDivergenceVertical` float
+,`BeamLineSetup_monochromatorType` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_autoprocintegration`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_summary_autoprocintegration` (
+`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`cell_a` float
+,`cell_b` float
+,`cell_c` float
+,`cell_alpha` float
+,`cell_beta` float
+,`cell_gamma` float
+,`anomalous` tinyint(1)
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`v_datacollection_summary_autoprocintegration_processingPrograms` varchar(255)
+,`AutoProcProgram_autoProcProgramId` int(10) unsigned
+,`v_datacollection_summary_autoprocintegration_processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`AutoProcIntegration_phasing_dataCollectionId` int(11) unsigned
+,`PhasingStep_phasing_phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT')
+,`SpaceGroup_spaceGroupShortName` varchar(45)
+,`autoProcId` int(10) unsigned
+,`AutoProc_spaceGroup` varchar(45)
+,`scalingStatisticsType` enum('overall','innerShell','outerShell')
+,`resolutionLimitHigh` float
+,`resolutionLimitLow` float
+,`rMerge` float
+,`completeness` float
+,`autoProcScalingId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_datacollectiongroup`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_summary_datacollectiongroup` (
+`DataCollectionGroup_dataCollectionGroupId` int(11)
+,`DataCollectionGroup_blSampleId` int(10) unsigned
+,`DataCollectionGroup_sessionId` int(10) unsigned
+,`DataCollectionGroup_workflowId` int(11) unsigned
+,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_startTime` datetime
+,`DataCollectionGroup_endTime` datetime
+,`DataCollectionGroup_comments` varchar(1024)
+,`DataCollectionGroup_actualSampleBarcode` varchar(45)
+,`DataCollectionGroup_xtalSnapshotFullPath` varchar(255)
+,`BLSample_blSampleId` int(10) unsigned
+,`BLSample_crystalId` int(10) unsigned
+,`BLSample_name` varchar(100)
+,`BLSample_code` varchar(45)
+,`BLSession_sessionId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+,`BLSession_protectedData` varchar(1024)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_name` varchar(255)
+,`Protein_acronym` varchar(45)
+,`DataCollection_dataCollectionId` int(11) unsigned
+,`DataCollection_dataCollectionGroupId` int(11)
+,`DataCollection_startTime` datetime
+,`DataCollection_endTime` datetime
+,`DataCollection_runStatus` varchar(45)
+,`DataCollection_numberOfImages` int(10) unsigned
+,`DataCollection_startImageNumber` int(10) unsigned
+,`DataCollection_numberOfPasses` int(10) unsigned
+,`DataCollection_exposureTime` float
+,`DataCollection_imageDirectory` varchar(255)
+,`DataCollection_wavelength` float
+,`DataCollection_resolution` float
+,`DataCollection_detectorDistance` float
+,`DataCollection_xBeam` float
+,`DataCollection_yBeam` float
+,`DataCollection_comments` varchar(1024)
+,`DataCollection_xtalSnapshotFullPath1` varchar(255)
+,`DataCollection_xtalSnapshotFullPath2` varchar(255)
+,`DataCollection_xtalSnapshotFullPath3` varchar(255)
+,`DataCollection_xtalSnapshotFullPath4` varchar(255)
+,`DataCollection_phiStart` float
+,`DataCollection_kappaStart` float
+,`DataCollection_omegaStart` float
+,`DataCollection_resolutionAtCorner` float
+,`DataCollection_bestWilsonPlotPath` varchar(255)
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_axisRange` float
+,`DataCollection_axisStart` float
+,`DataCollection_axisEnd` float
+,`Workflow_workflowTitle` varchar(255)
+,`Workflow_workflowType` enum('Characterisation','Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC','EnergyInterleavedMAD','MXPressF','MXPressH','MXPressP','MXPressP_SAD','MXPressR','MXPressR_180','MXPressR_dehydration','MeshAndCollect','MeshAndCollectFromFile')
+,`Workflow_status` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_phasing`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_summary_phasing` (
+`v_datacollection_summary_phasing_autoProcIntegrationId` int(10) unsigned
+,`v_datacollection_summary_phasing_dataCollectionId` int(11) unsigned
+,`v_datacollection_summary_phasing_cell_a` float
+,`v_datacollection_summary_phasing_cell_b` float
+,`v_datacollection_summary_phasing_cell_c` float
+,`v_datacollection_summary_phasing_cell_alpha` float
+,`v_datacollection_summary_phasing_cell_beta` float
+,`v_datacollection_summary_phasing_cell_gamma` float
+,`v_datacollection_summary_phasing_anomalous` tinyint(1)
+,`v_datacollection_summary_phasing_autoproc_space_group` varchar(45)
+,`v_datacollection_summary_phasing_autoproc_autoprocId` int(10) unsigned
+,`v_datacollection_summary_phasing_autoProcScalingId` int(10) unsigned
+,`v_datacollection_summary_phasing_processingPrograms` varchar(255)
+,`v_datacollection_summary_phasing_autoProcProgramId` int(10) unsigned
+,`v_datacollection_summary_phasing_processingStatus` enum('RUNNING','FAILED','SUCCESS','0','1')
+,`v_datacollection_summary_session_sessionId` int(10) unsigned
+,`v_datacollection_summary_session_proposalId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_datacollection_summary_screening`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_datacollection_summary_screening` (
+`Screening_screeningId` int(10) unsigned
+,`Screening_dataCollectionId` int(11) unsigned
+,`Screening_dataCollectionGroupId` int(11)
+,`ScreeningOutput_strategySuccess` tinyint(1)
+,`ScreeningOutput_indexingSuccess` tinyint(1)
+,`ScreeningOutput_rankingResolution` double
+,`ScreeningOutput_mosaicityEstimated` tinyint(1)
+,`ScreeningOutput_mosaicity` float
+,`ScreeningOutput_totalExposureTime` double
+,`ScreeningOutput_totalRotationRange` double
+,`ScreeningOutput_totalNumberOfImages` int(11)
+,`ScreeningOutputLattice_spaceGroup` varchar(45)
+,`ScreeningOutputLattice_unitCell_a` float
+,`ScreeningOutputLattice_unitCell_b` float
+,`ScreeningOutputLattice_unitCell_c` float
+,`ScreeningOutputLattice_unitCell_alpha` float
+,`ScreeningOutputLattice_unitCell_beta` float
+,`ScreeningOutputLattice_unitCell_gamma` float
+,`ScreeningStrategySubWedge_exposureTime` float
+,`ScreeningStrategySubWedge_transmission` float
+,`ScreeningStrategySubWedge_oscillationRange` float
+,`ScreeningStrategySubWedge_numberOfImages` int(10) unsigned
+,`ScreeningStrategySubWedge_multiplicity` float
+,`ScreeningStrategySubWedge_completeness` float
+,`ScreeningStrategySubWedge_axisStart` float
+,`ScreeningStrategySubWedge_axisEnd` float
+,`ScreeningStrategySubWedge_rotationAxis` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewar`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewar` (
+`proposalId` int(10) unsigned
+,`shippingId` int(10) unsigned
+,`shippingName` varchar(45)
+,`dewarId` int(10) unsigned
+,`dewarName` varchar(45)
+,`dewarStatus` varchar(45)
+,`proposalCode` varchar(45)
+,`proposalNumber` varchar(45)
+,`creationDate` datetime
+,`shippingType` varchar(45)
+,`barCode` varchar(45)
+,`shippingStatus` varchar(45)
+,`beamLineName` varchar(45)
+,`nbEvents` bigint(21)
+,`storesin` bigint(21)
+,`nbSamples` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarBeamline`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarBeamline` (
+`beamLineName` varchar(45)
+,`COUNT(*)` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarBeamlineByWeek`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarBeamlineByWeek` (
+`Week` varchar(23)
+,`ID14` bigint(21)
+,`ID23` bigint(21)
+,`ID29` bigint(21)
+,`BM14` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarByWeek`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarByWeek` (
+`Week` varchar(23)
+,`Dewars Tracked` bigint(21)
+,`Dewars Non-Tracked` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarByWeekTotal`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarByWeekTotal` (
+`Week` varchar(23)
+,`Dewars Tracked` bigint(21)
+,`Dewars Non-Tracked` bigint(21)
+,`Total` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarList`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarList` (
+`proposal` varchar(90)
+,`shippingName` varchar(45)
+,`dewarName` varchar(45)
+,`barCode` varchar(45)
+,`creationDate` varchar(10)
+,`shippingType` varchar(45)
+,`nbEvents` bigint(21)
+,`dewarStatus` varchar(45)
+,`shippingStatus` varchar(45)
+,`nbSamples` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarProposalCode`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarProposalCode` (
+`proposalCode` varchar(45)
+,`COUNT(*)` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewarProposalCodeByWeek`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewarProposalCodeByWeek` (
+`Week` varchar(23)
+,`MX` bigint(21)
+,`FX` bigint(21)
+,`BM14U` bigint(21)
+,`BM161` bigint(21)
+,`BM162` bigint(21)
+,`Others` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_dewar_summary`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_dewar_summary` (
+`shippingName` varchar(45)
+,`deliveryAgent_agentName` varchar(45)
+,`deliveryAgent_shippingDate` date
+,`deliveryAgent_deliveryDate` date
+,`deliveryAgent_agentCode` varchar(45)
+,`deliveryAgent_flightCode` varchar(45)
+,`shippingStatus` varchar(45)
+,`bltimeStamp` datetime
+,`laboratoryId` int(10) unsigned
+,`isStorageShipping` tinyint(1)
+,`creationDate` datetime
+,`Shipping_comments` varchar(255)
+,`sendingLabContactId` int(10) unsigned
+,`returnLabContactId` int(10) unsigned
+,`returnCourier` varchar(45)
+,`dateOfShippingToUser` datetime
+,`shippingType` varchar(45)
+,`dewarId` int(10) unsigned
+,`shippingId` int(10) unsigned
+,`dewarCode` varchar(45)
+,`comments` tinytext
+,`storageLocation` varchar(45)
+,`dewarStatus` varchar(45)
+,`isStorageDewar` tinyint(1)
+,`barCode` varchar(45)
+,`firstExperimentId` int(10) unsigned
+,`customsValue` int(11) unsigned
+,`transportValue` int(11) unsigned
+,`trackingNumberToSynchrotron` varchar(30)
+,`trackingNumberFromSynchrotron` varchar(30)
+,`type` enum('Dewar','Toolbox')
+,`isReimbursed` tinyint(1)
+,`sessionId` int(10) unsigned
+,`beamlineName` varchar(45)
+,`sessionStartDate` datetime
+,`sessionEndDate` datetime
+,`beamLineOperator` varchar(255)
+,`nbReimbDewars` int(10)
+,`proposalId` int(10) unsigned
+,`containerId` int(10) unsigned
+,`containerType` varchar(20)
+,`capacity` int(10) unsigned
+,`beamlineLocation` varchar(20)
+,`sampleChangerLocation` varchar(20)
+,`containerStatus` varchar(45)
+,`containerCode` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_em_movie`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_em_movie` (
+`Movie_movieId` int(11)
+,`Movie_dataCollectionId` int(11) unsigned
+,`Movie_movieNumber` int(11)
+,`Movie_movieFullPath` varchar(255)
+,`Movie_positionX` varchar(45)
+,`Movie_positionY` varchar(45)
+,`Movie_micrographFullPath` varchar(255)
+,`Movie_micrographSnapshotFullPath` varchar(255)
+,`Movie_xmlMetaDataFullPath` varchar(255)
+,`Movie_dosePerImage` varchar(45)
+,`Movie_createdTimeStamp` timestamp
+,`MotionCorrection_motionCorrectionId` int(11)
+,`MotionCorrection_movieId` int(11)
+,`MotionCorrection_firstFrame` varchar(45)
+,`MotionCorrection_lastFrame` varchar(45)
+,`MotionCorrection_dosePerFrame` varchar(45)
+,`MotionCorrection_doseWeight` varchar(45)
+,`MotionCorrection_totalMotion` varchar(45)
+,`MotionCorrection_averageMotionPerFrame` varchar(45)
+,`MotionCorrection_driftPlotFullPath` varchar(512)
+,`MotionCorrection_micrographFullPath` varchar(512)
+,`MotionCorrection_micrographSnapshotFullPath` varchar(512)
+,`MotionCorrection_correctedDoseMicrographFullPath` varchar(512)
+,`MotionCorrection_patchesUsed` varchar(45)
+,`MotionCorrection_logFileFullPath` varchar(512)
+,`CTF_CTFid` int(11)
+,`CTF_motionCorrectionId` int(11)
+,`CTF_spectraImageThumbnailFullPath` varchar(512)
+,`CTF_spectraImageFullPath` varchar(512)
+,`CTF_defocusU` varchar(45)
+,`CTF_defocusV` varchar(45)
+,`CTF_angle` varchar(45)
+,`CTF_crossCorrelationCoefficient` varchar(45)
+,`CTF_resolutionLimit` varchar(45)
+,`CTF_estimatedBfactor` varchar(45)
+,`CTF_logFilePath` varchar(512)
+,`CTF_createdTimeStamp` timestamp
+,`DataCollection_xBeamPix` float
+,`Proposal_proposalId` int(10) unsigned
+,`BLSession_sessionId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_em_stats`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_em_stats` (
+`proposalId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`imageDirectory` varchar(255)
+,`movieId` int(11)
+,`createdTimeStamp` timestamp
+,`motionCorrectionId` int(11)
+,`dataCollectionId` int(11) unsigned
+,`totalMotion` varchar(45)
+,`averageMotionPerFrame` varchar(45)
+,`lastFrame` varchar(45)
+,`dosePerFrame` varchar(45)
+,`defocusU` varchar(45)
+,`defocusV` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_energyScan`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_energyScan` (
+`energyScanId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`fluorescenceDetector` varchar(255)
+,`scanFileFullPath` varchar(255)
+,`choochFileFullPath` varchar(255)
+,`jpegChoochFileFullPath` varchar(255)
+,`element` varchar(45)
+,`startEnergy` float
+,`endEnergy` float
+,`transmissionFactor` float
+,`exposureTime` float
+,`synchrotronCurrent` float
+,`temperature` float
+,`peakEnergy` float
+,`peakFPrime` float
+,`peakFDoublePrime` float
+,`inflectionEnergy` float
+,`inflectionFPrime` float
+,`inflectionFDoublePrime` float
+,`xrayDose` float
+,`startTime` datetime
+,`endTime` datetime
+,`edgeEnergy` varchar(255)
+,`filename` varchar(255)
+,`beamSizeVertical` float
+,`beamSizeHorizontal` float
+,`crystalClass` varchar(20)
+,`comments` varchar(1024)
+,`flux` double
+,`flux_end` double
+,`BLSample_sampleId` int(10) unsigned
+,`name` varchar(100)
+,`code` varchar(45)
+,`acronym` varchar(45)
+,`BLSession_proposalId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_hour`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_hour` (
+`num` varchar(18)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_Log4Stat`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_Log4Stat` (
+`id` int(11)
+,`priority` varchar(15)
+,`timestamp` datetime
+,`msg` varchar(255)
+,`detail` varchar(255)
+,`value` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_logonByHour`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_logonByHour` (
+`Hour` varchar(7)
+,`Distinct logins` bigint(21)
+,`Total logins` bigint(22)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_logonByMonthDay`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_logonByMonthDay` (
+`Day` varchar(5)
+,`Distinct logins` bigint(21)
+,`Total logins` bigint(22)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_logonByWeek`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_logonByWeek` (
+`Week` varchar(23)
+,`Distinct logins` bigint(21)
+,`Total logins` bigint(22)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_logonByWeekDay`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_logonByWeekDay` (
+`Day` varchar(64)
+,`Distinct logins` bigint(21)
+,`Total logins` bigint(22)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_monthDay`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_monthDay` (
+`num` varchar(10)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_mx_autoprocessing_stats`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_mx_autoprocessing_stats` (
+`autoProcScalingStatisticsId` int(10) unsigned
+,`autoProcScalingId` int(10) unsigned
+,`scalingStatisticsType` enum('overall','innerShell','outerShell')
+,`resolutionLimitLow` float
+,`resolutionLimitHigh` float
+,`rMerge` float
+,`rMeasWithinIPlusIMinus` float
+,`rMeasAllIPlusIMinus` float
+,`rPimWithinIPlusIMinus` float
+,`rPimAllIPlusIMinus` float
+,`fractionalPartialBias` float
+,`nTotalObservations` int(10)
+,`nTotalUniqueObservations` int(10)
+,`meanIOverSigI` float
+,`completeness` float
+,`multiplicity` float
+,`anomalousCompleteness` float
+,`anomalousMultiplicity` float
+,`recordTimeStamp` datetime
+,`anomalous` tinyint(1)
+,`ccHalf` float
+,`ccAno` float
+,`sigAno` varchar(45)
+,`ISA` varchar(45)
+,`dataCollectionId` int(11) unsigned
+,`strategySubWedgeOrigId` int(10) unsigned
+,`detectorId` int(11)
+,`blSubSampleId` int(11) unsigned
+,`dataCollectionNumber` int(10) unsigned
+,`startTime` datetime
+,`endTime` datetime
+,`sessionId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`beamLineName` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_mx_sample`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_mx_sample` (
+`BLSample_blSampleId` int(10) unsigned
+,`BLSample_diffractionPlanId` int(10) unsigned
+,`BLSample_crystalId` int(10) unsigned
+,`BLSample_containerId` int(10) unsigned
+,`BLSample_name` varchar(100)
+,`BLSample_code` varchar(45)
+,`BLSample_location` varchar(45)
+,`BLSample_holderLength` double
+,`BLSample_loopLength` double
+,`BLSample_loopType` varchar(45)
+,`BLSample_wireWidth` double
+,`BLSample_comments` varchar(1024)
+,`BLSample_completionStage` varchar(45)
+,`BLSample_structureStage` varchar(45)
+,`BLSample_publicationStage` varchar(45)
+,`BLSample_publicationComments` varchar(255)
+,`BLSample_blSampleStatus` varchar(20)
+,`BLSample_isInSampleChanger` tinyint(1)
+,`BLSample_lastKnownCenteringPosition` varchar(255)
+,`BLSample_recordTimeStamp` timestamp
+,`BLSample_SMILES` varchar(400)
+,`Protein_proteinId` int(10) unsigned
+,`Protein_name` varchar(255)
+,`Protein_acronym` varchar(45)
+,`Protein_proteinType` varchar(45)
+,`Protein_proposalId` int(10) unsigned
+,`Person_personId` int(10) unsigned
+,`Person_familyName` varchar(100)
+,`Person_givenName` varchar(45)
+,`Person_emailAddress` varchar(60)
+,`Container_containerId` int(10) unsigned
+,`Container_code` varchar(45)
+,`Container_containerType` varchar(20)
+,`Container_containerStatus` varchar(45)
+,`Container_beamlineLocation` varchar(20)
+,`Container_sampleChangerLocation` varchar(20)
+,`Dewar_code` varchar(45)
+,`Dewar_dewarId` int(10) unsigned
+,`Dewar_storageLocation` varchar(45)
+,`Dewar_dewarStatus` varchar(45)
+,`Dewar_barCode` varchar(45)
+,`Shipping_shippingId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`BLSession_startDate` datetime
+,`BLSession_beamLineName` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_phasing`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_phasing` (
+`BLSample_blSampleId` int(10) unsigned
+,`AutoProcIntegration_autoProcIntegrationId` int(10) unsigned
+,`AutoProcIntegration_dataCollectionId` int(11) unsigned
+,`AutoProcIntegration_autoProcProgramId` int(10) unsigned
+,`AutoProcIntegration_startImageNumber` int(10) unsigned
+,`AutoProcIntegration_endImageNumber` int(10) unsigned
+,`AutoProcIntegration_refinedDetectorDistance` float
+,`AutoProcIntegration_refinedXBeam` float
+,`AutoProcIntegration_refinedYBeam` float
+,`AutoProcIntegration_rotationAxisX` float
+,`AutoProcIntegration_rotationAxisY` float
+,`AutoProcIntegration_rotationAxisZ` float
+,`AutoProcIntegration_beamVectorX` float
+,`AutoProcIntegration_beamVectorY` float
+,`AutoProcIntegration_beamVectorZ` float
+,`AutoProcIntegration_cell_a` float
+,`AutoProcIntegration_cell_b` float
+,`AutoProcIntegration_cell_c` float
+,`AutoProcIntegration_cell_alpha` float
+,`AutoProcIntegration_cell_beta` float
+,`AutoProcIntegration_cell_gamma` float
+,`AutoProcIntegration_recordTimeStamp` datetime
+,`AutoProcIntegration_anomalous` tinyint(1)
+,`SpaceGroup_spaceGroupId` int(10) unsigned
+,`SpaceGroup_geometryClassnameId` int(11) unsigned
+,`SpaceGroup_spaceGroupNumber` int(10) unsigned
+,`SpaceGroup_spaceGroupShortName` varchar(45)
+,`SpaceGroup_spaceGroupName` varchar(45)
+,`SpaceGroup_bravaisLattice` varchar(45)
+,`SpaceGroup_bravaisLatticeName` varchar(45)
+,`SpaceGroup_pointGroup` varchar(45)
+,`SpaceGroup_MX_used` tinyint(1)
+,`PhasingStep_phasingStepId` int(10) unsigned
+,`PhasingStep_previousPhasingStepId` int(10) unsigned
+,`PhasingStep_programRunId` int(10) unsigned
+,`PhasingStep_spaceGroupId` int(10) unsigned
+,`PhasingStep_autoProcScalingId` int(10) unsigned
+,`PhasingStep_phasingAnalysisId` int(10) unsigned
+,`PhasingStep_phasingStepType` enum('PREPARE','SUBSTRUCTUREDETERMINATION','PHASING','MODELBUILDING','REFINEMENT','LIGAND_FIT')
+,`PhasingStep_method` varchar(45)
+,`PhasingStep_solventContent` varchar(45)
+,`PhasingStep_enantiomorph` varchar(45)
+,`PhasingStep_lowRes` varchar(45)
+,`PhasingStep_highRes` varchar(45)
+,`PhasingStep_recordTimeStamp` timestamp
+,`DataCollection_dataCollectionId` int(11) unsigned
+,`DataCollection_dataCollectionGroupId` int(11)
+,`DataCollection_strategySubWedgeOrigId` int(10) unsigned
+,`DataCollection_detectorId` int(11)
+,`DataCollection_blSubSampleId` int(11) unsigned
+,`DataCollection_dataCollectionNumber` int(10) unsigned
+,`DataCollection_startTime` datetime
+,`DataCollection_endTime` datetime
+,`DataCollection_runStatus` varchar(45)
+,`DataCollection_axisStart` float
+,`DataCollection_axisEnd` float
+,`DataCollection_axisRange` float
+,`DataCollection_overlap` float
+,`DataCollection_numberOfImages` int(10) unsigned
+,`DataCollection_startImageNumber` int(10) unsigned
+,`DataCollection_numberOfPasses` int(10) unsigned
+,`DataCollection_exposureTime` float
+,`DataCollection_imageDirectory` varchar(255)
+,`DataCollection_imagePrefix` varchar(100)
+,`DataCollection_imageSuffix` varchar(45)
+,`DataCollection_fileTemplate` varchar(255)
+,`DataCollection_wavelength` float
+,`DataCollection_resolution` float
+,`DataCollection_detectorDistance` float
+,`DataCollection_xBeam` float
+,`DataCollection_yBeam` float
+,`DataCollection_xBeamPix` float
+,`DataCollection_yBeamPix` float
+,`DataCollection_comments` varchar(1024)
+,`DataCollection_printableForReport` tinyint(1) unsigned
+,`DataCollection_slitGapVertical` float
+,`DataCollection_slitGapHorizontal` float
+,`DataCollection_transmission` float
+,`DataCollection_synchrotronMode` varchar(20)
+,`DataCollection_xtalSnapshotFullPath1` varchar(255)
+,`DataCollection_xtalSnapshotFullPath2` varchar(255)
+,`DataCollection_xtalSnapshotFullPath3` varchar(255)
+,`DataCollection_xtalSnapshotFullPath4` varchar(255)
+,`DataCollection_rotationAxis` enum('Omega','Kappa','Phi')
+,`DataCollection_phiStart` float
+,`DataCollection_kappaStart` float
+,`DataCollection_omegaStart` float
+,`DataCollection_resolutionAtCorner` float
+,`DataCollection_detector2Theta` float
+,`DataCollection_undulatorGap1` float
+,`DataCollection_undulatorGap2` float
+,`DataCollection_undulatorGap3` float
+,`DataCollection_beamSizeAtSampleX` float
+,`DataCollection_beamSizeAtSampleY` float
+,`DataCollection_centeringMethod` varchar(255)
+,`DataCollection_averageTemperature` float
+,`DataCollection_actualCenteringPosition` varchar(255)
+,`DataCollection_beamShape` varchar(45)
+,`DataCollection_flux` double
+,`DataCollection_flux_end` double
+,`DataCollection_totalAbsorbedDose` double
+,`DataCollection_bestWilsonPlotPath` varchar(255)
+,`DataCollection_imageQualityIndicatorsPlotPath` varchar(512)
+,`DataCollection_imageQualityIndicatorsCSVPath` varchar(512)
+,`PhasingProgramRun_phasingProgramRunId` int(11) unsigned
+,`PhasingProgramRun_phasingCommandLine` varchar(255)
+,`PhasingProgramRun_phasingPrograms` varchar(255)
+,`PhasingProgramRun_phasingStatus` tinyint(1)
+,`PhasingProgramRun_phasingMessage` varchar(255)
+,`PhasingProgramRun_phasingStartTime` datetime
+,`PhasingProgramRun_phasingEndTime` datetime
+,`PhasingProgramRun_phasingEnvironment` varchar(255)
+,`PhasingProgramRun_recordTimeStamp` timestamp
+,`Protein_proteinId` int(10) unsigned
+,`BLSession_sessionId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+,`PhasingStatistics_phasingStatisticsId` int(11) unsigned
+,`PhasingStatistics_metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model')
+,`PhasingStatistics_statisticsValue` double
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_sample`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_sample` (
+`proposalId` int(10) unsigned
+,`shippingId` int(10) unsigned
+,`dewarId` int(10) unsigned
+,`containerId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`proposalCode` varchar(45)
+,`proposalNumber` varchar(45)
+,`creationDate` datetime
+,`shippingType` varchar(45)
+,`barCode` varchar(45)
+,`shippingStatus` varchar(45)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_sampleByWeek`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_sampleByWeek` (
+`Week` varchar(23)
+,`Samples` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_saxs_datacollection`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_saxs_datacollection` (
+`Subtraction_subtractionId` int(10)
+,`MeasurementToDataCollection_dataCollectionId` int(10)
+,`MeasurementToDataCollection_dataCollectionOrder` int(10)
+,`MeasurementToDataCollection_measurementToDataCollectionId` int(10)
+,`Specimen_specimenId` int(10)
+,`Measurement_code` varchar(100)
+,`Measurement_measurementId` int(10)
+,`Buffer_bufferId` int(10)
+,`Buffer_proposalId` int(10)
+,`Buffer_safetyLevelId` int(10)
+,`Buffer_name` varchar(45)
+,`Buffer_acronym` varchar(45)
+,`Buffer_pH` varchar(45)
+,`Buffer_composition` varchar(45)
+,`Buffer_comments` varchar(512)
+,`Macromolecule_macromoleculeId` int(11)
+,`Macromolecule_proposalId` int(10) unsigned
+,`Macromolecule_safetyLevelId` int(10)
+,`Macromolecule_name` varchar(45)
+,`Macromolecule_acronym` varchar(45)
+,`Macromolecule_extintionCoefficient` varchar(45)
+,`Macromolecule_molecularMass` varchar(45)
+,`Macromolecule_sequence` varchar(1000)
+,`Macromolecule_contactsDescriptionFilePath` varchar(255)
+,`Macromolecule_symmetry` varchar(45)
+,`Macromolecule_comments` varchar(1024)
+,`Macromolecule_refractiveIndex` varchar(45)
+,`Macromolecule_solventViscosity` varchar(45)
+,`Macromolecule_creationDate` datetime
+,`Specimen_experimentId` int(10)
+,`Specimen_bufferId` int(10)
+,`Specimen_samplePlatePositionId` int(10)
+,`Specimen_safetyLevelId` int(10)
+,`Specimen_stockSolutionId` int(10)
+,`Specimen_code` varchar(255)
+,`Specimen_concentration` varchar(45)
+,`Specimen_volume` varchar(45)
+,`Specimen_comments` varchar(5120)
+,`SamplePlatePosition_samplePlatePositionId` int(10)
+,`SamplePlatePosition_samplePlateId` int(10)
+,`SamplePlatePosition_rowNumber` int(11)
+,`SamplePlatePosition_columnNumber` int(11)
+,`SamplePlatePosition_volume` varchar(45)
+,`samplePlateId` int(10)
+,`experimentId` int(10)
+,`plateGroupId` int(10)
+,`plateTypeId` int(10)
+,`instructionSetId` int(10)
+,`SamplePlate_boxId` int(10) unsigned
+,`SamplePlate_name` varchar(45)
+,`SamplePlate_slotPositionRow` varchar(45)
+,`SamplePlate_slotPositionColumn` varchar(45)
+,`SamplePlate_storageTemperature` varchar(45)
+,`Experiment_experimentId` int(11)
+,`Experiment_sessionId` int(10) unsigned
+,`Experiment_proposalId` int(10)
+,`Experiment_name` varchar(255)
+,`Experiment_creationDate` datetime
+,`Experiment_experimentType` varchar(128)
+,`Experiment_sourceFilePath` varchar(256)
+,`Experiment_dataAcquisitionFilePath` varchar(256)
+,`Experiment_status` varchar(45)
+,`Experiment_comments` varchar(512)
+,`Measurement_priorityLevelId` int(10)
+,`Measurement_exposureTemperature` varchar(45)
+,`Measurement_viscosity` varchar(45)
+,`Measurement_flow` tinyint(1)
+,`Measurement_extraFlowTime` varchar(45)
+,`Measurement_volumeToLoad` varchar(45)
+,`Measurement_waitTime` varchar(45)
+,`Measurement_transmission` varchar(45)
+,`Measurement_comments` varchar(512)
+,`Measurement_imageDirectory` varchar(512)
+,`Run_runId` int(10)
+,`Run_timePerFrame` varchar(45)
+,`Run_timeStart` varchar(45)
+,`Run_timeEnd` varchar(45)
+,`Run_storageTemperature` varchar(45)
+,`Run_exposureTemperature` varchar(45)
+,`Run_spectrophotometer` varchar(45)
+,`Run_energy` varchar(45)
+,`Run_creationDate` datetime
+,`Run_frameAverage` varchar(45)
+,`Run_frameCount` varchar(45)
+,`Run_transmission` varchar(45)
+,`Run_beamCenterX` varchar(45)
+,`Run_beamCenterY` varchar(45)
+,`Run_pixelSizeX` varchar(45)
+,`Run_pixelSizeY` varchar(45)
+,`Run_radiationRelative` varchar(45)
+,`Run_radiationAbsolute` varchar(45)
+,`Run_normalization` varchar(45)
+,`Merge_mergeId` int(10)
+,`Merge_measurementId` int(10)
+,`Merge_frameListId` int(10)
+,`Merge_discardedFrameNameList` varchar(1024)
+,`Merge_averageFilePath` varchar(255)
+,`Merge_framesCount` varchar(45)
+,`Merge_framesMerge` varchar(45)
+,`Merge_creationDate` datetime
+,`Subtraction_dataCollectionId` int(10)
+,`Subtraction_rg` varchar(45)
+,`Subtraction_rgStdev` varchar(45)
+,`Subtraction_I0` varchar(45)
+,`Subtraction_I0Stdev` varchar(45)
+,`Subtraction_firstPointUsed` varchar(45)
+,`Subtraction_lastPointUsed` varchar(45)
+,`Subtraction_quality` varchar(45)
+,`Subtraction_isagregated` varchar(45)
+,`Subtraction_concentration` varchar(45)
+,`Subtraction_gnomFilePath` varchar(255)
+,`Subtraction_rgGuinier` varchar(45)
+,`Subtraction_rgGnom` varchar(45)
+,`Subtraction_dmax` varchar(45)
+,`Subtraction_total` varchar(45)
+,`Subtraction_volume` varchar(45)
+,`Subtraction_creationTime` datetime
+,`Subtraction_kratkyFilePath` varchar(255)
+,`Subtraction_scatteringFilePath` varchar(255)
+,`Subtraction_guinierFilePath` varchar(255)
+,`Subtraction_substractedFilePath` varchar(255)
+,`Subtraction_gnomFilePathOutput` varchar(255)
+,`Subtraction_sampleOneDimensionalFiles` int(10)
+,`Subtraction_bufferOnedimensionalFiles` int(10)
+,`Subtraction_sampleAverageFilePath` varchar(255)
+,`Subtraction_bufferAverageFilePath` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_session`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_session` (
+`sessionId` int(10) unsigned
+,`expSessionPk` int(11) unsigned
+,`beamLineSetupId` int(10) unsigned
+,`proposalId` int(10) unsigned
+,`projectCode` varchar(45)
+,`BLSession_startDate` datetime
+,`BLSession_endDate` datetime
+,`beamLineName` varchar(45)
+,`scheduled` tinyint(1)
+,`nbShifts` int(10) unsigned
+,`comments` varchar(2000)
+,`beamLineOperator` varchar(255)
+,`visit_number` int(10) unsigned
+,`bltimeStamp` timestamp
+,`usedFlag` tinyint(1)
+,`sessionTitle` varchar(255)
+,`structureDeterminations` float
+,`dewarTransport` float
+,`databackupFrance` float
+,`databackupEurope` float
+,`operatorSiteNumber` varchar(10)
+,`BLSession_lastUpdate` timestamp
+,`BLSession_protectedData` varchar(1024)
+,`Proposal_title` varchar(200)
+,`Proposal_proposalCode` varchar(45)
+,`Proposal_ProposalNumber` varchar(45)
+,`Proposal_ProposalType` varchar(2)
+,`Person_personId` int(10) unsigned
+,`Person_familyName` varchar(100)
+,`Person_givenName` varchar(45)
+,`Person_emailAddress` varchar(60)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_tracking_shipment_history`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_tracking_shipment_history` (
+`Dewar_dewarId` int(10) unsigned
+,`Dewar_code` varchar(45)
+,`Dewar_comments` tinytext
+,`Dewar_dewarStatus` varchar(45)
+,`Dewar_barCode` varchar(45)
+,`Dewar_firstExperimentId` int(10) unsigned
+,`Dewar_trackingNumberToSynchrotron` varchar(30)
+,`Dewar_trackingNumberFromSynchrotron` varchar(30)
+,`Dewar_type` enum('Dewar','Toolbox')
+,`Shipping_shippingId` int(10) unsigned
+,`Shipping_proposalId` int(10) unsigned
+,`Shipping_shippingName` varchar(45)
+,`deliveryAgent_agentName` varchar(45)
+,`Shipping_deliveryAgent_shippingDate` date
+,`Shipping_deliveryAgent_deliveryDate` date
+,`Shipping_shippingStatus` varchar(45)
+,`Shipping_returnCourier` varchar(45)
+,`Shipping_dateOfShippingToUser` datetime
+,`DewarTransportHistory_DewarTransportHistoryId` int(10) unsigned
+,`DewarTransportHistory_dewarStatus` varchar(45)
+,`DewarTransportHistory_storageLocation` varchar(45)
+,`DewarTransportHistory_arrivalDate` datetime
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_week`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_week` (
+`num` varchar(7)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_weekDay`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_weekDay` (
+`day` varchar(10)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_xfeFluorescenceSpectrum`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_xfeFluorescenceSpectrum` (
+`xfeFluorescenceSpectrumId` int(10) unsigned
+,`sessionId` int(10) unsigned
+,`blSampleId` int(10) unsigned
+,`fittedDataFileFullPath` varchar(255)
+,`scanFileFullPath` varchar(255)
+,`jpegScanFileFullPath` varchar(255)
+,`startTime` datetime
+,`endTime` datetime
+,`filename` varchar(255)
+,`energy` float
+,`exposureTime` float
+,`beamTransmission` float
+,`annotatedPymcaXfeSpectrum` varchar(255)
+,`beamSizeVertical` float
+,`beamSizeHorizontal` float
+,`crystalClass` varchar(20)
+,`comments` varchar(1024)
+,`flux` double
+,`flux_end` double
+,`workingDirectory` varchar(512)
+,`BLSample_sampleId` int(10) unsigned
+,`BLSession_proposalId` int(10) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Workflow`
+--
+
 CREATE TABLE `Workflow` (
-  `workflowId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
+  `workflowId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
   `workflowTitle` varchar(255) DEFAULT NULL,
   `workflowType` enum('Characterisation','Undefined','BioSAXS Post Processing','EnhancedCharacterisation','LineScan','MeshScan','Dehydration','KappaReorientation','BurnStrategy','XrayCentering','DiffractionTomography','TroubleShooting','VisualReorientation','HelicalCharacterisation','GroupedProcessing','MXPressE','MXPressO','MXPressL','MXScore','MXPressI','MXPressM','MXPressA','CollectAndSpectra','LowDoseDC','EnergyInterleavedMAD','MXPressF','MXPressH','MXPressP','MXPressP_SAD','MXPressR','MXPressR_180','MXPressR_dehydration','MeshAndCollect','MeshAndCollectFromFile') DEFAULT NULL,
   `workflowTypeId` int(11) DEFAULT NULL,
@@ -2893,42 +4805,50 @@ CREATE TABLE `Workflow` (
   `status` varchar(255) DEFAULT NULL,
   `resultFilePath` varchar(255) DEFAULT NULL,
   `logFilePath` varchar(255) DEFAULT NULL,
-  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`workflowId`)
-) ENGINE=InnoDB AUTO_INCREMENT=153305 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `WorkflowDehydration` (
-  `workflowDehydrationId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `workflowId` int(11) unsigned NOT NULL COMMENT 'Related workflow',
-  `dataFilePath` varchar(255) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`workflowDehydrationId`),
-  KEY `WorkflowDehydration_FKIndex1` (`workflowId`),
-  CONSTRAINT `WorkflowDehydration_workflowfk_1` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `recordTimeStamp` datetime DEFAULT NULL COMMENT 'Creation or last update date/time'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorkflowDehydration`
+--
+
+CREATE TABLE `WorkflowDehydration` (
+  `workflowDehydrationId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `workflowId` int(11) UNSIGNED NOT NULL COMMENT 'Related workflow',
+  `dataFilePath` varchar(255) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorkflowMesh`
+--
+
 CREATE TABLE `WorkflowMesh` (
-  `workflowMeshId` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)',
-  `workflowId` int(11) unsigned NOT NULL COMMENT 'Related workflow',
-  `bestPositionId` int(11) unsigned DEFAULT NULL,
-  `bestImageId` int(12) unsigned DEFAULT NULL,
+  `workflowMeshId` int(11) UNSIGNED NOT NULL COMMENT 'Primary key (auto-incremented)',
+  `workflowId` int(11) UNSIGNED NOT NULL COMMENT 'Related workflow',
+  `bestPositionId` int(11) UNSIGNED DEFAULT NULL,
+  `bestImageId` int(12) UNSIGNED DEFAULT NULL,
   `value1` double DEFAULT NULL,
   `value2` double DEFAULT NULL,
   `value3` double DEFAULT NULL COMMENT 'N value',
   `value4` double DEFAULT NULL,
   `cartographyPath` varchar(255) DEFAULT NULL,
-  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time',
-  PRIMARY KEY (`workflowMeshId`),
-  KEY `WorkflowMesh_FKIndex1` (`workflowId`),
-  KEY `bestPositionId` (`bestPositionId`),
-  KEY `bestImageId` (`bestImageId`),
-  CONSTRAINT `WorkflowMesh_ibfk_2` FOREIGN KEY (`bestImageId`) REFERENCES `Image` (`imageId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `WorkflowMesh_workflowfk_1` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=163359 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorkflowStep`
+--
 
 CREATE TABLE `WorkflowStep` (
-  `workflowStepId` int(11) NOT NULL AUTO_INCREMENT,
-  `workflowId` int(11) unsigned NOT NULL,
+  `workflowStepId` int(11) NOT NULL,
+  `workflowId` int(11) UNSIGNED NOT NULL,
   `workflowStepType` varchar(45) DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
   `folderPath` varchar(1024) DEFAULT NULL,
@@ -2940,24 +4860,32 @@ CREATE TABLE `WorkflowStep` (
   `crystalSizeY` varchar(45) DEFAULT NULL,
   `crystalSizeZ` varchar(45) DEFAULT NULL,
   `maxDozorScore` varchar(45) DEFAULT NULL,
-  `recordTimeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`workflowStepId`),
-  KEY `step_to_workflow_fk_idx` (`workflowId`),
-  CONSTRAINT `step_to_workflow_fk` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=237905 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorkflowType`
+--
 
 CREATE TABLE `WorkflowType` (
-  `workflowTypeId` int(11) NOT NULL AUTO_INCREMENT,
+  `workflowTypeId` int(11) NOT NULL,
   `workflowTypeName` varchar(45) DEFAULT NULL,
   `comments` varchar(2048) DEFAULT NULL,
-  `recordTimeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`workflowTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+  `recordTimeStamp` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `XFEFluorescenceSpectrum`
+--
 
 CREATE TABLE `XFEFluorescenceSpectrum` (
-  `xfeFluorescenceSpectrumId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sessionId` int(10) unsigned NOT NULL,
-  `blSampleId` int(10) unsigned DEFAULT NULL,
+  `xfeFluorescenceSpectrumId` int(10) UNSIGNED NOT NULL,
+  `sessionId` int(10) UNSIGNED NOT NULL,
+  `blSampleId` int(10) UNSIGNED DEFAULT NULL,
   `fittedDataFileFullPath` varchar(255) DEFAULT NULL,
   `scanFileFullPath` varchar(255) DEFAULT NULL,
   `jpegScanFileFullPath` varchar(255) DEFAULT NULL,
@@ -2966,6 +4894,7 @@ CREATE TABLE `XFEFluorescenceSpectrum` (
   `filename` varchar(255) DEFAULT NULL,
   `energy` float DEFAULT NULL,
   `exposureTime` float DEFAULT NULL,
+  `axisPosition` float DEFAULT NULL,
   `beamTransmission` float DEFAULT NULL,
   `annotatedPymcaXfeSpectrum` varchar(255) DEFAULT NULL,
   `beamSizeVertical` float DEFAULT NULL,
@@ -2975,122 +4904,3651 @@ CREATE TABLE `XFEFluorescenceSpectrum` (
   `flux` double DEFAULT NULL COMMENT 'flux measured before the xrfSpectra',
   `flux_end` double DEFAULT NULL COMMENT 'flux measured after the xrfSpectra',
   `workingDirectory` varchar(512) DEFAULT NULL,
-  `blSubSampleId` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`xfeFluorescenceSpectrumId`),
-  KEY `XFEFluorescnceSpectrum_FKIndex1` (`blSampleId`),
-  KEY `XFEFluorescnceSpectrum_FKIndex2` (`sessionId`),
-  KEY `XFE_ibfk_3` (`blSubSampleId`),
-  CONSTRAINT `XFE_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `XFE_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `XFE_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5385 DEFAULT CHARSET=latin1;
+  `blSubSampleId` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `XRFFluorescenceMapping`
+--
 
 CREATE TABLE `XRFFluorescenceMapping` (
-  `xrfFluorescenceMappingId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `xrfFluorescenceMappingROIId` int(11) unsigned NOT NULL,
-  `dataCollectionId` int(11) unsigned NOT NULL,
-  `imageNumber` int(10) unsigned NOT NULL,
-  `counts` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`xrfFluorescenceMappingId`),
-  KEY `XRFFluorescenceMapping_ibfk1` (`xrfFluorescenceMappingROIId`),
-  KEY `XRFFluorescenceMapping_ibfk2` (`dataCollectionId`),
-  CONSTRAINT `XRFFluorescenceMapping_ibfk1` FOREIGN KEY (`xrfFluorescenceMappingROIId`) REFERENCES `XRFFluorescenceMappingROI` (`xrfFluorescenceMappingROIId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `XRFFluorescenceMapping_ibfk2` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `xrfFluorescenceMappingId` int(11) UNSIGNED NOT NULL,
+  `xrfFluorescenceMappingROIId` int(11) UNSIGNED NOT NULL,
+  `dataCollectionId` int(11) UNSIGNED NOT NULL,
+  `imageNumber` int(10) UNSIGNED NOT NULL,
+  `counts` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `XRFFluorescenceMappingROI`
+--
+
 CREATE TABLE `XRFFluorescenceMappingROI` (
-  `xrfFluorescenceMappingROIId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `xrfFluorescenceMappingROIId` int(11) UNSIGNED NOT NULL,
   `startEnergy` float NOT NULL,
   `endEnergy` float NOT NULL,
   `element` varchar(2) DEFAULT NULL,
   `edge` varchar(2) DEFAULT NULL COMMENT 'In future may be changed to enum(K, L)',
-  `r` tinyint(3) unsigned DEFAULT NULL COMMENT 'R colour component',
-  `g` tinyint(3) unsigned DEFAULT NULL COMMENT 'G colour component',
-  `b` tinyint(3) unsigned DEFAULT NULL COMMENT 'B colour component',
-  PRIMARY KEY (`xrfFluorescenceMappingROIId`)
+  `r` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'R colour component',
+  `g` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'G colour component',
+  `b` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'B colour component'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- views
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_AnalysisInfo` AS (select `exp`.`creationDate` AS `experimentCreationDate`,(select `r`.`timeStart` from `Run` `r` where (`r`.`runId` = `m`.`runId`)) AS `timeStart`,`dc`.`dataCollectionId` AS `dataCollectionId`,`m`.`measurementId` AS `measurementId`,`p`.`proposalId` AS `proposalId`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`m`.`priorityLevelId` AS `priorityLevelId`,`m`.`code` AS `code`,`m`.`exposureTemperature` AS `exposureTemperature`,`m`.`transmission` AS `transmission`,`m`.`comments` AS `measurementComments`,`exp`.`comments` AS `experimentComments`,`exp`.`experimentId` AS `experimentId`,`exp`.`experimentType` AS `experimentType`,`s`.`concentration` AS `conc`,`bu`.`acronym` AS `bufferAcronym`,`ma`.`acronym` AS `macromoleculeAcronym`,`bu`.`bufferId` AS `bufferId`,`ma`.`macromoleculeId` AS `macromoleculeId`,(select `su`.`substractedFilePath` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractedFilePath`,(select `su`.`rgGuinier` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGuinier`,(select `su`.`firstPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `firstPointUsed`,(select `su`.`lastPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `lastPointUsed`,(select distinct `su`.`I0` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `I0`,(select distinct `su`.`isagregated` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `isagregated`,(select distinct `su`.`subtractionId` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractionId`,(select distinct `su`.`rgGnom` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGnom`,(select distinct `su`.`total` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `total`,(select distinct `su`.`dmax` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `dmax`,(select distinct `su`.`volume` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `volume`,(select `su`.`I0Stdev` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `i0stdev`,(select `su`.`quality` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `quality`,(select `su`.`creationTime` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `substractionCreationTime`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 1))) AS `bufferBeforeMeasurementId`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 3))) AS `bufferAfterMeasurementId`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeAverageFilePath`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 2))) AS `sampleMeasurementId`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `sampleMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `averageFilePath`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `framesMerge`,(select `m2`.`framesCount` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `framesCount`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterAverageFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId1`,(select `modelList`.`nsdFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `nsdFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId2`,(select `modelList`.`chi2RgFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `chi2RgFilePath`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModelId`,(select `ab`.`abInitioModelId` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `abInitioModelId`,(select `ab`.`comments` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `comments` from (((((((`Experiment` `exp` join `Buffer` `bu`) join `SaxsDataCollection` `dc`) join `Macromolecule` `ma`) join `MeasurementToDataCollection` `mtd`) join `Specimen` `s`) join `Measurement` `m`) join `Proposal` `p`) where ((`bu`.`bufferId` = `s`.`bufferId`) and (`exp`.`proposalId` = `p`.`proposalId`) and (`m`.`specimenId` = `s`.`specimenId`) and (`dc`.`dataCollectionId` = `mtd`.`dataCollectionId`) and (`mtd`.`measurementId` = `m`.`measurementId`) and (`s`.`macromoleculeId` = `ma`.`macromoleculeId`) and (`s`.`experimentId` = `exp`.`experimentId`) and (`exp`.`experimentType` <> 'TEMPLATE') and `p`.`proposalId` in (select distinct `prop`.`proposalId` from (`Proposal` `prop` join `Experiment` `exper`) where ((`exper`.`proposalId` = `prop`.`proposalId`) and (`prop`.`proposalId` <> 3374)))));
+--
+-- Structure for view `V_AnalysisInfo`
+--
+DROP TABLE IF EXISTS `V_AnalysisInfo`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Log4Stat` AS select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (((`s`.`detail` like 'fx%') or (`s`.`detail` like 'ifx%') or (`s`.`detail` like 'mx%') or (`s`.`detail` like 'ix%') or (`s`.`detail` like 'bm14u%') or (`s`.`detail` like 'bm161%') or (`s`.`detail` like 'bm162%')) and (`s`.`detail` <> 'fx999') and (`s`.`detail` <> 'ifx999') and (`s`.`detail` <> 'mx415'));
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_AnalysisInfo`  AS  (select `exp`.`creationDate` AS `experimentCreationDate`,(select `r`.`timeStart` from `Run` `r` where (`r`.`runId` = `m`.`runId`)) AS `timeStart`,`dc`.`dataCollectionId` AS `dataCollectionId`,`m`.`measurementId` AS `measurementId`,`p`.`proposalId` AS `proposalId`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`m`.`priorityLevelId` AS `priorityLevelId`,`m`.`code` AS `code`,`m`.`exposureTemperature` AS `exposureTemperature`,`m`.`transmission` AS `transmission`,`m`.`comments` AS `measurementComments`,`exp`.`comments` AS `experimentComments`,`exp`.`experimentId` AS `experimentId`,`exp`.`experimentType` AS `experimentType`,`s`.`concentration` AS `conc`,`bu`.`acronym` AS `bufferAcronym`,`ma`.`acronym` AS `macromoleculeAcronym`,`bu`.`bufferId` AS `bufferId`,`ma`.`macromoleculeId` AS `macromoleculeId`,(select `su`.`substractedFilePath` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractedFilePath`,(select `su`.`rgGuinier` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGuinier`,(select `su`.`firstPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `firstPointUsed`,(select `su`.`lastPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `lastPointUsed`,(select distinct `su`.`I0` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `I0`,(select distinct `su`.`isagregated` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `isagregated`,(select distinct `su`.`subtractionId` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractionId`,(select distinct `su`.`rgGnom` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGnom`,(select distinct `su`.`total` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `total`,(select distinct `su`.`dmax` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `dmax`,(select distinct `su`.`volume` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `volume`,(select `su`.`I0Stdev` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `i0stdev`,(select `su`.`quality` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `quality`,(select `su`.`creationTime` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `substractionCreationTime`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 1))) AS `bufferBeforeMeasurementId`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 3))) AS `bufferAfterMeasurementId`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeAverageFilePath`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 2))) AS `sampleMeasurementId`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `sampleMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `averageFilePath`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `framesMerge`,(select `m2`.`framesCount` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `framesCount`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterAverageFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId1`,(select `modelList`.`nsdFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `nsdFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId2`,(select `modelList`.`chi2RgFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `chi2RgFilePath`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModelId`,(select `ab`.`abInitioModelId` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `abInitioModelId`,(select `ab`.`comments` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `comments` from (((((((`Experiment` `exp` join `Buffer` `bu`) join `SaxsDataCollection` `dc`) join `Macromolecule` `ma`) join `MeasurementToDataCollection` `mtd`) join `Specimen` `s`) join `Measurement` `m`) join `Proposal` `p`) where ((`bu`.`bufferId` = `s`.`bufferId`) and (`exp`.`proposalId` = `p`.`proposalId`) and (`m`.`specimenId` = `s`.`specimenId`) and (`dc`.`dataCollectionId` = `mtd`.`dataCollectionId`) and (`mtd`.`measurementId` = `m`.`measurementId`) and (`s`.`macromoleculeId` = `ma`.`macromoleculeId`) and (`s`.`experimentId` = `exp`.`experimentId`) and (`exp`.`experimentType` <> 'TEMPLATE') and `p`.`proposalId` in (select distinct `prop`.`proposalId` from (`Proposal` `prop` join `Experiment` `exper`) where ((`exper`.`proposalId` = `prop`.`proposalId`) and (`prop`.`proposalId` <> 3374))))) ;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection` AS select `DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`DataCollection`.`runStatus` AS `runStatus`,`DataCollection`.`axisStart` AS `axisStart`,`DataCollection`.`axisEnd` AS `axisEnd`,`DataCollection`.`axisRange` AS `axisRange`,`DataCollection`.`overlap` AS `overlap`,`DataCollection`.`numberOfImages` AS `numberOfImages`,`DataCollection`.`startImageNumber` AS `startImageNumber`,`DataCollection`.`numberOfPasses` AS `numberOfPasses`,`DataCollection`.`exposureTime` AS `exposureTime`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`DataCollection`.`imagePrefix` AS `imagePrefix`,`DataCollection`.`imageSuffix` AS `imageSuffix`,`DataCollection`.`fileTemplate` AS `fileTemplate`,`DataCollection`.`wavelength` AS `wavelength`,`DataCollection`.`resolution` AS `resolution`,`DataCollection`.`detectorDistance` AS `detectorDistance`,`DataCollection`.`xBeam` AS `xBeam`,`DataCollection`.`yBeam` AS `yBeam`,`DataCollection`.`xBeamPix` AS `xBeamPix`,`DataCollection`.`yBeamPix` AS `yBeamPix`,`DataCollection`.`comments` AS `comments`,`DataCollection`.`printableForReport` AS `printableForReport`,`DataCollection`.`slitGapVertical` AS `slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `slitGapHorizontal`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`synchrotronMode` AS `synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `rotationAxis`,`DataCollection`.`phiStart` AS `phiStart`,`DataCollection`.`kappaStart` AS `kappaStart`,`DataCollection`.`omegaStart` AS `omegaStart`,`DataCollection`.`resolutionAtCorner` AS `resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `detector2Theta`,`DataCollection`.`undulatorGap1` AS `undulatorGap1`,`DataCollection`.`undulatorGap2` AS `undulatorGap2`,`DataCollection`.`undulatorGap3` AS `undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `centeringMethod`,`DataCollection`.`averageTemperature` AS `averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `actualCenteringPosition`,`DataCollection`.`beamShape` AS `beamShape`,`DataCollection`.`flux` AS `flux`,`DataCollection`.`flux_end` AS `flux_end`,`DataCollection`.`totalAbsorbedDose` AS `totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `imageQualityIndicatorsCSVPath`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`DataCollectionGroup`.`workflowId` AS `workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId` from ((((`DataCollection` left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_autoprocintegration` AS select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_processingStatus`,`AutoProcProgram`.`processingStartTime` AS `v_datacollection_processingStartTime`,`AutoProcProgram`.`processingEndTime` AS `v_datacollection_processingEndTime`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`acronym` AS `Protein_acronym`,`BLSample`.`name` AS `BLSample_name`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix` from (((((((((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`)));
+--
+-- Structure for view `v_datacollection`
+--
+DROP TABLE IF EXISTS `v_datacollection`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing` AS select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProc`.`spaceGroup` AS `spaceGroup`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`PhasingStep`.`solventContent` AS `solventContent`,`PhasingStep`.`enantiomorph` AS `enantiomorph`,`PhasingStep`.`lowRes` AS `lowRes`,`PhasingStep`.`highRes` AS `highRes`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`AutoProcProgram`.`processingPrograms` AS `processingPrograms`,`AutoProcProgram`.`processingStatus` AS `processingStatus`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`PhasingProgramRun`.`phasingStartTime` AS `phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `phasingEndTime`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId` from (((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection`  AS  select `DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`DataCollection`.`runStatus` AS `runStatus`,`DataCollection`.`axisStart` AS `axisStart`,`DataCollection`.`axisEnd` AS `axisEnd`,`DataCollection`.`axisRange` AS `axisRange`,`DataCollection`.`overlap` AS `overlap`,`DataCollection`.`numberOfImages` AS `numberOfImages`,`DataCollection`.`startImageNumber` AS `startImageNumber`,`DataCollection`.`numberOfPasses` AS `numberOfPasses`,`DataCollection`.`exposureTime` AS `exposureTime`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`DataCollection`.`imagePrefix` AS `imagePrefix`,`DataCollection`.`imageSuffix` AS `imageSuffix`,`DataCollection`.`fileTemplate` AS `fileTemplate`,`DataCollection`.`wavelength` AS `wavelength`,`DataCollection`.`resolution` AS `resolution`,`DataCollection`.`detectorDistance` AS `detectorDistance`,`DataCollection`.`xBeam` AS `xBeam`,`DataCollection`.`yBeam` AS `yBeam`,`DataCollection`.`xBeamPix` AS `xBeamPix`,`DataCollection`.`yBeamPix` AS `yBeamPix`,`DataCollection`.`comments` AS `comments`,`DataCollection`.`printableForReport` AS `printableForReport`,`DataCollection`.`slitGapVertical` AS `slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `slitGapHorizontal`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`synchrotronMode` AS `synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `rotationAxis`,`DataCollection`.`phiStart` AS `phiStart`,`DataCollection`.`kappaStart` AS `kappaStart`,`DataCollection`.`omegaStart` AS `omegaStart`,`DataCollection`.`resolutionAtCorner` AS `resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `detector2Theta`,`DataCollection`.`undulatorGap1` AS `undulatorGap1`,`DataCollection`.`undulatorGap2` AS `undulatorGap2`,`DataCollection`.`undulatorGap3` AS `undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `centeringMethod`,`DataCollection`.`averageTemperature` AS `averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `actualCenteringPosition`,`DataCollection`.`beamShape` AS `beamShape`,`DataCollection`.`flux` AS `flux`,`DataCollection`.`flux_end` AS `flux_end`,`DataCollection`.`totalAbsorbedDose` AS `totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `imageQualityIndicatorsCSVPath`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`DataCollectionGroup`.`workflowId` AS `workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId` from ((((`DataCollection` left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`))) ;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing_program_run` AS select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId`,`PhasingProgramAttachment`.`phasingProgramAttachmentId` AS `phasingProgramAttachmentId`,`PhasingProgramAttachment`.`fileType` AS `fileType`,`PhasingProgramAttachment`.`fileName` AS `fileName`,`PhasingProgramAttachment`.`filePath` AS `filePath` from ((((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramAttachment` on((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun`.`phasingProgramRunId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary` AS select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`DataCollectionGroup`.`crystalClass` AS `DataCollectionGroup_crystalClass`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`comments` AS `BLSample_comments`,`Container`.`containerId` AS `Container_containerId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Container`.`containerType` AS `Container_containerType`,`Container`.`code` AS `Container_code`,`Container`.`capacity` AS `Container_capacity`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`voltage` AS `DataCollection_voltage`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status`,`Workflow`.`workflowId` AS `Workflow_workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`v_datacollection_summary_screening`.`Screening_screeningId` AS `Screening_screeningId`,`v_datacollection_summary_screening`.`Screening_dataCollectionId` AS `Screening_dataCollectionId`,`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`v_datacollection_summary_screening`.`ScreeningOutput_strategySuccess` AS `ScreeningOutput_strategySuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_rankingResolution` AS `ScreeningOutput_rankingResolution`,`v_datacollection_summary_screening`.`ScreeningOutput_mosaicity` AS `ScreeningOutput_mosaicity`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`v_datacollection_summary_screening`.`ScreeningOutput_totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`v_datacollection_summary_screening`.`ScreeningOutput_totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`v_datacollection_summary_screening`.`ScreeningOutput_totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_transmission` AS `ScreeningStrategySubWedge_transmission`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_completeness` AS `ScreeningStrategySubWedge_completeness`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_axisStart` AS `ScreeningStrategySubWedge_axisStart`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`DiffractionPlan`.`diffractionPlanId` AS `diffractionPlanId`,`DiffractionPlan`.`experimentKind` AS `experimentKind`,`DiffractionPlan`.`observedResolution` AS `observedResolution`,`DiffractionPlan`.`minimalResolution` AS `minimalResolution`,`DiffractionPlan`.`exposureTime` AS `exposureTime`,`DiffractionPlan`.`oscillationRange` AS `oscillationRange`,`DiffractionPlan`.`maximalResolution` AS `maximalResolution`,`DiffractionPlan`.`screeningResolution` AS `screeningResolution`,`DiffractionPlan`.`radiationSensitivity` AS `radiationSensitivity`,`DiffractionPlan`.`anomalousScatterer` AS `anomalousScatterer`,`DiffractionPlan`.`preferredBeamSizeX` AS `preferredBeamSizeX`,`DiffractionPlan`.`preferredBeamSizeY` AS `preferredBeamSizeY`,`DiffractionPlan`.`preferredBeamDiameter` AS `preferredBeamDiameter`,`DiffractionPlan`.`comments` AS `DiffractipnPlan_comments`,`DiffractionPlan`.`aimedCompleteness` AS `aimedCompleteness`,`DiffractionPlan`.`aimedIOverSigmaAtHighestRes` AS `aimedIOverSigmaAtHighestRes`,`DiffractionPlan`.`aimedMultiplicity` AS `aimedMultiplicity`,`DiffractionPlan`.`aimedResolution` AS `aimedResolution`,`DiffractionPlan`.`anomalousData` AS `anomalousData`,`DiffractionPlan`.`complexity` AS `complexity`,`DiffractionPlan`.`estimateRadiationDamage` AS `estimateRadiationDamage`,`DiffractionPlan`.`forcedSpaceGroup` AS `forcedSpaceGroup`,`DiffractionPlan`.`requiredCompleteness` AS `requiredCompleteness`,`DiffractionPlan`.`requiredMultiplicity` AS `requiredMultiplicity`,`DiffractionPlan`.`requiredResolution` AS `requiredResolution`,`DiffractionPlan`.`strategyOption` AS `strategyOption`,`DiffractionPlan`.`kappaStrategyOption` AS `kappaStrategyOption`,`DiffractionPlan`.`numberOfPositions` AS `numberOfPositions`,`DiffractionPlan`.`minDimAccrossSpindleAxis` AS `minDimAccrossSpindleAxis`,`DiffractionPlan`.`maxDimAccrossSpindleAxis` AS `maxDimAccrossSpindleAxis`,`DiffractionPlan`.`radiationSensitivityBeta` AS `radiationSensitivityBeta`,`DiffractionPlan`.`radiationSensitivityGamma` AS `radiationSensitivityGamma`,`DiffractionPlan`.`minOscWidth` AS `minOscWidth`,`Detector`.`detectorType` AS `Detector_detectorType`,`Detector`.`detectorManufacturer` AS `Detector_detectorManufacturer`,`Detector`.`detectorModel` AS `Detector_detectorModel`,`Detector`.`detectorPixelSizeHorizontal` AS `Detector_detectorPixelSizeHorizontal`,`Detector`.`detectorPixelSizeVertical` AS `Detector_detectorPixelSizeVertical`,`Detector`.`detectorSerialNumber` AS `Detector_detectorSerialNumber`,`Detector`.`detectorDistanceMin` AS `Detector_detectorDistanceMin`,`Detector`.`detectorDistanceMax` AS `Detector_detectorDistanceMax`,`Detector`.`trustedPixelValueRangeLower` AS `Detector_trustedPixelValueRangeLower`,`Detector`.`trustedPixelValueRangeUpper` AS `Detector_trustedPixelValueRangeUpper`,`Detector`.`sensorThickness` AS `Detector_sensorThickness`,`Detector`.`overload` AS `Detector_overload`,`Detector`.`XGeoCorr` AS `Detector_XGeoCorr`,`Detector`.`YGeoCorr` AS `Detector_YGeoCorr`,`Detector`.`detectorMode` AS `Detector_detectorMode`,`BeamLineSetup`.`undulatorType1` AS `BeamLineSetup_undulatorType1`,`BeamLineSetup`.`undulatorType2` AS `BeamLineSetup_undulatorType2`,`BeamLineSetup`.`undulatorType3` AS `BeamLineSetup_undulatorType3`,`BeamLineSetup`.`synchrotronName` AS `BeamLineSetup_synchrotronName`,`BeamLineSetup`.`synchrotronMode` AS `BeamLineSetup_synchrotronMode`,`BeamLineSetup`.`polarisation` AS `BeamLineSetup_polarisation`,`BeamLineSetup`.`focusingOptic` AS `BeamLineSetup_focusingOptic`,`BeamLineSetup`.`beamDivergenceHorizontal` AS `BeamLineSetup_beamDivergenceHorizontal`,`BeamLineSetup`.`beamDivergenceVertical` AS `BeamLineSetup_beamDivergenceVertical`,`BeamLineSetup`.`monochromatorType` AS `BeamLineSetup_monochromatorType` from ((((((((((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BeamLineSetup` on((`BeamLineSetup`.`beamLineSetupId` = `BLSession`.`beamLineSetupId`))) left join `Detector` on((`Detector`.`detectorId` = `DataCollection`.`detectorId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `DiffractionPlan` on((`DiffractionPlan`.`diffractionPlanId` = `BLSample`.`diffractionPlanId`))) left join `Container` on((`Container`.`containerId` = `BLSample`.`containerId`))) left join `Dewar` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `v_datacollection_summary_screening` on((`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)));
+--
+-- Structure for view `v_datacollection_autoprocintegration`
+--
+DROP TABLE IF EXISTS `v_datacollection_autoprocintegration`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_autoprocintegration` AS select `AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `cell_a`,`AutoProcIntegration`.`cell_b` AS `cell_b`,`AutoProcIntegration`.`cell_c` AS `cell_c`,`AutoProcIntegration`.`cell_alpha` AS `cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `cell_gamma`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_autoprocintegration_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_autoprocintegration_processingStatus`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_phasing_dataCollectionId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`AutoProc`.`autoProcId` AS `autoProcId`,`AutoProc`.`spaceGroup` AS `AutoProc_spaceGroup`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId` from ((((((((`AutoProcIntegration` left join `AutoProcProgram` on((`AutoProcIntegration`.`autoProcProgramId` = `AutoProcProgram`.`autoProcProgramId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `AutoProcScalingStatistics` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScalingStatistics`.`autoProcScalingId`))) left join `AutoProc` on((`AutoProc`.`autoProcId` = `AutoProcScaling`.`autoProcId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`)));
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_autoprocintegration`  AS  select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_processingStatus`,`AutoProcProgram`.`processingStartTime` AS `v_datacollection_processingStartTime`,`AutoProcProgram`.`processingEndTime` AS `v_datacollection_processingEndTime`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`acronym` AS `Protein_acronym`,`BLSample`.`name` AS `BLSample_name`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix` from (((((((((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) ;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_datacollectiongroup` AS select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status` from ((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_phasing` AS select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_phasing_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_phasing_processingStatus`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId` from (((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`)));
+--
+-- Structure for view `v_datacollection_phasing`
+--
+DROP TABLE IF EXISTS `v_datacollection_phasing`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_screening` AS select `Screening`.`screeningId` AS `Screening_screeningId`,`Screening`.`dataCollectionId` AS `Screening_dataCollectionId`,`Screening`.`dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`ScreeningOutput`.`strategySuccess` AS `ScreeningOutput_strategySuccess`,`ScreeningOutput`.`indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`ScreeningOutput`.`rankingResolution` AS `ScreeningOutput_rankingResolution`,`ScreeningOutput`.`mosaicityEstimated` AS `ScreeningOutput_mosaicityEstimated`,`ScreeningOutput`.`mosaicity` AS `ScreeningOutput_mosaicity`,`ScreeningOutput`.`totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`ScreeningOutput`.`totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`ScreeningOutput`.`totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`ScreeningOutputLattice`.`spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`ScreeningOutputLattice`.`unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`ScreeningOutputLattice`.`unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`ScreeningOutputLattice`.`unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`ScreeningOutputLattice`.`unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`ScreeningOutputLattice`.`unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`ScreeningOutputLattice`.`unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`ScreeningStrategySubWedge`.`exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`ScreeningStrategySubWedge`.`transmission` AS `ScreeningStrategySubWedge_transmission`,`ScreeningStrategySubWedge`.`oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`ScreeningStrategySubWedge`.`numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`ScreeningStrategySubWedge`.`multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`ScreeningStrategySubWedge`.`completeness` AS `ScreeningStrategySubWedge_completeness`,`ScreeningStrategySubWedge`.`axisStart` AS `ScreeningStrategySubWedge_axisStart`,`ScreeningStrategySubWedge`.`axisEnd` AS `ScreeningStrategySubWedge_axisEnd`,`ScreeningStrategySubWedge`.`rotationAxis` AS `ScreeningStrategySubWedge_rotationAxis` from (((((`Screening` left join `ScreeningOutput` on((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`))) left join `ScreeningOutputLattice` on((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`))) left join `ScreeningStrategy` on((`ScreeningStrategy`.`screeningOutputId` = `ScreeningOutput`.`screeningOutputId`))) left join `ScreeningStrategyWedge` on((`ScreeningStrategyWedge`.`screeningStrategyId` = `ScreeningStrategy`.`screeningStrategyId`))) left join `ScreeningStrategySubWedge` on((`ScreeningStrategySubWedge`.`screeningStrategyWedgeId` = `ScreeningStrategyWedge`.`screeningStrategyWedgeId`)));
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing`  AS  select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProc`.`spaceGroup` AS `spaceGroup`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`PhasingStep`.`solventContent` AS `solventContent`,`PhasingStep`.`enantiomorph` AS `enantiomorph`,`PhasingStep`.`lowRes` AS `lowRes`,`PhasingStep`.`highRes` AS `highRes`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`AutoProcProgram`.`processingPrograms` AS `processingPrograms`,`AutoProcProgram`.`processingStatus` AS `processingStatus`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`PhasingProgramRun`.`phasingStartTime` AS `phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `phasingEndTime`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId` from (((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar` AS select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if((`bls`.`code` is not null),1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on((`s`.`proposalId` = `p`.`proposalId`))) join `Dewar` `d` on((`d`.`shippingId` = `s`.`shippingId`))) left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSession` `ss` on((`ss`.`sessionId` = `d`.`firstExperimentId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h1` on(((`h1`.`dewarId` = `d`.`dewarId`) and ((`h1`.`dewarStatus` = 'at ESRF') or (`h1`.`dewarStatus` = 'sent to User'))))) left join `DewarTransportHistory` `h2` on(((`h2`.`dewarId` = `d`.`dewarId`) and (`h2`.`storageLocation` = 'STORES-IN')))) where (((`p`.`proposalCode` like 'MX%') or (`p`.`proposalCode` like 'FX%') or (`p`.`proposalCode` like 'IFX%') or (`p`.`proposalCode` like 'IX%') or (`p`.`proposalCode` like 'BM14U%') or (`p`.`proposalCode` like 'bm161%') or (`p`.`proposalCode` like 'bm162%')) and ((`p`.`proposalCode` <> 'FX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'IFX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'MX') or (`p`.`proposalNumber` <> '415')) and (`d`.`type` = 'Dewar') and (`s`.`creationDate` is not null)) group by `d`.`dewarId`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamline` AS select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where (`d`.`beamLineName` is not null) group by `d`.`beamLineName`;
+--
+-- Structure for view `v_datacollection_phasing_program_run`
+--
+DROP TABLE IF EXISTS `v_datacollection_phasing_program_run`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamlineByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`beamLineName` like 'ID14%'),1,NULL)) AS `ID14`,count(if((`d`.`beamLineName` like 'ID23%'),1,NULL)) AS `ID23`,count(if((`d`.`beamLineName` like 'ID29%'),1,NULL)) AS `ID29`,count(if((`d`.`beamLineName` like 'BM14%'),1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%x-%v')))) group by `w`.`num` order by `w`.`num`;
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing_program_run`  AS  select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId`,`PhasingProgramAttachment`.`phasingProgramAttachmentId` AS `phasingProgramAttachmentId`,`PhasingProgramAttachment`.`fileType` AS `fileType`,`PhasingProgramAttachment`.`fileName` AS `fileName`,`PhasingProgramAttachment`.`filePath` AS `filePath` from ((((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramAttachment` on((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun`.`phasingProgramRunId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by `w`.`num`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeekTotal` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked`,count(if((`d`.`proposalCode` is not null),1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+--
+-- Structure for view `v_datacollection_summary`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarList` AS select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if((`bls`.`blSampleId` is not null),1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h` on((`h`.`dewarId` = `d`.`dewarId`))) group by `d`.`dewarId` order by `d`.`creationDate` desc;
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary`  AS  select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`DataCollectionGroup`.`crystalClass` AS `DataCollectionGroup_crystalClass`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`comments` AS `BLSample_comments`,`Container`.`containerId` AS `Container_containerId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Container`.`containerType` AS `Container_containerType`,`Container`.`code` AS `Container_code`,`Container`.`capacity` AS `Container_capacity`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`voltage` AS `DataCollection_voltage`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status`,`Workflow`.`workflowId` AS `Workflow_workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`v_datacollection_summary_screening`.`Screening_screeningId` AS `Screening_screeningId`,`v_datacollection_summary_screening`.`Screening_dataCollectionId` AS `Screening_dataCollectionId`,`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`v_datacollection_summary_screening`.`ScreeningOutput_strategySuccess` AS `ScreeningOutput_strategySuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_rankingResolution` AS `ScreeningOutput_rankingResolution`,`v_datacollection_summary_screening`.`ScreeningOutput_mosaicity` AS `ScreeningOutput_mosaicity`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`v_datacollection_summary_screening`.`ScreeningOutput_totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`v_datacollection_summary_screening`.`ScreeningOutput_totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`v_datacollection_summary_screening`.`ScreeningOutput_totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_transmission` AS `ScreeningStrategySubWedge_transmission`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_completeness` AS `ScreeningStrategySubWedge_completeness`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_axisStart` AS `ScreeningStrategySubWedge_axisStart`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`DiffractionPlan`.`diffractionPlanId` AS `diffractionPlanId`,`DiffractionPlan`.`experimentKind` AS `experimentKind`,`DiffractionPlan`.`observedResolution` AS `observedResolution`,`DiffractionPlan`.`minimalResolution` AS `minimalResolution`,`DiffractionPlan`.`exposureTime` AS `exposureTime`,`DiffractionPlan`.`oscillationRange` AS `oscillationRange`,`DiffractionPlan`.`maximalResolution` AS `maximalResolution`,`DiffractionPlan`.`screeningResolution` AS `screeningResolution`,`DiffractionPlan`.`radiationSensitivity` AS `radiationSensitivity`,`DiffractionPlan`.`anomalousScatterer` AS `anomalousScatterer`,`DiffractionPlan`.`preferredBeamSizeX` AS `preferredBeamSizeX`,`DiffractionPlan`.`preferredBeamSizeY` AS `preferredBeamSizeY`,`DiffractionPlan`.`preferredBeamDiameter` AS `preferredBeamDiameter`,`DiffractionPlan`.`comments` AS `DiffractipnPlan_comments`,`DiffractionPlan`.`aimedCompleteness` AS `aimedCompleteness`,`DiffractionPlan`.`aimedIOverSigmaAtHighestRes` AS `aimedIOverSigmaAtHighestRes`,`DiffractionPlan`.`aimedMultiplicity` AS `aimedMultiplicity`,`DiffractionPlan`.`aimedResolution` AS `aimedResolution`,`DiffractionPlan`.`anomalousData` AS `anomalousData`,`DiffractionPlan`.`complexity` AS `complexity`,`DiffractionPlan`.`estimateRadiationDamage` AS `estimateRadiationDamage`,`DiffractionPlan`.`forcedSpaceGroup` AS `forcedSpaceGroup`,`DiffractionPlan`.`requiredCompleteness` AS `requiredCompleteness`,`DiffractionPlan`.`requiredMultiplicity` AS `requiredMultiplicity`,`DiffractionPlan`.`requiredResolution` AS `requiredResolution`,`DiffractionPlan`.`strategyOption` AS `strategyOption`,`DiffractionPlan`.`kappaStrategyOption` AS `kappaStrategyOption`,`DiffractionPlan`.`numberOfPositions` AS `numberOfPositions`,`DiffractionPlan`.`minDimAccrossSpindleAxis` AS `minDimAccrossSpindleAxis`,`DiffractionPlan`.`maxDimAccrossSpindleAxis` AS `maxDimAccrossSpindleAxis`,`DiffractionPlan`.`radiationSensitivityBeta` AS `radiationSensitivityBeta`,`DiffractionPlan`.`radiationSensitivityGamma` AS `radiationSensitivityGamma`,`DiffractionPlan`.`minOscWidth` AS `minOscWidth`,`Detector`.`detectorType` AS `Detector_detectorType`,`Detector`.`detectorManufacturer` AS `Detector_detectorManufacturer`,`Detector`.`detectorModel` AS `Detector_detectorModel`,`Detector`.`detectorPixelSizeHorizontal` AS `Detector_detectorPixelSizeHorizontal`,`Detector`.`detectorPixelSizeVertical` AS `Detector_detectorPixelSizeVertical`,`Detector`.`detectorSerialNumber` AS `Detector_detectorSerialNumber`,`Detector`.`detectorDistanceMin` AS `Detector_detectorDistanceMin`,`Detector`.`detectorDistanceMax` AS `Detector_detectorDistanceMax`,`Detector`.`trustedPixelValueRangeLower` AS `Detector_trustedPixelValueRangeLower`,`Detector`.`trustedPixelValueRangeUpper` AS `Detector_trustedPixelValueRangeUpper`,`Detector`.`sensorThickness` AS `Detector_sensorThickness`,`Detector`.`overload` AS `Detector_overload`,`Detector`.`XGeoCorr` AS `Detector_XGeoCorr`,`Detector`.`YGeoCorr` AS `Detector_YGeoCorr`,`Detector`.`detectorMode` AS `Detector_detectorMode`,`BeamLineSetup`.`undulatorType1` AS `BeamLineSetup_undulatorType1`,`BeamLineSetup`.`undulatorType2` AS `BeamLineSetup_undulatorType2`,`BeamLineSetup`.`undulatorType3` AS `BeamLineSetup_undulatorType3`,`BeamLineSetup`.`synchrotronName` AS `BeamLineSetup_synchrotronName`,`BeamLineSetup`.`synchrotronMode` AS `BeamLineSetup_synchrotronMode`,`BeamLineSetup`.`polarisation` AS `BeamLineSetup_polarisation`,`BeamLineSetup`.`focusingOptic` AS `BeamLineSetup_focusingOptic`,`BeamLineSetup`.`beamDivergenceHorizontal` AS `BeamLineSetup_beamDivergenceHorizontal`,`BeamLineSetup`.`beamDivergenceVertical` AS `BeamLineSetup_beamDivergenceVertical`,`BeamLineSetup`.`monochromatorType` AS `BeamLineSetup_monochromatorType` from ((((((((((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BeamLineSetup` on((`BeamLineSetup`.`beamLineSetupId` = `BLSession`.`beamLineSetupId`))) left join `Detector` on((`Detector`.`detectorId` = `DataCollection`.`detectorId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `DiffractionPlan` on((`DiffractionPlan`.`diffractionPlanId` = `BLSample`.`diffractionPlanId`))) left join `Container` on((`Container`.`containerId` = `BLSample`.`containerId`))) left join `Dewar` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `v_datacollection_summary_screening` on((`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCode` AS select `d`.`proposalCode` AS `proposalCode`,count(0) AS `COUNT(*)` from `v_dewar` `d` group by `d`.`proposalCode`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCodeByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`proposalCode` = 'MX'),1,NULL)) AS `MX`,count(if((`d`.`proposalCode` = 'FX'),1,NULL)) AS `FX`,count(if((`d`.`proposalCode` = 'BM14U'),1,NULL)) AS `BM14U`,count(if((`d`.`proposalCode` = 'BM161'),1,NULL)) AS `BM161`,count(if((`d`.`proposalCode` = 'BM162'),1,NULL)) AS `BM162`,count(if(((`d`.`proposalCode` <> 'MX') and (`d`.`proposalCode` <> 'FX') and (`d`.`proposalCode` <> 'BM14U') and (`d`.`proposalCode` <> 'BM161') and (`d`.`proposalCode` <> 'BM162')),1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+--
+-- Structure for view `v_datacollection_summary_autoprocintegration`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_autoprocintegration`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar_summary` AS select `Shipping`.`shippingName` AS `shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `deliveryAgent_deliveryDate`,`Shipping`.`deliveryAgent_agentCode` AS `deliveryAgent_agentCode`,`Shipping`.`deliveryAgent_flightCode` AS `deliveryAgent_flightCode`,`Shipping`.`shippingStatus` AS `shippingStatus`,`Shipping`.`bltimeStamp` AS `bltimeStamp`,`Shipping`.`laboratoryId` AS `laboratoryId`,`Shipping`.`isStorageShipping` AS `isStorageShipping`,`Shipping`.`creationDate` AS `creationDate`,`Shipping`.`comments` AS `Shipping_comments`,`Shipping`.`sendingLabContactId` AS `sendingLabContactId`,`Shipping`.`returnLabContactId` AS `returnLabContactId`,`Shipping`.`returnCourier` AS `returnCourier`,`Shipping`.`dateOfShippingToUser` AS `dateOfShippingToUser`,`Shipping`.`shippingType` AS `shippingType`,`Dewar`.`dewarId` AS `dewarId`,`Dewar`.`shippingId` AS `shippingId`,`Dewar`.`code` AS `dewarCode`,`Dewar`.`comments` AS `comments`,`Dewar`.`storageLocation` AS `storageLocation`,`Dewar`.`dewarStatus` AS `dewarStatus`,`Dewar`.`isStorageDewar` AS `isStorageDewar`,`Dewar`.`barCode` AS `barCode`,`Dewar`.`firstExperimentId` AS `firstExperimentId`,`Dewar`.`customsValue` AS `customsValue`,`Dewar`.`transportValue` AS `transportValue`,`Dewar`.`trackingNumberToSynchrotron` AS `trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `trackingNumberFromSynchrotron`,`Dewar`.`type` AS `type`,`Dewar`.`isReimbursed` AS `isReimbursed`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`beamLineName` AS `beamlineName`,`BLSession`.`startDate` AS `sessionStartDate`,`BLSession`.`endDate` AS `sessionEndDate`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`nbReimbDewars` AS `nbReimbDewars`,`Proposal`.`proposalId` AS `proposalId`,`Container`.`containerId` AS `containerId`,`Container`.`containerType` AS `containerType`,`Container`.`capacity` AS `capacity`,`Container`.`beamlineLocation` AS `beamlineLocation`,`Container`.`sampleChangerLocation` AS `sampleChangerLocation`,`Container`.`containerStatus` AS `containerStatus`,`Container`.`code` AS `containerCode` from (((((`Dewar` left join `Container` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `ShippingHasSession` on((`Shipping`.`shippingId` = `ShippingHasSession`.`shippingId`))) left join `BLSession` on((`ShippingHasSession`.`sessionId` = `BLSession`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `Shipping`.`proposalId`))) order by `Dewar`.`dewarId` desc;
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_autoprocintegration`  AS  select `AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `cell_a`,`AutoProcIntegration`.`cell_b` AS `cell_b`,`AutoProcIntegration`.`cell_c` AS `cell_c`,`AutoProcIntegration`.`cell_alpha` AS `cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `cell_gamma`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_autoprocintegration_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_autoprocintegration_processingStatus`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_phasing_dataCollectionId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`AutoProc`.`autoProcId` AS `autoProcId`,`AutoProc`.`spaceGroup` AS `AutoProc_spaceGroup`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId` from ((((((((`AutoProcIntegration` left join `AutoProcProgram` on((`AutoProcIntegration`.`autoProcProgramId` = `AutoProcProgram`.`autoProcProgramId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `AutoProcScalingStatistics` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScalingStatistics`.`autoProcScalingId`))) left join `AutoProc` on((`AutoProc`.`autoProcId` = `AutoProcScaling`.`autoProcId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_movie` AS select `Movie`.`movieId` AS `Movie_movieId`,`Movie`.`dataCollectionId` AS `Movie_dataCollectionId`,`Movie`.`movieNumber` AS `Movie_movieNumber`,`Movie`.`movieFullPath` AS `Movie_movieFullPath`,`Movie`.`positionX` AS `Movie_positionX`,`Movie`.`positionY` AS `Movie_positionY`,`Movie`.`micrographFullPath` AS `Movie_micrographFullPath`,`Movie`.`micrographSnapshotFullPath` AS `Movie_micrographSnapshotFullPath`,`Movie`.`xmlMetaDataFullPath` AS `Movie_xmlMetaDataFullPath`,`Movie`.`dosePerImage` AS `Movie_dosePerImage`,`Movie`.`createdTimeStamp` AS `Movie_createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `MotionCorrection_motionCorrectionId`,`MotionCorrection`.`movieId` AS `MotionCorrection_movieId`,`MotionCorrection`.`firstFrame` AS `MotionCorrection_firstFrame`,`MotionCorrection`.`lastFrame` AS `MotionCorrection_lastFrame`,`MotionCorrection`.`dosePerFrame` AS `MotionCorrection_dosePerFrame`,`MotionCorrection`.`doseWeight` AS `MotionCorrection_doseWeight`,`MotionCorrection`.`totalMotion` AS `MotionCorrection_totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `MotionCorrection_averageMotionPerFrame`,`MotionCorrection`.`driftPlotFullPath` AS `MotionCorrection_driftPlotFullPath`,`MotionCorrection`.`micrographFullPath` AS `MotionCorrection_micrographFullPath`,`MotionCorrection`.`micrographSnapshotFullPath` AS `MotionCorrection_micrographSnapshotFullPath`,`MotionCorrection`.`correctedDoseMicrographFullPath` AS `MotionCorrection_correctedDoseMicrographFullPath`,`MotionCorrection`.`patchesUsed` AS `MotionCorrection_patchesUsed`,`MotionCorrection`.`logFileFullPath` AS `MotionCorrection_logFileFullPath`,`CTF`.`CTFid` AS `CTF_CTFid`,`CTF`.`motionCorrectionId` AS `CTF_motionCorrectionId`,`CTF`.`spectraImageThumbnailFullPath` AS `CTF_spectraImageThumbnailFullPath`,`CTF`.`spectraImageFullPath` AS `CTF_spectraImageFullPath`,`CTF`.`defocusU` AS `CTF_defocusU`,`CTF`.`defocusV` AS `CTF_defocusV`,`CTF`.`angle` AS `CTF_angle`,`CTF`.`crossCorrelationCoefficient` AS `CTF_crossCorrelationCoefficient`,`CTF`.`resolutionLimit` AS `CTF_resolutionLimit`,`CTF`.`estimatedBfactor` AS `CTF_estimatedBfactor`,`CTF`.`logFilePath` AS `CTF_logFilePath`,`CTF`.`createdTimeStamp` AS `CTF_createdTimeStamp`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Proposal`.`proposalId` AS `Proposal_proposalId`,`BLSession`.`sessionId` AS `BLSession_sessionId` from ((((((`Movie` left join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `Movie`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_stats` AS select `Proposal`.`proposalId` AS `proposalId`,`BLSession`.`sessionId` AS `sessionId`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`Movie`.`movieId` AS `movieId`,`Movie`.`createdTimeStamp` AS `createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `motionCorrectionId`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`MotionCorrection`.`totalMotion` AS `totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `averageMotionPerFrame`,`MotionCorrection`.`lastFrame` AS `lastFrame`,`MotionCorrection`.`dosePerFrame` AS `dosePerFrame`,`CTF`.`defocusU` AS `defocusU`,`CTF`.`defocusV` AS `defocusV` from ((((((`BLSession` join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) join `DataCollectionGroup` on((`DataCollectionGroup`.`sessionId` = `BLSession`.`sessionId`))) join `DataCollection` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) join `Movie` on((`Movie`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`)));
+--
+-- Structure for view `v_datacollection_summary_datacollectiongroup`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_datacollectiongroup`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_energyScan` AS select `EnergyScan`.`energyScanId` AS `energyScanId`,`EnergyScan`.`sessionId` AS `sessionId`,`EnergyScan`.`blSampleId` AS `blSampleId`,`EnergyScan`.`fluorescenceDetector` AS `fluorescenceDetector`,`EnergyScan`.`scanFileFullPath` AS `scanFileFullPath`,`EnergyScan`.`choochFileFullPath` AS `choochFileFullPath`,`EnergyScan`.`jpegChoochFileFullPath` AS `jpegChoochFileFullPath`,`EnergyScan`.`element` AS `element`,`EnergyScan`.`startEnergy` AS `startEnergy`,`EnergyScan`.`endEnergy` AS `endEnergy`,`EnergyScan`.`transmissionFactor` AS `transmissionFactor`,`EnergyScan`.`exposureTime` AS `exposureTime`,`EnergyScan`.`synchrotronCurrent` AS `synchrotronCurrent`,`EnergyScan`.`temperature` AS `temperature`,`EnergyScan`.`peakEnergy` AS `peakEnergy`,`EnergyScan`.`peakFPrime` AS `peakFPrime`,`EnergyScan`.`peakFDoublePrime` AS `peakFDoublePrime`,`EnergyScan`.`inflectionEnergy` AS `inflectionEnergy`,`EnergyScan`.`inflectionFPrime` AS `inflectionFPrime`,`EnergyScan`.`inflectionFDoublePrime` AS `inflectionFDoublePrime`,`EnergyScan`.`xrayDose` AS `xrayDose`,`EnergyScan`.`startTime` AS `startTime`,`EnergyScan`.`endTime` AS `endTime`,`EnergyScan`.`edgeEnergy` AS `edgeEnergy`,`EnergyScan`.`filename` AS `filename`,`EnergyScan`.`beamSizeVertical` AS `beamSizeVertical`,`EnergyScan`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`EnergyScan`.`crystalClass` AS `crystalClass`,`EnergyScan`.`comments` AS `comments`,`EnergyScan`.`flux` AS `flux`,`EnergyScan`.`flux_end` AS `flux_end`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((((`EnergyScan` left join `BLSample` on((`BLSample`.`blSampleId` = `EnergyScan`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `BLSession` on((`BLSession`.`sessionId` = `EnergyScan`.`sessionId`)));
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_datacollectiongroup`  AS  select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status` from ((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_hour` AS select date_format((now() - interval 23 hour),_utf8'%Y-%m-%d %H') AS `num` union select date_format((now() - interval 22 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 21 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 20 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 19 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 18 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 17 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 16 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 15 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 14 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 13 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 12 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 11 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 10 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 9 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 8 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 7 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 6 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 5 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 4 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 3 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 2 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 1 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 0 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByHour` AS select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%H') order by `w`.`num`;
+--
+-- Structure for view `v_datacollection_summary_phasing`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_phasing`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByMonthDay` AS select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num`;
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_phasing`  AS  select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_phasing_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_phasing_processingStatus`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId` from (((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeek` AS select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON')))) group by substr(`w`.`num`,6) order by `w`.`num`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeekDay` AS select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by `w`.`day` order by `w`.`day`;
+--
+-- Structure for view `v_datacollection_summary_screening`
+--
+DROP TABLE IF EXISTS `v_datacollection_summary_screening`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_monthDay` AS select date_format((now() - interval 31 day),_utf8'%Y-%m-%d') AS `num` union select date_format((now() - interval 30 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format((now() - interval 29 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format((now() - interval 28 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format((now() - interval 27 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format((now() - interval 26 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format((now() - interval 25 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format((now() - interval 24 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format((now() - interval 23 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format((now() - interval 22 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format((now() - interval 21 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format((now() - interval 20 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format((now() - interval 19 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format((now() - interval 18 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format((now() - interval 17 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format((now() - interval 16 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format((now() - interval 15 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format((now() - interval 14 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format((now() - interval 13 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format((now() - interval 12 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format((now() - interval 11 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format((now() - interval 10 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format((now() - interval 9 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format((now() - interval 8 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format((now() - interval 7 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')`;
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_screening`  AS  select `Screening`.`screeningId` AS `Screening_screeningId`,`Screening`.`dataCollectionId` AS `Screening_dataCollectionId`,`Screening`.`dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`ScreeningOutput`.`strategySuccess` AS `ScreeningOutput_strategySuccess`,`ScreeningOutput`.`indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`ScreeningOutput`.`rankingResolution` AS `ScreeningOutput_rankingResolution`,`ScreeningOutput`.`mosaicityEstimated` AS `ScreeningOutput_mosaicityEstimated`,`ScreeningOutput`.`mosaicity` AS `ScreeningOutput_mosaicity`,`ScreeningOutput`.`totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`ScreeningOutput`.`totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`ScreeningOutput`.`totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`ScreeningOutputLattice`.`spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`ScreeningOutputLattice`.`unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`ScreeningOutputLattice`.`unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`ScreeningOutputLattice`.`unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`ScreeningOutputLattice`.`unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`ScreeningOutputLattice`.`unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`ScreeningOutputLattice`.`unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`ScreeningStrategySubWedge`.`exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`ScreeningStrategySubWedge`.`transmission` AS `ScreeningStrategySubWedge_transmission`,`ScreeningStrategySubWedge`.`oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`ScreeningStrategySubWedge`.`numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`ScreeningStrategySubWedge`.`multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`ScreeningStrategySubWedge`.`completeness` AS `ScreeningStrategySubWedge_completeness`,`ScreeningStrategySubWedge`.`axisStart` AS `ScreeningStrategySubWedge_axisStart`,`ScreeningStrategySubWedge`.`axisEnd` AS `ScreeningStrategySubWedge_axisEnd`,`ScreeningStrategySubWedge`.`rotationAxis` AS `ScreeningStrategySubWedge_rotationAxis` from (((((`Screening` left join `ScreeningOutput` on((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`))) left join `ScreeningOutputLattice` on((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`))) left join `ScreeningStrategy` on((`ScreeningStrategy`.`screeningOutputId` = `ScreeningOutput`.`screeningOutputId`))) left join `ScreeningStrategyWedge` on((`ScreeningStrategyWedge`.`screeningStrategyId` = `ScreeningStrategy`.`screeningStrategyId`))) left join `ScreeningStrategySubWedge` on((`ScreeningStrategySubWedge`.`screeningStrategyWedgeId` = `ScreeningStrategyWedge`.`screeningStrategyWedgeId`))) ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_autoprocessing_stats` AS select `AutoProcScalingStatistics`.`autoProcScalingStatisticsId` AS `autoProcScalingStatisticsId`,`AutoProcScalingStatistics`.`autoProcScalingId` AS `autoProcScalingId`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`rMeasWithinIPlusIMinus` AS `rMeasWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rMeasAllIPlusIMinus` AS `rMeasAllIPlusIMinus`,`AutoProcScalingStatistics`.`rPimWithinIPlusIMinus` AS `rPimWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rPimAllIPlusIMinus` AS `rPimAllIPlusIMinus`,`AutoProcScalingStatistics`.`fractionalPartialBias` AS `fractionalPartialBias`,`AutoProcScalingStatistics`.`nTotalObservations` AS `nTotalObservations`,`AutoProcScalingStatistics`.`nTotalUniqueObservations` AS `nTotalUniqueObservations`,`AutoProcScalingStatistics`.`meanIOverSigI` AS `meanIOverSigI`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScalingStatistics`.`multiplicity` AS `multiplicity`,`AutoProcScalingStatistics`.`anomalousCompleteness` AS `anomalousCompleteness`,`AutoProcScalingStatistics`.`anomalousMultiplicity` AS `anomalousMultiplicity`,`AutoProcScalingStatistics`.`recordTimeStamp` AS `recordTimeStamp`,`AutoProcScalingStatistics`.`anomalous` AS `anomalous`,`AutoProcScalingStatistics`.`ccHalf` AS `ccHalf`,`AutoProcScalingStatistics`.`ccAno` AS `ccAno`,`AutoProcScalingStatistics`.`sigAno` AS `sigAno`,`AutoProcScalingStatistics`.`isa` AS `ISA`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`beamLineName` AS `beamLineName` from ((((((`AutoProcScalingStatistics` left join `AutoProcScaling` on((`AutoProcScalingStatistics`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcIntegration` on((`AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_sample` AS select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`diffractionPlanId` AS `BLSample_diffractionPlanId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`containerId` AS `BLSample_containerId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`holderLength` AS `BLSample_holderLength`,`BLSample`.`loopLength` AS `BLSample_loopLength`,`BLSample`.`loopType` AS `BLSample_loopType`,`BLSample`.`wireWidth` AS `BLSample_wireWidth`,`BLSample`.`comments` AS `BLSample_comments`,`BLSample`.`completionStage` AS `BLSample_completionStage`,`BLSample`.`structureStage` AS `BLSample_structureStage`,`BLSample`.`publicationStage` AS `BLSample_publicationStage`,`BLSample`.`publicationComments` AS `BLSample_publicationComments`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`isInSampleChanger` AS `BLSample_isInSampleChanger`,`BLSample`.`lastKnownCenteringPosition` AS `BLSample_lastKnownCenteringPosition`,`BLSample`.`recordTimeStamp` AS `BLSample_recordTimeStamp`,`BLSample`.`SMILES` AS `BLSample_SMILES`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`Protein`.`proteinType` AS `Protein_proteinType`,`Shipping`.`proposalId` AS `Protein_proposalId`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress`,`Container`.`containerId` AS `Container_containerId`,`Container`.`code` AS `Container_code`,`Container`.`containerType` AS `Container_containerType`,`Container`.`containerStatus` AS `Container_containerStatus`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`beamLineName` AS `BLSession_beamLineName` from ((((((((`BLSample` left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Person` on((`Person`.`personId` = `Protein`.`personId`))) left join `Container` on((`BLSample`.`containerId` = `Container`.`containerId`))) left join `Dewar` on((`Dewar`.`dewarId` = `Container`.`dewarId`))) left join `Shipping` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`blSampleId` = `BLSample`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`)));
+--
+-- Structure for view `v_dewar`
+--
+DROP TABLE IF EXISTS `v_dewar`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_phasing` AS select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcProgramId` AS `AutoProcIntegration_autoProcProgramId`,`AutoProcIntegration`.`startImageNumber` AS `AutoProcIntegration_startImageNumber`,`AutoProcIntegration`.`endImageNumber` AS `AutoProcIntegration_endImageNumber`,`AutoProcIntegration`.`refinedDetectorDistance` AS `AutoProcIntegration_refinedDetectorDistance`,`AutoProcIntegration`.`refinedXBeam` AS `AutoProcIntegration_refinedXBeam`,`AutoProcIntegration`.`refinedYBeam` AS `AutoProcIntegration_refinedYBeam`,`AutoProcIntegration`.`rotationAxisX` AS `AutoProcIntegration_rotationAxisX`,`AutoProcIntegration`.`rotationAxisY` AS `AutoProcIntegration_rotationAxisY`,`AutoProcIntegration`.`rotationAxisZ` AS `AutoProcIntegration_rotationAxisZ`,`AutoProcIntegration`.`beamVectorX` AS `AutoProcIntegration_beamVectorX`,`AutoProcIntegration`.`beamVectorY` AS `AutoProcIntegration_beamVectorY`,`AutoProcIntegration`.`beamVectorZ` AS `AutoProcIntegration_beamVectorZ`,`AutoProcIntegration`.`cell_a` AS `AutoProcIntegration_cell_a`,`AutoProcIntegration`.`cell_b` AS `AutoProcIntegration_cell_b`,`AutoProcIntegration`.`cell_c` AS `AutoProcIntegration_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `AutoProcIntegration_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `AutoProcIntegration_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `AutoProcIntegration_cell_gamma`,`AutoProcIntegration`.`recordTimeStamp` AS `AutoProcIntegration_recordTimeStamp`,`AutoProcIntegration`.`anomalous` AS `AutoProcIntegration_anomalous`,`SpaceGroup`.`spaceGroupId` AS `SpaceGroup_spaceGroupId`,`SpaceGroup`.`geometryClassnameId` AS `SpaceGroup_geometryClassnameId`,`SpaceGroup`.`spaceGroupNumber` AS `SpaceGroup_spaceGroupNumber`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`SpaceGroup`.`spaceGroupName` AS `SpaceGroup_spaceGroupName`,`SpaceGroup`.`bravaisLattice` AS `SpaceGroup_bravaisLattice`,`SpaceGroup`.`bravaisLatticeName` AS `SpaceGroup_bravaisLatticeName`,`SpaceGroup`.`pointGroup` AS `SpaceGroup_pointGroup`,`SpaceGroup`.`MX_used` AS `SpaceGroup_MX_used`,`PhasingStep`.`phasingStepId` AS `PhasingStep_phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `PhasingStep_previousPhasingStepId`,`PhasingStep`.`programRunId` AS `PhasingStep_programRunId`,`PhasingStep`.`spaceGroupId` AS `PhasingStep_spaceGroupId`,`PhasingStep`.`autoProcScalingId` AS `PhasingStep_autoProcScalingId`,`PhasingStep`.`phasingAnalysisId` AS `PhasingStep_phasingAnalysisId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasingStepType`,`PhasingStep`.`method` AS `PhasingStep_method`,`PhasingStep`.`solventContent` AS `PhasingStep_solventContent`,`PhasingStep`.`enantiomorph` AS `PhasingStep_enantiomorph`,`PhasingStep`.`lowRes` AS `PhasingStep_lowRes`,`PhasingStep`.`highRes` AS `PhasingStep_highRes`,`PhasingStep`.`recordTimeStamp` AS `PhasingStep_recordTimeStamp`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `DataCollection_strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `DataCollection_detectorId`,`DataCollection`.`blSubSampleId` AS `DataCollection_blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`overlap` AS `DataCollection_overlap`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`imageSuffix` AS `DataCollection_imageSuffix`,`DataCollection`.`fileTemplate` AS `DataCollection_fileTemplate`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`DataCollection`.`yBeamPix` AS `DataCollection_yBeamPix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`printableForReport` AS `DataCollection_printableForReport`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`transmission` AS `DataCollection_transmission`,`DataCollection`.`synchrotronMode` AS `DataCollection_synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `DataCollection_detector2Theta`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `DataCollection_beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `DataCollection_beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `DataCollection_centeringMethod`,`DataCollection`.`averageTemperature` AS `DataCollection_averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `DataCollection_actualCenteringPosition`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`totalAbsorbedDose` AS `DataCollection_totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `DataCollection_imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `DataCollection_imageQualityIndicatorsCSVPath`,`PhasingProgramRun`.`phasingProgramRunId` AS `PhasingProgramRun_phasingProgramRunId`,`PhasingProgramRun`.`phasingCommandLine` AS `PhasingProgramRun_phasingCommandLine`,`PhasingProgramRun`.`phasingPrograms` AS `PhasingProgramRun_phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `PhasingProgramRun_phasingStatus`,`PhasingProgramRun`.`phasingMessage` AS `PhasingProgramRun_phasingMessage`,`PhasingProgramRun`.`phasingStartTime` AS `PhasingProgramRun_phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `PhasingProgramRun_phasingEndTime`,`PhasingProgramRun`.`phasingEnvironment` AS `PhasingProgramRun_phasingEnvironment`,`PhasingProgramRun`.`recordTimeStamp` AS `PhasingProgramRun_recordTimeStamp`,`Protein`.`proteinId` AS `Protein_proteinId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`PhasingStatistics`.`phasingStatisticsId` AS `PhasingStatistics_phasingStatisticsId`,`PhasingStatistics`.`metric` AS `PhasingStatistics_metric`,`PhasingStatistics`.`statisticsValue` AS `PhasingStatistics_statisticsValue` from (((((((((((((`DataCollection` left join `AutoProcIntegration` on((`AutoProcIntegration`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStatistics` on((`PhasingStatistics`.`phasingStepId` = `PhasingStep`.`phasingStepId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar`  AS  select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if((`bls`.`code` is not null),1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on((`s`.`proposalId` = `p`.`proposalId`))) join `Dewar` `d` on((`d`.`shippingId` = `s`.`shippingId`))) left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSession` `ss` on((`ss`.`sessionId` = `d`.`firstExperimentId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h1` on(((`h1`.`dewarId` = `d`.`dewarId`) and ((`h1`.`dewarStatus` = 'at ESRF') or (`h1`.`dewarStatus` = 'sent to User'))))) left join `DewarTransportHistory` `h2` on(((`h2`.`dewarId` = `d`.`dewarId`) and (`h2`.`storageLocation` = 'STORES-IN')))) where (((`p`.`proposalCode` like 'MX%') or (`p`.`proposalCode` like 'FX%') or (`p`.`proposalCode` like 'IFX%') or (`p`.`proposalCode` like 'IX%') or (`p`.`proposalCode` like 'BM14U%') or (`p`.`proposalCode` like 'bm161%') or (`p`.`proposalCode` like 'bm162%')) and ((`p`.`proposalCode` <> 'FX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'IFX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'MX') or (`p`.`proposalNumber` <> '415')) and (`d`.`type` = 'Dewar') and (`s`.`creationDate` is not null)) group by `d`.`dewarId` ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sample` AS select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on((`c`.`containerId` = `bls`.`containerId`))) join `v_dewar` `d` on((`d`.`dewarId` = `c`.`dewarId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sampleByWeek` AS select substr(`w`.`num`,6) AS `Week`,if((`w`.`num` <= date_format(now(),'%Y-%v')),count(if((`bls`.`proposalCode` is not null),1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on((`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6);
+--
+-- Structure for view `v_dewarBeamline`
+--
+DROP TABLE IF EXISTS `v_dewarBeamline`;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_saxs_datacollection` AS select `Subtraction`.`subtractionId` AS `Subtraction_subtractionId`,`MeasurementToDataCollection`.`dataCollectionId` AS `MeasurementToDataCollection_dataCollectionId`,`MeasurementToDataCollection`.`dataCollectionOrder` AS `MeasurementToDataCollection_dataCollectionOrder`,`MeasurementToDataCollection`.`measurementToDataCollectionId` AS `MeasurementToDataCollection_measurementToDataCollectionId`,`Specimen`.`specimenId` AS `Specimen_specimenId`,`Measurement`.`code` AS `Measurement_code`,`Measurement`.`measurementId` AS `Measurement_measurementId`,`Buffer`.`bufferId` AS `Buffer_bufferId`,`Buffer`.`proposalId` AS `Buffer_proposalId`,`Buffer`.`safetyLevelId` AS `Buffer_safetyLevelId`,`Buffer`.`name` AS `Buffer_name`,`Buffer`.`acronym` AS `Buffer_acronym`,`Buffer`.`pH` AS `Buffer_pH`,`Buffer`.`composition` AS `Buffer_composition`,`Buffer`.`comments` AS `Buffer_comments`,`Macromolecule`.`macromoleculeId` AS `Macromolecule_macromoleculeId`,`Macromolecule`.`proposalId` AS `Macromolecule_proposalId`,`Macromolecule`.`safetyLevelId` AS `Macromolecule_safetyLevelId`,`Macromolecule`.`name` AS `Macromolecule_name`,`Macromolecule`.`acronym` AS `Macromolecule_acronym`,`Macromolecule`.`extintionCoefficient` AS `Macromolecule_extintionCoefficient`,`Macromolecule`.`molecularMass` AS `Macromolecule_molecularMass`,`Macromolecule`.`sequence` AS `Macromolecule_sequence`,`Macromolecule`.`contactsDescriptionFilePath` AS `Macromolecule_contactsDescriptionFilePath`,`Macromolecule`.`symmetry` AS `Macromolecule_symmetry`,`Macromolecule`.`comments` AS `Macromolecule_comments`,`Macromolecule`.`refractiveIndex` AS `Macromolecule_refractiveIndex`,`Macromolecule`.`solventViscosity` AS `Macromolecule_solventViscosity`,`Macromolecule`.`creationDate` AS `Macromolecule_creationDate`,`Specimen`.`experimentId` AS `Specimen_experimentId`,`Specimen`.`bufferId` AS `Specimen_bufferId`,`Specimen`.`samplePlatePositionId` AS `Specimen_samplePlatePositionId`,`Specimen`.`safetyLevelId` AS `Specimen_safetyLevelId`,`Specimen`.`stockSolutionId` AS `Specimen_stockSolutionId`,`Specimen`.`code` AS `Specimen_code`,`Specimen`.`concentration` AS `Specimen_concentration`,`Specimen`.`volume` AS `Specimen_volume`,`Specimen`.`comments` AS `Specimen_comments`,`SamplePlatePosition`.`samplePlatePositionId` AS `SamplePlatePosition_samplePlatePositionId`,`SamplePlatePosition`.`samplePlateId` AS `SamplePlatePosition_samplePlateId`,`SamplePlatePosition`.`rowNumber` AS `SamplePlatePosition_rowNumber`,`SamplePlatePosition`.`columnNumber` AS `SamplePlatePosition_columnNumber`,`SamplePlatePosition`.`volume` AS `SamplePlatePosition_volume`,`SamplePlate`.`samplePlateId` AS `samplePlateId`,`SamplePlate`.`experimentId` AS `experimentId`,`SamplePlate`.`plateGroupId` AS `plateGroupId`,`SamplePlate`.`plateTypeId` AS `plateTypeId`,`SamplePlate`.`instructionSetId` AS `instructionSetId`,`SamplePlate`.`boxId` AS `SamplePlate_boxId`,`SamplePlate`.`name` AS `SamplePlate_name`,`SamplePlate`.`slotPositionRow` AS `SamplePlate_slotPositionRow`,`SamplePlate`.`slotPositionColumn` AS `SamplePlate_slotPositionColumn`,`SamplePlate`.`storageTemperature` AS `SamplePlate_storageTemperature`,`Experiment`.`experimentId` AS `Experiment_experimentId`,`Experiment`.`sessionId` AS `Experiment_sessionId`,`Experiment`.`proposalId` AS `Experiment_proposalId`,`Experiment`.`name` AS `Experiment_name`,`Experiment`.`creationDate` AS `Experiment_creationDate`,`Experiment`.`experimentType` AS `Experiment_experimentType`,`Experiment`.`sourceFilePath` AS `Experiment_sourceFilePath`,`Experiment`.`dataAcquisitionFilePath` AS `Experiment_dataAcquisitionFilePath`,`Experiment`.`status` AS `Experiment_status`,`Experiment`.`comments` AS `Experiment_comments`,`Measurement`.`priorityLevelId` AS `Measurement_priorityLevelId`,`Measurement`.`exposureTemperature` AS `Measurement_exposureTemperature`,`Measurement`.`viscosity` AS `Measurement_viscosity`,`Measurement`.`flow` AS `Measurement_flow`,`Measurement`.`extraFlowTime` AS `Measurement_extraFlowTime`,`Measurement`.`volumeToLoad` AS `Measurement_volumeToLoad`,`Measurement`.`waitTime` AS `Measurement_waitTime`,`Measurement`.`transmission` AS `Measurement_transmission`,`Measurement`.`comments` AS `Measurement_comments`,`Measurement`.`imageDirectory` AS `Measurement_imageDirectory`,`Run`.`runId` AS `Run_runId`,`Run`.`timePerFrame` AS `Run_timePerFrame`,`Run`.`timeStart` AS `Run_timeStart`,`Run`.`timeEnd` AS `Run_timeEnd`,`Run`.`storageTemperature` AS `Run_storageTemperature`,`Run`.`exposureTemperature` AS `Run_exposureTemperature`,`Run`.`spectrophotometer` AS `Run_spectrophotometer`,`Run`.`energy` AS `Run_energy`,`Run`.`creationDate` AS `Run_creationDate`,`Run`.`frameAverage` AS `Run_frameAverage`,`Run`.`frameCount` AS `Run_frameCount`,`Run`.`transmission` AS `Run_transmission`,`Run`.`beamCenterX` AS `Run_beamCenterX`,`Run`.`beamCenterY` AS `Run_beamCenterY`,`Run`.`pixelSizeX` AS `Run_pixelSizeX`,`Run`.`pixelSizeY` AS `Run_pixelSizeY`,`Run`.`radiationRelative` AS `Run_radiationRelative`,`Run`.`radiationAbsolute` AS `Run_radiationAbsolute`,`Run`.`normalization` AS `Run_normalization`,`Merge`.`mergeId` AS `Merge_mergeId`,`Merge`.`measurementId` AS `Merge_measurementId`,`Merge`.`frameListId` AS `Merge_frameListId`,`Merge`.`discardedFrameNameList` AS `Merge_discardedFrameNameList`,`Merge`.`averageFilePath` AS `Merge_averageFilePath`,`Merge`.`framesCount` AS `Merge_framesCount`,`Merge`.`framesMerge` AS `Merge_framesMerge`,`Merge`.`creationDate` AS `Merge_creationDate`,`Subtraction`.`dataCollectionId` AS `Subtraction_dataCollectionId`,`Subtraction`.`rg` AS `Subtraction_rg`,`Subtraction`.`rgStdev` AS `Subtraction_rgStdev`,`Subtraction`.`I0` AS `Subtraction_I0`,`Subtraction`.`I0Stdev` AS `Subtraction_I0Stdev`,`Subtraction`.`firstPointUsed` AS `Subtraction_firstPointUsed`,`Subtraction`.`lastPointUsed` AS `Subtraction_lastPointUsed`,`Subtraction`.`quality` AS `Subtraction_quality`,`Subtraction`.`isagregated` AS `Subtraction_isagregated`,`Subtraction`.`concentration` AS `Subtraction_concentration`,`Subtraction`.`gnomFilePath` AS `Subtraction_gnomFilePath`,`Subtraction`.`rgGuinier` AS `Subtraction_rgGuinier`,`Subtraction`.`rgGnom` AS `Subtraction_rgGnom`,`Subtraction`.`dmax` AS `Subtraction_dmax`,`Subtraction`.`total` AS `Subtraction_total`,`Subtraction`.`volume` AS `Subtraction_volume`,`Subtraction`.`creationTime` AS `Subtraction_creationTime`,`Subtraction`.`kratkyFilePath` AS `Subtraction_kratkyFilePath`,`Subtraction`.`scatteringFilePath` AS `Subtraction_scatteringFilePath`,`Subtraction`.`guinierFilePath` AS `Subtraction_guinierFilePath`,`Subtraction`.`substractedFilePath` AS `Subtraction_substractedFilePath`,`Subtraction`.`gnomFilePathOutput` AS `Subtraction_gnomFilePathOutput`,`Subtraction`.`sampleOneDimensionalFiles` AS `Subtraction_sampleOneDimensionalFiles`,`Subtraction`.`bufferOnedimensionalFiles` AS `Subtraction_bufferOnedimensionalFiles`,`Subtraction`.`sampleAverageFilePath` AS `Subtraction_sampleAverageFilePath`,`Subtraction`.`bufferAverageFilePath` AS `Subtraction_bufferAverageFilePath` from ((((((((((`Experiment` left join `Specimen` on((`Specimen`.`experimentId` = `Experiment`.`experimentId`))) left join `Measurement` on((`Measurement`.`specimenId` = `Specimen`.`specimenId`))) left join `MeasurementToDataCollection` on((`MeasurementToDataCollection`.`measurementId` = `Measurement`.`measurementId`))) left join `Macromolecule` on((`Macromolecule`.`macromoleculeId` = `Specimen`.`macromoleculeId`))) left join `Buffer` on((`Buffer`.`bufferId` = `Specimen`.`bufferId`))) left join `SamplePlatePosition` on((`SamplePlatePosition`.`samplePlatePositionId` = `Specimen`.`samplePlatePositionId`))) left join `SamplePlate` on((`SamplePlate`.`samplePlateId` = `SamplePlatePosition`.`samplePlateId`))) left join `Run` on((`Run`.`runId` = `Measurement`.`runId`))) left join `Merge` on((`Merge`.`measurementId` = `Measurement`.`measurementId`))) left join `Subtraction` on((`Subtraction`.`dataCollectionId` = `MeasurementToDataCollection`.`dataCollectionId`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamline`  AS  select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where (`d`.`beamLineName` is not null) group by `d`.`beamLineName` ;
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_session` AS select `BLSession`.`sessionId` AS `sessionId`,`BLSession`.`expSessionPk` AS `expSessionPk`,`BLSession`.`beamLineSetupId` AS `beamLineSetupId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`projectCode` AS `projectCode`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`endDate` AS `BLSession_endDate`,`BLSession`.`beamLineName` AS `beamLineName`,`BLSession`.`scheduled` AS `scheduled`,`BLSession`.`nbShifts` AS `nbShifts`,`BLSession`.`comments` AS `comments`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`visit_number` AS `visit_number`,`BLSession`.`bltimeStamp` AS `bltimeStamp`,`BLSession`.`usedFlag` AS `usedFlag`,`BLSession`.`sessionTitle` AS `sessionTitle`,`BLSession`.`structureDeterminations` AS `structureDeterminations`,`BLSession`.`dewarTransport` AS `dewarTransport`,`BLSession`.`databackupFrance` AS `databackupFrance`,`BLSession`.`databackupEurope` AS `databackupEurope`,`BLSession`.`operatorSiteNumber` AS `operatorSiteNumber`,`BLSession`.`lastUpdate` AS `BLSession_lastUpdate`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Proposal`.`title` AS `Proposal_title`,`Proposal`.`proposalCode` AS `Proposal_proposalCode`,`Proposal`.`proposalNumber` AS `Proposal_ProposalNumber`,`Proposal`.`proposalType` AS `Proposal_ProposalType`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress` from ((`BLSession` left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `Person` on((`Person`.`personId` = `Proposal`.`personId`)));
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_tracking_shipment_history` AS select `Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`comments` AS `Dewar_comments`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Dewar`.`firstExperimentId` AS `Dewar_firstExperimentId`,`Dewar`.`trackingNumberToSynchrotron` AS `Dewar_trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `Dewar_trackingNumberFromSynchrotron`,`Dewar`.`type` AS `Dewar_type`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`proposalId` AS `Shipping_proposalId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `Shipping_deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `Shipping_deliveryAgent_deliveryDate`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`Shipping`.`returnCourier` AS `Shipping_returnCourier`,`Shipping`.`dateOfShippingToUser` AS `Shipping_dateOfShippingToUser`,`DewarTransportHistory`.`DewarTransportHistoryId` AS `DewarTransportHistory_DewarTransportHistoryId`,`DewarTransportHistory`.`dewarStatus` AS `DewarTransportHistory_dewarStatus`,`DewarTransportHistory`.`storageLocation` AS `DewarTransportHistory_storageLocation`,`DewarTransportHistory`.`arrivalDate` AS `DewarTransportHistory_arrivalDate` from ((`Shipping` left join `Dewar` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DewarTransportHistory` on((`DewarTransportHistory`.`dewarId` = `Dewar`.`dewarId`)));
+--
+-- Structure for view `v_dewarBeamlineByWeek`
+--
+DROP TABLE IF EXISTS `v_dewarBeamlineByWeek`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_week` AS select date_format((now() - interval 52 week),_utf8'%x-%v') AS `num` union select date_format((now() - interval 51 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format((now() - interval 50 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format((now() - interval 49 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format((now() - interval 48 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format((now() - interval 47 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format((now() - interval 46 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format((now() - interval 45 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format((now() - interval 44 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format((now() - interval 43 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format((now() - interval 42 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format((now() - interval 41 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format((now() - interval 40 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format((now() - interval 39 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format((now() - interval 38 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format((now() - interval 37 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format((now() - interval 36 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format((now() - interval 35 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format((now() - interval 34 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format((now() - interval 33 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format((now() - interval 32 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format((now() - interval 31 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format((now() - interval 30 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format((now() - interval 29 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format((now() - interval 28 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format((now() - interval 27 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format((now() - interval 26 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format((now() - interval 25 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format((now() - interval 24 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format((now() - interval 23 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format((now() - interval 22 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format((now() - interval 21 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format((now() - interval 20 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format((now() - interval 19 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format((now() - interval 18 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format((now() - interval 17 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format((now() - interval 16 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format((now() - interval 15 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format((now() - interval 14 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format((now() - interval 13 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format((now() - interval 12 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format((now() - interval 11 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format((now() - interval 10 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format((now() - interval 9 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format((now() - interval 8 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format((now() - interval 7 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format((now() - interval 6 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format((now() - interval 5 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format((now() - interval 4 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format((now() - interval 3 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format((now() - interval 2 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format((now() - interval 1 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format((now() - interval 0 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamlineByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`beamLineName` like 'ID14%'),1,NULL)) AS `ID14`,count(if((`d`.`beamLineName` like 'ID23%'),1,NULL)) AS `ID23`,count(if((`d`.`beamLineName` like 'ID29%'),1,NULL)) AS `ID29`,count(if((`d`.`beamLineName` like 'BM14%'),1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%x-%v')))) group by `w`.`num` order by `w`.`num` ;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_weekDay` AS select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `day` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')`;
+-- --------------------------------------------------------
 
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_xfeFluorescenceSpectrum` AS select `XFEFluorescenceSpectrum`.`xfeFluorescenceSpectrumId` AS `xfeFluorescenceSpectrumId`,`XFEFluorescenceSpectrum`.`sessionId` AS `sessionId`,`XFEFluorescenceSpectrum`.`blSampleId` AS `blSampleId`,`XFEFluorescenceSpectrum`.`fittedDataFileFullPath` AS `fittedDataFileFullPath`,`XFEFluorescenceSpectrum`.`scanFileFullPath` AS `scanFileFullPath`,`XFEFluorescenceSpectrum`.`jpegScanFileFullPath` AS `jpegScanFileFullPath`,`XFEFluorescenceSpectrum`.`startTime` AS `startTime`,`XFEFluorescenceSpectrum`.`endTime` AS `endTime`,`XFEFluorescenceSpectrum`.`filename` AS `filename`,`XFEFluorescenceSpectrum`.`energy` AS `energy`,`XFEFluorescenceSpectrum`.`exposureTime` AS `exposureTime`,`XFEFluorescenceSpectrum`.`beamTransmission` AS `beamTransmission`,`XFEFluorescenceSpectrum`.`annotatedPymcaXfeSpectrum` AS `annotatedPymcaXfeSpectrum`,`XFEFluorescenceSpectrum`.`beamSizeVertical` AS `beamSizeVertical`,`XFEFluorescenceSpectrum`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`XFEFluorescenceSpectrum`.`crystalClass` AS `crystalClass`,`XFEFluorescenceSpectrum`.`comments` AS `comments`,`XFEFluorescenceSpectrum`.`flux` AS `flux`,`XFEFluorescenceSpectrum`.`flux_end` AS `flux_end`,`XFEFluorescenceSpectrum`.`workingDirectory` AS `workingDirectory`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((`XFEFluorescenceSpectrum` left join `BLSample` on((`BLSample`.`blSampleId` = `XFEFluorescenceSpectrum`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `XFEFluorescenceSpectrum`.`sessionId`)));
+--
+-- Structure for view `v_dewarByWeek`
+--
+DROP TABLE IF EXISTS `v_dewarByWeek`;
 
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by `w`.`num` ;
 
+-- --------------------------------------------------------
 
+--
+-- Structure for view `v_dewarByWeekTotal`
+--
+DROP TABLE IF EXISTS `v_dewarByWeekTotal`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeekTotal`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked`,count(if((`d`.`proposalCode` is not null),1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_dewarList`
+--
+DROP TABLE IF EXISTS `v_dewarList`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarList`  AS  select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if((`bls`.`blSampleId` is not null),1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h` on((`h`.`dewarId` = `d`.`dewarId`))) group by `d`.`dewarId` order by `d`.`creationDate` desc ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_dewarProposalCode`
+--
+DROP TABLE IF EXISTS `v_dewarProposalCode`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCode`  AS  select `d`.`proposalCode` AS `proposalCode`,count(0) AS `COUNT(*)` from `v_dewar` `d` group by `d`.`proposalCode` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_dewarProposalCodeByWeek`
+--
+DROP TABLE IF EXISTS `v_dewarProposalCodeByWeek`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCodeByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`proposalCode` = 'MX'),1,NULL)) AS `MX`,count(if((`d`.`proposalCode` = 'FX'),1,NULL)) AS `FX`,count(if((`d`.`proposalCode` = 'BM14U'),1,NULL)) AS `BM14U`,count(if((`d`.`proposalCode` = 'BM161'),1,NULL)) AS `BM161`,count(if((`d`.`proposalCode` = 'BM162'),1,NULL)) AS `BM162`,count(if(((`d`.`proposalCode` <> 'MX') and (`d`.`proposalCode` <> 'FX') and (`d`.`proposalCode` <> 'BM14U') and (`d`.`proposalCode` <> 'BM161') and (`d`.`proposalCode` <> 'BM162')),1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_dewar_summary`
+--
+DROP TABLE IF EXISTS `v_dewar_summary`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar_summary`  AS  select `Shipping`.`shippingName` AS `shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `deliveryAgent_deliveryDate`,`Shipping`.`deliveryAgent_agentCode` AS `deliveryAgent_agentCode`,`Shipping`.`deliveryAgent_flightCode` AS `deliveryAgent_flightCode`,`Shipping`.`shippingStatus` AS `shippingStatus`,`Shipping`.`bltimeStamp` AS `bltimeStamp`,`Shipping`.`laboratoryId` AS `laboratoryId`,`Shipping`.`isStorageShipping` AS `isStorageShipping`,`Shipping`.`creationDate` AS `creationDate`,`Shipping`.`comments` AS `Shipping_comments`,`Shipping`.`sendingLabContactId` AS `sendingLabContactId`,`Shipping`.`returnLabContactId` AS `returnLabContactId`,`Shipping`.`returnCourier` AS `returnCourier`,`Shipping`.`dateOfShippingToUser` AS `dateOfShippingToUser`,`Shipping`.`shippingType` AS `shippingType`,`Dewar`.`dewarId` AS `dewarId`,`Dewar`.`shippingId` AS `shippingId`,`Dewar`.`code` AS `dewarCode`,`Dewar`.`comments` AS `comments`,`Dewar`.`storageLocation` AS `storageLocation`,`Dewar`.`dewarStatus` AS `dewarStatus`,`Dewar`.`isStorageDewar` AS `isStorageDewar`,`Dewar`.`barCode` AS `barCode`,`Dewar`.`firstExperimentId` AS `firstExperimentId`,`Dewar`.`customsValue` AS `customsValue`,`Dewar`.`transportValue` AS `transportValue`,`Dewar`.`trackingNumberToSynchrotron` AS `trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `trackingNumberFromSynchrotron`,`Dewar`.`type` AS `type`,`Dewar`.`isReimbursed` AS `isReimbursed`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`beamLineName` AS `beamlineName`,`BLSession`.`startDate` AS `sessionStartDate`,`BLSession`.`endDate` AS `sessionEndDate`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`nbReimbDewars` AS `nbReimbDewars`,`Proposal`.`proposalId` AS `proposalId`,`Container`.`containerId` AS `containerId`,`Container`.`containerType` AS `containerType`,`Container`.`capacity` AS `capacity`,`Container`.`beamlineLocation` AS `beamlineLocation`,`Container`.`sampleChangerLocation` AS `sampleChangerLocation`,`Container`.`containerStatus` AS `containerStatus`,`Container`.`code` AS `containerCode` from (((((`Dewar` left join `Container` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `ShippingHasSession` on((`Shipping`.`shippingId` = `ShippingHasSession`.`shippingId`))) left join `BLSession` on((`ShippingHasSession`.`sessionId` = `BLSession`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `Shipping`.`proposalId`))) order by `Dewar`.`dewarId` desc ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_em_movie`
+--
+DROP TABLE IF EXISTS `v_em_movie`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_movie`  AS  select `Movie`.`movieId` AS `Movie_movieId`,`Movie`.`dataCollectionId` AS `Movie_dataCollectionId`,`Movie`.`movieNumber` AS `Movie_movieNumber`,`Movie`.`movieFullPath` AS `Movie_movieFullPath`,`Movie`.`positionX` AS `Movie_positionX`,`Movie`.`positionY` AS `Movie_positionY`,`Movie`.`micrographFullPath` AS `Movie_micrographFullPath`,`Movie`.`micrographSnapshotFullPath` AS `Movie_micrographSnapshotFullPath`,`Movie`.`xmlMetaDataFullPath` AS `Movie_xmlMetaDataFullPath`,`Movie`.`dosePerImage` AS `Movie_dosePerImage`,`Movie`.`createdTimeStamp` AS `Movie_createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `MotionCorrection_motionCorrectionId`,`MotionCorrection`.`movieId` AS `MotionCorrection_movieId`,`MotionCorrection`.`firstFrame` AS `MotionCorrection_firstFrame`,`MotionCorrection`.`lastFrame` AS `MotionCorrection_lastFrame`,`MotionCorrection`.`dosePerFrame` AS `MotionCorrection_dosePerFrame`,`MotionCorrection`.`doseWeight` AS `MotionCorrection_doseWeight`,`MotionCorrection`.`totalMotion` AS `MotionCorrection_totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `MotionCorrection_averageMotionPerFrame`,`MotionCorrection`.`driftPlotFullPath` AS `MotionCorrection_driftPlotFullPath`,`MotionCorrection`.`micrographFullPath` AS `MotionCorrection_micrographFullPath`,`MotionCorrection`.`micrographSnapshotFullPath` AS `MotionCorrection_micrographSnapshotFullPath`,`MotionCorrection`.`correctedDoseMicrographFullPath` AS `MotionCorrection_correctedDoseMicrographFullPath`,`MotionCorrection`.`patchesUsed` AS `MotionCorrection_patchesUsed`,`MotionCorrection`.`logFileFullPath` AS `MotionCorrection_logFileFullPath`,`CTF`.`CTFid` AS `CTF_CTFid`,`CTF`.`motionCorrectionId` AS `CTF_motionCorrectionId`,`CTF`.`spectraImageThumbnailFullPath` AS `CTF_spectraImageThumbnailFullPath`,`CTF`.`spectraImageFullPath` AS `CTF_spectraImageFullPath`,`CTF`.`defocusU` AS `CTF_defocusU`,`CTF`.`defocusV` AS `CTF_defocusV`,`CTF`.`angle` AS `CTF_angle`,`CTF`.`crossCorrelationCoefficient` AS `CTF_crossCorrelationCoefficient`,`CTF`.`resolutionLimit` AS `CTF_resolutionLimit`,`CTF`.`estimatedBfactor` AS `CTF_estimatedBfactor`,`CTF`.`logFilePath` AS `CTF_logFilePath`,`CTF`.`createdTimeStamp` AS `CTF_createdTimeStamp`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Proposal`.`proposalId` AS `Proposal_proposalId`,`BLSession`.`sessionId` AS `BLSession_sessionId` from ((((((`Movie` left join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `Movie`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_em_stats`
+--
+DROP TABLE IF EXISTS `v_em_stats`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_stats`  AS  select `Proposal`.`proposalId` AS `proposalId`,`BLSession`.`sessionId` AS `sessionId`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`Movie`.`movieId` AS `movieId`,`Movie`.`createdTimeStamp` AS `createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `motionCorrectionId`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`MotionCorrection`.`totalMotion` AS `totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `averageMotionPerFrame`,`MotionCorrection`.`lastFrame` AS `lastFrame`,`MotionCorrection`.`dosePerFrame` AS `dosePerFrame`,`CTF`.`defocusU` AS `defocusU`,`CTF`.`defocusV` AS `defocusV` from ((((((`BLSession` join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) join `DataCollectionGroup` on((`DataCollectionGroup`.`sessionId` = `BLSession`.`sessionId`))) join `DataCollection` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) join `Movie` on((`Movie`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_energyScan`
+--
+DROP TABLE IF EXISTS `v_energyScan`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_energyScan`  AS  select `EnergyScan`.`energyScanId` AS `energyScanId`,`EnergyScan`.`sessionId` AS `sessionId`,`EnergyScan`.`blSampleId` AS `blSampleId`,`EnergyScan`.`fluorescenceDetector` AS `fluorescenceDetector`,`EnergyScan`.`scanFileFullPath` AS `scanFileFullPath`,`EnergyScan`.`choochFileFullPath` AS `choochFileFullPath`,`EnergyScan`.`jpegChoochFileFullPath` AS `jpegChoochFileFullPath`,`EnergyScan`.`element` AS `element`,`EnergyScan`.`startEnergy` AS `startEnergy`,`EnergyScan`.`endEnergy` AS `endEnergy`,`EnergyScan`.`transmissionFactor` AS `transmissionFactor`,`EnergyScan`.`exposureTime` AS `exposureTime`,`EnergyScan`.`synchrotronCurrent` AS `synchrotronCurrent`,`EnergyScan`.`temperature` AS `temperature`,`EnergyScan`.`peakEnergy` AS `peakEnergy`,`EnergyScan`.`peakFPrime` AS `peakFPrime`,`EnergyScan`.`peakFDoublePrime` AS `peakFDoublePrime`,`EnergyScan`.`inflectionEnergy` AS `inflectionEnergy`,`EnergyScan`.`inflectionFPrime` AS `inflectionFPrime`,`EnergyScan`.`inflectionFDoublePrime` AS `inflectionFDoublePrime`,`EnergyScan`.`xrayDose` AS `xrayDose`,`EnergyScan`.`startTime` AS `startTime`,`EnergyScan`.`endTime` AS `endTime`,`EnergyScan`.`edgeEnergy` AS `edgeEnergy`,`EnergyScan`.`filename` AS `filename`,`EnergyScan`.`beamSizeVertical` AS `beamSizeVertical`,`EnergyScan`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`EnergyScan`.`crystalClass` AS `crystalClass`,`EnergyScan`.`comments` AS `comments`,`EnergyScan`.`flux` AS `flux`,`EnergyScan`.`flux_end` AS `flux_end`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((((`EnergyScan` left join `BLSample` on((`BLSample`.`blSampleId` = `EnergyScan`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `BLSession` on((`BLSession`.`sessionId` = `EnergyScan`.`sessionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_hour`
+--
+DROP TABLE IF EXISTS `v_hour`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_hour`  AS  select date_format((now() - interval 23 hour),_utf8'%Y-%m-%d %H') AS `num` union select date_format((now() - interval 22 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 21 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 20 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 19 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 18 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 17 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 16 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 15 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 14 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 13 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 12 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 11 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 10 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 9 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 8 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 7 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 6 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 5 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 4 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 3 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 2 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 1 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 0 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_Log4Stat`
+--
+DROP TABLE IF EXISTS `v_Log4Stat`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Log4Stat`  AS  select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (((`s`.`detail` like 'fx%') or (`s`.`detail` like 'ifx%') or (`s`.`detail` like 'mx%') or (`s`.`detail` like 'ix%') or (`s`.`detail` like 'bm14u%') or (`s`.`detail` like 'bm161%') or (`s`.`detail` like 'bm162%')) and (`s`.`detail` <> 'fx999') and (`s`.`detail` <> 'ifx999') and (`s`.`detail` <> 'mx415')) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_logonByHour`
+--
+DROP TABLE IF EXISTS `v_logonByHour`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByHour`  AS  select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%H') order by `w`.`num` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_logonByMonthDay`
+--
+DROP TABLE IF EXISTS `v_logonByMonthDay`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByMonthDay`  AS  select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_logonByWeek`
+--
+DROP TABLE IF EXISTS `v_logonByWeek`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON')))) group by substr(`w`.`num`,6) order by `w`.`num` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_logonByWeekDay`
+--
+DROP TABLE IF EXISTS `v_logonByWeekDay`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeekDay`  AS  select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by `w`.`day` order by `w`.`day` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_monthDay`
+--
+DROP TABLE IF EXISTS `v_monthDay`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_monthDay`  AS  select date_format((now() - interval 31 day),_utf8'%Y-%m-%d') AS `num` union select date_format((now() - interval 30 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format((now() - interval 29 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format((now() - interval 28 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format((now() - interval 27 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format((now() - interval 26 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format((now() - interval 25 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format((now() - interval 24 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format((now() - interval 23 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format((now() - interval 22 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format((now() - interval 21 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format((now() - interval 20 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format((now() - interval 19 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format((now() - interval 18 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format((now() - interval 17 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format((now() - interval 16 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format((now() - interval 15 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format((now() - interval 14 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format((now() - interval 13 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format((now() - interval 12 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format((now() - interval 11 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format((now() - interval 10 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format((now() - interval 9 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format((now() - interval 8 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format((now() - interval 7 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_mx_autoprocessing_stats`
+--
+DROP TABLE IF EXISTS `v_mx_autoprocessing_stats`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_autoprocessing_stats`  AS  select `AutoProcScalingStatistics`.`autoProcScalingStatisticsId` AS `autoProcScalingStatisticsId`,`AutoProcScalingStatistics`.`autoProcScalingId` AS `autoProcScalingId`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`rMeasWithinIPlusIMinus` AS `rMeasWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rMeasAllIPlusIMinus` AS `rMeasAllIPlusIMinus`,`AutoProcScalingStatistics`.`rPimWithinIPlusIMinus` AS `rPimWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rPimAllIPlusIMinus` AS `rPimAllIPlusIMinus`,`AutoProcScalingStatistics`.`fractionalPartialBias` AS `fractionalPartialBias`,`AutoProcScalingStatistics`.`nTotalObservations` AS `nTotalObservations`,`AutoProcScalingStatistics`.`nTotalUniqueObservations` AS `nTotalUniqueObservations`,`AutoProcScalingStatistics`.`meanIOverSigI` AS `meanIOverSigI`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScalingStatistics`.`multiplicity` AS `multiplicity`,`AutoProcScalingStatistics`.`anomalousCompleteness` AS `anomalousCompleteness`,`AutoProcScalingStatistics`.`anomalousMultiplicity` AS `anomalousMultiplicity`,`AutoProcScalingStatistics`.`recordTimeStamp` AS `recordTimeStamp`,`AutoProcScalingStatistics`.`anomalous` AS `anomalous`,`AutoProcScalingStatistics`.`ccHalf` AS `ccHalf`,`AutoProcScalingStatistics`.`ccAno` AS `ccAno`,`AutoProcScalingStatistics`.`sigAno` AS `sigAno`,`AutoProcScalingStatistics`.`isa` AS `ISA`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`beamLineName` AS `beamLineName` from ((((((`AutoProcScalingStatistics` left join `AutoProcScaling` on((`AutoProcScalingStatistics`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcIntegration` on((`AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_mx_sample`
+--
+DROP TABLE IF EXISTS `v_mx_sample`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_sample`  AS  select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`diffractionPlanId` AS `BLSample_diffractionPlanId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`containerId` AS `BLSample_containerId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`holderLength` AS `BLSample_holderLength`,`BLSample`.`loopLength` AS `BLSample_loopLength`,`BLSample`.`loopType` AS `BLSample_loopType`,`BLSample`.`wireWidth` AS `BLSample_wireWidth`,`BLSample`.`comments` AS `BLSample_comments`,`BLSample`.`completionStage` AS `BLSample_completionStage`,`BLSample`.`structureStage` AS `BLSample_structureStage`,`BLSample`.`publicationStage` AS `BLSample_publicationStage`,`BLSample`.`publicationComments` AS `BLSample_publicationComments`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`isInSampleChanger` AS `BLSample_isInSampleChanger`,`BLSample`.`lastKnownCenteringPosition` AS `BLSample_lastKnownCenteringPosition`,`BLSample`.`recordTimeStamp` AS `BLSample_recordTimeStamp`,`BLSample`.`SMILES` AS `BLSample_SMILES`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`Protein`.`proteinType` AS `Protein_proteinType`,`Shipping`.`proposalId` AS `Protein_proposalId`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress`,`Container`.`containerId` AS `Container_containerId`,`Container`.`code` AS `Container_code`,`Container`.`containerType` AS `Container_containerType`,`Container`.`containerStatus` AS `Container_containerStatus`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`beamLineName` AS `BLSession_beamLineName` from ((((((((`BLSample` left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Person` on((`Person`.`personId` = `Protein`.`personId`))) left join `Container` on((`BLSample`.`containerId` = `Container`.`containerId`))) left join `Dewar` on((`Dewar`.`dewarId` = `Container`.`dewarId`))) left join `Shipping` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`blSampleId` = `BLSample`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_phasing`
+--
+DROP TABLE IF EXISTS `v_phasing`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_phasing`  AS  select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcProgramId` AS `AutoProcIntegration_autoProcProgramId`,`AutoProcIntegration`.`startImageNumber` AS `AutoProcIntegration_startImageNumber`,`AutoProcIntegration`.`endImageNumber` AS `AutoProcIntegration_endImageNumber`,`AutoProcIntegration`.`refinedDetectorDistance` AS `AutoProcIntegration_refinedDetectorDistance`,`AutoProcIntegration`.`refinedXBeam` AS `AutoProcIntegration_refinedXBeam`,`AutoProcIntegration`.`refinedYBeam` AS `AutoProcIntegration_refinedYBeam`,`AutoProcIntegration`.`rotationAxisX` AS `AutoProcIntegration_rotationAxisX`,`AutoProcIntegration`.`rotationAxisY` AS `AutoProcIntegration_rotationAxisY`,`AutoProcIntegration`.`rotationAxisZ` AS `AutoProcIntegration_rotationAxisZ`,`AutoProcIntegration`.`beamVectorX` AS `AutoProcIntegration_beamVectorX`,`AutoProcIntegration`.`beamVectorY` AS `AutoProcIntegration_beamVectorY`,`AutoProcIntegration`.`beamVectorZ` AS `AutoProcIntegration_beamVectorZ`,`AutoProcIntegration`.`cell_a` AS `AutoProcIntegration_cell_a`,`AutoProcIntegration`.`cell_b` AS `AutoProcIntegration_cell_b`,`AutoProcIntegration`.`cell_c` AS `AutoProcIntegration_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `AutoProcIntegration_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `AutoProcIntegration_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `AutoProcIntegration_cell_gamma`,`AutoProcIntegration`.`recordTimeStamp` AS `AutoProcIntegration_recordTimeStamp`,`AutoProcIntegration`.`anomalous` AS `AutoProcIntegration_anomalous`,`SpaceGroup`.`spaceGroupId` AS `SpaceGroup_spaceGroupId`,`SpaceGroup`.`geometryClassnameId` AS `SpaceGroup_geometryClassnameId`,`SpaceGroup`.`spaceGroupNumber` AS `SpaceGroup_spaceGroupNumber`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`SpaceGroup`.`spaceGroupName` AS `SpaceGroup_spaceGroupName`,`SpaceGroup`.`bravaisLattice` AS `SpaceGroup_bravaisLattice`,`SpaceGroup`.`bravaisLatticeName` AS `SpaceGroup_bravaisLatticeName`,`SpaceGroup`.`pointGroup` AS `SpaceGroup_pointGroup`,`SpaceGroup`.`MX_used` AS `SpaceGroup_MX_used`,`PhasingStep`.`phasingStepId` AS `PhasingStep_phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `PhasingStep_previousPhasingStepId`,`PhasingStep`.`programRunId` AS `PhasingStep_programRunId`,`PhasingStep`.`spaceGroupId` AS `PhasingStep_spaceGroupId`,`PhasingStep`.`autoProcScalingId` AS `PhasingStep_autoProcScalingId`,`PhasingStep`.`phasingAnalysisId` AS `PhasingStep_phasingAnalysisId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasingStepType`,`PhasingStep`.`method` AS `PhasingStep_method`,`PhasingStep`.`solventContent` AS `PhasingStep_solventContent`,`PhasingStep`.`enantiomorph` AS `PhasingStep_enantiomorph`,`PhasingStep`.`lowRes` AS `PhasingStep_lowRes`,`PhasingStep`.`highRes` AS `PhasingStep_highRes`,`PhasingStep`.`recordTimeStamp` AS `PhasingStep_recordTimeStamp`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `DataCollection_strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `DataCollection_detectorId`,`DataCollection`.`blSubSampleId` AS `DataCollection_blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`overlap` AS `DataCollection_overlap`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`imageSuffix` AS `DataCollection_imageSuffix`,`DataCollection`.`fileTemplate` AS `DataCollection_fileTemplate`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`DataCollection`.`yBeamPix` AS `DataCollection_yBeamPix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`printableForReport` AS `DataCollection_printableForReport`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`transmission` AS `DataCollection_transmission`,`DataCollection`.`synchrotronMode` AS `DataCollection_synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `DataCollection_detector2Theta`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `DataCollection_beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `DataCollection_beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `DataCollection_centeringMethod`,`DataCollection`.`averageTemperature` AS `DataCollection_averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `DataCollection_actualCenteringPosition`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`totalAbsorbedDose` AS `DataCollection_totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `DataCollection_imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `DataCollection_imageQualityIndicatorsCSVPath`,`PhasingProgramRun`.`phasingProgramRunId` AS `PhasingProgramRun_phasingProgramRunId`,`PhasingProgramRun`.`phasingCommandLine` AS `PhasingProgramRun_phasingCommandLine`,`PhasingProgramRun`.`phasingPrograms` AS `PhasingProgramRun_phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `PhasingProgramRun_phasingStatus`,`PhasingProgramRun`.`phasingMessage` AS `PhasingProgramRun_phasingMessage`,`PhasingProgramRun`.`phasingStartTime` AS `PhasingProgramRun_phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `PhasingProgramRun_phasingEndTime`,`PhasingProgramRun`.`phasingEnvironment` AS `PhasingProgramRun_phasingEnvironment`,`PhasingProgramRun`.`recordTimeStamp` AS `PhasingProgramRun_recordTimeStamp`,`Protein`.`proteinId` AS `Protein_proteinId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`PhasingStatistics`.`phasingStatisticsId` AS `PhasingStatistics_phasingStatisticsId`,`PhasingStatistics`.`metric` AS `PhasingStatistics_metric`,`PhasingStatistics`.`statisticsValue` AS `PhasingStatistics_statisticsValue` from (((((((((((((`DataCollection` left join `AutoProcIntegration` on((`AutoProcIntegration`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStatistics` on((`PhasingStatistics`.`phasingStepId` = `PhasingStep`.`phasingStepId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_sample`
+--
+DROP TABLE IF EXISTS `v_sample`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sample`  AS  select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on((`c`.`containerId` = `bls`.`containerId`))) join `v_dewar` `d` on((`d`.`dewarId` = `c`.`dewarId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_sampleByWeek`
+--
+DROP TABLE IF EXISTS `v_sampleByWeek`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sampleByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,if((`w`.`num` <= date_format(now(),'%Y-%v')),count(if((`bls`.`proposalCode` is not null),1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on((`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_saxs_datacollection`
+--
+DROP TABLE IF EXISTS `v_saxs_datacollection`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_saxs_datacollection`  AS  select `Subtraction`.`subtractionId` AS `Subtraction_subtractionId`,`MeasurementToDataCollection`.`dataCollectionId` AS `MeasurementToDataCollection_dataCollectionId`,`MeasurementToDataCollection`.`dataCollectionOrder` AS `MeasurementToDataCollection_dataCollectionOrder`,`MeasurementToDataCollection`.`measurementToDataCollectionId` AS `MeasurementToDataCollection_measurementToDataCollectionId`,`Specimen`.`specimenId` AS `Specimen_specimenId`,`Measurement`.`code` AS `Measurement_code`,`Measurement`.`measurementId` AS `Measurement_measurementId`,`Buffer`.`bufferId` AS `Buffer_bufferId`,`Buffer`.`proposalId` AS `Buffer_proposalId`,`Buffer`.`safetyLevelId` AS `Buffer_safetyLevelId`,`Buffer`.`name` AS `Buffer_name`,`Buffer`.`acronym` AS `Buffer_acronym`,`Buffer`.`pH` AS `Buffer_pH`,`Buffer`.`composition` AS `Buffer_composition`,`Buffer`.`comments` AS `Buffer_comments`,`Macromolecule`.`macromoleculeId` AS `Macromolecule_macromoleculeId`,`Macromolecule`.`proposalId` AS `Macromolecule_proposalId`,`Macromolecule`.`safetyLevelId` AS `Macromolecule_safetyLevelId`,`Macromolecule`.`name` AS `Macromolecule_name`,`Macromolecule`.`acronym` AS `Macromolecule_acronym`,`Macromolecule`.`extintionCoefficient` AS `Macromolecule_extintionCoefficient`,`Macromolecule`.`molecularMass` AS `Macromolecule_molecularMass`,`Macromolecule`.`sequence` AS `Macromolecule_sequence`,`Macromolecule`.`contactsDescriptionFilePath` AS `Macromolecule_contactsDescriptionFilePath`,`Macromolecule`.`symmetry` AS `Macromolecule_symmetry`,`Macromolecule`.`comments` AS `Macromolecule_comments`,`Macromolecule`.`refractiveIndex` AS `Macromolecule_refractiveIndex`,`Macromolecule`.`solventViscosity` AS `Macromolecule_solventViscosity`,`Macromolecule`.`creationDate` AS `Macromolecule_creationDate`,`Specimen`.`experimentId` AS `Specimen_experimentId`,`Specimen`.`bufferId` AS `Specimen_bufferId`,`Specimen`.`samplePlatePositionId` AS `Specimen_samplePlatePositionId`,`Specimen`.`safetyLevelId` AS `Specimen_safetyLevelId`,`Specimen`.`stockSolutionId` AS `Specimen_stockSolutionId`,`Specimen`.`code` AS `Specimen_code`,`Specimen`.`concentration` AS `Specimen_concentration`,`Specimen`.`volume` AS `Specimen_volume`,`Specimen`.`comments` AS `Specimen_comments`,`SamplePlatePosition`.`samplePlatePositionId` AS `SamplePlatePosition_samplePlatePositionId`,`SamplePlatePosition`.`samplePlateId` AS `SamplePlatePosition_samplePlateId`,`SamplePlatePosition`.`rowNumber` AS `SamplePlatePosition_rowNumber`,`SamplePlatePosition`.`columnNumber` AS `SamplePlatePosition_columnNumber`,`SamplePlatePosition`.`volume` AS `SamplePlatePosition_volume`,`SamplePlate`.`samplePlateId` AS `samplePlateId`,`SamplePlate`.`experimentId` AS `experimentId`,`SamplePlate`.`plateGroupId` AS `plateGroupId`,`SamplePlate`.`plateTypeId` AS `plateTypeId`,`SamplePlate`.`instructionSetId` AS `instructionSetId`,`SamplePlate`.`boxId` AS `SamplePlate_boxId`,`SamplePlate`.`name` AS `SamplePlate_name`,`SamplePlate`.`slotPositionRow` AS `SamplePlate_slotPositionRow`,`SamplePlate`.`slotPositionColumn` AS `SamplePlate_slotPositionColumn`,`SamplePlate`.`storageTemperature` AS `SamplePlate_storageTemperature`,`Experiment`.`experimentId` AS `Experiment_experimentId`,`Experiment`.`sessionId` AS `Experiment_sessionId`,`Experiment`.`proposalId` AS `Experiment_proposalId`,`Experiment`.`name` AS `Experiment_name`,`Experiment`.`creationDate` AS `Experiment_creationDate`,`Experiment`.`experimentType` AS `Experiment_experimentType`,`Experiment`.`sourceFilePath` AS `Experiment_sourceFilePath`,`Experiment`.`dataAcquisitionFilePath` AS `Experiment_dataAcquisitionFilePath`,`Experiment`.`status` AS `Experiment_status`,`Experiment`.`comments` AS `Experiment_comments`,`Measurement`.`priorityLevelId` AS `Measurement_priorityLevelId`,`Measurement`.`exposureTemperature` AS `Measurement_exposureTemperature`,`Measurement`.`viscosity` AS `Measurement_viscosity`,`Measurement`.`flow` AS `Measurement_flow`,`Measurement`.`extraFlowTime` AS `Measurement_extraFlowTime`,`Measurement`.`volumeToLoad` AS `Measurement_volumeToLoad`,`Measurement`.`waitTime` AS `Measurement_waitTime`,`Measurement`.`transmission` AS `Measurement_transmission`,`Measurement`.`comments` AS `Measurement_comments`,`Measurement`.`imageDirectory` AS `Measurement_imageDirectory`,`Run`.`runId` AS `Run_runId`,`Run`.`timePerFrame` AS `Run_timePerFrame`,`Run`.`timeStart` AS `Run_timeStart`,`Run`.`timeEnd` AS `Run_timeEnd`,`Run`.`storageTemperature` AS `Run_storageTemperature`,`Run`.`exposureTemperature` AS `Run_exposureTemperature`,`Run`.`spectrophotometer` AS `Run_spectrophotometer`,`Run`.`energy` AS `Run_energy`,`Run`.`creationDate` AS `Run_creationDate`,`Run`.`frameAverage` AS `Run_frameAverage`,`Run`.`frameCount` AS `Run_frameCount`,`Run`.`transmission` AS `Run_transmission`,`Run`.`beamCenterX` AS `Run_beamCenterX`,`Run`.`beamCenterY` AS `Run_beamCenterY`,`Run`.`pixelSizeX` AS `Run_pixelSizeX`,`Run`.`pixelSizeY` AS `Run_pixelSizeY`,`Run`.`radiationRelative` AS `Run_radiationRelative`,`Run`.`radiationAbsolute` AS `Run_radiationAbsolute`,`Run`.`normalization` AS `Run_normalization`,`Merge`.`mergeId` AS `Merge_mergeId`,`Merge`.`measurementId` AS `Merge_measurementId`,`Merge`.`frameListId` AS `Merge_frameListId`,`Merge`.`discardedFrameNameList` AS `Merge_discardedFrameNameList`,`Merge`.`averageFilePath` AS `Merge_averageFilePath`,`Merge`.`framesCount` AS `Merge_framesCount`,`Merge`.`framesMerge` AS `Merge_framesMerge`,`Merge`.`creationDate` AS `Merge_creationDate`,`Subtraction`.`dataCollectionId` AS `Subtraction_dataCollectionId`,`Subtraction`.`rg` AS `Subtraction_rg`,`Subtraction`.`rgStdev` AS `Subtraction_rgStdev`,`Subtraction`.`I0` AS `Subtraction_I0`,`Subtraction`.`I0Stdev` AS `Subtraction_I0Stdev`,`Subtraction`.`firstPointUsed` AS `Subtraction_firstPointUsed`,`Subtraction`.`lastPointUsed` AS `Subtraction_lastPointUsed`,`Subtraction`.`quality` AS `Subtraction_quality`,`Subtraction`.`isagregated` AS `Subtraction_isagregated`,`Subtraction`.`concentration` AS `Subtraction_concentration`,`Subtraction`.`gnomFilePath` AS `Subtraction_gnomFilePath`,`Subtraction`.`rgGuinier` AS `Subtraction_rgGuinier`,`Subtraction`.`rgGnom` AS `Subtraction_rgGnom`,`Subtraction`.`dmax` AS `Subtraction_dmax`,`Subtraction`.`total` AS `Subtraction_total`,`Subtraction`.`volume` AS `Subtraction_volume`,`Subtraction`.`creationTime` AS `Subtraction_creationTime`,`Subtraction`.`kratkyFilePath` AS `Subtraction_kratkyFilePath`,`Subtraction`.`scatteringFilePath` AS `Subtraction_scatteringFilePath`,`Subtraction`.`guinierFilePath` AS `Subtraction_guinierFilePath`,`Subtraction`.`substractedFilePath` AS `Subtraction_substractedFilePath`,`Subtraction`.`gnomFilePathOutput` AS `Subtraction_gnomFilePathOutput`,`Subtraction`.`sampleOneDimensionalFiles` AS `Subtraction_sampleOneDimensionalFiles`,`Subtraction`.`bufferOnedimensionalFiles` AS `Subtraction_bufferOnedimensionalFiles`,`Subtraction`.`sampleAverageFilePath` AS `Subtraction_sampleAverageFilePath`,`Subtraction`.`bufferAverageFilePath` AS `Subtraction_bufferAverageFilePath` from ((((((((((`Experiment` left join `Specimen` on((`Specimen`.`experimentId` = `Experiment`.`experimentId`))) left join `Measurement` on((`Measurement`.`specimenId` = `Specimen`.`specimenId`))) left join `MeasurementToDataCollection` on((`MeasurementToDataCollection`.`measurementId` = `Measurement`.`measurementId`))) left join `Macromolecule` on((`Macromolecule`.`macromoleculeId` = `Specimen`.`macromoleculeId`))) left join `Buffer` on((`Buffer`.`bufferId` = `Specimen`.`bufferId`))) left join `SamplePlatePosition` on((`SamplePlatePosition`.`samplePlatePositionId` = `Specimen`.`samplePlatePositionId`))) left join `SamplePlate` on((`SamplePlate`.`samplePlateId` = `SamplePlatePosition`.`samplePlateId`))) left join `Run` on((`Run`.`runId` = `Measurement`.`runId`))) left join `Merge` on((`Merge`.`measurementId` = `Measurement`.`measurementId`))) left join `Subtraction` on((`Subtraction`.`dataCollectionId` = `MeasurementToDataCollection`.`dataCollectionId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_session`
+--
+DROP TABLE IF EXISTS `v_session`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_session`  AS  select `BLSession`.`sessionId` AS `sessionId`,`BLSession`.`expSessionPk` AS `expSessionPk`,`BLSession`.`beamLineSetupId` AS `beamLineSetupId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`projectCode` AS `projectCode`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`endDate` AS `BLSession_endDate`,`BLSession`.`beamLineName` AS `beamLineName`,`BLSession`.`scheduled` AS `scheduled`,`BLSession`.`nbShifts` AS `nbShifts`,`BLSession`.`comments` AS `comments`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`visit_number` AS `visit_number`,`BLSession`.`bltimeStamp` AS `bltimeStamp`,`BLSession`.`usedFlag` AS `usedFlag`,`BLSession`.`sessionTitle` AS `sessionTitle`,`BLSession`.`structureDeterminations` AS `structureDeterminations`,`BLSession`.`dewarTransport` AS `dewarTransport`,`BLSession`.`databackupFrance` AS `databackupFrance`,`BLSession`.`databackupEurope` AS `databackupEurope`,`BLSession`.`operatorSiteNumber` AS `operatorSiteNumber`,`BLSession`.`lastUpdate` AS `BLSession_lastUpdate`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Proposal`.`title` AS `Proposal_title`,`Proposal`.`proposalCode` AS `Proposal_proposalCode`,`Proposal`.`proposalNumber` AS `Proposal_ProposalNumber`,`Proposal`.`proposalType` AS `Proposal_ProposalType`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress` from ((`BLSession` left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `Person` on((`Person`.`personId` = `Proposal`.`personId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_tracking_shipment_history`
+--
+DROP TABLE IF EXISTS `v_tracking_shipment_history`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_tracking_shipment_history`  AS  select `Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`comments` AS `Dewar_comments`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Dewar`.`firstExperimentId` AS `Dewar_firstExperimentId`,`Dewar`.`trackingNumberToSynchrotron` AS `Dewar_trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `Dewar_trackingNumberFromSynchrotron`,`Dewar`.`type` AS `Dewar_type`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`proposalId` AS `Shipping_proposalId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `Shipping_deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `Shipping_deliveryAgent_deliveryDate`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`Shipping`.`returnCourier` AS `Shipping_returnCourier`,`Shipping`.`dateOfShippingToUser` AS `Shipping_dateOfShippingToUser`,`DewarTransportHistory`.`DewarTransportHistoryId` AS `DewarTransportHistory_DewarTransportHistoryId`,`DewarTransportHistory`.`dewarStatus` AS `DewarTransportHistory_dewarStatus`,`DewarTransportHistory`.`storageLocation` AS `DewarTransportHistory_storageLocation`,`DewarTransportHistory`.`arrivalDate` AS `DewarTransportHistory_arrivalDate` from ((`Shipping` left join `Dewar` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DewarTransportHistory` on((`DewarTransportHistory`.`dewarId` = `Dewar`.`dewarId`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_week`
+--
+DROP TABLE IF EXISTS `v_week`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_week`  AS  select date_format((now() - interval 52 week),_utf8'%x-%v') AS `num` union select date_format((now() - interval 51 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format((now() - interval 50 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format((now() - interval 49 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format((now() - interval 48 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format((now() - interval 47 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format((now() - interval 46 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format((now() - interval 45 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format((now() - interval 44 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format((now() - interval 43 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format((now() - interval 42 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format((now() - interval 41 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format((now() - interval 40 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format((now() - interval 39 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format((now() - interval 38 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format((now() - interval 37 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format((now() - interval 36 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format((now() - interval 35 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format((now() - interval 34 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format((now() - interval 33 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format((now() - interval 32 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format((now() - interval 31 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format((now() - interval 30 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format((now() - interval 29 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format((now() - interval 28 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format((now() - interval 27 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format((now() - interval 26 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format((now() - interval 25 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format((now() - interval 24 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format((now() - interval 23 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format((now() - interval 22 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format((now() - interval 21 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format((now() - interval 20 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format((now() - interval 19 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format((now() - interval 18 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format((now() - interval 17 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format((now() - interval 16 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format((now() - interval 15 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format((now() - interval 14 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format((now() - interval 13 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format((now() - interval 12 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format((now() - interval 11 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format((now() - interval 10 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format((now() - interval 9 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format((now() - interval 8 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format((now() - interval 7 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format((now() - interval 6 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format((now() - interval 5 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format((now() - interval 4 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format((now() - interval 3 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format((now() - interval 2 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format((now() - interval 1 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format((now() - interval 0 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_weekDay`
+--
+DROP TABLE IF EXISTS `v_weekDay`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_weekDay`  AS  select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `day` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_xfeFluorescenceSpectrum`
+--
+DROP TABLE IF EXISTS `v_xfeFluorescenceSpectrum`;
+
+CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_xfeFluorescenceSpectrum`  AS  select `XFEFluorescenceSpectrum`.`xfeFluorescenceSpectrumId` AS `xfeFluorescenceSpectrumId`,`XFEFluorescenceSpectrum`.`sessionId` AS `sessionId`,`XFEFluorescenceSpectrum`.`blSampleId` AS `blSampleId`,`XFEFluorescenceSpectrum`.`fittedDataFileFullPath` AS `fittedDataFileFullPath`,`XFEFluorescenceSpectrum`.`scanFileFullPath` AS `scanFileFullPath`,`XFEFluorescenceSpectrum`.`jpegScanFileFullPath` AS `jpegScanFileFullPath`,`XFEFluorescenceSpectrum`.`startTime` AS `startTime`,`XFEFluorescenceSpectrum`.`endTime` AS `endTime`,`XFEFluorescenceSpectrum`.`filename` AS `filename`,`XFEFluorescenceSpectrum`.`energy` AS `energy`,`XFEFluorescenceSpectrum`.`exposureTime` AS `exposureTime`,`XFEFluorescenceSpectrum`.`beamTransmission` AS `beamTransmission`,`XFEFluorescenceSpectrum`.`annotatedPymcaXfeSpectrum` AS `annotatedPymcaXfeSpectrum`,`XFEFluorescenceSpectrum`.`beamSizeVertical` AS `beamSizeVertical`,`XFEFluorescenceSpectrum`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`XFEFluorescenceSpectrum`.`crystalClass` AS `crystalClass`,`XFEFluorescenceSpectrum`.`comments` AS `comments`,`XFEFluorescenceSpectrum`.`flux` AS `flux`,`XFEFluorescenceSpectrum`.`flux_end` AS `flux_end`,`XFEFluorescenceSpectrum`.`workingDirectory` AS `workingDirectory`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((`XFEFluorescenceSpectrum` left join `BLSample` on((`BLSample`.`blSampleId` = `XFEFluorescenceSpectrum`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `XFEFluorescenceSpectrum`.`sessionId`))) ;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `AbInitioModel`
+--
+ALTER TABLE `AbInitioModel`
+  ADD PRIMARY KEY (`abInitioModelId`),
+  ADD KEY `AbInitioModelToModelList` (`modelListId`),
+  ADD KEY `AverageToModel` (`averagedModelId`),
+  ADD KEY `AbInitioModelToRapid` (`rapidShapeDeterminationModelId`),
+  ADD KEY `SahpeDeterminationToAbiniti` (`shapeDeterminationModelId`);
+
+--
+-- Indexes for table `Additive`
+--
+ALTER TABLE `Additive`
+  ADD PRIMARY KEY (`additiveId`);
+
+--
+-- Indexes for table `AdminActivity`
+--
+ALTER TABLE `AdminActivity`
+  ADD PRIMARY KEY (`adminActivityId`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `AdminActivity_FKAction` (`action`);
+
+--
+-- Indexes for table `AdminVar`
+--
+ALTER TABLE `AdminVar`
+  ADD PRIMARY KEY (`varId`),
+  ADD KEY `AdminVar_FKIndexName` (`name`),
+  ADD KEY `AdminVar_FKIndexValue` (`value`(767));
+
+--
+-- Indexes for table `Aperture`
+--
+ALTER TABLE `Aperture`
+  ADD PRIMARY KEY (`apertureId`);
+
+--
+-- Indexes for table `Assembly`
+--
+ALTER TABLE `Assembly`
+  ADD PRIMARY KEY (`assemblyId`),
+  ADD KEY `AssemblyToMacromolecule` (`macromoleculeId`);
+
+--
+-- Indexes for table `AssemblyHasMacromolecule`
+--
+ALTER TABLE `AssemblyHasMacromolecule`
+  ADD PRIMARY KEY (`AssemblyHasMacromoleculeId`),
+  ADD KEY `AssemblyHasMacromoleculeToAssembly` (`assemblyId`),
+  ADD KEY `AssemblyHasMacromoleculeToAssemblyRegion` (`macromoleculeId`);
+
+--
+-- Indexes for table `AssemblyRegion`
+--
+ALTER TABLE `AssemblyRegion`
+  ADD PRIMARY KEY (`assemblyRegionId`),
+  ADD KEY `AssemblyRegionToAssemblyHasMacromolecule` (`assemblyHasMacromoleculeId`);
+
+--
+-- Indexes for table `AutoProc`
+--
+ALTER TABLE `AutoProc`
+  ADD PRIMARY KEY (`autoProcId`),
+  ADD KEY `AutoProc_FKIndex1` (`autoProcProgramId`);
+
+--
+-- Indexes for table `AutoProcIntegration`
+--
+ALTER TABLE `AutoProcIntegration`
+  ADD PRIMARY KEY (`autoProcIntegrationId`),
+  ADD KEY `AutoProcIntegrationIdx1` (`dataCollectionId`),
+  ADD KEY `AutoProcIntegration_FKIndex1` (`autoProcProgramId`);
+
+--
+-- Indexes for table `AutoProcProgram`
+--
+ALTER TABLE `AutoProcProgram`
+  ADD PRIMARY KEY (`autoProcProgramId`),
+  ADD KEY `fk_AutoProcProgram_1_idx` (`dataCollectionId`);
+
+--
+-- Indexes for table `AutoProcProgramAttachment`
+--
+ALTER TABLE `AutoProcProgramAttachment`
+  ADD PRIMARY KEY (`autoProcProgramAttachmentId`),
+  ADD KEY `AutoProcProgramAttachmentIdx1` (`autoProcProgramId`);
+
+--
+-- Indexes for table `AutoProcScaling`
+--
+ALTER TABLE `AutoProcScaling`
+  ADD PRIMARY KEY (`autoProcScalingId`),
+  ADD KEY `AutoProcScalingFk1` (`autoProcId`),
+  ADD KEY `AutoProcScalingIdx1` (`autoProcScalingId`,`autoProcId`);
+
+--
+-- Indexes for table `AutoProcScalingStatistics`
+--
+ALTER TABLE `AutoProcScalingStatistics`
+  ADD PRIMARY KEY (`autoProcScalingStatisticsId`),
+  ADD KEY `AutoProcScalingStatisticsIdx1` (`autoProcScalingId`),
+  ADD KEY `AutoProcScalingStatistics_FKindexType` (`scalingStatisticsType`);
+
+--
+-- Indexes for table `AutoProcScaling_has_Int`
+--
+ALTER TABLE `AutoProcScaling_has_Int`
+  ADD PRIMARY KEY (`autoProcScaling_has_IntId`),
+  ADD KEY `AutoProcScl_has_IntIdx1` (`autoProcScalingId`),
+  ADD KEY `AutoProcScal_has_IntIdx2` (`autoProcIntegrationId`),
+  ADD KEY `AutoProcScalingHasInt_FKIndex3` (`autoProcScalingId`,`autoProcIntegrationId`);
+
+--
+-- Indexes for table `AutoProcStatus`
+--
+ALTER TABLE `AutoProcStatus`
+  ADD PRIMARY KEY (`autoProcStatusId`),
+  ADD KEY `AutoProcStatus_FKIndex1` (`autoProcIntegrationId`);
+
+--
+-- Indexes for table `BeamApertures`
+--
+ALTER TABLE `BeamApertures`
+  ADD PRIMARY KEY (`beamAperturesid`),
+  ADD KEY `beamapertures_FK1` (`beamlineStatsId`);
+
+--
+-- Indexes for table `BeamCalendar`
+--
+ALTER TABLE `BeamCalendar`
+  ADD PRIMARY KEY (`beamCalendarId`);
+
+--
+-- Indexes for table `BeamCentres`
+--
+ALTER TABLE `BeamCentres`
+  ADD PRIMARY KEY (`beamCentresid`),
+  ADD KEY `beamCentres_FK1` (`beamlineStatsId`);
+
+--
+-- Indexes for table `BeamlineAction`
+--
+ALTER TABLE `BeamlineAction`
+  ADD PRIMARY KEY (`beamlineActionId`),
+  ADD KEY `BeamlineAction_ibfk1` (`sessionId`);
+
+--
+-- Indexes for table `BeamLineSetup`
+--
+ALTER TABLE `BeamLineSetup`
+  ADD PRIMARY KEY (`beamLineSetupId`);
+
+--
+-- Indexes for table `BeamlineStats`
+--
+ALTER TABLE `BeamlineStats`
+  ADD PRIMARY KEY (`beamlineStatsId`);
+
+--
+-- Indexes for table `BF_automationError`
+--
+ALTER TABLE `BF_automationError`
+  ADD PRIMARY KEY (`automationErrorId`);
+
+--
+-- Indexes for table `BF_automationFault`
+--
+ALTER TABLE `BF_automationFault`
+  ADD PRIMARY KEY (`automationFaultId`),
+  ADD KEY `BF_automationFault_ibfk1` (`automationErrorId`),
+  ADD KEY `BF_automationFault_ibfk2` (`containerId`);
+
+--
+-- Indexes for table `BF_component`
+--
+ALTER TABLE `BF_component`
+  ADD PRIMARY KEY (`componentId`),
+  ADD KEY `bf_component_FK1` (`systemId`);
+
+--
+-- Indexes for table `BF_component_beamline`
+--
+ALTER TABLE `BF_component_beamline`
+  ADD PRIMARY KEY (`component_beamlineId`),
+  ADD KEY `bf_component_beamline_FK1` (`componentId`);
+
+--
+-- Indexes for table `BF_fault`
+--
+ALTER TABLE `BF_fault`
+  ADD PRIMARY KEY (`faultId`),
+  ADD KEY `bf_fault_FK1` (`sessionId`),
+  ADD KEY `bf_fault_FK2` (`subcomponentId`),
+  ADD KEY `bf_fault_FK3` (`personId`),
+  ADD KEY `bf_fault_FK4` (`assigneeId`);
+
+--
+-- Indexes for table `BF_subcomponent`
+--
+ALTER TABLE `BF_subcomponent`
+  ADD PRIMARY KEY (`subcomponentId`),
+  ADD KEY `bf_subcomponent_FK1` (`componentId`);
+
+--
+-- Indexes for table `BF_subcomponent_beamline`
+--
+ALTER TABLE `BF_subcomponent_beamline`
+  ADD PRIMARY KEY (`subcomponent_beamlineId`),
+  ADD KEY `bf_subcomponent_beamline_FK1` (`subcomponentId`);
+
+--
+-- Indexes for table `BF_system`
+--
+ALTER TABLE `BF_system`
+  ADD PRIMARY KEY (`systemId`);
+
+--
+-- Indexes for table `BF_system_beamline`
+--
+ALTER TABLE `BF_system_beamline`
+  ADD PRIMARY KEY (`system_beamlineId`),
+  ADD KEY `bf_system_beamline_FK1` (`systemId`);
+
+--
+-- Indexes for table `BLSample`
+--
+ALTER TABLE `BLSample`
+  ADD PRIMARY KEY (`blSampleId`),
+  ADD KEY `BLSample_FKIndex1` (`containerId`),
+  ADD KEY `BLSample_FKIndex2` (`crystalId`),
+  ADD KEY `BLSample_FKIndex3` (`diffractionPlanId`),
+  ADD KEY `crystalId` (`crystalId`,`containerId`),
+  ADD KEY `BLSample_Index1` (`name`) USING BTREE,
+  ADD KEY `BLSample_FKIndex_Status` (`blSampleStatus`),
+  ADD KEY `BLSampleImage_idx1` (`blSubSampleId`),
+  ADD KEY `BLSample_fk5` (`screenComponentGroupId`);
+
+--
+-- Indexes for table `BLSampleGroup`
+--
+ALTER TABLE `BLSampleGroup`
+  ADD PRIMARY KEY (`blSampleGroupId`);
+
+--
+-- Indexes for table `BLSampleGroup_has_BLSample`
+--
+ALTER TABLE `BLSampleGroup_has_BLSample`
+  ADD PRIMARY KEY (`blSampleGroupId`,`blSampleId`),
+  ADD KEY `BLSampleGroup_has_BLSample_ibfk2` (`blSampleId`);
+
+--
+-- Indexes for table `BLSampleImage`
+--
+ALTER TABLE `BLSampleImage`
+  ADD PRIMARY KEY (`blSampleImageId`),
+  ADD KEY `BLSampleImage_fk2` (`containerInspectionId`),
+  ADD KEY `BLSampleImage_idx1` (`blSampleId`);
+
+--
+-- Indexes for table `BLSampleImageAnalysis`
+--
+ALTER TABLE `BLSampleImageAnalysis`
+  ADD PRIMARY KEY (`blSampleImageAnalysisId`),
+  ADD KEY `BLSampleImageAnalysis_ibfk1` (`blSampleImageId`);
+
+--
+-- Indexes for table `BLSampleImageScore`
+--
+ALTER TABLE `BLSampleImageScore`
+  ADD PRIMARY KEY (`blSampleImageScoreId`);
+
+--
+-- Indexes for table `BLSampleType_has_Component`
+--
+ALTER TABLE `BLSampleType_has_Component`
+  ADD PRIMARY KEY (`blSampleTypeId`,`componentId`),
+  ADD KEY `blSampleType_has_Component_fk2` (`componentId`);
+
+--
+-- Indexes for table `BLSample_has_DiffractionPlan`
+--
+ALTER TABLE `BLSample_has_DiffractionPlan`
+  ADD PRIMARY KEY (`blSampleId`,`diffractionPlanId`),
+  ADD KEY `BLSample_has_DiffractionPlan_ibfk2` (`diffractionPlanId`);
+
+--
+-- Indexes for table `BLSample_has_EnergyScan`
+--
+ALTER TABLE `BLSample_has_EnergyScan`
+  ADD PRIMARY KEY (`blSampleHasEnergyScanId`),
+  ADD KEY `BLSample_has_EnergyScan_FKIndex1` (`blSampleId`),
+  ADD KEY `BLSample_has_EnergyScan_FKIndex2` (`energyScanId`);
+
+--
+-- Indexes for table `BLSession`
+--
+ALTER TABLE `BLSession`
+  ADD PRIMARY KEY (`sessionId`),
+  ADD KEY `Session_FKIndex1` (`proposalId`),
+  ADD KEY `Session_FKIndex2` (`beamLineSetupId`),
+  ADD KEY `Session_FKIndexStartDate` (`startDate`),
+  ADD KEY `Session_FKIndexEndDate` (`endDate`),
+  ADD KEY `Session_FKIndexBeamLineName` (`beamLineName`),
+  ADD KEY `BLSession_FKIndexOperatorSiteNumber` (`operatorSiteNumber`),
+  ADD KEY `BLSession_ibfk_3` (`beamCalendarId`);
+
+--
+-- Indexes for table `BLSession_has_SCPosition`
+--
+ALTER TABLE `BLSession_has_SCPosition`
+  ADD PRIMARY KEY (`blsessionhasscpositionid`),
+  ADD KEY `blsession_has_scposition_FK1` (`blsessionid`);
+
+--
+-- Indexes for table `BLSubSample`
+--
+ALTER TABLE `BLSubSample`
+  ADD PRIMARY KEY (`blSubSampleId`),
+  ADD KEY `BLSubSample_FKIndex1` (`blSampleId`),
+  ADD KEY `BLSubSample_FKIndex2` (`diffractionPlanId`),
+  ADD KEY `BLSubSample_FKIndex3` (`positionId`),
+  ADD KEY `BLSubSample_FKIndex5` (`position2Id`),
+  ADD KEY `BLSubSample_motorPositionfk_1` (`motorPositionId`);
+
+--
+-- Indexes for table `Buffer`
+--
+ALTER TABLE `Buffer`
+  ADD PRIMARY KEY (`bufferId`),
+  ADD KEY `BufferToSafetyLevel` (`safetyLevelId`);
+
+--
+-- Indexes for table `BufferHasAdditive`
+--
+ALTER TABLE `BufferHasAdditive`
+  ADD PRIMARY KEY (`bufferHasAdditiveId`),
+  ADD KEY `BufferHasAdditiveToBuffer` (`bufferId`),
+  ADD KEY `BufferHasAdditiveToAdditive` (`additiveId`),
+  ADD KEY `BufferHasAdditiveToUnit` (`measurementUnitId`);
+
+--
+-- Indexes for table `CalendarHash`
+--
+ALTER TABLE `CalendarHash`
+  ADD PRIMARY KEY (`calendarHashId`);
+
+--
+-- Indexes for table `ComponentSubType`
+--
+ALTER TABLE `ComponentSubType`
+  ADD PRIMARY KEY (`componentSubTypeId`);
+
+--
+-- Indexes for table `ComponentType`
+--
+ALTER TABLE `ComponentType`
+  ADD PRIMARY KEY (`componentTypeId`);
+
+--
+-- Indexes for table `Component_has_SubType`
+--
+ALTER TABLE `Component_has_SubType`
+  ADD PRIMARY KEY (`componentId`,`componentSubTypeId`),
+  ADD KEY `component_has_SubType_fk2` (`componentSubTypeId`);
+
+--
+-- Indexes for table `ConcentrationType`
+--
+ALTER TABLE `ConcentrationType`
+  ADD PRIMARY KEY (`concentrationTypeId`);
+
+--
+-- Indexes for table `Container`
+--
+ALTER TABLE `Container`
+  ADD PRIMARY KEY (`containerId`),
+  ADD UNIQUE KEY `Container_UNIndex1` (`barcode`),
+  ADD KEY `Container_FKIndex1` (`dewarId`),
+  ADD KEY `Container_FKIndex` (`beamlineLocation`),
+  ADD KEY `Container_FKIndexStatus` (`containerStatus`),
+  ADD KEY `Container_ibfk6` (`sessionId`),
+  ADD KEY `Container_ibfk5` (`ownerId`);
+
+--
+-- Indexes for table `ContainerHistory`
+--
+ALTER TABLE `ContainerHistory`
+  ADD PRIMARY KEY (`containerHistoryId`),
+  ADD KEY `ContainerHistory_ibfk1` (`containerId`);
+
+--
+-- Indexes for table `ContainerInspection`
+--
+ALTER TABLE `ContainerInspection`
+  ADD PRIMARY KEY (`containerInspectionId`),
+  ADD KEY `ContainerInspection_fk4` (`scheduleComponentid`),
+  ADD KEY `ContainerInspection_idx1` (`containerId`),
+  ADD KEY `ContainerInspection_idx2` (`inspectionTypeId`),
+  ADD KEY `ContainerInspection_idx3` (`imagerId`);
+
+--
+-- Indexes for table `ContainerQueue`
+--
+ALTER TABLE `ContainerQueue`
+  ADD PRIMARY KEY (`containerQueueId`),
+  ADD KEY `ContainerQueue_ibfk1` (`containerId`),
+  ADD KEY `ContainerQueue_ibfk2` (`personId`);
+
+--
+-- Indexes for table `ContainerQueueSample`
+--
+ALTER TABLE `ContainerQueueSample`
+  ADD PRIMARY KEY (`containerQueueSampleId`),
+  ADD KEY `ContainerQueueSample_ibfk1` (`containerQueueId`),
+  ADD KEY `ContainerQueueSample_ibfk2` (`blSubSampleId`);
+
+--
+-- Indexes for table `Crystal`
+--
+ALTER TABLE `Crystal`
+  ADD PRIMARY KEY (`crystalId`),
+  ADD KEY `Crystal_FKIndex1` (`proteinId`),
+  ADD KEY `Crystal_FKIndex2` (`diffractionPlanId`);
+
+--
+-- Indexes for table `Crystal_has_UUID`
+--
+ALTER TABLE `Crystal_has_UUID`
+  ADD PRIMARY KEY (`crystal_has_UUID_Id`),
+  ADD KEY `Crystal_has_UUID_FKIndex1` (`crystalId`),
+  ADD KEY `Crystal_has_UUID_FKIndex2` (`UUID`);
+
+--
+-- Indexes for table `CTF`
+--
+ALTER TABLE `CTF`
+  ADD PRIMARY KEY (`CTFid`),
+  ADD KEY `fk_CTF_1_idx` (`motionCorrectionId`);
+
+--
+-- Indexes for table `DataAcquisition`
+--
+ALTER TABLE `DataAcquisition`
+  ADD PRIMARY KEY (`dataAcquisitionId`);
+
+--
+-- Indexes for table `DataCollection`
+--
+ALTER TABLE `DataCollection`
+  ADD PRIMARY KEY (`dataCollectionId`),
+  ADD KEY `DataCollection_FKIndex1` (`dataCollectionGroupId`),
+  ADD KEY `DataCollection_FKIndex2` (`strategySubWedgeOrigId`),
+  ADD KEY `DataCollection_FKIndex3` (`detectorId`),
+  ADD KEY `DataCollection_FKIndexStartTime` (`startTime`),
+  ADD KEY `DataCollection_FKIndexImageDirectory` (`imageDirectory`),
+  ADD KEY `DataCollection_FKIndexDCNumber` (`dataCollectionNumber`),
+  ADD KEY `DataCollection_FKIndexImagePrefix` (`imagePrefix`),
+  ADD KEY `startPositionId` (`startPositionId`),
+  ADD KEY `endPositionId` (`endPositionId`),
+  ADD KEY `blSubSampleId` (`blSubSampleId`);
+
+--
+-- Indexes for table `DataCollectionFileAttachment`
+--
+ALTER TABLE `DataCollectionFileAttachment`
+  ADD PRIMARY KEY (`dataCollectionFileAttachmentId`),
+  ADD KEY `dataCollectionFileAttachmentId_fk1` (`dataCollectionId`);
+
+--
+-- Indexes for table `DataCollectionGroup`
+--
+ALTER TABLE `DataCollectionGroup`
+  ADD PRIMARY KEY (`dataCollectionGroupId`),
+  ADD KEY `DataCollectionGroup_FKIndex1` (`blSampleId`),
+  ADD KEY `DataCollectionGroup_FKIndex2` (`sessionId`),
+  ADD KEY `workflowId` (`workflowId`);
+
+--
+-- Indexes for table `DataCollectionPlanGroup`
+--
+ALTER TABLE `DataCollectionPlanGroup`
+  ADD PRIMARY KEY (`dataCollectionPlanGroupId`),
+  ADD KEY `DataCollectionPlanGroup_ibfk1` (`sessionId`),
+  ADD KEY `DataCollectionPlanGroup_ibfk2` (`blSampleId`);
+
+--
+-- Indexes for table `DatamatrixInSampleChanger`
+--
+ALTER TABLE `DatamatrixInSampleChanger`
+  ADD PRIMARY KEY (`datamatrixInSampleChangerId`),
+  ADD KEY `DatamatrixInSampleChanger_FKIndex1` (`proposalId`);
+
+--
+-- Indexes for table `DataReductionStatus`
+--
+ALTER TABLE `DataReductionStatus`
+  ADD PRIMARY KEY (`dataReductionStatusId`);
+
+--
+-- Indexes for table `Detector`
+--
+ALTER TABLE `Detector`
+  ADD PRIMARY KEY (`detectorId`),
+  ADD UNIQUE KEY `Detector_ibuk1` (`detectorSerialNumber`),
+  ADD KEY `Detector_FKIndex1` (`detectorType`,`detectorManufacturer`,`detectorModel`,`detectorPixelSizeHorizontal`,`detectorPixelSizeVertical`);
+
+--
+-- Indexes for table `Dewar`
+--
+ALTER TABLE `Dewar`
+  ADD PRIMARY KEY (`dewarId`),
+  ADD UNIQUE KEY `barCode` (`barCode`),
+  ADD KEY `Dewar_FKIndex1` (`shippingId`),
+  ADD KEY `Dewar_FKIndex2` (`firstExperimentId`),
+  ADD KEY `Dewar_FKIndexStatus` (`dewarStatus`),
+  ADD KEY `Dewar_FKIndexCode` (`code`);
+
+--
+-- Indexes for table `DewarLocation`
+--
+ALTER TABLE `DewarLocation`
+  ADD PRIMARY KEY (`eventId`);
+
+--
+-- Indexes for table `DewarLocationList`
+--
+ALTER TABLE `DewarLocationList`
+  ADD PRIMARY KEY (`locationId`);
+
+--
+-- Indexes for table `DewarTransportHistory`
+--
+ALTER TABLE `DewarTransportHistory`
+  ADD PRIMARY KEY (`DewarTransportHistoryId`),
+  ADD KEY `DewarTransportHistory_FKIndex1` (`dewarId`);
+
+--
+-- Indexes for table `DiffractionPlan`
+--
+ALTER TABLE `DiffractionPlan`
+  ADD PRIMARY KEY (`diffractionPlanId`);
+
+--
+-- Indexes for table `DiffractionPlan_has_Detector`
+--
+ALTER TABLE `DiffractionPlan_has_Detector`
+  ADD PRIMARY KEY (`diffractionPlanId`,`detectorId`),
+  ADD KEY `DiffractionPlan_has_Detector_ibfk2` (`detectorId`);
+
+--
+-- Indexes for table `EMMicroscope`
+--
+ALTER TABLE `EMMicroscope`
+  ADD PRIMARY KEY (`emMicroscopeId`);
+
+--
+-- Indexes for table `EnergyScan`
+--
+ALTER TABLE `EnergyScan`
+  ADD PRIMARY KEY (`energyScanId`),
+  ADD KEY `EnergyScan_FKIndex2` (`sessionId`),
+  ADD KEY `ES_ibfk_2` (`blSampleId`),
+  ADD KEY `ES_ibfk_3` (`blSubSampleId`);
+
+--
+-- Indexes for table `Experiment`
+--
+ALTER TABLE `Experiment`
+  ADD PRIMARY KEY (`experimentId`),
+  ADD KEY `fk_Experiment_To_session_idx` (`sessionId`);
+
+--
+-- Indexes for table `ExperimentKindDetails`
+--
+ALTER TABLE `ExperimentKindDetails`
+  ADD PRIMARY KEY (`experimentKindId`),
+  ADD KEY `ExperimentKindDetails_FKIndex1` (`diffractionPlanId`);
+
+--
+-- Indexes for table `FitStructureToExperimentalData`
+--
+ALTER TABLE `FitStructureToExperimentalData`
+  ADD PRIMARY KEY (`fitStructureToExperimentalDataId`),
+  ADD KEY `fk_FitStructureToExperimentalData_1` (`structureId`),
+  ADD KEY `fk_FitStructureToExperimentalData_2` (`workflowId`),
+  ADD KEY `fk_FitStructureToExperimentalData_3` (`subtractionId`);
+
+--
+-- Indexes for table `Frame`
+--
+ALTER TABLE `Frame`
+  ADD PRIMARY KEY (`frameId`),
+  ADD KEY `FILE` (`filePath`);
+
+--
+-- Indexes for table `FrameList`
+--
+ALTER TABLE `FrameList`
+  ADD PRIMARY KEY (`frameListId`);
+
+--
+-- Indexes for table `FrameSet`
+--
+ALTER TABLE `FrameSet`
+  ADD PRIMARY KEY (`frameSetId`),
+  ADD KEY `FramesetToRun` (`runId`),
+  ADD KEY `FrameSetToFrameList` (`frameListId`);
+
+--
+-- Indexes for table `FrameToList`
+--
+ALTER TABLE `FrameToList`
+  ADD PRIMARY KEY (`frameToListId`),
+  ADD KEY `FrameToLisToFrameList` (`frameListId`),
+  ADD KEY `FrameToListToFrame` (`frameId`);
+
+--
+-- Indexes for table `GeometryClassname`
+--
+ALTER TABLE `GeometryClassname`
+  ADD PRIMARY KEY (`geometryClassnameId`);
+
+--
+-- Indexes for table `GridInfo`
+--
+ALTER TABLE `GridInfo`
+  ADD PRIMARY KEY (`gridInfoId`),
+  ADD KEY `workflowMeshId` (`workflowMeshId`),
+  ADD KEY `GridInfo_ibfk_2` (`dataCollectionGroupId`);
+
+--
+-- Indexes for table `Image`
+--
+ALTER TABLE `Image`
+  ADD PRIMARY KEY (`imageId`),
+  ADD KEY `Image_FKIndex1` (`dataCollectionId`),
+  ADD KEY `Image_FKIndex2` (`imageNumber`),
+  ADD KEY `Image_Index3` (`fileLocation`,`fileName`) USING BTREE,
+  ADD KEY `motorPositionId` (`motorPositionId`);
+
+--
+-- Indexes for table `ImageQualityIndicators`
+--
+ALTER TABLE `ImageQualityIndicators`
+  ADD PRIMARY KEY (`imageQualityIndicatorsId`),
+  ADD KEY `ImageQualityIndicatorsIdx1` (`imageId`),
+  ADD KEY `AutoProcProgramIdx1` (`autoProcProgramId`);
+
+--
+-- Indexes for table `Imager`
+--
+ALTER TABLE `Imager`
+  ADD PRIMARY KEY (`imagerId`);
+
+--
+-- Indexes for table `InputParameterWorkflow`
+--
+ALTER TABLE `InputParameterWorkflow`
+  ADD PRIMARY KEY (`inputParameterId`);
+
+--
+-- Indexes for table `InspectionType`
+--
+ALTER TABLE `InspectionType`
+  ADD PRIMARY KEY (`inspectionTypeId`);
+
+--
+-- Indexes for table `Instruction`
+--
+ALTER TABLE `Instruction`
+  ADD PRIMARY KEY (`instructionId`),
+  ADD KEY `InstructionToInstructionSet` (`instructionSetId`);
+
+--
+-- Indexes for table `InstructionSet`
+--
+ALTER TABLE `InstructionSet`
+  ADD PRIMARY KEY (`instructionSetId`);
+
+--
+-- Indexes for table `IspybCrystalClass`
+--
+ALTER TABLE `IspybCrystalClass`
+  ADD PRIMARY KEY (`crystalClassId`);
+
+--
+-- Indexes for table `IspybReference`
+--
+ALTER TABLE `IspybReference`
+  ADD PRIMARY KEY (`referenceId`);
+
+--
+-- Indexes for table `LabContact`
+--
+ALTER TABLE `LabContact`
+  ADD PRIMARY KEY (`labContactId`),
+  ADD UNIQUE KEY `personAndProposal` (`personId`,`proposalId`),
+  ADD UNIQUE KEY `cardNameAndProposal` (`cardName`,`proposalId`),
+  ADD KEY `LabContact_FKIndex1` (`proposalId`);
+
+--
+-- Indexes for table `Laboratory`
+--
+ALTER TABLE `Laboratory`
+  ADD PRIMARY KEY (`laboratoryId`);
+
+--
+-- Indexes for table `Log4Stat`
+--
+ALTER TABLE `Log4Stat`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `Login`
+--
+ALTER TABLE `Login`
+  ADD PRIMARY KEY (`loginId`),
+  ADD KEY `Token` (`token`);
+
+--
+-- Indexes for table `Macromolecule`
+--
+ALTER TABLE `Macromolecule`
+  ADD PRIMARY KEY (`macromoleculeId`),
+  ADD KEY `MacromoleculeToSafetyLevel` (`safetyLevelId`);
+
+--
+-- Indexes for table `MacromoleculeRegion`
+--
+ALTER TABLE `MacromoleculeRegion`
+  ADD PRIMARY KEY (`macromoleculeRegionId`),
+  ADD KEY `MacromoleculeRegionInformationToMacromolecule` (`macromoleculeId`);
+
+--
+-- Indexes for table `Measurement`
+--
+ALTER TABLE `Measurement`
+  ADD PRIMARY KEY (`measurementId`),
+  ADD KEY `SpecimenToSamplePlateWell` (`specimenId`),
+  ADD KEY `MeasurementToRun` (`runId`);
+
+--
+-- Indexes for table `MeasurementToDataCollection`
+--
+ALTER TABLE `MeasurementToDataCollection`
+  ADD PRIMARY KEY (`measurementToDataCollectionId`),
+  ADD KEY `MeasurementToDataCollectionToDataCollection` (`dataCollectionId`),
+  ADD KEY `MeasurementToDataCollectionToMeasurement` (`measurementId`);
+
+--
+-- Indexes for table `MeasurementUnit`
+--
+ALTER TABLE `MeasurementUnit`
+  ADD PRIMARY KEY (`measurementUnitId`);
+
+--
+-- Indexes for table `Merge`
+--
+ALTER TABLE `Merge`
+  ADD PRIMARY KEY (`mergeId`),
+  ADD KEY `MergeToMeasurement` (`measurementId`),
+  ADD KEY `MergeToListOfFrames` (`frameListId`);
+
+--
+-- Indexes for table `MixtureToStructure`
+--
+ALTER TABLE `MixtureToStructure`
+  ADD PRIMARY KEY (`fitToStructureId`),
+  ADD KEY `fk_FitToStructure_1` (`structureId`),
+  ADD KEY `fk_FitToStructure_2` (`mixtureId`);
+
+--
+-- Indexes for table `Model`
+--
+ALTER TABLE `Model`
+  ADD PRIMARY KEY (`modelId`);
+
+--
+-- Indexes for table `ModelBuilding`
+--
+ALTER TABLE `ModelBuilding`
+  ADD PRIMARY KEY (`modelBuildingId`),
+  ADD KEY `ModelBuilding_FKIndex1` (`phasingAnalysisId`),
+  ADD KEY `ModelBuilding_FKIndex2` (`phasingProgramRunId`),
+  ADD KEY `ModelBuilding_FKIndex3` (`spaceGroupId`);
+
+--
+-- Indexes for table `ModelList`
+--
+ALTER TABLE `ModelList`
+  ADD PRIMARY KEY (`modelListId`);
+
+--
+-- Indexes for table `ModelToList`
+--
+ALTER TABLE `ModelToList`
+  ADD PRIMARY KEY (`modelToListId`),
+  ADD KEY `ModelToListToList` (`modelListId`),
+  ADD KEY `ModelToListToModel` (`modelId`);
+
+--
+-- Indexes for table `MotionCorrection`
+--
+ALTER TABLE `MotionCorrection`
+  ADD PRIMARY KEY (`motionCorrectionId`),
+  ADD KEY `fk_MotionCorrection_1_idx` (`movieId`),
+  ADD KEY `movieId` (`movieId`);
+
+--
+-- Indexes for table `MotorPosition`
+--
+ALTER TABLE `MotorPosition`
+  ADD PRIMARY KEY (`motorPositionId`);
+
+--
+-- Indexes for table `Movie`
+--
+ALTER TABLE `Movie`
+  ADD PRIMARY KEY (`movieId`),
+  ADD KEY `dataCollectionToMovie_idx` (`dataCollectionId`);
+
+--
+-- Indexes for table `MXMRRun`
+--
+ALTER TABLE `MXMRRun`
+  ADD PRIMARY KEY (`mxMRRunId`),
+  ADD KEY `mxMRRun_FK1` (`autoProcScalingId`);
+
+--
+-- Indexes for table `MXMRRunBlob`
+--
+ALTER TABLE `MXMRRunBlob`
+  ADD PRIMARY KEY (`mxMRRunBlobId`),
+  ADD KEY `mxMRRunBlob_FK1` (`mxMRRunId`);
+
+--
+-- Indexes for table `Particle`
+--
+ALTER TABLE `Particle`
+  ADD PRIMARY KEY (`particleId`),
+  ADD KEY `Particle_FKIND1` (`dataCollectionId`);
+
+--
+-- Indexes for table `PDB`
+--
+ALTER TABLE `PDB`
+  ADD PRIMARY KEY (`pdbId`);
+
+--
+-- Indexes for table `PDBEntry`
+--
+ALTER TABLE `PDBEntry`
+  ADD PRIMARY KEY (`pdbEntryId`),
+  ADD KEY `pdbEntryIdx1` (`autoProcProgramId`);
+
+--
+-- Indexes for table `PDBEntry_has_AutoProcProgram`
+--
+ALTER TABLE `PDBEntry_has_AutoProcProgram`
+  ADD PRIMARY KEY (`pdbEntryHasAutoProcId`),
+  ADD KEY `pdbEntry_AutoProcProgramIdx1` (`pdbEntryId`),
+  ADD KEY `pdbEntry_AutoProcProgramIdx2` (`autoProcProgramId`);
+
+--
+-- Indexes for table `Permission`
+--
+ALTER TABLE `Permission`
+  ADD PRIMARY KEY (`permissionId`);
+
+--
+-- Indexes for table `Person`
+--
+ALTER TABLE `Person`
+  ADD PRIMARY KEY (`personId`),
+  ADD KEY `Person_FKIndex1` (`laboratoryId`),
+  ADD KEY `Person_FKIndexFamilyName` (`familyName`),
+  ADD KEY `Person_FKIndex_Login` (`login`),
+  ADD KEY `siteId` (`siteId`);
+
+--
+-- Indexes for table `Phasing`
+--
+ALTER TABLE `Phasing`
+  ADD PRIMARY KEY (`phasingId`),
+  ADD KEY `Phasing_FKIndex1` (`phasingAnalysisId`),
+  ADD KEY `Phasing_FKIndex2` (`phasingProgramRunId`),
+  ADD KEY `Phasing_FKIndex3` (`spaceGroupId`);
+
+--
+-- Indexes for table `PhasingAnalysis`
+--
+ALTER TABLE `PhasingAnalysis`
+  ADD PRIMARY KEY (`phasingAnalysisId`);
+
+--
+-- Indexes for table `PhasingProgramAttachment`
+--
+ALTER TABLE `PhasingProgramAttachment`
+  ADD PRIMARY KEY (`phasingProgramAttachmentId`),
+  ADD KEY `PhasingProgramAttachment_FKIndex1` (`phasingProgramRunId`);
+
+--
+-- Indexes for table `PhasingProgramRun`
+--
+ALTER TABLE `PhasingProgramRun`
+  ADD PRIMARY KEY (`phasingProgramRunId`);
+
+--
+-- Indexes for table `PhasingStatistics`
+--
+ALTER TABLE `PhasingStatistics`
+  ADD PRIMARY KEY (`phasingStatisticsId`),
+  ADD KEY `PhasingStatistics_FKIndex1` (`phasingHasScalingId1`),
+  ADD KEY `PhasingStatistics_FKIndex2` (`phasingHasScalingId2`),
+  ADD KEY `fk_PhasingStatistics_phasingStep_idx` (`phasingStepId`);
+
+--
+-- Indexes for table `PhasingStep`
+--
+ALTER TABLE `PhasingStep`
+  ADD PRIMARY KEY (`phasingStepId`),
+  ADD KEY `FK_programRun_id` (`programRunId`),
+  ADD KEY `FK_spacegroup_id` (`spaceGroupId`),
+  ADD KEY `FK_autoprocScaling_id` (`autoProcScalingId`),
+  ADD KEY `FK_phasingAnalysis_id` (`phasingAnalysisId`);
+
+--
+-- Indexes for table `Phasing_has_Scaling`
+--
+ALTER TABLE `Phasing_has_Scaling`
+  ADD PRIMARY KEY (`phasingHasScalingId`),
+  ADD KEY `PhasingHasScaling_FKIndex1` (`phasingAnalysisId`),
+  ADD KEY `PhasingHasScaling_FKIndex2` (`autoProcScalingId`);
+
+--
+-- Indexes for table `PHPSession`
+--
+ALTER TABLE `PHPSession`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `PlateGroup`
+--
+ALTER TABLE `PlateGroup`
+  ADD PRIMARY KEY (`plateGroupId`);
+
+--
+-- Indexes for table `PlateType`
+--
+ALTER TABLE `PlateType`
+  ADD PRIMARY KEY (`PlateTypeId`),
+  ADD KEY `PlateTypeToExperiment` (`experimentId`);
+
+--
+-- Indexes for table `Position`
+--
+ALTER TABLE `Position`
+  ADD PRIMARY KEY (`positionId`),
+  ADD KEY `Position_FKIndex1` (`relativePositionId`);
+
+--
+-- Indexes for table `PreparePhasingData`
+--
+ALTER TABLE `PreparePhasingData`
+  ADD PRIMARY KEY (`preparePhasingDataId`),
+  ADD KEY `PreparePhasingData_FKIndex1` (`phasingAnalysisId`),
+  ADD KEY `PreparePhasingData_FKIndex2` (`phasingProgramRunId`),
+  ADD KEY `PreparePhasingData_FKIndex3` (`spaceGroupId`);
+
+--
+-- Indexes for table `Project`
+--
+ALTER TABLE `Project`
+  ADD PRIMARY KEY (`projectId`),
+  ADD KEY `Project_FK1` (`personId`);
+
+--
+-- Indexes for table `Project_has_BLSample`
+--
+ALTER TABLE `Project_has_BLSample`
+  ADD PRIMARY KEY (`projectId`,`blSampleId`),
+  ADD KEY `Project_has_BLSample_FK2` (`blSampleId`);
+
+--
+-- Indexes for table `Project_has_DCGroup`
+--
+ALTER TABLE `Project_has_DCGroup`
+  ADD PRIMARY KEY (`projectId`,`dataCollectionGroupId`),
+  ADD KEY `Project_has_DCGroup_FK2` (`dataCollectionGroupId`);
+
+--
+-- Indexes for table `Project_has_EnergyScan`
+--
+ALTER TABLE `Project_has_EnergyScan`
+  ADD PRIMARY KEY (`projectId`,`energyScanId`),
+  ADD KEY `project_has_energyscan_FK2` (`energyScanId`);
+
+--
+-- Indexes for table `Project_has_Person`
+--
+ALTER TABLE `Project_has_Person`
+  ADD PRIMARY KEY (`projectId`,`personId`),
+  ADD KEY `project_has_person_FK2` (`personId`);
+
+--
+-- Indexes for table `Project_has_Protein`
+--
+ALTER TABLE `Project_has_Protein`
+  ADD PRIMARY KEY (`projectId`,`proteinId`),
+  ADD KEY `project_has_protein_FK2` (`proteinId`);
+
+--
+-- Indexes for table `Project_has_Session`
+--
+ALTER TABLE `Project_has_Session`
+  ADD PRIMARY KEY (`projectId`,`sessionId`),
+  ADD KEY `project_has_session_FK2` (`sessionId`);
+
+--
+-- Indexes for table `Project_has_Shipping`
+--
+ALTER TABLE `Project_has_Shipping`
+  ADD PRIMARY KEY (`projectId`,`shippingId`),
+  ADD KEY `project_has_shipping_FK2` (`shippingId`);
+
+--
+-- Indexes for table `Project_has_User`
+--
+ALTER TABLE `Project_has_User`
+  ADD PRIMARY KEY (`projecthasuserid`),
+  ADD KEY `Project_Has_user_FK1` (`projectid`);
+
+--
+-- Indexes for table `Project_has_XFEFSpectrum`
+--
+ALTER TABLE `Project_has_XFEFSpectrum`
+  ADD PRIMARY KEY (`projectId`,`xfeFluorescenceSpectrumId`),
+  ADD KEY `project_has_xfefspectrum_FK2` (`xfeFluorescenceSpectrumId`);
+
+--
+-- Indexes for table `Proposal`
+--
+ALTER TABLE `Proposal`
+  ADD PRIMARY KEY (`proposalId`),
+  ADD KEY `Proposal_FKIndex1` (`personId`),
+  ADD KEY `Proposal_FKIndexCodeNumber` (`proposalCode`,`proposalNumber`);
+
+--
+-- Indexes for table `ProposalHasPerson`
+--
+ALTER TABLE `ProposalHasPerson`
+  ADD PRIMARY KEY (`proposalHasPersonId`),
+  ADD KEY `fk_ProposalHasPerson_Proposal` (`proposalId`),
+  ADD KEY `fk_ProposalHasPerson_Personal` (`personId`);
+
+--
+-- Indexes for table `Protein`
+--
+ALTER TABLE `Protein`
+  ADD PRIMARY KEY (`proteinId`),
+  ADD KEY `Protein_FKIndex1` (`proposalId`),
+  ADD KEY `ProteinAcronym_Index` (`proposalId`,`acronym`),
+  ADD KEY `Protein_FKIndex2` (`personId`),
+  ADD KEY `Protein_Index2` (`acronym`) USING BTREE,
+  ADD KEY `protein_fk3` (`componentTypeId`);
+
+--
+-- Indexes for table `Protein_has_Lattice`
+--
+ALTER TABLE `Protein_has_Lattice`
+  ADD PRIMARY KEY (`proteinId`);
+
+--
+-- Indexes for table `Protein_has_PDB`
+--
+ALTER TABLE `Protein_has_PDB`
+  ADD PRIMARY KEY (`proteinhaspdbid`),
+  ADD KEY `Protein_Has_PDB_fk1` (`proteinid`),
+  ADD KEY `Protein_Has_PDB_fk2` (`pdbid`);
+
+--
+-- Indexes for table `RigidBodyModeling`
+--
+ALTER TABLE `RigidBodyModeling`
+  ADD PRIMARY KEY (`rigidBodyModelingId`),
+  ADD KEY `fk_RigidBodyModeling_1` (`subtractionId`);
+
+--
+-- Indexes for table `RobotAction`
+--
+ALTER TABLE `RobotAction`
+  ADD PRIMARY KEY (`robotActionId`),
+  ADD KEY `RobotAction_FK1` (`blsessionId`),
+  ADD KEY `RobotAction_FK2` (`blsampleId`);
+
+--
+-- Indexes for table `Run`
+--
+ALTER TABLE `Run`
+  ADD PRIMARY KEY (`runId`);
+
+--
+-- Indexes for table `SafetyLevel`
+--
+ALTER TABLE `SafetyLevel`
+  ADD PRIMARY KEY (`safetyLevelId`);
+
+--
+-- Indexes for table `SamplePlate`
+--
+ALTER TABLE `SamplePlate`
+  ADD PRIMARY KEY (`samplePlateId`),
+  ADD KEY `PlateToPtateGroup` (`plateGroupId`),
+  ADD KEY `SamplePlateToType` (`plateTypeId`),
+  ADD KEY `SamplePlateToExperiment` (`experimentId`),
+  ADD KEY `SamplePlateToInstructionSet` (`instructionSetId`);
+
+--
+-- Indexes for table `SamplePlatePosition`
+--
+ALTER TABLE `SamplePlatePosition`
+  ADD PRIMARY KEY (`samplePlatePositionId`),
+  ADD KEY `PlatePositionToPlate` (`samplePlateId`);
+
+--
+-- Indexes for table `SaxsDataCollection`
+--
+ALTER TABLE `SaxsDataCollection`
+  ADD PRIMARY KEY (`dataCollectionId`),
+  ADD KEY `SaxsDataCollectionToExperiment` (`experimentId`);
+
+--
+-- Indexes for table `ScanParametersModel`
+--
+ALTER TABLE `ScanParametersModel`
+  ADD PRIMARY KEY (`scanParametersModelId`),
+  ADD KEY `PDF_Model_ibfk1` (`scanParametersServiceId`),
+  ADD KEY `PDF_Model_ibfk2` (`dataCollectionPlanId`);
+
+--
+-- Indexes for table `ScanParametersService`
+--
+ALTER TABLE `ScanParametersService`
+  ADD PRIMARY KEY (`scanParametersServiceId`);
+
+--
+-- Indexes for table `Schedule`
+--
+ALTER TABLE `Schedule`
+  ADD PRIMARY KEY (`scheduleId`);
+
+--
+-- Indexes for table `ScheduleComponent`
+--
+ALTER TABLE `ScheduleComponent`
+  ADD PRIMARY KEY (`scheduleComponentId`),
+  ADD KEY `ScheduleComponent_fk2` (`inspectionTypeId`),
+  ADD KEY `ScheduleComponent_idx1` (`scheduleId`);
+
+--
+-- Indexes for table `Screen`
+--
+ALTER TABLE `Screen`
+  ADD PRIMARY KEY (`screenId`),
+  ADD KEY `Screen_fk1` (`proposalId`);
+
+--
+-- Indexes for table `ScreenComponent`
+--
+ALTER TABLE `ScreenComponent`
+  ADD PRIMARY KEY (`screenComponentId`),
+  ADD KEY `ScreenComponent_fk1` (`screenComponentGroupId`),
+  ADD KEY `ScreenComponent_fk2` (`componentId`);
+
+--
+-- Indexes for table `ScreenComponentGroup`
+--
+ALTER TABLE `ScreenComponentGroup`
+  ADD PRIMARY KEY (`screenComponentGroupId`),
+  ADD KEY `ScreenComponentGroup_fk1` (`screenId`);
+
+--
+-- Indexes for table `Screening`
+--
+ALTER TABLE `Screening`
+  ADD PRIMARY KEY (`screeningId`),
+  ADD KEY `Screening_FKIndexDiffractionPlanId` (`diffractionPlanId`),
+  ADD KEY `dcgroupId` (`dataCollectionGroupId`);
+
+--
+-- Indexes for table `ScreeningInput`
+--
+ALTER TABLE `ScreeningInput`
+  ADD PRIMARY KEY (`screeningInputId`),
+  ADD KEY `ScreeningInput_FKIndex1` (`screeningId`);
+
+--
+-- Indexes for table `ScreeningOutput`
+--
+ALTER TABLE `ScreeningOutput`
+  ADD PRIMARY KEY (`screeningOutputId`),
+  ADD KEY `ScreeningOutput_FKIndex1` (`screeningId`);
+
+--
+-- Indexes for table `ScreeningOutputLattice`
+--
+ALTER TABLE `ScreeningOutputLattice`
+  ADD PRIMARY KEY (`screeningOutputLatticeId`),
+  ADD KEY `ScreeningOutputLattice_FKIndex1` (`screeningOutputId`);
+
+--
+-- Indexes for table `ScreeningRank`
+--
+ALTER TABLE `ScreeningRank`
+  ADD PRIMARY KEY (`screeningRankId`),
+  ADD KEY `ScreeningRank_FKIndex1` (`screeningId`),
+  ADD KEY `ScreeningRank_FKIndex2` (`screeningRankSetId`);
+
+--
+-- Indexes for table `ScreeningRankSet`
+--
+ALTER TABLE `ScreeningRankSet`
+  ADD PRIMARY KEY (`screeningRankSetId`);
+
+--
+-- Indexes for table `ScreeningStrategy`
+--
+ALTER TABLE `ScreeningStrategy`
+  ADD PRIMARY KEY (`screeningStrategyId`),
+  ADD KEY `ScreeningStrategy_FKIndex1` (`screeningOutputId`);
+
+--
+-- Indexes for table `ScreeningStrategySubWedge`
+--
+ALTER TABLE `ScreeningStrategySubWedge`
+  ADD PRIMARY KEY (`screeningStrategySubWedgeId`),
+  ADD KEY `ScreeningStrategySubWedge_FK1` (`screeningStrategyWedgeId`);
+
+--
+-- Indexes for table `ScreeningStrategyWedge`
+--
+ALTER TABLE `ScreeningStrategyWedge`
+  ADD PRIMARY KEY (`screeningStrategyWedgeId`),
+  ADD KEY `ScreeningStrategyWedge_IBFK_1` (`screeningStrategyId`);
+
+--
+-- Indexes for table `SessionType`
+--
+ALTER TABLE `SessionType`
+  ADD PRIMARY KEY (`sessionTypeId`),
+  ADD KEY `SessionType_FKIndex1` (`sessionId`);
+
+--
+-- Indexes for table `Session_has_Person`
+--
+ALTER TABLE `Session_has_Person`
+  ADD PRIMARY KEY (`sessionId`,`personId`),
+  ADD KEY `Session_has_Person_FKIndex1` (`sessionId`),
+  ADD KEY `Session_has_Person_FKIndex2` (`personId`);
+
+--
+-- Indexes for table `Shipping`
+--
+ALTER TABLE `Shipping`
+  ADD PRIMARY KEY (`shippingId`),
+  ADD KEY `Shipping_FKIndex1` (`proposalId`),
+  ADD KEY `laboratoryId` (`laboratoryId`),
+  ADD KEY `Shipping_FKIndex2` (`sendingLabContactId`),
+  ADD KEY `Shipping_FKIndex3` (`returnLabContactId`),
+  ADD KEY `Shipping_FKIndexCreationDate` (`creationDate`),
+  ADD KEY `Shipping_FKIndexName` (`shippingName`),
+  ADD KEY `Shipping_FKIndexStatus` (`shippingStatus`);
+
+--
+-- Indexes for table `ShippingHasSession`
+--
+ALTER TABLE `ShippingHasSession`
+  ADD PRIMARY KEY (`shippingId`,`sessionId`),
+  ADD KEY `ShippingHasSession_FKIndex1` (`shippingId`),
+  ADD KEY `ShippingHasSession_FKIndex2` (`sessionId`);
+
+--
+-- Indexes for table `SpaceGroup`
+--
+ALTER TABLE `SpaceGroup`
+  ADD PRIMARY KEY (`spaceGroupId`),
+  ADD KEY `SpaceGroup_FKShortName` (`spaceGroupShortName`),
+  ADD KEY `geometryClassnameId` (`geometryClassnameId`);
+
+--
+-- Indexes for table `Specimen`
+--
+ALTER TABLE `Specimen`
+  ADD PRIMARY KEY (`specimenId`),
+  ADD KEY `SamplePlateWellToBuffer` (`bufferId`),
+  ADD KEY `SamplePlateWellToMacromolecule` (`macromoleculeId`),
+  ADD KEY `SamplePlateWellToSamplePlatePosition` (`samplePlatePositionId`),
+  ADD KEY `SamplePlateWellToSafetyLevel` (`safetyLevelId`),
+  ADD KEY `SamplePlateWellToExperiment` (`experimentId`),
+  ADD KEY `SampleToStockSolution` (`stockSolutionId`);
+
+--
+-- Indexes for table `StockSolution`
+--
+ALTER TABLE `StockSolution`
+  ADD PRIMARY KEY (`stockSolutionId`),
+  ADD KEY `StockSolutionToBuffer` (`bufferId`),
+  ADD KEY `StockSolutionToMacromolecule` (`macromoleculeId`),
+  ADD KEY `StockSolutionToInstructionSet` (`instructionSetId`);
+
+--
+-- Indexes for table `Stoichiometry`
+--
+ALTER TABLE `Stoichiometry`
+  ADD PRIMARY KEY (`stoichiometryId`),
+  ADD KEY `StoichiometryToHost` (`hostMacromoleculeId`),
+  ADD KEY `StoichiometryToMacromolecule` (`macromoleculeId`);
+
+--
+-- Indexes for table `Structure`
+--
+ALTER TABLE `Structure`
+  ADD PRIMARY KEY (`structureId`),
+  ADD KEY `StructureToMacromolecule` (`macromoleculeId`),
+  ADD KEY `StructureToCrystal_idx` (`crystalId`),
+  ADD KEY `StructureToBlSample_idx` (`blSampleId`);
+
+--
+-- Indexes for table `SubstructureDetermination`
+--
+ALTER TABLE `SubstructureDetermination`
+  ADD PRIMARY KEY (`substructureDeterminationId`),
+  ADD KEY `SubstructureDetermination_FKIndex1` (`phasingAnalysisId`),
+  ADD KEY `SubstructureDetermination_FKIndex2` (`phasingProgramRunId`),
+  ADD KEY `SubstructureDetermination_FKIndex3` (`spaceGroupId`);
+
+--
+-- Indexes for table `Subtraction`
+--
+ALTER TABLE `Subtraction`
+  ADD PRIMARY KEY (`subtractionId`),
+  ADD KEY `EdnaAnalysisToMeasurement` (`dataCollectionId`),
+  ADD KEY `fk_Subtraction_1` (`sampleOneDimensionalFiles`),
+  ADD KEY `fk_Subtraction_2` (`bufferOnedimensionalFiles`);
+
+--
+-- Indexes for table `SubtractionToAbInitioModel`
+--
+ALTER TABLE `SubtractionToAbInitioModel`
+  ADD PRIMARY KEY (`subtractionToAbInitioModelId`),
+  ADD KEY `substractionToAbInitioModelToAbinitioModel` (`abInitioId`),
+  ADD KEY `ubstractionToSubstraction` (`subtractionId`);
+
+--
+-- Indexes for table `Superposition`
+--
+ALTER TABLE `Superposition`
+  ADD PRIMARY KEY (`superpositionId`),
+  ADD KEY `fk_Superposition_1` (`subtractionId`);
+
+--
+-- Indexes for table `SW_onceToken`
+--
+ALTER TABLE `SW_onceToken`
+  ADD PRIMARY KEY (`onceTokenId`),
+  ADD KEY `SW_onceToken_fk1` (`personId`),
+  ADD KEY `SW_onceToken_fk2` (`proposalId`);
+
+--
+-- Indexes for table `UntrustedRegion`
+--
+ALTER TABLE `UntrustedRegion`
+  ADD PRIMARY KEY (`untrustedRegionId`),
+  ADD KEY `UntrustedRegion_FKIndex1` (`detectorId`);
+
+--
+-- Indexes for table `UserGroup`
+--
+ALTER TABLE `UserGroup`
+  ADD PRIMARY KEY (`userGroupId`),
+  ADD UNIQUE KEY `UserGroup_idx1` (`name`);
+
+--
+-- Indexes for table `UserGroup_has_Permission`
+--
+ALTER TABLE `UserGroup_has_Permission`
+  ADD PRIMARY KEY (`userGroupId`,`permissionId`),
+  ADD KEY `UserGroup_has_Permission_fk2` (`permissionId`);
+
+--
+-- Indexes for table `UserGroup_has_Person`
+--
+ALTER TABLE `UserGroup_has_Person`
+  ADD PRIMARY KEY (`userGroupId`,`personId`),
+  ADD KEY `userGroup_has_Person_fk2` (`personId`);
+
+--
+-- Indexes for table `Workflow`
+--
+ALTER TABLE `Workflow`
+  ADD PRIMARY KEY (`workflowId`);
+
+--
+-- Indexes for table `WorkflowDehydration`
+--
+ALTER TABLE `WorkflowDehydration`
+  ADD PRIMARY KEY (`workflowDehydrationId`),
+  ADD KEY `WorkflowDehydration_FKIndex1` (`workflowId`);
+
+--
+-- Indexes for table `WorkflowMesh`
+--
+ALTER TABLE `WorkflowMesh`
+  ADD PRIMARY KEY (`workflowMeshId`),
+  ADD KEY `WorkflowMesh_FKIndex1` (`workflowId`),
+  ADD KEY `bestPositionId` (`bestPositionId`),
+  ADD KEY `bestImageId` (`bestImageId`);
+
+--
+-- Indexes for table `WorkflowStep`
+--
+ALTER TABLE `WorkflowStep`
+  ADD PRIMARY KEY (`workflowStepId`),
+  ADD KEY `step_to_workflow_fk_idx` (`workflowId`);
+
+--
+-- Indexes for table `WorkflowType`
+--
+ALTER TABLE `WorkflowType`
+  ADD PRIMARY KEY (`workflowTypeId`);
+
+--
+-- Indexes for table `XFEFluorescenceSpectrum`
+--
+ALTER TABLE `XFEFluorescenceSpectrum`
+  ADD PRIMARY KEY (`xfeFluorescenceSpectrumId`),
+  ADD KEY `XFEFluorescnceSpectrum_FKIndex1` (`blSampleId`),
+  ADD KEY `XFEFluorescnceSpectrum_FKIndex2` (`sessionId`),
+  ADD KEY `XFE_ibfk_3` (`blSubSampleId`);
+
+--
+-- Indexes for table `XRFFluorescenceMapping`
+--
+ALTER TABLE `XRFFluorescenceMapping`
+  ADD PRIMARY KEY (`xrfFluorescenceMappingId`),
+  ADD KEY `XRFFluorescenceMapping_ibfk1` (`xrfFluorescenceMappingROIId`),
+  ADD KEY `XRFFluorescenceMapping_ibfk2` (`dataCollectionId`);
+
+--
+-- Indexes for table `XRFFluorescenceMappingROI`
+--
+ALTER TABLE `XRFFluorescenceMappingROI`
+  ADD PRIMARY KEY (`xrfFluorescenceMappingROIId`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `AbInitioModel`
+--
+ALTER TABLE `AbInitioModel`
+  MODIFY `abInitioModelId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40650;
+--
+-- AUTO_INCREMENT for table `Additive`
+--
+ALTER TABLE `Additive`
+  MODIFY `additiveId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `AdminActivity`
+--
+ALTER TABLE `AdminActivity`
+  MODIFY `adminActivityId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2154;
+--
+-- AUTO_INCREMENT for table `AdminVar`
+--
+ALTER TABLE `AdminVar`
+  MODIFY `varId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `Aperture`
+--
+ALTER TABLE `Aperture`
+  MODIFY `apertureId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Assembly`
+--
+ALTER TABLE `Assembly`
+  MODIFY `assemblyId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `AssemblyHasMacromolecule`
+--
+ALTER TABLE `AssemblyHasMacromolecule`
+  MODIFY `AssemblyHasMacromoleculeId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `AssemblyRegion`
+--
+ALTER TABLE `AssemblyRegion`
+  MODIFY `assemblyRegionId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `AutoProc`
+--
+ALTER TABLE `AutoProc`
+  MODIFY `autoProcId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711800;
+--
+-- AUTO_INCREMENT for table `AutoProcIntegration`
+--
+ALTER TABLE `AutoProcIntegration`
+  MODIFY `autoProcIntegrationId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1908639;
+--
+-- AUTO_INCREMENT for table `AutoProcProgram`
+--
+ALTER TABLE `AutoProcProgram`
+  MODIFY `autoProcProgramId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1782400;
+--
+-- AUTO_INCREMENT for table `AutoProcProgramAttachment`
+--
+ALTER TABLE `AutoProcProgramAttachment`
+  MODIFY `autoProcProgramAttachmentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=17816207;
+--
+-- AUTO_INCREMENT for table `AutoProcScaling`
+--
+ALTER TABLE `AutoProcScaling`
+  MODIFY `autoProcScalingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711810;
+--
+-- AUTO_INCREMENT for table `AutoProcScalingStatistics`
+--
+ALTER TABLE `AutoProcScalingStatistics`
+  MODIFY `autoProcScalingStatisticsId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=5210435;
+--
+-- AUTO_INCREMENT for table `AutoProcScaling_has_Int`
+--
+ALTER TABLE `AutoProcScaling_has_Int`
+  MODIFY `autoProcScaling_has_IntId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711745;
+--
+-- AUTO_INCREMENT for table `AutoProcStatus`
+--
+ALTER TABLE `AutoProcStatus`
+  MODIFY `autoProcStatusId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2522383;
+--
+-- AUTO_INCREMENT for table `BeamApertures`
+--
+ALTER TABLE `BeamApertures`
+  MODIFY `beamAperturesid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BeamCalendar`
+--
+ALTER TABLE `BeamCalendar`
+  MODIFY `beamCalendarId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BeamCentres`
+--
+ALTER TABLE `BeamCentres`
+  MODIFY `beamCentresid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BeamlineAction`
+--
+ALTER TABLE `BeamlineAction`
+  MODIFY `beamlineActionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BeamLineSetup`
+--
+ALTER TABLE `BeamLineSetup`
+  MODIFY `beamLineSetupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1463627;
+--
+-- AUTO_INCREMENT for table `BeamlineStats`
+--
+ALTER TABLE `BeamlineStats`
+  MODIFY `beamlineStatsId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_automationError`
+--
+ALTER TABLE `BF_automationError`
+  MODIFY `automationErrorId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_automationFault`
+--
+ALTER TABLE `BF_automationFault`
+  MODIFY `automationFaultId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_component`
+--
+ALTER TABLE `BF_component`
+  MODIFY `componentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_component_beamline`
+--
+ALTER TABLE `BF_component_beamline`
+  MODIFY `component_beamlineId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_fault`
+--
+ALTER TABLE `BF_fault`
+  MODIFY `faultId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_subcomponent`
+--
+ALTER TABLE `BF_subcomponent`
+  MODIFY `subcomponentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_subcomponent_beamline`
+--
+ALTER TABLE `BF_subcomponent_beamline`
+  MODIFY `subcomponent_beamlineId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_system`
+--
+ALTER TABLE `BF_system`
+  MODIFY `systemId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BF_system_beamline`
+--
+ALTER TABLE `BF_system_beamline`
+  MODIFY `system_beamlineId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSample`
+--
+ALTER TABLE `BLSample`
+  MODIFY `blSampleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=631420;
+--
+-- AUTO_INCREMENT for table `BLSampleGroup`
+--
+ALTER TABLE `BLSampleGroup`
+  MODIFY `blSampleGroupId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSampleImage`
+--
+ALTER TABLE `BLSampleImage`
+  MODIFY `blSampleImageId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `BLSampleImageAnalysis`
+--
+ALTER TABLE `BLSampleImageAnalysis`
+  MODIFY `blSampleImageAnalysisId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSampleImageScore`
+--
+ALTER TABLE `BLSampleImageScore`
+  MODIFY `blSampleImageScoreId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSample_has_EnergyScan`
+--
+ALTER TABLE `BLSample_has_EnergyScan`
+  MODIFY `blSampleHasEnergyScanId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSession`
+--
+ALTER TABLE `BLSession`
+  MODIFY `sessionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61489;
+--
+-- AUTO_INCREMENT for table `BLSession_has_SCPosition`
+--
+ALTER TABLE `BLSession_has_SCPosition`
+  MODIFY `blsessionhasscpositionid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `BLSubSample`
+--
+ALTER TABLE `BLSubSample`
+  MODIFY `blSubSampleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)';
+--
+-- AUTO_INCREMENT for table `Buffer`
+--
+ALTER TABLE `Buffer`
+  MODIFY `bufferId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7480;
+--
+-- AUTO_INCREMENT for table `BufferHasAdditive`
+--
+ALTER TABLE `BufferHasAdditive`
+  MODIFY `bufferHasAdditiveId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `CalendarHash`
+--
+ALTER TABLE `CalendarHash`
+  MODIFY `calendarHashId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ComponentType`
+--
+ALTER TABLE `ComponentType`
+  MODIFY `componentTypeId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `ConcentrationType`
+--
+ALTER TABLE `ConcentrationType`
+  MODIFY `concentrationTypeId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Container`
+--
+ALTER TABLE `Container`
+  MODIFY `containerId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=345549;
+--
+-- AUTO_INCREMENT for table `ContainerHistory`
+--
+ALTER TABLE `ContainerHistory`
+  MODIFY `containerHistoryId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ContainerInspection`
+--
+ALTER TABLE `ContainerInspection`
+  MODIFY `containerInspectionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ContainerQueue`
+--
+ALTER TABLE `ContainerQueue`
+  MODIFY `containerQueueId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ContainerQueueSample`
+--
+ALTER TABLE `ContainerQueueSample`
+  MODIFY `containerQueueSampleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Crystal`
+--
+ALTER TABLE `Crystal`
+  MODIFY `crystalId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=556931;
+--
+-- AUTO_INCREMENT for table `Crystal_has_UUID`
+--
+ALTER TABLE `Crystal_has_UUID`
+  MODIFY `crystal_has_UUID_Id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93158;
+--
+-- AUTO_INCREMENT for table `CTF`
+--
+ALTER TABLE `CTF`
+  MODIFY `CTFid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5350;
+--
+-- AUTO_INCREMENT for table `DataAcquisition`
+--
+ALTER TABLE `DataAcquisition`
+  MODIFY `dataAcquisitionId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `DataCollection`
+--
+ALTER TABLE `DataCollection`
+  MODIFY `dataCollectionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2180598;
+--
+-- AUTO_INCREMENT for table `DataCollectionFileAttachment`
+--
+ALTER TABLE `DataCollectionFileAttachment`
+  MODIFY `dataCollectionFileAttachmentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `DataCollectionGroup`
+--
+ALTER TABLE `DataCollectionGroup`
+  MODIFY `dataCollectionGroupId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1721604;
+--
+-- AUTO_INCREMENT for table `DataCollectionPlanGroup`
+--
+ALTER TABLE `DataCollectionPlanGroup`
+  MODIFY `dataCollectionPlanGroupId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `DatamatrixInSampleChanger`
+--
+ALTER TABLE `DatamatrixInSampleChanger`
+  MODIFY `datamatrixInSampleChangerId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19089089;
+--
+-- AUTO_INCREMENT for table `DataReductionStatus`
+--
+ALTER TABLE `DataReductionStatus`
+  MODIFY `dataReductionStatusId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Detector`
+--
+ALTER TABLE `Detector`
+  MODIFY `detectorId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=81;
+--
+-- AUTO_INCREMENT for table `Dewar`
+--
+ALTER TABLE `Dewar`
+  MODIFY `dewarId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313849;
+--
+-- AUTO_INCREMENT for table `DewarLocation`
+--
+ALTER TABLE `DewarLocation`
+  MODIFY `eventId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16070;
+--
+-- AUTO_INCREMENT for table `DewarLocationList`
+--
+ALTER TABLE `DewarLocationList`
+  MODIFY `locationId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `DewarTransportHistory`
+--
+ALTER TABLE `DewarTransportHistory`
+  MODIFY `DewarTransportHistoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42030;
+--
+-- AUTO_INCREMENT for table `DiffractionPlan`
+--
+ALTER TABLE `DiffractionPlan`
+  MODIFY `diffractionPlanId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=755420;
+--
+-- AUTO_INCREMENT for table `EMMicroscope`
+--
+ALTER TABLE `EMMicroscope`
+  MODIFY `emMicroscopeId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `EnergyScan`
+--
+ALTER TABLE `EnergyScan`
+  MODIFY `energyScanId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14716;
+--
+-- AUTO_INCREMENT for table `Experiment`
+--
+ALTER TABLE `Experiment`
+  MODIFY `experimentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18425;
+--
+-- AUTO_INCREMENT for table `ExperimentKindDetails`
+--
+ALTER TABLE `ExperimentKindDetails`
+  MODIFY `experimentKindId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+--
+-- AUTO_INCREMENT for table `FitStructureToExperimentalData`
+--
+ALTER TABLE `FitStructureToExperimentalData`
+  MODIFY `fitStructureToExperimentalDataId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `Frame`
+--
+ALTER TABLE `Frame`
+  MODIFY `frameId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1836295;
+--
+-- AUTO_INCREMENT for table `FrameList`
+--
+ALTER TABLE `FrameList`
+  MODIFY `frameListId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226501;
+--
+-- AUTO_INCREMENT for table `FrameSet`
+--
+ALTER TABLE `FrameSet`
+  MODIFY `frameSetId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4209;
+--
+-- AUTO_INCREMENT for table `FrameToList`
+--
+ALTER TABLE `FrameToList`
+  MODIFY `frameToListId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2805367;
+--
+-- AUTO_INCREMENT for table `GeometryClassname`
+--
+ALTER TABLE `GeometryClassname`
+  MODIFY `geometryClassnameId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT for table `GridInfo`
+--
+ALTER TABLE `GridInfo`
+  MODIFY `gridInfoId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=163356;
+--
+-- AUTO_INCREMENT for table `Image`
+--
+ALTER TABLE `Image`
+  MODIFY `imageId` int(12) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53491860;
+--
+-- AUTO_INCREMENT for table `ImageQualityIndicators`
+--
+ALTER TABLE `ImageQualityIndicators`
+  MODIFY `imageQualityIndicatorsId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2854180;
+--
+-- AUTO_INCREMENT for table `Imager`
+--
+ALTER TABLE `Imager`
+  MODIFY `imagerId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `InputParameterWorkflow`
+--
+ALTER TABLE `InputParameterWorkflow`
+  MODIFY `inputParameterId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `InspectionType`
+--
+ALTER TABLE `InspectionType`
+  MODIFY `inspectionTypeId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Instruction`
+--
+ALTER TABLE `Instruction`
+  MODIFY `instructionId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `InstructionSet`
+--
+ALTER TABLE `InstructionSet`
+  MODIFY `instructionSetId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `IspybCrystalClass`
+--
+ALTER TABLE `IspybCrystalClass`
+  MODIFY `crystalClassId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `IspybReference`
+--
+ALTER TABLE `IspybReference`
+  MODIFY `referenceId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=15;
+--
+-- AUTO_INCREMENT for table `LabContact`
+--
+ALTER TABLE `LabContact`
+  MODIFY `labContactId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=262205;
+--
+-- AUTO_INCREMENT for table `Laboratory`
+--
+ALTER TABLE `Laboratory`
+  MODIFY `laboratoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312772;
+--
+-- AUTO_INCREMENT for table `Log4Stat`
+--
+ALTER TABLE `Log4Stat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19789;
+--
+-- AUTO_INCREMENT for table `Login`
+--
+ALTER TABLE `Login`
+  MODIFY `loginId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29301;
+--
+-- AUTO_INCREMENT for table `Macromolecule`
+--
+ALTER TABLE `Macromolecule`
+  MODIFY `macromoleculeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61336;
+--
+-- AUTO_INCREMENT for table `MacromoleculeRegion`
+--
+ALTER TABLE `MacromoleculeRegion`
+  MODIFY `macromoleculeRegionId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Measurement`
+--
+ALTER TABLE `Measurement`
+  MODIFY `measurementId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=291103;
+--
+-- AUTO_INCREMENT for table `MeasurementToDataCollection`
+--
+ALTER TABLE `MeasurementToDataCollection`
+  MODIFY `measurementToDataCollectionId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=291103;
+--
+-- AUTO_INCREMENT for table `Merge`
+--
+ALTER TABLE `Merge`
+  MODIFY `mergeId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151259;
+--
+-- AUTO_INCREMENT for table `MixtureToStructure`
+--
+ALTER TABLE `MixtureToStructure`
+  MODIFY `fitToStructureId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Model`
+--
+ALTER TABLE `Model`
+  MODIFY `modelId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=653393;
+--
+-- AUTO_INCREMENT for table `ModelBuilding`
+--
+ALTER TABLE `ModelBuilding`
+  MODIFY `modelBuildingId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)';
+--
+-- AUTO_INCREMENT for table `ModelList`
+--
+ALTER TABLE `ModelList`
+  MODIFY `modelListId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43748;
+--
+-- AUTO_INCREMENT for table `ModelToList`
+--
+ALTER TABLE `ModelToList`
+  MODIFY `modelToListId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=530477;
+--
+-- AUTO_INCREMENT for table `MotionCorrection`
+--
+ALTER TABLE `MotionCorrection`
+  MODIFY `motionCorrectionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5391;
+--
+-- AUTO_INCREMENT for table `MotorPosition`
+--
+ALTER TABLE `MotorPosition`
+  MODIFY `motorPositionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=4098632;
+--
+-- AUTO_INCREMENT for table `Movie`
+--
+ALTER TABLE `Movie`
+  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5921;
+--
+-- AUTO_INCREMENT for table `MXMRRun`
+--
+ALTER TABLE `MXMRRun`
+  MODIFY `mxMRRunId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `MXMRRunBlob`
+--
+ALTER TABLE `MXMRRunBlob`
+  MODIFY `mxMRRunBlobId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `PDB`
+--
+ALTER TABLE `PDB`
+  MODIFY `pdbId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `PDBEntry`
+--
+ALTER TABLE `PDBEntry`
+  MODIFY `pdbEntryId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `PDBEntry_has_AutoProcProgram`
+--
+ALTER TABLE `PDBEntry_has_AutoProcProgram`
+  MODIFY `pdbEntryHasAutoProcId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Permission`
+--
+ALTER TABLE `Permission`
+  MODIFY `permissionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Person`
+--
+ALTER TABLE `Person`
+  MODIFY `personId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=400671;
+--
+-- AUTO_INCREMENT for table `Phasing`
+--
+ALTER TABLE `Phasing`
+  MODIFY `phasingId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=106310;
+--
+-- AUTO_INCREMENT for table `PhasingAnalysis`
+--
+ALTER TABLE `PhasingAnalysis`
+  MODIFY `phasingAnalysisId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=135302;
+--
+-- AUTO_INCREMENT for table `PhasingProgramAttachment`
+--
+ALTER TABLE `PhasingProgramAttachment`
+  MODIFY `phasingProgramAttachmentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=337817;
+--
+-- AUTO_INCREMENT for table `PhasingProgramRun`
+--
+ALTER TABLE `PhasingProgramRun`
+  MODIFY `phasingProgramRunId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=456576;
+--
+-- AUTO_INCREMENT for table `PhasingStatistics`
+--
+ALTER TABLE `PhasingStatistics`
+  MODIFY `phasingStatisticsId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=821230;
+--
+-- AUTO_INCREMENT for table `PhasingStep`
+--
+ALTER TABLE `PhasingStep`
+  MODIFY `phasingStepId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=321205;
+--
+-- AUTO_INCREMENT for table `Phasing_has_Scaling`
+--
+ALTER TABLE `Phasing_has_Scaling`
+  MODIFY `phasingHasScalingId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=135302;
+--
+-- AUTO_INCREMENT for table `PlateGroup`
+--
+ALTER TABLE `PlateGroup`
+  MODIFY `plateGroupId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13801;
+--
+-- AUTO_INCREMENT for table `PlateType`
+--
+ALTER TABLE `PlateType`
+  MODIFY `PlateTypeId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `Position`
+--
+ALTER TABLE `Position`
+  MODIFY `positionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `PreparePhasingData`
+--
+ALTER TABLE `PreparePhasingData`
+  MODIFY `preparePhasingDataId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=14499;
+--
+-- AUTO_INCREMENT for table `Project`
+--
+ALTER TABLE `Project`
+  MODIFY `projectId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Project_has_User`
+--
+ALTER TABLE `Project_has_User`
+  MODIFY `projecthasuserid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Proposal`
+--
+ALTER TABLE `Proposal`
+  MODIFY `proposalId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8425;
+--
+-- AUTO_INCREMENT for table `ProposalHasPerson`
+--
+ALTER TABLE `ProposalHasPerson`
+  MODIFY `proposalHasPersonId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4614;
+--
+-- AUTO_INCREMENT for table `Protein`
+--
+ALTER TABLE `Protein`
+  MODIFY `proteinId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=376497;
+--
+-- AUTO_INCREMENT for table `Protein_has_PDB`
+--
+ALTER TABLE `Protein_has_PDB`
+  MODIFY `proteinhaspdbid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `RigidBodyModeling`
+--
+ALTER TABLE `RigidBodyModeling`
+  MODIFY `rigidBodyModelingId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `RobotAction`
+--
+ALTER TABLE `RobotAction`
+  MODIFY `robotActionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `Run`
+--
+ALTER TABLE `Run`
+  MODIFY `runId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134836;
+--
+-- AUTO_INCREMENT for table `SafetyLevel`
+--
+ALTER TABLE `SafetyLevel`
+  MODIFY `safetyLevelId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `SamplePlate`
+--
+ALTER TABLE `SamplePlate`
+  MODIFY `samplePlateId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41401;
+--
+-- AUTO_INCREMENT for table `SamplePlatePosition`
+--
+ALTER TABLE `SamplePlatePosition`
+  MODIFY `samplePlatePositionId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117475;
+--
+-- AUTO_INCREMENT for table `SaxsDataCollection`
+--
+ALTER TABLE `SaxsDataCollection`
+  MODIFY `dataCollectionId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97035;
+--
+-- AUTO_INCREMENT for table `ScanParametersModel`
+--
+ALTER TABLE `ScanParametersModel`
+  MODIFY `scanParametersModelId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ScanParametersService`
+--
+ALTER TABLE `ScanParametersService`
+  MODIFY `scanParametersServiceId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Schedule`
+--
+ALTER TABLE `Schedule`
+  MODIFY `scheduleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ScheduleComponent`
+--
+ALTER TABLE `ScheduleComponent`
+  MODIFY `scheduleComponentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Screen`
+--
+ALTER TABLE `Screen`
+  MODIFY `screenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ScreenComponent`
+--
+ALTER TABLE `ScreenComponent`
+  MODIFY `screenComponentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ScreenComponentGroup`
+--
+ALTER TABLE `ScreenComponentGroup`
+  MODIFY `screenComponentGroupId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Screening`
+--
+ALTER TABLE `Screening`
+  MODIFY `screeningId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=473414;
+--
+-- AUTO_INCREMENT for table `ScreeningInput`
+--
+ALTER TABLE `ScreeningInput`
+  MODIFY `screeningInputId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97571;
+--
+-- AUTO_INCREMENT for table `ScreeningOutput`
+--
+ALTER TABLE `ScreeningOutput`
+  MODIFY `screeningOutputId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=473354;
+--
+-- AUTO_INCREMENT for table `ScreeningOutputLattice`
+--
+ALTER TABLE `ScreeningOutputLattice`
+  MODIFY `screeningOutputLatticeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=322630;
+--
+-- AUTO_INCREMENT for table `ScreeningRank`
+--
+ALTER TABLE `ScreeningRank`
+  MODIFY `screeningRankId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6239;
+--
+-- AUTO_INCREMENT for table `ScreeningRankSet`
+--
+ALTER TABLE `ScreeningRankSet`
+  MODIFY `screeningRankSetId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=993;
+--
+-- AUTO_INCREMENT for table `ScreeningStrategy`
+--
+ALTER TABLE `ScreeningStrategy`
+  MODIFY `screeningStrategyId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249750;
+--
+-- AUTO_INCREMENT for table `ScreeningStrategySubWedge`
+--
+ALTER TABLE `ScreeningStrategySubWedge`
+  MODIFY `screeningStrategySubWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=259829;
+--
+-- AUTO_INCREMENT for table `ScreeningStrategyWedge`
+--
+ALTER TABLE `ScreeningStrategyWedge`
+  MODIFY `screeningStrategyWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=244747;
+--
+-- AUTO_INCREMENT for table `SessionType`
+--
+ALTER TABLE `SessionType`
+  MODIFY `sessionTypeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Shipping`
+--
+ALTER TABLE `Shipping`
+  MODIFY `shippingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309230;
+--
+-- AUTO_INCREMENT for table `SpaceGroup`
+--
+ALTER TABLE `SpaceGroup`
+  MODIFY `spaceGroupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=237;
+--
+-- AUTO_INCREMENT for table `Specimen`
+--
+ALTER TABLE `Specimen`
+  MODIFY `specimenId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120322;
+--
+-- AUTO_INCREMENT for table `StockSolution`
+--
+ALTER TABLE `StockSolution`
+  MODIFY `stockSolutionId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+--
+-- AUTO_INCREMENT for table `Stoichiometry`
+--
+ALTER TABLE `Stoichiometry`
+  MODIFY `stoichiometryId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+--
+-- AUTO_INCREMENT for table `Structure`
+--
+ALTER TABLE `Structure`
+  MODIFY `structureId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+--
+-- AUTO_INCREMENT for table `SubstructureDetermination`
+--
+ALTER TABLE `SubstructureDetermination`
+  MODIFY `substructureDeterminationId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=14495;
+--
+-- AUTO_INCREMENT for table `Subtraction`
+--
+ALTER TABLE `Subtraction`
+  MODIFY `subtractionId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62321;
+--
+-- AUTO_INCREMENT for table `SubtractionToAbInitioModel`
+--
+ALTER TABLE `SubtractionToAbInitioModel`
+  MODIFY `subtractionToAbInitioModelId` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40654;
+--
+-- AUTO_INCREMENT for table `Superposition`
+--
+ALTER TABLE `Superposition`
+  MODIFY `superpositionId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `SW_onceToken`
+--
+ALTER TABLE `SW_onceToken`
+  MODIFY `onceTokenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `UntrustedRegion`
+--
+ALTER TABLE `UntrustedRegion`
+  MODIFY `untrustedRegionId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)';
+--
+-- AUTO_INCREMENT for table `UserGroup`
+--
+ALTER TABLE `UserGroup`
+  MODIFY `userGroupId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Workflow`
+--
+ALTER TABLE `Workflow`
+  MODIFY `workflowId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=153406;
+--
+-- AUTO_INCREMENT for table `WorkflowDehydration`
+--
+ALTER TABLE `WorkflowDehydration`
+  MODIFY `workflowDehydrationId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)';
+--
+-- AUTO_INCREMENT for table `WorkflowMesh`
+--
+ALTER TABLE `WorkflowMesh`
+  MODIFY `workflowMeshId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=163374;
+--
+-- AUTO_INCREMENT for table `WorkflowStep`
+--
+ALTER TABLE `WorkflowStep`
+  MODIFY `workflowStepId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237934;
+--
+-- AUTO_INCREMENT for table `WorkflowType`
+--
+ALTER TABLE `WorkflowType`
+  MODIFY `workflowTypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+--
+-- AUTO_INCREMENT for table `XFEFluorescenceSpectrum`
+--
+ALTER TABLE `XFEFluorescenceSpectrum`
+  MODIFY `xfeFluorescenceSpectrumId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5385;
+--
+-- AUTO_INCREMENT for table `XRFFluorescenceMapping`
+--
+ALTER TABLE `XRFFluorescenceMapping`
+  MODIFY `xrfFluorescenceMappingId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `XRFFluorescenceMappingROI`
+--
+ALTER TABLE `XRFFluorescenceMappingROI`
+  MODIFY `xrfFluorescenceMappingROIId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `AbInitioModel`
+--
+ALTER TABLE `AbInitioModel`
+  ADD CONSTRAINT `AbInitioModelToModelList` FOREIGN KEY (`modelListId`) REFERENCES `ModelList` (`modelListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `AbInitioModelToRapid` FOREIGN KEY (`rapidShapeDeterminationModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `AverageToModel` FOREIGN KEY (`averagedModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SahpeDeterminationToAbiniti` FOREIGN KEY (`shapeDeterminationModelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Assembly`
+--
+ALTER TABLE `Assembly`
+  ADD CONSTRAINT `AssemblyToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `AssemblyHasMacromolecule`
+--
+ALTER TABLE `AssemblyHasMacromolecule`
+  ADD CONSTRAINT `AssemblyHasMacromoleculeToAssembly` FOREIGN KEY (`assemblyId`) REFERENCES `Assembly` (`assemblyId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `AssemblyHasMacromoleculeToAssemblyRegion` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `AssemblyRegion`
+--
+ALTER TABLE `AssemblyRegion`
+  ADD CONSTRAINT `AssemblyRegionToAssemblyHasMacromolecule` FOREIGN KEY (`assemblyHasMacromoleculeId`) REFERENCES `AssemblyHasMacromolecule` (`AssemblyHasMacromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `AutoProcIntegration`
+--
+ALTER TABLE `AutoProcIntegration`
+  ADD CONSTRAINT `AutoProcIntegration_ibfk_1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `AutoProcIntegration_ibfk_2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `AutoProcProgram`
+--
+ALTER TABLE `AutoProcProgram`
+  ADD CONSTRAINT `AutoProcProgram_FK1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `AutoProcProgramAttachment`
+--
+ALTER TABLE `AutoProcProgramAttachment`
+  ADD CONSTRAINT `AutoProcProgramAttachmentFk1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `AutoProcScaling`
+--
+ALTER TABLE `AutoProcScaling`
+  ADD CONSTRAINT `AutoProcScalingFk1` FOREIGN KEY (`autoProcId`) REFERENCES `AutoProc` (`autoProcId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `AutoProcScalingStatistics`
+--
+ALTER TABLE `AutoProcScalingStatistics`
+  ADD CONSTRAINT `AutoProcScalingStatisticsFk1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `AutoProcScaling_has_Int`
+--
+ALTER TABLE `AutoProcScaling_has_Int`
+  ADD CONSTRAINT `AutoProcScaling_has_IntFk1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `AutoProcScaling_has_IntFk2` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `AutoProcStatus`
+--
+ALTER TABLE `AutoProcStatus`
+  ADD CONSTRAINT `AutoProcStatus_ibfk_1` FOREIGN KEY (`autoProcIntegrationId`) REFERENCES `AutoProcIntegration` (`autoProcIntegrationId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `BeamApertures`
+--
+ALTER TABLE `BeamApertures`
+  ADD CONSTRAINT `beamapertures_FK1` FOREIGN KEY (`beamlineStatsId`) REFERENCES `BeamlineStats` (`beamlineStatsId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `BeamCentres`
+--
+ALTER TABLE `BeamCentres`
+  ADD CONSTRAINT `beamCentres_FK1` FOREIGN KEY (`beamlineStatsId`) REFERENCES `BeamlineStats` (`beamlineStatsId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `BeamlineAction`
+--
+ALTER TABLE `BeamlineAction`
+  ADD CONSTRAINT `BeamlineAction_ibfk1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`);
+
+--
+-- Constraints for table `BF_automationFault`
+--
+ALTER TABLE `BF_automationFault`
+  ADD CONSTRAINT `BF_automationFault_ibfk1` FOREIGN KEY (`automationErrorId`) REFERENCES `BF_automationError` (`automationErrorId`),
+  ADD CONSTRAINT `BF_automationFault_ibfk2` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`);
+
+--
+-- Constraints for table `BF_component`
+--
+ALTER TABLE `BF_component`
+  ADD CONSTRAINT `bf_component_FK1` FOREIGN KEY (`systemId`) REFERENCES `BF_system` (`systemId`);
+
+--
+-- Constraints for table `BF_component_beamline`
+--
+ALTER TABLE `BF_component_beamline`
+  ADD CONSTRAINT `bf_component_beamline_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`);
+
+--
+-- Constraints for table `BF_fault`
+--
+ALTER TABLE `BF_fault`
+  ADD CONSTRAINT `bf_fault_FK1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`),
+  ADD CONSTRAINT `bf_fault_FK2` FOREIGN KEY (`subcomponentId`) REFERENCES `BF_subcomponent` (`subcomponentId`),
+  ADD CONSTRAINT `bf_fault_FK3` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
+  ADD CONSTRAINT `bf_fault_FK4` FOREIGN KEY (`assigneeId`) REFERENCES `Person` (`personId`);
+
+--
+-- Constraints for table `BF_subcomponent`
+--
+ALTER TABLE `BF_subcomponent`
+  ADD CONSTRAINT `bf_subcomponent_FK1` FOREIGN KEY (`componentId`) REFERENCES `BF_component` (`componentId`);
+
+--
+-- Constraints for table `BF_subcomponent_beamline`
+--
+ALTER TABLE `BF_subcomponent_beamline`
+  ADD CONSTRAINT `bf_subcomponent_beamline_FK1` FOREIGN KEY (`subcomponentId`) REFERENCES `BF_subcomponent` (`subcomponentId`);
+
+--
+-- Constraints for table `BF_system_beamline`
+--
+ALTER TABLE `BF_system_beamline`
+  ADD CONSTRAINT `bf_system_beamline_FK1` FOREIGN KEY (`systemId`) REFERENCES `BF_system` (`systemId`);
+
+--
+-- Constraints for table `BLSample`
+--
+ALTER TABLE `BLSample`
+  ADD CONSTRAINT `BLSample_ibfk_1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSample_ibfk_2` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSample_ibfk_3` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `BLSampleGroup_has_BLSample`
+--
+ALTER TABLE `BLSampleGroup_has_BLSample`
+  ADD CONSTRAINT `BLSampleGroup_has_BLSample_ibfk1` FOREIGN KEY (`blSampleGroupId`) REFERENCES `BLSampleGroup` (`blSampleGroupId`),
+  ADD CONSTRAINT `BLSampleGroup_has_BLSample_ibfk2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`);
+
+--
+-- Constraints for table `BLSampleImage`
+--
+ALTER TABLE `BLSampleImage`
+  ADD CONSTRAINT `BLSampleImage_fk1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSampleImage_fk2` FOREIGN KEY (`containerInspectionId`) REFERENCES `ContainerInspection` (`containerInspectionId`);
+
+--
+-- Constraints for table `BLSampleImageAnalysis`
+--
+ALTER TABLE `BLSampleImageAnalysis`
+  ADD CONSTRAINT `BLSampleImageAnalysis_ibfk1` FOREIGN KEY (`blSampleImageId`) REFERENCES `BLSampleImage` (`blSampleImageId`);
+
+--
+-- Constraints for table `BLSampleType_has_Component`
+--
+ALTER TABLE `BLSampleType_has_Component`
+  ADD CONSTRAINT `blSampleType_has_Component_fk1` FOREIGN KEY (`blSampleTypeId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `blSampleType_has_Component_fk2` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `BLSample_has_DiffractionPlan`
+--
+ALTER TABLE `BLSample_has_DiffractionPlan`
+  ADD CONSTRAINT `BLSample_has_DiffractionPlan_ibfk1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`),
+  ADD CONSTRAINT `BLSample_has_DiffractionPlan_ibfk2` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`);
+
+--
+-- Constraints for table `BLSample_has_EnergyScan`
+--
+ALTER TABLE `BLSample_has_EnergyScan`
+  ADD CONSTRAINT `BLSample_has_EnergyScan_ibfk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSample_has_EnergyScan_ibfk_2` FOREIGN KEY (`energyScanId`) REFERENCES `EnergyScan` (`energyScanId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `BLSession`
+--
+ALTER TABLE `BLSession`
+  ADD CONSTRAINT `BLSession_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSession_ibfk_2` FOREIGN KEY (`beamLineSetupId`) REFERENCES `BeamLineSetup` (`beamLineSetupId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSession_ibfk_3` FOREIGN KEY (`beamCalendarId`) REFERENCES `BeamCalendar` (`beamCalendarId`);
+
+--
+-- Constraints for table `BLSession_has_SCPosition`
+--
+ALTER TABLE `BLSession_has_SCPosition`
+  ADD CONSTRAINT `blsession_has_scposition_FK1` FOREIGN KEY (`blsessionid`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `BLSubSample`
+--
+ALTER TABLE `BLSubSample`
+  ADD CONSTRAINT `BLSubSample_blSamplefk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSubSample_diffractionPlanfk_1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSubSample_motorPositionfk_1` FOREIGN KEY (`motorPositionId`) REFERENCES `MotorPosition` (`motorPositionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSubSample_positionfk_1` FOREIGN KEY (`positionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `BLSubSample_positionfk_2` FOREIGN KEY (`position2Id`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Buffer`
+--
+ALTER TABLE `Buffer`
+  ADD CONSTRAINT `BufferToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `BufferHasAdditive`
+--
+ALTER TABLE `BufferHasAdditive`
+  ADD CONSTRAINT `BufferHasAdditiveToAdditive` FOREIGN KEY (`additiveId`) REFERENCES `Additive` (`additiveId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `BufferHasAdditiveToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `BufferHasAdditiveToUnit` FOREIGN KEY (`measurementUnitId`) REFERENCES `MeasurementUnit` (`measurementUnitId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Component_has_SubType`
+--
+ALTER TABLE `Component_has_SubType`
+  ADD CONSTRAINT `component_has_SubType_fk1` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `component_has_SubType_fk2` FOREIGN KEY (`componentSubTypeId`) REFERENCES `ComponentSubType` (`componentSubTypeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Container`
+--
+ALTER TABLE `Container`
+  ADD CONSTRAINT `Container_ibfk5` FOREIGN KEY (`ownerId`) REFERENCES `Person` (`personId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Container_ibfk6` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Container_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ContainerHistory`
+--
+ALTER TABLE `ContainerHistory`
+  ADD CONSTRAINT `ContainerHistory_ibfk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ContainerInspection`
+--
+ALTER TABLE `ContainerInspection`
+  ADD CONSTRAINT `ContainerInspection_fk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ContainerInspection_fk2` FOREIGN KEY (`inspectionTypeId`) REFERENCES `InspectionType` (`inspectionTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ContainerInspection_fk3` FOREIGN KEY (`imagerId`) REFERENCES `Imager` (`imagerId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ContainerInspection_fk4` FOREIGN KEY (`scheduleComponentid`) REFERENCES `ScheduleComponent` (`scheduleComponentId`);
+
+--
+-- Constraints for table `ContainerQueue`
+--
+ALTER TABLE `ContainerQueue`
+  ADD CONSTRAINT `ContainerQueue_ibfk1` FOREIGN KEY (`containerId`) REFERENCES `Container` (`containerId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ContainerQueue_ibfk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ContainerQueueSample`
+--
+ALTER TABLE `ContainerQueueSample`
+  ADD CONSTRAINT `ContainerQueueSample_ibfk1` FOREIGN KEY (`containerQueueId`) REFERENCES `ContainerQueue` (`containerQueueId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ContainerQueueSample_ibfk2` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Crystal`
+--
+ALTER TABLE `Crystal`
+  ADD CONSTRAINT `Crystal_ibfk_1` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Crystal_ibfk_2` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Crystal_has_UUID`
+--
+ALTER TABLE `Crystal_has_UUID`
+  ADD CONSTRAINT `ibfk_1` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `DataCollection`
+--
+ALTER TABLE `DataCollection`
+  ADD CONSTRAINT `DataCollection_ibfk_1` FOREIGN KEY (`strategySubWedgeOrigId`) REFERENCES `ScreeningStrategySubWedge` (`screeningStrategySubWedgeId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollection_ibfk_2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollection_ibfk_3` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollection_ibfk_8` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`);
+
+--
+-- Constraints for table `DataCollectionFileAttachment`
+--
+ALTER TABLE `DataCollectionFileAttachment`
+  ADD CONSTRAINT `dataCollectionFileAttachmentId_fk1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `DataCollectionGroup`
+--
+ALTER TABLE `DataCollectionGroup`
+  ADD CONSTRAINT `DataCollectionGroup_ibfk_1` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollectionGroup_ibfk_2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollectionGroup_ibfk_3` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `DataCollectionPlanGroup`
+--
+ALTER TABLE `DataCollectionPlanGroup`
+  ADD CONSTRAINT `DataCollectionPlanGroup_ibfk1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `DataCollectionPlanGroup_ibfk2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Dewar`
+--
+ALTER TABLE `Dewar`
+  ADD CONSTRAINT `Dewar_ibfk_1` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Dewar_ibfk_2` FOREIGN KEY (`firstExperimentId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `DewarTransportHistory`
+--
+ALTER TABLE `DewarTransportHistory`
+  ADD CONSTRAINT `DewarTransportHistory_ibfk_1` FOREIGN KEY (`dewarId`) REFERENCES `Dewar` (`dewarId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `DiffractionPlan_has_Detector`
+--
+ALTER TABLE `DiffractionPlan_has_Detector`
+  ADD CONSTRAINT `DiffractionPlan_has_Detector_ibfk1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`),
+  ADD CONSTRAINT `DiffractionPlan_has_Detector_ibfk2` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`);
+
+--
+-- Constraints for table `EnergyScan`
+--
+ALTER TABLE `EnergyScan`
+  ADD CONSTRAINT `ES_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ES_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ES_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Experiment`
+--
+ALTER TABLE `Experiment`
+  ADD CONSTRAINT `fk_Experiment_To_session` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ExperimentKindDetails`
+--
+ALTER TABLE `ExperimentKindDetails`
+  ADD CONSTRAINT `EKD_ibfk_1` FOREIGN KEY (`diffractionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `FitStructureToExperimentalData`
+--
+ALTER TABLE `FitStructureToExperimentalData`
+  ADD CONSTRAINT `fk_FitStructureToExperimentalData_1` FOREIGN KEY (`structureId`) REFERENCES `Structure` (`structureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_FitStructureToExperimentalData_2` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_FitStructureToExperimentalData_3` FOREIGN KEY (`subtractionId`) REFERENCES `Subtraction` (`subtractionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `FrameSet`
+--
+ALTER TABLE `FrameSet`
+  ADD CONSTRAINT `FrameSetToFrameList` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FramesetToRun` FOREIGN KEY (`runId`) REFERENCES `Run` (`runId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `FrameToList`
+--
+ALTER TABLE `FrameToList`
+  ADD CONSTRAINT `FrameToLisToFrameList` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FrameToListToFrame` FOREIGN KEY (`frameId`) REFERENCES `Frame` (`frameId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `GridInfo`
+--
+ALTER TABLE `GridInfo`
+  ADD CONSTRAINT `GridInfo_ibfk_1` FOREIGN KEY (`workflowMeshId`) REFERENCES `WorkflowMesh` (`workflowMeshId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `GridInfo_ibfk_2` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Image`
+--
+ALTER TABLE `Image`
+  ADD CONSTRAINT `Image_ibfk_1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Image_ibfk_3` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ImageQualityIndicators`
+--
+ALTER TABLE `ImageQualityIndicators`
+  ADD CONSTRAINT `AutoProcProgramFk1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Instruction`
+--
+ALTER TABLE `Instruction`
+  ADD CONSTRAINT `InstructionToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `LabContact`
+--
+ALTER TABLE `LabContact`
+  ADD CONSTRAINT `LabContact_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
+  ADD CONSTRAINT `LabContact_ibfk_2` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`);
+
+--
+-- Constraints for table `Macromolecule`
+--
+ALTER TABLE `Macromolecule`
+  ADD CONSTRAINT `MacromoleculeToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `MacromoleculeRegion`
+--
+ALTER TABLE `MacromoleculeRegion`
+  ADD CONSTRAINT `MacromoleculeRegionInformationToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Measurement`
+--
+ALTER TABLE `Measurement`
+  ADD CONSTRAINT `MeasurementToRun` FOREIGN KEY (`runId`) REFERENCES `Run` (`runId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SpecimenToSamplePlateWell` FOREIGN KEY (`specimenId`) REFERENCES `Specimen` (`specimenId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `MeasurementToDataCollection`
+--
+ALTER TABLE `MeasurementToDataCollection`
+  ADD CONSTRAINT `MeasurementToDataCollectionToDataCollection` FOREIGN KEY (`dataCollectionId`) REFERENCES `SaxsDataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `MeasurementToDataCollectionToMeasurement` FOREIGN KEY (`measurementId`) REFERENCES `Measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Merge`
+--
+ALTER TABLE `Merge`
+  ADD CONSTRAINT `MergeToListOfFrames` FOREIGN KEY (`frameListId`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `MergeToMeasurement` FOREIGN KEY (`measurementId`) REFERENCES `Measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `MixtureToStructure`
+--
+ALTER TABLE `MixtureToStructure`
+  ADD CONSTRAINT `fk_FitToStructure_1` FOREIGN KEY (`structureId`) REFERENCES `Structure` (`structureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_FitToStructure_2` FOREIGN KEY (`mixtureId`) REFERENCES `FitStructureToExperimentalData` (`fitStructureToExperimentalDataId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ModelBuilding`
+--
+ALTER TABLE `ModelBuilding`
+  ADD CONSTRAINT `ModelBuilding_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ModelBuilding_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ModelBuilding_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ModelToList`
+--
+ALTER TABLE `ModelToList`
+  ADD CONSTRAINT `ModelToListToList` FOREIGN KEY (`modelListId`) REFERENCES `ModelList` (`modelListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ModelToListToModel` FOREIGN KEY (`modelId`) REFERENCES `Model` (`modelId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `MotionCorrection`
+--
+ALTER TABLE `MotionCorrection`
+  ADD CONSTRAINT `fk_MotionCorrection_1` FOREIGN KEY (`movieId`) REFERENCES `Movie` (`movieId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Movie`
+--
+ALTER TABLE `Movie`
+  ADD CONSTRAINT `dataCollectionToMovie` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `MXMRRun`
+--
+ALTER TABLE `MXMRRun`
+  ADD CONSTRAINT `mxMRRun_FK1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`);
+
+--
+-- Constraints for table `MXMRRunBlob`
+--
+ALTER TABLE `MXMRRunBlob`
+  ADD CONSTRAINT `mxMRRunBlob_FK1` FOREIGN KEY (`mxMRRunId`) REFERENCES `MXMRRun` (`mxMRRunId`);
+
+--
+-- Constraints for table `Particle`
+--
+ALTER TABLE `Particle`
+  ADD CONSTRAINT `Particle_FK1` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `PDBEntry`
+--
+ALTER TABLE `PDBEntry`
+  ADD CONSTRAINT `pdbEntry_FK1` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `PDBEntry_has_AutoProcProgram`
+--
+ALTER TABLE `PDBEntry_has_AutoProcProgram`
+  ADD CONSTRAINT `pdbEntry_AutoProcProgram_FK1` FOREIGN KEY (`pdbEntryId`) REFERENCES `PDBEntry` (`pdbEntryId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pdbEntry_AutoProcProgram_FK2` FOREIGN KEY (`autoProcProgramId`) REFERENCES `AutoProcProgram` (`autoProcProgramId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Person`
+--
+ALTER TABLE `Person`
+  ADD CONSTRAINT `Person_ibfk_1` FOREIGN KEY (`laboratoryId`) REFERENCES `Laboratory` (`laboratoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Phasing`
+--
+ALTER TABLE `Phasing`
+  ADD CONSTRAINT `Phasing_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Phasing_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Phasing_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `PhasingProgramAttachment`
+--
+ALTER TABLE `PhasingProgramAttachment`
+  ADD CONSTRAINT `Phasing_phasingProgramAttachmentfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `PhasingStatistics`
+--
+ALTER TABLE `PhasingStatistics`
+  ADD CONSTRAINT `PhasingStatistics_phasingHasScalingfk_1` FOREIGN KEY (`phasingHasScalingId1`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PhasingStatistics_phasingHasScalingfk_2` FOREIGN KEY (`phasingHasScalingId2`) REFERENCES `Phasing_has_Scaling` (`phasingHasScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_PhasingStatistics_phasingStep` FOREIGN KEY (`phasingStepId`) REFERENCES `PhasingStep` (`phasingStepId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `PhasingStep`
+--
+ALTER TABLE `PhasingStep`
+  ADD CONSTRAINT `FK_autoprocScaling` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_program` FOREIGN KEY (`programRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_spacegroup` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Phasing_has_Scaling`
+--
+ALTER TABLE `Phasing_has_Scaling`
+  ADD CONSTRAINT `PhasingHasScaling_autoProcScalingfk_1` FOREIGN KEY (`autoProcScalingId`) REFERENCES `AutoProcScaling` (`autoProcScalingId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PhasingHasScaling_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Position`
+--
+ALTER TABLE `Position`
+  ADD CONSTRAINT `Position_relativePositionfk_1` FOREIGN KEY (`relativePositionId`) REFERENCES `Position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `PreparePhasingData`
+--
+ALTER TABLE `PreparePhasingData`
+  ADD CONSTRAINT `PreparePhasingData_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PreparePhasingData_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PreparePhasingData_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Project`
+--
+ALTER TABLE `Project`
+  ADD CONSTRAINT `Project_FK1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`);
+
+--
+-- Constraints for table `Project_has_BLSample`
+--
+ALTER TABLE `Project_has_BLSample`
+  ADD CONSTRAINT `Project_has_BLSample_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Project_has_BLSample_FK2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Project_has_DCGroup`
+--
+ALTER TABLE `Project_has_DCGroup`
+  ADD CONSTRAINT `Project_has_DCGroup_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Project_has_DCGroup_FK2` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Project_has_EnergyScan`
+--
+ALTER TABLE `Project_has_EnergyScan`
+  ADD CONSTRAINT `project_has_energyscan_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `project_has_energyscan_FK2` FOREIGN KEY (`energyScanId`) REFERENCES `EnergyScan` (`energyScanId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Project_has_Person`
+--
+ALTER TABLE `Project_has_Person`
+  ADD CONSTRAINT `project_has_person_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `project_has_person_FK2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Project_has_Protein`
+--
+ALTER TABLE `Project_has_Protein`
+  ADD CONSTRAINT `project_has_protein_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `project_has_protein_FK2` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Project_has_Session`
+--
+ALTER TABLE `Project_has_Session`
+  ADD CONSTRAINT `project_has_session_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `project_has_session_FK2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Project_has_Shipping`
+--
+ALTER TABLE `Project_has_Shipping`
+  ADD CONSTRAINT `project_has_shipping_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `project_has_shipping_FK2` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Project_has_User`
+--
+ALTER TABLE `Project_has_User`
+  ADD CONSTRAINT `Project_Has_user_FK1` FOREIGN KEY (`projectid`) REFERENCES `Project` (`projectId`);
+
+--
+-- Constraints for table `Project_has_XFEFSpectrum`
+--
+ALTER TABLE `Project_has_XFEFSpectrum`
+  ADD CONSTRAINT `project_has_xfefspectrum_FK1` FOREIGN KEY (`projectId`) REFERENCES `Project` (`projectId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `project_has_xfefspectrum_FK2` FOREIGN KEY (`xfeFluorescenceSpectrumId`) REFERENCES `XFEFluorescenceSpectrum` (`xfeFluorescenceSpectrumId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Proposal`
+--
+ALTER TABLE `Proposal`
+  ADD CONSTRAINT `Proposal_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ProposalHasPerson`
+--
+ALTER TABLE `ProposalHasPerson`
+  ADD CONSTRAINT `fk_ProposalHasPerson_Personal` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_ProposalHasPerson_Proposal` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Protein`
+--
+ALTER TABLE `Protein`
+  ADD CONSTRAINT `Protein_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `protein_fk3` FOREIGN KEY (`componentTypeId`) REFERENCES `ComponentType` (`componentTypeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Protein_has_Lattice`
+--
+ALTER TABLE `Protein_has_Lattice`
+  ADD CONSTRAINT `Protein_has_Lattice_ibfk1` FOREIGN KEY (`proteinId`) REFERENCES `Protein` (`proteinId`);
+
+--
+-- Constraints for table `Protein_has_PDB`
+--
+ALTER TABLE `Protein_has_PDB`
+  ADD CONSTRAINT `Protein_Has_PDB_fk1` FOREIGN KEY (`proteinid`) REFERENCES `Protein` (`proteinId`),
+  ADD CONSTRAINT `Protein_Has_PDB_fk2` FOREIGN KEY (`pdbid`) REFERENCES `PDB` (`pdbId`);
+
+--
+-- Constraints for table `RobotAction`
+--
+ALTER TABLE `RobotAction`
+  ADD CONSTRAINT `RobotAction_FK1` FOREIGN KEY (`blsessionId`) REFERENCES `BLSession` (`sessionId`),
+  ADD CONSTRAINT `RobotAction_FK2` FOREIGN KEY (`blsampleId`) REFERENCES `BLSample` (`blSampleId`);
+
+--
+-- Constraints for table `SamplePlate`
+--
+ALTER TABLE `SamplePlate`
+  ADD CONSTRAINT `PlateToPtateGroup` FOREIGN KEY (`plateGroupId`) REFERENCES `PlateGroup` (`plateGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateToType` FOREIGN KEY (`plateTypeId`) REFERENCES `PlateType` (`PlateTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `SamplePlatePosition`
+--
+ALTER TABLE `SamplePlatePosition`
+  ADD CONSTRAINT `PlatePositionToPlate` FOREIGN KEY (`samplePlateId`) REFERENCES `SamplePlate` (`samplePlateId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `SaxsDataCollection`
+--
+ALTER TABLE `SaxsDataCollection`
+  ADD CONSTRAINT `SaxsDataCollectionToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ScanParametersModel`
+--
+ALTER TABLE `ScanParametersModel`
+  ADD CONSTRAINT `PDF_Model_ibfk1` FOREIGN KEY (`scanParametersServiceId`) REFERENCES `ScanParametersService` (`scanParametersServiceId`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `PDF_Model_ibfk2` FOREIGN KEY (`dataCollectionPlanId`) REFERENCES `DiffractionPlan` (`diffractionPlanId`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScheduleComponent`
+--
+ALTER TABLE `ScheduleComponent`
+  ADD CONSTRAINT `ScheduleComponent_fk1` FOREIGN KEY (`scheduleId`) REFERENCES `Schedule` (`scheduleId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ScheduleComponent_fk2` FOREIGN KEY (`inspectionTypeId`) REFERENCES `InspectionType` (`inspectionTypeId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Screen`
+--
+ALTER TABLE `Screen`
+  ADD CONSTRAINT `Screen_fk1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`);
+
+--
+-- Constraints for table `ScreenComponent`
+--
+ALTER TABLE `ScreenComponent`
+  ADD CONSTRAINT `ScreenComponent_fk1` FOREIGN KEY (`screenComponentGroupId`) REFERENCES `ScreenComponentGroup` (`screenComponentGroupId`),
+  ADD CONSTRAINT `ScreenComponent_fk2` FOREIGN KEY (`componentId`) REFERENCES `Protein` (`proteinId`);
+
+--
+-- Constraints for table `ScreenComponentGroup`
+--
+ALTER TABLE `ScreenComponentGroup`
+  ADD CONSTRAINT `ScreenComponentGroup_fk1` FOREIGN KEY (`screenId`) REFERENCES `Screen` (`screenId`);
+
+--
+-- Constraints for table `Screening`
+--
+ALTER TABLE `Screening`
+  ADD CONSTRAINT `Screening_ibfk_1` FOREIGN KEY (`dataCollectionGroupId`) REFERENCES `DataCollectionGroup` (`dataCollectionGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ScreeningInput`
+--
+ALTER TABLE `ScreeningInput`
+  ADD CONSTRAINT `ScreeningInput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningOutput`
+--
+ALTER TABLE `ScreeningOutput`
+  ADD CONSTRAINT `ScreeningOutput_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningOutputLattice`
+--
+ALTER TABLE `ScreeningOutputLattice`
+  ADD CONSTRAINT `ScreeningOutputLattice_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningRank`
+--
+ALTER TABLE `ScreeningRank`
+  ADD CONSTRAINT `ScreeningRank_ibfk_1` FOREIGN KEY (`screeningId`) REFERENCES `Screening` (`screeningId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ScreeningRank_ibfk_2` FOREIGN KEY (`screeningRankSetId`) REFERENCES `ScreeningRankSet` (`screeningRankSetId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningStrategy`
+--
+ALTER TABLE `ScreeningStrategy`
+  ADD CONSTRAINT `ScreeningStrategy_ibfk_1` FOREIGN KEY (`screeningOutputId`) REFERENCES `ScreeningOutput` (`screeningOutputId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningStrategySubWedge`
+--
+ALTER TABLE `ScreeningStrategySubWedge`
+  ADD CONSTRAINT `ScreeningStrategySubWedge_FK1` FOREIGN KEY (`screeningStrategyWedgeId`) REFERENCES `ScreeningStrategyWedge` (`screeningStrategyWedgeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ScreeningStrategyWedge`
+--
+ALTER TABLE `ScreeningStrategyWedge`
+  ADD CONSTRAINT `ScreeningStrategyWedge_IBFK_1` FOREIGN KEY (`screeningStrategyId`) REFERENCES `ScreeningStrategy` (`screeningStrategyId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `SessionType`
+--
+ALTER TABLE `SessionType`
+  ADD CONSTRAINT `SessionType_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Session_has_Person`
+--
+ALTER TABLE `Session_has_Person`
+  ADD CONSTRAINT `Session_has_Person_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Session_has_Person_ibfk_2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Shipping`
+--
+ALTER TABLE `Shipping`
+  ADD CONSTRAINT `Shipping_ibfk_1` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Shipping_ibfk_2` FOREIGN KEY (`sendingLabContactId`) REFERENCES `LabContact` (`labContactId`),
+  ADD CONSTRAINT `Shipping_ibfk_3` FOREIGN KEY (`returnLabContactId`) REFERENCES `LabContact` (`labContactId`);
+
+--
+-- Constraints for table `ShippingHasSession`
+--
+ALTER TABLE `ShippingHasSession`
+  ADD CONSTRAINT `ShippingHasSession_ibfk_1` FOREIGN KEY (`shippingId`) REFERENCES `Shipping` (`shippingId`),
+  ADD CONSTRAINT `ShippingHasSession_ibfk_2` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`);
+
+--
+-- Constraints for table `SpaceGroup`
+--
+ALTER TABLE `SpaceGroup`
+  ADD CONSTRAINT `SpaceGroup_ibfk_1` FOREIGN KEY (`geometryClassnameId`) REFERENCES `GeometryClassname` (`geometryClassnameId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Specimen`
+--
+ALTER TABLE `Specimen`
+  ADD CONSTRAINT `SamplePlateWellToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateWellToExperiment` FOREIGN KEY (`experimentId`) REFERENCES `Experiment` (`experimentId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateWellToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateWellToSafetyLevel` FOREIGN KEY (`safetyLevelId`) REFERENCES `SafetyLevel` (`safetyLevelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SamplePlateWellToSamplePlatePosition` FOREIGN KEY (`samplePlatePositionId`) REFERENCES `SamplePlatePosition` (`samplePlatePositionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `SampleToStockSolution` FOREIGN KEY (`stockSolutionId`) REFERENCES `StockSolution` (`stockSolutionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `StockSolution`
+--
+ALTER TABLE `StockSolution`
+  ADD CONSTRAINT `StockSolutionToBuffer` FOREIGN KEY (`bufferId`) REFERENCES `Buffer` (`bufferId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StockSolutionToInstructionSet` FOREIGN KEY (`instructionSetId`) REFERENCES `InstructionSet` (`instructionSetId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StockSolutionToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Stoichiometry`
+--
+ALTER TABLE `Stoichiometry`
+  ADD CONSTRAINT `StoichiometryToHost` FOREIGN KEY (`hostMacromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StoichiometryToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Structure`
+--
+ALTER TABLE `Structure`
+  ADD CONSTRAINT `StructureToBlSample` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StructureToCrystal` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StructureToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `SubstructureDetermination`
+--
+ALTER TABLE `SubstructureDetermination`
+  ADD CONSTRAINT `SubstructureDetermination_phasingAnalysisfk_1` FOREIGN KEY (`phasingAnalysisId`) REFERENCES `PhasingAnalysis` (`phasingAnalysisId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `SubstructureDetermination_phasingProgramRunfk_1` FOREIGN KEY (`phasingProgramRunId`) REFERENCES `PhasingProgramRun` (`phasingProgramRunId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `SubstructureDetermination_spaceGroupfk_1` FOREIGN KEY (`spaceGroupId`) REFERENCES `SpaceGroup` (`spaceGroupId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Subtraction`
+--
+ALTER TABLE `Subtraction`
+  ADD CONSTRAINT `EdnaAnalysisToMeasurement0` FOREIGN KEY (`dataCollectionId`) REFERENCES `SaxsDataCollection` (`dataCollectionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Subtraction_1` FOREIGN KEY (`sampleOneDimensionalFiles`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Subtraction_2` FOREIGN KEY (`bufferOnedimensionalFiles`) REFERENCES `FrameList` (`frameListId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `SubtractionToAbInitioModel`
+--
+ALTER TABLE `SubtractionToAbInitioModel`
+  ADD CONSTRAINT `substractionToAbInitioModelToAbinitioModel` FOREIGN KEY (`abInitioId`) REFERENCES `AbInitioModel` (`abInitioModelId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `substractionToSubstraction` FOREIGN KEY (`subtractionId`) REFERENCES `Subtraction` (`subtractionId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `SW_onceToken`
+--
+ALTER TABLE `SW_onceToken`
+  ADD CONSTRAINT `SW_onceToken_fk1` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`),
+  ADD CONSTRAINT `SW_onceToken_fk2` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`);
+
+--
+-- Constraints for table `UntrustedRegion`
+--
+ALTER TABLE `UntrustedRegion`
+  ADD CONSTRAINT `UntrustedRegion_ibfk_1` FOREIGN KEY (`detectorId`) REFERENCES `Detector` (`detectorId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `UserGroup_has_Permission`
+--
+ALTER TABLE `UserGroup_has_Permission`
+  ADD CONSTRAINT `UserGroup_has_Permission_fk1` FOREIGN KEY (`userGroupId`) REFERENCES `UserGroup` (`userGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `UserGroup_has_Permission_fk2` FOREIGN KEY (`permissionId`) REFERENCES `Permission` (`permissionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `UserGroup_has_Person`
+--
+ALTER TABLE `UserGroup_has_Person`
+  ADD CONSTRAINT `userGroup_has_Person_fk1` FOREIGN KEY (`userGroupId`) REFERENCES `UserGroup` (`userGroupId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `userGroup_has_Person_fk2` FOREIGN KEY (`personId`) REFERENCES `Person` (`personId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `WorkflowDehydration`
+--
+ALTER TABLE `WorkflowDehydration`
+  ADD CONSTRAINT `WorkflowDehydration_workflowfk_1` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `WorkflowMesh`
+--
+ALTER TABLE `WorkflowMesh`
+  ADD CONSTRAINT `WorkflowMesh_ibfk_2` FOREIGN KEY (`bestImageId`) REFERENCES `Image` (`imageId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `WorkflowMesh_workflowfk_1` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `WorkflowStep`
+--
+ALTER TABLE `WorkflowStep`
+  ADD CONSTRAINT `step_to_workflow_fk` FOREIGN KEY (`workflowId`) REFERENCES `Workflow` (`workflowId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `XFEFluorescenceSpectrum`
+--
+ALTER TABLE `XFEFluorescenceSpectrum`
+  ADD CONSTRAINT `XFE_ibfk_1` FOREIGN KEY (`sessionId`) REFERENCES `BLSession` (`sessionId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `XFE_ibfk_2` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `XFE_ibfk_3` FOREIGN KEY (`blSubSampleId`) REFERENCES `BLSubSample` (`blSubSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `XRFFluorescenceMapping`
+--
+ALTER TABLE `XRFFluorescenceMapping`
+  ADD CONSTRAINT `XRFFluorescenceMapping_ibfk1` FOREIGN KEY (`xrfFluorescenceMappingROIId`) REFERENCES `XRFFluorescenceMappingROI` (`xrfFluorescenceMappingROIId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `XRFFluorescenceMapping_ibfk2` FOREIGN KEY (`dataCollectionId`) REFERENCES `DataCollection` (`dataCollectionId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

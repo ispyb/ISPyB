@@ -2,10 +2,14 @@ package ispyb.ws.rest.mx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
 
+import ispyb.server.biosaxs.services.core.experiment.Experiment3Service;
+import ispyb.server.biosaxs.services.core.structure.Structure3Service;
 import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.mx.services.autoproc.AutoProc3Service;
 import ispyb.server.mx.services.autoproc.AutoProcIntegration3Service;
 import ispyb.server.mx.services.autoproc.AutoProcProgram3Service;
@@ -51,7 +55,14 @@ public class MXRestWebService extends RestWebService{
 			}
 		}
 		return new AutoProcessingDataParser(lists);
+	}	
+	
+	
+	protected Experiment3Service getExperiment3Service() throws NamingException {
+		return (Experiment3Service) Ejb3ServiceLocator.getInstance().getLocalService(Experiment3Service.class);
 	}
+	
+	
 	
 	protected Crystal3Service getCrystal3Service() throws NamingException {
 		return (Crystal3Service) Ejb3ServiceLocator.getInstance().getLocalService(Crystal3Service.class);
@@ -148,5 +159,9 @@ public class MXRestWebService extends RestWebService{
 	
 	protected PhasingStatistics3Service getPhasingStatistics3Service() throws NamingException {
 		return (PhasingStatistics3Service) Ejb3ServiceLocator.getInstance().getLocalService(PhasingStatistics3Service.class);
+	}
+	
+	protected Structure3Service getStruture3Service() throws NamingException {
+		return (Structure3Service) Ejb3ServiceLocator.getInstance().getLocalService(Structure3Service.class);
 	}
 }

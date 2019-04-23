@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.13</version>
+		<version>5.16</version>
 
 	</parent>
 	<artifactId>ispyb-bcr</artifactId>
@@ -327,19 +327,4 @@
 
 </plugins>
 	</build>
-	
-		<profiles>
-		<!-- profiles to separate site dependent properties -->
-		<profile>
-			<id>ESRF</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
-			<properties>
-				<ispyb.site>ESRF</ispyb.site>
-			</properties>
-		</profile>
-	</profiles>
-	  
 </project>

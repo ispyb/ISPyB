@@ -39,6 +39,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.common.util.StringUtils;
+import ispyb.server.biosaxs.services.sql.SQLQueryKeeper;
+import ispyb.server.biosaxs.vos.dataAcquisition.Specimen3VO;
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.services.shipping.Container3Service;
 import ispyb.server.common.util.ejb.CastDecimalOrder;
@@ -824,7 +826,6 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			final Integer crystalId, final String name, final String code, final String status,
 			final Byte isInSampleChanger, final Integer shippingId, final String sortType) throws Exception {
 
-		LOG.info("Name: " + name + " proposalId: " + proposalId);
 		checkCreateChangeRemoveAccess();
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);
@@ -1079,5 +1080,5 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
-	
+
 }

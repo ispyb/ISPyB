@@ -54,6 +54,29 @@ public class SessionRestWebService extends RestWebService {
 		return this.sendResponse(true);
 	}
 	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/session/list")
+	@Produces({ "application/json" })
+	public Response getSessionList(@PathParam("token") String token) throws Exception {
+		String methodName = "getSessionList";
+		long id = this.logInit(methodName, logger, token);
+		try {
+			List<Map<String, Object>> proposals = this.getProposalsFromToken(token);
+			List<Map<String, Object>> sessions = new ArrayList<Map<String,Object>>();
+			for (Map<String, Object> proposal : proposals) {			
+				logger.info("Getting sessions from proposal " + proposal.get("Proposal_proposalId"));
+				sessions.addAll(getSessionService().getSessionViewByProposalId((int) proposal.get("Proposal_proposalId")));
+			}
+			this.logFinish(methodName, id, logger);
+			return this.sendResponse(sessions);
+		} catch (Exception e) {
+			return this.logError("getSessionList", e, id, logger);
+		}				
+	}
+	
+	
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@GET
 	@GZIP

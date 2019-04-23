@@ -4,7 +4,7 @@
 	 <parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.13</version>
+		<version>5.16</version>
 	</parent>
 	
 	<artifactId>ispyb-ui</artifactId>
@@ -381,28 +381,34 @@
 		</plugins>
 	</build>
 
-	<!-- profiles to separate dev to prod properties -->
-	<!-- the dev properties have to be set according to your own dev environment -->
+	<!-- profiles to separate environment properties -->
 	<profiles>
 	
 		<profile>
-			<id>PROD</id>
+			<id>ispyb.env-production</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>ispyb.env</name>
+					<value>production</value>
+				</property>
 			</activation>
 
 			<properties>
-				<ispyb.deployment.mode>PROD</ispyb.deployment.mode>
 				<js.minimized>true</js.minimized>
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 			</properties>
 		</profile>
 		
 		<profile>
-			<id>DEV</id>
+			<id>ispyb.env-development</id>
+			<activation>
+				<property>
+					<name>ispyb.env</name>
+					<value>development</value>
+				</property>
+			</activation>
 			<properties>
 				<js.minimized>false</js.minimized>
-				<ispyb.deployment.mode>DEV</ispyb.deployment.mode>
 				<js.alternative.path.enabled>true</js.alternative.path.enabled>				
 			</properties>
 		</profile>
@@ -410,9 +416,12 @@
 		<!-- profiles to separate site dependent properties : the properties are 
 			stored in pom.xml of ispyb-ejb module -->
 		<profile>
-			<id>ESRF</id>
+			<id>ispyb.site-ESRF</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>ispyb.site</name>
+					<value>ESRF</value>
+				</property>
 			</activation>
 			
 			<properties>
@@ -424,11 +433,13 @@
 		</profile>
 
 		<profile>
-			<id>EMBL</id>
-		</profile>
-
-		<profile>
-			<id>SOLEIL</id>
+			<id>ispyb.site-SOLEIL</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>SOLEIL</value>
+				</property>
+			</activation>
 
 			<build>
 				<plugins>
@@ -472,11 +483,6 @@
 
 			</properties>
 		</profile>
-
-		<profile>
-			<id>MAXIV</id>
-		</profile>
-
 	</profiles>
 
 </project>

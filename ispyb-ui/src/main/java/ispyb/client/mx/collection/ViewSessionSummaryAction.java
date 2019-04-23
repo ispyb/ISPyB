@@ -1566,7 +1566,8 @@ public class ViewSessionSummaryAction extends DispatchAction {
 					}
 				}
 				
-				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_EMBL() || Constants.SITE_IS_MAXIV()) {
+				if (Constants.SITE_IS_ESRF() || Constants.SITE_IS_EMBL() || Constants.SITE_IS_MAXIV()
+						|| Constants.SITE_IS_ALBA()) {
 					// Only show autoPROC status if successful
 					if (dcInfo.getAutoProcAutoPROCStatus().contains("Green")) {
 						result += " autoPROC " + "<img src='" + imgSuccess + "'  border='0' />";					

@@ -19,6 +19,8 @@
  ******************************************************************************/
 // main autoProcessing panel, composed with the list of autoProcs, the actionPanel (rsymm, ISig and the reports)
 // the data (right and left panel) and the status of autoProc and the interrupted autoProc
+
+
 function AutoprocessingPanel(args) {
 	var _this = this;
 	this.width = "800";
@@ -34,6 +36,9 @@ function AutoprocessingPanel(args) {
 	this.autoProcActionPanel = null;
 	// infor about autoProc + files
 	this.autoProcDataPanel = null;
+	// reprocessing panel
+	this.reprocessingPanel = null;
+	
 	// status
 	this.autoProcStatusPanel = null;
 	// interrupted autoProc
@@ -60,10 +65,17 @@ AutoprocessingPanel.prototype.getPanel = function(data) {
 							'autoProcId' : autoProcId
 						});
 			});
-
+  
 	var items = [];
 	// add to the list
 	items.push(_this.autoProcListPanel.getPanel(data));
+	
+	
+	 // reprocessing panel
+	if (data && data.hasReprocessing) {
+		_this.reprocessingPanel = new ReprocessingPanel();
+		items.push(_this.reprocessingPanel.getPanel(data));
+	}
 
 	// if we have some autoProc, add the Rymm and ISig panel, (and reports if autoProc is selected)
 	if (data && data.autoProcList) {
@@ -71,6 +83,7 @@ AutoprocessingPanel.prototype.getPanel = function(data) {
 		
 		items.push(_this.autoProcActionPanel.getPanel(data));
 	}
+
 	// if interrupted autoProc, add them 
 	if (data && data.interruptedAutoProcEvents && data.interruptedAutoProcEvents.length > 0){
 		_this.interruptedAutoProcPanel = new InterruptedAutoProcPanel();

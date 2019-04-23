@@ -63,7 +63,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	          		  <!-- Password -->
 	          		  <layout:column styleClass="MESSAGE_GREY">
 <c:choose>
-<c:when test="${SITE_ATTRIBUTE eq 'ESRF'|| SITE_ATTRIBUTE eq 'MAXIV'|| SITE_ATTRIBUTE eq 'SOLEIL'}">
+<c:when test="${SITE_ATTRIBUTE eq 'ESRF'|| SITE_ATTRIBUTE eq 'MAXIV'|| SITE_ATTRIBUTE eq 'SOLEIL' || SITE_ATTRIBUTE eq 'ALBA'}">
 	          		    <bean:message key="label.password"/>&nbsp;(*)
 </c:when>
 <c:otherwise>
@@ -123,7 +123,11 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
   		<layout:panel key="Messages" align="center" styleClass="PANEL_LOGON" width="270px">
 	  		<layout:grid cols="1" styleClass="SEARCH_GRID"  borderSpacing="5">	
 	      		<layout:column>
-  					<%=adminVar.getValue("infoMessage")%>
+  					<%
+  						String infoMessage = adminVar.getValue(Constants.MESSAGE_INFO);
+  						if (infoMessage.equals("unknown var")) infoMessage = "";
+  					%>
+  					<%=infoMessage%>
   				</layout:column>
   			</layout:grid> 
 		 </layout:panel>
@@ -145,6 +149,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 	<a href="http://www.diamond.ac.uk"><img src="<%=request.getContextPath()%>/images/diamond-logo.png" border=0></a>
 	<a href="http://www.synchrotron-soleil.fr"><img src="<%=request.getContextPath()%>/images/soleil-logo.gif" border=0></a>
 	<a href="http://www.maxiv.se"><img src="<%=request.getContextPath()%>/images/max_iv_logo.gif" border=0></a>
+	<a href="http://www.cells.es"><img src="<%=request.getContextPath()%>/images/alba.png" border=0></a>
 
     </DIV>
 
@@ -164,7 +169,8 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 		  <A href="http://www.diamond.ac.uk">Diamond</A> | 
 		  <A href="http://www.synchrotron-soleil.fr">SOLEIL</A> | 
 		  <A href="http://www.embl-grenoble.fr/">EMBL</A> |
-		  <A href="http://www.maxiv.se/">MAXIV</A>
+		  <A href="http://www.maxiv.se/">MAXIV</A> |
+		  <A href="http://www.cells.es/">ALBA</A>
       </P>
       <P class=x-small>
       		Copyright &copy; 2004 ISPyB All rights reserved. <br/>

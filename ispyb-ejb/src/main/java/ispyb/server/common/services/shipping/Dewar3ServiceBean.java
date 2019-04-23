@@ -239,6 +239,14 @@ public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 				storageLocation, null, withDewarHistory, withContainer);
 	}
 
+	public List<Dewar3VO> findFiltered(final Integer proposalId, final Integer shippingId, final String type,
+		   final String code, final String barCode, final String comments, final Date date1, final Date date2, final String dewarStatus,
+		   final String storageLocation, final boolean withDewarHistory, final boolean withContainer) throws Exception {
+
+		return this.findFiltered(proposalId, shippingId, type, code, barCode, comments, date1, date2, dewarStatus,
+				storageLocation, null, null, false, withDewarHistory, withContainer);
+	}
+
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<Dewar3VO> findByCustomQuery(final Integer proposalId, final String dewarName, final String comments,
@@ -411,6 +419,15 @@ public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 		return this.findFiltered(proposalId, shippingId, type, code, null, comments, date1, date2, dewarStatus,
 				storageLocation, dewarId, null, false, withDewarHistory, withContainer);
 	}
+
+	/*@Override
+	public List<Dewar3VO> findFiltered(final Integer proposalId, final Integer shippingId, final String type,
+		   final String code, final String barCode, final String comments, final Date date1, final Date date2, final String dewarStatus,
+		   final String storageLocation, final Integer dewarId, final boolean withDewarHistory,
+		   final boolean withContainer) throws Exception {
+		return this.findFiltered(proposalId, shippingId, type, code, barCode, comments, date1, date2, dewarStatus,
+				storageLocation, dewarId, null, false, withDewarHistory, withContainer);
+	}*/
 
 	@SuppressWarnings("unchecked")
 	@Override

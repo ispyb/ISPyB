@@ -21,9 +21,9 @@ RUN mvn install:install-file -Dfile=dependencies/securityfilter.jar -DgroupId=se
     mvn install:install-file -Dfile=dependencies/jhdf5.jar -DgroupId=jhdf5 -DartifactId=jhdf5 -Dversion=1.0 -Dpackaging=jar && \
     mvn install:install-file -Dfile=dependencies/jhdf5obj.jar -DgroupId=jhdf5obj -DartifactId=jhdf5obj -Dversion=1.0 -Dpackaging=jar && \
     mvn install:install-file -Dfile=dependencies/jhdfobj.jar -DgroupId=jhdfobj -DartifactId=jhdfobj -Dversion=1.0 -Dpackaging=jar && \
-    mvn install:install-file -Dfile=dependencies/ispyb-WSclient-userportal-gen-1.4.jar -DgroupId=ispyb -DartifactId=ispyb-WSclient-userportal-gen -Dversion=1.4 -Dpackaging=jar && \
+    mvn install:install-file -Dfile=dependencies/ispyb-userportal-gen-1.5.jar -DgroupId=ispyb -DartifactId=ispyb-userportal-gen -Dversion=1.5 -Dpackaging=jar && \
     mvn install:install-file -Dfile=dependencies/Struts-Layout-1.2.jar -DgroupId=struts-layout -DartifactId=struts-layout -Dversion=1.2 -Dpackaging=jar && \
-    mvn install -P MAXIV,PROD && \
+    mvn install -Dispyb.site=MAXIV -Dispyb.env=production && \
     cp ispyb-ear/target/ispyb.ear /var/ispyb.ear
 
 
