@@ -31,7 +31,7 @@ import java.util.List;
  */
 public enum ALBABeamlineEnum {
 	BIOMAX("BioMAX-BL13", "idBioMAX", new String[]{"BioMAX"}, "<font style='color:#6888A8;font-size:90%'>BL13<font style='color:#0000FF;font-weight:bold;'>312</font></font>", null, true, false),
-	MX("MX-BL13", "idMX", new String[]{"MX"}, "<font style='color:#000080;font-size:90%'>BL13<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, true),;
+	MX("BL13 - XALOC", "idMX", new String[]{"MX"}, "<font style='color:#000080;font-size:90%'>BL13<font style='color:#0000FF;font-weight:bold;'>313</font></font>", null, true, true),;
 
 	private ALBABeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber, String[] correctionFiles, boolean emailNotification, boolean inActivity){
 		this.beamlineName = beamlineName;
