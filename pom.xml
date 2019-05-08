@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-parent</artifactId>
-	<version>5.15</version>
+	<version>5.16</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>ispyb-ejb</module>
@@ -155,6 +155,15 @@
 				<property>
 					<name>ispyb.site</name>
 					<value>MAXIV</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>ispyb.site-ALBA</id>
+			<activation>
+				<property>
+					<name>ispyb.site</name>
+					<value>ALBA</value>
 				</property>
 			</activation>
 		</profile>

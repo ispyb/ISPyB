@@ -1433,6 +1433,21 @@ public class ViewResultsAction extends DispatchAction {
 				archivePath = archivePath + archivePathDir[k] + "/";
 			}
 		}
+
+		if (Constants.SITE_IS_ALBA()) {
+			LOG.debug("In ALBA block");
+			String[] archivePathDir = archivePath.split("/");
+			String beamLineName = dc.getDataCollectionGroupVO().getSessionVO().getBeamlineName().toLowerCase();
+			archivePath = "/beamlines/ispyb/bl13/";
+			// archivePath = "/beamlines/ispyb/" + beamLineName + "/";
+
+			for (int k = 5; k < archivePathDir.length; k++) {
+				if (k != 7) {
+					archivePath = archivePath + archivePathDir[k] + "/";
+				}
+			}
+			LOG.debug("generated archivePath: " + archivePath);
+		}
 		
 		boolean isFileExist = new File(archivePath + Constants.EDNA_FILES_SUFIX).exists();
 		String fullEDNAPath = archivePath;

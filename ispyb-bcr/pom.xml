@@ -6,7 +6,8 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.15</version>
+		<version>5.16</version>
+
 	</parent>
 	<artifactId>ispyb-bcr</artifactId>
 	<packaging>war</packaging>
