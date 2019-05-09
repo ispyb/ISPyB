@@ -518,7 +518,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/send/pdf")
 	@Produces({ "application/pdf" })
-	public Response exportReportAndSendAsPdf(@PathParam("token") String token,
+	public void exportReportAndSendAsPdf(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
 			@PathParam("sessionId") String sessionId) throws NamingException {
 
@@ -553,29 +553,27 @@ public class DataCollectionRestWebService extends MXRestWebService {
 					String body = Constants.getProperty("mail.report.body.test");
 
 					//TODO SD: add prod and dev/test property for this.
-//					if (Constants.isServerProd(serverName)) {
-//						to = mpEmail;
-//						cc = Constants.getProperty("mail.report.cc");
-//						// ESRF ####
-//						if (Constants.SITE_IS_ESRF()) {
-//							if (proposalNumber.equals("12"))
-//								cc = cc + "," + Constants.getProperty("mail.report.cc.fx12");
-//						}
-//						body = Constants.getProperty("mail.report.body");
-//					}
+					if (Constants.IS_INDUSTRY_MAILING_IN_PROD()) {
+						to = mpEmail;
+						cc = Constants.getProperty("mail.report.cc");
+						// ESRF ####
+						if (Constants.SITE_IS_ESRF()) {
+							bcc = Constants.getProperty("mail.report.bcc");
+							if (proposal.endsWith("12"))
+								cc = cc + "," + Constants.getProperty("mail.report.cc.fx12");
+						}
+						body = Constants.getProperty("mail.report.body");
+					}
 
 					if (baos != null) {
 						SendMailUtils.sendMail(from, to, cc, bcc, subject, body, attachName, baos, mimeType, true);
-						this.logFinish(methodName, start, logger);
-						return this.sendResponse(true);
-					}
-			} else 
-				return this.downloadFile(baos.toByteArray(), "No_data.pdf");			
+						this.logFinish(methodName, start, logger);						
+					}	
+			}
 						
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
-		}
-		return this.sendResponse(false);
+			this.logError(methodName, e, start, logger);
+		}		
 	}
 	
 	private ByteArrayOutputStream getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
