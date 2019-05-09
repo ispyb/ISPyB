@@ -518,7 +518,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/send/pdf")
 	@Produces({ "application/pdf" })
-	public void exportReportAndSendAsPdf(@PathParam("token") String token,
+	public Response exportReportAndSendAsPdf(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
 			@PathParam("sessionId") String sessionId) throws NamingException {
 
@@ -552,7 +552,6 @@ public class DataCollectionRestWebService extends MXRestWebService {
 					String cc = Constants.getProperty("mail.report.cc.test");
 					String body = Constants.getProperty("mail.report.body.test");
 
-					//TODO SD: add prod and dev/test property for this.
 					if (Constants.IS_INDUSTRY_MAILING_IN_PROD()) {
 						to = mpEmail;
 						cc = Constants.getProperty("mail.report.cc");
@@ -572,8 +571,9 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			}
 						
 		} catch (Exception e) {
-			this.logError(methodName, e, start, logger);
-		}		
+			return this.logError(methodName, e, start, logger);
+		}	
+		return this.sendResponse(true);
 	}
 	
 	private ByteArrayOutputStream getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
