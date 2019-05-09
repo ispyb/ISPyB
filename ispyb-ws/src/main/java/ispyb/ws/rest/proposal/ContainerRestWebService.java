@@ -1,15 +1,19 @@
 package ispyb.ws.rest.proposal;
 
+import ispyb.common.util.Constants;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.ws.rest.RestWebService;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -88,7 +92,32 @@ public class ContainerRestWebService extends RestWebService {
 			return this.logError("emptySampleLocation", e, id, logger);
 		}
 	}
-	
-		
 
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/containers")
+	@Produces({ "application/json" })
+	public Response getContainerIdsByProposalAndCode(@PathParam("token") String token,
+													 @PathParam("proposal") String proposal,
+													 @FormParam("containerCode") String containerCode
+	) throws NamingException {
+
+		long id = this.logInit("getContainerIdsByProposalAndCode", logger, token, proposal);
+		try {
+			Login3VO login3VO = this.getLogin3Service().findByToken(token);
+			List<Integer> containerIdList = new ArrayList<Integer>();
+			int proposalId = this.getProposalId(proposal);
+			List<Container3VO> containerList = this.getContainer3Service().findByProposalIdAndCode(proposalId,
+					containerCode);
+
+			for (int i = 0; i < containerList.size(); i++) {
+				Container3VO container = containerList.get(i);
+				containerIdList.add(container.getContainerId());
+			}
+			this.logFinish("getContainerIdsByProposalAndCode", id, logger);
+			return sendResponse(containerIdList);
+		} catch (Exception e) {
+			return this.logError("getContainerIdsByProposalAndCode", e, id, logger);
+		}
+	}
 }
