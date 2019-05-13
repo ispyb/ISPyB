@@ -518,7 +518,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/send/pdf")
 	@Produces({ "application/pdf" })
-	public Response exportReportAndSendAsPdf(@PathParam("token") String token,
+	public void exportReportAndSendAsPdf(@PathParam("token") String token,
 			@PathParam("proposal") String proposal,
 			@PathParam("sessionId") String sessionId) throws NamingException {
 
@@ -571,9 +571,9 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			}
 						
 		} catch (Exception e) {
-			return this.logError(methodName, e, start, logger);
+			this.logError(methodName, e, start, logger);
 		}	
-		return this.sendResponse(true);
+		return;
 	}
 	
 	private ByteArrayOutputStream getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
