@@ -1,8 +1,10 @@
 package ispyb.ws.rest.mx;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,10 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.GZIP;
 
+import ispyb.common.util.Constants;
+import ispyb.common.util.SendMailUtils;
 import ispyb.common.util.export.ExiPdfRtfExporter;
+import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 
@@ -230,7 +235,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionReportyBySessionIdPdf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
 		try {
-			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, false);
+			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, false).toByteArray();
 			this.logFinish(methodName, start, logger);
 			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
 			if (ses != null)
@@ -302,7 +307,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionReportyBySessionIdRtf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
 		try {
-			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, false);
+			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, false).toByteArray();
 			this.logFinish(methodName, start, logger);
 			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
 			if (ses != null)
@@ -326,7 +331,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionAnalysisReportyBySessionIdPdf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
 		try {
-			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, true);
+			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, true).toByteArray();
 			this.logFinish(methodName, start, logger);
 			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
 			if (ses !=null)
@@ -396,7 +401,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		String methodName = "getDataCollectionReportyBySessionIdRtf";
 		long start = this.logInit(methodName, logger, token, proposal, sessionId);
 		try {
-			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, true);
+			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, true).toByteArray();
 			this.logFinish(methodName, start, logger);
 			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
 			if (ses !=null)
@@ -509,7 +514,69 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 	}
 	
-	private byte [] getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/session/{sessionId}/report/send/pdf")
+	@Produces({ "application/pdf" })
+	public void exportReportAndSendAsPdf(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("sessionId") String sessionId) throws NamingException {
+
+		String methodName = "exportReportAndSendAsPdf";
+		long start = this.logInit(methodName, logger, token, proposal, sessionId);
+		try {
+			
+			ByteArrayOutputStream baos = this.getPdfRtf(sessionId, proposal, null, false, false);
+			this.logFinish(methodName, start, logger);
+			
+			if (sessionId != null) {
+							
+				Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+
+					Proposal3VO pv = ses.getProposalVO();
+					// String mpEmail = personService.findByPk(pv.getPersonVOId(), false).getEmailAddress();
+					String mpEmail = pv.getPersonVO().getEmailAddress();
+					String from = Constants.getProperty("mail.report.from.mxind");
+					String bcc = null;
+
+					SimpleDateFormat simple1 = new SimpleDateFormat("dd/MM/yyyy");
+					String date = simple1.format(ses.getStartDate());
+					String subject = "MXpress FX " + proposal + " - " + date + " on " + ses.getBeamlineName();
+
+					SimpleDateFormat simple = new SimpleDateFormat("ddMMyyyy");
+					date = simple.format(ses.getStartDate());
+					String attachName = proposal + "-" + date + "-" + ses.getBeamlineName() + ".pdf";
+					String mimeType = "application/pdf";
+
+					String to = Constants.getProperty("mail.report.to.test");
+					String cc = Constants.getProperty("mail.report.cc.test");
+					String body = Constants.getProperty("mail.report.body.test");
+
+					if (Constants.IS_INDUSTRY_MAILING_IN_PROD()) {
+						to = mpEmail;
+						cc = Constants.getProperty("mail.report.cc");
+						// ESRF ####
+						if (Constants.SITE_IS_ESRF()) {
+							bcc = Constants.getProperty("mail.report.bcc");
+							if (proposal.endsWith("12"))
+								cc = cc + "," + Constants.getProperty("mail.report.cc.fx12");
+						}
+						body = Constants.getProperty("mail.report.body");
+					}
+
+					if (baos != null) {
+						SendMailUtils.sendMail(from, to, cc, bcc, subject, body, attachName, baos, mimeType, true);
+						this.logFinish(methodName, start, logger);						
+					}	
+			}
+						
+		} catch (Exception e) {
+			this.logError(methodName, e, start, logger);
+		}	
+		return;
+	}
+	
+	private ByteArrayOutputStream getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
 		
 		Integer id = new Integer(sessionId);
 		
@@ -527,14 +594,15 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		}
 		 
 		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, xrfSpectrums, nbRowsMax);
-		byte [] byteToExport;
+
+		ByteArrayOutputStream baosToExport = null;
 		
 		if (isAnalysis)
-			byteToExport = pdf.exportDataCollectionAnalysisReport(isRtf).toByteArray();
+			baosToExport = pdf.exportDataCollectionAnalysisReport(isRtf);
 		else
-			byteToExport = pdf.exportDataCollectionReport(isRtf).toByteArray();
+			baosToExport = pdf.exportDataCollectionReport(isRtf);
 		
-		return byteToExport;
+		return baosToExport;
 	}
 	
 	private byte [] getPdfRtf(String filterParam, String proposal, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
