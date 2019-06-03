@@ -22,6 +22,7 @@ public class AutoProcProgramaAttachmentFileReader {
 	public static HashMap<String, Object> readAttachment(AutoProcProgramAttachment3VO attachment) throws Exception {
 		boolean xscaleFile = false;
 		boolean truncateLog = false;
+		boolean mergedNoanomCorrectFile = false;
 		List<AutoProcessingData> listAutoProcessingData = new ArrayList<AutoProcessingData>();
 		
 //		System.out.println(attachment);
@@ -29,10 +30,11 @@ public class AutoProcProgramaAttachmentFileReader {
 			String fileName = attachment.getFileName();
 			xscaleFile = (fileName != null && fileName.toLowerCase().endsWith("xscale.lp"));
 			truncateLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("truncate"));
+			mergedNoanomCorrectFile = (fileName != null && fileName.toLowerCase().endsWith(".lp") && fileName.toLowerCase().contains("merged_noanom_correct"));
 
 //			System.out.println(xscaleFile);
 //			System.out.println(truncateLog);
-			if (xscaleFile || truncateLog) {
+			if (xscaleFile || truncateLog || mergedNoanomCorrectFile) {
 				// parse the file
 				String sourceFileName = PathUtils.FitPathToOS(attachment.getFilePath() + "/" + fileName);
 				BufferedReader inFile = null;
@@ -49,7 +51,7 @@ public class AutoProcProgramaAttachmentFileReader {
 						String line = s;
 //						System.out.println(line);
 						output += line + "\n";
-						if (xscaleFile) {
+						if (xscaleFile  || mergedNoanomCorrectFile) {
 							if (line.contains("SUBSET OF INTENSITY DATA WITH SIGNAL/NOISE")) {
 								startToRead = true;
 							} else if (startToRead) {
@@ -157,15 +159,18 @@ public class AutoProcProgramaAttachmentFileReader {
 		// o[0] is a boolean xscaleFile
 		// o[1] is a boolean truncateLog
 		// o[2] is List<AutoProcessingData>
+		// o[2] is mergedNoanomCorrectFile
 //		Object[] o = new Object[3];
 //		o[0] = xscaleFile;
 //		o[1] = truncateLog;
 //		o[2] = listAutoProcessingData;
+//		o[3] = mergedNoanomCorrectFile
 		
 		HashMap<String, Object> o = new HashMap<String, Object>();
 		o.put("xscaleFile", xscaleFile);
 		o.put("truncateLog", truncateLog);
 		o.put("autoProcessingData", listAutoProcessingData);
+		o.put("mergedNoanomCorrectFile", mergedNoanomCorrectFile);
 		return o;
 	}
 }
