@@ -65,6 +65,11 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
 			"fileName like '%XSCALE%' ";
 
+	private static final String FIND_AUTOPROC_NOANOM_CORRECT = "SELECT * " +
+			"FROM AutoProcProgramAttachment  " +
+			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
+			"fileName like '%merged_noanom_CORRECT%' ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -176,6 +181,25 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 		String query = FIND_AUTOPROC_XSCALE ;
 		try{
 			
+			List<AutoProcProgramAttachment3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcProgramAttachmentNativeQuery")
+					.setParameter("autoProcProgramId", autoProcProgramId).getResultList();
+			return listVOs;
+		}catch(Exception e){
+			return null;
+		}
+	}
+
+	/**
+	 * find noanom correct files attachments
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<AutoProcProgramAttachment3VO> findNoanomCorrect(final Integer autoProcProgramId) throws Exception {
+
+		String query = FIND_AUTOPROC_NOANOM_CORRECT ;
+		try{
+
 			List<AutoProcProgramAttachment3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcProgramAttachmentNativeQuery")
 					.setParameter("autoProcProgramId", autoProcProgramId).getResultList();
 			return listVOs;
