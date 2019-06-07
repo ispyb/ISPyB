@@ -22,7 +22,11 @@ public class AutoProcProgramaAttachmentFileReader {
 	public static HashMap<String, Object> readAttachment(AutoProcProgramAttachment3VO attachment) throws Exception {
 		boolean xscaleFile = false;
 		boolean truncateLog = false;
-		boolean mergedNoanomCorrectFile = false;
+		boolean noanomAimlessLog = false;
+		ArrayList<Double> fastdp_cc2 = new ArrayList<Double>();
+		ArrayList<Double> fastdp_completeness = new ArrayList<Double>();
+		ArrayList<Double> fastdp_rfactor = new ArrayList<Double>();
+		ArrayList<Double> fastdp_isigma = new ArrayList<Double>();
 		List<AutoProcessingData> listAutoProcessingData = new ArrayList<AutoProcessingData>();
 		
 //		System.out.println(attachment);
@@ -30,11 +34,11 @@ public class AutoProcProgramaAttachmentFileReader {
 			String fileName = attachment.getFileName();
 			xscaleFile = (fileName != null && fileName.toLowerCase().endsWith("xscale.lp"));
 			truncateLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("truncate"));
-			mergedNoanomCorrectFile = (fileName != null && fileName.toLowerCase().endsWith(".lp") && fileName.toLowerCase().contains("merged_noanom_correct"));
+			noanomAimlessLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("noanom_aimless"));
 
 //			System.out.println(xscaleFile);
 //			System.out.println(truncateLog);
-			if (xscaleFile || truncateLog || mergedNoanomCorrectFile) {
+			if (xscaleFile || truncateLog || noanomAimlessLog) {
 				// parse the file
 				String sourceFileName = PathUtils.FitPathToOS(attachment.getFilePath() + "/" + fileName);
 				BufferedReader inFile = null;
@@ -44,6 +48,11 @@ public class AutoProcProgramaAttachmentFileReader {
 					// 1. Reading input by lines:
 					boolean startToRead = false;
 					boolean startToRead2 = false;
+					boolean startToReadFastDPCC2 = false;
+					boolean startToReadFastDPCompleteness = false;
+					boolean startToReadFastDPRfactor = false;
+					boolean startToReadFastDPIsigma = false;
+					boolean endToRead = false;
 					System.out.println(sourceFileName);
 					inFile = new BufferedReader(new FileReader(sourceFileName));
 					String s = new String();
@@ -51,7 +60,7 @@ public class AutoProcProgramaAttachmentFileReader {
 						String line = s;
 //						System.out.println(line);
 						output += line + "\n";
-						if (xscaleFile  || mergedNoanomCorrectFile) {
+						if (xscaleFile) {
 							if (line.contains("SUBSET OF INTENSITY DATA WITH SIGNAL/NOISE")) {
 								startToRead = true;
 							} else if (startToRead) {
@@ -123,6 +132,8 @@ public class AutoProcProgramaAttachmentFileReader {
 										}
 									}
 
+									// String autoProcProgramAttachmentId, Double resolutionLimit, Double completeness,
+									//			Double rFactorObserved, Double iSigma, Double cc2, Double sigAno, Integer anomalCorr, String fileName, Integer autoProcProgramId
 //									AutoProcessingData d = new AutoProcessingData(attachment.getAutoProcProgramAttachmentId(),
 									AutoProcessingData d = new AutoProcessingData(attachment.getFileName(),
 											Double.parseDouble(val[0]), Double.parseDouble(val[1]), Double.parseDouble(val[2]),
@@ -137,9 +148,67 @@ public class AutoProcProgramaAttachmentFileReader {
 								startToRead = false;
 							}
 
+						} else if (noanomAimlessLog) {
+							if (line.contains("Analysis against resolution, XDSdataset")){
+								startToReadFastDPRfactor = true;
+								startToReadFastDPCompleteness = false;
+								startToReadFastDPIsigma = true;
+								startToReadFastDPCC2 = false;
+							} else if (line.contains("Completeness & multiplicity v. resolution, XDSdataset")) {
+								startToReadFastDPRfactor = false;
+								startToReadFastDPCompleteness = true;
+								startToReadFastDPIsigma = false;
+								startToReadFastDPCC2 = false;
+							} else if (line.contains("Correlations CC(1/2) within dataset, XDSdataset")) {
+								startToReadFastDPRfactor = false;
+								startToReadFastDPCompleteness = false;
+								startToReadFastDPIsigma = false;
+								startToReadFastDPCC2 = true;
+							}
+							startToRead = startToReadFastDPRfactor || startToReadFastDPCompleteness || startToReadFastDPIsigma || startToReadFastDPCC2;
+							if (startToRead && !endToRead) {
+								if (!line.contains("$$") && !line.isEmpty() && !line.contains("I/sigma") && !line.contains("I/sigma")
+										&& !line.contains("Filtered") && !line.contains("Mean") && !line.contains("Rmerge")
+										&& !line.contains("Average") && !line.contains("Fractional")
+										&& !line.contains("$GRAPHS:Completeness v Resolution")
+										&& !line.contains(":Multiplicity v Resolution")
+										&& !line.contains("$GRAPHS: CC(1/2) v resolution")
+										&& !line.contains("RMS anomalous correlation ratio")
+										&& !line.contains("Rsplit")) {
+									String[] values = line.split(" ");
+									String[] val = new String[17];
+									int i = 0;
+									if (startToReadFastDPRfactor || startToReadFastDPIsigma){
+										fastdp_rfactor.add(Double.parseDouble(values[6]));
+										fastdp_isigma.add(Double.parseDouble(values[12]));
+									} else if (startToReadFastDPCC2){
+										fastdp_cc2.add(Double.parseDouble(values[6]));
+									} else if (startToReadFastDPCompleteness){
+										fastdp_completeness.add(Double.parseDouble(values[6]));
+									}
+								}
+							}
+							if (line.contains("Overall")) {
+								endToRead = true;
+							}
 						}
 					}
 					inFile.close();
+
+					if (noanomAimlessLog) {
+						try {
+							for (int i = 0; i < fastdp_completeness.size(); i++) {
+								AutoProcessingData d = new AutoProcessingData(attachment.getFileName(),
+										null, fastdp_completeness.get(i), fastdp_rfactor.get(i),
+										fastdp_isigma.get(i), fastdp_cc2.get(i), null,
+										null, fileName, attachment.getAutoProcProgramVO().getAutoProcProgramId());
+								listAutoProcessingData.add(d);
+							}
+
+						} catch (Exception e) {
+
+						}
+					}
 
 				} catch (Exception e) {
 					throw e;
@@ -170,7 +239,7 @@ public class AutoProcProgramaAttachmentFileReader {
 		o.put("xscaleFile", xscaleFile);
 		o.put("truncateLog", truncateLog);
 		o.put("autoProcessingData", listAutoProcessingData);
-		o.put("mergedNoanomCorrectFile", mergedNoanomCorrectFile);
+		o.put("mergedNoanomCorrectFile", noanomAimlessLog);
 		return o;
 	}
 }
