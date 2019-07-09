@@ -215,6 +215,14 @@ public class UploadShipmentUtils {
 				proposalCode = (String) request.getSession().getAttribute(Constants.PROPOSAL_CODE);
 				proposalNumber = String.valueOf(request.getSession().getAttribute(Constants.PROPOSAL_NUMBER));
 
+				if (Constants.SITE_IS_MAXIV() && proposalCode == "all" && proposalNumber == "manager"){
+					Proposal3Service proposalService = (Proposal3Service) Ejb3ServiceLocator.getInstance().getLocalService(
+							Proposal3Service.class);
+					Proposal3VO p = proposalService.findByPk((int)request.getSession().getAttribute("proposalId"));
+					proposalCode = p.getCode();
+					proposalNumber = p.getNumber();
+
+				}
 				if (populateForShipment)
 					populatedTemplateFileName = Constants.TEMPLATE_RELATIVE_DIRECTORY_PATH + proposalCode + proposalNumber
 							+ "_shipment_" + shippingId + today;

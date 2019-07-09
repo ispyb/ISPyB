@@ -188,6 +188,8 @@ public final class Constants {
 	public static final String AUTHORISATION_ACTIVE = "ISPyB.authorisation.active";
 	
 	public static final String ACCESS_DENIED = "Access not authorised.";
+	
+	public static final String DEPLOY_PROD = "prod" ;
 
 	/*
 	 * adminVar keys
@@ -271,6 +273,10 @@ public final class Constants {
 	public static final String MAIL_TO_SITE = (SITE_IS_ESRF()) ? getProperty("mail.to") : (SITE_IS_DLS()) ? getProperty("mail.to")
 			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") 
 			: (SITE_IS_EMBL()) ? getProperty("mail.to") : "";
+			
+	public static final boolean IS_INDUSTRY_MAILING_IN_PROD() {
+				return getProperty("mail.report.industry").equals(DEPLOY_PROD);
+			}
 
 	
 	/*

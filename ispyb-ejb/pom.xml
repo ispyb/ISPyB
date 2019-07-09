@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.16</version>
+		<version>5.18</version>
 	</parent>
 	<artifactId>ispyb-ejb3</artifactId>
 	<packaging>jar</packaging>
@@ -219,8 +219,30 @@
   			<js.minimized>true</js.minimized>
   			<js.alternative.path.enabled>false</js.alternative.path.enabled>
   			<js.alternative.path> </js.alternative.path>
+  			
+  			<mail.report.industry>prod</mail.report.industry>
+  			
   		</properties>
   	</profile>
+
+  	<profile>
+  		<id>ispyb.env-test</id>
+		<activation>
+			<property>
+				<name>ispyb.env</name>
+				<value>test</value>
+			</property>
+		</activation>
+  		<properties>
+  			<js.minimized>false</js.minimized>
+  			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
+  			<js.alternative.path.enabled>true</js.alternative.path.enabled>
+  			<data.path>W:</data.path>
+  			
+  			<mail.report.industry>test</mail.report.industry>
+  		</properties>
+  	</profile>
+
      <profile>
   		<id>ispyb.env-development</id>
 		<activation>
@@ -234,6 +256,8 @@
   			<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
   			<js.alternative.path.enabled>true</js.alternative.path.enabled>
   			<data.path>/work/ademaria/data/pyarch/</data.path>
+  			
+  			<mail.report.industry>test</mail.report.industry>
   		</properties>
   	</profile>
 
@@ -285,6 +309,8 @@
   			<mail.report.industry.from>mxind@esrf.fr</mail.report.industry.from>
 			<mail.report.industry.cc>ix@esrf.fr</mail.report.industry.cc>					
 			<mail.report.industry.cc.fx12>wang.weiru@gene.com </mail.report.industry.cc.fx12>
+			
+			<mail.report.industry.bcc>delageni@esrf.fr</mail.report.industry.bcc>
 			
 			<dictionary.site>The ESRF</dictionary.site> 
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
@@ -346,6 +372,7 @@
                         <mail.report.industry.from>ispyb@embl-hamburg.de</mail.report.industry.from>
                         <mail.report.industry.cc>ispyb@embl-hamburg.de</mail.report.industry.cc>
                         <mail.report.industry.cc.fx12>ispyb@embl-hamburg.de</mail.report.industry.cc.fx12>
+                        <mail.report.industry.bcc></mail.report.industry.bcc>
                         <dictionary.site>The EMBL</dictionary.site>
                         <dictionary.bcm>mxCuBE</dictionary.bcm>
 
@@ -412,6 +439,8 @@
 				<mail.report.industry.from>mxind@synchrotron-soleil.fr</mail.report.industry.from>
 				<mail.report.industry.cc>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc>
 				<mail.report.industry.cc.fx12>sunset.dev@synchrotron-soleil.fr</mail.report.industry.cc.fx12>
+				<mail.report.industry.bcc></mail.report.industry.bcc>
+				
 
 				<database.driver>oracle.jdbc.driver.OracleDriver.fr</database.driver>
 				<database.url>jdbc:oracle:thin:@localhost:1521:xe</database.url>
@@ -464,6 +493,7 @@
 
 			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
 			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
+			<ispyb.upload.folder.pdf>/mxn/groups/ispybstorage/pdf/</ispyb.upload.folder.pdf>
 
 			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
 			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>
@@ -490,6 +520,7 @@
 			<mail.report.industry.from>mxind@maxiv.lu.se</mail.report.industry.from>
 			<mail.report.industry.cc>ix@maxiv.lu.se</mail.report.industry.cc>
 			<mail.report.industry.cc.fx12>ims@maxiv.lu.se </mail.report.industry.cc.fx12>
+            <mail.report.industry.bcc></mail.report.industry.bcc>
 
 			<dictionary.site>MAX IV</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
@@ -499,6 +530,7 @@
 			<userportal.webservices.url>https://smis.esrf.fr/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
 			<ispyb.userportal.link>SMIS</ispyb.userportal.link>
 			<userportal.url>duo.maxiv.lu.se:3000</userportal.url>
+			<ispyb.upload.folder.json>/data/ispyb/pyarch/pdb/json/</ispyb.upload.folder.json>
 			
             <ispyb.shipping.reimburseddewars>false</ispyb.shipping.reimburseddewars>
 
@@ -553,6 +585,7 @@
 			<mail.report.industry.from>xxxx@cells.es</mail.report.industry.from>
 			<mail.report.industry.cc>xxxx@cells.es</mail.report.industry.cc>
 			<mail.report.industry.cc.fx12>xxxx@cells.es</mail.report.industry.cc.fx12>
+            <mail.report.industry.bcc></mail.report.industry.bcc>
 
 			<dictionary.site>ALBA</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>
@@ -609,6 +642,8 @@
   			
   			<mail.report.industry.from>${user.name}@localhost</mail.report.industry.from>
 			<mail.report.industry.cc>${user.name}@localhost</mail.report.industry.cc>
+			<mail.report.industry.bcc></mail.report.industry.bcc>
+			
 			
 			<dictionary.site>GENERIC</dictionary.site>
 			<dictionary.bcm>mxCuBE</dictionary.bcm>

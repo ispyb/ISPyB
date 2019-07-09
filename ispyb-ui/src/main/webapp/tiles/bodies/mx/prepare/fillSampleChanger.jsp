@@ -141,8 +141,14 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 				<td><bean:write name="viewContainerForm" property="<%=\"nbSampleList[\" + index + \"]\" %>" /></td>
 				<td>
 					<html:select styleClass="FIELD_COMBO" size="1" name="viewContainerForm" property="<%=\"beamlineLocationList[\" + index + \"]\" %>">
-						<html:option value=""></html:option>
-						<html:options collection="beamlineList" property="value" labelProperty="label" />
+                        <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
+                            <html:options collection="beamlineList" property="value" labelProperty="label" />
+                            <html:option value=""></html:option>
+                        </c:if>
+                        <c:if test="${SITE_ATTRIBUTE ne 'MAXIV'}">
+                            <html:option value=""></html:option>
+                            <html:options collection="beamlineList" property="value" labelProperty="label" />
+                        </c:if>
 					</html:select>
 				</td>
 				<td>

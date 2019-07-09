@@ -89,3 +89,7 @@ ispyb-ejb/*.iml
 ispyb-ws/*.iml
 ispyb-ui/*.iml
 
+Sonarcube
+.scannerwork/
+sonar-project.properties
+

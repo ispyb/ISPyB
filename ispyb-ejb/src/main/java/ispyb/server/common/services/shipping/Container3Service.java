@@ -85,6 +85,9 @@ public interface Container3Service {
 	public List<Container3VO> findByProposalIdAndStatus(final Integer proposalId, final String containerStatusProcess)
 			throws Exception;
 
+	public List<Container3VO> findByProposalIdAndCode(final Integer proposalId, final String containerCode)
+			throws Exception;
+	
 	public List<Container3VO> findByCode(final Integer dewarId, final String code)throws Exception;
 
 	/**
