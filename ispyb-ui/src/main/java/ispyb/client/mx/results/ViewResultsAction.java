@@ -1519,6 +1519,7 @@ public class ViewResultsAction extends DispatchAction {
 			Integer dataCollectionId = BreadCrumbsForm.getIt(request).getSelectedDataCollection().getDataCollectionId();
 			DataCollection3VO dc = dataCollectionService.findByPk(dataCollectionId, false,  false);
 			String archivePath = Constants.SITE_IS_DLS() ? PathUtils.getFullEDNAPath(dc) : PathUtils.getFullDNAPath(dc);
+			LOG.debug("archivePath:"+ archivePath);
 			// String fullEDNAPath = archivePath + Constants.EDNA_FILES_SUFIX;
 
 			boolean isFileExist = new File(archivePath + Constants.EDNA_FILES_SUFIX).exists();

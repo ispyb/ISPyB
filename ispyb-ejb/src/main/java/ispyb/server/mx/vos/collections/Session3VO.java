@@ -630,10 +630,15 @@ public class Session3VO extends ISPyBValueObject implements Cloneable {
 					lastName = "mc*"+lastName.substring(2);
 				}
 				// Get local contact email
-				String email = LdapConnection.getLocalContactEmail(lastName, firstNameLetter);
-				if (email != null && !email.equals(""))
-					beamLineOperatorEmail = email;
-				LOG.debug("LocalContact email: " + lastName + "/" + firstNameLetter + " = " + beamLineOperatorEmail);
+				String email = null;
+				if (Constants.SITE_IS_ESRF()) {
+					email = LdapConnection.getLocalContactEmail(lastName, firstNameLetter);
+					if (email != null && !email.equals(""))
+						beamLineOperatorEmail = email;
+					LOG.debug("LocalContact email: " + lastName + "/" + firstNameLetter + " = " + beamLineOperatorEmail);
+				} else {
+					LOG.debug("LocalContact " + lastName + "/" + firstNameLetter);
+				}
 			} else {
 				LOG.debug("Local contact is empty.");
 			}

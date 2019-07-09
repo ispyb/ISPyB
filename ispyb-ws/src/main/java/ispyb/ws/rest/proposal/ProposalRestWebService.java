@@ -5,6 +5,7 @@ import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
 import ispyb.server.common.exceptions.AccessDeniedException;
+import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.common.vos.proposals.LabContact3VO;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
@@ -22,6 +23,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -190,6 +192,29 @@ public class ProposalRestWebService extends MXRestWebService{
 		}
 		catch(Exception e){
 			return this.logError("updateProposal", e, id, logger);
+		}
+	}
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/proposalId")
+	@Produces({ "application/json" })
+	public Response getProposalByCodeAndNumber(@PathParam("token") String token,
+											   @FormParam("proposalNumber") String proposalNumber,
+											   @FormParam("proposalCode") String proposalCode) throws Exception {
+		String methodName = "getProposalByCodeAndNumber";
+		long id = this.logInit(methodName, logger, token);
+		Integer proposalId = 0;
+		try {
+			Login3VO login3VO = this.getLogin3Service().findByToken(token);
+			Proposal3VO proposal = this.getProposal3Service().findForWSByCodeAndNumber(proposalCode, proposalNumber);
+			if (proposal != null){
+				proposalId = proposal.getProposalId();
+			}
+			this.logFinish(methodName, id, logger);
+			return this.sendResponse(proposalId.toString());
+		} catch (Exception e) {
+			return this.logError(methodName, e, id, logger);
 		}
 	}
 

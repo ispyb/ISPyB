@@ -72,9 +72,12 @@ public class MAXIVLoginModule {
                     SearchControls cons = new SearchControls();
                     cons.setSearchScope(SearchControls.SUBTREE_SCOPE);
                     // Search roles
-                    NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, filter, cons);
-                    while (answer.hasMore()) {
-                        SearchResult sr = answer.next();
+                    //NamingEnumeration<SearchResult> answer = ctx.search(groupCtxDN, filter, cons);
+                    NamingEnumeration<SearchResult> answer1 = ctx.search("CN=Users," +groupCtxDN, filter, cons);
+                    NamingEnumeration<SearchResult> answer2 = ctx.search("OU=DUOactive," +groupCtxDN, filter, cons);
+                    NamingEnumeration<SearchResult> answer3 = ctx.search("OU=DUO," +groupCtxDN, filter, cons);
+                    while (answer1.hasMore()) {
+                        SearchResult sr = answer1.next();
                         attrs = sr.getAttributes();
                         System.out.println(attrs.toString());
                         Attribute roles = attrs.get(groupAttributeID);
@@ -85,7 +88,36 @@ public class MAXIVLoginModule {
                             roleName = value.toString();
                             // fill roles array
                             if (roleName != null) {
-                                if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts")) {
+								if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
+                                		roleName.equals("Information Management") || roleName.equals("biomax")) {
+									myRoles.add(Constants.ROLE_MANAGER);
+                                    myRoles.add(Constants.ROLE_LOCALCONTACT);
+                                    myRoles.add(Constants.ROLE_ADMIN);
+                                    myRoles.add(Constants.ROLE_BLOM);
+                                    myRoles.add(Constants.ROLE_INDUSTRIAL);
+                                    myRoles.add(Constants.ROLE_STORE);
+                                    myRoles.add("User");
+                                }
+                                else if (roleName.contains("-group")){
+                                    myRoles.add("User");
+                                }
+                            }
+                        }
+                    }
+                    while (answer2.hasMore()) {
+                        SearchResult sr = answer2.next();
+                        attrs = sr.getAttributes();
+                        System.out.println(attrs.toString());
+                        Attribute roles = attrs.get(groupAttributeID);
+
+                        for (int r = 0; r < roles.size(); r++) {
+                            Object value = roles.get(r);
+                            String roleName = null;
+                            roleName = value.toString();
+                            // fill roles array
+                            if (roleName != null) {
+                                if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
+                                        roleName.equals("Information Management") || roleName.equals("biomax")) {
                                     myRoles.add(Constants.ROLE_MANAGER);
                                     myRoles.add(Constants.ROLE_LOCALCONTACT);
                                     myRoles.add(Constants.ROLE_ADMIN);
@@ -100,6 +132,36 @@ public class MAXIVLoginModule {
                             }
                         }
                     }
+
+                    while (answer3.hasMore()) {
+                        SearchResult sr = answer3.next();
+                        attrs = sr.getAttributes();
+                        System.out.println(attrs.toString());
+                        Attribute roles = attrs.get(groupAttributeID);
+
+                        for (int r = 0; r < roles.size(); r++) {
+                            Object value = roles.get(r);
+                            String roleName = null;
+                            roleName = value.toString();
+                            // fill roles array
+                            if (roleName != null) {
+                                if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
+                                        roleName.equals("Information Management") || roleName.equals("biomax")) {
+                                    myRoles.add(Constants.ROLE_MANAGER);
+                                    myRoles.add(Constants.ROLE_LOCALCONTACT);
+                                    myRoles.add(Constants.ROLE_ADMIN);
+                                    myRoles.add(Constants.ROLE_BLOM);
+                                    myRoles.add(Constants.ROLE_INDUSTRIAL);
+                                    myRoles.add(Constants.ROLE_STORE);
+                                    myRoles.add("User");
+                                }
+                                else if (roleName.contains("-group")){
+                                    myRoles.add("User");
+                                }
+                            }
+                        }
+                    }
+
                     /** Any validated user is in role User */
                     if (myRoles.size() == 0){
                         myRoles.add("User");
