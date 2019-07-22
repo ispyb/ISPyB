@@ -69,7 +69,7 @@ public interface Experiment3Service {
 
 //	public Macromolecule3VO findMacromoleculeById(Integer macromoleculeId);
 
-	public abstract void saveStructure(Structure3VO structure3vo);
+	public abstract Structure3VO saveStructure(Structure3VO structure3vo);
 
 	public List<Map<String, Object>> getExperimentDescription(Integer experimentId);
 	

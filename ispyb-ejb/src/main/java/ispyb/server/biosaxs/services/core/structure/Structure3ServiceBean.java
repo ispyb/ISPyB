@@ -52,6 +52,14 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception {
+		String query = "SELECT structure3VO FROM Structure3VO structure3VO where structure3VO.proposalId = :proposalId" ;
+		Query EJBQuery = this.entityManager.createQuery(query).setParameter("proposalId", proposalId);
+		return (List<Structure3VO>) EJBQuery.getResultList();	
+	}
+	
 	@Override
 	public List<Structure3VO> getStructuresByDataCollectionId(Integer dataCollectionId) throws Exception {
 		DataCollection3VO dataCollection = entityManager.find(DataCollection3VO.class, dataCollectionId);
