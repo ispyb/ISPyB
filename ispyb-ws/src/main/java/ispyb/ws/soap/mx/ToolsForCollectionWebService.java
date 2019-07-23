@@ -45,6 +45,8 @@ import ispyb.common.util.Constants;
 import ispyb.common.util.SendMailUtils;
 import ispyb.common.util.StringUtils;
 import ispyb.common.util.beamlines.ESRFBeamlineEnum;
+import ispyb.server.biosaxs.services.core.structure.Structure3Service;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.common.services.proposals.LabContact3Service;
 import ispyb.server.common.services.proposals.Person3Service;
 import ispyb.server.common.services.proposals.Proposal3Service;
@@ -1709,6 +1711,41 @@ public class ToolsForCollectionWebService {
 			throw e;
 		}
 	}
+	
+	@WebMethod
+	@WebResult(name = "structures")
+	public String getLigandsByDataCollectionId(
+	@WebParam(name = "dataCollectionId")Integer dataCollectionId) throws Exception {
+		try {
+			Structure3Service structure3service = (Structure3Service) ejb3ServiceLocator.getLocalService(Structure3Service.class);
+			List<Structure3VO> structures = structure3service.getLigandsByDataCollectionId(dataCollectionId);
+			if (structures != null){
+				return convertStructuresToCSV(structures);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private String convertStructuresToCSV(List<Structure3VO> structures) {
+
+		try {
+			StringBuilder sb = new StringBuilder();
+			for (Structure3VO structure3vo : structures) {
+				sb.append(structure3vo.getGroupName());
+				sb.append(",");
+				sb.append(structure3vo.getType());
+				sb.append(",");
+				sb.append(structure3vo.getFilePath());
+				sb.append("\n");
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 	
 	@WebMethod
 	@WebResult(name = "robotActionId")
