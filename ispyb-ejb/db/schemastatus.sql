@@ -7,7 +7,7 @@
 -- Server version: 10.1.23-MariaDB-9+deb9u1
 -- PHP Version: 7.0.19-1
 
---ISPyB version: 5.19
+--ISPyB version: 5.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
