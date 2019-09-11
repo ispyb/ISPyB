@@ -1,24 +1,13 @@
-/*******************************************************************************
- * This file is part of ISPyB.
- * 
- * ISPyB is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * ISPyB is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ISPyB.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, 
- * P. Brenchereau, M. Bodin, A. De Maria Antolinos, O. Svensson, I. Karpics, 
- * A. Nardella, J. Lewis Muir, R. Fogh, D. Sanchez, I. Chado.
- *********************************************************************************/
+-- phpMyAdmin SQL Dump
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Sep 11, 2019 at 10:40 AM
+-- Server version: 10.1.23-MariaDB-9+deb9u1
+-- PHP Version: 7.0.19-1
 
+-- ISPyB version: 5.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -30,8 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pydb` version  5.14.3
+-- Database: `pydb`
 --
+CREATE DATABASE IF NOT EXISTS `pydb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `pydb`;
 
 -- --------------------------------------------------------
 
@@ -1065,6 +1056,7 @@ CREATE TABLE `DataCollection` (
   `imageDirectory` varchar(255) DEFAULT NULL,
   `imagePrefix` varchar(100) DEFAULT NULL,
   `imageSuffix` varchar(45) DEFAULT NULL,
+  `imageContainerSubPath` varchar(255) DEFAULT NULL COMMENT 'Internal path of a HDF5 file pointing to the data for this data collection',
   `fileTemplate` varchar(255) DEFAULT NULL,
   `wavelength` float DEFAULT NULL,
   `resolution` float DEFAULT NULL,
@@ -1168,7 +1160,7 @@ CREATE TABLE `DataCollectionGroup` (
   `blSampleId` int(10) UNSIGNED DEFAULT NULL COMMENT 'references BLSample table',
   `sessionId` int(10) UNSIGNED NOT NULL COMMENT 'references Session table',
   `workflowId` int(11) UNSIGNED DEFAULT NULL,
-  `experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration') DEFAULT NULL COMMENT 'Experiment type flag',
+  `experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration','Still') DEFAULT NULL COMMENT 'Experiment type flag',
   `startTime` datetime DEFAULT NULL COMMENT 'Start time of the dataCollectionGroup',
   `endTime` datetime DEFAULT NULL COMMENT 'end time of the dataCollectionGroup',
   `crystalClass` varchar(20) DEFAULT NULL COMMENT 'Crystal Class for industrials users',
@@ -1251,7 +1243,8 @@ CREATE TABLE `Detector` (
   `detectorMinResolution` float DEFAULT NULL,
   `CS` float DEFAULT NULL COMMENT 'Unit: mm',
   `density` float DEFAULT NULL,
-  `composition` varchar(16) DEFAULT NULL
+  `composition` varchar(16) DEFAULT NULL,
+  `localName` varchar(40) DEFAULT NULL COMMENT 'Colloquial name for the detector'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Detector table is linked to a dataCollection';
 
 -- --------------------------------------------------------
@@ -1712,6 +1705,21 @@ CREATE TABLE `InstructionSet` (
   `instructionSetId` int(10) NOT NULL,
   `type` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `IspybAutoProcAttachment`
+--
+
+CREATE TABLE `IspybAutoProcAttachment` (
+  `autoProcAttachmentId` int(11) NOT NULL,
+  `fileName` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `step` enum('XDS','XSCALE','SCALA','SCALEPACK','TRUNCATE','DIMPLE') DEFAULT 'XDS' COMMENT 'step where the file is generated',
+  `fileCategory` enum('input','output','log','correction') DEFAULT 'output',
+  `hasGraph` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ISPyB autoProcAttachment files values';
 
 -- --------------------------------------------------------
 
@@ -2259,6 +2267,7 @@ CREATE TABLE `PhasingProgramRun` (
   `phasingStartTime` datetime DEFAULT NULL COMMENT 'Processing start time',
   `phasingEndTime` datetime DEFAULT NULL COMMENT 'Processing end time',
   `phasingEnvironment` varchar(255) DEFAULT NULL COMMENT 'Cpus, Nodes,...',
+  `phasingDirectory` varchar(255) DEFAULT NULL COMMENT 'Directory of execution',
   `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -2277,7 +2286,7 @@ CREATE TABLE `PhasingStatistics` (
   `binNumber` int(11) DEFAULT NULL COMMENT 'binNumber, 999 for overall',
   `lowRes` double DEFAULT NULL COMMENT 'low resolution cutoff of this binfloat',
   `highRes` double DEFAULT NULL COMMENT 'high resolution cutoff of this binfloat',
-  `metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model') DEFAULT NULL COMMENT 'metric',
+  `metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model','Start R-work','Start R-free','Final R-work','Final R-free') DEFAULT NULL COMMENT 'metric',
   `statisticsValue` double DEFAULT NULL COMMENT 'the statistics value',
   `nReflections` int(11) DEFAULT NULL,
   `recordTimeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation or last update date/time'
@@ -2520,7 +2529,8 @@ CREATE TABLE `Proposal` (
   `proposalNumber` varchar(45) DEFAULT NULL,
   `proposalType` varchar(2) DEFAULT NULL COMMENT 'Proposal type: MX, BX',
   `bltimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `externalId` binary(16) DEFAULT NULL
+  `externalId` binary(16) DEFAULT NULL,
+  `state` enum('Open','Closed','Cancelled') DEFAULT 'Open'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -2766,6 +2776,19 @@ CREATE TABLE `ScheduleComponent` (
   `scheduleId` int(11) UNSIGNED NOT NULL,
   `inspectionTypeId` int(11) UNSIGNED DEFAULT NULL,
   `offset_hours` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `SchemaStatus`
+--
+
+CREATE TABLE `SchemaStatus` (
+  `schemaStatusId` int(11) NOT NULL,
+  `scriptName` varchar(100) NOT NULL,
+  `schemaStatus` varchar(10) DEFAULT NULL,
+  `recordTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -3161,7 +3184,8 @@ CREATE TABLE `Structure` (
   `name` varchar(255) DEFAULT NULL,
   `symmetry` varchar(45) DEFAULT NULL,
   `multiplicity` varchar(45) DEFAULT NULL,
-  `groupName` varchar(45) DEFAULT NULL
+  `groupName` varchar(45) DEFAULT NULL,
+  `proposalId` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -3584,7 +3608,7 @@ CREATE TABLE `v_datacollection_summary` (
 ,`DataCollectionGroup_blSampleId` int(10) unsigned
 ,`DataCollectionGroup_sessionId` int(10) unsigned
 ,`DataCollectionGroup_workflowId` int(11) unsigned
-,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration','Still')
 ,`DataCollectionGroup_startTime` datetime
 ,`DataCollectionGroup_endTime` datetime
 ,`DataCollectionGroup_comments` varchar(1024)
@@ -3811,7 +3835,7 @@ CREATE TABLE `v_datacollection_summary_datacollectiongroup` (
 ,`DataCollectionGroup_blSampleId` int(10) unsigned
 ,`DataCollectionGroup_sessionId` int(10) unsigned
 ,`DataCollectionGroup_workflowId` int(11) unsigned
-,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration')
+,`DataCollectionGroup_experimentType` enum('EM','SAD','SAD - Inverse Beam','OSC','Collect - Multiwedge','MAD','Helical','Multi-positional','Mesh','Burn','MAD - Inverse Beam','Characterization','Dehydration','Still')
 ,`DataCollectionGroup_startTime` datetime
 ,`DataCollectionGroup_endTime` datetime
 ,`DataCollectionGroup_comments` varchar(1024)
@@ -4514,12 +4538,13 @@ CREATE TABLE `v_phasing` (
 ,`PhasingProgramRun_phasingStartTime` datetime
 ,`PhasingProgramRun_phasingEndTime` datetime
 ,`PhasingProgramRun_phasingEnvironment` varchar(255)
+,`PhasingProgramRun_phasingDirectory` varchar(255)
 ,`PhasingProgramRun_recordTimeStamp` timestamp
 ,`Protein_proteinId` int(10) unsigned
 ,`BLSession_sessionId` int(10) unsigned
 ,`BLSession_proposalId` int(10) unsigned
 ,`PhasingStatistics_phasingStatisticsId` int(11) unsigned
-,`PhasingStatistics_metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model')
+,`PhasingStatistics_metric` enum('Rcullis','Average Fragment Length','Chain Count','Residues Count','CC','PhasingPower','FOM','<d"/sig>','Best CC','CC(1/2)','Weak CC','CFOM','Pseudo_free_CC','CC of partial model','Start R-work','Start R-free','Final R-work','Final R-free')
 ,`PhasingStatistics_statisticsValue` double
 );
 
@@ -4965,8 +4990,7 @@ CREATE TABLE `XRFFluorescenceMappingROI` (
 -- Structure for view `V_AnalysisInfo`
 --
 DROP TABLE IF EXISTS `V_AnalysisInfo`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_AnalysisInfo`  AS  (select `exp`.`creationDate` AS `experimentCreationDate`,(select `r`.`timeStart` from `Run` `r` where (`r`.`runId` = `m`.`runId`)) AS `timeStart`,`dc`.`dataCollectionId` AS `dataCollectionId`,`m`.`measurementId` AS `measurementId`,`p`.`proposalId` AS `proposalId`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`m`.`priorityLevelId` AS `priorityLevelId`,`m`.`code` AS `code`,`m`.`exposureTemperature` AS `exposureTemperature`,`m`.`transmission` AS `transmission`,`m`.`comments` AS `measurementComments`,`exp`.`comments` AS `experimentComments`,`exp`.`experimentId` AS `experimentId`,`exp`.`experimentType` AS `experimentType`,`s`.`concentration` AS `conc`,`bu`.`acronym` AS `bufferAcronym`,`ma`.`acronym` AS `macromoleculeAcronym`,`bu`.`bufferId` AS `bufferId`,`ma`.`macromoleculeId` AS `macromoleculeId`,(select `su`.`substractedFilePath` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractedFilePath`,(select `su`.`rgGuinier` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGuinier`,(select `su`.`firstPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `firstPointUsed`,(select `su`.`lastPointUsed` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `lastPointUsed`,(select distinct `su`.`I0` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `I0`,(select distinct `su`.`isagregated` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `isagregated`,(select distinct `su`.`subtractionId` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `subtractionId`,(select distinct `su`.`rgGnom` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `rgGnom`,(select distinct `su`.`total` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `total`,(select distinct `su`.`dmax` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `dmax`,(select distinct `su`.`volume` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `volume`,(select `su`.`I0Stdev` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `i0stdev`,(select `su`.`quality` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `quality`,(select `su`.`creationTime` from `Subtraction` `su` where (`su`.`subtractionId` = (select max(`su2`.`subtractionId`) from `Subtraction` `su2` where (`su2`.`dataCollectionId` = `dc`.`dataCollectionId`)))) AS `substractionCreationTime`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 1))) AS `bufferBeforeMeasurementId`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 3))) AS `bufferAfterMeasurementId`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `bufferBeforeAverageFilePath`,(select `mtd2`.`measurementId` from `MeasurementToDataCollection` `mtd2` where ((`mtd`.`dataCollectionId` = `mtd2`.`dataCollectionId`) and (`mtd2`.`dataCollectionOrder` = 2))) AS `sampleMeasurementId`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `sampleMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `averageFilePath`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `sampleMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `sampleMeasurementId`)))) AS `framesMerge`,(select `m2`.`framesCount` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferBeforeMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferBeforeMeasurementId`)))) AS `framesCount`,(select `m2`.`framesMerge` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterFramesMerged`,(select `m2`.`mergeId` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterMergeId`,(select `m2`.`averageFilePath` from `Merge` `m2` where ((`m2`.`measurementId` = `bufferAfterMeasurementId`) and `m2`.`mergeId` in (select min(`m3`.`mergeId`) from `Merge` `m3` where (`m3`.`measurementId` = `bufferAfterMeasurementId`)))) AS `bufferAfterAverageFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId1`,(select `modelList`.`nsdFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `nsdFilePath`,(select `modelList`.`modelListId` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`subtractionId` <> 0) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `modelListId2`,(select `modelList`.`chi2RgFilePath` from (((`ModelList` `modelList` join `AbInitioModel` `ab`) join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`modelList`.`modelListId` = `ab`.`modelListId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `chi2RgFilePath`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`averagedModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `averagedModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`rapidShapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `rapidShapeDeterminationModelId`,(select `model`.`pdbFile` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModel`,(select `model`.`modelId` from (((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Model` `model`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`model`.`modelId` = `ab`.`shapeDeterminationModelId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `shapeDeterminationModelId`,(select `ab`.`abInitioModelId` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `abInitioModelId`,(select `ab`.`comments` from ((`AbInitioModel` `ab` join `SubtractionToAbInitioModel` `subToAb`) join `Subtraction` `su`) where ((`su`.`dataCollectionId` = `dc`.`dataCollectionId`) and (`ab`.`abInitioModelId` = `subToAb`.`abInitioId`) and (`subToAb`.`abInitioId` = (select max(`subToAb2`.`abInitioId`) from `SubtractionToAbInitioModel` `subToAb2` where (`subToAb2`.`subtractionId` = `su`.`subtractionId`))))) AS `comments` from (((((((`Experiment` `exp` join `Buffer` `bu`) join `SaxsDataCollection` `dc`) join `Macromolecule` `ma`) join `MeasurementToDataCollection` `mtd`) join `Specimen` `s`) join `Measurement` `m`) join `Proposal` `p`) where ((`bu`.`bufferId` = `s`.`bufferId`) and (`exp`.`proposalId` = `p`.`proposalId`) and (`m`.`specimenId` = `s`.`specimenId`) and (`dc`.`dataCollectionId` = `mtd`.`dataCollectionId`) and (`mtd`.`measurementId` = `m`.`measurementId`) and (`s`.`macromoleculeId` = `ma`.`macromoleculeId`) and (`s`.`experimentId` = `exp`.`experimentId`) and (`exp`.`experimentType` <> 'TEMPLATE') and `p`.`proposalId` in (select distinct `prop`.`proposalId` from (`Proposal` `prop` join `Experiment` `exper`) where ((`exper`.`proposalId` = `prop`.`proposalId`) and (`prop`.`proposalId` <> 3374))))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'V_AnalysisInfo')
 
 -- --------------------------------------------------------
 
@@ -4974,8 +4998,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `V_An
 -- Structure for view `v_datacollection`
 --
 DROP TABLE IF EXISTS `v_datacollection`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection`  AS  select `DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`DataCollection`.`runStatus` AS `runStatus`,`DataCollection`.`axisStart` AS `axisStart`,`DataCollection`.`axisEnd` AS `axisEnd`,`DataCollection`.`axisRange` AS `axisRange`,`DataCollection`.`overlap` AS `overlap`,`DataCollection`.`numberOfImages` AS `numberOfImages`,`DataCollection`.`startImageNumber` AS `startImageNumber`,`DataCollection`.`numberOfPasses` AS `numberOfPasses`,`DataCollection`.`exposureTime` AS `exposureTime`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`DataCollection`.`imagePrefix` AS `imagePrefix`,`DataCollection`.`imageSuffix` AS `imageSuffix`,`DataCollection`.`fileTemplate` AS `fileTemplate`,`DataCollection`.`wavelength` AS `wavelength`,`DataCollection`.`resolution` AS `resolution`,`DataCollection`.`detectorDistance` AS `detectorDistance`,`DataCollection`.`xBeam` AS `xBeam`,`DataCollection`.`yBeam` AS `yBeam`,`DataCollection`.`xBeamPix` AS `xBeamPix`,`DataCollection`.`yBeamPix` AS `yBeamPix`,`DataCollection`.`comments` AS `comments`,`DataCollection`.`printableForReport` AS `printableForReport`,`DataCollection`.`slitGapVertical` AS `slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `slitGapHorizontal`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`synchrotronMode` AS `synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `rotationAxis`,`DataCollection`.`phiStart` AS `phiStart`,`DataCollection`.`kappaStart` AS `kappaStart`,`DataCollection`.`omegaStart` AS `omegaStart`,`DataCollection`.`resolutionAtCorner` AS `resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `detector2Theta`,`DataCollection`.`undulatorGap1` AS `undulatorGap1`,`DataCollection`.`undulatorGap2` AS `undulatorGap2`,`DataCollection`.`undulatorGap3` AS `undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `centeringMethod`,`DataCollection`.`averageTemperature` AS `averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `actualCenteringPosition`,`DataCollection`.`beamShape` AS `beamShape`,`DataCollection`.`flux` AS `flux`,`DataCollection`.`flux_end` AS `flux_end`,`DataCollection`.`totalAbsorbedDose` AS `totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `imageQualityIndicatorsCSVPath`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`DataCollectionGroup`.`workflowId` AS `workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId` from ((((`DataCollection` left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection')
 
 -- --------------------------------------------------------
 
@@ -4983,8 +5006,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_autoprocintegration`
 --
 DROP TABLE IF EXISTS `v_datacollection_autoprocintegration`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_autoprocintegration`  AS  select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_processingStatus`,`AutoProcProgram`.`processingStartTime` AS `v_datacollection_processingStartTime`,`AutoProcProgram`.`processingEndTime` AS `v_datacollection_processingEndTime`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`acronym` AS `Protein_acronym`,`BLSample`.`name` AS `BLSample_name`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix` from (((((((((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_autoprocintegration')
 
 -- --------------------------------------------------------
 
@@ -4992,8 +5014,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_phasing`
 --
 DROP TABLE IF EXISTS `v_datacollection_phasing`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing`  AS  select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProc`.`spaceGroup` AS `spaceGroup`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`PhasingStep`.`solventContent` AS `solventContent`,`PhasingStep`.`enantiomorph` AS `enantiomorph`,`PhasingStep`.`lowRes` AS `lowRes`,`PhasingStep`.`highRes` AS `highRes`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`AutoProcProgram`.`processingPrograms` AS `processingPrograms`,`AutoProcProgram`.`processingStatus` AS `processingStatus`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`PhasingProgramRun`.`phasingStartTime` AS `phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `phasingEndTime`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId` from (((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_phasing')
 
 -- --------------------------------------------------------
 
@@ -5001,8 +5022,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_phasing_program_run`
 --
 DROP TABLE IF EXISTS `v_datacollection_phasing_program_run`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_phasing_program_run`  AS  select `PhasingStep`.`phasingStepId` AS `phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `previousPhasingStepId`,`PhasingStep`.`phasingAnalysisId` AS `phasingAnalysisId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `dataCollectionId`,`AutoProc`.`autoProcId` AS `autoProcId`,`PhasingStep`.`phasingStepType` AS `phasingStepType`,`PhasingStep`.`method` AS `method`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId`,`SpaceGroup`.`spaceGroupShortName` AS `spaceGroupShortName`,`PhasingProgramRun`.`phasingPrograms` AS `phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `phasingStatus`,`DataCollectionGroup`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSample`.`blSampleId` AS `blSampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`Protein`.`proteinId` AS `proteinId`,`PhasingProgramAttachment`.`phasingProgramAttachmentId` AS `phasingProgramAttachmentId`,`PhasingProgramAttachment`.`fileType` AS `fileType`,`PhasingProgramAttachment`.`fileName` AS `fileName`,`PhasingProgramAttachment`.`filePath` AS `filePath` from ((((((((((((((`AutoProcIntegration` left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramAttachment` on((`PhasingProgramAttachment`.`phasingProgramRunId` = `PhasingProgramRun`.`phasingProgramRunId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_phasing_program_run')
 
 -- --------------------------------------------------------
 
@@ -5010,8 +5030,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_summary`
 --
 DROP TABLE IF EXISTS `v_datacollection_summary`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary`  AS  select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`DataCollectionGroup`.`crystalClass` AS `DataCollectionGroup_crystalClass`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`comments` AS `BLSample_comments`,`Container`.`containerId` AS `Container_containerId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Container`.`containerType` AS `Container_containerType`,`Container`.`code` AS `Container_code`,`Container`.`capacity` AS `Container_capacity`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`transmission` AS `transmission`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `beamSizeAtSampleY`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`voltage` AS `DataCollection_voltage`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status`,`Workflow`.`workflowId` AS `Workflow_workflowId`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`v_datacollection_summary_autoprocintegration`.`autoProcScalingId` AS `autoProcScalingId`,`v_datacollection_summary_autoprocintegration`.`cell_a` AS `cell_a`,`v_datacollection_summary_autoprocintegration`.`cell_b` AS `cell_b`,`v_datacollection_summary_autoprocintegration`.`cell_c` AS `cell_c`,`v_datacollection_summary_autoprocintegration`.`cell_alpha` AS `cell_alpha`,`v_datacollection_summary_autoprocintegration`.`cell_beta` AS `cell_beta`,`v_datacollection_summary_autoprocintegration`.`cell_gamma` AS `cell_gamma`,`v_datacollection_summary_autoprocintegration`.`anomalous` AS `anomalous`,`v_datacollection_summary_autoprocintegration`.`scalingStatisticsType` AS `scalingStatisticsType`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`v_datacollection_summary_autoprocintegration`.`resolutionLimitLow` AS `resolutionLimitLow`,`v_datacollection_summary_autoprocintegration`.`completeness` AS `completeness`,`v_datacollection_summary_autoprocintegration`.`AutoProc_spaceGroup` AS `AutoProc_spaceGroup`,`v_datacollection_summary_autoprocintegration`.`autoProcId` AS `autoProcId`,`v_datacollection_summary_autoprocintegration`.`rMerge` AS `rMerge`,`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingPrograms` AS `AutoProcProgram_processingPrograms`,`v_datacollection_summary_autoprocintegration`.`v_datacollection_summary_autoprocintegration_processingStatus` AS `AutoProcProgram_processingStatus`,`v_datacollection_summary_autoprocintegration`.`AutoProcProgram_autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`v_datacollection_summary_screening`.`Screening_screeningId` AS `Screening_screeningId`,`v_datacollection_summary_screening`.`Screening_dataCollectionId` AS `Screening_dataCollectionId`,`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`v_datacollection_summary_screening`.`ScreeningOutput_strategySuccess` AS `ScreeningOutput_strategySuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`v_datacollection_summary_screening`.`ScreeningOutput_rankingResolution` AS `ScreeningOutput_rankingResolution`,`v_datacollection_summary_screening`.`ScreeningOutput_mosaicity` AS `ScreeningOutput_mosaicity`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`v_datacollection_summary_screening`.`ScreeningOutputLattice_unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`v_datacollection_summary_screening`.`ScreeningOutput_totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`v_datacollection_summary_screening`.`ScreeningOutput_totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`v_datacollection_summary_screening`.`ScreeningOutput_totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_transmission` AS `ScreeningStrategySubWedge_transmission`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_completeness` AS `ScreeningStrategySubWedge_completeness`,`v_datacollection_summary_screening`.`ScreeningStrategySubWedge_axisStart` AS `ScreeningStrategySubWedge_axisStart`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`DiffractionPlan`.`diffractionPlanId` AS `diffractionPlanId`,`DiffractionPlan`.`experimentKind` AS `experimentKind`,`DiffractionPlan`.`observedResolution` AS `observedResolution`,`DiffractionPlan`.`minimalResolution` AS `minimalResolution`,`DiffractionPlan`.`exposureTime` AS `exposureTime`,`DiffractionPlan`.`oscillationRange` AS `oscillationRange`,`DiffractionPlan`.`maximalResolution` AS `maximalResolution`,`DiffractionPlan`.`screeningResolution` AS `screeningResolution`,`DiffractionPlan`.`radiationSensitivity` AS `radiationSensitivity`,`DiffractionPlan`.`anomalousScatterer` AS `anomalousScatterer`,`DiffractionPlan`.`preferredBeamSizeX` AS `preferredBeamSizeX`,`DiffractionPlan`.`preferredBeamSizeY` AS `preferredBeamSizeY`,`DiffractionPlan`.`preferredBeamDiameter` AS `preferredBeamDiameter`,`DiffractionPlan`.`comments` AS `DiffractipnPlan_comments`,`DiffractionPlan`.`aimedCompleteness` AS `aimedCompleteness`,`DiffractionPlan`.`aimedIOverSigmaAtHighestRes` AS `aimedIOverSigmaAtHighestRes`,`DiffractionPlan`.`aimedMultiplicity` AS `aimedMultiplicity`,`DiffractionPlan`.`aimedResolution` AS `aimedResolution`,`DiffractionPlan`.`anomalousData` AS `anomalousData`,`DiffractionPlan`.`complexity` AS `complexity`,`DiffractionPlan`.`estimateRadiationDamage` AS `estimateRadiationDamage`,`DiffractionPlan`.`forcedSpaceGroup` AS `forcedSpaceGroup`,`DiffractionPlan`.`requiredCompleteness` AS `requiredCompleteness`,`DiffractionPlan`.`requiredMultiplicity` AS `requiredMultiplicity`,`DiffractionPlan`.`requiredResolution` AS `requiredResolution`,`DiffractionPlan`.`strategyOption` AS `strategyOption`,`DiffractionPlan`.`kappaStrategyOption` AS `kappaStrategyOption`,`DiffractionPlan`.`numberOfPositions` AS `numberOfPositions`,`DiffractionPlan`.`minDimAccrossSpindleAxis` AS `minDimAccrossSpindleAxis`,`DiffractionPlan`.`maxDimAccrossSpindleAxis` AS `maxDimAccrossSpindleAxis`,`DiffractionPlan`.`radiationSensitivityBeta` AS `radiationSensitivityBeta`,`DiffractionPlan`.`radiationSensitivityGamma` AS `radiationSensitivityGamma`,`DiffractionPlan`.`minOscWidth` AS `minOscWidth`,`Detector`.`detectorType` AS `Detector_detectorType`,`Detector`.`detectorManufacturer` AS `Detector_detectorManufacturer`,`Detector`.`detectorModel` AS `Detector_detectorModel`,`Detector`.`detectorPixelSizeHorizontal` AS `Detector_detectorPixelSizeHorizontal`,`Detector`.`detectorPixelSizeVertical` AS `Detector_detectorPixelSizeVertical`,`Detector`.`detectorSerialNumber` AS `Detector_detectorSerialNumber`,`Detector`.`detectorDistanceMin` AS `Detector_detectorDistanceMin`,`Detector`.`detectorDistanceMax` AS `Detector_detectorDistanceMax`,`Detector`.`trustedPixelValueRangeLower` AS `Detector_trustedPixelValueRangeLower`,`Detector`.`trustedPixelValueRangeUpper` AS `Detector_trustedPixelValueRangeUpper`,`Detector`.`sensorThickness` AS `Detector_sensorThickness`,`Detector`.`overload` AS `Detector_overload`,`Detector`.`XGeoCorr` AS `Detector_XGeoCorr`,`Detector`.`YGeoCorr` AS `Detector_YGeoCorr`,`Detector`.`detectorMode` AS `Detector_detectorMode`,`BeamLineSetup`.`undulatorType1` AS `BeamLineSetup_undulatorType1`,`BeamLineSetup`.`undulatorType2` AS `BeamLineSetup_undulatorType2`,`BeamLineSetup`.`undulatorType3` AS `BeamLineSetup_undulatorType3`,`BeamLineSetup`.`synchrotronName` AS `BeamLineSetup_synchrotronName`,`BeamLineSetup`.`synchrotronMode` AS `BeamLineSetup_synchrotronMode`,`BeamLineSetup`.`polarisation` AS `BeamLineSetup_polarisation`,`BeamLineSetup`.`focusingOptic` AS `BeamLineSetup_focusingOptic`,`BeamLineSetup`.`beamDivergenceHorizontal` AS `BeamLineSetup_beamDivergenceHorizontal`,`BeamLineSetup`.`beamDivergenceVertical` AS `BeamLineSetup_beamDivergenceVertical`,`BeamLineSetup`.`monochromatorType` AS `BeamLineSetup_monochromatorType` from ((((((((((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BeamLineSetup` on((`BeamLineSetup`.`beamLineSetupId` = `BLSession`.`beamLineSetupId`))) left join `Detector` on((`Detector`.`detectorId` = `DataCollection`.`detectorId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `DiffractionPlan` on((`DiffractionPlan`.`diffractionPlanId` = `BLSample`.`diffractionPlanId`))) left join `Container` on((`Container`.`containerId` = `BLSample`.`containerId`))) left join `Dewar` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) left join `v_datacollection_summary_autoprocintegration` on((`v_datacollection_summary_autoprocintegration`.`AutoProcIntegration_dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `v_datacollection_summary_screening` on((`v_datacollection_summary_screening`.`Screening_dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_summary')
 
 -- --------------------------------------------------------
 
@@ -5019,8 +5038,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_summary_autoprocintegration`
 --
 DROP TABLE IF EXISTS `v_datacollection_summary_autoprocintegration`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_autoprocintegration`  AS  select `AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `cell_a`,`AutoProcIntegration`.`cell_b` AS `cell_b`,`AutoProcIntegration`.`cell_c` AS `cell_c`,`AutoProcIntegration`.`cell_alpha` AS `cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `cell_gamma`,`AutoProcIntegration`.`anomalous` AS `anomalous`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_autoprocintegration_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `AutoProcProgram_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_autoprocintegration_processingStatus`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_phasing_dataCollectionId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasing_phasingStepType`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`AutoProc`.`autoProcId` AS `autoProcId`,`AutoProc`.`spaceGroup` AS `AutoProc_spaceGroup`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScaling`.`autoProcScalingId` AS `autoProcScalingId` from ((((((((`AutoProcIntegration` left join `AutoProcProgram` on((`AutoProcIntegration`.`autoProcProgramId` = `AutoProcProgram`.`autoProcProgramId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `AutoProcScalingStatistics` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScalingStatistics`.`autoProcScalingId`))) left join `AutoProc` on((`AutoProc`.`autoProcId` = `AutoProcScaling`.`autoProcId`))) left join `Phasing_has_Scaling` on((`Phasing_has_Scaling`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `Phasing_has_Scaling`.`autoProcScalingId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_summary_autoprocintegration')
 
 -- --------------------------------------------------------
 
@@ -5028,8 +5046,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_summary_datacollectiongroup`
 --
 DROP TABLE IF EXISTS `v_datacollection_summary_datacollectiongroup`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_datacollectiongroup`  AS  select `DataCollectionGroup`.`dataCollectionGroupId` AS `DataCollectionGroup_dataCollectionGroupId`,`DataCollectionGroup`.`blSampleId` AS `DataCollectionGroup_blSampleId`,`DataCollectionGroup`.`sessionId` AS `DataCollectionGroup_sessionId`,`DataCollectionGroup`.`workflowId` AS `DataCollectionGroup_workflowId`,`DataCollectionGroup`.`experimentType` AS `DataCollectionGroup_experimentType`,`DataCollectionGroup`.`startTime` AS `DataCollectionGroup_startTime`,`DataCollectionGroup`.`endTime` AS `DataCollectionGroup_endTime`,`DataCollectionGroup`.`comments` AS `DataCollectionGroup_comments`,`DataCollectionGroup`.`actualSampleBarcode` AS `DataCollectionGroup_actualSampleBarcode`,`DataCollectionGroup`.`xtalSnapshotFullPath` AS `DataCollectionGroup_xtalSnapshotFullPath`,`BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`Workflow`.`workflowTitle` AS `Workflow_workflowTitle`,`Workflow`.`workflowType` AS `Workflow_workflowType`,`Workflow`.`status` AS `Workflow_status` from ((((((`DataCollectionGroup` left join `DataCollection` on(((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`) and (`DataCollection`.`dataCollectionId` = (select max(`dc2`.`dataCollectionId`) from `DataCollection` `dc2` where (`dc2`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`)))))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Workflow` on((`DataCollectionGroup`.`workflowId` = `Workflow`.`workflowId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_summary_datacollectiongroup')
 
 -- --------------------------------------------------------
 
@@ -5037,8 +5054,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_summary_phasing`
 --
 DROP TABLE IF EXISTS `v_datacollection_summary_phasing`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_phasing`  AS  select `AutoProcIntegration`.`autoProcIntegrationId` AS `v_datacollection_summary_phasing_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `v_datacollection_summary_phasing_dataCollectionId`,`AutoProcIntegration`.`cell_a` AS `v_datacollection_summary_phasing_cell_a`,`AutoProcIntegration`.`cell_b` AS `v_datacollection_summary_phasing_cell_b`,`AutoProcIntegration`.`cell_c` AS `v_datacollection_summary_phasing_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `v_datacollection_summary_phasing_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `v_datacollection_summary_phasing_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `v_datacollection_summary_phasing_cell_gamma`,`AutoProcIntegration`.`anomalous` AS `v_datacollection_summary_phasing_anomalous`,`AutoProc`.`spaceGroup` AS `v_datacollection_summary_phasing_autoproc_space_group`,`AutoProc`.`autoProcId` AS `v_datacollection_summary_phasing_autoproc_autoprocId`,`AutoProcScaling`.`autoProcScalingId` AS `v_datacollection_summary_phasing_autoProcScalingId`,`AutoProcProgram`.`processingPrograms` AS `v_datacollection_summary_phasing_processingPrograms`,`AutoProcProgram`.`autoProcProgramId` AS `v_datacollection_summary_phasing_autoProcProgramId`,`AutoProcProgram`.`processingStatus` AS `v_datacollection_summary_phasing_processingStatus`,`BLSession`.`sessionId` AS `v_datacollection_summary_session_sessionId`,`BLSession`.`proposalId` AS `v_datacollection_summary_session_proposalId` from (((((((`AutoProcIntegration` left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcProgram` on((`AutoProcProgram`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) left join `AutoProc` on((`AutoProc`.`autoProcProgramId` = `AutoProcIntegration`.`autoProcProgramId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_summary_phasing')
 
 -- --------------------------------------------------------
 
@@ -5046,8 +5062,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_datacollection_summary_screening`
 --
 DROP TABLE IF EXISTS `v_datacollection_summary_screening`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_datacollection_summary_screening`  AS  select `Screening`.`screeningId` AS `Screening_screeningId`,`Screening`.`dataCollectionId` AS `Screening_dataCollectionId`,`Screening`.`dataCollectionGroupId` AS `Screening_dataCollectionGroupId`,`ScreeningOutput`.`strategySuccess` AS `ScreeningOutput_strategySuccess`,`ScreeningOutput`.`indexingSuccess` AS `ScreeningOutput_indexingSuccess`,`ScreeningOutput`.`rankingResolution` AS `ScreeningOutput_rankingResolution`,`ScreeningOutput`.`mosaicityEstimated` AS `ScreeningOutput_mosaicityEstimated`,`ScreeningOutput`.`mosaicity` AS `ScreeningOutput_mosaicity`,`ScreeningOutput`.`totalExposureTime` AS `ScreeningOutput_totalExposureTime`,`ScreeningOutput`.`totalRotationRange` AS `ScreeningOutput_totalRotationRange`,`ScreeningOutput`.`totalNumberOfImages` AS `ScreeningOutput_totalNumberOfImages`,`ScreeningOutputLattice`.`spaceGroup` AS `ScreeningOutputLattice_spaceGroup`,`ScreeningOutputLattice`.`unitCell_a` AS `ScreeningOutputLattice_unitCell_a`,`ScreeningOutputLattice`.`unitCell_b` AS `ScreeningOutputLattice_unitCell_b`,`ScreeningOutputLattice`.`unitCell_c` AS `ScreeningOutputLattice_unitCell_c`,`ScreeningOutputLattice`.`unitCell_alpha` AS `ScreeningOutputLattice_unitCell_alpha`,`ScreeningOutputLattice`.`unitCell_beta` AS `ScreeningOutputLattice_unitCell_beta`,`ScreeningOutputLattice`.`unitCell_gamma` AS `ScreeningOutputLattice_unitCell_gamma`,`ScreeningStrategySubWedge`.`exposureTime` AS `ScreeningStrategySubWedge_exposureTime`,`ScreeningStrategySubWedge`.`transmission` AS `ScreeningStrategySubWedge_transmission`,`ScreeningStrategySubWedge`.`oscillationRange` AS `ScreeningStrategySubWedge_oscillationRange`,`ScreeningStrategySubWedge`.`numberOfImages` AS `ScreeningStrategySubWedge_numberOfImages`,`ScreeningStrategySubWedge`.`multiplicity` AS `ScreeningStrategySubWedge_multiplicity`,`ScreeningStrategySubWedge`.`completeness` AS `ScreeningStrategySubWedge_completeness`,`ScreeningStrategySubWedge`.`axisStart` AS `ScreeningStrategySubWedge_axisStart`,`ScreeningStrategySubWedge`.`axisEnd` AS `ScreeningStrategySubWedge_axisEnd`,`ScreeningStrategySubWedge`.`rotationAxis` AS `ScreeningStrategySubWedge_rotationAxis` from (((((`Screening` left join `ScreeningOutput` on((`Screening`.`screeningId` = `ScreeningOutput`.`screeningId`))) left join `ScreeningOutputLattice` on((`ScreeningOutput`.`screeningOutputId` = `ScreeningOutputLattice`.`screeningOutputId`))) left join `ScreeningStrategy` on((`ScreeningStrategy`.`screeningOutputId` = `ScreeningOutput`.`screeningOutputId`))) left join `ScreeningStrategyWedge` on((`ScreeningStrategyWedge`.`screeningStrategyId` = `ScreeningStrategy`.`screeningStrategyId`))) left join `ScreeningStrategySubWedge` on((`ScreeningStrategySubWedge`.`screeningStrategyWedgeId` = `ScreeningStrategyWedge`.`screeningStrategyWedgeId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_datacollection_summary_screening')
 
 -- --------------------------------------------------------
 
@@ -5055,8 +5070,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dataco
 -- Structure for view `v_dewar`
 --
 DROP TABLE IF EXISTS `v_dewar`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar`  AS  select `p`.`proposalId` AS `proposalId`,`s`.`shippingId` AS `shippingId`,`s`.`shippingName` AS `shippingName`,`d`.`dewarId` AS `dewarId`,`d`.`code` AS `dewarName`,`d`.`dewarStatus` AS `dewarStatus`,`p`.`proposalCode` AS `proposalCode`,`p`.`proposalNumber` AS `proposalNumber`,`s`.`creationDate` AS `creationDate`,`s`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`s`.`shippingStatus` AS `shippingStatus`,`ss`.`beamLineName` AS `beamLineName`,count(distinct `h1`.`DewarTransportHistoryId`) AS `nbEvents`,count(distinct `h2`.`DewarTransportHistoryId`) AS `storesin`,count(if((`bls`.`code` is not null),1,NULL)) AS `nbSamples` from (((((((`Proposal` `p` join `Shipping` `s` on((`s`.`proposalId` = `p`.`proposalId`))) join `Dewar` `d` on((`d`.`shippingId` = `s`.`shippingId`))) left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSession` `ss` on((`ss`.`sessionId` = `d`.`firstExperimentId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h1` on(((`h1`.`dewarId` = `d`.`dewarId`) and ((`h1`.`dewarStatus` = 'at ESRF') or (`h1`.`dewarStatus` = 'sent to User'))))) left join `DewarTransportHistory` `h2` on(((`h2`.`dewarId` = `d`.`dewarId`) and (`h2`.`storageLocation` = 'STORES-IN')))) where (((`p`.`proposalCode` like 'MX%') or (`p`.`proposalCode` like 'FX%') or (`p`.`proposalCode` like 'IFX%') or (`p`.`proposalCode` like 'IX%') or (`p`.`proposalCode` like 'BM14U%') or (`p`.`proposalCode` like 'bm161%') or (`p`.`proposalCode` like 'bm162%')) and ((`p`.`proposalCode` <> 'FX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'IFX') or (`p`.`proposalNumber` <> '999')) and ((`p`.`proposalCode` <> 'MX') or (`p`.`proposalNumber` <> '415')) and (`d`.`type` = 'Dewar') and (`s`.`creationDate` is not null)) group by `d`.`dewarId` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewar')
 
 -- --------------------------------------------------------
 
@@ -5064,8 +5078,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarBeamline`
 --
 DROP TABLE IF EXISTS `v_dewarBeamline`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamline`  AS  select `d`.`beamLineName` AS `beamLineName`,count(0) AS `COUNT(*)` from `v_dewar` `d` where (`d`.`beamLineName` is not null) group by `d`.`beamLineName` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarBeamline')
 
 -- --------------------------------------------------------
 
@@ -5073,8 +5086,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarBeamlineByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarBeamlineByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarBeamlineByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`beamLineName` like 'ID14%'),1,NULL)) AS `ID14`,count(if((`d`.`beamLineName` like 'ID23%'),1,NULL)) AS `ID23`,count(if((`d`.`beamLineName` like 'ID29%'),1,NULL)) AS `ID29`,count(if((`d`.`beamLineName` like 'BM14%'),1,NULL)) AS `BM14` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%x-%v')))) group by `w`.`num` order by `w`.`num` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarBeamlineByWeek')
 
 -- --------------------------------------------------------
 
@@ -5082,8 +5094,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by `w`.`num` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarByWeek')
 
 -- --------------------------------------------------------
 
@@ -5091,8 +5102,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarByWeekTotal`
 --
 DROP TABLE IF EXISTS `v_dewarByWeekTotal`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarByWeekTotal`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`shippingType` = 'DewarTracking'),1,NULL)) AS `Dewars Tracked`,count(if(((`d`.`proposalCode` is not null) and ((`d`.`shippingType` <> 'DewarTracking') or isnull(`d`.`shippingType`))),1,NULL)) AS `Dewars Non-Tracked`,count(if((`d`.`proposalCode` is not null),1,NULL)) AS `Total` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarByWeekTotal')
 
 -- --------------------------------------------------------
 
@@ -5100,8 +5110,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarList`
 --
 DROP TABLE IF EXISTS `v_dewarList`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarList`  AS  select concat(`d`.`proposalCode`,`d`.`proposalNumber`) AS `proposal`,`d`.`shippingName` AS `shippingName`,`d`.`dewarName` AS `dewarName`,`d`.`barCode` AS `barCode`,date_format(`d`.`creationDate`,'%d/%m/%Y') AS `creationDate`,`d`.`shippingType` AS `shippingType`,count(distinct `h`.`DewarTransportHistoryId`) AS `nbEvents`,`d`.`dewarStatus` AS `dewarStatus`,`d`.`shippingStatus` AS `shippingStatus`,count(if((`bls`.`blSampleId` is not null),1,NULL)) AS `nbSamples` from (((`v_dewar` `d` left join `Container` `c` on((`c`.`dewarId` = `d`.`dewarId`))) left join `BLSample` `bls` on((`bls`.`containerId` = `c`.`containerId`))) left join `DewarTransportHistory` `h` on((`h`.`dewarId` = `d`.`dewarId`))) group by `d`.`dewarId` order by `d`.`creationDate` desc ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarList')
 
 -- --------------------------------------------------------
 
@@ -5109,8 +5118,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarProposalCode`
 --
 DROP TABLE IF EXISTS `v_dewarProposalCode`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCode`  AS  select `d`.`proposalCode` AS `proposalCode`,count(0) AS `COUNT(*)` from `v_dewar` `d` group by `d`.`proposalCode` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarProposalCode')
 
 -- --------------------------------------------------------
 
@@ -5118,8 +5126,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewarProposalCodeByWeek`
 --
 DROP TABLE IF EXISTS `v_dewarProposalCodeByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewarProposalCodeByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(if((`d`.`proposalCode` = 'MX'),1,NULL)) AS `MX`,count(if((`d`.`proposalCode` = 'FX'),1,NULL)) AS `FX`,count(if((`d`.`proposalCode` = 'BM14U'),1,NULL)) AS `BM14U`,count(if((`d`.`proposalCode` = 'BM161'),1,NULL)) AS `BM161`,count(if((`d`.`proposalCode` = 'BM162'),1,NULL)) AS `BM162`,count(if(((`d`.`proposalCode` <> 'MX') and (`d`.`proposalCode` <> 'FX') and (`d`.`proposalCode` <> 'BM14U') and (`d`.`proposalCode` <> 'BM161') and (`d`.`proposalCode` <> 'BM162')),1,NULL)) AS `Others` from (`v_week` `w` left join `v_dewar` `d` on((`w`.`num` = date_format(`d`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewarProposalCodeByWeek')
 
 -- --------------------------------------------------------
 
@@ -5127,8 +5134,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_de
 -- Structure for view `v_dewar_summary`
 --
 DROP TABLE IF EXISTS `v_dewar_summary`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar_summary`  AS  select `Shipping`.`shippingName` AS `shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `deliveryAgent_deliveryDate`,`Shipping`.`deliveryAgent_agentCode` AS `deliveryAgent_agentCode`,`Shipping`.`deliveryAgent_flightCode` AS `deliveryAgent_flightCode`,`Shipping`.`shippingStatus` AS `shippingStatus`,`Shipping`.`bltimeStamp` AS `bltimeStamp`,`Shipping`.`laboratoryId` AS `laboratoryId`,`Shipping`.`isStorageShipping` AS `isStorageShipping`,`Shipping`.`creationDate` AS `creationDate`,`Shipping`.`comments` AS `Shipping_comments`,`Shipping`.`sendingLabContactId` AS `sendingLabContactId`,`Shipping`.`returnLabContactId` AS `returnLabContactId`,`Shipping`.`returnCourier` AS `returnCourier`,`Shipping`.`dateOfShippingToUser` AS `dateOfShippingToUser`,`Shipping`.`shippingType` AS `shippingType`,`Dewar`.`dewarId` AS `dewarId`,`Dewar`.`shippingId` AS `shippingId`,`Dewar`.`code` AS `dewarCode`,`Dewar`.`comments` AS `comments`,`Dewar`.`storageLocation` AS `storageLocation`,`Dewar`.`dewarStatus` AS `dewarStatus`,`Dewar`.`isStorageDewar` AS `isStorageDewar`,`Dewar`.`barCode` AS `barCode`,`Dewar`.`firstExperimentId` AS `firstExperimentId`,`Dewar`.`customsValue` AS `customsValue`,`Dewar`.`transportValue` AS `transportValue`,`Dewar`.`trackingNumberToSynchrotron` AS `trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `trackingNumberFromSynchrotron`,`Dewar`.`type` AS `type`,`Dewar`.`isReimbursed` AS `isReimbursed`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`beamLineName` AS `beamlineName`,`BLSession`.`startDate` AS `sessionStartDate`,`BLSession`.`endDate` AS `sessionEndDate`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`nbReimbDewars` AS `nbReimbDewars`,`Proposal`.`proposalId` AS `proposalId`,`Container`.`containerId` AS `containerId`,`Container`.`containerType` AS `containerType`,`Container`.`capacity` AS `capacity`,`Container`.`beamlineLocation` AS `beamlineLocation`,`Container`.`sampleChangerLocation` AS `sampleChangerLocation`,`Container`.`containerStatus` AS `containerStatus`,`Container`.`code` AS `containerCode` from (((((`Dewar` left join `Container` on((`Container`.`dewarId` = `Dewar`.`dewarId`))) left join `Shipping` on((`Shipping`.`shippingId` = `Dewar`.`shippingId`))) left join `ShippingHasSession` on((`Shipping`.`shippingId` = `ShippingHasSession`.`shippingId`))) left join `BLSession` on((`ShippingHasSession`.`sessionId` = `BLSession`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `Shipping`.`proposalId`))) order by `Dewar`.`dewarId` desc ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_dewar_summary')
 
 -- --------------------------------------------------------
 
@@ -5136,8 +5142,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_dewar_
 -- Structure for view `v_em_movie`
 --
 DROP TABLE IF EXISTS `v_em_movie`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_movie`  AS  select `Movie`.`movieId` AS `Movie_movieId`,`Movie`.`dataCollectionId` AS `Movie_dataCollectionId`,`Movie`.`movieNumber` AS `Movie_movieNumber`,`Movie`.`movieFullPath` AS `Movie_movieFullPath`,`Movie`.`positionX` AS `Movie_positionX`,`Movie`.`positionY` AS `Movie_positionY`,`Movie`.`micrographFullPath` AS `Movie_micrographFullPath`,`Movie`.`micrographSnapshotFullPath` AS `Movie_micrographSnapshotFullPath`,`Movie`.`xmlMetaDataFullPath` AS `Movie_xmlMetaDataFullPath`,`Movie`.`dosePerImage` AS `Movie_dosePerImage`,`Movie`.`createdTimeStamp` AS `Movie_createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `MotionCorrection_motionCorrectionId`,`MotionCorrection`.`movieId` AS `MotionCorrection_movieId`,`MotionCorrection`.`firstFrame` AS `MotionCorrection_firstFrame`,`MotionCorrection`.`lastFrame` AS `MotionCorrection_lastFrame`,`MotionCorrection`.`dosePerFrame` AS `MotionCorrection_dosePerFrame`,`MotionCorrection`.`doseWeight` AS `MotionCorrection_doseWeight`,`MotionCorrection`.`totalMotion` AS `MotionCorrection_totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `MotionCorrection_averageMotionPerFrame`,`MotionCorrection`.`driftPlotFullPath` AS `MotionCorrection_driftPlotFullPath`,`MotionCorrection`.`micrographFullPath` AS `MotionCorrection_micrographFullPath`,`MotionCorrection`.`micrographSnapshotFullPath` AS `MotionCorrection_micrographSnapshotFullPath`,`MotionCorrection`.`correctedDoseMicrographFullPath` AS `MotionCorrection_correctedDoseMicrographFullPath`,`MotionCorrection`.`patchesUsed` AS `MotionCorrection_patchesUsed`,`MotionCorrection`.`logFileFullPath` AS `MotionCorrection_logFileFullPath`,`CTF`.`CTFid` AS `CTF_CTFid`,`CTF`.`motionCorrectionId` AS `CTF_motionCorrectionId`,`CTF`.`spectraImageThumbnailFullPath` AS `CTF_spectraImageThumbnailFullPath`,`CTF`.`spectraImageFullPath` AS `CTF_spectraImageFullPath`,`CTF`.`defocusU` AS `CTF_defocusU`,`CTF`.`defocusV` AS `CTF_defocusV`,`CTF`.`angle` AS `CTF_angle`,`CTF`.`crossCorrelationCoefficient` AS `CTF_crossCorrelationCoefficient`,`CTF`.`resolutionLimit` AS `CTF_resolutionLimit`,`CTF`.`estimatedBfactor` AS `CTF_estimatedBfactor`,`CTF`.`logFilePath` AS `CTF_logFilePath`,`CTF`.`createdTimeStamp` AS `CTF_createdTimeStamp`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`Proposal`.`proposalId` AS `Proposal_proposalId`,`BLSession`.`sessionId` AS `BLSession_sessionId` from ((((((`Movie` left join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `Movie`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_em_movie')
 
 -- --------------------------------------------------------
 
@@ -5145,8 +5150,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_mov
 -- Structure for view `v_em_stats`
 --
 DROP TABLE IF EXISTS `v_em_stats`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_stats`  AS  select `Proposal`.`proposalId` AS `proposalId`,`BLSession`.`sessionId` AS `sessionId`,`DataCollection`.`imageDirectory` AS `imageDirectory`,`Movie`.`movieId` AS `movieId`,`Movie`.`createdTimeStamp` AS `createdTimeStamp`,`MotionCorrection`.`motionCorrectionId` AS `motionCorrectionId`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`MotionCorrection`.`totalMotion` AS `totalMotion`,`MotionCorrection`.`averageMotionPerFrame` AS `averageMotionPerFrame`,`MotionCorrection`.`lastFrame` AS `lastFrame`,`MotionCorrection`.`dosePerFrame` AS `dosePerFrame`,`CTF`.`defocusU` AS `defocusU`,`CTF`.`defocusV` AS `defocusV` from ((((((`BLSession` join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) join `DataCollectionGroup` on((`DataCollectionGroup`.`sessionId` = `BLSession`.`sessionId`))) join `DataCollection` on((`DataCollection`.`dataCollectionGroupId` = `DataCollectionGroup`.`dataCollectionGroupId`))) join `Movie` on((`Movie`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) join `MotionCorrection` on((`MotionCorrection`.`movieId` = `Movie`.`movieId`))) join `CTF` on((`CTF`.`motionCorrectionId` = `MotionCorrection`.`motionCorrectionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_em_stats')
 
 -- --------------------------------------------------------
 
@@ -5154,8 +5158,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_em_sta
 -- Structure for view `v_energyScan`
 --
 DROP TABLE IF EXISTS `v_energyScan`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_energyScan`  AS  select `EnergyScan`.`energyScanId` AS `energyScanId`,`EnergyScan`.`sessionId` AS `sessionId`,`EnergyScan`.`blSampleId` AS `blSampleId`,`EnergyScan`.`fluorescenceDetector` AS `fluorescenceDetector`,`EnergyScan`.`scanFileFullPath` AS `scanFileFullPath`,`EnergyScan`.`choochFileFullPath` AS `choochFileFullPath`,`EnergyScan`.`jpegChoochFileFullPath` AS `jpegChoochFileFullPath`,`EnergyScan`.`element` AS `element`,`EnergyScan`.`startEnergy` AS `startEnergy`,`EnergyScan`.`endEnergy` AS `endEnergy`,`EnergyScan`.`transmissionFactor` AS `transmissionFactor`,`EnergyScan`.`exposureTime` AS `exposureTime`,`EnergyScan`.`synchrotronCurrent` AS `synchrotronCurrent`,`EnergyScan`.`temperature` AS `temperature`,`EnergyScan`.`peakEnergy` AS `peakEnergy`,`EnergyScan`.`peakFPrime` AS `peakFPrime`,`EnergyScan`.`peakFDoublePrime` AS `peakFDoublePrime`,`EnergyScan`.`inflectionEnergy` AS `inflectionEnergy`,`EnergyScan`.`inflectionFPrime` AS `inflectionFPrime`,`EnergyScan`.`inflectionFDoublePrime` AS `inflectionFDoublePrime`,`EnergyScan`.`xrayDose` AS `xrayDose`,`EnergyScan`.`startTime` AS `startTime`,`EnergyScan`.`endTime` AS `endTime`,`EnergyScan`.`edgeEnergy` AS `edgeEnergy`,`EnergyScan`.`filename` AS `filename`,`EnergyScan`.`beamSizeVertical` AS `beamSizeVertical`,`EnergyScan`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`EnergyScan`.`crystalClass` AS `crystalClass`,`EnergyScan`.`comments` AS `comments`,`EnergyScan`.`flux` AS `flux`,`EnergyScan`.`flux_end` AS `flux_end`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSample`.`name` AS `name`,`BLSample`.`code` AS `code`,`Protein`.`acronym` AS `acronym`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((((`EnergyScan` left join `BLSample` on((`BLSample`.`blSampleId` = `EnergyScan`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `BLSession` on((`BLSession`.`sessionId` = `EnergyScan`.`sessionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_energyScan')
 
 -- --------------------------------------------------------
 
@@ -5163,8 +5166,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_energy
 -- Structure for view `v_hour`
 --
 DROP TABLE IF EXISTS `v_hour`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_hour`  AS  select date_format((now() - interval 23 hour),_utf8'%Y-%m-%d %H') AS `num` union select date_format((now() - interval 22 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 21 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 20 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 19 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 18 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 17 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 16 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 15 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 14 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 13 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 12 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 11 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 10 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 9 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 8 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 7 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 6 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 5 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 4 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 3 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 2 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 1 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 HOUR),'%Y-%m-%d %H')` union select date_format((now() - interval 0 hour),_utf8'%Y-%m-%d %H') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 HOUR),'%Y-%m-%d %H')` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_hour')
 
 -- --------------------------------------------------------
 
@@ -5172,8 +5174,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_ho
 -- Structure for view `v_Log4Stat`
 --
 DROP TABLE IF EXISTS `v_Log4Stat`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Log4Stat`  AS  select `s`.`id` AS `id`,`s`.`priority` AS `priority`,`s`.`timestamp` AS `timestamp`,`s`.`msg` AS `msg`,`s`.`detail` AS `detail`,`s`.`value` AS `value` from `Log4Stat` `s` where (((`s`.`detail` like 'fx%') or (`s`.`detail` like 'ifx%') or (`s`.`detail` like 'mx%') or (`s`.`detail` like 'ix%') or (`s`.`detail` like 'bm14u%') or (`s`.`detail` like 'bm161%') or (`s`.`detail` like 'bm162%')) and (`s`.`detail` <> 'fx999') and (`s`.`detail` <> 'ifx999') and (`s`.`detail` <> 'mx415')) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_Log4Stat')
 
 -- --------------------------------------------------------
 
@@ -5181,8 +5182,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_Lo
 -- Structure for view `v_logonByHour`
 --
 DROP TABLE IF EXISTS `v_logonByHour`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByHour`  AS  select date_format(`w`.`num`,'%H') AS `Hour`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_hour` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d %H')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%H') order by `w`.`num` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_logonByHour')
 
 -- --------------------------------------------------------
 
@@ -5190,8 +5190,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByMonthDay`
 --
 DROP TABLE IF EXISTS `v_logonByMonthDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByMonthDay`  AS  select date_format(`w`.`num`,'%d/%m') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_monthDay` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by date_format(`w`.`num`,'%d/%m') order by `w`.`num` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_logonByMonthDay')
 
 -- --------------------------------------------------------
 
@@ -5199,8 +5198,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByWeek`
 --
 DROP TABLE IF EXISTS `v_logonByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_week` `w` left join `v_Log4Stat` `s` on(((`w`.`num` = date_format(`s`.`timestamp`,'%Y-%v')) and (`s`.`msg` = 'LOGON')))) group by substr(`w`.`num`,6) order by `w`.`num` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_logonByWeek')
 
 -- --------------------------------------------------------
 
@@ -5208,8 +5206,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_logonByWeekDay`
 --
 DROP TABLE IF EXISTS `v_logonByWeekDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_logonByWeekDay`  AS  select date_format(`w`.`day`,'%W') AS `Day`,count(distinct `s`.`detail`) AS `Distinct logins`,(count(`s`.`detail`) - count(distinct `s`.`detail`)) AS `Total logins` from (`v_weekDay` `w` left join `v_Log4Stat` `s` on(((`w`.`day` = date_format(`s`.`timestamp`,'%Y-%m-%d')) and (`s`.`msg` = 'LOGON')))) group by `w`.`day` order by `w`.`day` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_logonByWeekDay')
 
 -- --------------------------------------------------------
 
@@ -5217,8 +5214,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_lo
 -- Structure for view `v_monthDay`
 --
 DROP TABLE IF EXISTS `v_monthDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_monthDay`  AS  select date_format((now() - interval 31 day),_utf8'%Y-%m-%d') AS `num` union select date_format((now() - interval 30 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d')` union select date_format((now() - interval 29 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 DAY),'%Y-%m-%d')` union select date_format((now() - interval 28 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 DAY),'%Y-%m-%d')` union select date_format((now() - interval 27 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 DAY),'%Y-%m-%d')` union select date_format((now() - interval 26 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 DAY),'%Y-%m-%d')` union select date_format((now() - interval 25 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 DAY),'%Y-%m-%d')` union select date_format((now() - interval 24 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 DAY),'%Y-%m-%d')` union select date_format((now() - interval 23 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 DAY),'%Y-%m-%d')` union select date_format((now() - interval 22 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 DAY),'%Y-%m-%d')` union select date_format((now() - interval 21 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 DAY),'%Y-%m-%d')` union select date_format((now() - interval 20 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 DAY),'%Y-%m-%d')` union select date_format((now() - interval 19 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 DAY),'%Y-%m-%d')` union select date_format((now() - interval 18 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 DAY),'%Y-%m-%d')` union select date_format((now() - interval 17 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 DAY),'%Y-%m-%d')` union select date_format((now() - interval 16 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 DAY),'%Y-%m-%d')` union select date_format((now() - interval 15 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 DAY),'%Y-%m-%d')` union select date_format((now() - interval 14 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 DAY),'%Y-%m-%d')` union select date_format((now() - interval 13 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 DAY),'%Y-%m-%d')` union select date_format((now() - interval 12 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 DAY),'%Y-%m-%d')` union select date_format((now() - interval 11 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 DAY),'%Y-%m-%d')` union select date_format((now() - interval 10 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 DAY),'%Y-%m-%d')` union select date_format((now() - interval 9 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 DAY),'%Y-%m-%d')` union select date_format((now() - interval 8 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 DAY),'%Y-%m-%d')` union select date_format((now() - interval 7 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 DAY),'%Y-%m-%d')` union select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 DAY),'%Y-%m-%d')` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_monthDay')
 
 -- --------------------------------------------------------
 
@@ -5226,8 +5222,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mo
 -- Structure for view `v_mx_autoprocessing_stats`
 --
 DROP TABLE IF EXISTS `v_mx_autoprocessing_stats`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_autoprocessing_stats`  AS  select `AutoProcScalingStatistics`.`autoProcScalingStatisticsId` AS `autoProcScalingStatisticsId`,`AutoProcScalingStatistics`.`autoProcScalingId` AS `autoProcScalingId`,`AutoProcScalingStatistics`.`scalingStatisticsType` AS `scalingStatisticsType`,`AutoProcScalingStatistics`.`resolutionLimitLow` AS `resolutionLimitLow`,`AutoProcScalingStatistics`.`resolutionLimitHigh` AS `resolutionLimitHigh`,`AutoProcScalingStatistics`.`rMerge` AS `rMerge`,`AutoProcScalingStatistics`.`rMeasWithinIPlusIMinus` AS `rMeasWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rMeasAllIPlusIMinus` AS `rMeasAllIPlusIMinus`,`AutoProcScalingStatistics`.`rPimWithinIPlusIMinus` AS `rPimWithinIPlusIMinus`,`AutoProcScalingStatistics`.`rPimAllIPlusIMinus` AS `rPimAllIPlusIMinus`,`AutoProcScalingStatistics`.`fractionalPartialBias` AS `fractionalPartialBias`,`AutoProcScalingStatistics`.`nTotalObservations` AS `nTotalObservations`,`AutoProcScalingStatistics`.`nTotalUniqueObservations` AS `nTotalUniqueObservations`,`AutoProcScalingStatistics`.`meanIOverSigI` AS `meanIOverSigI`,`AutoProcScalingStatistics`.`completeness` AS `completeness`,`AutoProcScalingStatistics`.`multiplicity` AS `multiplicity`,`AutoProcScalingStatistics`.`anomalousCompleteness` AS `anomalousCompleteness`,`AutoProcScalingStatistics`.`anomalousMultiplicity` AS `anomalousMultiplicity`,`AutoProcScalingStatistics`.`recordTimeStamp` AS `recordTimeStamp`,`AutoProcScalingStatistics`.`anomalous` AS `anomalous`,`AutoProcScalingStatistics`.`ccHalf` AS `ccHalf`,`AutoProcScalingStatistics`.`ccAno` AS `ccAno`,`AutoProcScalingStatistics`.`sigAno` AS `sigAno`,`AutoProcScalingStatistics`.`isa` AS `ISA`,`DataCollection`.`dataCollectionId` AS `dataCollectionId`,`DataCollection`.`strategySubWedgeOrigId` AS `strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `detectorId`,`DataCollection`.`blSubSampleId` AS `blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `dataCollectionNumber`,`DataCollection`.`startTime` AS `startTime`,`DataCollection`.`endTime` AS `endTime`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`beamLineName` AS `beamLineName` from ((((((`AutoProcScalingStatistics` left join `AutoProcScaling` on((`AutoProcScalingStatistics`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `AutoProcIntegration` on((`AutoProcIntegration`.`autoProcIntegrationId` = `AutoProcScaling_has_Int`.`autoProcIntegrationId`))) left join `DataCollection` on((`DataCollection`.`dataCollectionId` = `AutoProcIntegration`.`dataCollectionId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_mx_autoprocessing_stats')
 
 -- --------------------------------------------------------
 
@@ -5235,8 +5230,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx
 -- Structure for view `v_mx_sample`
 --
 DROP TABLE IF EXISTS `v_mx_sample`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_sample`  AS  select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`BLSample`.`diffractionPlanId` AS `BLSample_diffractionPlanId`,`BLSample`.`crystalId` AS `BLSample_crystalId`,`BLSample`.`containerId` AS `BLSample_containerId`,`BLSample`.`name` AS `BLSample_name`,`BLSample`.`code` AS `BLSample_code`,`BLSample`.`location` AS `BLSample_location`,`BLSample`.`holderLength` AS `BLSample_holderLength`,`BLSample`.`loopLength` AS `BLSample_loopLength`,`BLSample`.`loopType` AS `BLSample_loopType`,`BLSample`.`wireWidth` AS `BLSample_wireWidth`,`BLSample`.`comments` AS `BLSample_comments`,`BLSample`.`completionStage` AS `BLSample_completionStage`,`BLSample`.`structureStage` AS `BLSample_structureStage`,`BLSample`.`publicationStage` AS `BLSample_publicationStage`,`BLSample`.`publicationComments` AS `BLSample_publicationComments`,`BLSample`.`blSampleStatus` AS `BLSample_blSampleStatus`,`BLSample`.`isInSampleChanger` AS `BLSample_isInSampleChanger`,`BLSample`.`lastKnownCenteringPosition` AS `BLSample_lastKnownCenteringPosition`,`BLSample`.`recordTimeStamp` AS `BLSample_recordTimeStamp`,`BLSample`.`SMILES` AS `BLSample_SMILES`,`Protein`.`proteinId` AS `Protein_proteinId`,`Protein`.`name` AS `Protein_name`,`Protein`.`acronym` AS `Protein_acronym`,`Protein`.`proteinType` AS `Protein_proteinType`,`Shipping`.`proposalId` AS `Protein_proposalId`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress`,`Container`.`containerId` AS `Container_containerId`,`Container`.`code` AS `Container_code`,`Container`.`containerType` AS `Container_containerType`,`Container`.`containerStatus` AS `Container_containerStatus`,`Container`.`beamlineLocation` AS `Container_beamlineLocation`,`Container`.`sampleChangerLocation` AS `Container_sampleChangerLocation`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`storageLocation` AS `Dewar_storageLocation`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`BLSession`.`sessionId` AS `sessionId`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`beamLineName` AS `BLSession_beamLineName` from ((((((((`BLSample` left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Protein`.`proteinId` = `Crystal`.`proteinId`))) left join `Person` on((`Person`.`personId` = `Protein`.`personId`))) left join `Container` on((`BLSample`.`containerId` = `Container`.`containerId`))) left join `Dewar` on((`Dewar`.`dewarId` = `Container`.`dewarId`))) left join `Shipping` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`blSampleId` = `BLSample`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_mx_sample')
 
 -- --------------------------------------------------------
 
@@ -5244,8 +5238,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_mx_sam
 -- Structure for view `v_phasing`
 --
 DROP TABLE IF EXISTS `v_phasing`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_phasing`  AS  select `BLSample`.`blSampleId` AS `BLSample_blSampleId`,`AutoProcIntegration`.`autoProcIntegrationId` AS `AutoProcIntegration_autoProcIntegrationId`,`AutoProcIntegration`.`dataCollectionId` AS `AutoProcIntegration_dataCollectionId`,`AutoProcIntegration`.`autoProcProgramId` AS `AutoProcIntegration_autoProcProgramId`,`AutoProcIntegration`.`startImageNumber` AS `AutoProcIntegration_startImageNumber`,`AutoProcIntegration`.`endImageNumber` AS `AutoProcIntegration_endImageNumber`,`AutoProcIntegration`.`refinedDetectorDistance` AS `AutoProcIntegration_refinedDetectorDistance`,`AutoProcIntegration`.`refinedXBeam` AS `AutoProcIntegration_refinedXBeam`,`AutoProcIntegration`.`refinedYBeam` AS `AutoProcIntegration_refinedYBeam`,`AutoProcIntegration`.`rotationAxisX` AS `AutoProcIntegration_rotationAxisX`,`AutoProcIntegration`.`rotationAxisY` AS `AutoProcIntegration_rotationAxisY`,`AutoProcIntegration`.`rotationAxisZ` AS `AutoProcIntegration_rotationAxisZ`,`AutoProcIntegration`.`beamVectorX` AS `AutoProcIntegration_beamVectorX`,`AutoProcIntegration`.`beamVectorY` AS `AutoProcIntegration_beamVectorY`,`AutoProcIntegration`.`beamVectorZ` AS `AutoProcIntegration_beamVectorZ`,`AutoProcIntegration`.`cell_a` AS `AutoProcIntegration_cell_a`,`AutoProcIntegration`.`cell_b` AS `AutoProcIntegration_cell_b`,`AutoProcIntegration`.`cell_c` AS `AutoProcIntegration_cell_c`,`AutoProcIntegration`.`cell_alpha` AS `AutoProcIntegration_cell_alpha`,`AutoProcIntegration`.`cell_beta` AS `AutoProcIntegration_cell_beta`,`AutoProcIntegration`.`cell_gamma` AS `AutoProcIntegration_cell_gamma`,`AutoProcIntegration`.`recordTimeStamp` AS `AutoProcIntegration_recordTimeStamp`,`AutoProcIntegration`.`anomalous` AS `AutoProcIntegration_anomalous`,`SpaceGroup`.`spaceGroupId` AS `SpaceGroup_spaceGroupId`,`SpaceGroup`.`geometryClassnameId` AS `SpaceGroup_geometryClassnameId`,`SpaceGroup`.`spaceGroupNumber` AS `SpaceGroup_spaceGroupNumber`,`SpaceGroup`.`spaceGroupShortName` AS `SpaceGroup_spaceGroupShortName`,`SpaceGroup`.`spaceGroupName` AS `SpaceGroup_spaceGroupName`,`SpaceGroup`.`bravaisLattice` AS `SpaceGroup_bravaisLattice`,`SpaceGroup`.`bravaisLatticeName` AS `SpaceGroup_bravaisLatticeName`,`SpaceGroup`.`pointGroup` AS `SpaceGroup_pointGroup`,`SpaceGroup`.`MX_used` AS `SpaceGroup_MX_used`,`PhasingStep`.`phasingStepId` AS `PhasingStep_phasingStepId`,`PhasingStep`.`previousPhasingStepId` AS `PhasingStep_previousPhasingStepId`,`PhasingStep`.`programRunId` AS `PhasingStep_programRunId`,`PhasingStep`.`spaceGroupId` AS `PhasingStep_spaceGroupId`,`PhasingStep`.`autoProcScalingId` AS `PhasingStep_autoProcScalingId`,`PhasingStep`.`phasingAnalysisId` AS `PhasingStep_phasingAnalysisId`,`PhasingStep`.`phasingStepType` AS `PhasingStep_phasingStepType`,`PhasingStep`.`method` AS `PhasingStep_method`,`PhasingStep`.`solventContent` AS `PhasingStep_solventContent`,`PhasingStep`.`enantiomorph` AS `PhasingStep_enantiomorph`,`PhasingStep`.`lowRes` AS `PhasingStep_lowRes`,`PhasingStep`.`highRes` AS `PhasingStep_highRes`,`PhasingStep`.`recordTimeStamp` AS `PhasingStep_recordTimeStamp`,`DataCollection`.`dataCollectionId` AS `DataCollection_dataCollectionId`,`DataCollection`.`dataCollectionGroupId` AS `DataCollection_dataCollectionGroupId`,`DataCollection`.`strategySubWedgeOrigId` AS `DataCollection_strategySubWedgeOrigId`,`DataCollection`.`detectorId` AS `DataCollection_detectorId`,`DataCollection`.`blSubSampleId` AS `DataCollection_blSubSampleId`,`DataCollection`.`dataCollectionNumber` AS `DataCollection_dataCollectionNumber`,`DataCollection`.`startTime` AS `DataCollection_startTime`,`DataCollection`.`endTime` AS `DataCollection_endTime`,`DataCollection`.`runStatus` AS `DataCollection_runStatus`,`DataCollection`.`axisStart` AS `DataCollection_axisStart`,`DataCollection`.`axisEnd` AS `DataCollection_axisEnd`,`DataCollection`.`axisRange` AS `DataCollection_axisRange`,`DataCollection`.`overlap` AS `DataCollection_overlap`,`DataCollection`.`numberOfImages` AS `DataCollection_numberOfImages`,`DataCollection`.`startImageNumber` AS `DataCollection_startImageNumber`,`DataCollection`.`numberOfPasses` AS `DataCollection_numberOfPasses`,`DataCollection`.`exposureTime` AS `DataCollection_exposureTime`,`DataCollection`.`imageDirectory` AS `DataCollection_imageDirectory`,`DataCollection`.`imagePrefix` AS `DataCollection_imagePrefix`,`DataCollection`.`imageSuffix` AS `DataCollection_imageSuffix`,`DataCollection`.`fileTemplate` AS `DataCollection_fileTemplate`,`DataCollection`.`wavelength` AS `DataCollection_wavelength`,`DataCollection`.`resolution` AS `DataCollection_resolution`,`DataCollection`.`detectorDistance` AS `DataCollection_detectorDistance`,`DataCollection`.`xBeam` AS `DataCollection_xBeam`,`DataCollection`.`yBeam` AS `DataCollection_yBeam`,`DataCollection`.`xBeamPix` AS `DataCollection_xBeamPix`,`DataCollection`.`yBeamPix` AS `DataCollection_yBeamPix`,`DataCollection`.`comments` AS `DataCollection_comments`,`DataCollection`.`printableForReport` AS `DataCollection_printableForReport`,`DataCollection`.`slitGapVertical` AS `DataCollection_slitGapVertical`,`DataCollection`.`slitGapHorizontal` AS `DataCollection_slitGapHorizontal`,`DataCollection`.`transmission` AS `DataCollection_transmission`,`DataCollection`.`synchrotronMode` AS `DataCollection_synchrotronMode`,`DataCollection`.`xtalSnapshotFullPath1` AS `DataCollection_xtalSnapshotFullPath1`,`DataCollection`.`xtalSnapshotFullPath2` AS `DataCollection_xtalSnapshotFullPath2`,`DataCollection`.`xtalSnapshotFullPath3` AS `DataCollection_xtalSnapshotFullPath3`,`DataCollection`.`xtalSnapshotFullPath4` AS `DataCollection_xtalSnapshotFullPath4`,`DataCollection`.`rotationAxis` AS `DataCollection_rotationAxis`,`DataCollection`.`phiStart` AS `DataCollection_phiStart`,`DataCollection`.`kappaStart` AS `DataCollection_kappaStart`,`DataCollection`.`omegaStart` AS `DataCollection_omegaStart`,`DataCollection`.`resolutionAtCorner` AS `DataCollection_resolutionAtCorner`,`DataCollection`.`detector2Theta` AS `DataCollection_detector2Theta`,`DataCollection`.`undulatorGap1` AS `DataCollection_undulatorGap1`,`DataCollection`.`undulatorGap2` AS `DataCollection_undulatorGap2`,`DataCollection`.`undulatorGap3` AS `DataCollection_undulatorGap3`,`DataCollection`.`beamSizeAtSampleX` AS `DataCollection_beamSizeAtSampleX`,`DataCollection`.`beamSizeAtSampleY` AS `DataCollection_beamSizeAtSampleY`,`DataCollection`.`centeringMethod` AS `DataCollection_centeringMethod`,`DataCollection`.`averageTemperature` AS `DataCollection_averageTemperature`,`DataCollection`.`actualCenteringPosition` AS `DataCollection_actualCenteringPosition`,`DataCollection`.`beamShape` AS `DataCollection_beamShape`,`DataCollection`.`flux` AS `DataCollection_flux`,`DataCollection`.`flux_end` AS `DataCollection_flux_end`,`DataCollection`.`totalAbsorbedDose` AS `DataCollection_totalAbsorbedDose`,`DataCollection`.`bestWilsonPlotPath` AS `DataCollection_bestWilsonPlotPath`,`DataCollection`.`imageQualityIndicatorsPlotPath` AS `DataCollection_imageQualityIndicatorsPlotPath`,`DataCollection`.`imageQualityIndicatorsCSVPath` AS `DataCollection_imageQualityIndicatorsCSVPath`,`PhasingProgramRun`.`phasingProgramRunId` AS `PhasingProgramRun_phasingProgramRunId`,`PhasingProgramRun`.`phasingCommandLine` AS `PhasingProgramRun_phasingCommandLine`,`PhasingProgramRun`.`phasingPrograms` AS `PhasingProgramRun_phasingPrograms`,`PhasingProgramRun`.`phasingStatus` AS `PhasingProgramRun_phasingStatus`,`PhasingProgramRun`.`phasingMessage` AS `PhasingProgramRun_phasingMessage`,`PhasingProgramRun`.`phasingStartTime` AS `PhasingProgramRun_phasingStartTime`,`PhasingProgramRun`.`phasingEndTime` AS `PhasingProgramRun_phasingEndTime`,`PhasingProgramRun`.`phasingEnvironment` AS `PhasingProgramRun_phasingEnvironment`,`PhasingProgramRun`.`recordTimeStamp` AS `PhasingProgramRun_recordTimeStamp`,`Protein`.`proteinId` AS `Protein_proteinId`,`BLSession`.`sessionId` AS `BLSession_sessionId`,`BLSession`.`proposalId` AS `BLSession_proposalId`,`PhasingStatistics`.`phasingStatisticsId` AS `PhasingStatistics_phasingStatisticsId`,`PhasingStatistics`.`metric` AS `PhasingStatistics_metric`,`PhasingStatistics`.`statisticsValue` AS `PhasingStatistics_statisticsValue` from (((((((((((((`DataCollection` left join `AutoProcIntegration` on((`AutoProcIntegration`.`dataCollectionId` = `DataCollection`.`dataCollectionId`))) left join `AutoProcScaling_has_Int` on((`AutoProcScaling_has_Int`.`autoProcIntegrationId` = `AutoProcIntegration`.`autoProcIntegrationId`))) left join `AutoProcScaling` on((`AutoProcScaling`.`autoProcScalingId` = `AutoProcScaling_has_Int`.`autoProcScalingId`))) left join `PhasingStep` on((`PhasingStep`.`autoProcScalingId` = `AutoProcScaling`.`autoProcScalingId`))) left join `PhasingStatistics` on((`PhasingStatistics`.`phasingStepId` = `PhasingStep`.`phasingStepId`))) left join `SpaceGroup` on((`SpaceGroup`.`spaceGroupId` = `PhasingStep`.`spaceGroupId`))) left join `DataCollectionGroup` on((`DataCollectionGroup`.`dataCollectionGroupId` = `DataCollection`.`dataCollectionGroupId`))) left join `BLSession` on((`BLSession`.`sessionId` = `DataCollectionGroup`.`sessionId`))) left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `BLSample` on((`BLSample`.`blSampleId` = `DataCollectionGroup`.`blSampleId`))) left join `Crystal` on((`Crystal`.`crystalId` = `BLSample`.`crystalId`))) left join `Protein` on((`Crystal`.`proteinId` = `Protein`.`proteinId`))) left join `PhasingProgramRun` on((`PhasingProgramRun`.`phasingProgramRunId` = `PhasingStep`.`programRunId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_phasing')
 
 -- --------------------------------------------------------
 
@@ -5253,8 +5246,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_phasin
 -- Structure for view `v_sample`
 --
 DROP TABLE IF EXISTS `v_sample`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sample`  AS  select `d`.`proposalId` AS `proposalId`,`d`.`shippingId` AS `shippingId`,`d`.`dewarId` AS `dewarId`,`c`.`containerId` AS `containerId`,`bls`.`blSampleId` AS `blSampleId`,`d`.`proposalCode` AS `proposalCode`,`d`.`proposalNumber` AS `proposalNumber`,`d`.`creationDate` AS `creationDate`,`d`.`shippingType` AS `shippingType`,`d`.`barCode` AS `barCode`,`d`.`shippingStatus` AS `shippingStatus` from ((`BLSample` `bls` join `Container` `c` on((`c`.`containerId` = `bls`.`containerId`))) join `v_dewar` `d` on((`d`.`dewarId` = `c`.`dewarId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_sample')
 
 -- --------------------------------------------------------
 
@@ -5262,8 +5254,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sa
 -- Structure for view `v_sampleByWeek`
 --
 DROP TABLE IF EXISTS `v_sampleByWeek`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sampleByWeek`  AS  select substr(`w`.`num`,6) AS `Week`,if((`w`.`num` <= date_format(now(),'%Y-%v')),count(if((`bls`.`proposalCode` is not null),1,NULL)),NULL) AS `Samples` from (`v_week` `w` left join `v_sample` `bls` on((`w`.`num` = date_format(`bls`.`creationDate`,'%Y-%v')))) group by substr(`w`.`num`,6) order by substr(`w`.`num`,6) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_sampleByWeek')
 
 -- --------------------------------------------------------
 
@@ -5271,8 +5262,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sa
 -- Structure for view `v_saxs_datacollection`
 --
 DROP TABLE IF EXISTS `v_saxs_datacollection`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_saxs_datacollection`  AS  select `Subtraction`.`subtractionId` AS `Subtraction_subtractionId`,`MeasurementToDataCollection`.`dataCollectionId` AS `MeasurementToDataCollection_dataCollectionId`,`MeasurementToDataCollection`.`dataCollectionOrder` AS `MeasurementToDataCollection_dataCollectionOrder`,`MeasurementToDataCollection`.`measurementToDataCollectionId` AS `MeasurementToDataCollection_measurementToDataCollectionId`,`Specimen`.`specimenId` AS `Specimen_specimenId`,`Measurement`.`code` AS `Measurement_code`,`Measurement`.`measurementId` AS `Measurement_measurementId`,`Buffer`.`bufferId` AS `Buffer_bufferId`,`Buffer`.`proposalId` AS `Buffer_proposalId`,`Buffer`.`safetyLevelId` AS `Buffer_safetyLevelId`,`Buffer`.`name` AS `Buffer_name`,`Buffer`.`acronym` AS `Buffer_acronym`,`Buffer`.`pH` AS `Buffer_pH`,`Buffer`.`composition` AS `Buffer_composition`,`Buffer`.`comments` AS `Buffer_comments`,`Macromolecule`.`macromoleculeId` AS `Macromolecule_macromoleculeId`,`Macromolecule`.`proposalId` AS `Macromolecule_proposalId`,`Macromolecule`.`safetyLevelId` AS `Macromolecule_safetyLevelId`,`Macromolecule`.`name` AS `Macromolecule_name`,`Macromolecule`.`acronym` AS `Macromolecule_acronym`,`Macromolecule`.`extintionCoefficient` AS `Macromolecule_extintionCoefficient`,`Macromolecule`.`molecularMass` AS `Macromolecule_molecularMass`,`Macromolecule`.`sequence` AS `Macromolecule_sequence`,`Macromolecule`.`contactsDescriptionFilePath` AS `Macromolecule_contactsDescriptionFilePath`,`Macromolecule`.`symmetry` AS `Macromolecule_symmetry`,`Macromolecule`.`comments` AS `Macromolecule_comments`,`Macromolecule`.`refractiveIndex` AS `Macromolecule_refractiveIndex`,`Macromolecule`.`solventViscosity` AS `Macromolecule_solventViscosity`,`Macromolecule`.`creationDate` AS `Macromolecule_creationDate`,`Specimen`.`experimentId` AS `Specimen_experimentId`,`Specimen`.`bufferId` AS `Specimen_bufferId`,`Specimen`.`samplePlatePositionId` AS `Specimen_samplePlatePositionId`,`Specimen`.`safetyLevelId` AS `Specimen_safetyLevelId`,`Specimen`.`stockSolutionId` AS `Specimen_stockSolutionId`,`Specimen`.`code` AS `Specimen_code`,`Specimen`.`concentration` AS `Specimen_concentration`,`Specimen`.`volume` AS `Specimen_volume`,`Specimen`.`comments` AS `Specimen_comments`,`SamplePlatePosition`.`samplePlatePositionId` AS `SamplePlatePosition_samplePlatePositionId`,`SamplePlatePosition`.`samplePlateId` AS `SamplePlatePosition_samplePlateId`,`SamplePlatePosition`.`rowNumber` AS `SamplePlatePosition_rowNumber`,`SamplePlatePosition`.`columnNumber` AS `SamplePlatePosition_columnNumber`,`SamplePlatePosition`.`volume` AS `SamplePlatePosition_volume`,`SamplePlate`.`samplePlateId` AS `samplePlateId`,`SamplePlate`.`experimentId` AS `experimentId`,`SamplePlate`.`plateGroupId` AS `plateGroupId`,`SamplePlate`.`plateTypeId` AS `plateTypeId`,`SamplePlate`.`instructionSetId` AS `instructionSetId`,`SamplePlate`.`boxId` AS `SamplePlate_boxId`,`SamplePlate`.`name` AS `SamplePlate_name`,`SamplePlate`.`slotPositionRow` AS `SamplePlate_slotPositionRow`,`SamplePlate`.`slotPositionColumn` AS `SamplePlate_slotPositionColumn`,`SamplePlate`.`storageTemperature` AS `SamplePlate_storageTemperature`,`Experiment`.`experimentId` AS `Experiment_experimentId`,`Experiment`.`sessionId` AS `Experiment_sessionId`,`Experiment`.`proposalId` AS `Experiment_proposalId`,`Experiment`.`name` AS `Experiment_name`,`Experiment`.`creationDate` AS `Experiment_creationDate`,`Experiment`.`experimentType` AS `Experiment_experimentType`,`Experiment`.`sourceFilePath` AS `Experiment_sourceFilePath`,`Experiment`.`dataAcquisitionFilePath` AS `Experiment_dataAcquisitionFilePath`,`Experiment`.`status` AS `Experiment_status`,`Experiment`.`comments` AS `Experiment_comments`,`Measurement`.`priorityLevelId` AS `Measurement_priorityLevelId`,`Measurement`.`exposureTemperature` AS `Measurement_exposureTemperature`,`Measurement`.`viscosity` AS `Measurement_viscosity`,`Measurement`.`flow` AS `Measurement_flow`,`Measurement`.`extraFlowTime` AS `Measurement_extraFlowTime`,`Measurement`.`volumeToLoad` AS `Measurement_volumeToLoad`,`Measurement`.`waitTime` AS `Measurement_waitTime`,`Measurement`.`transmission` AS `Measurement_transmission`,`Measurement`.`comments` AS `Measurement_comments`,`Measurement`.`imageDirectory` AS `Measurement_imageDirectory`,`Run`.`runId` AS `Run_runId`,`Run`.`timePerFrame` AS `Run_timePerFrame`,`Run`.`timeStart` AS `Run_timeStart`,`Run`.`timeEnd` AS `Run_timeEnd`,`Run`.`storageTemperature` AS `Run_storageTemperature`,`Run`.`exposureTemperature` AS `Run_exposureTemperature`,`Run`.`spectrophotometer` AS `Run_spectrophotometer`,`Run`.`energy` AS `Run_energy`,`Run`.`creationDate` AS `Run_creationDate`,`Run`.`frameAverage` AS `Run_frameAverage`,`Run`.`frameCount` AS `Run_frameCount`,`Run`.`transmission` AS `Run_transmission`,`Run`.`beamCenterX` AS `Run_beamCenterX`,`Run`.`beamCenterY` AS `Run_beamCenterY`,`Run`.`pixelSizeX` AS `Run_pixelSizeX`,`Run`.`pixelSizeY` AS `Run_pixelSizeY`,`Run`.`radiationRelative` AS `Run_radiationRelative`,`Run`.`radiationAbsolute` AS `Run_radiationAbsolute`,`Run`.`normalization` AS `Run_normalization`,`Merge`.`mergeId` AS `Merge_mergeId`,`Merge`.`measurementId` AS `Merge_measurementId`,`Merge`.`frameListId` AS `Merge_frameListId`,`Merge`.`discardedFrameNameList` AS `Merge_discardedFrameNameList`,`Merge`.`averageFilePath` AS `Merge_averageFilePath`,`Merge`.`framesCount` AS `Merge_framesCount`,`Merge`.`framesMerge` AS `Merge_framesMerge`,`Merge`.`creationDate` AS `Merge_creationDate`,`Subtraction`.`dataCollectionId` AS `Subtraction_dataCollectionId`,`Subtraction`.`rg` AS `Subtraction_rg`,`Subtraction`.`rgStdev` AS `Subtraction_rgStdev`,`Subtraction`.`I0` AS `Subtraction_I0`,`Subtraction`.`I0Stdev` AS `Subtraction_I0Stdev`,`Subtraction`.`firstPointUsed` AS `Subtraction_firstPointUsed`,`Subtraction`.`lastPointUsed` AS `Subtraction_lastPointUsed`,`Subtraction`.`quality` AS `Subtraction_quality`,`Subtraction`.`isagregated` AS `Subtraction_isagregated`,`Subtraction`.`concentration` AS `Subtraction_concentration`,`Subtraction`.`gnomFilePath` AS `Subtraction_gnomFilePath`,`Subtraction`.`rgGuinier` AS `Subtraction_rgGuinier`,`Subtraction`.`rgGnom` AS `Subtraction_rgGnom`,`Subtraction`.`dmax` AS `Subtraction_dmax`,`Subtraction`.`total` AS `Subtraction_total`,`Subtraction`.`volume` AS `Subtraction_volume`,`Subtraction`.`creationTime` AS `Subtraction_creationTime`,`Subtraction`.`kratkyFilePath` AS `Subtraction_kratkyFilePath`,`Subtraction`.`scatteringFilePath` AS `Subtraction_scatteringFilePath`,`Subtraction`.`guinierFilePath` AS `Subtraction_guinierFilePath`,`Subtraction`.`substractedFilePath` AS `Subtraction_substractedFilePath`,`Subtraction`.`gnomFilePathOutput` AS `Subtraction_gnomFilePathOutput`,`Subtraction`.`sampleOneDimensionalFiles` AS `Subtraction_sampleOneDimensionalFiles`,`Subtraction`.`bufferOnedimensionalFiles` AS `Subtraction_bufferOnedimensionalFiles`,`Subtraction`.`sampleAverageFilePath` AS `Subtraction_sampleAverageFilePath`,`Subtraction`.`bufferAverageFilePath` AS `Subtraction_bufferAverageFilePath` from ((((((((((`Experiment` left join `Specimen` on((`Specimen`.`experimentId` = `Experiment`.`experimentId`))) left join `Measurement` on((`Measurement`.`specimenId` = `Specimen`.`specimenId`))) left join `MeasurementToDataCollection` on((`MeasurementToDataCollection`.`measurementId` = `Measurement`.`measurementId`))) left join `Macromolecule` on((`Macromolecule`.`macromoleculeId` = `Specimen`.`macromoleculeId`))) left join `Buffer` on((`Buffer`.`bufferId` = `Specimen`.`bufferId`))) left join `SamplePlatePosition` on((`SamplePlatePosition`.`samplePlatePositionId` = `Specimen`.`samplePlatePositionId`))) left join `SamplePlate` on((`SamplePlate`.`samplePlateId` = `SamplePlatePosition`.`samplePlateId`))) left join `Run` on((`Run`.`runId` = `Measurement`.`runId`))) left join `Merge` on((`Merge`.`measurementId` = `Measurement`.`measurementId`))) left join `Subtraction` on((`Subtraction`.`dataCollectionId` = `MeasurementToDataCollection`.`dataCollectionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_saxs_datacollection')
 
 -- --------------------------------------------------------
 
@@ -5280,8 +5270,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_saxs_d
 -- Structure for view `v_session`
 --
 DROP TABLE IF EXISTS `v_session`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_session`  AS  select `BLSession`.`sessionId` AS `sessionId`,`BLSession`.`expSessionPk` AS `expSessionPk`,`BLSession`.`beamLineSetupId` AS `beamLineSetupId`,`BLSession`.`proposalId` AS `proposalId`,`BLSession`.`projectCode` AS `projectCode`,`BLSession`.`startDate` AS `BLSession_startDate`,`BLSession`.`endDate` AS `BLSession_endDate`,`BLSession`.`beamLineName` AS `beamLineName`,`BLSession`.`scheduled` AS `scheduled`,`BLSession`.`nbShifts` AS `nbShifts`,`BLSession`.`comments` AS `comments`,`BLSession`.`beamLineOperator` AS `beamLineOperator`,`BLSession`.`visit_number` AS `visit_number`,`BLSession`.`bltimeStamp` AS `bltimeStamp`,`BLSession`.`usedFlag` AS `usedFlag`,`BLSession`.`sessionTitle` AS `sessionTitle`,`BLSession`.`structureDeterminations` AS `structureDeterminations`,`BLSession`.`dewarTransport` AS `dewarTransport`,`BLSession`.`databackupFrance` AS `databackupFrance`,`BLSession`.`databackupEurope` AS `databackupEurope`,`BLSession`.`operatorSiteNumber` AS `operatorSiteNumber`,`BLSession`.`lastUpdate` AS `BLSession_lastUpdate`,`BLSession`.`protectedData` AS `BLSession_protectedData`,`Proposal`.`title` AS `Proposal_title`,`Proposal`.`proposalCode` AS `Proposal_proposalCode`,`Proposal`.`proposalNumber` AS `Proposal_ProposalNumber`,`Proposal`.`proposalType` AS `Proposal_ProposalType`,`Person`.`personId` AS `Person_personId`,`Person`.`familyName` AS `Person_familyName`,`Person`.`givenName` AS `Person_givenName`,`Person`.`emailAddress` AS `Person_emailAddress` from ((`BLSession` left join `Proposal` on((`Proposal`.`proposalId` = `BLSession`.`proposalId`))) left join `Person` on((`Person`.`personId` = `Proposal`.`personId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_session')
 
 -- --------------------------------------------------------
 
@@ -5289,8 +5278,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_sessio
 -- Structure for view `v_tracking_shipment_history`
 --
 DROP TABLE IF EXISTS `v_tracking_shipment_history`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_tracking_shipment_history`  AS  select `Dewar`.`dewarId` AS `Dewar_dewarId`,`Dewar`.`code` AS `Dewar_code`,`Dewar`.`comments` AS `Dewar_comments`,`Dewar`.`dewarStatus` AS `Dewar_dewarStatus`,`Dewar`.`barCode` AS `Dewar_barCode`,`Dewar`.`firstExperimentId` AS `Dewar_firstExperimentId`,`Dewar`.`trackingNumberToSynchrotron` AS `Dewar_trackingNumberToSynchrotron`,`Dewar`.`trackingNumberFromSynchrotron` AS `Dewar_trackingNumberFromSynchrotron`,`Dewar`.`type` AS `Dewar_type`,`Shipping`.`shippingId` AS `Shipping_shippingId`,`Shipping`.`proposalId` AS `Shipping_proposalId`,`Shipping`.`shippingName` AS `Shipping_shippingName`,`Shipping`.`deliveryAgent_agentName` AS `deliveryAgent_agentName`,`Shipping`.`deliveryAgent_shippingDate` AS `Shipping_deliveryAgent_shippingDate`,`Shipping`.`deliveryAgent_deliveryDate` AS `Shipping_deliveryAgent_deliveryDate`,`Shipping`.`shippingStatus` AS `Shipping_shippingStatus`,`Shipping`.`returnCourier` AS `Shipping_returnCourier`,`Shipping`.`dateOfShippingToUser` AS `Shipping_dateOfShippingToUser`,`DewarTransportHistory`.`DewarTransportHistoryId` AS `DewarTransportHistory_DewarTransportHistoryId`,`DewarTransportHistory`.`dewarStatus` AS `DewarTransportHistory_dewarStatus`,`DewarTransportHistory`.`storageLocation` AS `DewarTransportHistory_storageLocation`,`DewarTransportHistory`.`arrivalDate` AS `DewarTransportHistory_arrivalDate` from ((`Shipping` left join `Dewar` on((`Dewar`.`shippingId` = `Shipping`.`shippingId`))) left join `DewarTransportHistory` on((`DewarTransportHistory`.`dewarId` = `Dewar`.`dewarId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_tracking_shipment_history')
 
 -- --------------------------------------------------------
 
@@ -5298,8 +5286,7 @@ CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_tracki
 -- Structure for view `v_week`
 --
 DROP TABLE IF EXISTS `v_week`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_week`  AS  select date_format((now() - interval 52 week),_utf8'%x-%v') AS `num` union select date_format((now() - interval 51 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 51 WEEK),'%x-%v')` union select date_format((now() - interval 50 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 50 WEEK),'%x-%v')` union select date_format((now() - interval 49 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 49 WEEK),'%x-%v')` union select date_format((now() - interval 48 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 48 WEEK),'%x-%v')` union select date_format((now() - interval 47 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 47 WEEK),'%x-%v')` union select date_format((now() - interval 46 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 46 WEEK),'%x-%v')` union select date_format((now() - interval 45 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 45 WEEK),'%x-%v')` union select date_format((now() - interval 44 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 44 WEEK),'%x-%v')` union select date_format((now() - interval 43 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 43 WEEK),'%x-%v')` union select date_format((now() - interval 42 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 42 WEEK),'%x-%v')` union select date_format((now() - interval 41 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 41 WEEK),'%x-%v')` union select date_format((now() - interval 40 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 40 WEEK),'%x-%v')` union select date_format((now() - interval 39 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 39 WEEK),'%x-%v')` union select date_format((now() - interval 38 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 38 WEEK),'%x-%v')` union select date_format((now() - interval 37 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 37 WEEK),'%x-%v')` union select date_format((now() - interval 36 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 36 WEEK),'%x-%v')` union select date_format((now() - interval 35 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 35 WEEK),'%x-%v')` union select date_format((now() - interval 34 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 34 WEEK),'%x-%v')` union select date_format((now() - interval 33 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 33 WEEK),'%x-%v')` union select date_format((now() - interval 32 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 32 WEEK),'%x-%v')` union select date_format((now() - interval 31 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 31 WEEK),'%x-%v')` union select date_format((now() - interval 30 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 WEEK),'%x-%v')` union select date_format((now() - interval 29 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 29 WEEK),'%x-%v')` union select date_format((now() - interval 28 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 28 WEEK),'%x-%v')` union select date_format((now() - interval 27 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 27 WEEK),'%x-%v')` union select date_format((now() - interval 26 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 26 WEEK),'%x-%v')` union select date_format((now() - interval 25 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 25 WEEK),'%x-%v')` union select date_format((now() - interval 24 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 24 WEEK),'%x-%v')` union select date_format((now() - interval 23 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 23 WEEK),'%x-%v')` union select date_format((now() - interval 22 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 22 WEEK),'%x-%v')` union select date_format((now() - interval 21 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 21 WEEK),'%x-%v')` union select date_format((now() - interval 20 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 20 WEEK),'%x-%v')` union select date_format((now() - interval 19 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 19 WEEK),'%x-%v')` union select date_format((now() - interval 18 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 18 WEEK),'%x-%v')` union select date_format((now() - interval 17 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 17 WEEK),'%x-%v')` union select date_format((now() - interval 16 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 16 WEEK),'%x-%v')` union select date_format((now() - interval 15 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 15 WEEK),'%x-%v')` union select date_format((now() - interval 14 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 14 WEEK),'%x-%v')` union select date_format((now() - interval 13 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 13 WEEK),'%x-%v')` union select date_format((now() - interval 12 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 12 WEEK),'%x-%v')` union select date_format((now() - interval 11 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 11 WEEK),'%x-%v')` union select date_format((now() - interval 10 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 10 WEEK),'%x-%v')` union select date_format((now() - interval 9 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 9 WEEK),'%x-%v')` union select date_format((now() - interval 8 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 8 WEEK),'%x-%v')` union select date_format((now() - interval 7 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 7 WEEK),'%x-%v')` union select date_format((now() - interval 6 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 6 WEEK),'%x-%v')` union select date_format((now() - interval 5 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 WEEK),'%x-%v')` union select date_format((now() - interval 4 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 WEEK),'%x-%v')` union select date_format((now() - interval 3 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 WEEK),'%x-%v')` union select date_format((now() - interval 2 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 WEEK),'%x-%v')` union select date_format((now() - interval 1 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 WEEK),'%x-%v')` union select date_format((now() - interval 0 week),_utf8'%x-%v') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 WEEK),'%x-%v')` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_week')
 
 -- --------------------------------------------------------
 
@@ -5307,8 +5294,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_we
 -- Structure for view `v_weekDay`
 --
 DROP TABLE IF EXISTS `v_weekDay`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_weekDay`  AS  select date_format((now() - interval 6 day),_utf8'%Y-%m-%d') AS `day` union select date_format((now() - interval 5 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 5 DAY),'%Y-%m-%d')` union select date_format((now() - interval 4 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 4 DAY),'%Y-%m-%d')` union select date_format((now() - interval 3 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 3 DAY),'%Y-%m-%d')` union select date_format((now() - interval 2 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 2 DAY),'%Y-%m-%d')` union select date_format((now() - interval 1 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')` union select date_format((now() - interval 0 day),_utf8'%Y-%m-%d') AS `DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 0 DAY),'%Y-%m-%d')` ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_weekDay')
 
 -- --------------------------------------------------------
 
@@ -5316,8 +5302,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_we
 -- Structure for view `v_xfeFluorescenceSpectrum`
 --
 DROP TABLE IF EXISTS `v_xfeFluorescenceSpectrum`;
-
-CREATE ALGORITHM=MERGE DEFINER=`pxadmin`@`%` SQL SECURITY DEFINER VIEW `v_xfeFluorescenceSpectrum`  AS  select `XFEFluorescenceSpectrum`.`xfeFluorescenceSpectrumId` AS `xfeFluorescenceSpectrumId`,`XFEFluorescenceSpectrum`.`sessionId` AS `sessionId`,`XFEFluorescenceSpectrum`.`blSampleId` AS `blSampleId`,`XFEFluorescenceSpectrum`.`fittedDataFileFullPath` AS `fittedDataFileFullPath`,`XFEFluorescenceSpectrum`.`scanFileFullPath` AS `scanFileFullPath`,`XFEFluorescenceSpectrum`.`jpegScanFileFullPath` AS `jpegScanFileFullPath`,`XFEFluorescenceSpectrum`.`startTime` AS `startTime`,`XFEFluorescenceSpectrum`.`endTime` AS `endTime`,`XFEFluorescenceSpectrum`.`filename` AS `filename`,`XFEFluorescenceSpectrum`.`energy` AS `energy`,`XFEFluorescenceSpectrum`.`exposureTime` AS `exposureTime`,`XFEFluorescenceSpectrum`.`beamTransmission` AS `beamTransmission`,`XFEFluorescenceSpectrum`.`annotatedPymcaXfeSpectrum` AS `annotatedPymcaXfeSpectrum`,`XFEFluorescenceSpectrum`.`beamSizeVertical` AS `beamSizeVertical`,`XFEFluorescenceSpectrum`.`beamSizeHorizontal` AS `beamSizeHorizontal`,`XFEFluorescenceSpectrum`.`crystalClass` AS `crystalClass`,`XFEFluorescenceSpectrum`.`comments` AS `comments`,`XFEFluorescenceSpectrum`.`flux` AS `flux`,`XFEFluorescenceSpectrum`.`flux_end` AS `flux_end`,`XFEFluorescenceSpectrum`.`workingDirectory` AS `workingDirectory`,`BLSample`.`blSampleId` AS `BLSample_sampleId`,`BLSession`.`proposalId` AS `BLSession_proposalId` from ((`XFEFluorescenceSpectrum` left join `BLSample` on((`BLSample`.`blSampleId` = `XFEFluorescenceSpectrum`.`blSampleId`))) left join `BLSession` on((`BLSession`.`sessionId` = `XFEFluorescenceSpectrum`.`sessionId`))) ;
+-- in use(#1142 - SHOW VIEW command denied to user 'pxuser'@'localhost' for table 'v_xfeFluorescenceSpectrum')
 
 --
 -- Indexes for dumped tables
@@ -6005,6 +5990,12 @@ ALTER TABLE `InstructionSet`
   ADD PRIMARY KEY (`instructionSetId`);
 
 --
+-- Indexes for table `IspybAutoProcAttachment`
+--
+ALTER TABLE `IspybAutoProcAttachment`
+  ADD PRIMARY KEY (`autoProcAttachmentId`);
+
+--
 -- Indexes for table `IspybCrystalClass`
 --
 ALTER TABLE `IspybCrystalClass`
@@ -6485,6 +6476,13 @@ ALTER TABLE `ScheduleComponent`
   ADD KEY `ScheduleComponent_idx1` (`scheduleId`);
 
 --
+-- Indexes for table `SchemaStatus`
+--
+ALTER TABLE `SchemaStatus`
+  ADD PRIMARY KEY (`schemaStatusId`),
+  ADD UNIQUE KEY `scriptName` (`scriptName`);
+
+--
 -- Indexes for table `Screen`
 --
 ALTER TABLE `Screen`
@@ -6650,7 +6648,8 @@ ALTER TABLE `Structure`
   ADD PRIMARY KEY (`structureId`),
   ADD KEY `StructureToMacromolecule` (`macromoleculeId`),
   ADD KEY `StructureToCrystal_idx` (`crystalId`),
-  ADD KEY `StructureToBlSample_idx` (`blSampleId`);
+  ADD KEY `StructureToBlSample_idx` (`blSampleId`),
+  ADD KEY `StructureToProposal_idx` (`proposalId`);
 
 --
 -- Indexes for table `SubstructureDetermination`
@@ -6827,42 +6826,42 @@ ALTER TABLE `AssemblyRegion`
 -- AUTO_INCREMENT for table `AutoProc`
 --
 ALTER TABLE `AutoProc`
-  MODIFY `autoProcId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711800;
+  MODIFY `autoProcId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1712452;
 --
 -- AUTO_INCREMENT for table `AutoProcIntegration`
 --
 ALTER TABLE `AutoProcIntegration`
-  MODIFY `autoProcIntegrationId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1908639;
+  MODIFY `autoProcIntegrationId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1909588;
 --
 -- AUTO_INCREMENT for table `AutoProcProgram`
 --
 ALTER TABLE `AutoProcProgram`
-  MODIFY `autoProcProgramId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1782400;
+  MODIFY `autoProcProgramId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1783661;
 --
 -- AUTO_INCREMENT for table `AutoProcProgramAttachment`
 --
 ALTER TABLE `AutoProcProgramAttachment`
-  MODIFY `autoProcProgramAttachmentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=17816207;
+  MODIFY `autoProcProgramAttachmentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=17820261;
 --
 -- AUTO_INCREMENT for table `AutoProcScaling`
 --
 ALTER TABLE `AutoProcScaling`
-  MODIFY `autoProcScalingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711810;
+  MODIFY `autoProcScalingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1712462;
 --
 -- AUTO_INCREMENT for table `AutoProcScalingStatistics`
 --
 ALTER TABLE `AutoProcScalingStatistics`
-  MODIFY `autoProcScalingStatisticsId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=5210435;
+  MODIFY `autoProcScalingStatisticsId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=5212391;
 --
 -- AUTO_INCREMENT for table `AutoProcScaling_has_Int`
 --
 ALTER TABLE `AutoProcScaling_has_Int`
-  MODIFY `autoProcScaling_has_IntId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1711745;
+  MODIFY `autoProcScaling_has_IntId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1712397;
 --
 -- AUTO_INCREMENT for table `AutoProcStatus`
 --
 ALTER TABLE `AutoProcStatus`
-  MODIFY `autoProcStatusId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2522383;
+  MODIFY `autoProcStatusId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2526687;
 --
 -- AUTO_INCREMENT for table `BeamApertures`
 --
@@ -6887,7 +6886,7 @@ ALTER TABLE `BeamlineAction`
 -- AUTO_INCREMENT for table `BeamLineSetup`
 --
 ALTER TABLE `BeamLineSetup`
-  MODIFY `beamLineSetupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1463627;
+  MODIFY `beamLineSetupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1463669;
 --
 -- AUTO_INCREMENT for table `BeamlineStats`
 --
@@ -6972,7 +6971,7 @@ ALTER TABLE `BLSample_has_EnergyScan`
 -- AUTO_INCREMENT for table `BLSession`
 --
 ALTER TABLE `BLSession`
-  MODIFY `sessionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61489;
+  MODIFY `sessionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61501;
 --
 -- AUTO_INCREMENT for table `BLSession_has_SCPosition`
 --
@@ -7047,7 +7046,7 @@ ALTER TABLE `Crystal_has_UUID`
 -- AUTO_INCREMENT for table `CTF`
 --
 ALTER TABLE `CTF`
-  MODIFY `CTFid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5350;
+  MODIFY `CTFid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5371;
 --
 -- AUTO_INCREMENT for table `DataAcquisition`
 --
@@ -7057,7 +7056,7 @@ ALTER TABLE `DataAcquisition`
 -- AUTO_INCREMENT for table `DataCollection`
 --
 ALTER TABLE `DataCollection`
-  MODIFY `dataCollectionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2180598;
+  MODIFY `dataCollectionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=2180649;
 --
 -- AUTO_INCREMENT for table `DataCollectionFileAttachment`
 --
@@ -7067,7 +7066,7 @@ ALTER TABLE `DataCollectionFileAttachment`
 -- AUTO_INCREMENT for table `DataCollectionGroup`
 --
 ALTER TABLE `DataCollectionGroup`
-  MODIFY `dataCollectionGroupId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1721604;
+  MODIFY `dataCollectionGroupId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=1721658;
 --
 -- AUTO_INCREMENT for table `DataCollectionPlanGroup`
 --
@@ -7092,7 +7091,7 @@ ALTER TABLE `Detector`
 -- AUTO_INCREMENT for table `Dewar`
 --
 ALTER TABLE `Dewar`
-  MODIFY `dewarId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313849;
+  MODIFY `dewarId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313852;
 --
 -- AUTO_INCREMENT for table `DewarLocation`
 --
@@ -7107,12 +7106,12 @@ ALTER TABLE `DewarLocationList`
 -- AUTO_INCREMENT for table `DewarTransportHistory`
 --
 ALTER TABLE `DewarTransportHistory`
-  MODIFY `DewarTransportHistoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42030;
+  MODIFY `DewarTransportHistoryId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42031;
 --
 -- AUTO_INCREMENT for table `DiffractionPlan`
 --
 ALTER TABLE `DiffractionPlan`
-  MODIFY `diffractionPlanId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=755420;
+  MODIFY `diffractionPlanId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=758327;
 --
 -- AUTO_INCREMENT for table `EMMicroscope`
 --
@@ -7172,7 +7171,7 @@ ALTER TABLE `GridInfo`
 -- AUTO_INCREMENT for table `Image`
 --
 ALTER TABLE `Image`
-  MODIFY `imageId` int(12) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53491860;
+  MODIFY `imageId` int(12) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53491893;
 --
 -- AUTO_INCREMENT for table `ImageQualityIndicators`
 --
@@ -7204,6 +7203,11 @@ ALTER TABLE `Instruction`
 ALTER TABLE `InstructionSet`
   MODIFY `instructionSetId` int(10) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `IspybAutoProcAttachment`
+--
+ALTER TABLE `IspybAutoProcAttachment`
+  MODIFY `autoProcAttachmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+--
 -- AUTO_INCREMENT for table `IspybCrystalClass`
 --
 ALTER TABLE `IspybCrystalClass`
@@ -7232,7 +7236,7 @@ ALTER TABLE `Log4Stat`
 -- AUTO_INCREMENT for table `Login`
 --
 ALTER TABLE `Login`
-  MODIFY `loginId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29301;
+  MODIFY `loginId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29365;
 --
 -- AUTO_INCREMENT for table `Macromolecule`
 --
@@ -7287,7 +7291,7 @@ ALTER TABLE `ModelToList`
 -- AUTO_INCREMENT for table `MotionCorrection`
 --
 ALTER TABLE `MotionCorrection`
-  MODIFY `motionCorrectionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5391;
+  MODIFY `motionCorrectionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5413;
 --
 -- AUTO_INCREMENT for table `MotorPosition`
 --
@@ -7297,7 +7301,7 @@ ALTER TABLE `MotorPosition`
 -- AUTO_INCREMENT for table `Movie`
 --
 ALTER TABLE `Movie`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5921;
+  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5958;
 --
 -- AUTO_INCREMENT for table `MXMRRun`
 --
@@ -7347,22 +7351,22 @@ ALTER TABLE `PhasingAnalysis`
 -- AUTO_INCREMENT for table `PhasingProgramAttachment`
 --
 ALTER TABLE `PhasingProgramAttachment`
-  MODIFY `phasingProgramAttachmentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=337817;
+  MODIFY `phasingProgramAttachmentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=337995;
 --
 -- AUTO_INCREMENT for table `PhasingProgramRun`
 --
 ALTER TABLE `PhasingProgramRun`
-  MODIFY `phasingProgramRunId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=456576;
+  MODIFY `phasingProgramRunId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=456605;
 --
 -- AUTO_INCREMENT for table `PhasingStatistics`
 --
 ALTER TABLE `PhasingStatistics`
-  MODIFY `phasingStatisticsId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=821230;
+  MODIFY `phasingStatisticsId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=821258;
 --
 -- AUTO_INCREMENT for table `PhasingStep`
 --
 ALTER TABLE `PhasingStep`
-  MODIFY `phasingStepId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=321205;
+  MODIFY `phasingStepId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=321234;
 --
 -- AUTO_INCREMENT for table `Phasing_has_Scaling`
 --
@@ -7474,6 +7478,11 @@ ALTER TABLE `Schedule`
 ALTER TABLE `ScheduleComponent`
   MODIFY `scheduleComponentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `SchemaStatus`
+--
+ALTER TABLE `SchemaStatus`
+  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+--
 -- AUTO_INCREMENT for table `Screen`
 --
 ALTER TABLE `Screen`
@@ -7492,7 +7501,7 @@ ALTER TABLE `ScreenComponentGroup`
 -- AUTO_INCREMENT for table `Screening`
 --
 ALTER TABLE `Screening`
-  MODIFY `screeningId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=473414;
+  MODIFY `screeningId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=476320;
 --
 -- AUTO_INCREMENT for table `ScreeningInput`
 --
@@ -7502,12 +7511,12 @@ ALTER TABLE `ScreeningInput`
 -- AUTO_INCREMENT for table `ScreeningOutput`
 --
 ALTER TABLE `ScreeningOutput`
-  MODIFY `screeningOutputId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=473354;
+  MODIFY `screeningOutputId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=476260;
 --
 -- AUTO_INCREMENT for table `ScreeningOutputLattice`
 --
 ALTER TABLE `ScreeningOutputLattice`
-  MODIFY `screeningOutputLatticeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=322630;
+  MODIFY `screeningOutputLatticeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=324992;
 --
 -- AUTO_INCREMENT for table `ScreeningRank`
 --
@@ -7522,17 +7531,17 @@ ALTER TABLE `ScreeningRankSet`
 -- AUTO_INCREMENT for table `ScreeningStrategy`
 --
 ALTER TABLE `ScreeningStrategy`
-  MODIFY `screeningStrategyId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249750;
+  MODIFY `screeningStrategyId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251852;
 --
 -- AUTO_INCREMENT for table `ScreeningStrategySubWedge`
 --
 ALTER TABLE `ScreeningStrategySubWedge`
-  MODIFY `screeningStrategySubWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=259829;
+  MODIFY `screeningStrategySubWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=267131;
 --
 -- AUTO_INCREMENT for table `ScreeningStrategyWedge`
 --
 ALTER TABLE `ScreeningStrategyWedge`
-  MODIFY `screeningStrategyWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=244747;
+  MODIFY `screeningStrategyWedgeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key', AUTO_INCREMENT=246849;
 --
 -- AUTO_INCREMENT for table `SessionType`
 --
@@ -7542,7 +7551,7 @@ ALTER TABLE `SessionType`
 -- AUTO_INCREMENT for table `Shipping`
 --
 ALTER TABLE `Shipping`
-  MODIFY `shippingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309230;
+  MODIFY `shippingId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309231;
 --
 -- AUTO_INCREMENT for table `SpaceGroup`
 --
@@ -7607,7 +7616,7 @@ ALTER TABLE `UserGroup`
 -- AUTO_INCREMENT for table `Workflow`
 --
 ALTER TABLE `Workflow`
-  MODIFY `workflowId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=153406;
+  MODIFY `workflowId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key (auto-incremented)', AUTO_INCREMENT=153815;
 --
 -- AUTO_INCREMENT for table `WorkflowDehydration`
 --
@@ -8484,7 +8493,8 @@ ALTER TABLE `Stoichiometry`
 ALTER TABLE `Structure`
   ADD CONSTRAINT `StructureToBlSample` FOREIGN KEY (`blSampleId`) REFERENCES `BLSample` (`blSampleId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `StructureToCrystal` FOREIGN KEY (`crystalId`) REFERENCES `Crystal` (`crystalId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `StructureToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `StructureToMacromolecule` FOREIGN KEY (`macromoleculeId`) REFERENCES `Macromolecule` (`macromoleculeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `StructureToProposal` FOREIGN KEY (`proposalId`) REFERENCES `Proposal` (`proposalId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `SubstructureDetermination`
