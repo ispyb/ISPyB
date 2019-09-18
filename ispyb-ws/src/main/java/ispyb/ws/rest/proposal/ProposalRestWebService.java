@@ -1,6 +1,8 @@
 package ispyb.ws.rest.proposal;
 
+import file.FileUploadForm;
 import ispyb.server.biosaxs.vos.assembly.Macromolecule3VO;
+import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.Buffer3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
 import ispyb.server.biosaxs.vos.dataAcquisition.plate.Platetype3VO;
@@ -14,20 +16,26 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 import ispyb.server.smis.UpdateFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @Path("/")
 public class ProposalRestWebService extends MXRestWebService{
@@ -81,6 +89,7 @@ public class ProposalRestWebService extends MXRestWebService{
 				
 				List<Protein3VO> proteins = this.getProtein3Service().findByProposalId(proposalId);
 				List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
+				List<Structure3VO> ligands = this.getStruture3Service().getStructuresByProposalId(proposalId);
 				
 				List<LabContact3VO> labContacts = this.getLabContact3Service().findFiltered(proposalId, null);
 				results.put("proposal", proposals);
@@ -91,7 +100,7 @@ public class ProposalRestWebService extends MXRestWebService{
 				results.put("stockSolutions", stockSolutions);
 				results.put("labcontacts", labContacts);
 				results.put("proteins", proteins);
-				
+				results.put("ligands", ligands);
 			}
 
 			multiple.add(results);
@@ -153,6 +162,9 @@ public class ProposalRestWebService extends MXRestWebService{
 			List<Crystal3VO> crystals = this.getCrystal3Service().findByProposalId(proposalId);
 			
 			List<LabContact3VO> labContacts = this.getLabContact3Service().findFiltered(proposalId, null);
+			
+			List<Structure3VO> ligands = this.getStruture3Service().getStructuresByProposalId(proposalId);
+			
 			results.put("proposal", proposals);
 			results.put("crystals", crystals);
 			results.put("plateTypes", plateTypes);
@@ -161,6 +173,7 @@ public class ProposalRestWebService extends MXRestWebService{
 			results.put("stockSolutions", stockSolutions);
 			results.put("labcontacts", labContacts);
 			results.put("proteins", proteins);
+			results.put("ligands", ligands);
 
 			multiple.add(results);
 			this.logFinish("listProposal", id, logger);
@@ -217,5 +230,62 @@ public class ProposalRestWebService extends MXRestWebService{
 			return this.logError(methodName, e, id, logger);
 		}
 	}
+	
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/ligands/list")	
+	@Produces({ "application/json" })
+	public Response getLigandsByProposalId(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal) throws IllegalStateException, IOException{
+				
+		try {
+			logger.info("getLigandsByProposalId for proposal " + proposal);
+			return this.sendResponse(this.getStruture3Service().getStructuresByProposalId(this.getProposalId(proposal)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(String.format("getLigandsByProposalId. ", e.getMessage()));
+			return this.sendError(e.getMessage());
+		}		
+	}
+	
+	@RolesAllowed({"User", "Manager", "Industrial", "LocalContact"})
+	@POST
+	@Path("{token}/proposal/{proposal}/structure/save")
+	@Consumes("multipart/form-data")	
+	@Produces({ "application/json" })
+	public Response saveStructure(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@MultipartForm FileUploadForm form) throws IllegalStateException, IOException{
+				
+		try {
+			logger.info("saveStructure for proposal " + proposal);
+			if (form.getInputStream() != null){
+				String filePath = this.copyFileToDisk(proposal, form);
+				logger.info("saveStructure. Copying to disk. filepath=" + filePath);				
+				
+				Structure3VO structure = new Structure3VO();
+				structure.setProposalId(this.getProposalId(proposal));
+				structure.setType(form.getType());
+				structure.setGroupName(form.getGroupName());
+				structure.setFilePath(filePath);
+				structure.setName(new File(filePath).getName());					
+				structure = this.getExperiment3Service().saveStructure(structure);
+				
+				return this.sendResponse(structure);
+			}
+			else{
+				throw new Exception("File is empty");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(String.format("saveStructure. ", e.getMessage()));
+			return this.sendError(e.getMessage());
+		}		
+	}
+	
 
 }
