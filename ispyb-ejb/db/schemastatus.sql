@@ -1,6 +1,25 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Sep 11, 2019 at 10:46 AM
+-- Server version: 10.1.23-MariaDB-9+deb9u1
+-- PHP Version: 7.0.19-1
+
+--ISPyB version: 5.20
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pydb` version 5.14.3
+-- Database: `pydb`
 --
 
 -- --------------------------------------------------------
@@ -87,7 +106,15 @@ INSERT INTO `SchemaStatus` (`schemaStatusId`, `scriptName`, `schemaStatus`, `rec
 (87, '2018_11_06_Phasing_group_name.sql', 'DONE', '2018-11-06 08:53:50'),
 (88, '2018_11_12_new_admin_var.sql', 'DONE', '2018-11-12 15:53:05'),
 (89, '2018_11_27_updateCollations.sql', 'DONE', '2018-11-28 10:10:06'),
-(91, '2018_12_04_EnergyScan_and_XFEFluorescenceSpectrum_add_axisPosition.sql', 'DONE', '2018-12-05 08:33:06');
+(91, '2018_12_04_EnergyScan_and_XFEFluorescenceSpectrum_add_axisPosition.sql', 'DONE', '2018-12-05 08:33:06'),
+(92, '2019_07_24_Add_ProposalId_to_Structure.sql', 'DONE', '2019-07-24 08:42:41'),
+(93, '2018_06_29_DataCollection_imageContainerSubPath.sql', 'DONE', '2019-09-11 08:24:22'),
+(94, '2018_12_06_still_data_collection.sql', 'DONE', '2019-09-11 08:33:54'),
+(95, '2018_12_17_PhasingProgramRun_phasingDirectory.sql', 'DONE', '2019-09-11 08:34:09'),
+(97, '2018_12_17_PhasingStatistics_new_metrics.sql', 'DONE', '2019-09-11 08:34:31'),
+(98, '2018_12_18_v_phasing_phasingDirectory.sql', 'DONE', '2019-09-11 08:34:50'),
+(99, '2019_01_14_Proposal_state.sql', 'DONE', '2019-09-11 08:35:10'),
+(100, '2019_01_15_Detector_localName.sql', 'DONE', '2019-09-11 08:35:34');
 
 --
 -- Indexes for dumped tables
@@ -108,4 +135,7 @@ ALTER TABLE `SchemaStatus`
 -- AUTO_INCREMENT for table `SchemaStatus`
 --
 ALTER TABLE `SchemaStatus`
-  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `schemaStatusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
