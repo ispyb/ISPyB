@@ -71,7 +71,7 @@ public interface EM3Service {
 
 	List<Map<String, Object>> getStatsByDataCollectionIds(int proposalId, String dataCollectionIdList);
 
-	Collection<? extends Map<String, Object>> getStatsByDataSessionIds(int proposalId, Integer id);
+	Collection<? extends Map<String, Object>> getStatsByDataDataCollectionGroupId(Integer id);
 
 	List<Map<String, Object>> getStatsBySessionId(int proposalId, int parseInt);
 }
