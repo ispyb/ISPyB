@@ -78,10 +78,10 @@ public class ProteinRestWebService extends MXRestWebService {
 				protein3vo.setName(name);
 				protein3vo.setAcronym(acronym);
 
-				getProtein3Service().update(protein3vo);
+				protein3vo = getProtein3Service().update(protein3vo);
 				this.logFinish("saveProtein", start, logger);
 
-				return new ProteinRestWebService().getProteinByProposalId(token, proposal);
+				return sendResponse(protein3vo);
 			} catch (Exception e) {
 				this.logError("saveProtein", e, start, logger);
 			}
