@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
@@ -50,7 +52,40 @@ public class ProteinRestWebService extends MXRestWebService {
 			throw e;
 		}
 	}
-	
-		
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@POST
+	@Path("/{token}/proposal/{proposal}/mx/protein/save")
+	@Produces({ "application/json" })
+	public Response saveProtein(
+			@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@FormParam("proteinId") Integer proteinId,
+			@FormParam("name") String name,
+			@FormParam("acronym") String acronym) throws Exception {
+
+			long start = this.logInit("saveProtein", logger, token, proposal,
+					proteinId, name, acronym);
+
+			try {
+
+				Protein3VO protein3vo = new Protein3VO();
+				if (proteinId == null) {
+					protein3vo = getProtein3Service().create(protein3vo);
+				} else {
+					protein3vo = getProtein3Service().findByPk(proteinId, false);
+				}
+				protein3vo.setName(name);
+				protein3vo.setAcronym(acronym);
+
+				getProtein3Service().update(protein3vo);
+				this.logFinish("saveProtein", start, logger);
+
+				return new ProteinRestWebService().getProteinByProposalId(token, proposal);
+			} catch (Exception e) {
+				this.logError("saveProtein", e, start, logger);
+			}
+			return null;
+	}
 
 }
