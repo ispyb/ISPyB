@@ -70,15 +70,19 @@ public class ProteinRestWebService extends MXRestWebService {
 			try {
 
 				Protein3VO protein3vo = new Protein3VO();
-				if (proteinId == null) {
-					protein3vo = getProtein3Service().create(protein3vo);
-				} else {
-					protein3vo = getProtein3Service().findByPk(proteinId, false);
-				}
-				protein3vo.setName(name);
-				protein3vo.setAcronym(acronym);
 
-				protein3vo = getProtein3Service().update(protein3vo);
+				if (proteinId == null) {
+					protein3vo.setProposalVO(this.getProposal3Service().findByPk(this.getProposalId(proposal)));
+					protein3vo.setName(name);
+					protein3vo.setAcronym(acronym);
+					protein3vo = this.getProtein3Service().create(protein3vo);
+				} else {
+					protein3vo = this.getProtein3Service().findByPk(proteinId, false);
+					protein3vo.setName(name);
+					protein3vo.setAcronym(acronym);
+				}
+
+				protein3vo = this.getProtein3Service().update(protein3vo);
 				this.logFinish("saveProtein", start, logger);
 
 				return sendResponse(protein3vo);
