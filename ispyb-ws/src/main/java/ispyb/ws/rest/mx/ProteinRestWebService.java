@@ -71,7 +71,7 @@ public class ProteinRestWebService extends MXRestWebService {
 
 				Protein3VO protein3vo = new Protein3VO();
 
-				if (proteinId == null) {
+				if (proteinId == null || proteinId == 0) {
 					protein3vo.setProposalVO(this.getProposal3Service().findByPk(this.getProposalId(proposal)));
 					protein3vo.setName(name);
 					protein3vo.setAcronym(acronym);
