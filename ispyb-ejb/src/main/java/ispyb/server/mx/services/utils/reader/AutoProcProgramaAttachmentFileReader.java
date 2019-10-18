@@ -186,7 +186,8 @@ public class AutoProcProgramaAttachmentFileReader {
 										&& !line.contains("Analysis against resolution, XDSdataset")
 										&& !line.contains("Completeness & multiplicity v. resolution, XDSdataset")
 										&& !line.contains("$TABLE:  Correlations CC(1/2) within dataset, XDSdataset:")
-										&& !line.contains("Rsplit")) {
+										&& !line.contains("Rsplit")
+										&& !line.contains("Overall")) {
 									String[] values = line.split(" ");
 									String[] val = new String[20];
 									int i = 0;
