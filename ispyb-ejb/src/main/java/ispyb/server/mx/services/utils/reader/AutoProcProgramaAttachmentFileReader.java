@@ -206,7 +206,7 @@ public class AutoProcProgramaAttachmentFileReader {
 									if (startToReadFastDPRfactor || startToReadFastDPIsigma){
 										fastdp_dmid.add(Double.parseDouble(val[2]));
 										fastdp_rfactor.add(100 * Double.parseDouble(val[6]));
-										fastdp_isigma.add(Double.parseDouble(val[12]));
+										fastdp_isigma.add(Double.parseDouble(val[13]));
 									} else if (startToReadFastDPCC2){
 										fastdp_cc2.add(100 * Double.parseDouble(val[6]));
 									} else if (startToReadFastDPCompleteness){
