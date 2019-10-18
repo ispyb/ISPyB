@@ -65,10 +65,10 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
 			"fileName like '%XSCALE%' ";
 
-	private static final String FIND_AUTOPROC_NOANOM_CORRECT = "SELECT * " +
+	private static final String FIND_AUTOPROC_NOANOM_AIMLESS = "SELECT * " +
 			"FROM AutoProcProgramAttachment  " +
 			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
-			"fileName like '%merged_noanom_CORRECT%' ";
+			"fileName like '%_noanom_aimless%' ";
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -197,7 +197,7 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 	@SuppressWarnings("unchecked")
 	public List<AutoProcProgramAttachment3VO> findNoanomCorrect(final Integer autoProcProgramId) throws Exception {
 
-		String query = FIND_AUTOPROC_NOANOM_CORRECT ;
+		String query = FIND_AUTOPROC_NOANOM_AIMLESS ;
 		try{
 
 			List<AutoProcProgramAttachment3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcProgramAttachmentNativeQuery")

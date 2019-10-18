@@ -27,6 +27,7 @@ public class AutoProcProgramaAttachmentFileReader {
 		ArrayList<Double> fastdp_completeness = new ArrayList<Double>();
 		ArrayList<Double> fastdp_rfactor = new ArrayList<Double>();
 		ArrayList<Double> fastdp_isigma = new ArrayList<Double>();
+		ArrayList<Double> fastdp_dmid = new ArrayList<Double>();
 		List<AutoProcessingData> listAutoProcessingData = new ArrayList<AutoProcessingData>();
 		
 //		System.out.println(attachment);
@@ -52,7 +53,12 @@ public class AutoProcProgramaAttachmentFileReader {
 					boolean startToReadFastDPCompleteness = false;
 					boolean startToReadFastDPRfactor = false;
 					boolean startToReadFastDPIsigma = false;
+					boolean endToReadFastDPCC2 = false;
+					boolean endToReadFastDPCompleteness = false;
+					boolean endToReadFastDPRfactor = false;
+					boolean endToReadFastDPIsigma = false;
 					boolean endToRead = false;
+					boolean endToReadFastDP = false;
 					System.out.println(sourceFileName);
 					inFile = new BufferedReader(new FileReader(sourceFileName));
 					String s = new String();
@@ -154,16 +160,19 @@ public class AutoProcProgramaAttachmentFileReader {
 								startToReadFastDPCompleteness = false;
 								startToReadFastDPIsigma = true;
 								startToReadFastDPCC2 = false;
+								endToRead = false;
 							} else if (line.contains("Completeness & multiplicity v. resolution, XDSdataset")) {
 								startToReadFastDPRfactor = false;
 								startToReadFastDPCompleteness = true;
 								startToReadFastDPIsigma = false;
 								startToReadFastDPCC2 = false;
+								endToRead = false;
 							} else if (line.contains("Correlations CC(1/2) within dataset, XDSdataset")) {
 								startToReadFastDPRfactor = false;
 								startToReadFastDPCompleteness = false;
 								startToReadFastDPIsigma = false;
 								startToReadFastDPCC2 = true;
+								endToRead = false;
 							}
 							startToRead = startToReadFastDPRfactor || startToReadFastDPCompleteness || startToReadFastDPIsigma || startToReadFastDPCC2;
 							if (startToRead && !endToRead) {
@@ -174,22 +183,52 @@ public class AutoProcProgramaAttachmentFileReader {
 										&& !line.contains(":Multiplicity v Resolution")
 										&& !line.contains("$GRAPHS: CC(1/2) v resolution")
 										&& !line.contains("RMS anomalous correlation ratio")
+										&& !line.contains("Analysis against resolution, XDSdataset")
+										&& !line.contains("Completeness & multiplicity v. resolution, XDSdataset")
+										&& !line.contains("$TABLE:  Correlations CC(1/2) within dataset, XDSdataset:")
 										&& !line.contains("Rsplit")) {
 									String[] values = line.split(" ");
-									String[] val = new String[17];
+									String[] val = new String[20];
 									int i = 0;
+									for (int k = 0; k < values.length; k++) {
+										if (i <= 19 && !values[k].isEmpty()) {
+											//val[i] = values[k];
+											if ("-".equals(values[k])) {
+												val[i] = "0";
+											} else {
+												val[i] = values[k];
+											}
+											i++;
+										}
+									}
+
 									if (startToReadFastDPRfactor || startToReadFastDPIsigma){
-										fastdp_rfactor.add(Double.parseDouble(values[6]));
-										fastdp_isigma.add(Double.parseDouble(values[12]));
+										fastdp_dmid.add(Double.parseDouble(val[2]));
+										fastdp_rfactor.add(Double.parseDouble(val[6]));
+										fastdp_isigma.add(Double.parseDouble(val[12]));
 									} else if (startToReadFastDPCC2){
-										fastdp_cc2.add(Double.parseDouble(values[6]));
+										fastdp_cc2.add(Double.parseDouble(val[6]));
 									} else if (startToReadFastDPCompleteness){
-										fastdp_completeness.add(Double.parseDouble(values[6]));
+										fastdp_completeness.add(Double.parseDouble(val[6]));
 									}
 								}
 							}
-							if (line.contains("Overall")) {
+							if (startToRead && line.contains("Overall")) {
+								if (startToReadFastDPRfactor || startToReadFastDPIsigma){
+									endToReadFastDPRfactor = true;
+									endToReadFastDPIsigma = true;
+								} else if (startToReadFastDPCC2){
+									endToReadFastDPCC2 = true;
+								} else if (startToReadFastDPCompleteness){
+									endToReadFastDPCompleteness = true;
+								}
 								endToRead = true;
+								startToReadFastDPRfactor = false;
+								startToReadFastDPCompleteness = false;
+								startToReadFastDPIsigma = false;
+								startToReadFastDPCC2 = false;
+								endToReadFastDP = endToReadFastDPRfactor && endToReadFastDPCompleteness && endToReadFastDPIsigma && endToReadFastDPCC2;
+
 							}
 						}
 					}
@@ -197,16 +236,17 @@ public class AutoProcProgramaAttachmentFileReader {
 
 					if (noanomAimlessLog) {
 						try {
-							for (int i = 0; i < fastdp_completeness.size(); i++) {
+							int imax = 21;
+							for (int i = 0; i < imax; i++) {
 								AutoProcessingData d = new AutoProcessingData(attachment.getFileName(),
-										null, fastdp_completeness.get(i), fastdp_rfactor.get(i),
+										fastdp_dmid.get(i), fastdp_completeness.get(i), fastdp_rfactor.get(i),
 										fastdp_isigma.get(i), fastdp_cc2.get(i), null,
 										null, fileName, attachment.getAutoProcProgramVO().getAutoProcProgramId());
 								listAutoProcessingData.add(d);
 							}
 
 						} catch (Exception e) {
-
+							System.out.println(e.getMessage());
 						}
 					}
 
@@ -239,7 +279,7 @@ public class AutoProcProgramaAttachmentFileReader {
 		o.put("xscaleFile", xscaleFile);
 		o.put("truncateLog", truncateLog);
 		o.put("autoProcessingData", listAutoProcessingData);
-		o.put("mergedNoanomCorrectFile", noanomAimlessLog);
+		o.put("noanomAimlessLog", noanomAimlessLog);
 		return o;
 	}
 }
