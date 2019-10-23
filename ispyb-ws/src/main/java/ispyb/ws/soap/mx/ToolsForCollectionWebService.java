@@ -1738,8 +1738,6 @@ public class ToolsForCollectionWebService {
 				sb.append(structure3vo.getType());
 				sb.append(",");
 				sb.append(structure3vo.getFilePath());
-				sb.append(",");
-				sb.append(structure3vo.getMultiplicity());
 				sb.append("\n");
 			}
 			return sb.toString();
