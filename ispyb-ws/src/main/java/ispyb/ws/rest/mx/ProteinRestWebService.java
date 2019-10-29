@@ -103,10 +103,10 @@ public class ProteinRestWebService extends MXRestWebService {
 			@FormParam("proteinId") Integer proteinId,
 			@FormParam("name") String name,
 			@FormParam("acronym") String acronym,
-			@FormParam("createEmptyCrystalForm") String createEmptyCrystalForm) throws Exception {
+			@FormParam("createEmptyCrystalForm") Integer createEmptyCrystalForm) throws Exception {
 
 		long start = this.logInit("saveProteinWithEmptyCrystalForm", logger, token, proposal,
-				proteinId, name, acronym);
+				proteinId, name, acronym, createEmptyCrystalForm);
 
 		try {
 
@@ -126,7 +126,7 @@ public class ProteinRestWebService extends MXRestWebService {
 			protein3vo = this.getProtein3Service().update(protein3vo);
 
 			// Create a default crystal form if needed
-			if (createEmptyCrystalForm == "1"){
+			if (createEmptyCrystalForm == 1){
 				Crystal3VO crystal = new Crystal3VO();
 				crystal.setComments("Dummy crystal form");
 				crystal.setName("");
