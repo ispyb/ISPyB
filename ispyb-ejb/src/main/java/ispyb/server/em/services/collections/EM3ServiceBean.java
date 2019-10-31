@@ -73,7 +73,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	private final String StatsByDataCollectionId = getStatsQuery() + " where dataCollectionId in (:dataCollectionIdList) and BLSession.proposalId=:proposalId";
 	
-	private final String StatsBySessionId = getStatsQuery() + " where BLSession.sessionId = :sessionId and BLSession.proposalId=:proposalId";
+	private final String StatsByDataCollectionGroupId = getStatsQuery() + " where DataCollection.dataCollectionGroupId=:dataCollectionGroupId";
 	
 	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
@@ -208,44 +208,42 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		return dataCollectionGroup3Service.update(group);
 	}
 	
+	
+	private DataCollectionGroup3VO getDataCollectionBySampleAndSession(String sampleAcronym, int proposalId, Session3VO session) throws Exception{
+		List<BLSample3VO> samples = sample3Service.findByAcronymAndProposalId(sampleAcronym, proposalId, null);
+		log.info("{} samples found for sample acronym = {} proposalId = {} sessionId = {} ", samples.size(), sampleAcronym, proposalId, session.getSessionId());
+		
+		/** Get data collection groups for that sample acronym **/
+		List<DataCollectionGroup3VO> groups = new ArrayList<DataCollectionGroup3VO>();
+		for (BLSample3VO blSample3VO : samples) {
+			groups.addAll(dataCollectionGroup3Service.findBySampleId(blSample3VO.getBlSampleId(), false, false));
+		}
+		log.info("{} data collections found for sample acronym = {} proposalId = {} sessionId = {} ", groups.size(), sampleAcronym, proposalId, session.getSessionId());
+		
+		
+		/** Look for a DCGroup for that session **/
+		for (DataCollectionGroup3VO dataCollectionGroup3VO : groups) {
+			if (dataCollectionGroup3VO.getSessionVOId().equals(session.getSessionId())){
+				log.info("Data collection group found for sample acronym = {} proposalId = {} sessionId = {} ", sampleAcronym, proposalId, session.getSessionId());
+				return dataCollectionGroup3VO;
+			}
+		}
+		
+		return null;
+				
+	}
+	
+	
 	private DataCollectionGroup3VO getDataCollectionGroup(String sampleAcronym, String proposal, String beamlineName, Session3VO session, String proteinAcronym) throws Exception{
 		int proposalId = this.getProposalId(proposal, beamlineName);
 		
-		List<BLSample3VO> samples = sample3Service.findByAcronymAndProposalId(sampleAcronym, proposalId, null);
-		log.info("{} samples found for sample acronym = {} proposalId = {} beamlineName = {}", samples.size(), sampleAcronym, proposalId, beamlineName);
-		DataCollectionGroup3VO group = new DataCollectionGroup3VO();
-		if (samples != null){
-			if (samples.size() > 1){
-				log.warn("Multiple acronyms found for sample acronym = {} and proposal = {} and only one was expected . technique=EM sampleAcronym={} proposal={}",sampleAcronym, proposal);
-			}
-			if (samples.size() > 0 ){
-				BLSample3VO sample = samples.get(0);
-				/** Grid should already exist **/
-				List<DataCollectionGroup3VO> groups = dataCollectionGroup3Service.findBySampleId(sample.getBlSampleId(), false, false);
-				log.info("{} dataCollectionGroup found for sample acronym = {}", groups.size(), sampleAcronym);
-				if (groups.size() == 0){
-					/** No group exists then we will create one **/
-					/** Creating datacollectionGroup. This is the GRID **/
-					return this.createDataCollectionGroup(session);
-				}
-				else{
-					group = this.getDataCollectionGroupBySessionId(groups, session);
-					
-					if (group == null){
-						/** There are not grid with this sample Acronym for this session **/
-						log.info("No dataCollectionGroup found for sample acronym = {} and sessionId = {}", sampleAcronym, session.getSessionId());
-						return this.createDataCollectionGroup(session);
-						
-					}
-					else{
-						log.info("DataCollectionGroup found for sample acronym = {} and sessionId = {}", sampleAcronym, session.getSessionId());
-						return group;
-					}
-				}
-			}
-			
+				
+		
+		DataCollectionGroup3VO group = this.getDataCollectionBySampleAndSession(sampleAcronym, proposalId, session);
+		if (group != null){
+			return group;
 		}
-		log.info("No sample acronym found for sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		log.info("No sample acronym found for sampleAcronym = {} and proposal = {} sessionId = {} ", sampleAcronym, proposal, session.getSessionId());
 		/** Samples are null or 0 **/
 		
 		List<Protein3VO> proteins = protein3Service.findByAcronymAndProposalId(proposalId, proteinAcronym);
@@ -577,9 +575,9 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	}
 
 	@Override
-	public Collection<? extends Map<String, Object>> getStatsByDataSessionIds(int proposalId, Integer sessionId) {
+	public Collection<? extends Map<String, Object>> getStatsByDataDataCollectionGroupId(Integer dataCollectionGroupId) {
 		Session session = (Session) this.entityManager.getDelegate();
-		String queryString = StatsBySessionId.replace(":sessionId", String.valueOf(sessionId)).replace(":proposalId", String.valueOf(proposalId));
+		String queryString = StatsByDataCollectionGroupId.replace(":dataCollectionGroupId", String.valueOf(dataCollectionGroupId));
 		System.out.println(queryString);
 		SQLQuery query = session.createSQLQuery(queryString);
 		return executeSQLQuery(query);
