@@ -80,6 +80,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	@EJB
 	private Shipping3Service shipment3Service;
 	
+	@EJB
+	private ContainerHistory3Service containerHistory3Service;
+	
 
 	public Container3ServiceBean() {
 	};
@@ -96,6 +99,13 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		checkCreateChangeRemoveAccess();
 		this.checkAndCompleteData(vo, true);
 		this.entityManager.persist(vo);
+		
+		if (vo.getDewarVO() != null ) {
+			containerHistory3Service.create(vo, vo.getDewarVO().getStorageLocation(),  vo.getDewarVO().getDewarStatus());			
+		} else {
+			containerHistory3Service.create(vo, null, null);			
+		}
+		
 		return vo;
 	}
 
@@ -109,7 +119,7 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 	 */
 	public Container3VO update(final Container3VO vo) throws Exception {
 		
-		checkCreateChangeRemoveAccess();
+		checkCreateChangeRemoveAccess();		
 		this.checkAndCompleteData(vo, false);
 		return entityManager.merge(vo);
 	}
