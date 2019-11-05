@@ -420,5 +420,84 @@ public class AutoprocintegrationRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
+
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/fastdp/cc2")
+	@Produces("text/plain")
+	public Response getFastDPCC2(@PathParam("token") String token, @PathParam("proposal") String proposal,
+								 @PathParam("autoProcIntegrationListId") String autoProcIntegrationListId) {
+
+		String methodName = "getFastDPCC2";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			String result = this.getFastDPParserByAutoProcIntegrationListId(
+					this.parseToInteger(autoProcIntegrationListId)).parsecc2();
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/fastdp/rfactor")
+	@Produces("text/plain")
+	public Response getFastDPRfactor(@PathParam("token") String token, @PathParam("proposal") String proposal,
+									 @PathParam("autoProcIntegrationListId") String autoProcIntegrationListId) {
+
+		String methodName = "getFastDPRfactor";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			String result = this.getFastDPParserByAutoProcIntegrationListId(
+					this.parseToInteger(autoProcIntegrationListId)).parseRfactor();
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/fastdp/completeness")
+	@Produces("text/plain")
+	public Response getFastDPCompleteness(@PathParam("token") String token, @PathParam("proposal") String proposal,
+										  @PathParam("autoProcIntegrationListId") String autoProcIntegrationListId) {
+
+		String methodName = "getFastDPCompleteness";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			String result = this.getFastDPParserByAutoProcIntegrationListId(this.parseToInteger(autoProcIntegrationListId)).parseCompleteness();
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@GZIP
+	@Path("{token}/proposal/{proposal}/mx/autoprocintegration/{autoProcIntegrationListId}/fastdp/isigma")
+	@Produces("text/plain")
+	public Response getFastDPISigma(@PathParam("token") String token, @PathParam("proposal") String proposal,
+									@PathParam("autoProcIntegrationListId") String autoProcIntegrationListId) {
+
+		String methodName = "getFastDPISigma";
+		long start = this.logInit(methodName, logger, token, proposal);
+		try {
+			String result = this.getFastDPParserByAutoProcIntegrationListId(
+					this.parseToInteger(autoProcIntegrationListId)).parseISigma();
+			this.logFinish(methodName, start, logger);
+			return this.sendResponse(result);
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
 	
 }

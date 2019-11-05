@@ -78,4 +78,11 @@ public interface AutoProcProgramAttachment3Service {
 	 */
 	public List<AutoProcProgramAttachment3VO> findXScale(final Integer autoProcProgramId) throws Exception;
 
+	/**
+	 * find noanom correct files attachments
+	 * @return
+	 * @throws Exception
+	 */
+	public List<AutoProcProgramAttachment3VO> findNoanomCorrect(final Integer autoProcProgramId) throws Exception;
+
 }
