@@ -394,7 +394,7 @@ public class ShippingRestWebService extends MXRestWebService {
 			this.getShipping3Service().deleteAllSamplesAndContainersForShipping(shippingId);
 			this.getShipping3Service().deleteByPk(shippingId);
 			this.logFinish("removeShipment", id, logger);
-			return this.sendResponse("Ok");
+			return sendResponse(true);
 			//return sendResponse(this.getShipping3Service().getShippingById(shippingId));
 		} catch (Exception e) {
 			return this.logError("removeShipment", e, id, logger);
