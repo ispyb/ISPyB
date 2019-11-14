@@ -6,6 +6,7 @@ import ispyb.ws.rest.RestWebService;
 import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,9 +66,12 @@ public class StatsWebService extends MXRestWebService {
 			
 			for (int i = 0; i < ids.size(); i++) {
 				int id = ids.get(i);
-				List<Map<String, Object>> result = this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
-				result.get(i).put("stats", getEMService().getStatsByDataSessionIds(this.getProposalId(proposal), id));
-				dataCollections.addAll(result);
+				List<Map<String, Object>> listResult = this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionId(this.getProposalId(proposal), id);
+				for (Map<String, Object> result : listResult) {
+					int dataCollectionGroupId = (int) result.get("DataCollectionGroup_dataCollectionGroupId");
+					result.put("stats", getEMService().getStatsByDataDataCollectionGroupId(dataCollectionGroupId));
+				}
+				dataCollections.addAll(listResult);
 			}
 			return this.sendResponse(dataCollections, false);
 		} catch (Exception e) {

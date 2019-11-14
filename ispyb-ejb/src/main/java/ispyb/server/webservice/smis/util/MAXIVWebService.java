@@ -444,8 +444,7 @@ public class MAXIVWebService implements SMISWebService {
 		ArrayList<JSONObject> sessions = new ArrayList<JSONObject>();
 
         StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
-                .append(propId).append("/sessions/").append("?access_token=").append(this.getToken())
-				.append("&filter=").append(this.getFilterSubmittedSessions());
+                .append(propId).append("/sessions/").append("?access_token=").append(this.getToken());
 
 
         JSONArray jsonSessions = readJsonArrayFromUrl(url.toString());
@@ -594,37 +593,6 @@ public class MAXIVWebService implements SMISWebService {
 		return token;
 	}
 
-    private String getFilterSubmittedSessions() throws Exception {
-        StringBuilder filter = new StringBuilder();
-        String filterStr = "";
-        JSONObject jsonFieldNeq = new JSONObject();
-        jsonFieldNeq.put("neq", JSONObject.NULL);
-        JSONObject jsonField1 = new JSONObject();
-        jsonField1.put("submitted", jsonFieldNeq);
-
-        /*JSONArray jsonArray = new JSONArray();
-        jsonArray.put(jsonField1);
-
-        JSONObject jsonFieldAnd = new JSONObject();
-        jsonFieldAnd.put("and", jsonArray);*/
-        JSONObject jsonFilter = new JSONObject();
-        jsonFilter.put("where", jsonField1);
-
-        filterStr = jsonFilter.toString();
-
-        Pattern p = Pattern.compile("[a-zA-Z0-9]");
-
-        for (int i = 0; i < filterStr.length(); i++) {
-            Matcher m = p.matcher(String.valueOf(filterStr.charAt(i)));
-            if (m.find()) {
-                filter.append(filterStr.charAt(i));
-            } else {
-                filter.append("%").append(String.format("%h", (filterStr.charAt(i))));
-            }
-        }
-
-        return filter.toString();
-    }
 
     private String getFilter(String startDateStr, String endDateStr, String beamline) throws Exception {
         StringBuilder filter = new StringBuilder();

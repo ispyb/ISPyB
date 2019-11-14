@@ -73,7 +73,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	private final String StatsByDataCollectionId = getStatsQuery() + " where dataCollectionId in (:dataCollectionIdList) and BLSession.proposalId=:proposalId";
 	
-	private final String StatsBySessionId = getStatsQuery() + " where BLSession.sessionId = :sessionId and BLSession.proposalId=:proposalId";
+	private final String StatsByDataCollectionGroupId = getStatsQuery() + " where DataCollection.dataCollectionGroupId=:dataCollectionGroupId";
 	
 	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
@@ -575,9 +575,9 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	}
 
 	@Override
-	public Collection<? extends Map<String, Object>> getStatsByDataSessionIds(int proposalId, Integer sessionId) {
+	public Collection<? extends Map<String, Object>> getStatsByDataDataCollectionGroupId(Integer dataCollectionGroupId) {
 		Session session = (Session) this.entityManager.getDelegate();
-		String queryString = StatsBySessionId.replace(":sessionId", String.valueOf(sessionId)).replace(":proposalId", String.valueOf(proposalId));
+		String queryString = StatsByDataCollectionGroupId.replace(":dataCollectionGroupId", String.valueOf(dataCollectionGroupId));
 		System.out.println(queryString);
 		SQLQuery query = session.createSQLQuery(queryString);
 		return executeSQLQuery(query);

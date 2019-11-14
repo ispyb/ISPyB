@@ -55,7 +55,20 @@ public class MXRestWebService extends RestWebService{
 			}
 		}
 		return new AutoProcessingDataParser(lists);
-	}	
+	}
+
+	protected AutoProcessingDataParser getFastDPParserByAutoProcIntegrationListId(List<Integer> ids) throws NamingException, Exception {
+		List<List<AutoProcessingData>> lists = new ArrayList<List<AutoProcessingData>>();
+		for (Integer id : ids) {
+			AutoProcIntegration3VO autoProcIntegration3VO = this.getAutoProcIntegration3Service().findByPk(id);
+			List<AutoProcProgramAttachment3VO> noanomCorrectAttachmentList = this.getAutoProcProgramAttachment3Service().findNoanomCorrect(autoProcIntegration3VO.getAutoProcProgramVOId());
+			for (AutoProcProgramAttachment3VO autoProcProgramAttachment3VO : noanomCorrectAttachmentList) {
+				List<AutoProcessingData> data = AutoProcProgramaAttachmentFileReader.getAutoProcessingDataFromAttachemt(autoProcProgramAttachment3VO);
+				lists.add(data);
+			}
+		}
+		return new AutoProcessingDataParser(lists);
+	}
 	
 	
 	protected Experiment3Service getExperiment3Service() throws NamingException {

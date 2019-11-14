@@ -487,7 +487,7 @@ public class CreatePuckAction extends DispatchAction {
 				containerVO.setCode(puckCode);				
 				containerVO.setTimeStamp(StringUtils.getCurrentTimeStamp());
 				containerVO.setDewarVO(dewarVO);
-				if (samples != null && nbSamples > Constants.SPINE_SAMPLE_CAPACITY){
+				if (samples != null && (nbSamples > Constants.SPINE_SAMPLE_CAPACITY || Constants.SITE_IS_MAXIV())){
 					containerVO.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
 					containerVO.setCapacity(Constants.UNIPUCK_SAMPLE_CAPACITY);
 				} else {
