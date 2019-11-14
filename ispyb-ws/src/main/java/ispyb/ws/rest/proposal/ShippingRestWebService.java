@@ -9,6 +9,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.common.vos.shipping.Container3VO;
 import ispyb.server.common.vos.shipping.Dewar3VO;
 import ispyb.server.common.vos.shipping.Shipping3VO;
+import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
@@ -390,11 +391,32 @@ public class ShippingRestWebService extends MXRestWebService {
 
 		long id = this.logInit("removeShipment", logger, token, proposal, shippingId);
 		try {
-			this.getShipping3Service().deleteByPk(new Integer(shippingId));
+			this.getShipping3Service().deleteAllSamplesAndContainersForShipping(shippingId);
+			this.getShipping3Service().deleteByPk(shippingId);
 			this.logFinish("removeShipment", id, logger);
-			return sendResponse(this.getShipping3Service().getShippingById(shippingId));
+			return sendResponse(true);
+			//return sendResponse(this.getShipping3Service().getShippingById(shippingId));
 		} catch (Exception e) {
 			return this.logError("removeShipment", e, id, logger);
+		}
+
+	}
+
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/{shippingId}/datacollecitons/list")
+	@Produces({ "application/json" })
+	public Response getDatacollectionsByShippingId(@PathParam("token") String token, @PathParam("proposal") String proposal,
+							   @PathParam("shippingId") Integer shippingId) throws Exception {
+
+		long id = this.logInit("getDatacollectionsByShippingId", logger, token, proposal, shippingId);
+		try {
+			List<DataCollection3VO> dcs = this.getDataCollection3Service().findByShippingId(shippingId);
+			this.logFinish("getDatacollectionsByShippingId", id, logger);
+			return sendResponse(dcs);
+		} catch (Exception e) {
+			return this.logError("getDatacollectionsByShippingId", e, id, logger);
 		}
 
 	}
