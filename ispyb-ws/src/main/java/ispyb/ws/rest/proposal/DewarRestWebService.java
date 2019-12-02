@@ -35,6 +35,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
@@ -314,8 +315,39 @@ public class DewarRestWebService extends RestWebService {
 		}
 		return null;
 	}
-	
-	
+
+
+	@RolesAllowed({"Manager", "Localcontact" })
+	@POST
+	@Path("{token}/dewar/updateStatus")
+	@Produces({ "application/json" })
+	public Response updateStatus(
+			@PathParam("token") String token,
+			@FormParam("location") String location,
+			@FormParam("barCode") String barCode,
+			@FormParam("username") String username)
+			throws Exception {
+
+		long start = this.logInit("updateStatus", logger, token, location,
+				barCode, username);
+
+		try {
+			Timestamp dateTime = getDateTime();
+			// Add dewar event in table
+			getDewarAPIService().addDewarLocation(barCode, username, dateTime, location, "", "");
+
+			// Update dewar info (Dewar, Shipping, DewarTransportHistory)
+			if (!getDewarAPIService().updateDewar(barCode, location, "", "")) {
+				throw new Exception("Cannot update the dewar status");
+			}
+			this.logFinish("updateStatus", start, logger);
+
+			return this.sendResponse(Status.OK);
+		} catch (Exception e) {
+			this.logError("updateStatus", e, start, logger);
+			return this.sendResponse(Status.NOT_FOUND);
+		}
+	}
 
 
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
