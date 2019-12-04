@@ -692,5 +692,14 @@ public class StringUtils {
 		else
 			return false;
 	}
+
+	public static String breakString(String str, int size){
+		StringBuilder sb = new StringBuilder(str);
+		int i = 0;
+		while((i =sb.indexOf(" ",i +size))!=-1){
+			sb.replace(i, i + 1, "\n");
+		}
+		return sb.toString();
+	}
 }
 
