@@ -693,13 +693,18 @@ public class StringUtils {
 			return false;
 	}
 
-	public static String breakString(String str, int size){
-		StringBuilder sb = new StringBuilder(str);
-		int i = 0;
-		while((i =sb.indexOf(" ",i +size))!=-1){
-			sb.replace(i, i + 1, "\n");
+	public static String breakString(String original, int interval) {
+		String formatted = "";
+		String separator = "\n\r";
+
+		for (int i = 0; i < original.length(); i++) {
+			if (i % interval == 0 && i > 0) {
+				formatted += separator;
+			}
+			formatted += original.substring(i, i+1);
 		}
-		return sb.toString();
+
+		return formatted;
 	}
 }
 
