@@ -1,5 +1,6 @@
 package ispyb.ws.rest.proposal;
 
+import ispyb.common.util.StringUtils;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PDFFormFiller;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
@@ -478,7 +479,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_sendingLaboratoryName",
 				sendingLaboratory.getName());
 		fieldNamesAndValues.put("TF_sendingLaboratoryAddress",
-				sendingLaboratory.getAddress());
+				StringUtils.breakString(sendingLaboratory.getAddress(), 30));
 
 		fieldNamesAndValues.put(
 				"TF_returnLabContactName",
@@ -500,7 +501,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_returnLaboratoryName",
 				returnLaboratory.getName());
 		fieldNamesAndValues.put("TF_returnLaboratoryAddress",
-				returnLaboratory.getAddress());
+				StringUtils.breakString(returnLaboratory.getAddress(), 30));
 
 		// default courier company (only if exists)
 		String defaultCourrierCompany = "unknown";
