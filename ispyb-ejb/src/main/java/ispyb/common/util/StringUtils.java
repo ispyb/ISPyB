@@ -695,7 +695,7 @@ public class StringUtils {
 
 	public static String breakString(String original, int interval) {
 		String formatted = "";
-		String separator = "\n\r";
+		String separator = "\\n\\r";
 
 		for (int i = 0; i < original.length(); i++) {
 			if (i % interval == 0 && i > 0) {
