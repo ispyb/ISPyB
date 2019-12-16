@@ -6,8 +6,6 @@
 
 package bcr.client.tracking;
 
-import ispyb.server.common.services.shipping.DewarAPIService;
-import ispyb.server.common.vos.shipping.DewarAPIBean;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -21,6 +19,8 @@ import bcr.client.util.Formatter;
 import bcr.client.util.SendMailUtils;
 import bcr.common.util.Constants;
 import bcr.common.util.Ejb3ServiceLocatorBCR;
+import ispyb.server.common.services.shipping.DewarAPIService;
+import ispyb.server.common.vos.shipping.DewarAPIBean;
 
 public class TrackingEmail {
 

@@ -512,11 +512,6 @@ public class DewarRestWebService extends RestWebService {
 			// Update status
 			dewar.setDewarStatus(Constants.SHIPPING_STATUS_READY_TO_GO);
 			this.getDewar3Service().update(dewar);
-			// Refresh dewarFullFacade
-			// old DewarFullFacadeLocal dewarFullFacade =
-			// DewarFullFacadeUtil.getLocalHome().create();
-			// old DewarFullValue dewarFull =
-			// dewarFullFacade.findByPrimaryKey(dewarId);
 			Dewar3VO dewarFull = this.getDewar3Service().findByPk(dewarId, false,
 					false);
 			dewarFull.setDewarStatus(Constants.SHIPPING_STATUS_READY_TO_GO);
@@ -524,33 +519,16 @@ public class DewarRestWebService extends RestWebService {
 
 		// Add event to history
 		Timestamp dateTime = getDateTime();
-		// old DewarTransportHistoryFacadeLocal _dewarTransportHistoryFacade =
-		// DewarTransportHistoryFacadeUtil.getLocalHome().create();
-		// old DewarTransportHistoryLightValue newHistory = new
-		// DewarTransportHistoryLightValue();
 		DewarTransportHistory3VO newHistory = new DewarTransportHistory3VO();
 		newHistory.setDewarStatus(Constants.SHIPPING_STATUS_READY_TO_GO);
 		newHistory.setStorageLocation("");
 		newHistory.setArrivalDate(dateTime);
-		// old newHistory.setDewarId(dewarId);
 		newHistory.setDewarVO(dewar);
-		// old _dewarTransportHistoryFacade.create(newHistory);
 		this.getDewarTransportHistory3Service().create(newHistory);
 
 		// Utilisation du stream PDF dans l'action struts
 		byte[] pdfContent = outputStream.toByteArray();
 		return pdfContent;
-		// MISServletUtils.sendToBrowser(in_response/* HttpServletResponse */,
-		// new ByteArrayInputStream(pdfContent),
-		// new Integer(pdfContent.length), "application/pdf", dewar.getCode() +
-		// ".pdf"/* fileName */, // !!!
-		// // =>
-		// // Parcel
-		// // name
-		// // !
-		// false/* inLine */, true/* forceAttachment */);
-
-//		return null;
 	}
 
 	

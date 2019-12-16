@@ -81,5 +81,20 @@ public interface DewarAPIService {
 	 * 
 	 */
 	public boolean updateDewar(String dewarBarCode, String location, String courierName, String TrackingNumber);
+	
+	/**
+	 * Update Dewar table (dewarStatus, storageLocation, trackingNumberFromESRF) Update Shipping table (shippingStatus, return Courier,
+	 * dateOfShippingToUser) Add entry in DewarTransportHistory table
+	 * if updateContainers = true, then update the Container table and the ContainerHistory table with the status and location of the dewar.
+	 * 
+	 * @param dewarBarCode
+	 * @param location
+	 * @param courierName
+	 * @param TrackingNumber
+	 * @param updateContainers
+	 * @return
+	 * 
+	 */
+	public boolean updateDewar(String dewarBarCode, String location, String courierName, String TrackingNumber, boolean updateContainers);
 
 }

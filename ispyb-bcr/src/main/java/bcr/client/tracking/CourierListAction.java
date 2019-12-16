@@ -6,8 +6,6 @@
 
 package bcr.client.tracking;
 
-import ispyb.server.common.services.shipping.DewarAPIService;
-
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.sql.Timestamp;
@@ -27,6 +25,7 @@ import org.apache.struts.actions.DispatchAction;
 
 import bcr.common.util.Constants;
 import bcr.common.util.Ejb3ServiceLocatorBCR;
+import ispyb.server.common.services.shipping.DewarAPIService;
 
 /**
  * @struts.action name="courierForm" path="/user/courierList" type="bcr.client.tracking.CourierListAction"

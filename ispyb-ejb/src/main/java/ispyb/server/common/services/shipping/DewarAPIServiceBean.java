@@ -302,6 +302,27 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 
 		LOG.debug("Dewar Tracking (updateDewar): updating info for dewar barcode '" + dewarBarCode + "'");
 
+		return this.updateDewar(dewarBarCode, location,courierName, TrackingNumber, false);
+
+	}
+	
+	/**
+	 * Update Dewar table (dewarStatus, storageLocation, trackingNumberFromESRF) Update Shipping table (shippingStatus, return Courier,
+	 * dateOfShippingToUser) Add entry in DewarTransportHistory table
+	 * if updateContainers = true, then update the Container table and the ContainerHistory table with the status and location of the dewar.
+	 * 
+	 * @param dewarBarCode
+	 * @param location
+	 * @param courierName
+	 * @param TrackingNumber
+	 * @param updateContainers
+	 * @return
+	 * 
+	 */
+	public boolean updateDewar(String dewarBarCode, String location, String courierName, String TrackingNumber, boolean updateContainers) {
+
+		LOG.debug("Dewar Tracking (updateDewar): updating info for dewar barcode '" + dewarBarCode + "'");
+
 		try {
 			// Time stamp
 			Date dateTime = getDateTime();
@@ -322,6 +343,8 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 			Shipping3Service shippingService = (Shipping3Service) ejb3ServiceLocator.getLocalService(Shipping3Service.class);
 			DewarTransportHistory3Service dewarTransportHistoryService = (DewarTransportHistory3Service) ejb3ServiceLocator
 					.getLocalService(DewarTransportHistory3Service.class);
+			ContainerHistory3Service containerHistoryService = (ContainerHistory3Service) ejb3ServiceLocator.getLocalService(ContainerHistory3Service.class);
+			
 			// Get dewar and shipping Id
 			int dewarId;
 			int shippingId;
@@ -370,12 +393,17 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 			}
 
 			// Update Container status (avoid to have containers in processing mode in MxCube)
+			// the container location is updated also if asked for
 			List<Container3VO> containers = containerService.findByDewarId(dewarId);
 			for (int i = 0; i < containers.size(); i++) {
 				Container3VO container = containers.get(i);
-				container.setContainerStatus(dewarStatus);
+				container.setContainerStatus(dewarStatus);				
+				if (updateContainers) {
+					// in this case we update also the location and we create an entry in ContainerHistory table
+					container.setBeamlineLocation(location);
+					containerHistoryService.create(container, location, dewarStatus);
+				}
 				containerService.update(container);
-
 			}
 
 			// Add entry in DewarTransportHistory table

@@ -1,25 +1,25 @@
 package ispyb.ws.rest.proposal;
 
-import ispyb.common.util.Constants;
-import ispyb.server.common.vos.login.Login3VO;
-import ispyb.server.common.vos.shipping.Container3VO;
-import ispyb.ws.rest.RestWebService;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.annotation.security.RolesAllowed;
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+
+import ispyb.server.common.vos.login.Login3VO;
+import ispyb.server.common.vos.shipping.Container3VO;
+import ispyb.server.common.vos.shipping.ContainerHistory3VO;
+import ispyb.ws.rest.RestWebService;
 
 @Path("/")
 public class ContainerRestWebService extends RestWebService {
@@ -118,6 +118,55 @@ public class ContainerRestWebService extends RestWebService {
 			return sendResponse(containerIdList);
 		} catch (Exception e) {
 			return this.logError("getContainerIdsByProposalAndCode", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/container/{containerIds}/beamlinelocation/{location}/update")
+	@Produces({ "application/json" })
+	public Response updateContainerLocationAndHistory(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("containerIds") String containerIds,
+			@PathParam("location") String location) throws NamingException {
+		
+		long id = this.logInit("updateContainerLocationAndHistory", logger, token, proposal);
+		try {
+			
+			List<Integer> containerIdList = this.parseToInteger(containerIds);
+			
+			for (int i = 0; i < containerIdList.size(); i++) {
+
+				Container3VO container = this.getContainer3Service().findByPk(containerIdList.get(i), false);
+				container.setBeamlineLocation(location);
+				this.getContainer3Service().update(container);
+				this.getContainerHistory3Service().create(container, location, container.getContainerStatus());				
+			}
+			
+			this.logFinish("updateContainerLocationAndHistory", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("updateContainerLocationAndHistory", "ok");
+			return sendResponse(response);
+		} catch (Exception e) {
+			return this.logError("updateContainerLocationAndHistory", e, id, logger);
+		}
+	}
+	
+	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
+	@GET
+	@Path("{token}/proposal/{proposal}/container/{containerId}/containerHistory/list")
+	@Produces({ "application/json" })
+	public Response getContainerHistory(@PathParam("token") String token,
+			@PathParam("proposal") String proposal,
+			@PathParam("containerId") Integer containerId) throws NamingException {
+		
+		long id = this.logInit("getContainerHistory", logger, token, proposal);
+		try {		
+			List<ContainerHistory3VO> containerHistoryList = this.getContainerHistory3Service().findByContainerId(containerId);			
+			this.logFinish("getContainerHistory", id, logger);
+			return sendResponse(containerHistoryList);
+		} catch (Exception e) {
+			return this.logError("getContainerHistory", e, id, logger);
 		}
 	}
 }
