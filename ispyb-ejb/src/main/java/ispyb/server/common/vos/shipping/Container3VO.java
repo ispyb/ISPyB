@@ -101,6 +101,11 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
 	@JoinColumn(name = "containerId")
 	protected Set<BLSample3VO> sampleVOs;
+	
+	@Fetch(value = FetchMode.SELECT)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	@JoinColumn(name = "containerId")
+	protected Set<ContainerHistory3VO> containerHistoryVOs;
 
 	public Container3VO() {
 		super();
@@ -272,6 +277,14 @@ public class Container3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setPersonVO(Person3VO personVO) {
 		this.personVO = personVO;
+	}
+
+	public Set<ContainerHistory3VO> getContainerHistoryVOs() {
+		return containerHistoryVOs;
+	}
+
+	public void setContainerHistoryVOs(Set<ContainerHistory3VO> containerHistoryVOs) {
+		this.containerHistoryVOs = containerHistoryVOs;
 	}
 
 	/**

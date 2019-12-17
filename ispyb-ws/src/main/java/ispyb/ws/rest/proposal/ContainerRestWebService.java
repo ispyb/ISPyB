@@ -134,19 +134,19 @@ public class ContainerRestWebService extends RestWebService {
 		try {
 			
 			List<Integer> containerIdList = this.parseToInteger(containerIds);
+			List<Container3VO> containerUpdatedList = new ArrayList<Container3VO>();
 			
 			for (int i = 0; i < containerIdList.size(); i++) {
 
 				Container3VO container = this.getContainer3Service().findByPk(containerIdList.get(i), false);
 				container.setBeamlineLocation(location);
 				this.getContainer3Service().update(container);
-				this.getContainerHistory3Service().create(container, location, container.getContainerStatus());				
+				this.getContainerHistory3Service().create(container, location, container.getContainerStatus());		
+				containerUpdatedList.add(container);
 			}
 			
 			this.logFinish("updateContainerLocationAndHistory", id, logger);
-			HashMap<String, String> response = new HashMap<String, String>();
-			response.put("updateContainerLocationAndHistory", "ok");
-			return sendResponse(response);
+			return sendResponse(containerUpdatedList);
 		} catch (Exception e) {
 			return this.logError("updateContainerLocationAndHistory", e, id, logger);
 		}

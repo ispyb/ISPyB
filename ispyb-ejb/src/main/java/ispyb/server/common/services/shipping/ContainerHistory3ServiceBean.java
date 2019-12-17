@@ -28,6 +28,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
@@ -165,12 +166,11 @@ public class ContainerHistory3ServiceBean implements ContainerHistory3Service,
 			throws Exception {
 
 		Session session = (Session) this.entityManager.getDelegate();
-		Criteria criteria = session.createCriteria(ContainerHistory3VO.class);
+		Criteria criteria = session.createCriteria(ContainerHistory3VO.class).addOrder(Order.desc("containerHistoryId"));
 		
 		if (containerId != null){
 			criteria.createCriteria("containerVO").add(Restrictions.eq("containerId", containerId));
 		}
-		
 		return criteria.list();
 	}
 	

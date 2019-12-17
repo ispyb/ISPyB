@@ -50,17 +50,17 @@ public class ContainerHistory3VO extends ISPyBValueObject implements Cloneable {
 	@Id
 	@GeneratedValue
 	@Column(name = "containerHistoryId")
-	private Integer containerHistoryId;
+	protected Integer containerHistoryId;
 
 	@ManyToOne
 	@JoinColumn(name = "containerId")
 	private Container3VO containerVO;
 
 	@Column(name = "location")
-	private String containerLocation;
+	protected String containerLocation;
 	
 	@Column(name = "status")
-	private String containerStatus;
+	protected String containerStatus;
 
 	public ContainerHistory3VO() {
 		super();
