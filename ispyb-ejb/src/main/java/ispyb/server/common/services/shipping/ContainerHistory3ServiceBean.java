@@ -18,8 +18,10 @@
  ****************************************************************************************************/
 package ispyb.server.common.services.shipping;
 
+import java.util.Iterator;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -51,7 +53,7 @@ public class ContainerHistory3ServiceBean implements ContainerHistory3Service,
 	}
 
 	@PersistenceContext(unitName = "ispyb_db")
-	private EntityManager entityManager;
+	private EntityManager entityManager;		
 
 	public ContainerHistory3ServiceBean() {
 	};
@@ -72,14 +74,21 @@ public class ContainerHistory3ServiceBean implements ContainerHistory3Service,
 		return vo;
 	}
 	
-	public ContainerHistory3VO create(final  Container3VO container, final String location, final String status) throws Exception {
+	public ContainerHistory3VO create(final Container3VO container, final String location, final String status) throws Exception {
 		
 		checkCreateChangeRemoveAccess();
-		ContainerHistory3VO vo = new ContainerHistory3VO(container, location, status);
-		// TODO Edit this business code
-		this.checkAndCompleteData(vo, true);
-		this.entityManager.persist(vo);
-		return vo;
+		
+		ContainerHistory3VO lastContainerHistory = this.findLastCreated(container.getContainerId());
+		// do not create the same history twice
+		if (lastContainerHistory != null && lastContainerHistory.getContainerLocation().equals(location)
+					&& lastContainerHistory.getContainerStatus().equals(status)) {
+			return lastContainerHistory;
+		} else {		
+			ContainerHistory3VO vo = new ContainerHistory3VO(container, location, status);
+			this.checkAndCompleteData(vo, true);
+			this.entityManager.persist(vo);
+			return vo;
+		}							
 	}
 
 	/**
@@ -145,7 +154,7 @@ public class ContainerHistory3ServiceBean implements ContainerHistory3Service,
 			return null;
 		}
 	}
-	
+		
 	/**
 	 * Check if user has access rights to create, change and remove ContainerHistory3 entities. If not set rollback
 	 * only and throw AccessDeniedException
@@ -204,4 +213,14 @@ public class ContainerHistory3ServiceBean implements ContainerHistory3Service,
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
+		
+	private ContainerHistory3VO findLastCreated(Integer containerId) throws Exception {
+		List<ContainerHistory3VO> historyList = this.findByContainerId(containerId);		
+		if (!historyList.isEmpty()) {
+			return historyList.get(0);			
+		}
+		return null;
+	}
+
+	
 }
