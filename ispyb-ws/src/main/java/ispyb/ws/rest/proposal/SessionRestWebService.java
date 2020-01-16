@@ -88,7 +88,7 @@ public class SessionRestWebService extends RestWebService {
 		try {
 			List<Map<String, Object>> result = getSessionService().getSessionViewByProposalId(this.getProposalId(proposal));
 			this.logFinish(methodName, id, logger);
-			return sendResponse(result);
+			return sendResponse(result, true);
 		} catch (Exception e) {
 			return this.logError(methodName, e, id, logger);
 		}
