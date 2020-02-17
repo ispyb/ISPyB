@@ -1172,6 +1172,9 @@ public class ToolsForCollectionWebService {
 			DataCollection3VO dc = null;
 			DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
 					.getLocalService(DataCollection3Service.class);
+			if (Constants.SITE_IS_MAXIV()) {
+				fileLocation = fileLocation.replace("/data/visitors/biomax/","/mxn/groups/ispybstorage/pyarch/visitors/");
+			}
 			dc = dataCollectionService.findForDataCollectionIdFromFileLocationAndFileName(fileLocation, fileName);
 			if (dc == null) {
 				// try to add or remove the last / -- it seems that there is no rule with this.
