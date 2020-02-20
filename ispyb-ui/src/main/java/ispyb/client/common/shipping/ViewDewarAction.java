@@ -356,7 +356,9 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			// ---------------------------------------------------------------------------------------------------
 			// PDF Labels generation
 			PDFFormFiller pdfFormFiller = new PDFFormFiller();
+
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
 			// try {
 			if (returnLabContact.getDefaultCourrierCompany() != null
 					&& returnLabContact.getDefaultCourrierCompany().equals(
@@ -382,6 +384,7 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			Map<String, String> fieldNamesAndValues = new HashMap<String, String>();
 			fieldNamesAndValues.put("TF_parcelLabel", dewar.getCode());
 			fieldNamesAndValues.put("TF_parcelBarcode", "*" + dewar.getBarCode() + "*");
+
 			fieldNamesAndValues.put("TF_shipmentName", shipping.getShippingName());
 			fieldNamesAndValues.put("TF_parcelsNumber", Integer.toString(shipping.getDewarVOs().size()));
 			fieldNamesAndValues.put("TF_proposalNumber", proposal.getCode() + "-" + proposal.getNumber());
@@ -414,7 +417,11 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			fieldNamesAndValues.put("TF_sendingLabContactFax", sendingFax);
 
 			fieldNamesAndValues.put("TF_sendingLaboratoryName", sendingLaboratory.getName());
-			fieldNamesAndValues.put("TF_sendingLaboratoryAddress", StringUtils.breakString(sendingLaboratory.getAddress(), 30));
+			if (Constants.SITE_IS_MAXIV()) {
+				fieldNamesAndValues.put("TF_sendingLaboratoryAddress", StringUtils.breakString(sendingLaboratory.getAddress(), 30));
+			} else {
+				fieldNamesAndValues.put("TF_sendingLaboratoryAddress", sendingLaboratory.getAddress());
+			}
 
 			fieldNamesAndValues.put("TF_returnLabContactName", returnPerson.getFamilyName().toUpperCase() + " "
 					+ returnPerson.getGivenName());
