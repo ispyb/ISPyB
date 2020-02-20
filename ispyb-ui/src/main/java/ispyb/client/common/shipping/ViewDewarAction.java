@@ -417,12 +417,13 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			fieldNamesAndValues.put("TF_sendingLabContactFax", sendingFax);
 
 			fieldNamesAndValues.put("TF_sendingLaboratoryName", sendingLaboratory.getName());
-			if (Constants.SITE_IS_MAXIV()) {
+			/*if (Constants.SITE_IS_MAXIV()) {
 				fieldNamesAndValues.put("TF_sendingLaboratoryAddress", StringUtils.breakString(sendingLaboratory.getAddress(), 30));
 			} else {
 				fieldNamesAndValues.put("TF_sendingLaboratoryAddress", sendingLaboratory.getAddress());
-			}
+			}*/
 
+			fieldNamesAndValues.put("TF_sendingLaboratoryAddress", sendingLaboratory.getAddress());
 			fieldNamesAndValues.put("TF_returnLabContactName", returnPerson.getFamilyName().toUpperCase() + " "
 					+ returnPerson.getGivenName());
 
@@ -439,7 +440,12 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			fieldNamesAndValues.put("TF_returnLabContactFax", returnFax);
 
 			fieldNamesAndValues.put("TF_returnLaboratoryName", returnLaboratory.getName());
-			fieldNamesAndValues.put("TF_returnLaboratoryAddress", StringUtils.breakString(returnLaboratory.getAddress(), 30));
+			/*if (Constants.SITE_IS_MAXIV()) {
+				fieldNamesAndValues.put("TF_returnLaboratoryAddress", StringUtils.breakString(returnLaboratory.getAddress(), 30));
+			} else {
+				fieldNamesAndValues.put("TF_returnLaboratoryAddress", returnLaboratory.getAddress());
+			}*/
+			fieldNamesAndValues.put("TF_returnLaboratoryAddress", returnLaboratory.getAddress());
 
 			// default courier company (only if exists)
 			String defaultCourrierCompany = "unknown";
