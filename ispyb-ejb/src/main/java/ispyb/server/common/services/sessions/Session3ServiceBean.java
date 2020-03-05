@@ -155,7 +155,7 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 			+ " WHERE DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId"
 			+ " and DataCollection.numberOfImages <=4 and DataCollectionGroup.sessionId  = :sessionId ";
 	
-	private final String[] beamlinesToProtect = { "ID29", "ID23-1", "ID23-2", "ID30A-1", "ID30A-2","ID30A-3", "ID30B" };
+	private final String[] beamlinesToProtect = { "ID29", "ID23-1", "ID23-2", "ID30A-1", "ID30A-2","ID30A-3", "ID30B", "CM01" };
 	
 	private final String[] account_not_to_protect = { "OPID", "OPD", "MXIHR" };
 	
