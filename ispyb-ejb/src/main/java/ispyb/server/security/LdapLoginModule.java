@@ -182,10 +182,8 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 	 * validateCredentials Validate the inputPassword by creating a ldap InitialContext with the SECURITY_CREDENTIALS
 	 * set to the password.
 	 * 
-	 * @param inputPassword
+	 * @param password
 	 *            the password to validate.
-	 * @param expectedPassword
-	 *            ignored
 	 */
 	public boolean validateCredentials(String username, String password) {
 
@@ -277,14 +275,26 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 		String principalDNSuffix = (String) options.get(PRINCIPAL_DN_SUFFIX_OPT);
 		String userDN = principalDNPrefix + username + principalDNSuffix;
 		String optionsStr = options.toString();
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.SECURITY_AUTHENTICATION, "simple");
+		//env.put(Context.SECURITY_PRINCIPAL, username + "@maxlab.lu.se");
 		env.setProperty(Context.SECURITY_PRINCIPAL, userDN);
 		env.put(Context.SECURITY_CREDENTIALS, credential);
+		env.put("jboss.security.security_domain", "ispyb");
+		env.put("allowEmptyPasswords", "false");
 
 		// Connects to server
-		// Connects to server
 		// Avoid having user password in logs... LOG.debug("Logging into LDAP server, env=" + env);
+		InitialLdapContext ctx = null;
 		LOG.debug("Logging into LDAP server");
-		InitialLdapContext ctx = new InitialLdapContext(env, null);
+		try {
+			ctx = new InitialLdapContext(env, null);
+		}catch (Exception ex){
+			if (username.equals("ispyb")) {
+				LOG.debug("Env:" + env);
+			}
+			throw ex;
+		}
 		LOG.debug("Logged into LDAP server");
 
 		// Search for Groups/Roles the user belongs
@@ -359,19 +369,15 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 							roleName = value.toString();
 							// fill roles array
 							if (roleName != null) {
-								if (roleName.equals("Staff")) {
-									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
-								} else if (roleName.equals("ispyb-manager")
-										|| roleName.equals("Information Management") || roleName.equals("biomax")) {
-									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+								if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
+										roleName.equals("Information Management") || roleName.equals("biomax")) {
+									userRoles.addMember(new SimplePrincipal(Constants.ROLE_MANAGER));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_ADMIN));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_BLOM));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_INDUSTRIAL));
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_STORE));
-								} else if (roleName.equals("ispyb-biomax-contacts")) {
-									userRoles.addMember(new SimplePrincipal(Constants.ROLE_LOCALCONTACT));
-									userRoles.addMember(new SimplePrincipal(Constants.ALL_MANAGE_ROLE_NAME));
+									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
 								} else if (roleName.contains("-group")) {
 									userRoles.addMember(new SimplePrincipal("mx" + roleName.replace("-group", "")));
 									userRoles.addMember(new SimplePrincipal(DEFAULT_GROUP));
