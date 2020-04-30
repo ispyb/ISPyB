@@ -275,13 +275,16 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 		String principalDNSuffix = (String) options.get(PRINCIPAL_DN_SUFFIX_OPT);
 		String userDN = principalDNPrefix + username + principalDNSuffix;
 		String optionsStr = options.toString();
-		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(Context.SECURITY_AUTHENTICATION, "simple");
-		//env.put(Context.SECURITY_PRINCIPAL, username + "@maxlab.lu.se");
+
 		env.setProperty(Context.SECURITY_PRINCIPAL, userDN);
 		env.put(Context.SECURITY_CREDENTIALS, credential);
-		env.put("jboss.security.security_domain", "ispyb");
-		env.put("allowEmptyPasswords", "false");
+		if (Constants.SITE_IS_MAXIV()){
+			env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+			env.put(Context.SECURITY_AUTHENTICATION, "simple");
+			env.put("jboss.security.security_domain", "ispyb");
+			env.put("allowEmptyPasswords", "false");
+		}
+		
 
 		// Connects to server
 		// Avoid having user password in logs... LOG.debug("Logging into LDAP server, env=" + env);
