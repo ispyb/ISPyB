@@ -692,5 +692,19 @@ public class StringUtils {
 		else
 			return false;
 	}
+
+	public static String breakString(String original, int interval) {
+		String formatted = "";
+		String separator = "\\n\\r";
+
+		for (int i = 0; i < original.length(); i++) {
+			if (i % interval == 0 && i > 0) {
+				formatted += separator;
+			}
+			formatted += original.substring(i, i+1);
+		}
+
+		return formatted;
+	}
 }
 
