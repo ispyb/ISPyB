@@ -440,11 +440,6 @@ public class ViewDewarAction extends org.apache.struts.actions.DispatchAction {
 			fieldNamesAndValues.put("TF_returnLabContactFax", returnFax);
 
 			fieldNamesAndValues.put("TF_returnLaboratoryName", returnLaboratory.getName());
-			/*if (Constants.SITE_IS_MAXIV()) {
-				fieldNamesAndValues.put("TF_returnLaboratoryAddress", StringUtils.breakString(returnLaboratory.getAddress(), 30));
-			} else {
-				fieldNamesAndValues.put("TF_returnLaboratoryAddress", returnLaboratory.getAddress());
-			}*/
 			fieldNamesAndValues.put("TF_returnLaboratoryAddress", returnLaboratory.getAddress());
 
 			// default courier company (only if exists)
