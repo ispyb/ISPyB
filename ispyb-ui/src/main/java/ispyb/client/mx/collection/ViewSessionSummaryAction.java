@@ -171,6 +171,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 	public final static String KEY_PEAK_ENERGY_DOUBLE_PRIME = "peakEnergyDoublePrime";
 
+	public final static String KEY_REMOTE_ENERGY = "remoteEnergy";
+
+	public final static String KEY_REMOTE_ENERGY_PRIME = "remoteEnergyPrime";
+
+	public final static String KEY_REMOTE_ENERGY_DOUBLE_PRIME = "remoteEnergyDoublePrime";
+
 	public final static String KEY_UNIT_CELL = "unitCell";
 
 	public final static String KEY_UNIT_CELL_TITLE = "unitCellTitle";
@@ -918,6 +924,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				+ (energyScan.getPeakFPrime() == null ? "" : energyScan.getPeakFPrime() + ""), false));
 		listResults.add(new Param(KEY_PEAK_ENERGY_DOUBLE_PRIME, "Peak f''", ""
 				+ (energyScan.getPeakFDoublePrime() == null ? "" : energyScan.getPeakFDoublePrime() + ""), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY, "Remote Energy", ""
+				+ (energyScan.getRemoteEnergy() == null ? "" : energyScan.getRemoteEnergy() + " keV"), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY_PRIME, "Remote f'", ""
+				+ (energyScan.getRemoteFPrime() == null ? "" : energyScan.getRemoteFPrime() + ""), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY_DOUBLE_PRIME, "Remote f''", ""
+				+ (energyScan.getRemoteFDoublePrime() == null ? "" : energyScan.getRemoteFDoublePrime() + ""), false));
 		info.setListResults(listResults);
 
 		return info;
