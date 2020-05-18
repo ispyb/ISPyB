@@ -843,7 +843,7 @@ public class ToolsForCollectionWebService {
 	public Integer storeOrUpdateEnergyScan(@WebParam(name = "energyScan")
 	EnergyScanWS3VO vo) throws Exception {
 		try {
-			LOG.debug("storeOrUpdateEnergyScan");
+			LOG.debug("storeOrUpdateEnergyScan - " +vo.toWSString());
 			// if vo is null we return null, no creation
 			if (vo == null)
 				return null;
