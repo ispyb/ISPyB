@@ -283,7 +283,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
 			env.put("jboss.security.security_domain", "ispyb");
 			env.put("allowEmptyPasswords", "false");
-			LOG.info("Env:" + env);
+			//LOG.info("Env:" + env);
 		}
 		
 
@@ -294,7 +294,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 		try {
 			ctx = new InitialLdapContext(env, null);
 		}catch (Exception ex){
-			if (username.equals("ispyb")) {
+			if (Constants.SITE_IS_MAXIV() && username.equals("ispyb")) {
 				LOG.info("Env:" + env);
 			}
 			throw ex;
