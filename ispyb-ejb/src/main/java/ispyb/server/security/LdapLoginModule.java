@@ -283,7 +283,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
 			env.put("jboss.security.security_domain", "ispyb");
 			env.put("allowEmptyPasswords", "false");
-			LOG.debug("Env:" + env);
+			LOG.info("Env:" + env);
 		}
 		
 
@@ -295,7 +295,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 			ctx = new InitialLdapContext(env, null);
 		}catch (Exception ex){
 			if (username.equals("ispyb")) {
-				LOG.debug("Env:" + env);
+				LOG.info("Env:" + env);
 			}
 			throw ex;
 		}
@@ -367,12 +367,12 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 						Attribute roles = attrs.get(groupAttrName);
 
 						for (int r = 0; r < roles.size(); r++) {
-
 							Object value = roles.get(r);
 							String roleName = null;
 							roleName = value.toString();
 							// fill roles array
 							if (roleName != null) {
+								LOG.info("Role found for " +username +":" +roleName);
 								if (roleName.equals("ispyb-manager") || roleName.equals("ispyb-biomax-contacts") ||
 										roleName.equals("Information Management") || roleName.equals("biomax")) {
 									userRoles.addMember(new SimplePrincipal(Constants.ROLE_MANAGER));
