@@ -283,6 +283,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
 			env.put("jboss.security.security_domain", "ispyb");
 			env.put("allowEmptyPasswords", "false");
+			LOG.debug("Env:" + env);
 		}
 		
 
