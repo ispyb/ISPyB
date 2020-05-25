@@ -57,6 +57,7 @@ import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -943,18 +944,26 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setImagePrefix("");
 		info.setImageThumbnailPath("");
 		info.setCrystalSnapshotPath("");
+		Float energy = xrfSpectrum.getEnergy();
+		String energyValue = Float.toString(energy) +" keV";
+		if (Constants.SITE_IS_MAXIV()){
+			DecimalFormat decimalFormat = new DecimalFormat("#.##");
+			energyValue = decimalFormat.format(energy) +" keV";
+		}
+
 		// parameters
 		List<Param> listParameters = new ArrayList<Param>();
-		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : Float
-				.toString(xrfSpectrum.getEnergy()), false));
+		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : energyValue, false));
 		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (xrfSpectrum.getExposureTime() == null ? ""
 				: ("" + xrfSpectrum.getExposureTime() + " s")), false));
-		listParameters
-				.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
-						: ("" + xrfSpectrum.getBeamSizeHorizontal() + " Î¼m")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " Î¼m")),
-				false));
+		if (!Constants.SITE_IS_MAXIV()) {
+			listParameters
+					.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
+							: ("" + xrfSpectrum.getBeamSizeHorizontal() + " Î¼m")), false));
+			listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+					(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " Î¼m")),
+					false));
+		}
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(xrfSpectrum.getComments());
@@ -979,7 +988,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		int annotatedPymcaXfeSpectrumExists = PathUtils.fileExists(xrfSpectrum.getAnnotatedPymcaXfeSpectrum());
 		String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xrfSpectrum
 				.getAnnotatedPymcaXfeSpectrum());
-		if (annotatedPymcaXfeSpectrumExists == 0) {
+		if (annotatedPymcaXfeSpectrumExists == 0 && !Constants.SITE_IS_MAXIV()) {
 			result = "Html report not found: " + shortFileNameAnnotatedPymcaXfeSpectrum;
 		} else if (annotatedPymcaXfeSpectrumExists == 1) {
 			result = shortFileNameAnnotatedPymcaXfeSpectrum;
