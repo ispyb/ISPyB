@@ -883,12 +883,14 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission factor",
 				(energyScan.getTransmissionFactor() == null ? "" : ("" + energyScan.getTransmissionFactor() + " %")),
 				false));
-		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
-				(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " Î¼m")),
-				false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " Î¼m")),
-				false));
+		if (!Constants.SITE_IS_MAXIV()) {
+			listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
+					(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " Î¼m")),
+					false));
+			listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+					(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " Î¼m")),
+					false));
+		}
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(energyScan.getComments());
