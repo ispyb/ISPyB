@@ -93,3 +93,5 @@ Sonarcube
 .scannerwork/
 sonar-project.properties
 
+/*.log
+/*.log
