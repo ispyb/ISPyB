@@ -41,7 +41,7 @@
 						<configuration>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-userportal-gen</artifactId>
-							<version>1.6</version>
+							<version>1.7</version>
 							<packaging>jar</packaging>
 							<file>${basedir}/../dependencies/ispyb-userportal-gen-1.7.jar</file>
 						</configuration>
