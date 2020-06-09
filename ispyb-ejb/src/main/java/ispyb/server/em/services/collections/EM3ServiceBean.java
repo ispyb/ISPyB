@@ -613,20 +613,23 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	}	
 	
 	private void updateSessionLastUpdate(Session3VO vo) throws Exception {
-		try {
-			
+		try {			
 			Timestamp currentTimeStamp = StringUtils.getCurrentTimeStamp();
-			Timestamp lastUpdate = new Timestamp(vo.getLastUpdate().getTime());
-			if (currentTimeStamp.after(lastUpdate)) {
-				vo.setLastUpdate(currentTimeStamp);
-				session3Service.update(vo);
-				LOG.debug("Session updated " + vo.getSessionId());				
-			}
+			
+			if (vo == null || (vo.getLastUpdate() != null && vo.getLastUpdate().after(currentTimeStamp))) {
+				// do nothing
+				return;
+			}									
+			vo.setLastUpdate(currentTimeStamp);
+			session3Service.update(vo);						
+			LOG.debug("Session updated " + vo.getSessionId());	
+			return ;
 
 		} catch (Exception e) {
 			LOG.error("ERROR: updateSessionLastUpdate - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
 			throw e;
 		}
+		
 	}
 
 
