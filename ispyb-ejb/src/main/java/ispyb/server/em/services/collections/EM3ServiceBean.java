@@ -18,8 +18,10 @@
  ****************************************************************************************************/
 package ispyb.server.em.services.collections;
 
+import ispyb.common.util.StringUtils;
 import ispyb.server.common.services.proposals.Proposal3Service;
 import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
 import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
@@ -39,6 +41,7 @@ import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
 import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -78,7 +81,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
 	
-	protected Logger log = LoggerFactory.getLogger(EM3ServiceBean.class);
+	protected final Logger LOG = LoggerFactory.getLogger(EM3ServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -126,7 +129,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	
 	private Integer getProposalId(String proposal, String beamlineName) throws Exception {
 		List<Proposal3VO> proposals = proposal3Service.findProposalByLoginName(proposal);
-		log.info("Found {} proposals for loginName = {}. technique=EM beamlineName={}", String.valueOf(proposals.size()), proposal, beamlineName);
+		LOG.info("Found {} proposals for loginName = {}. technique=EM beamlineName={}", String.valueOf(proposals.size()), proposal, beamlineName);
 
 		if (proposals.size() == 1) {
 			return proposals.get(0).getProposalId();
@@ -144,10 +147,10 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			if (sessions.size() > 0) {
 				/** Session found **/
 				Session3VO session = sessions.get(0);
-				log.info("Existing session found. technique=EM sessionId={} beamlineName={}", session.getSessionId(), session.getBeamlineName());
+				LOG.info("Existing session found. technique=EM sessionId={} beamlineName={}", session.getSessionId(), session.getBeamlineName());
 				return session;
 			} else {
-				log.info("No sessions found for proposal {} and time {}.", proposal, Calendar.getInstance().getTime().toString());
+				LOG.info("No sessions found for proposal {} and time {}.", proposal, Calendar.getInstance().getTime().toString());
 				Session3VO session = new Session3VO();
 				session.setBeamlineName(beamlineName);
 				session.setComments("Session created automatically by ISPyB");
@@ -162,19 +165,19 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 				    beamlineSetup = beamLineSetup3Service.create(beamlineSetup);
 				}
 				catch(Exception exp){
-					log.info("BeamlineSetup could not persist");
+					LOG.info("BeamlineSetup could not persist");
 				}
 				if (beamlineSetup.getBeamLineSetupId() != null){
 					session.setBeamLineSetupVO(beamlineSetup);
 				}
-				log.info("Creating session  proposal={}. technique=EM proposal={}", proposal,proposal);
+				LOG.info("Creating session  proposal={}. technique=EM proposal={}", proposal,proposal);
 				session = session3Service.create(session);
-				log.info("Session created for  proposal={}. technique=EM proposal={}", proposal,proposal);
+				LOG.info("Session created for  proposal={}. technique=EM proposal={}", proposal,proposal);
 				return session;
 			}
 		} 
 		else{
-			log.error("No proposal found for proposal={}. technique=EM proposal={}", proposal,proposal);
+			LOG.error("No proposal found for proposal={}. technique=EM proposal={}", proposal,proposal);
 			throw new Exception("No proposal found for proposal=" + proposal);
 		}
 
@@ -182,7 +185,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	private DataCollectionGroup3VO getDataCollectionGroupBySessionId(List<DataCollectionGroup3VO> dataCollectionGroup, Session3VO session) throws Exception{
 		for (DataCollectionGroup3VO dataCollectionGroup3VO : dataCollectionGroup) {
-			log.info("Comparing session of dataCollectionGroup = {} sessionId={}", dataCollectionGroup3VO.getSessionVO().getSessionId(), session.getSessionId());
+			LOG.info("Comparing session of dataCollectionGroup = {} sessionId={}", dataCollectionGroup3VO.getSessionVO().getSessionId(), session.getSessionId());
 			if (dataCollectionGroup3VO.getSessionVO().getSessionId().equals(session.getSessionId())){
 				return dataCollectionGroup3VO;
 			}
@@ -195,9 +198,9 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		group.setSessionVO(session);
 		group.setExperimentType("EM");
 		group.setStartTime(Calendar.getInstance().getTime());					
-		log.info("Creating dataCollectionGroup. technique=EM sessionId={}", session.getSessionId());
+		LOG.info("Creating dataCollectionGroup. technique=EM sessionId={}", session.getSessionId());
 		group = dataCollectionGroup3Service.create(group);
-		log.info("Created dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),
+		LOG.info("Created dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(),
 				group.getDataCollectionGroupId());
 		return group;
 	}
@@ -211,20 +214,20 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	
 	private DataCollectionGroup3VO getDataCollectionBySampleAndSession(String sampleAcronym, int proposalId, Session3VO session) throws Exception{
 		List<BLSample3VO> samples = sample3Service.findByAcronymAndProposalId(sampleAcronym, proposalId, null);
-		log.info("{} samples found for sample acronym = {} proposalId = {} sessionId = {} ", samples.size(), sampleAcronym, proposalId, session.getSessionId());
+		LOG.info("{} samples found for sample acronym = {} proposalId = {} sessionId = {} ", samples.size(), sampleAcronym, proposalId, session.getSessionId());
 		
 		/** Get data collection groups for that sample acronym **/
 		List<DataCollectionGroup3VO> groups = new ArrayList<DataCollectionGroup3VO>();
 		for (BLSample3VO blSample3VO : samples) {
 			groups.addAll(dataCollectionGroup3Service.findBySampleId(blSample3VO.getBlSampleId(), false, false));
 		}
-		log.info("{} data collections found for sample acronym = {} proposalId = {} sessionId = {} ", groups.size(), sampleAcronym, proposalId, session.getSessionId());
+		LOG.info("{} data collections found for sample acronym = {} proposalId = {} sessionId = {} ", groups.size(), sampleAcronym, proposalId, session.getSessionId());
 		
 		
 		/** Look for a DCGroup for that session **/
 		for (DataCollectionGroup3VO dataCollectionGroup3VO : groups) {
 			if (dataCollectionGroup3VO.getSessionVOId().equals(session.getSessionId())){
-				log.info("Data collection group found for sample acronym = {} proposalId = {} sessionId = {} ", sampleAcronym, proposalId, session.getSessionId());
+				LOG.info("Data collection group found for sample acronym = {} proposalId = {} sessionId = {} ", sampleAcronym, proposalId, session.getSessionId());
 				return dataCollectionGroup3VO;
 			}
 		}
@@ -243,37 +246,37 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		if (group != null){
 			return group;
 		}
-		log.info("No sample acronym found for sampleAcronym = {} and proposal = {} sessionId = {} ", sampleAcronym, proposal, session.getSessionId());
+		LOG.info("No sample acronym found for sampleAcronym = {} and proposal = {} sessionId = {} ", sampleAcronym, proposal, session.getSessionId());
 		/** Samples are null or 0 **/
 		
 		List<Protein3VO> proteins = protein3Service.findByAcronymAndProposalId(proposalId, proteinAcronym);
 		Protein3VO protein = new Protein3VO();
 		if (proteins.size() == 0){
-			log.warn("Protein {} does not exist on ISPyB for proposal={}. ", proteinAcronym, proposal);
+			LOG.warn("Protein {} does not exist on ISPyB for proposal={}. ", proteinAcronym, proposal);
 			/** It creates the protein **/
 			
 			protein.setProposalVO(proposal3Service.findByPk(proposalId));
 			protein.setAcronym(proteinAcronym);
 			protein.setName(proteinAcronym);
-			log.info("Creating Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			LOG.info("Creating Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
 			protein = protein3Service.create(protein);
-			log.info("Created Protein with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
+			LOG.info("Created Protein with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
 
 			/** It created the crystal form **/
 			Crystal3VO crystal = new Crystal3VO();
 			crystal.setProteinVO(protein);
 			crystal.setComments("Crystal created automatically from ISPyB for EM proteins");
 			crystal.setName(proteinAcronym);
-			log.info("Creating Crystal with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			LOG.info("Creating Crystal with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
 			crystal = crystal3Service.create(crystal);
-			log.info("Created Crystal with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
+			LOG.info("Created Crystal with proteinAcronym = {} and proteinId = {} and proposal = {} ", proteinAcronym, protein.getProteinId(), proposal);
 			
 			Set<Crystal3VO> crystals = new HashSet<Crystal3VO>();
 			crystals.add(crystal);
 			protein.setCrystalVOs(crystals);
-			log.info("Adding Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			LOG.info("Adding Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
 			protein = protein3Service.update(protein);
-			log.info("Added Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
+			LOG.info("Added Crystal to Protein with proteinAcronym = {} and proposal = {} ", proteinAcronym, proposal);
 		}
 		else{
 			protein = proteins.get(0);
@@ -282,13 +285,13 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		
 		BLSample3VO sample = new BLSample3VO();
 		sample.setName(sampleAcronym);
-		log.info("Find cyrstal for proteinId = {}", protein.getProteinId());
+		LOG.info("Find cyrstal for proteinId = {}", protein.getProteinId());
 		List<Crystal3VO> crystals = crystal3Service.findByProteinId(protein.getProteinId());
-		log.info("Found {} crystals", crystals.size());
+		LOG.info("Found {} crystals", crystals.size());
 		sample.setCrystalVO(crystals.get(0));
-		log.info("Creating Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		LOG.info("Creating Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
 		sample = sample3Service.create(sample);
-		log.info("Created Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
+		LOG.info("Created Sample with sampleAcronym = {} and proposal = {} ", sampleAcronym, proposal);
 		return this.createDataCollectionGroup(session, sample);
     }
 	
@@ -297,12 +300,15 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			String thumbnailMicrographPath, String xmlMetaDataPath, String voltage, String sphericalAberration, String amplitudeContrast, String magnification,
 			String scannedPixelSize, String noImages, String dosePerImage, String positionX, String positionY, String beamlineName, Date startTime, String gridSquareSnapshotFullPath)
 			throws Exception {
+		
+		// we need to retrieve the session to update the lastUpdate field used by dataconfidentiality
+		Session3VO session = this.getSession(proposal, beamlineName);
 
 		/**
 		 * Look for a data collection that represents the gridSquare. We take the latest dataCollection
 		 **/
 		List<DataCollection3VO> dataCollectionList = dataCollection3Service.findFiltered(movieDirectory, null, null, null, null, null);
-		log.info("Found {} dataCollection(s) for movieDirectory {}. technique=EM ", dataCollectionList.size(), movieDirectory);
+		LOG.info("Found {} dataCollection(s) for movieDirectory {}. technique=EM ", dataCollectionList.size(), movieDirectory);
 		DataCollection3VO gridSquare = null;
 
 		/**
@@ -312,11 +318,15 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		if (dataCollectionList.size() > 0) {
 			/** There are  DataCollections then we are adding a movie to an existing gridSquare **/
 			gridSquare = dataCollectionList.get(0);
-			log.info("Found dataCollection. technique=EM dataCollectionId={}", gridSquare.getDataCollectionId());
+			LOG.info("Found dataCollection. technique=EM dataCollectionId={}", gridSquare.getDataCollectionId());
+			
+			//TODO : check if can be removed because should be the session loaded by this.getSession(proposal, beamlineName);
+			session = gridSquare.getDataCollectionGroupVO().getSessionVO();
+			
 		} else {
 			
 			/** There are not DataCollections then we are not adding a movie to an existing gridSquare **/
-			Session3VO session = this.getSession(proposal, beamlineName);
+		
 
 			/** 
 			 *  Data Collection Group with a BLSample represents a GRID 
@@ -326,7 +336,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			
 															
 			/** Creating data Collection GridSquare**/
-			log.info("Creating dataCollection for dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(), group.getDataCollectionGroupId());
+			LOG.info("Creating dataCollection for dataCollectionGroup. technique=EM sessionId={} dataCollectionGroupId={}", session.getSessionId(), group.getDataCollectionGroupId());
 			DataCollection3VO dataCollection = new DataCollection3VO();
 			dataCollection.setDataCollectionGroupVO(group);
 			dataCollection.setImageDirectory(movieDirectory);
@@ -337,14 +347,14 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 				dataCollection.setXbeamPix(Double.valueOf(scannedPixelSize));
 			}
 			catch(Exception exp){
-				log.error("scannedPixelSize {} can not be converted into a double. technique=EM scannedPixelSize={}", scannedPixelSize, scannedPixelSize);
+				LOG.error("scannedPixelSize {} can not be converted into a double. technique=EM scannedPixelSize={}", scannedPixelSize, scannedPixelSize);
 			}
 			
 			try{
 				dataCollection.setVoltage(Float.valueOf(voltage));
 			}
 			catch(Exception exp){
-				log.error("Voltage {} can not be converted into a double. technique=EM voltage={}", voltage, voltage);
+				LOG.error("Voltage {} can not be converted into a double. technique=EM voltage={}", voltage, voltage);
 			}
 			
 			if (session.getBeamLineSetupVO() != null){
@@ -352,7 +362,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 					session.getBeamLineSetupVO().setCS(Float.valueOf(sphericalAberration));
 				}
 				catch(Exception exp){
-					log.info("Spherical Abberation {} can not be converted into a double. technique=EM voltage={}", sphericalAberration);
+					LOG.info("Spherical Abberation {} can not be converted into a double. technique=EM voltage={}", sphericalAberration);
 				}
 			}
 			
@@ -361,7 +371,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 					dataCollection.setMagnification(Integer.valueOf(magnification));
 				}
 				catch(Exception exp){
-					log.info("Magnification {} can not be converted into a Integer. technique=EM voltage={}", magnification);
+					LOG.info("Magnification {} can not be converted into a Integer. technique=EM voltage={}", magnification);
 				}
 			}
 						
@@ -373,7 +383,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 		/** Adding movie **/
 		Movie movie = new Movie();
-		log.info("DataCollectionId:" + gridSquare.getDataCollectionId());
+		LOG.info("DataCollectionId:" + gridSquare.getDataCollectionId());
 		movie.setDataCollectionId(gridSquare.getDataCollectionId());
 		movie.setMicrographPath(micrographPath);
 		movie.setMoviePath(moviePath);
@@ -384,9 +394,11 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		movie.setDosePerImage(dosePerImage);
 		movie.setXmlMetaDataPath(xmlMetaDataPath);
 
-		log.info("Creating movie. technique=EM moviePath={}", moviePath);
+		LOG.info("Creating movie. technique=EM moviePath={}", moviePath);
 		movie = entityManager.merge(movie);
-		log.info("Created movie. technique=EM moviePath={} movieId", moviePath, movie.getMovieId());
+		LOG.info("Created movie. technique=EM moviePath={} movieId", moviePath, movie.getMovieId());
+		
+		this.updateSessionLastUpdate(session);
 
 		return movie;
 	}
@@ -406,7 +418,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		if (movies.size() > 0) {
 			return movies.get(0);
 		}
-		log.error("Found no movies for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
+		LOG.error("Found no movies for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
 		return null;
 	}
 
@@ -426,23 +438,25 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			if (motions.size() > 0) {
 				return motions.get(0);
 			} else {
-				log.error("Found no motionCorrection for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
+				LOG.error("Found no motionCorrection for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
 				return null;
 			}
 		}
-		log.error("Found no movies for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
+		LOG.error("Found no movies for movieFullPath {}. movieFullPath={}", movieFullPath, movieFullPath);
 		return null;
 	}
 
 	@Override
 	public MotionCorrection addMotionCorrection(String proposal, String movieFullPath, String firstFrame, String lastFrame, String dosePerFrame,
 			String doseWeight, String totalMotion, String averageMotionPerFrame, String driftPlotFullPath, String micrographFullPath,
-			String micrographSnapshotFullPath, String correctedDoseMicrographFullPath, String logFileFullPath) {
+			String micrographSnapshotFullPath, String correctedDoseMicrographFullPath, String logFileFullPath) throws Exception {
 
-		log.info("Looking for movie. proposal={} movieFullPath={}", proposal, movieFullPath);
+		LOG.info("Looking for movie. proposal={} movieFullPath={}", proposal, movieFullPath);
 		Movie movie = this.findMovieByMovieFullPath(movieFullPath);
+		MotionCorrection motion = null;
+		
 		if (movie != null) {
-			MotionCorrection motion = new MotionCorrection();
+			motion = new MotionCorrection();
 			motion.setMovieId(movie.getMovieId());
 			motion.setFirstFrame(firstFrame);
 			motion.setLastFrame(lastFrame);
@@ -456,22 +470,27 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			motion.setCorrectedDoseMicrographFullPath(correctedDoseMicrographFullPath);
 			motion.setLogFileFullPath(logFileFullPath);
 			try {
-				log.info("Creating motion Correction. technique=EM movieFullPath={}", movieFullPath);
+				LOG.info("Creating motion Correction. technique=EM movieFullPath={}", movieFullPath);
 				motion = this.entityManager.merge(motion);
-				log.info("Created motion Correction. technique=EM movieFullPath={}", movieFullPath);
-				return motion;
+				LOG.info("Created motion Correction. technique=EM movieFullPath={}", movieFullPath);
+				
+				// update the session linked to the gridsquare of this movie
+				DataCollection3VO gridSquare = dataCollection3Service.findByPk(movie.getDataCollectionId(), false/*withImage*/, false/*withAutoProcIntegration*/);
+				this.updateSessionLastUpdate(gridSquare.getDataCollectionGroupVO().getSessionVO());
+				
 			} catch (Exception exp) {
 				throw exp;
-			}
+			}			
+			
 		}
-		return null;
+		return motion;
 	}
 
 	@Override
 	public CTF addCTF(String proposal, String movieFullPath, String spectraImageSnapshotFullPath, String spectraImageFullPath, String defocusU, String defocusV, String angle,
 			String crossCorrelationCoefficient, String resolutionLimit, String estimatedBfactor, String logFilePath) {
 
-		log.info("Looking for motion correction. proposal={} movieFullPath={}", proposal, movieFullPath);
+		LOG.info("Looking for motion correction. proposal={} movieFullPath={}", proposal, movieFullPath);
 		MotionCorrection motion = this.findMotionCorrectionByMovieFullPath(movieFullPath);
 		if (motion != null) {
 			CTF ctf = new CTF();
@@ -486,9 +505,9 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			ctf.setEstimatedBfactor(estimatedBfactor);
 			ctf.setLogFilePath(logFilePath);
 			try {
-				log.info("Creating CTF. technique=EM movieFullPath={}", movieFullPath);
+				LOG.info("Creating CTF. technique=EM movieFullPath={}", movieFullPath);
 				ctf = this.entityManager.merge(ctf);
-				log.info("Created CTF. technique=EM movieFullPath={}", movieFullPath);
+				LOG.info("Created CTF. technique=EM movieFullPath={}", movieFullPath);
 				return ctf;
 			} catch (Exception exp) {
 				throw exp;
@@ -591,6 +610,23 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		query.setParameter("sessionId", sessionId);
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
+	}	
+	
+	private void updateSessionLastUpdate(Session3VO vo) throws Exception {
+		try {
+			
+			Timestamp currentTimeStamp = StringUtils.getCurrentTimeStamp();
+			Timestamp lastUpdate = new Timestamp(vo.getLastUpdate().getTime());
+			if (currentTimeStamp.after(lastUpdate)) {
+				vo.setLastUpdate(currentTimeStamp);
+				session3Service.update(vo);
+				LOG.debug("Session updated " + vo.getSessionId());				
+			}
+
+		} catch (Exception e) {
+			LOG.error("ERROR: updateSessionLastUpdate - " + StringUtils.getCurrentDate() + " - " + vo.toWSString());
+			throw e;
+		}
 	}
 
 
