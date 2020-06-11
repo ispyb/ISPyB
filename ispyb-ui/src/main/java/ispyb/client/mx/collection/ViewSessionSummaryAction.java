@@ -57,7 +57,6 @@ import ispyb.server.mx.vos.collections.XFEFluorescenceSpectrum3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -872,7 +871,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		EnergyScan3VO energyScan = sessionDataObject.getEnergyScan();
 		// experimentType
 		info.setExperimentType("Energy Scan");
-		info.setImagePrefix("");
+		if (Constants.SITE_IS_MAXIV()){
+			info.setImagePrefix(energyScan.getFilename());
+		} else {
+			info.setImagePrefix("");
+		}
+
 		info.setImageThumbnailPath("");
 		info.setCrystalSnapshotPath("");
 		// parameters
@@ -901,7 +905,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setProteinAcronym("");
 		info.setSampleName("");
 		info.setSampleNameProtein("");
-		if (energyScan.getBlSampleVO() != null) {
+		if (energyScan.getBlSampleVO() != null && !Constants.SITE_IS_MAXIV()) {
 			setSampleAndProteinNames(info, energyScan.getBlSampleVO());
 		} 
 
@@ -943,6 +947,11 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		XFEFluorescenceSpectrum3VO xrfSpectrum = sessionDataObject.getXrfSpectra();
 		// experimentType
 		info.setExperimentType("XRFSpectrum");
+		if (Constants.SITE_IS_MAXIV()){
+			info.setImagePrefix(xrfSpectrum.getFilename());
+		} else {
+			info.setImagePrefix("");
+        }
 		info.setImagePrefix("");
 		info.setImageThumbnailPath("");
 		info.setCrystalSnapshotPath("");
@@ -976,7 +985,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setProteinAcronym("");
 		info.setSampleName("");
 		info.setSampleNameProtein("");
-		if (xrfSpectrum.getBlSampleVO() != null) {
+		if (xrfSpectrum.getBlSampleVO() != null && !Constants.SITE_IS_MAXIV()) {
 			setSampleAndProteinNames(info, xrfSpectrum.getBlSampleVO());
 		} 
 
