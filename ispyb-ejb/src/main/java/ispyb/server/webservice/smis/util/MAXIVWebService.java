@@ -409,6 +409,16 @@ public class MAXIVWebService implements SMISWebService {
 		return arg1;
 	}
 	
+	public void addDoiToSessionBySessionPk(final Long expSessionPk, final String doi) throws Exception_Exception {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	public void addDoiToSessionByProposalBeamlineAndDate(String arg0, Integer arg1, String arg2, Calendar arg3,
+			String arg4) throws Exception_Exception {
+		// TODO Auto-generated method stub		
+	}
+	
 	private JSONObject getProposalForId(Long propId){
 		JSONObject proposal = null;
 		init();
@@ -781,4 +791,5 @@ public class MAXIVWebService implements SMISWebService {
 		}
 		return httpclient;
 	}
+
 }

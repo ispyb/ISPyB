@@ -49,7 +49,7 @@ public interface EM3Service {
 			String doseWeight, String totalMotion,
 			String averageMotionPerFrame, String driftPlotFullPath,
 			String micrographFullPath, String micrographSnapshotFullPath,
-			String correctedDoseMicrographFullPath, String logFileFullPath);
+			String correctedDoseMicrographFullPath, String logFileFullPath) throws Exception;
 
 	CTF addCTF(String proposal, String moviePath,
 			String spectraImageSnapshotFullPath, String spectraImageFullPath, String defocusU,
