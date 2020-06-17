@@ -810,7 +810,10 @@ public class ExiPdfRtfExporter {
 				+ 	"Pk f'': \n" 
 				+ 	"Inflection Energy: \n" 
 				+ 	"Ip f': \n" 
-				+ 	"Ip f'': \n" ;
+				+ 	"Ip f'': \n"
+				+ 	"Remote Energy: \n"
+				+ 	"Remote f': \n"
+				+ 	"Remote f'': \n" ;
 
 		table.addCell(new Paragraph(parag, FONT_DOC));
 		
@@ -819,9 +822,12 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(energyScanMapItem, "peakEnergy", df3) + "keV \n"
 			+ getCellParam(energyScanMapItem, "peakFPrime", df2) + " e- \n" 
 		+ 	getCellParam(energyScanMapItem, "peakFDoublePrime", df2) + " e- \n" 
-		+  "("+ getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n" 
+		+   getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n"
 		+ 	getCellParam(energyScanMapItem, "inflectionFPrime", df2)  + " e- \n" 
-		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n" ;
+		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n"
+		+   getCellParam(energyScanMapItem, "remoteEnergy", df2) + "keV \n"
+		+ 	getCellParam(energyScanMapItem, "remoteFPrime", df2)  + " e- \n"
+		+ 	getCellParam(energyScanMapItem, "remoteFDoublePrime", df2)  + " e- \n" ;;
 		
 		table.addCell(new Paragraph(parag, FONT_DOC_BOLD));
 		
@@ -1173,7 +1179,7 @@ public class ExiPdfRtfExporter {
 		String parag = getCellParam(energyScanMapItem, "scanFileFullPath", null) + "\n" ;
 		document.add(new Paragraph(parag, FONT_DOC_SMALL));
 		
-		Table table = new Table(9);
+		Table table = new Table(11);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 		table.getDefaultCell().setBorderWidth(0);
 		table.setBorder(0);
@@ -1250,7 +1256,18 @@ public class ExiPdfRtfExporter {
 		parag = getCellParam(energyScanMapItem, "inflectionEnergy", df2) + "keV \n" 
 		+ 	getCellParam(energyScanMapItem, "inflectionFPrime", df2)  + " e- \n" 
 		+ 	getCellParam(energyScanMapItem, "inflectionFDoublePrime", df2)  + " e- \n" ;
-		
+
+		// Cell 10
+		parag = "Remote Energy: \n"
+				+ 	"Remote f': \n"
+				+ 	"Remote f'': \n" ;
+
+		table.addCell(new Paragraph(parag, FONT_DOC_SMALL));
+
+		// Cell 11
+		parag = getCellParam(energyScanMapItem, "remoteEnergy", df2) + "keV \n"
+				+ 	getCellParam(energyScanMapItem, "remoteFPrime", df2)  + " e- \n"
+				+ 	getCellParam(energyScanMapItem, "remoteFDoublePrime", df2)  + " e- \n" ;
 		table.addCell(new Paragraph(parag, FONT_DOC_SMALL_BOLD));
 				
 		document.add(table);

@@ -171,6 +171,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 
 	public final static String KEY_PEAK_ENERGY_DOUBLE_PRIME = "peakEnergyDoublePrime";
 
+	public final static String KEY_REMOTE_ENERGY = "remoteEnergy";
+
+	public final static String KEY_REMOTE_ENERGY_PRIME = "remoteEnergyPrime";
+
+	public final static String KEY_REMOTE_ENERGY_DOUBLE_PRIME = "remoteEnergyDoublePrime";
+
 	public final static String KEY_UNIT_CELL = "unitCell";
 
 	public final static String KEY_UNIT_CELL_TITLE = "unitCellTitle";
@@ -865,7 +871,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		EnergyScan3VO energyScan = sessionDataObject.getEnergyScan();
 		// experimentType
 		info.setExperimentType("Energy Scan");
-		info.setImagePrefix("");
+		if (Constants.SITE_IS_MAXIV()){
+			info.setImagePrefix(energyScan.getFilename());
+		} else {
+			info.setImagePrefix("");
+		}
+
 		info.setImageThumbnailPath("");
 		info.setCrystalSnapshotPath("");
 		// parameters
@@ -876,12 +887,14 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		listParameters.add(new Param(KEY_TRANSMISSION, "Transmission factor",
 				(energyScan.getTransmissionFactor() == null ? "" : ("" + energyScan.getTransmissionFactor() + " %")),
 				false));
-		listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
-				(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " Î¼m")),
-				false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " Î¼m")),
-				false));
+		if (!Constants.SITE_IS_MAXIV()) {
+			listParameters.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor",
+					(energyScan.getBeamSizeHorizontal() == null ? "" : ("" + energyScan.getBeamSizeHorizontal() + " Î¼m")),
+					false));
+			listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+					(energyScan.getBeamSizeVertical() == null ? "" : ("" + energyScan.getBeamSizeVertical() + " Î¼m")),
+					false));
+		}
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(energyScan.getComments());
@@ -892,7 +905,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setProteinAcronym("");
 		info.setSampleName("");
 		info.setSampleNameProtein("");
-		if (energyScan.getBlSampleVO() != null) {
+		if (energyScan.getBlSampleVO() != null && !Constants.SITE_IS_MAXIV()) {
 			setSampleAndProteinNames(info, energyScan.getBlSampleVO());
 		} 
 
@@ -918,6 +931,12 @@ public class ViewSessionSummaryAction extends DispatchAction {
 				+ (energyScan.getPeakFPrime() == null ? "" : energyScan.getPeakFPrime() + ""), false));
 		listResults.add(new Param(KEY_PEAK_ENERGY_DOUBLE_PRIME, "Peak f''", ""
 				+ (energyScan.getPeakFDoublePrime() == null ? "" : energyScan.getPeakFDoublePrime() + ""), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY, "Remote Energy", ""
+				+ (energyScan.getRemoteEnergy() == null ? "" : energyScan.getRemoteEnergy() + " keV"), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY_PRIME, "Remote f'", ""
+				+ (energyScan.getRemoteFPrime() == null ? "" : energyScan.getRemoteFPrime() + ""), false));
+		listResults.add(new Param(KEY_REMOTE_ENERGY_DOUBLE_PRIME, "Remote f''", ""
+				+ (energyScan.getRemoteFDoublePrime() == null ? "" : energyScan.getRemoteFDoublePrime() + ""), false));
 		info.setListResults(listResults);
 
 		return info;
@@ -928,21 +947,34 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		XFEFluorescenceSpectrum3VO xrfSpectrum = sessionDataObject.getXrfSpectra();
 		// experimentType
 		info.setExperimentType("XRFSpectrum");
+		if (Constants.SITE_IS_MAXIV()){
+			info.setImagePrefix(xrfSpectrum.getFilename());
+		} else {
+			info.setImagePrefix("");
+        }
 		info.setImagePrefix("");
 		info.setImageThumbnailPath("");
 		info.setCrystalSnapshotPath("");
+		Float energy = xrfSpectrum.getEnergy();
+		String energyValue = Float.toString(energy) +" keV";
+		if (Constants.SITE_IS_MAXIV()){
+			DecimalFormat decimalFormat = new DecimalFormat("#.##");
+			energyValue = decimalFormat.format(energy) +" keV";
+		}
+
 		// parameters
 		List<Param> listParameters = new ArrayList<Param>();
-		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : Float
-				.toString(xrfSpectrum.getEnergy()), false));
+		listParameters.add(new Param(KEY_ENERGY, "Energy", xrfSpectrum.getEnergy() == null ? "" : energyValue, false));
 		listParameters.add(new Param(KEY_EXPOSURE_TIME, "Exposure time", (xrfSpectrum.getExposureTime() == null ? ""
 				: ("" + xrfSpectrum.getExposureTime() + " s")), false));
-		listParameters
-				.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
-						: ("" + xrfSpectrum.getBeamSizeHorizontal() + " Î¼m")), false));
-		listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
-				(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " Î¼m")),
-				false));
+		if (!Constants.SITE_IS_MAXIV()) {
+			listParameters
+					.add(new Param(KEY_BEAMSIZE_HOR, "Beam size Hor", (xrfSpectrum.getBeamSizeHorizontal() == null ? ""
+							: ("" + xrfSpectrum.getBeamSizeHorizontal() + " Î¼m")), false));
+			listParameters.add(new Param(KEY_BEAMSIZE_VERT, "Beam size Vert",
+					(xrfSpectrum.getBeamSizeVertical() == null ? "" : ("" + xrfSpectrum.getBeamSizeVertical() + " Î¼m")),
+					false));
+		}
 		info.setListParameters(listParameters);
 		// comments
 		info.setComments(xrfSpectrum.getComments());
@@ -953,7 +985,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		info.setProteinAcronym("");
 		info.setSampleName("");
 		info.setSampleNameProtein("");
-		if (xrfSpectrum.getBlSampleVO() != null) {
+		if (xrfSpectrum.getBlSampleVO() != null && !Constants.SITE_IS_MAXIV()) {
 			setSampleAndProteinNames(info, xrfSpectrum.getBlSampleVO());
 		} 
 
@@ -967,7 +999,7 @@ public class ViewSessionSummaryAction extends DispatchAction {
 		int annotatedPymcaXfeSpectrumExists = PathUtils.fileExists(xrfSpectrum.getAnnotatedPymcaXfeSpectrum());
 		String shortFileNameAnnotatedPymcaXfeSpectrum = StringUtils.getShortFilename(xrfSpectrum
 				.getAnnotatedPymcaXfeSpectrum());
-		if (annotatedPymcaXfeSpectrumExists == 0) {
+		if (annotatedPymcaXfeSpectrumExists == 0 && !Constants.SITE_IS_MAXIV()) {
 			result = "Html report not found: " + shortFileNameAnnotatedPymcaXfeSpectrum;
 		} else if (annotatedPymcaXfeSpectrumExists == 1) {
 			result = shortFileNameAnnotatedPymcaXfeSpectrum;

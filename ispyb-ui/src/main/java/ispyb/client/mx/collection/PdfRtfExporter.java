@@ -871,6 +871,9 @@ public class PdfRtfExporter {
 			tableES.addCell(new Paragraph("Beam size Hor.\n(" + Constants.MICRO + "m)", FONT_DOC_BOLD));
 			tableES.addCell(new Paragraph("Beam size Ver.\n(" + Constants.MICRO + "m)", FONT_DOC_BOLD));
 			tableES.addCell(new Paragraph("Transm. Factor\n(%)", FONT_DOC_BOLD));
+			tableES.addCell(new Paragraph("Remote Energy\n(keV)", FONT_DOC_BOLD));
+			tableES.addCell(new Paragraph("Remote f'\n(e)", FONT_DOC_BOLD));
+			tableES.addCell(new Paragraph("Remote f''\n(e)", FONT_DOC_BOLD));
 			// Column crystalClass only for IFX proposal in case of MXPress
 			// experiment
 			if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX))
@@ -939,6 +942,22 @@ public class PdfRtfExporter {
 					tableES.addCell(new Paragraph(col.getTransmissionFactor().toString(), FONT_DOC));
 				else
 					tableES.addCell("");
+
+				if (col.getRemoteEnergy() != null)
+					tableES.addCell(new Paragraph(col.getRemoteEnergy().toString(), FONT_DOC));
+				else
+					tableES.addCell("");
+
+				if (col.getRemoteFPrime() != null)
+					tableES.addCell(new Paragraph(col.getRemoteFPrime().toString(), FONT_DOC));
+				else
+					tableES.addCell("");
+
+				if (col.getRemoteFDoublePrime() != null)
+					tableES.addCell(new Paragraph(col.getRemoteFDoublePrime().toString(), FONT_DOC));
+				else
+					tableES.addCell("");
+
 
 				if (proposalCode.toLowerCase().equals(Constants.PROPOSAL_CODE_FX)) {
 					// if (col.getCrystalClass()!= null) tableES.addCell(new

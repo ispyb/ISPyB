@@ -375,10 +375,6 @@ public final class Constants {
 
 	public static final String[] DEWAR_AUTOMATIC_PROCESSING_STATE = { DEWAR_ID30 };
 
-	public static final String ARRIVAL_LOCATION = "STORES-IN";
-
-	public static final String RETURN_LOCATION = "STORES-OUT";
-
 	/**
 	 * Value set by default when a diffractionPlan is created (web services)
 	 */
