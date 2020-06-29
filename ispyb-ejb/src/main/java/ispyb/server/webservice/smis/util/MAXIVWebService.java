@@ -280,7 +280,7 @@ public class MAXIVWebService implements SMISWebService {
 			localContact.setFirstName((String) jsonLocalContacts.get(0).get("firstname"));
 			localContact.setPhone((String) jsonLocalContacts.get(0).get("phone"));
 			localContact.setEmail((String) jsonLocalContacts.get(0).get("email"));
-			localContact.setTitle((String) jsonLocalContacts.get(0).get("title"));
+			//localContact.setTitle((String) jsonLocalContacts.get(0).get("title"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			localContact.setFirstName("Manager");
