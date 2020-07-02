@@ -15,10 +15,7 @@ import ispyb.server.smis.ScientistsFromSMIS;
 import ispyb.ws.rest.mx.MXRestWebService;
 
 import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
@@ -173,6 +170,24 @@ public class ShippingRestWebService extends MXRestWebService {
 		}
 
 	}
+
+	/*@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/shipping/find/")
+	@Produces({ "application/json" })
+	public Response getShippingByProposalAndName(@PathParam("token") String token, @PathParam("proposal") String proposal,
+								@FormParam("name") String name, ) throws Exception {
+
+		long id = this.logInit("getShippingByProposalAndName", logger, token, proposal, name);
+		try {
+			List<Shipping3VO> result = this.getShipping3Service().findFiltered(null, name, proposal, null, null, null, null, null, false);
+			this.logFinish("getShippingByProposalAndName", id, logger);
+			return sendResponse(result);
+		} catch (Exception e) {
+			return this.logError("getShipping", e, id, logger);
+		}
+
+	}*/
 
 	
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
@@ -462,12 +477,36 @@ public class ShippingRestWebService extends MXRestWebService {
 
 			Shipping3VO shipping3VO = new Shipping3VO();
 
-			if ((shippingId != null) && (shippingId != "")) {
+			if ((shippingId != null) && (!"".equals(shippingId))) {
 				try{
-				shipping3VO = this.getShipping3Service().findByPk(Integer.parseInt(shippingId), true);
+					shipping3VO = this.getShipping3Service().findByPk(Integer.parseInt(shippingId), true);
 				}
 				catch(Exception e){
 					System.out.println("shipping Id is not a number");
+				}
+			}
+
+			if (Constants.SITE_IS_MAXIV()) {
+				try {
+					String proposalCode = proposal.substring(0, 2);
+					String proposalNumber = proposal.substring(proposal.length() - 8);
+					List<Shipping3VO> results = this.getShipping3Service().findFiltered(null, name, proposalCode, proposalNumber, null, null, null, null, false);
+					if (results != null && !results.isEmpty()) {
+						if ((shippingId != null) && (!"".equals(shippingId))) {
+							for (int i=0;i<results.size();i++) {
+								Shipping3VO ship = results.get(i);
+								if (!shippingId.equals(ship.getShippingId().toString()) && ship.getShippingName().equals(name)) {
+									this.logFinish("saveShipping", id, logger);
+									return this.sendError("There is another shipment with the same name for this proposal");
+								}
+							}
+						} else {
+							this.logFinish("saveShipping", id, logger);
+							return this.sendError("There is another shipment with the same name for this proposal");
+						}
+					}
+				} catch (Exception e) {
+					return this.logError("saveShipping", e, id, logger);
 				}
 			}
 
