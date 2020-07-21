@@ -106,5 +106,5 @@ by a corresponding change to the [schema file][schema-file]
 to keep it up to date.  This file can be edited using [MySQL
 Workbench][mysql-workbench] (a free tool from MySQL).
 
-[schema-file]: https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel_5.mwb
+[schema-file]: https://github.com/ispyb/ISPyB/blob/master/documentation/database/ISPyB_DataModel.mwb
 [mysql-workbench]: https://www.mysql.com/products/workbench/
