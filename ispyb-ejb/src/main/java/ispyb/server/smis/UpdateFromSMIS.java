@@ -545,8 +545,6 @@ public class UpdateFromSMIS {
 				getProposal(labContact, lab, person, proposalNumber, proposalCode);
 
 				// retrieve person to get it 'personId' for persistence of the labContact
-				String familyName = labContacts[i].getScientistName();
-				String givenName = labContacts[i].getScientistFirstName();
 				String siteId = null;
 				Person3VO currentPerson = null;
 				// try first to use siteID: better for unicity, but only for people having a siteId, later use personUUID
@@ -554,11 +552,11 @@ public class UpdateFromSMIS {
 					siteId = labContacts[i].getSiteId().toString();
 					currentPerson = person.findBySiteId(siteId);
 				} else {
-					currentPerson = person.findByLogin(labContacts[i].getBllogin());
-					/*List<Person3VO> persons = person.findByFamilyAndGivenName(familyName, givenName);
-					if (persons != null && !persons.isEmpty()) {
-						currentPerson = persons.get(0);
-					}*/
+					if (Constants.SITE_IS_ESRF()) {
+						currentPerson = person.findByLogin(labContacts[i].getUserName());
+					} else {
+						currentPerson = person.findByLogin(labContacts[i].getBllogin());
+					}
 				}
 									
 				if (currentPerson != null) {
@@ -575,7 +573,7 @@ public class UpdateFromSMIS {
 						LOG.debug("Link between proposal and person added: " + proposalId + " " + currentPerson.getPersonId());
 					}					
 				}
-								
+												
 				// fill the laboratory
 				Laboratory3VO currentLabo = ScientistsFromSMIS.extractLaboratoryInfo(labContacts[i]);
 				LOG.debug("current labo is : " + currentLabo.getAddress());
@@ -869,6 +867,8 @@ public class UpdateFromSMIS {
 		}
 	}
 	
+	// this method is only used by MAX IV for now, if used for others, it should be adapted: 
+	// for ESRF the bllogin should be replaced by username
 	private static void loadParticipants(ProposalParticipantInfoLightVO[] participants)
 		    throws Exception
 	  {
@@ -889,6 +889,7 @@ public class UpdateFromSMIS {
 	        {
 	          LOG.debug("proposal already exists");
 	          Proposal3VO proposalVO = (Proposal3VO)listProposals.get(0);
+	          
 	          Person3VO personEnt = person.findByLogin(participant.getBllogin());
 	          if (personEnt == null) {
 	            personEnt = new Person3VO();
@@ -896,7 +897,8 @@ public class UpdateFromSMIS {
 	          }
 	          
 	          personEnt.setGivenName(participant.getScientistFirstName());
-	          personEnt.setFamilyName(participant.getScientistName());
+	          personEnt.setFamilyName(participant.getScientistName());	          
+	          
 	          //TODO: Add more details
 	          
 	          personEnt = person.merge(personEnt);
@@ -1223,6 +1225,7 @@ public class UpdateFromSMIS {
 	@SuppressWarnings({ "unused", "rawtypes" })
 	private static Proposal3VO getProposal(ProposalParticipantInfoLightVO mainProp, Laboratory3Service lab,
 			Person3Service person, String proposalNumber, String proposalCode) throws Exception {
+		
 		// main proposer
 		String familyName = mainProp.getScientistName();
 		String givenName = mainProp.getScientistFirstName();
@@ -1234,7 +1237,7 @@ public class UpdateFromSMIS {
 		if (Constants.SITE_IS_ESRF() && mainProp.getSiteId()!= null) {
 				siteId = mainProp.getSiteId().toString();
 		}
-		String username = mainProp.getUserName();
+		String login = (Constants.SITE_IS_ESRF() ) ? mainProp.getUserName() : mainProp.getBllogin();
 
 		// labo
 		Integer labId;
@@ -1263,6 +1266,7 @@ public class UpdateFromSMIS {
 			LOG.debug("getting SMIS WS labo already exists");
 		}
 
+		// Person
 		Person3VO persv = new Person3VO();
 		Integer persId;
 		boolean personDoesNotExist = true;
@@ -1271,8 +1275,18 @@ public class UpdateFromSMIS {
 			Person3VO personVO = person.findBySiteId(siteId);
 			if (personVO != null ) {
 				persv = personVO;
+				if (persv.getLogin() == null || !persv.getLogin().equalsIgnoreCase(login)) {
+					persv.setLogin(login);
+					persv = person.merge(persv);
+				}
 				personDoesNotExist = false;
 			}	
+		} else if (login != null ){
+			Person3VO personVO = person.findByLogin(login);
+			if (personVO != null ) {
+				persv = personVO;
+				personDoesNotExist = false;
+			} 
 		} else {
 			List<Person3VO> listPerson = person.findByFamilyAndGivenName(familyName, givenName);
 			if (!listPerson.isEmpty()) {			
@@ -1290,12 +1304,7 @@ public class UpdateFromSMIS {
 			persv.setLaboratoryVO(labv);
 			persv.setFaxNumber(faxNumber);
 			persv.setSiteId(siteId);
-
-			if (Constants.SITE_IS_ESRF() ) {
-				persv.setLogin(username);
-			} else {
-				persv.setLogin(mainProp.getBllogin());
-			}
+			persv.setLogin(login);
 			
 			persv = person.merge(persv);
 			persId = persv.getPersonId();
@@ -1377,9 +1386,8 @@ public class UpdateFromSMIS {
 				propv.setType(Constants.PROPOSAL_MX_BX);
 			}
 			break;
-		}
+		}		
 		return propv;
-
 	}
 
 	/**
