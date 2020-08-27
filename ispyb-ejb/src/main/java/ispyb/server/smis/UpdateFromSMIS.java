@@ -665,7 +665,7 @@ public class UpdateFromSMIS {
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-			LOG.debug("Bllogin : " + mainProp.getBllogin() + "username = " + mainProp.getUserName());
+			LOG.debug("Bllogin : " + mainProp.getBllogin() + " - username = " + mainProp.getUserName());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 			
@@ -703,7 +703,7 @@ public class UpdateFromSMIS {
 					if (currentLogin == null || (username != null && !StringUtils.matchString(currentLogin, username))) {
 						currentPerson.setLogin(username);
 						currentPerson = person.merge(currentPerson);
-						LOG.debug("Update person with username");	
+						LOG.debug("Update person with username: " + username);	
 					}
 				}
 
