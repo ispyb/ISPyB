@@ -665,7 +665,7 @@ public class UpdateFromSMIS {
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-			LOG.debug("Bllogin : " + mainProp.getBllogin());
+			LOG.debug("Bllogin : " + mainProp.getBllogin() + "username = " + mainProp.getUserName());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 			
@@ -688,14 +688,24 @@ public class UpdateFromSMIS {
 				String currentGivenName = currentPerson.getGivenName();
 				String currentSiteId = currentPerson.getSiteId();
 				String currentEmail = currentPerson.getEmailAddress();
+				String currentLogin = currentPerson.getLogin();
 				// main proposer
 				String familyName = mainProp.getScientistName();
 				String givenName = mainProp.getScientistFirstName();
 				String siteId = null;
 				String email = mainProp.getScientistEmail();
+				String username = mainProp.getUserName();
 				
-				if (Constants.SITE_IS_ESRF() && mainProp.getSiteId() != null ) 
-					siteId=mainProp.getSiteId().toString();
+				if (Constants.SITE_IS_ESRF() ) {					
+					siteId = (mainProp.getSiteId() != null) ? mainProp.getSiteId().toString() : null;
+					
+					// fill the login if it was null before or if it has changed
+					if (currentLogin == null || (username != null && !StringUtils.matchString(currentLogin, username))) {
+						currentPerson.setLogin(username);
+						currentPerson = person.merge(currentPerson);
+						LOG.debug("Update person with username");	
+					}
+				}
 
 				if (Constants.getSite().equals(SITE.EMBL)) {
 					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
@@ -1224,6 +1234,7 @@ public class UpdateFromSMIS {
 		if (Constants.SITE_IS_ESRF() && mainProp.getSiteId()!= null) {
 				siteId = mainProp.getSiteId().toString();
 		}
+		String username = mainProp.getUserName();
 
 		// labo
 		Integer labId;
@@ -1280,14 +1291,16 @@ public class UpdateFromSMIS {
 			persv.setFaxNumber(faxNumber);
 			persv.setSiteId(siteId);
 
-			/** Adding the logging **/
-			LOG.debug("Adding login: " + persv.getLogin());
-
-			persv.setLogin(mainProp.getBllogin());
+			if (Constants.SITE_IS_ESRF() ) {
+				persv.setLogin(username);
+			} else {
+				persv.setLogin(mainProp.getBllogin());
+			}
+			
 			persv = person.merge(persv);
 			persId = persv.getPersonId();
 
-			LOG.debug("getting SMIS WS person created");
+			LOG.debug("getting SMIS WS person created with login = " + persv.getLogin());
 		} else {
 			// person is existing but may has changed labo : we set the new
 			// labId
