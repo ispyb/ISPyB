@@ -35,7 +35,7 @@ public class AutoProcProgramaAttachmentFileReader {
 			String fileName = attachment.getFileName();
 			xscaleFile = (fileName != null && fileName.toLowerCase().endsWith("xscale.lp"));
 			truncateLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("truncate"));
-			noanomAimlessLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("noanom_aimless"));
+			noanomAimlessLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("aimless"));
 
 //			System.out.println(xscaleFile);
 //			System.out.println(truncateLog);
