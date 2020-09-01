@@ -1054,6 +1054,9 @@ public class UpdateFromSMIS {
 															// number because we
 															// always start
 															// with 0
+		if (Constants.SITE_IS_MAXIV()){
+			visit_number = Integer.valueOf(sessionVO.getName());
+		}
 		Integer nbShifts = sessionVO.getShifts();
 		Integer startShift = sessionVO.getStartShift(); // startShift equals 1,
 														// 2 or 3 and stands for
@@ -1110,7 +1113,7 @@ public class UpdateFromSMIS {
 			sesv.setExpSessionPk(sessionVO.getPk());
 			sesv.setOperatorSiteNumber(siteNumber);
 
-			if (Constants.SITE_IS_SOLEIL()) {
+			if (Constants.SITE_IS_SOLEIL() || Constants.SITE_IS_MAXIV()) {
 				sesv.setVisit_number(visit_number);
 			}
 			

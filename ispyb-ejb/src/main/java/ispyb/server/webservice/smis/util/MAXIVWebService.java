@@ -302,11 +302,12 @@ public class MAXIVWebService implements SMISWebService {
 					session.setExperimentPk(propId);
 					session.setComment("Created by DUO");
 					session.setPk(new Long((int)jsonSession.get("sessionid")));
+					session.setName((String)jsonSession.get("sessionnum"));
 					session.setFirstLocalContact(localContact);
 					String title = (String)jsonProposal.get("title");
 					if(title.length() >= 200){
 						title = title.substring(0,195).concat("...");
-						System.out.println("Truncated Tilte :" + title);
+						System.out.println("Truncated Title :" + title);
 					}
 					session.setProposalTitle(title);
 					session.setCategCode("MX");
