@@ -291,7 +291,8 @@ public class MAXIVWebService implements SMISWebService {
 
 
 			try{
-				ArrayList<JSONObject> jsonShifts = getShiftsForSession((Integer)jsonSession.get("sessionid"));
+				Integer sessionId =  (Integer)jsonSession.get("sessionid");
+				ArrayList<JSONObject> jsonShifts = getShiftsForSession(sessionId);
 				if(jsonShifts.size() != 0){
 					session.setBeamlineName((String)jsonSession.get("beamline"));
 					session.setBeamlinePk(Long.valueOf(12345));//TODO Verify. We dont have a Long id
@@ -302,7 +303,7 @@ public class MAXIVWebService implements SMISWebService {
 					session.setExperimentPk(propId);
 					session.setComment("Created by DUO");
 					session.setPk(new Long((int)jsonSession.get("sessionid")));
-					session.setName((String)jsonSession.get("sessionnum"));
+					session.setName(((Integer)jsonSession.get("sessionnum")).toString());
 					session.setFirstLocalContact(localContact);
 					String title = (String)jsonProposal.get("title");
 					if(title.length() >= 200){
@@ -342,6 +343,8 @@ public class MAXIVWebService implements SMISWebService {
 					session.setCancelled(false);//TODO: Check what this means
 					
 					sessions.add(session);
+				} else {
+					LOG.info("Empty session found for DUO sessionid"  + sessionId.toString());
 				}
 			} catch(Exception ex){
 				//TODO: Handle exception
