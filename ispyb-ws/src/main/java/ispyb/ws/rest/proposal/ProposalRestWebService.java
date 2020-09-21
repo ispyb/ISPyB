@@ -210,6 +210,32 @@ public class ProposalRestWebService extends MXRestWebService{
 
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
+	@Path("{token}/proposal/updateProposalsByToken")
+	@Produces({ "application/json" })
+	public Response updateProposalsByToken(@PathParam("token") String token)
+			throws Exception {
+
+		long id = this.logInit("updateProposalsByToken", logger, token);
+		try {
+			Login3VO login3VO = this.getLogin3Service().findByToken(token);
+			logger.info("Updating proposals for the user: " + login3VO.getUsername());
+			List<Proposal3VO> proposals = this.getProposal3Service().findProposalByLoginName(login3VO.getUsername());
+			for (Proposal3VO proposal : proposals) {
+				UpdateFromSMIS.updateProposalFromSMIS(proposal.getProposalId());
+			}
+
+			this.logFinish("updateProposalsByToken", id, logger);
+			HashMap<String, String> response = new HashMap<String, String>();
+			response.put("Status", "Done");
+			return this.sendResponse(response);
+		}
+		catch(Exception e){
+			return this.logError("updateProposalsByToken", e, id, logger);
+		}
+	}
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
 	@Path("{token}/proposal/proposalId")
 	@Produces({ "application/json" })
 	public Response getProposalByCodeAndNumber(@PathParam("token") String token,

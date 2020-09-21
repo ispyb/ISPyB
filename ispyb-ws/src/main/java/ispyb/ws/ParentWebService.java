@@ -27,10 +27,14 @@ import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
 import ispyb.server.mx.services.collections.Image3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
+import ispyb.server.common.services.shipping.DewarAPIService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -134,6 +138,12 @@ public  class ParentWebService {
 	protected String copyFileToDisk(String proposal, FileUploadForm form, String fileName) throws Exception {
 		int proposalId = this.getProposalId(proposal);
 		String filePath = this.getTargetFolder(proposalId) + "/" + fileName;
+		/** If folder does not exist then it will be created **/
+		if (!new File(this.getTargetFolder(proposalId)).exists()){
+			java.nio.file.Path path = Paths.get(this.getTargetFolder(proposalId));
+			log.info("Folder does not exist and will be created. folder=" + path);
+			Files.createDirectory(path);
+		}
 		log.info("Copying file " + fileName + " to " + filePath );
 		File file = new File(filePath);
 		FileOutputStream fileOut = new FileOutputStream(file.getAbsolutePath());
@@ -264,6 +274,10 @@ public  class ParentWebService {
 
 	protected Dewar3Service getDewar3Service() throws NamingException {
 		return (Dewar3Service) Ejb3ServiceLocator.getInstance().getLocalService(Dewar3Service.class);
+	}
+
+	protected DewarAPIService getDewarAPIService() throws NamingException {
+		return (DewarAPIService) Ejb3ServiceLocator.getInstance().getLocalService(DewarAPIService.class);
 	}
 	
 	protected SchemaStatusService getSchemaStatusService() throws NamingException {
