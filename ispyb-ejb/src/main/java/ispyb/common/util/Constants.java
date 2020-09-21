@@ -904,7 +904,7 @@ public final class Constants {
 
 	public static final String[] CONTAINER_CAPACITY_EMBL = { "10", "16", "6", "0" };
 
-	public static final String[] CONTAINER_CAPACITY_MAXIV = { "10", "16", "6", "0" };
+	public static final String[] CONTAINER_CAPACITY_MAXIV = { "16", "16", "6", "0" };
 
 	public static final String[] CONTAINER_CAPACITY_SOLEIL = { "10", "16", "6", "0" };
 

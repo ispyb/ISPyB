@@ -647,7 +647,7 @@ public class UploadShipmentUtils {
 				container.setSampleVOs(sampleVOs);
 				containerService.update(container);
 				
-				if (nbSamplesInPuck > Constants.SPINE_SAMPLE_CAPACITY) {
+				if (nbSamplesInPuck > Constants.SPINE_SAMPLE_CAPACITY || Constants.SITE_IS_MAXIV()) {
 					container.setContainerType(Constants.CONTAINER_TYPE_UNIPUCK);
 					container.setCapacity(Constants.UNIPUCK_SAMPLE_CAPACITY);
 				} else { 

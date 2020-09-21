@@ -1166,7 +1166,7 @@ public class ToolsForCollectionWebService {
 	String fileName, @WebParam(name = "workflowId")
 	Integer workflowId) throws Exception {
 		try {
-			LOG.debug("updateDataCollectionGroupWorkflowId : workflowId=" + workflowId + ", fileLocation= " + fileLocation
+			LOG.info("updateDataCollectionGroupWorkflowId : workflowId=" + workflowId + ", fileLocation= " + fileLocation
 					+ ", fileName= " + fileName);
 			// retrieve the datacollection from fileLocation and fileName
 			DataCollection3VO dc = null;

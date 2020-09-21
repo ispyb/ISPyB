@@ -88,8 +88,6 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
 <c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
 	          		  <layout:column styleClass="MESSAGE_GREY">
 	          		    <div align=justify>(*): Your DUO password.
-	          		    	<br>Only when you have registered your beam time in the DUO system you will be able to add sample information.
-	          		    	<br>Beam line personnel will have to grant you access after registration (email mx@maxlab.lu.se ).
 	          		    </div>
 	                  </layout:column>
 </c:if>	              	                

@@ -1,5 +1,6 @@
 package ispyb.ws.rest.proposal;
 
+import ispyb.common.util.StringUtils;
 import ispyb.common.util.Constants;
 import ispyb.common.util.PDFFormFiller;
 import ispyb.server.biosaxs.vos.dataAcquisition.StockSolution3VO;
@@ -35,6 +36,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
@@ -314,8 +316,39 @@ public class DewarRestWebService extends RestWebService {
 		}
 		return null;
 	}
-	
-	
+
+
+	@RolesAllowed({"Manager", "Localcontact" })
+	@POST
+	@Path("{token}/dewar/updateStatus")
+	@Produces({ "application/json" })
+	public Response updateStatus(
+			@PathParam("token") String token,
+			@FormParam("location") String location,
+			@FormParam("barCode") String barCode,
+			@FormParam("username") String username)
+			throws Exception {
+
+		long start = this.logInit("updateStatus", logger, token, location,
+				barCode, username);
+
+		try {
+			Timestamp dateTime = getDateTime();
+			// Add dewar event in table
+			getDewarAPIService().addDewarLocation(barCode, username, dateTime, location, "", "");
+
+			// Update dewar info (Dewar, Shipping, DewarTransportHistory)
+			if (!getDewarAPIService().updateDewar(barCode, location, "", "")) {
+				throw new Exception("Cannot update the dewar status");
+			}
+			this.logFinish("updateStatus", start, logger);
+
+			return this.sendResponse(Status.OK);
+		} catch (Exception e) {
+			this.logError("updateStatus", e, start, logger);
+			return this.sendResponse(Status.NOT_FOUND);
+		}
+	}
 
 
 	public byte[] getLabels(int dewarId) throws NamingException, Exception {
@@ -446,7 +479,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_sendingLaboratoryName",
 				sendingLaboratory.getName());
 		fieldNamesAndValues.put("TF_sendingLaboratoryAddress",
-				sendingLaboratory.getAddress());
+				StringUtils.breakString(sendingLaboratory.getAddress(), 30));
 
 		fieldNamesAndValues.put(
 				"TF_returnLabContactName",
@@ -468,7 +501,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_returnLaboratoryName",
 				returnLaboratory.getName());
 		fieldNamesAndValues.put("TF_returnLaboratoryAddress",
-				returnLaboratory.getAddress());
+				StringUtils.breakString(returnLaboratory.getAddress(), 30));
 
 		// default courier company (only if exists)
 		String defaultCourrierCompany = "unknown";
