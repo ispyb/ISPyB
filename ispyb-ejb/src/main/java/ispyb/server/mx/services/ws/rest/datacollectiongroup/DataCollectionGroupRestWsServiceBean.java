@@ -81,6 +81,18 @@ public class DataCollectionGroupRestWsServiceBean extends WsServiceBean implemen
 	}
 
 	@Override
+	public List<Map<String, Object>> getViewDataCollectionBySampleId(int proposalId, int sampleId) {
+		String mySQLQuery = getViewTableQuery() + " where BLSession_proposalId = :proposalId and DataCollectionGroup_blSampleId = :sampleId";
+		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(mySQLQuery);
+		query.setParameter("proposalId", proposalId);
+		query.setParameter("sampleId", sampleId);
+		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+		return executeSQLQuery(query);
+	}
+
+	@Override
 	public List<Map<String, Object>> getViewDataCollectionBySampleName(int proposalId, String name) {
 		String mySQLQuery = getViewTableQuery() + " where BLSession_proposalId = :proposalId and BLSample_name = :name";
 		mySQLQuery = mySQLQuery + " group by v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId, v_datacollection_summary.DataCollectionGroup_dataCollectionGroupId";
