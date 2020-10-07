@@ -62,6 +62,8 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service,
 												+"and DCG.comments not in (' Data collection failed!\n') "
 												+"and P.proposalNumber not in (:TESTPROPOSALS) ";
 
+	private String EXPERIMENTSTATS_QUERY ="select * from v_mx_experiment_stats where startTime >= :START and startTime <= :END and comments not in (' Data collection failed!\\n') and proposalNumber not in (:TESTPROPOSALS) ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -149,6 +151,31 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service,
 		query.setParameter("START", dt1.format(startDate));
 		query.setParameter("END", dt1.format(endDate));
 		query.setParameter("LIMITIMAGES", Integer.valueOf(datacollectionImages));
+		query.setParameterList("TESTPROPOSALS", datacollectionTestProposals);
+		query.setParameter("BEAMLINENAME",beamline);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getExperimentStatsByDate(
+			Date startDate, Date endDate, String[] datacollectionTestProposals) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(EXPERIMENTSTATS_QUERY);
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
+		query.setParameterList("TESTPROPOSALS", datacollectionTestProposals);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getExperimentStatsByDate(
+			Date startDate, Date endDate, String[] datacollectionTestProposals, String beamline) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(EXPERIMENTSTATS_QUERY + "  and beamLineName = :BEAMLINENAME ");
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
 		query.setParameterList("TESTPROPOSALS", datacollectionTestProposals);
 		query.setParameter("BEAMLINENAME",beamline);
 		return executeSQLQuery(query);
