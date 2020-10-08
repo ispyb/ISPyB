@@ -32,6 +32,9 @@ import ispyb.server.common.services.shipping.DewarAPIService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -135,6 +138,12 @@ public  class ParentWebService {
 	protected String copyFileToDisk(String proposal, FileUploadForm form, String fileName) throws Exception {
 		int proposalId = this.getProposalId(proposal);
 		String filePath = this.getTargetFolder(proposalId) + "/" + fileName;
+		/** If folder does not exist then it will be created **/
+		if (!new File(this.getTargetFolder(proposalId)).exists()){
+			java.nio.file.Path path = Paths.get(this.getTargetFolder(proposalId));
+			log.info("Folder does not exist and will be created. folder=" + path);
+			Files.createDirectory(path);
+		}
 		log.info("Copying file " + fileName + " to " + filePath );
 		File file = new File(filePath);
 		FileOutputStream fileOut = new FileOutputStream(file.getAbsolutePath());
