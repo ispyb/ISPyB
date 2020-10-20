@@ -2,7 +2,6 @@ package ispyb.server.webservice.smis.util;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Date;
@@ -37,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import generated.ws.smis.FinderException;
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
@@ -54,8 +52,10 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private String serverUrl = "";
 	
-	public MAXIVWebService() {
-		this.serverUrl = Constants.getProperty("userportal.url");
+	public void init() {
+		if ("".equals(this.serverUrl)) {
+			this.serverUrl = Constants.getProperty("userportal.url");
+		}
 	}
 	
 	public List<Long> findNewMXProposalPKs_OLD (String startDateStr, String endDateStr) {
@@ -91,6 +91,7 @@ public class MAXIVWebService implements SMISWebService {
 
     public List<Long> findNewMXProposalPKs (String startDateStr, String endDateStr) {
         List<Long> pks = new ArrayList<Long>();
+		init();
         try {
             StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/?access_token=")
                 .append(this.getToken())
@@ -261,20 +262,37 @@ public class MAXIVWebService implements SMISWebService {
 	
 	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days){
 		List<ExpSessionInfoLightVO> sessions = new ArrayList<ExpSessionInfoLightVO>();
-		
+		init();
 		JSONObject jsonProposal = getProposalForId(propId);
         ArrayList<JSONObject> jsonSessions = new ArrayList<JSONObject>();
+		ArrayList<JSONObject> jsonLocalContacts = new ArrayList<JSONObject>();
+		InnerScientistVO localContact = new InnerScientistVO();
+
         try {
             jsonSessions = getSessionsForProposal(propId);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+		try {
+			jsonLocalContacts = getProposalLocalContactForPropid(propId);
+			localContact.setName((String) jsonLocalContacts.get(0).get("lastname"));
+			localContact.setFirstName((String) jsonLocalContacts.get(0).get("firstname"));
+			localContact.setPhone((String) jsonLocalContacts.get(0).get("phone"));
+			localContact.setEmail((String) jsonLocalContacts.get(0).get("email"));
+			//localContact.setTitle((String) jsonLocalContacts.get(0).get("title"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			localContact.setFirstName("Manager");
+			localContact.setName("BioMAX");
+		}
 		for(JSONObject jsonSession : jsonSessions){
 			ExpSessionInfoLightVO session = new ExpSessionInfoLightVO();
-			
+
+
 			try{
-				ArrayList<JSONObject> jsonShifts = getShiftsForSession((Integer)jsonSession.get("sessionid"));
+				Integer sessionId =  (Integer)jsonSession.get("sessionid");
+				ArrayList<JSONObject> jsonShifts = getShiftsForSession(sessionId);
 				if(jsonShifts.size() != 0){
 					session.setBeamlineName((String)jsonSession.get("beamline"));
 					session.setBeamlinePk(Long.valueOf(12345));//TODO Verify. We dont have a Long id
@@ -285,14 +303,12 @@ public class MAXIVWebService implements SMISWebService {
 					session.setExperimentPk(propId);
 					session.setComment("Created by DUO");
 					session.setPk(new Long((int)jsonSession.get("sessionid")));
-					InnerScientistVO localContact = new InnerScientistVO();
-					localContact.setName("Muller");
-					localContact.setFirstName("Uwe");
+					session.setName(((Integer)jsonSession.get("sessionnum")).toString());
 					session.setFirstLocalContact(localContact);
 					String title = (String)jsonProposal.get("title");
 					if(title.length() >= 200){
 						title = title.substring(0,195).concat("...");
-						System.out.println("Truncated Tilte :" + title);
+						System.out.println("Truncated Title :" + title);
 					}
 					session.setProposalTitle(title);
 					session.setCategCode("MX");
@@ -327,6 +343,8 @@ public class MAXIVWebService implements SMISWebService {
 					session.setCancelled(false);//TODO: Check what this means
 					
 					sessions.add(session);
+				} else {
+					LOG.info("Empty session found for DUO sessionid"  + sessionId.toString());
 				}
 			} catch(Exception ex){
 				//TODO: Handle exception
@@ -407,6 +425,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private JSONObject getProposalForId(Long propId){
 		JSONObject proposal = null;
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
 				.append(propId).append("?access_token=").append(this.getToken());
@@ -416,8 +435,27 @@ public class MAXIVWebService implements SMISWebService {
 		return proposal;
 	}
 
+	private ArrayList<JSONObject> getProposalLocalContactForPropid(Long propId)throws Exception {
+		ArrayList<JSONObject> localContacts = new ArrayList<JSONObject>();
+		init();
+
+		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
+				.append(propId).append("/localcontacts").append("?access_token=").append(this.getToken());
+
+		JSONArray jsonLocalContacts = readJsonArrayFromUrl(url.toString());
+
+		int len = jsonLocalContacts.length();
+		for (int i = 0; i < len; i++) {
+			JSONObject jsonLocalContact = (JSONObject) jsonLocalContacts.get(i);
+			localContacts.add(jsonLocalContact);
+		}
+
+		return localContacts;
+	}
+
 	private ArrayList<JSONObject> getProposalAuthorsForPropid(Long propId)throws Exception {
 		ArrayList<JSONObject> authors = new ArrayList<JSONObject>();
+		init();
 
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
 				.append(propId).append("/authors").append("?access_token=").append(this.getToken());
@@ -435,6 +473,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private ArrayList<JSONObject> getBeamlinesForProposal(Long propId){
 		ArrayList<JSONObject> beamlines = new ArrayList<JSONObject>();
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
 				.append(propId).append("/beamlines").append("?access_token=").append(this.getToken());
@@ -452,6 +491,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private ArrayList<JSONObject> getSessionsForProposal(Long propId) throws Exception {
 		ArrayList<JSONObject> sessions = new ArrayList<JSONObject>();
+		init();
 
         StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Proposals/")
                 .append(propId).append("/sessions/").append("?access_token=").append(this.getToken());
@@ -470,6 +510,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private ArrayList<JSONObject> getShiftsForSession(Integer sessionId){
 		ArrayList<JSONObject> shifts = new ArrayList<JSONObject>();
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/")
 				.append(sessionId).append("/shifts").append("?access_token=").append(this.getToken());
@@ -487,6 +528,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private ArrayList<JSONObject> getParticipantsForSession(Integer sessionId){
 		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Sessions/")
 				.append(sessionId).append("/participants").append("?access_token=").append(this.getToken());
@@ -504,6 +546,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private JSONObject getUserForId(Integer userId){
 		JSONObject user = null;
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Clients/")
 				.append(userId).append("?access_token=").append(this.getToken());
@@ -515,6 +558,7 @@ public class MAXIVWebService implements SMISWebService {
 	
 	private JSONObject getLabForId(Integer labId){
 		JSONObject lab = null;
+		init();
 		
 		StringBuilder url = new StringBuilder("https://").append(this.serverUrl).append("/api/Institutes/")
 				.append(labId).append("?access_token=").append(this.getToken());

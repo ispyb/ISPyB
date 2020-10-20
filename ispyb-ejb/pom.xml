@@ -479,7 +479,7 @@
   			<ispyb.authentication.method>LDAP</ispyb.authentication.method>
   			<ispyb.authorisation.proposals.source>database</ispyb.authorisation.proposals.source>
 
-			<ldap.employee.resource>ldaps://srv-ad-2.maxiv.lu.se/</ldap.employee.resource>
+			<ldap.employee.resource>ldaps://adauth.maxiv.lu.se/</ldap.employee.resource>
 			<ldap.base>dc=maxlab,dc=lu,dc=se</ldap.base>
 			<ldap.people>dc=maxlab,dc=lu,dc=se</ldap.people>
 			<ldap.attribute>samaccountname</ldap.attribute>

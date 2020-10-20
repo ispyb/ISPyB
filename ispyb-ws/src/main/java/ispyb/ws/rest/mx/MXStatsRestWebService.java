@@ -182,10 +182,86 @@ public class MXStatsRestWebService extends MXRestWebService {
 		}
 		return null;
 	}
-	
-	
 
-	
+	@RolesAllowed({ "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/stats/experimentstatistics/{start}/{end}/{beamlinenames}/json")
+	@Produces({ "application/json" })
+	public Response getExperimentStatisticsByDate(@PathParam("start") Date startDate,
+													  @PathParam("end") Date endDate,
+													  @PathParam("beamlinenames") String beamlinesName,
+													  @QueryParam("testproposals")String datacollectionTestProposals
+	) {
+
+		String methodName = "getExperimentStatisticsByDate";
+		long id = this.logInit(methodName, logger, startDate, endDate, beamlinesName, datacollectionTestProposals);
+		try {
+			String[] testProposals = null;
+			if (datacollectionTestProposals != null && datacollectionTestProposals != ""){
+				testProposals = datacollectionTestProposals.split(",");
+			}
+
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+
+			if (beamlinesName != null && !beamlinesName.equals("0")){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getExperimentStatsByDate(startDate, endDate, testProposals, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getExperimentStatsByDate(startDate, endDate, testProposals));
+			}
+
+			return this.sendResponse(list);
+
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
+
+	@RolesAllowed({ "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/stats/experimentstatistics/{start}/{end}/{beamlinenames}/csv")
+	@Produces({ "application/csv" })
+	public Response getCSVDatacollectionStatisticsByDate(@PathParam("start") Date startDate,
+														 @PathParam("end") Date endDate,
+														 @PathParam("beamlinenames") String beamlinesName,
+														 @QueryParam("testproposals") String datacollectionTestProposals
+	) {
+
+		String methodName = "getCSVExperimentStatisticsByDate";
+		long id = this.logInit(methodName, logger, startDate, endDate, beamlinesName, datacollectionTestProposals);
+		try {
+			String[] testProposals = null;
+			if (datacollectionTestProposals != null && datacollectionTestProposals != ""){
+				testProposals = datacollectionTestProposals.split(",");
+			}
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+
+			if (beamlinesName != null && !beamlinesName.equals("0")){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getExperimentStatsByDate(startDate, endDate, testProposals, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getExperimentStatsByDate( startDate, endDate, testProposals));
+			}
+
+			return this.sendResponse(this.parseListToCSV(list));
+
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
+
 	public String parseListToCSV(List<Map<String, Object>> list) {
 		StringWriter output = new StringWriter();
 

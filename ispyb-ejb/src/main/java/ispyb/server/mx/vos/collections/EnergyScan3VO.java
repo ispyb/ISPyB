@@ -149,6 +149,15 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 	
 	@Column(name = "workingDirectory")
 	protected String workingDirectory;
+
+	@Column(name = "remoteEnergy")
+	protected Double remoteEnergy;
+
+	@Column(name = "remoteFPrime")
+	protected Double remoteFPrime;
+
+	@Column(name = "remoteFDoublePrime")
+	protected Double remoteFDoublePrime;
 	
 	@ManyToOne
 	@JoinColumn(name = "blSubSampleId")
@@ -169,7 +178,8 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 			Double inflectionFDoublePrime, Double xrayDose, Date startTime,
 			Date endTime, String edgeEnergy, String filename,
 			Float beamSizeVertical, Float beamSizeHorizontal,
-			String crystalClass, String comments, Double flux, Double flux_end) {
+			String crystalClass, String comments, Double flux, Double flux_end,
+			Double remoteEnergy, Double remoteFPrime, Double remoteFDoublePrime) {
 		super();
 		this.energyScanId = energyScanId;
 		this.sessionVO = sessionVO;
@@ -202,6 +212,9 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		this.comments = comments;
 		this.flux = flux;
 		this.flux_end = flux_end;
+		this.remoteEnergy = remoteEnergy;
+		this.remoteFPrime = remoteFPrime;
+		this.remoteFDoublePrime = remoteFDoublePrime;
 	}
 	
 	
@@ -238,6 +251,9 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		this.comments = vo.getComments();
 		this.flux = vo.getFlux();
 		this.flux_end = vo.getFlux_end();
+		this.remoteEnergy = vo.getRemoteEnergy();
+		this.remoteFPrime = vo.getRemoteFPrime();
+		this.remoteFDoublePrime = vo.getRemoteFDoublePrime();
 	}
 
 
@@ -274,6 +290,9 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		this.comments = vo.getComments();
 		this.flux = vo.getFlux();
 		this.flux_end = vo.getFlux_end();
+		this.remoteEnergy = vo.getRemoteEnergy();
+		this.remoteFPrime = vo.getRemoteFPrime();
+		this.remoteFDoublePrime = vo.getRemoteFDoublePrime();
 	}
 
 
@@ -555,6 +574,24 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		this.flux_end = flux_end;
 	}
 
+	public Double getRemoteEnergy() { return remoteEnergy; }
+	public void setRemoteEnergy(Double remoteEnergy) {
+		this.remoteEnergy = remoteEnergy;
+	}
+
+	public Double getRemoteFPrime() {
+		return remoteFPrime;
+	}
+	public void setRemoteFPrime(Double remoteFPrime) {
+		this.remoteFPrime = remoteFPrime;
+	}
+
+	public Double getRemoteFDoublePrime() {
+		return remoteFDoublePrime;
+	}
+	public void setRemoteFDoublePrime(Double remoteFDoublePrime) {
+		this.remoteFDoublePrime = remoteFDoublePrime;
+	}
 
 
 	/**
@@ -637,7 +674,10 @@ public class EnergyScan3VO extends ISPyBValueObject implements Cloneable {
 		"crystalClass="+this.crystalClass+", "+
 		"comments="+this.comments+", "+
 		"flux="+this.flux+", "+
-		"flux_end="+this.flux_end;
+		"flux_end="+this.flux_end+", "+
+		"remoteEnergy="+this.remoteEnergy+", "+
+		"remoteFPrime="+this.remoteFPrime+", "+
+		"remoteFDoublePrime="+this.remoteFDoublePrime;
 		
 		return s;
 	}

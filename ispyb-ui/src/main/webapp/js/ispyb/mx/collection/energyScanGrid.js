@@ -135,6 +135,15 @@ function EnergyScanGrid(args) {
 					name : 'inflectionFDoublePrime',
 					mapping : 'inflectionFDoublePrime'
 				}, {
+                    name : 'remoteEnergy',
+                    mapping : 'remoteEnergy'
+                }, {
+                    name : 'remoteFPrime',
+                    mapping : 'remoteFPrime'
+                }, {
+                    name : 'remoteFDoublePrime',
+                    mapping : 'remoteFDoublePrime'
+                }, {
 					name : 'xrayDose',
 					mapping : 'xrayDose'
 				}, {
@@ -466,6 +475,24 @@ EnergyScanGrid.prototype._getColumns = function () {
 			renderer : renderNumberFormat1,
 			id : 'peakFDoublePrime'
 		}, {
+            text : 'Remote<br>Energy<br>(keV)',
+            dataIndex : 'remoteEnergy',
+            flex : 0.05,
+            renderer : renderNumberFormat3,
+            id : 'remoteEnergy'
+        }, {
+            text : 'Remote <br>f\'<br>(e)',
+            dataIndex : 'remoteFPrime',
+            flex : 0.05,
+            renderer : renderNumberFormat1,
+            id : 'remoteFPrime'
+        }, {
+            text : 'Remote <br>f\'\'<br>(e)',
+            dataIndex : 'remoteFDoublePrime',
+            flex : 0.05,
+            renderer : renderNumberFormat1,
+            id : 'remoteFDoublePrime'
+        }, {
 			text : 'Start Time',
 			dataIndex : 'startTime',
 			renderer : Ext.util.Format.dateRenderer('d-m-Y H:i:s'),
