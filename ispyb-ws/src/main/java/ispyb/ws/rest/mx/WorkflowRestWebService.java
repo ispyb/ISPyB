@@ -1,5 +1,6 @@
 package ispyb.ws.rest.mx;
 
+import ispyb.common.util.Constants;
 import ispyb.server.mx.vos.collections.Workflow3VO;
 import ispyb.server.mx.vos.collections.WorkflowStep3VO;
 
@@ -148,6 +149,10 @@ public class WorkflowRestWebService extends MXRestWebService {
 			WorkflowStep3VO workflowStep = this.getWorkflowStep3Service().findById(workflowStepId, this.getProposalId(proposal));
 			if (workflowStep != null){
 				if (workflowStep.getResultFilePath() != null){
+					if (Constants.SITE_IS_MAXIV()) {
+						String pathToJsonFile = workflowStep.getHtmlResultFilePath().replace("index.html","report.json");
+						workflowStep.setResultFilePath(pathToJsonFile);
+					}
 					if (new File(workflowStep.getResultFilePath()).exists()){
 						byte[] encoded = Files.readAllBytes(Paths.get(workflowStep.getResultFilePath()));
 						this.logFinish(methodName, start, logger);

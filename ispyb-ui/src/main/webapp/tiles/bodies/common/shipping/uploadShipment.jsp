@@ -120,6 +120,9 @@ function switchView()
 				<c:if test="${SITE_ATTRIBUTE eq 'MAXIV'}">
 					<layout:link href="<%=targetDownloadPopulatedTemplateFromShipment + shippingId%>"  styleClass="FIELD"><img src="<%=request.getContextPath()%>/images/Excel_24x24_01.png" border=0>The PRE-FILLED with your Protein Acronyms - template for submission via upload of XLS file can be downloaded here.</layout:link>
 				</c:if>
+				<c:if test="${SITE_ATTRIBUTE eq 'ALBA'}">
+					<layout:link href="<%=targetDownloadPopulatedTemplateFromShipment + shippingId%>"  styleClass="FIELD"><img src="<%=request.getContextPath()%>/images/Excel_24x24_01.png" border=0>The PRE-FILLED with your Protein Acronyms - template for submission via upload of XLS file can be downloaded here.</layout:link>
+				</c:if>
 			</layout:line>
 			<c:if test="${SITE_ATTRIBUTE eq 'DLS'}">
 				<layout:line>

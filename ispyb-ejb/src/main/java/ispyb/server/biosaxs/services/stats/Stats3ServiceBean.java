@@ -49,6 +49,19 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service,
 
 	private String AUTOPROCSTATS_QUERY = "select * from v_mx_autoprocessing_stats where startTime >= :START and startTime <= :END and scalingStatisticsType = :TYPE";
 
+	private String DATACOLLECTIONSTATS_QUERY ="select count(DC.dataCollectionId) as \"Datasets\", "
+												+"	  count(distinct(case when right(DC.imageDirectory,1) = '/' then left(DC.imageDirectory,length(DC.imageDirectory)-1) "
+												+"						  else DC.imageDirectory end)) as \"Samples\" "
+												+"from DataCollection DC "
+												+"join DataCollectionGroup DCG on DCG.dataCollectionGroupId = DC.dataCollectionGroupId "
+												+"join BLSession BLS on BLS.sessionId = DCG.sessionId "
+												+"join Proposal P on P.proposalId = BLS.proposalId "
+												+"where DC.startTime >= :START "
+												+"and DC.startTime <= :END "
+												+"and DC.numberOfImages <= :LIMITIMAGES "
+												+"and DCG.comments not in (' Data collection failed!\n') "
+												+"and P.proposalNumber not in (:TESTPROPOSALS) ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -110,6 +123,33 @@ public class Stats3ServiceBean extends WsServiceBean implements Stats3Service,
 		query.setParameter("START", dt1.format(startDate));
 		query.setParameter("END", dt1.format(endDate));
 		query.setParameter("TYPE", autoprocStatisticsType);
+		query.setParameter("BEAMLINENAME",beamline);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getDatacollectionStatsByDate(
+			String datacollectionImages, Date startDate, Date endDate, String[] datacollectionTestProposals) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(DATACOLLECTIONSTATS_QUERY);
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
+		query.setParameter("LIMITIMAGES", Integer.valueOf(datacollectionImages));
+		query.setParameterList("TESTPROPOSALS", datacollectionTestProposals);
+		return executeSQLQuery(query);
+	}
+
+	@Override
+	public List<Map<String, Object>> getDatacollectionStatsByDate(
+			String datacollectionImages, Date startDate, Date endDate, String[] datacollectionTestProposals, String beamline) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(DATACOLLECTIONSTATS_QUERY + "  and beamLineName = :BEAMLINENAME ");
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		query.setParameter("START", dt1.format(startDate));
+		query.setParameter("END", dt1.format(endDate));
+		query.setParameter("LIMITIMAGES", Integer.valueOf(datacollectionImages));
+		query.setParameterList("TESTPROPOSALS", datacollectionTestProposals);
 		query.setParameter("BEAMLINENAME",beamline);
 		return executeSQLQuery(query);
 	}

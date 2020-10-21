@@ -188,6 +188,8 @@ public final class Constants {
 	public static final String AUTHORISATION_ACTIVE = "ISPyB.authorisation.active";
 	
 	public static final String ACCESS_DENIED = "Access not authorised.";
+	
+	public static final String DEPLOY_PROD = "prod" ;
 
 	/*
 	 * adminVar keys
@@ -233,9 +235,9 @@ public final class Constants {
 	
 	public static final String LDAP_Employee_Identifier = getProperty("ldap.attribute");
 
-	public static final String LDAP_base = SITE_IS_MAXIV() ? getProperty("ldap.base") : "";
+	public static final String LDAP_base = SITE_IS_MAXIV() || SITE_IS_ALBA() ? getProperty("ldap.base") : "";
 	
-	public static final String LDAP_prefix = SITE_IS_MAXIV() ? getProperty("ldap.principalDNPrefix") : "";
+	public static final String LDAP_prefix = SITE_IS_MAXIV() || SITE_IS_ALBA() ? getProperty("ldap.principalDNPrefix") : "";
 	
 	public static final String LDAP_username = SITE_IS_MAXIV() ? getProperty("ldap.username") : "";
 	
@@ -271,6 +273,10 @@ public final class Constants {
 	public static final String MAIL_TO_SITE = (SITE_IS_ESRF()) ? getProperty("mail.to") : (SITE_IS_DLS()) ? getProperty("mail.to")
 			: (SITE_IS_MAXIV()) ? getProperty("mail.to") : (SITE_IS_SOLEIL()) ? getProperty("mail.to") 
 			: (SITE_IS_EMBL()) ? getProperty("mail.to") : "";
+			
+	public static final boolean IS_INDUSTRY_MAILING_IN_PROD() {
+				return getProperty("mail.report.industry").equals(DEPLOY_PROD);
+			}
 
 	
 	/*
