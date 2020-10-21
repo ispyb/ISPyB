@@ -100,6 +100,88 @@ public class MXStatsRestWebService extends MXRestWebService {
 		}
 		return null;
 	}
+
+	@RolesAllowed({ "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/stats/datacollectionstatistics/{imageslimit}/{start}/{end}/{beamlinenames}/json")
+	@Produces({ "application/json" })
+	public Response getDatacollectionStatisticsByDate(@PathParam("imageslimit") String datacollectionImages,
+													  @PathParam("start") Date startDate,
+													  @PathParam("end") Date endDate,
+													  @PathParam("beamlinenames") String beamlinesName,
+													  @QueryParam("testproposals")String datacollectionTestProposals
+													 ) {
+
+		String methodName = "getDatacollectionStatisticsByDate";
+		long id = this.logInit(methodName, logger, datacollectionImages, startDate, endDate, beamlinesName, datacollectionTestProposals);
+		try {
+			String[] testProposals = null;
+			if (datacollectionTestProposals != null && datacollectionTestProposals != ""){
+				testProposals = datacollectionTestProposals.split(",");
+			}
+
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+
+			if (beamlinesName != null && !beamlinesName.equals("0")){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getDatacollectionStatsByDate(datacollectionImages, startDate, endDate, testProposals, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getDatacollectionStatsByDate(datacollectionImages, startDate, endDate, testProposals));
+			}
+
+			return this.sendResponse(list);
+
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
+
+
+	@RolesAllowed({ "Manager", "LocalContact" })
+	@GET
+	@Path("{token}/stats/datacollectionstatistics/{imageslimit}/{start}/{end}/{beamlinenames}/csv")
+	@Produces({ "application/csv" })
+	public Response getCSVDatacollectionStatisticsByDate(@PathParam("imageslimit") String datacollectionImages,
+														 @PathParam("start") Date startDate,
+														 @PathParam("end") Date endDate,
+														 @PathParam("beamlinenames") String beamlinesName,
+														 @QueryParam("testproposals") String datacollectionTestProposals
+														 ) {
+
+		String methodName = "getCSVDatacollectionStatisticsByDate";
+		long id = this.logInit(methodName, logger, datacollectionImages, startDate, endDate, beamlinesName, datacollectionTestProposals);
+		try {
+			String[] testProposals = null;
+			if (datacollectionTestProposals != null && datacollectionTestProposals != ""){
+				testProposals = datacollectionTestProposals.split(",");
+			}
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+
+			if (beamlinesName != null && !beamlinesName.equals("0")){
+				List<String> beamlines = this.parseToString(beamlinesName);
+				if (beamlines.size() > 0){
+					for (String beamline : beamlines) {
+						list.addAll(this.getStatsWSService().getDatacollectionStatsByDate(datacollectionImages, startDate, endDate, testProposals, beamline));
+					}
+				}
+			}
+			else{
+				list.addAll(this.getStatsWSService().getDatacollectionStatsByDate(datacollectionImages, startDate, endDate, testProposals));
+			}
+
+			return this.sendResponse(this.parseListToCSV(list));
+
+		} catch (Exception e) {
+			this.logError(methodName, e, id, logger);
+		}
+		return null;
+	}
 	
 	
 

@@ -517,7 +517,9 @@ public class ISPyBParser extends XLSParser {
 					workbook.setSheetName(s, dewarCode + "_" + puckNumber);
 					HSSFSheet sheet = workbook.getSheetAt(s);
 
-					sheet.protectSheet(PWD);
+					if (!Constants.SITE_IS_MAXIV()) {
+						sheet.protectSheet(PWD);
+					}
 
 					// Dewar Code
 					HSSFRow row = sheet.getRow(dewarRow);
@@ -602,7 +604,9 @@ public class ISPyBParser extends XLSParser {
 					cell.setCellValue(new HSSFRichTextString(shippingDate));
 
 					//sheet.setProtect(true);
-					sheet.protectSheet(PWD);
+					if (!Constants.SITE_IS_MAXIV()) {
+						sheet.protectSheet(PWD);
+					}
 					puckNumber++;
 				}
 			}

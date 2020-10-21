@@ -375,6 +375,7 @@ public class ExportDataCollectionAction extends DispatchAction {
 				cc = Constants.getProperty("mail.report.cc");
 				// ESRF ####
 				if (Constants.SITE_IS_ESRF()) {
+					bcc = Constants.getProperty("mail.report.bcc");
 					if (proposalNumber.equals("12"))
 						cc = cc + "," + Constants.getProperty("mail.report.cc.fx12");
 				}

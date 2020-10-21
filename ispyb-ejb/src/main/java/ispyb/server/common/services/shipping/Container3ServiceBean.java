@@ -212,6 +212,27 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 		return foundEntities;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Container3VO> findByProposalIdAndCode(final Integer proposalId, final String containerCode) throws Exception {
+
+		Session session = (Session) this.entityManager.getDelegate();
+
+		Criteria crit = session.createCriteria(Container3VO.class);
+		Criteria subCrit = crit.createCriteria("dewarVO");
+
+		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
+
+		Criteria subSubCrit = subCrit.createCriteria("shippingVO");
+		Criteria subSubSubCrit = subSubCrit.createCriteria("proposalVO");
+		subSubSubCrit.add(Restrictions.eq("proposalId", proposalId));
+		crit.add(Restrictions.like("code", containerCode));
+		crit.addOrder(Order.desc("containerId"));
+
+		List<Container3VO> foundEntities = crit.list();
+		return foundEntities;
+	}
+
+
 	/**
 	 * Check if user has access rights to create, change and remove Container3 entities. If not set rollback only and
 	 * throw AccessDeniedException
