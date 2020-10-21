@@ -4,11 +4,7 @@ import ispyb.server.common.util.LoggerFormatter;
 import ispyb.server.common.vos.login.Login3VO;
 import ispyb.server.security.LdapConnection;
 import ispyb.ws.rest.RestWebService;
-import ispyb.ws.rest.security.login.EMBLLoginModule;
-import ispyb.ws.rest.security.login.ESRFLoginModule;
-import ispyb.ws.rest.security.login.SOLEILLLoginModule;
-import ispyb.ws.rest.security.login.MAXIVLoginModule;
-import ispyb.ws.rest.security.login.PropertyLoginModule;
+import ispyb.ws.rest.security.login.*;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -92,6 +88,9 @@ public class AuthenticationRestWebService extends RestWebService {
 						break;
 					case "MAXIV":
 						roles = MAXIVLoginModule.authenticate(login, password);
+						break;
+					case "ALBA":
+						roles = ALBALoginModule.authenticate(login, password);
 						break;
 					case "GENERIC":
 						roles = PropertyLoginModule.authenticate(login, password);
