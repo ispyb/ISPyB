@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.24</version>
+		<version>5.25</version>
 	</parent>
 	<artifactId>ispyb-bcr-ear</artifactId>
 	<packaging>ear</packaging>
