@@ -856,6 +856,8 @@ public final class Constants {
 	/*
 	 * sets of constants
 	 */
+	// for ESRF, it is replaced by ESRFBeamlineEnum
+	
 	public static final String[] BEAMLINE_LOCATION_DLS = { "i02", "i03", "i04", "i04-1", "i24" };
 
 	public static final String[] BEAMLINE_LOCATION_MAXIV = { "BioMAX", "MX" };
@@ -880,9 +882,6 @@ public final class Constants {
 			return "UNKNOWN";
 		}
 	}
-
-	// public static final String[] BEAMLINE_LOCATION = (SITE_IS_ESRF()) ? BEAMLINE_LOCATION_ESRF
-	// : (SITE_IS_DLS()) ? BEAMLINE_LOCATION_DLS : BEAMLINE_LOCATION_DEFAULT;
 
 	public static final String[] BEAMLINE_LOCATION = BEAMLINE_LOCATION_DEFAULT;
 
