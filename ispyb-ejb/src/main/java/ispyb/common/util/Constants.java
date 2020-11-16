@@ -856,10 +856,6 @@ public final class Constants {
 	/*
 	 * sets of constants
 	 */
-	// public static final String[] BEAMLINE_LOCATION_ESRF = { "ID14-1", "ID14-2", "ID14-3", "ID14-4", "ID23-1",
-	// "ID23-2",
-	// "ID29", "BM14U", "BM16", "ID14 1", "ID14 2", "ID14 3", "ID14 4", "ID23 1", "ID23 2", "BM29", "BM30A" };
-
 	public static final String[] BEAMLINE_LOCATION_DLS = { "i02", "i03", "i04", "i04-1", "i24" };
 
 	public static final String[] BEAMLINE_LOCATION_MAXIV = { "BioMAX", "MX" };

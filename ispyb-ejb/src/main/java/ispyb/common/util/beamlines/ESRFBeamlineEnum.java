@@ -30,56 +30,56 @@ import java.util.List;
 public enum ESRFBeamlineEnum {
 	ID14_1("ID14-1", "id14eh1", new String[] { "ID14 1" },
 			"<font style='color:#6888A8;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2323</font></font>",
-			null, false, false), 
+			null, false, false, false), 
 	ID14_2("ID14-2", "id14eh2", new String[] { "ID14 2" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2565</font></font>",
-			null, false, false), 
+			null, false, false, false), 
 	ID14_3("ID14-3", "id14eh3", new String[] { "ID14 3" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2786</font></font>",
-			null, false, false), 
+			null, false, false, false), 
 	ID14_4("ID14-4", "id14eh4", new String[] { "ID14 4" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2322</font></font>",
-			null, false, false), 
+			null, false, false, false), 
 	ID23_1("ID23-1", "id23eh1", new String[] { "ID23 1" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2261</font></font>",
-			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true), 
+			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true, true), 
 	ID23_2("ID23-2", "id23eh2", new String[] { "ID23 2" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2590</font></font>",
-			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true), 
+			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true, true), 
 	ID29("ID29", "id29", new String[] { "ID29" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2805</font></font>",
-			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true), 
+			new String[] { "x_geo_corr.cbf", "y_geo_corr.cbf" }, false, true, true), 
 	ID30A1("ID30A-1", "id30a1", new String[] { "ID30A1" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>",
-			null, true, true), 
+			null, true, true, true), 
 	ID30A2("ID30A-2", "id30a2", new String[] { "ID30A2" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>",
-			null, true, true), 
+			null, true, true, true), 
 	ID30A3("ID30A-3", "id30a3", new String[] { "ID30A3" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>",
-			null, true, true), 
+			null, true, true, true), 
 	ID30B("ID30B", "id30b", null,
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>",
-			null, true, true), 
+			null, true, true, true), 
 	BM14("BM14", "bm14", new String[] { "BM14U" },
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2703</font></font>",
-			null, false, true), 
+			null, false, true, false), 
 	BM16("BM16", "bm16", null,
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2614</font></font>",
-			null, false, false), 
+			null, false, false, false), 
 	BM29("BM29", "bm29", null,
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2628</font></font>",
-			null, false, true), 
+			null, false, true, false), 
 	BM30A("BM30A", "bm30a", null,
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2787</font></font>",
-			null, false, true), 
+			null, false, true, false), 
 	ID19("ID19", "id19", null,
 			"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2700</font></font>",
-			null, false, true),
-	CM01("CM01", "cm01", null,"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>", null, false, true);
+			null, false, true, false),
+	CM01("CM01", "cm01", null,"<font style='color:#000080;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>****</font></font>", null, false, true, false);
 
 	private ESRFBeamlineEnum(String beamlineName, String directoryName, String[] associatedName, String phoneNumber,
-			String[] correctionFiles, boolean emailNotification, boolean inActivity) {
+			String[] correctionFiles, boolean emailNotification, boolean inActivity, boolean toBeProtected) {
 		this.beamlineName = beamlineName;
 		this.directoryName = directoryName;
 		this.associatedName = associatedName;
@@ -87,6 +87,7 @@ public enum ESRFBeamlineEnum {
 		this.correctionFiles = correctionFiles;
 		this.emailNotification = emailNotification;
 		this.inActivity = inActivity;
+		this.toBeProtected = toBeProtected;
 	}
 
 	/**
@@ -127,6 +128,11 @@ public enum ESRFBeamlineEnum {
 	 * experiment tab.
 	 */
 	private final boolean inActivity;
+	
+	/**
+	 * toBeProtected: true if the beamline data shall be protected by calling the dataprotection webservice.
+	 */
+	private final boolean toBeProtected;
 
 	public String getBeamlineName() {
 		return this.beamlineName;
@@ -154,6 +160,10 @@ public enum ESRFBeamlineEnum {
 
 	public boolean isInActivity() {
 		return inActivity;
+	}
+	
+	public boolean isToBeProtected() {
+		return toBeProtected;
 	}
 
 	public static ESRFBeamlineEnum retrieveBeamlineWithName(String aName) {
@@ -240,6 +250,17 @@ public enum ESRFBeamlineEnum {
 			return beamline.isEmailNotification();
 		}
 		return false;
+	}
+	
+	public static String[] getBeamlineNamesToBeProtected() {
+		List<String> listBeamlinesToBeProtected = new ArrayList<String>();
+		for (ESRFBeamlineEnum b : ESRFBeamlineEnum.values()) {
+			if (b.inActivity && b.toBeProtected)
+				listBeamlinesToBeProtected.add(b.getBeamlineName());
+		}
+		String[] list = listBeamlinesToBeProtected.toArray(new String[listBeamlinesToBeProtected.size()]);
+
+		return list;
 	}
 
 }

@@ -214,6 +214,43 @@ public class ToolsForCollectionWebService {
 			throw e;
 		}
 	}
+	
+	/**
+	 * returns the sessions  to be protected afetr a dealy and in a particular window
+	 * this WS is only used for tests on ESRF site
+	 * 
+	 * @param delay
+	 * @param window
+	 * @return
+	 * @throws Exception
+	 */
+	@WebMethod
+	@WebResult(name = "Sessions")
+	public SessionWS3VO[] findSessionsToBeProtected(@WebParam(name = "delay") Integer delay, 
+			@WebParam(name = "window") Integer window) throws Exception {
+
+		try {
+			LOG.debug("findSessionsToBeProtected( : delay= " + delay + ", window= " + window);
+			long startTime = System.currentTimeMillis();
+			Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
+
+			SessionWS3VO[] ret = sessionService.findForWSToBeProtected(delay, window);
+			
+			if (ret == null || ret.length <1) {			
+					LOG.debug("findSessionsToBeProtected no sessions found ") ;					
+			}
+
+			long endTime = System.currentTimeMillis();
+			long duration = endTime - startTime;
+			LOG.debug("findSessionsToBeProtected(delay= " + delay + ", window= " + window
+					+ " time = " + duration + " ms");
+			return ret;
+			
+		} catch (Exception e) {
+			LOG.error("WS ERROR: findSessionsToBeProtected - " + StringUtils.getCurrentDate() + " - " + delay + ", " + window);
+			throw e;
+		}
+	}
 
 	@WebMethod
 	@WebResult(name = "session")

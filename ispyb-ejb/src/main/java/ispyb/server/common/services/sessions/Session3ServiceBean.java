@@ -138,9 +138,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		String query = "select * "
 				+ " FROM BLSession ses, Proposal pro "
 				+ "WHERE ses.proposalId = pro.proposalId AND pro.proposalCode like :code AND pro.proposalNumber = :number "
-				// +
-				// "AND ses.startDate <= " + now + " AND (ses.endDate >= " + now +
-				// " OR ses.endDate IS NULL) ORDER BY sessionId DESC ";
 				+ "AND ses.endDate >= " + Constants.MYSQL_ORACLE_CURRENT_DATE + "  AND ses.startDate <= "
 				+ Constants.MYSQL_ORACLE_CURRENT_DATE + "  ORDER BY sessionId DESC ";
 
@@ -155,11 +152,11 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 			+ " WHERE DataCollection.dataCollectionGroupId = DataCollectionGroup.dataCollectionGroupId"
 			+ " and DataCollection.numberOfImages <=4 and DataCollectionGroup.sessionId  = :sessionId ";
 	
-	private final String[] beamlinesToProtect = { "ID29", "ID23-1", "ID23-2", "ID30A-1", "ID30A-2","ID30A-3", "ID30B", "CM01" };
+	//private final String[] beamlinesToProtect = { "ID29", "ID23-1", "ID23-2", "ID30A-1", "ID30A-2","ID30A-3", "ID30B" };
+	private final String[] beamlinesToProtect = ESRFBeamlineEnum.getBeamlineNamesToBeProtected();
 	
 	private final String[] account_not_to_protect = { "OPID", "OPD", "MXIHR" };
 	
-
 	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -572,7 +569,6 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		return null;
 	}
 	
-
 	
 	/**
 	 * launch the data confidentiality for the specified session
@@ -581,16 +577,24 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 		if (sessionId != null) {
 
 			Session3VO sessionVO = this.findByPk(sessionId, false, false, false);
-			LOG.info("session to be protected = " + sessionId);
+			LOG.info("session to be protected = " + sessionId);			
 
 			// Check if the session exists
 			if (sessionVO == null) {
-				LOG.info("session does not exist");
+				LOG.info("session does not exist");				
+			} 
+			// Check if the beamline shall be protected
+			else if (ESRFBeamlineEnum.retrieveBeamlineWithName(sessionVO.getBeamlineName()) == null ) {				
+				LOG.info("beamline shall not be protected :  " + sessionVO.getBeamlineName());
+			}
+			// Check if the beamline shall be protected
+			else if (!ESRFBeamlineEnum.retrieveBeamlineWithName(sessionVO.getBeamlineName()).isToBeProtected()) {				
+				LOG.info("beamline shall not be protected :  " + sessionVO.getBeamlineName());
 			}
 			// Check if the session is already protected
 			else if (sessionVO.getProtectedData() != null && sessionVO.getProtectedData().equals("OK")) {
 				LOG.info("session is already protected :  " + sessionVO.getProtectedData());
-			} else {
+			} else {				
 
 				// Check the minimum delay to protect : 2 hours
 				Date lastUpdate = sessionVO.getLastUpdate();
@@ -692,7 +696,18 @@ public class Session3ServiceBean implements Session3Service, Session3ServiceLoca
 			crit.add(Restrictions.ge("lastUpdate", date1));
 		if (date2 != null)
 			crit.add(Restrictions.le("lastUpdate", date2));
-
+		
+		String[] beamlinesToProtect = ESRFBeamlineEnum.getBeamlineNamesToBeProtected();
+		
+		if (LOG.isDebugEnabled()) {
+			String beamlines = "";
+			for (String beamline: beamlinesToProtect) { 
+				beamlines = beamlines + " " + beamline;
+			};
+			LOG.debug("beamlinesToProtect: " + beamlines);
+		}
+		
+		
 		crit.add(Restrictions.in("beamlineName", beamlinesToProtect));
 
 		// account not to protect: opid*, opd*, mxihr*
