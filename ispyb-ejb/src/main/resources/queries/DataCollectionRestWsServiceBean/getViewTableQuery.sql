@@ -17,8 +17,8 @@ GROUP_CONCAT(ifnull(resolutionLimitLow,'null') SEPARATOR ', ') AS `resolutionsLi
 GROUP_CONCAT(ifnull(completeness,'null') SEPARATOR ', ') AS `completenessList`,
 GROUP_CONCAT(ifnull(AutoProc_spaceGroup,'null') SEPARATOR ', ') AS `AutoProc_spaceGroups`,
 GROUP_CONCAT(ifnull(meanIOverSigI,'null') SEPARATOR ', ') AS `meanIOverSigIList`,
-GROUP_CONCAT(ifnull(ccHalf,'null') SEPARATOR ', ') AS `rMerges`,
-GROUP_CONCAT(ifnull(rMerge,'null') SEPARATOR ', ') AS `ccHalfList`,
+GROUP_CONCAT(ifnull(rMerge,'null') SEPARATOR ', ') AS `rMerges`,
+GROUP_CONCAT(ifnull(ccHalf,'null') SEPARATOR ', ') AS `ccHalfList`,
 
 (SELECT count(*) 
 	FROM `PhasingStep`    
