@@ -18,6 +18,8 @@ GROUP_CONCAT(`resolutionLimitLow` SEPARATOR ', ') AS `resolutionsLimitLow`,
 GROUP_CONCAT(`rMerge` SEPARATOR ', ') AS `rMerges`,
 GROUP_CONCAT(`completeness` SEPARATOR ', ') AS `completenessList`,
 GROUP_CONCAT(`AutoProc_spaceGroup` SEPARATOR ', ') AS `AutoProc_spaceGroups`,
+GROUP_CONCAT(`meanIOverSigI` SEPARATOR ', ') AS `meanIOverSigIList`,
+GROUP_CONCAT(`ccHalf` SEPARATOR ', ') AS `ccHalfList`,
 
 (SELECT count(*) 
 	FROM `PhasingStep`    
