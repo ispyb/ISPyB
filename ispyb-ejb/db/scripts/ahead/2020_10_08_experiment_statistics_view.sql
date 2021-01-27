@@ -32,6 +32,6 @@ VIEW `v_mx_experiment_stats` AS
         (((`DataCollection` `DC`
         JOIN `DataCollectionGroup` `DCG` ON ((`DCG`.`dataCollectionGroupId` = `DC`.`dataCollectionGroupId`)))
         JOIN `BLSession` `BLS` ON ((`BLS`.`sessionId` = `DCG`.`sessionId`)))
-        JOIN `Proposal` `P` ON ((`P`.`proposalId` = `BLS`.`proposalId`)))
+        JOIN `Proposal` `P` ON ((`P`.`proposalId` = `BLS`.`proposalId`)));
 
 UPDATE SchemaStatus SET schemaStatus = 'DONE' WHERE scriptName = '2020_10_08_experiment_statistics_view.sql';

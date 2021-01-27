@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-parent</artifactId>
-	<version>5.24</version>
+	<version>5.28</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>ispyb-ejb</module>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.13.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
