@@ -24,6 +24,7 @@ import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.em.vos.ParticleClassification;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 
 import java.text.SimpleDateFormat;
@@ -212,6 +213,42 @@ public class ToolsForEMDataCollection{
 		}
 		return null;
 	}
+
+	@WebMethod(operationName = "addParticleClassification")
+	public ParticleClassification addParticleClassification(
+			@WebParam(name = "particlePickerId") String particlePickerId,
+			@WebParam(name = "type") String type,
+			@WebParam(name = "batchNumber") String batchNumber,
+			@WebParam(name = "classNumber") String classNumber,
+			@WebParam(name = "numberOfParticlesPerBatch") String numberOfParticlesPerBatch,
+			@WebParam(name = "numberOfClassesPerBatch") String numberOfClassesPerBatch,
+			@WebParam(name = "particlesPerClass") String particlesPerClass,
+			@WebParam(name = "rotationAccuracy") String rotationAccuracy,
+			@WebParam(name = "translationAccuracy") String translationAccuracy,
+			@WebParam(name = "estimatedResolution") String estimatedResolution,
+			@WebParam(name = "overallFourierCompleteness") String overallFourierCompleteness
+			)	
+	{
+		try {
+			log.info("addParticleClassification. technique=EM particlePickerId={} type={} batchNumber={} classNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} particlesPerClass={} rotationAccuracy={} " +
+					 "translationAccuracy={} estimatedResolution={} overallFourierCompleteness={}", 
+					 particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addParticleClassification(particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.info("addParticleClassification. technique=EM particlePickerId={} type={} batchNumber={} classNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} particlesPerClass={} rotationAccuracy={} " +
+					 "translationAccuracy={} estimatedResolution={} overallFourierCompleteness={} cause={}", 
+					 particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness, exp.getCause());
+		}
+		return null;
+	}
+
 	@WebMethod(operationName = "getDataCollectionsByWorkingFolder")
 	public CTF getDataCollectionsByWorkingFolder(
 			@WebParam(name = "proposal") String proposal,

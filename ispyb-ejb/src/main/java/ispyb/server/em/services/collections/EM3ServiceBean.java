@@ -26,6 +26,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticleClassification;
 import ispyb.server.em.vos.ParticlePicker;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
@@ -548,6 +549,38 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		}
 
 		return null;
+	}
+
+	@Override
+	public ParticleClassification addParticleClassification(String particlePickerId, String type,
+			String batchNumber, String classNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch,
+			String particlesPerClass, String rotationAccuracy, String translationAccuracy, String estimatedResolution,
+			String overallFourierCompleteness) {
+
+		ParticleClassification particleClassification = new ParticleClassification();
+//		AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
+//		autoProcProgram.setProcessingPrograms(classificationProgram);
+//		autoProcProgram = this.entityManager.merge(autoProcProgram);
+//		particleClassification.setAutoProcProgramId(autoProcProgram.getAutoProcProgramId());
+		particleClassification.setParticlePickerId(Integer.parseInt(particlePickerId));
+		particleClassification.setType(type);
+		particleClassification.setBatchNumber(batchNumber);
+		particleClassification.setClassNumber(classNumber);
+		particleClassification.setNumberOfClassesPerBatch(numberOfClassesPerBatch);
+		particleClassification.setNumberOfParticlesPerBatch(numberOfParticlesPerBatch);
+		particleClassification.setParticlesPerClass(particlesPerClass);
+		particleClassification.setRotationAccuracy(rotationAccuracy);
+		particleClassification.setTranslationAccuracy(translationAccuracy);
+		particleClassification.setEstimatedResolution(estimatedResolution);
+		particleClassification.setOverallFourierCompleteness(overallFourierCompleteness);
+		try {
+			LOG.info("Creating ParticleClassification. technique=EM");
+			particleClassification = this.entityManager.merge(particleClassification);
+			LOG.info("Created ParticleClassification. technique=EM");
+			return particleClassification;
+		} catch (Exception exp) {
+			throw exp;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
