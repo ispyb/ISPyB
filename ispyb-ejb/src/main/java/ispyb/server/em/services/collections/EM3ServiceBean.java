@@ -34,6 +34,7 @@ import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.services.ws.rest.WsServiceBean;
+import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -528,8 +529,10 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		MotionCorrection motionLast = this.findMotionCorrectionByMovieFullPath(lastMoviePath);
 		if (motionFirst != null) {
 			ParticlePicker particlePicker = new ParticlePicker();
-			//Here we need to create a new entry in the AutoProcProgram table!
-			//particlePicker.setAutoProcProgramId(autoProcProgramId);
+			AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
+			autoProcProgram.setProcessingPrograms(pickingProgram);
+			autoProcProgram = this.entityManager.merge(autoProcProgram);
+			particlePicker.setAutoProcProgramId(autoProcProgram.getAutoProcProgramId());
 			// The motionFirst and motionLast is not yet implemented in the database so we can't store the ids yet
 			particlePicker.setParticlePickingTemplate(particlePickingTemplate);
 			particlePicker.setParticleDiameter(particleDiameter);
