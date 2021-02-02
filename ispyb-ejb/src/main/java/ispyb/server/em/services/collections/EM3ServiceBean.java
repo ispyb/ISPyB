@@ -537,7 +537,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			try {
 				LOG.info("Creating ParticlePicker. technique=EM");
 				particlePicker = this.entityManager.merge(particlePicker);
-				LOG.info("Created CTF. technique=EM");
+				LOG.info("Created ParticlePicker. technique=EM");
 				return particlePicker;
 			} catch (Exception exp) {
 				throw exp;
