@@ -23,6 +23,7 @@ package ispyb.server.em.services.collections;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticlePicker;
 
 import java.util.Collection;
 import java.util.Date;
@@ -56,6 +57,8 @@ public interface EM3Service {
 			String defocusV, String angle, String crossCorrelationCoefficient,
 			String resolutionLimit, String estimatedBfactor, String logFilePath);
 
+	ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles);
 
 	List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
 

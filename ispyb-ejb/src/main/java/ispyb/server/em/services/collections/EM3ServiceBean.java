@@ -26,6 +26,7 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticlePicker;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
@@ -517,6 +518,35 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		return null;
 	}
 	
+	@Override
+	public ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles) {
+
+		LOG.info("Looking for first motion correction. proposal={} movieFullPath={}", proposal, firstMoviePath);
+		MotionCorrection motionFirst = this.findMotionCorrectionByMovieFullPath(firstMoviePath);
+		LOG.info("Looking for last motion correction. proposal={} movieFullPath={}", proposal, lastMoviePath);
+		MotionCorrection motionLast = this.findMotionCorrectionByMovieFullPath(lastMoviePath);
+		if (motionFirst != null) {
+			ParticlePicker particlePicker = new ParticlePicker();
+			//Here we need to create a new entry in the AutoProcProgram table!
+			//particlePicker.setAutoProcProgramId(autoProcProgramId);
+			// The motionFirst and motionLast is not yet implemented in the database so we can't store the ids yet
+			particlePicker.setParticlePickingTemplate(particlePickingTemplate);
+			particlePicker.setParticleDiameter(particleDiameter);
+			particlePicker.setNumberOfParticles(numberOfParticles);
+			try {
+				LOG.info("Creating ParticlePicker. technique=EM");
+				particlePicker = this.entityManager.merge(particlePicker);
+				LOG.info("Created CTF. technique=EM");
+				return particlePicker;
+			} catch (Exception exp) {
+				throw exp;
+			}
+		}
+
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Movie> getMoviesByDataCollectionId(int proposalId, int dataCollectionId) throws Exception{
