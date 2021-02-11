@@ -22,6 +22,9 @@ public class ParticlePicker implements Serializable{
 	@Column(name = "autoProcProgramId")
 	protected Integer autoProcProgramId;
 	
+	@Column(name = "firstMotionCorrectionId")
+	protected Integer firstMotionCorrectionId;
+	
 	@Column(name = "particlePickingTemplate")
 	protected String particlePickingTemplate;
 	
@@ -45,6 +48,14 @@ public class ParticlePicker implements Serializable{
 
 	public void setAutoProcProgramId(Integer autoProcProgramId) {
 		this.autoProcProgramId = autoProcProgramId;
+	}
+
+	public Integer getFirstMotionCorrectionId() {
+		return firstMotionCorrectionId;
+	}
+
+	public void setFirstMotionCorrectionId(Integer firstMotionCorrectionId) {
+		this.firstMotionCorrectionId = firstMotionCorrectionId;
 	}
 
 	public String getParticlePickingTemplate() {

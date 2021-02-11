@@ -28,6 +28,8 @@ import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 import ispyb.server.em.vos.ParticleClassification;
 import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
+import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
@@ -35,7 +37,6 @@ import ispyb.server.mx.services.sample.BLSample3Service;
 import ispyb.server.mx.services.sample.Crystal3Service;
 import ispyb.server.mx.services.sample.Protein3Service;
 import ispyb.server.mx.services.ws.rest.WsServiceBean;
-import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.collections.BeamLineSetup3VO;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -522,19 +523,26 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	
 	@Override
 	public ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
-			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles) {
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles,
+			String fullPathToParticleFile) {
 
 		LOG.info("Looking for first motion correction. proposal={} movieFullPath={}", proposal, firstMoviePath);
 		MotionCorrection motionFirst = this.findMotionCorrectionByMovieFullPath(firstMoviePath);
-		LOG.info("Looking for last motion correction. proposal={} movieFullPath={}", proposal, lastMoviePath);
-		MotionCorrection motionLast = this.findMotionCorrectionByMovieFullPath(lastMoviePath);
+//		LOG.info("Looking for last motion correction. proposal={} movieFullPath={}", proposal, lastMoviePath);
+//		MotionCorrection motionLast = this.findMotionCorrectionByMovieFullPath(lastMoviePath);
 		if (motionFirst != null) {
 			ParticlePicker particlePicker = new ParticlePicker();
 			AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
 			autoProcProgram.setProcessingPrograms(pickingProgram);
 			autoProcProgram = this.entityManager.merge(autoProcProgram);
+			AutoProcProgramAttachment3VO autoProcProgramAttachment = new AutoProcProgramAttachment3VO();
+			autoProcProgramAttachment.setAutoProcProgramVO(autoProcProgram);
+			autoProcProgramAttachment.setFileName("particleFile");
+			autoProcProgramAttachment.setFilePath(fullPathToParticleFile);
+			autoProcProgramAttachment.setFileType("Result");
+			autoProcProgramAttachment = this.entityManager.merge(autoProcProgramAttachment);
 			particlePicker.setAutoProcProgramId(autoProcProgram.getAutoProcProgramId());
-			// The motionFirst and motionLast is not yet implemented in the database so we can't store the ids yet
+			particlePicker.setFirstMotionCorrectionId(motionFirst.getMotionCorrectionId());
 			particlePicker.setParticlePickingTemplate(particlePickingTemplate);
 			particlePicker.setParticleDiameter(particleDiameter);
 			particlePicker.setNumberOfParticles(numberOfParticles);

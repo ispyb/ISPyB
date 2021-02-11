@@ -59,7 +59,8 @@ public interface EM3Service {
 			String resolutionLimit, String estimatedBfactor, String logFilePath);
 
 	ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
-			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles);
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, 
+			String numberOfParticles, String fullPathToParticleFile);
 
 	ParticleClassification addParticleClassification(String particlePickerId, String type,
 			String batchNumber, String classNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch,

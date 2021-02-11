@@ -198,18 +198,19 @@ public class ToolsForEMDataCollection{
 			@WebParam(name = "pickingProgram") String pickingProgram,
 			@WebParam(name = "particlePickingTemplate") String particlePickingTemplate,
 			@WebParam(name = "particleDiameter") String particleDiameter,
-			@WebParam(name = "numberOfParticles") String numberOfParticles
+			@WebParam(name = "numberOfParticles") String numberOfParticles,
+			@WebParam(name = "fullPathToParticleFile") String fullPathToParticleFile
 			)	
 	{
 		try {
-			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={}", 
-					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles);
+			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={} fullPathToParticleFile={}", 
+					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles,fullPathToParticleFile);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
-			return service.addParticlePicker(proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles);
+			return service.addParticlePicker(proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles, fullPathToParticleFile);
 		} catch (Exception exp) {
 			exp.printStackTrace();
-			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={} cause={}", 
-					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles, exp.getCause());
+			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={} fullPathToParticleFile={} cause={}", 
+					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles, fullPathToParticleFile, exp.getCause());
 		}
 		return null;
 	}
