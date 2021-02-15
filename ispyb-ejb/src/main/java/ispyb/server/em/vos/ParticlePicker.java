@@ -14,6 +14,10 @@ import javax.persistence.Table;
 @Table(name = "ParticlePicker")
 public class ParticlePicker implements Serializable{
 	
+	public Integer getParticlePickerId() {
+		return particlePickerId;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "particlePickerId")
