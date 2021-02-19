@@ -1,4 +1,4 @@
-# ISPyB Server Administrator’s Guide
+# ISPyB Server Administrator’s Guide - OBSOLETE -
 
 ## How to stop / restart jboss
 
