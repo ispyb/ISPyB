@@ -38,7 +38,7 @@ authentication with the web services added**
 
 All the software required may be directly downloaded from internet
 
-  * A Java SE Development Kit JDK 7
+  * A Java SE Development Kit JDK 8
     * <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 
   * WildFly Application Server 8.2.0Final
@@ -65,7 +65,7 @@ Firstly, the software above (see [Installation](#installation)) has to be
 installed along with the definition of the following environment variables and
 respective locations:
 
-  * `JAVA_HOME=/j2sdk_root/j2sdk1.7.x.x`
+  * `JAVA_HOME=/java-jdks/jdk1.8.x.x`
 
   * `JBOSS_HOME=/jboss_root/wildfly-8.2Final`
 
@@ -81,7 +81,7 @@ Change `standalone.conf` to adapt the `JAVA_OPTS` as they were for JBOSS6.
 
 ### Database connection
 
-Copy the `mysql` folder present from `ispyb-parent/configuration/mysql` to the
+Copy the `mysql` folder present from `/configuration/mysql` to the
 `wildfly-8.2.0.Final/modules/system/layers/base/com` folder.
 
 ### Configuring standalone.xml
@@ -90,7 +90,7 @@ Save the original `standalone.xml` from
 `wildfly-8.2.0.Final/standalone/configuration/standalone.xml` to
 `wildfly-8.2.0.Final/standalone/configuration/standalone.xml.orig`.
 
-Copy the `standalone.xml.example` present in `ispyb-parent/documentation` to
+Copy the `standalone.xml` ( or the `standalone.xml.simple` for simple authentication) present in `/configuration` to
 `wildfly-8.2.0.Final/standalone/configuration`.
 
 Customize it with your database as follows.
@@ -273,10 +273,10 @@ the database update (WSClient).
 
 ## Using Maven
 
-### Install maven 3.3.1
+### Install maven 3.6.0
 
-Configure your own `settings.xml` (copy the one from `maven/conf` and update
-them for you).
+Configure your own `settings.xml` (copy the one from `configuration/` and update
+the settings for you).
 
 A part of the site profile are set in this file, see an example in
 `documentation/settings.xml.example`.
@@ -375,13 +375,6 @@ To change the site for an invocation of Maven, add `-Dispyb.site=<site>`,
 where `<site>` is the name of the desired site, to the Maven command line
 (e.g., `mvn -Dispyb.site=ESRF clean install`).
 
-Properties:
-
-  * `DoNotCommit.properties`
-
-    These properties have been put outside of the project, in the maven
-    `settings.xml`, so you can safely define them, and get rid of the
-    `DoNotCommit.properties`.
 
 ## Project Structure
 
@@ -864,7 +857,7 @@ a **container**.
 
 ## Security
 
-### Security with JBOSS TODO
+### Security with JBOSS
 
 JBoss has several predefined ways to do the authentication and authorization.
 
@@ -916,7 +909,7 @@ uniqueMember: uid=leal,ou=people,dc=esrf,dc=fr
 See the entries added in `standalone.xml` in [Installation](#installation).
 
 
-### Simple authentication TODO
+### Simple authentication
 
 One of the aims of ISPyB is the portability and therefore the possibility of
 using it in others facilities. The simple authentication is a built in module
@@ -933,9 +926,9 @@ The policy should be added in the `standalone.xml` (see
     <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
         flag="required">
       <module-option
-          name="usersProperties">props/users.properties</module-option>
+          name="usersProperties">users.properties</module-option>
       <module-option
-          name="rolesProperties">props/roles.properties</module-option>
+          name="rolesProperties">roles.properties</module-option>
     </login-module>
   </authentication>
 
@@ -943,14 +936,14 @@ The policy should be added in the `standalone.xml` (see
 ```
 
 Users and the respective passwords can be added in the following file
-`jboss/server/default/conf/props/users.properties` with the syntax:
+`wildfly-8.2.0.Final/standalone/configuration/users.properties` with the syntax:
 
 ```
 <username>=<password>
 ```
 
 The roles assigned to each user are defined in
-`jboss-3.2.6/server/default/conf/props/roles.properties` with the syntax:
+`wildfly-8.2.0.Final/standalone/configuration/roles.properties` with the syntax:
 
 ```
 <username>=<role>[,<role>...]
@@ -985,6 +978,10 @@ The roles are :
   * Localcontact : can see only the proposals where he/she is localcontact.
   * Store : special role dedicated to the dewar tracking feature.
   * WebService : used only to access through webservice.
+
+Note that to be able to connect to ISPyB if a user has only the User Role, then at least one entry in the proposal table should exist.
+
+You can test the login with a user having the Manager role if no data in your database.
 
 
 ### ISPyB Authorization and Authentication Model
