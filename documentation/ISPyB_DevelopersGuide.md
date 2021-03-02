@@ -1,20 +1,5 @@
 # ISPyB Developers Guide
 
-**Version 4.0: New Server WildFly 8.2 and using Maven**
-
-**Version 3.7: New eclipse configuration**
-
-**Version 3.6: Archiving data at ESRF added**
-
-**Version 3.5: Folder structure updated with js; ant targets updated and
-authentication with the web services added**
-
-**Version 3.4: Default timeout updated**
-
-**Version 3.3: Use of the DoNotCommit.properties files to store sensible data**
-
-**Version 3.2: New server pyproserv; new logging**
-
 ## Table of contents
 
   * [Software required](#software-required)
@@ -77,21 +62,53 @@ fix: use `xjavadoc-1.5-snapshot050611.jar` to replace `xjavadoc-1.1.jar` in
 xdoclet lib directory.  (Find this jar in the files directory on the forge.)
 Remove the `xjavadoc-1.1.jar`.
 
-Change `standalone.conf` to adapt the `JAVA_OPTS` as they were for JBOSS6.
+Change `JBOSS_HOME/bin/standalone.conf` to adapt the `JAVA_OPTS`.
+
+### Install on development platform WILDFLY 17.0.1
+
+The current version of ispyb is compatible with Wildfly 17.0.1Final, the only changes should be done in the standalone.xml and concerns the datasource declaration.
+
+You may also use the example of standalone-WF17.xml present in `/configuration/` to adapt it for you.
+
+Comparing to the adaptation described below in this documentation for wildfly8.2, it should be updated as follows:
+
+       <datasources>
+            <datasource jndi-name="java:jboss/ispybconfigDS" pool-name="ispybconfigDS" enabled="true" use-java-context="true">
+                <connection-url>jdbc:mysql://ispydb-server:3306/pyconfig?serverTimezone=Europe/Paris</connection-url>
+                <driver>mysql</driver>
+                <security>
+                    <user-name>pxuser</user-name>
+                    <password>*******</password>
+                </security>
+            </datasource>
+            <datasource jndi-name="java:jboss/ispybDS" pool-name="ispybDS" enabled="true" use-java-context="true">
+                <connection-url>jdbc:mysql://ispydb-server:3306/pydb?serverTimezone=Europe/Paris</connection-url>
+                <driver>mysql</driver>
+                <security>
+                    <user-name>pxuser</user-name>
+                    <password>*******</password>
+                </security>
+            </datasource>
+            
+            <drivers>      
+                <driver name="mysql" module="com.mysql"/>
+            </drivers
+        </datasources>
+
 
 ### Database connection
 
 Copy the `mysql` folder present from `/configuration/mysql` to the
-`wildfly-8.2.0.Final/modules/system/layers/base/com` folder.
+`JBOSS_HOME/modules/system/layers/base/com` folder.
 
 ### Configuring standalone.xml
 
 Save the original `standalone.xml` from
-`wildfly-8.2.0.Final/standalone/configuration/standalone.xml` to
-`wildfly-8.2.0.Final/standalone/configuration/standalone.xml.orig`.
+`JBOSS_HOME/standalone/configuration/standalone.xml` to
+`JBOSS_HOME/standalone/configuration/standalone.xml.orig`.
 
 Copy the `standalone.xml` ( or the `standalone.xml.simple` for simple authentication) present in `/configuration` to
-`wildfly-8.2.0.Final/standalone/configuration`.
+`JBOSS_HOME/standalone/configuration`.
 
 Customize it with your database as follows.
 
