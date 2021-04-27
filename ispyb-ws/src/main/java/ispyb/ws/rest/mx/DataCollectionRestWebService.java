@@ -477,7 +477,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	public Response getViewDataCollectionByDataCollectionId(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("datacollectiongroupids") String datacollectiongroupids) {
 
-		String methodName = "getViewDataCollectionByWorkflowStepId";
+		String methodName = "getViewDataCollectionByDataCollectionId";
 		long start = this.logInit(methodName, logger, token, proposal, datacollectiongroupids);
 		try {
 			List<Integer> ids = this.parseToInteger(datacollectiongroupids);
