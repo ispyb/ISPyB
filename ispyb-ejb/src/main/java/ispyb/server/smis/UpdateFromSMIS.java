@@ -695,10 +695,32 @@ public class UpdateFromSMIS {
 				String username = mainProp.getUserName();
 				
 				if (Constants.SITE_IS_ESRF() ) {					
-					siteId = (mainProp.getSiteId() != null) ? mainProp.getSiteId().toString() : null;
+					siteId = (mainProp.getSiteId() != null) ? mainProp.getSiteId().toString() : null;					
+					
+					//TODO clean this method later when the username will be mandatory and filled for everybody
+					
+					// fill the main proposer info and update it in the proposal if main proposer has changed
+					if (!StringUtils.matchString(familyName, currentFamilyName)) {
+						Person3VO newPerson = new Person3VO();
+						
+						if (person.findByLogin(username) != null) {												
+							newPerson = person.findByLogin(username);
+						} else if (person.findByFamilyAndGivenName(familyName, givenName) != null && !person.findByFamilyAndGivenName(familyName, givenName).isEmpty()) {												
+							newPerson = person.findByFamilyAndGivenName(familyName, givenName).get(0);
+						}
+						newPerson.setFamilyName(familyName);
+						newPerson.setGivenName(givenName);
+						newPerson.setSiteId(siteId);
+						newPerson.setEmailAddress(email);
+						newPerson.setLogin(username);
+						newPerson = person.merge(newPerson);
+						proposalVO.setPersonVO(newPerson);
+						proposal.update(proposalVO);
+						LOG.debug("Update proposal main proposer person with name: " + familyName);
+						
 					
 					// fill the login if it was null before or if it has changed
-					if (currentLogin == null || (username != null && !StringUtils.matchString(currentLogin, username))) {
+					} else if (currentLogin == null || (username != null && !StringUtils.matchString(currentLogin, username))) {
 						currentPerson.setLogin(username);
 						currentPerson = person.merge(currentPerson);
 						LOG.debug("Update person with username: " + username);	
