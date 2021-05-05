@@ -23,8 +23,8 @@ public class ParticlePicker implements Serializable{
 	@Column(name = "particlePickerId")
 	protected Integer particlePickerId;
 	
-	@Column(name = "autoProcProgramId")
-	protected Integer autoProcProgramId;
+	@Column(name = "programId")
+	protected Integer programId;
 	
 	@Column(name = "firstMotionCorrectionId")
 	protected Integer firstMotionCorrectionId;
@@ -46,12 +46,12 @@ public class ParticlePicker implements Serializable{
 		this.particlePickerId = particlePickerId;
 	}
 
-	public Integer getAutoProcProgramId() {
-		return autoProcProgramId;
+	public Integer getProgramId() {
+		return programId;
 	}
 
-	public void setAutoProcProgramId(Integer autoProcProgramId) {
-		this.autoProcProgramId = autoProcProgramId;
+	public void setProgramId(Integer programId) {
+		this.programId = programId;
 	}
 
 	public Integer getFirstMotionCorrectionId() {

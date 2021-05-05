@@ -26,8 +26,9 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
-import ispyb.server.em.vos.ParticleClassification;
 import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
 import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
 import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
@@ -528,8 +529,6 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 		LOG.info("Looking for first motion correction. proposal={} movieFullPath={}", proposal, firstMoviePath);
 		MotionCorrection motionFirst = this.findMotionCorrectionByMovieFullPath(firstMoviePath);
-//		LOG.info("Looking for last motion correction. proposal={} movieFullPath={}", proposal, lastMoviePath);
-//		MotionCorrection motionLast = this.findMotionCorrectionByMovieFullPath(lastMoviePath);
 		if (motionFirst != null) {
 			ParticlePicker particlePicker = new ParticlePicker();
 			AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
@@ -541,7 +540,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 			autoProcProgramAttachment.setFilePath(fullPathToParticleFile);
 			autoProcProgramAttachment.setFileType("Result");
 			autoProcProgramAttachment = this.entityManager.merge(autoProcProgramAttachment);
-			particlePicker.setAutoProcProgramId(autoProcProgram.getAutoProcProgramId());
+			particlePicker.setProgramId(autoProcProgram.getAutoProcProgramId());
 			particlePicker.setFirstMotionCorrectionId(motionFirst.getMotionCorrectionId());
 			particlePicker.setParticlePickingTemplate(particlePickingTemplate);
 			particlePicker.setParticleDiameter(particleDiameter);
@@ -560,22 +559,40 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	}
 
 	@Override
-	public ParticleClassification addParticleClassification(String particlePickerId, String type,
-			String batchNumber, String classNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch,
-			String particlesPerClass, String rotationAccuracy, String translationAccuracy, String estimatedResolution,
-			String overallFourierCompleteness) {
+	public ParticleClassificationGroup addParticleClassificationGroup(String particlePickerId, String type,
+			String batchNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch, 
+			String symmetry, String classificationProgram) {
+
+		ParticleClassificationGroup particleClassificationGroup = new ParticleClassificationGroup();
+		AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
+		autoProcProgram.setProcessingPrograms(classificationProgram);
+		autoProcProgram = this.entityManager.merge(autoProcProgram);
+		particleClassificationGroup.setProgramId(autoProcProgram.getAutoProcProgramId());
+		particleClassificationGroup.setParticlePickerId(Integer.parseInt(particlePickerId));
+		particleClassificationGroup.setType(type);
+		particleClassificationGroup.setBatchNumber(batchNumber);
+		particleClassificationGroup.setNumberOfParticlesPerBatch(numberOfParticlesPerBatch);
+		particleClassificationGroup.setNumberOfClassesPerBatch(numberOfClassesPerBatch);
+		particleClassificationGroup.setSymmetry(symmetry);
+		try {
+			LOG.info("Creating ParticleClassificationGroup technique=EM");
+			particleClassificationGroup = this.entityManager.merge(particleClassificationGroup);
+			LOG.info("Created ParticleClassificationGroup technique=EM");
+			return particleClassificationGroup;
+		} catch (Exception exp) {
+			throw exp;
+		}
+	}
+
+	@Override
+	public ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
+			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String translationAccuracy, String estimatedResolution,	String overallFourierCompleteness) {
 
 		ParticleClassification particleClassification = new ParticleClassification();
-//		AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
-//		autoProcProgram.setProcessingPrograms(classificationProgram);
-//		autoProcProgram = this.entityManager.merge(autoProcProgram);
-//		particleClassification.setAutoProcProgramId(autoProcProgram.getAutoProcProgramId());
-		particleClassification.setParticlePickerId(Integer.parseInt(particlePickerId));
-		particleClassification.setType(type);
-		particleClassification.setBatchNumber(batchNumber);
+		particleClassification.setParticleClassificationGroupId(Integer.parseInt(particleClassificationGroupId));
 		particleClassification.setClassNumber(classNumber);
-		particleClassification.setNumberOfClassesPerBatch(numberOfClassesPerBatch);
-		particleClassification.setNumberOfParticlesPerBatch(numberOfParticlesPerBatch);
+		particleClassification.setClassImageFullPath(classImageFullPath);
 		particleClassification.setParticlesPerClass(particlesPerClass);
 		particleClassification.setRotationAccuracy(rotationAccuracy);
 		particleClassification.setTranslationAccuracy(translationAccuracy);

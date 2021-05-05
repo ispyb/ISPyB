@@ -25,6 +25,7 @@ import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 import ispyb.server.em.vos.ParticlePicker;
 import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 
 import java.text.SimpleDateFormat;
@@ -215,14 +216,41 @@ public class ToolsForEMDataCollection{
 		return null;
 	}
 
-	@WebMethod(operationName = "addParticleClassification")
-	public ParticleClassification addParticleClassification(
+	@WebMethod(operationName = "addParticleClassificationGroup")
+	public ParticleClassificationGroup addParticleClassificationGroup(
 			@WebParam(name = "particlePickerId") String particlePickerId,
 			@WebParam(name = "type") String type,
 			@WebParam(name = "batchNumber") String batchNumber,
-			@WebParam(name = "classNumber") String classNumber,
 			@WebParam(name = "numberOfParticlesPerBatch") String numberOfParticlesPerBatch,
 			@WebParam(name = "numberOfClassesPerBatch") String numberOfClassesPerBatch,
+			@WebParam(name = "symmetry") String symmetry,
+			@WebParam(name = "classificationProgram") String classificationProgram
+			)	
+	{
+		try {
+			log.info("addParticleClassificationGroup. technique=EM particlePickerId={} type={} batchNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} symmetry={} " +
+					 "classificationProgram={}", 
+					 particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addParticleClassificationGroup(particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.info("addParticleClassificationGroup. technique=EM particlePickerId={} type={} batchNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} symmetry={} " +
+					 "classificationProgram={} cause={}", 
+					 particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram, exp.getCause());
+		}
+		return null;
+	}
+	@WebMethod(operationName = "addParticleClassification")
+	public ParticleClassification addParticleClassification(
+			@WebParam(name = "particleClassificationGroupId") String particleClassificationGroupId,
+			@WebParam(name = "classNumber") String classNumber,
+			@WebParam(name = "classImageFullPath") String classImageFullPath,
 			@WebParam(name = "particlesPerClass") String particlesPerClass,
 			@WebParam(name = "rotationAccuracy") String rotationAccuracy,
 			@WebParam(name = "translationAccuracy") String translationAccuracy,
@@ -231,21 +259,21 @@ public class ToolsForEMDataCollection{
 			)	
 	{
 		try {
-			log.info("addParticleClassification. technique=EM particlePickerId={} type={} batchNumber={} classNumber={} " + 
-					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} particlesPerClass={} rotationAccuracy={} " +
-					 "translationAccuracy={} estimatedResolution={} overallFourierCompleteness={}", 
-					 particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
-					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
+			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
+					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "overallFourierCompleteness={}", 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 translationAccuracy, estimatedResolution, overallFourierCompleteness);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
-			return service.addParticleClassification(particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+			return service.addParticleClassification(particleClassificationGroupId, classNumber, classImageFullPath,
 					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
 		} catch (Exception exp) {
 			exp.printStackTrace();
-			log.info("addParticleClassification. technique=EM particlePickerId={} type={} batchNumber={} classNumber={} " + 
-					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} particlesPerClass={} rotationAccuracy={} " +
-					 "translationAccuracy={} estimatedResolution={} overallFourierCompleteness={} cause={}", 
-					 particlePickerId, type, batchNumber, classNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
-					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness, exp.getCause());
+			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
+					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "overallFourierCompleteness={} cause={}", 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 translationAccuracy, estimatedResolution, overallFourierCompleteness, exp.getCause());
 		}
 		return null;
 	}

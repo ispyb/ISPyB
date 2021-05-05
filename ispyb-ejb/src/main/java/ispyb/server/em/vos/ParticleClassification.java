@@ -19,23 +19,14 @@ public class ParticleClassification implements Serializable{
 	@Column(name = "particleClassificationId")
 	protected Integer particleClassificationId;
 	
-	@Column(name = "particlePickerId")
-	protected Integer particlePickerId;
-	
-	@Column(name = "type")
-	protected String type;
-	
-	@Column(name = "batchNumber")
-	protected String batchNumber;
+	@Column(name = "particleClassificationGroupId")
+	protected Integer particleClassificationGroupId;
 	
 	@Column(name = "classNumber")
 	protected String classNumber;
 
-	@Column(name = "numberOfParticlesPerBatch")
-	protected String numberOfParticlesPerBatch;
-
-	@Column(name = "numberOfClassesPerBatch")
-	protected String numberOfClassesPerBatch;
+	@Column(name = "classImageFullPath")
+	protected String classImageFullPath;
 
 	@Column(name = "particlesPerClass")
 	protected String particlesPerClass;
@@ -56,27 +47,16 @@ public class ParticleClassification implements Serializable{
 		return particleClassificationId;
 	}
 
-	public Integer getParticlePickerId() {
-		return particlePickerId;
-	}
-	public void setParticlePickerId(Integer particlePickerId) {
-		this.particlePickerId = particlePickerId;
+	public void setParticleClassificationId(Integer particleClassificationId) {
+		this.particleClassificationId = particleClassificationId;
 	}
 
-	public String getType() {
-		return type;
+	public Integer getParticleClassificationGroupId() {
+		return particleClassificationGroupId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getBatchNumber() {
-		return batchNumber;
-	}
-
-	public void setBatchNumber(String batchNumber) {
-		this.batchNumber = batchNumber;
+	public void setParticleClassificationGroupId(Integer particleClassificationGroupId) {
+		this.particleClassificationGroupId = particleClassificationGroupId;
 	}
 
 	public String getClassNumber() {
@@ -87,20 +67,12 @@ public class ParticleClassification implements Serializable{
 		this.classNumber = classNumber;
 	}
 
-	public String getNumberOfParticlesPerBatch() {
-		return numberOfParticlesPerBatch;
+	public String getClassImageFullPath() {
+		return classImageFullPath;
 	}
 
-	public void setNumberOfParticlesPerBatch(String numberOfParticlesPerBatch) {
-		this.numberOfParticlesPerBatch = numberOfParticlesPerBatch;
-	}
-
-	public String getNumberOfClassesPerBatch() {
-		return numberOfClassesPerBatch;
-	}
-
-	public void setNumberOfClassesPerBatch(String numberOfClassesPerBatch) {
-		this.numberOfClassesPerBatch = numberOfClassesPerBatch;
+	public void setClassImageFullPath(String classImageFullPath) {
+		this.classImageFullPath = classImageFullPath;
 	}
 
 	public String getParticlesPerClass() {

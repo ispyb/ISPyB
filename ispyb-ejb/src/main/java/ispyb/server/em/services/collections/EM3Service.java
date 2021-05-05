@@ -25,6 +25,7 @@ import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
 import ispyb.server.em.vos.ParticlePicker;
 import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
 
 import java.util.Collection;
 import java.util.Date;
@@ -62,10 +63,13 @@ public interface EM3Service {
 			String pickingProgram, String particlePickingTemplate, String particleDiameter, 
 			String numberOfParticles, String fullPathToParticleFile);
 
-	ParticleClassification addParticleClassification(String particlePickerId, String type,
-			String batchNumber, String classNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch,
-			String particlesPerClass, String rotationAccuracy, String translationAccuracy, String estimatedResolution,
-			String overallFourierCompleteness);
+	ParticleClassificationGroup addParticleClassificationGroup(String particlePickerId, String type,
+			String batchNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch, 
+			String symmetry, String classificationProgram);
+	
+	ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
+			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String translationAccuracy, String estimatedResolution, String overallFourierCompleteness);
 
 	List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
 
