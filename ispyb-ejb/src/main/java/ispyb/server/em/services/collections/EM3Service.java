@@ -88,4 +88,8 @@ public interface EM3Service {
 	Collection<? extends Map<String, Object>> getStatsByDataDataCollectionGroupId(Integer id);
 
 	List<Map<String, Object>> getStatsBySessionId(int proposalId, int parseInt);
+
+	List<Map<String, Object>> getClassificationBySessionId(int proposalId, int parseInt);
+	
+	ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId);
 }

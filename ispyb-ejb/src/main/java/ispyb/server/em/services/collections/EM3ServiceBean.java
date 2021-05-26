@@ -85,6 +85,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	
 	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
+	private final String getClassificationBySessionId = "select * from v_em_classification where sessionId = :sessionId and proposalId=:proposalId";
 	
 	protected final Logger LOG = LoggerFactory.getLogger(EM3ServiceBean.class);
 
@@ -702,6 +703,27 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
 	}	
+	
+	@Override
+	public List<Map<String, Object>> getClassificationBySessionId(int proposalId, int sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(getClassificationBySessionId);
+		System.out.println(getClassificationBySessionId);
+		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}	
+
+	@Override
+	public ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		@SuppressWarnings("unchecked")
+		List<ParticleClassification> ParticleClassificationList = session.createCriteria(ParticleClassification.class).add(Restrictions.eq("classificationId", classificationId)).list();
+		if (ParticleClassificationList.size() > 0){
+			return ParticleClassificationList.get(0);
+		}
+		return null;
+	}
 	
 	private void updateSessionLastUpdate(Session3VO vo) throws Exception {
 		try {			
