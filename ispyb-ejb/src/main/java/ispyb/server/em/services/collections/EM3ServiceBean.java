@@ -26,6 +26,11 @@ import ispyb.server.common.vos.proposals.Proposal3VO;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
+import ispyb.server.mx.vos.autoproc.AutoProcProgram3VO;
+import ispyb.server.mx.vos.autoproc.AutoProcProgramAttachment3VO;
 import ispyb.server.mx.services.collections.BeamLineSetup3Service;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 import ispyb.server.mx.services.collections.DataCollectionGroup3Service;
@@ -80,6 +85,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	
 	private final String getStatsBySessionId = "select * from v_em_stats where sessionId = :sessionId and proposalId=:proposalId";
 
+	private final String getClassificationBySessionId = "select * from v_em_classification where sessionId = :sessionId and proposalId=:proposalId";
 	
 	protected final Logger LOG = LoggerFactory.getLogger(EM3ServiceBean.class);
 
@@ -517,6 +523,92 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		return null;
 	}
 	
+	@Override
+	public ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, String numberOfParticles,
+			String fullPathToParticleFile) {
+
+		LOG.info("Looking for first motion correction. proposal={} movieFullPath={}", proposal, firstMoviePath);
+		MotionCorrection motionFirst = this.findMotionCorrectionByMovieFullPath(firstMoviePath);
+		if (motionFirst != null) {
+			ParticlePicker particlePicker = new ParticlePicker();
+			AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
+			autoProcProgram.setProcessingPrograms(pickingProgram);
+			autoProcProgram = this.entityManager.merge(autoProcProgram);
+			AutoProcProgramAttachment3VO autoProcProgramAttachment = new AutoProcProgramAttachment3VO();
+			autoProcProgramAttachment.setAutoProcProgramVO(autoProcProgram);
+			autoProcProgramAttachment.setFileName("particleFile");
+			autoProcProgramAttachment.setFilePath(fullPathToParticleFile);
+			autoProcProgramAttachment.setFileType("Result");
+			autoProcProgramAttachment = this.entityManager.merge(autoProcProgramAttachment);
+			particlePicker.setProgramId(autoProcProgram.getAutoProcProgramId());
+			particlePicker.setFirstMotionCorrectionId(motionFirst.getMotionCorrectionId());
+			particlePicker.setParticlePickingTemplate(particlePickingTemplate);
+			particlePicker.setParticleDiameter(particleDiameter);
+			particlePicker.setNumberOfParticles(numberOfParticles);
+			try {
+				LOG.info("Creating ParticlePicker. technique=EM");
+				particlePicker = this.entityManager.merge(particlePicker);
+				LOG.info("Created ParticlePicker. technique=EM");
+				return particlePicker;
+			} catch (Exception exp) {
+				throw exp;
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public ParticleClassificationGroup addParticleClassificationGroup(String particlePickerId, String type,
+			String batchNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch, 
+			String symmetry, String classificationProgram) {
+
+		ParticleClassificationGroup particleClassificationGroup = new ParticleClassificationGroup();
+		AutoProcProgram3VO autoProcProgram = new AutoProcProgram3VO();
+		autoProcProgram.setProcessingPrograms(classificationProgram);
+		autoProcProgram = this.entityManager.merge(autoProcProgram);
+		particleClassificationGroup.setProgramId(autoProcProgram.getAutoProcProgramId());
+		particleClassificationGroup.setParticlePickerId(Integer.parseInt(particlePickerId));
+		particleClassificationGroup.setType(type);
+		particleClassificationGroup.setBatchNumber(batchNumber);
+		particleClassificationGroup.setNumberOfParticlesPerBatch(numberOfParticlesPerBatch);
+		particleClassificationGroup.setNumberOfClassesPerBatch(numberOfClassesPerBatch);
+		particleClassificationGroup.setSymmetry(symmetry);
+		try {
+			LOG.info("Creating ParticleClassificationGroup technique=EM");
+			particleClassificationGroup = this.entityManager.merge(particleClassificationGroup);
+			LOG.info("Created ParticleClassificationGroup technique=EM");
+			return particleClassificationGroup;
+		} catch (Exception exp) {
+			throw exp;
+		}
+	}
+
+	@Override
+	public ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
+			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String translationAccuracy, String estimatedResolution,	String overallFourierCompleteness) {
+
+		ParticleClassification particleClassification = new ParticleClassification();
+		particleClassification.setParticleClassificationGroupId(Integer.parseInt(particleClassificationGroupId));
+		particleClassification.setClassNumber(classNumber);
+		particleClassification.setClassImageFullPath(classImageFullPath);
+		particleClassification.setParticlesPerClass(particlesPerClass);
+		particleClassification.setRotationAccuracy(rotationAccuracy);
+		particleClassification.setTranslationAccuracy(translationAccuracy);
+		particleClassification.setEstimatedResolution(estimatedResolution);
+		particleClassification.setOverallFourierCompleteness(overallFourierCompleteness);
+		try {
+			LOG.info("Creating ParticleClassification. technique=EM");
+			particleClassification = this.entityManager.merge(particleClassification);
+			LOG.info("Created ParticleClassification. technique=EM");
+			return particleClassification;
+		} catch (Exception exp) {
+			throw exp;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Movie> getMoviesByDataCollectionId(int proposalId, int dataCollectionId) throws Exception{
@@ -611,6 +703,27 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		query.setParameter("proposalId", proposalId);
 		return executeSQLQuery(query);
 	}	
+	
+	@Override
+	public List<Map<String, Object>> getClassificationBySessionId(int proposalId, int sessionId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		SQLQuery query = session.createSQLQuery(getClassificationBySessionId);
+		System.out.println(getClassificationBySessionId);
+		query.setParameter("sessionId", sessionId);
+		query.setParameter("proposalId", proposalId);
+		return executeSQLQuery(query);
+	}	
+
+	@Override
+	public ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId) {
+		Session session = (Session) this.entityManager.getDelegate();
+		@SuppressWarnings("unchecked")
+		List<ParticleClassification> ParticleClassificationList = session.createCriteria(ParticleClassification.class).add(Restrictions.eq("classificationId", classificationId)).list();
+		if (ParticleClassificationList.size() > 0){
+			return ParticleClassificationList.get(0);
+		}
+		return null;
+	}
 	
 	private void updateSessionLastUpdate(Session3VO vo) throws Exception {
 		try {			

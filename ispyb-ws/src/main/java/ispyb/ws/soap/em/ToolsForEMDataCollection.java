@@ -23,6 +23,9 @@ import ispyb.server.em.services.collections.EM3Service;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
 import ispyb.server.mx.services.collections.DataCollection3Service;
 
 import java.text.SimpleDateFormat;
@@ -188,6 +191,93 @@ public class ToolsForEMDataCollection{
 		return null;
 	}
 	
+	@WebMethod(operationName = "addParticlePicker")
+	public ParticlePicker addParticlePicker(
+			@WebParam(name = "proposal") String proposal,
+			@WebParam(name = "firstMovieFullPath") String firstMovieFullPath,
+			@WebParam(name = "lastMovieFullPath") String lastMovieFullPath,
+			@WebParam(name = "pickingProgram") String pickingProgram,
+			@WebParam(name = "particlePickingTemplate") String particlePickingTemplate,
+			@WebParam(name = "particleDiameter") String particleDiameter,
+			@WebParam(name = "numberOfParticles") String numberOfParticles,
+			@WebParam(name = "fullPathToParticleFile") String fullPathToParticleFile
+			)	
+	{
+		try {
+			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={} fullPathToParticleFile={}", 
+					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles,fullPathToParticleFile);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addParticlePicker(proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles, fullPathToParticleFile);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.info("addParticlePicker. technique=EM proposal={} firstMovieFullPath={} lastMovieFullPath={} pickingProgram={} particlePickingTemplate={} particleDiameter={} numberOfParticles={} fullPathToParticleFile={} cause={}", 
+					proposal, firstMovieFullPath, lastMovieFullPath, pickingProgram, particlePickingTemplate, particleDiameter, numberOfParticles, fullPathToParticleFile, exp.getCause());
+		}
+		return null;
+	}
+
+	@WebMethod(operationName = "addParticleClassificationGroup")
+	public ParticleClassificationGroup addParticleClassificationGroup(
+			@WebParam(name = "particlePickerId") String particlePickerId,
+			@WebParam(name = "type") String type,
+			@WebParam(name = "batchNumber") String batchNumber,
+			@WebParam(name = "numberOfParticlesPerBatch") String numberOfParticlesPerBatch,
+			@WebParam(name = "numberOfClassesPerBatch") String numberOfClassesPerBatch,
+			@WebParam(name = "symmetry") String symmetry,
+			@WebParam(name = "classificationProgram") String classificationProgram
+			)	
+	{
+		try {
+			log.info("addParticleClassificationGroup. technique=EM particlePickerId={} type={} batchNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} symmetry={} " +
+					 "classificationProgram={}", 
+					 particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addParticleClassificationGroup(particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.info("addParticleClassificationGroup. technique=EM particlePickerId={} type={} batchNumber={} " + 
+					 "numberOfParticlesPerBatch={} numberOfClassesPerBatch={} symmetry={} " +
+					 "classificationProgram={} cause={}", 
+					 particlePickerId, type, batchNumber, numberOfParticlesPerBatch, numberOfClassesPerBatch, 
+					 symmetry, classificationProgram, exp.getCause());
+		}
+		return null;
+	}
+	@WebMethod(operationName = "addParticleClassification")
+	public ParticleClassification addParticleClassification(
+			@WebParam(name = "particleClassificationGroupId") String particleClassificationGroupId,
+			@WebParam(name = "classNumber") String classNumber,
+			@WebParam(name = "classImageFullPath") String classImageFullPath,
+			@WebParam(name = "particlesPerClass") String particlesPerClass,
+			@WebParam(name = "rotationAccuracy") String rotationAccuracy,
+			@WebParam(name = "translationAccuracy") String translationAccuracy,
+			@WebParam(name = "estimatedResolution") String estimatedResolution,
+			@WebParam(name = "overallFourierCompleteness") String overallFourierCompleteness
+			)	
+	{
+		try {
+			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
+					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "overallFourierCompleteness={}", 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 translationAccuracy, estimatedResolution, overallFourierCompleteness);
+			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
+			return service.addParticleClassification(particleClassificationGroupId, classNumber, classImageFullPath,
+					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
+					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "overallFourierCompleteness={} cause={}", 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 translationAccuracy, estimatedResolution, overallFourierCompleteness, exp.getCause());
+		}
+		return null;
+	}
+
 	@WebMethod(operationName = "getDataCollectionsByWorkingFolder")
 	public CTF getDataCollectionsByWorkingFolder(
 			@WebParam(name = "proposal") String proposal,

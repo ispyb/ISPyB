@@ -23,6 +23,9 @@ package ispyb.server.em.services.collections;
 import ispyb.server.em.vos.CTF;
 import ispyb.server.em.vos.MotionCorrection;
 import ispyb.server.em.vos.Movie;
+import ispyb.server.em.vos.ParticlePicker;
+import ispyb.server.em.vos.ParticleClassification;
+import ispyb.server.em.vos.ParticleClassificationGroup;
 
 import java.util.Collection;
 import java.util.Date;
@@ -56,6 +59,17 @@ public interface EM3Service {
 			String defocusV, String angle, String crossCorrelationCoefficient,
 			String resolutionLimit, String estimatedBfactor, String logFilePath);
 
+	ParticlePicker addParticlePicker(String proposal, String firstMoviePath, String lastMoviePath,
+			String pickingProgram, String particlePickingTemplate, String particleDiameter, 
+			String numberOfParticles, String fullPathToParticleFile);
+
+	ParticleClassificationGroup addParticleClassificationGroup(String particlePickerId, String type,
+			String batchNumber, String numberOfParticlesPerBatch, String numberOfClassesPerBatch, 
+			String symmetry, String classificationProgram);
+	
+	ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
+			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String translationAccuracy, String estimatedResolution, String overallFourierCompleteness);
 
 	List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
 
@@ -74,4 +88,8 @@ public interface EM3Service {
 	Collection<? extends Map<String, Object>> getStatsByDataDataCollectionGroupId(Integer id);
 
 	List<Map<String, Object>> getStatsBySessionId(int proposalId, int parseInt);
+
+	List<Map<String, Object>> getClassificationBySessionId(int proposalId, int parseInt);
+	
+	ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId);
 }
