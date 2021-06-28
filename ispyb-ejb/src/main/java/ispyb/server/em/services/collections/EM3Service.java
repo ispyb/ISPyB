@@ -68,7 +68,7 @@ public interface EM3Service {
 			String symmetry, String classificationProgram);
 	
 	ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
-			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String classImageFullPath, String particlesPerClass, String classDistribution, String rotationAccuracy,
 			String translationAccuracy, String estimatedResolution, String overallFourierCompleteness);
 
 	List<String> getDoseByDataCollectionId(int proposalId, int dataCollectionId) throws Exception;
@@ -91,5 +91,5 @@ public interface EM3Service {
 
 	List<Map<String, Object>> getClassificationBySessionId(int proposalId, int parseInt);
 	
-	ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId);
+	ParticleClassification getClassificationByClassificationId(int proposalId, int particleClassificationId);
 }
