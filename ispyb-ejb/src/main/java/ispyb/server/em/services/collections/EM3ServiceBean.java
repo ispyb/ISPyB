@@ -587,7 +587,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 
 	@Override
 	public ParticleClassification addParticleClassification(String particleClassificationGroupId, String classNumber, 
-			String classImageFullPath, String particlesPerClass, String rotationAccuracy,
+			String classImageFullPath, String particlesPerClass, String classDistribution, String rotationAccuracy,
 			String translationAccuracy, String estimatedResolution,	String overallFourierCompleteness) {
 
 		ParticleClassification particleClassification = new ParticleClassification();
@@ -595,6 +595,7 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 		particleClassification.setClassNumber(classNumber);
 		particleClassification.setClassImageFullPath(classImageFullPath);
 		particleClassification.setParticlesPerClass(particlesPerClass);
+		particleClassification.setClassDistribution(classDistribution);
 		particleClassification.setRotationAccuracy(rotationAccuracy);
 		particleClassification.setTranslationAccuracy(translationAccuracy);
 		particleClassification.setEstimatedResolution(estimatedResolution);
@@ -715,10 +716,10 @@ public class EM3ServiceBean extends WsServiceBean implements EM3Service, EM3Serv
 	}	
 
 	@Override
-	public ParticleClassification getClassificationByClassificationId(int proposalId, int classificationId) {
+	public ParticleClassification getClassificationByClassificationId(int proposalId, int particleClassificationId) {
 		Session session = (Session) this.entityManager.getDelegate();
 		@SuppressWarnings("unchecked")
-		List<ParticleClassification> ParticleClassificationList = session.createCriteria(ParticleClassification.class).add(Restrictions.eq("classificationId", classificationId)).list();
+		List<ParticleClassification> ParticleClassificationList = session.createCriteria(ParticleClassification.class).add(Restrictions.eq("particleClassificationId", particleClassificationId)).list();
 		if (ParticleClassificationList.size() > 0){
 			return ParticleClassificationList.get(0);
 		}

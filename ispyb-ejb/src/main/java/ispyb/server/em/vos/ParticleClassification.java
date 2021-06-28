@@ -31,6 +31,9 @@ public class ParticleClassification implements Serializable{
 	@Column(name = "particlesPerClass")
 	protected String particlesPerClass;
 
+	@Column(name = "classDistribution")
+	protected String classDistribution;
+
 	@Column(name = "rotationAccuracy")
 	protected String rotationAccuracy;
 
@@ -81,6 +84,14 @@ public class ParticleClassification implements Serializable{
 
 	public void setParticlesPerClass(String particlesPerClass) {
 		this.particlesPerClass = particlesPerClass;
+	}
+
+	public String getClassDistribution() {
+		return classDistribution;
+	}
+
+	public void setClassDistribution(String classDistribution) {
+		this.classDistribution = classDistribution;
 	}
 
 	public String getRotationAccuracy() {

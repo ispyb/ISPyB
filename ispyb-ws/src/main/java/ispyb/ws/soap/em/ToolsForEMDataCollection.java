@@ -252,6 +252,7 @@ public class ToolsForEMDataCollection{
 			@WebParam(name = "classNumber") String classNumber,
 			@WebParam(name = "classImageFullPath") String classImageFullPath,
 			@WebParam(name = "particlesPerClass") String particlesPerClass,
+			@WebParam(name = "classDistribution") String classDistribution,
 			@WebParam(name = "rotationAccuracy") String rotationAccuracy,
 			@WebParam(name = "translationAccuracy") String translationAccuracy,
 			@WebParam(name = "estimatedResolution") String estimatedResolution,
@@ -260,19 +261,19 @@ public class ToolsForEMDataCollection{
 	{
 		try {
 			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
-					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "classImageFullPath={} particlesPerClass={} classDistribution={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
 					 "overallFourierCompleteness={}", 
-					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, classDistribution, rotationAccuracy, 
 					 translationAccuracy, estimatedResolution, overallFourierCompleteness);
 			EM3Service service = (EM3Service) ejb3ServiceLocator.getLocalService(EM3Service.class);
 			return service.addParticleClassification(particleClassificationGroupId, classNumber, classImageFullPath,
-					 particlesPerClass, rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
+					 particlesPerClass, classDistribution, classDistribution=rotationAccuracy, translationAccuracy, estimatedResolution, overallFourierCompleteness);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 			log.info("addParticleClassification. technique=EM particleClassificationGroupId={} classNumber={} " + 
-					 "classImageFullPath={} particlesPerClass={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
+					 "classImageFullPath={} particlesPerClass={} classDistribution={} rotationAccuracy={} translationAccuracy={} estimatedResolution={} " + 
 					 "overallFourierCompleteness={} cause={}", 
-					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, rotationAccuracy, 
+					 particleClassificationGroupId, classNumber, classImageFullPath, particlesPerClass, classDistribution, rotationAccuracy, 
 					 translationAccuracy, estimatedResolution, overallFourierCompleteness, exp.getCause());
 		}
 		return null;
