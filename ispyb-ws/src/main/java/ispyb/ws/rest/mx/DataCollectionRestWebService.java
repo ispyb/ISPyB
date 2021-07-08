@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import ispyb.common.util.export.ExiCsvExporter;
+import ispyb.server.common.services.proposals.Proposal3Service;
+import ispyb.server.common.services.sessions.Session3Service;
+import ispyb.server.common.util.ejb.Ejb3ServiceLocator;
+import ispyb.server.mx.services.collections.DataCollection3Service;
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.GZIP;
 
@@ -237,7 +243,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, false).toByteArray();
 			this.logFinish(methodName, start, logger);
-			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			Session3VO ses = this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false);
 			if (ses != null)
 				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
 			else
@@ -271,7 +277,31 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			return this.logError(methodName, e, start, logger);
 		}
 	}
-	
+
+	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
+	@GET
+	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/csv")
+	@Produces({ "application/csv" })
+	public Response getDataCollectionsReportByfilterParamCsv(@PathParam("token") String token,
+															 @PathParam("proposal") String proposal,
+															 @PathParam("filterParam") String filterParam) throws NamingException {
+
+		String methodName = "getDataCollectionReportyByfilterParamCsv";
+		long start = this.logInit(methodName, logger, token, proposal, filterParam);
+		try {
+			byte[] byteToExport = this.getCsv(filterParam, proposal).toByteArray();
+			this.logFinish(methodName, start, logger);
+
+			if (filterParam != null)
+				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ filterParam + ".csv");
+			else
+				return this.downloadFile(byteToExport, "No_data.csv");
+
+		} catch (Exception e) {
+			return this.logError(methodName, e, start, logger);
+		}
+	}
+
 	@RolesAllowed({"User", "Manager", "Industrial", "Localcontact"})
 	@GET
 	@Path("{token}/proposal/{proposal}/mx/datacollection/filterParam/{filterParam}/report/rtf")
@@ -309,7 +339,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, false).toByteArray();
 			this.logFinish(methodName, start, logger);
-			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			Session3VO ses = this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false);
 			if (ses != null)
 				return this.downloadFile(byteToExport, "Report_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 			else
@@ -333,7 +363,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, false, true).toByteArray();
 			this.logFinish(methodName, start, logger);
-			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			Session3VO ses = this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false);
 			if (ses !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".pdf");
 			else
@@ -403,7 +433,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		try {
 			byte[] byteToExport = this.getPdfRtf(sessionId, proposal, nbRows, true, true).toByteArray();
 			this.logFinish(methodName, start, logger);
-			Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+			Session3VO ses = this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false);
 			if (ses !=null)
 				return this.downloadFile(byteToExport, "AnalysisReport_" + proposal + "_"+ ses.getBeamlineName()+ "_" + ses.getStartDate() + ".rtf");
 			else
@@ -447,7 +477,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	public Response getViewDataCollectionByDataCollectionId(@PathParam("token") String token, @PathParam("proposal") String proposal,
 			@PathParam("datacollectiongroupids") String datacollectiongroupids) {
 
-		String methodName = "getViewDataCollectionByWorkflowStepId";
+		String methodName = "getViewDataCollectionByDataCollectionId";
 		long start = this.logInit(methodName, logger, token, proposal, datacollectiongroupids);
 		try {
 			List<Integer> ids = this.parseToInteger(datacollectiongroupids);
@@ -553,7 +583,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 			
 			if (sessionId != null) {
 							
-				Session3VO ses = this.getSession3Service().findByPk(new Integer(sessionId), false, false, false);
+				Session3VO ses = this.getSession3Service().findByPk(Integer.valueOf(sessionId), false, false, false);
 
 					Proposal3VO pv = ses.getProposalVO();
 					// String mpEmail = personService.findByPk(pv.getPersonVOId(), false).getEmailAddress();
@@ -600,7 +630,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 	
 	private ByteArrayOutputStream getPdfRtf(String sessionId, String proposal, String nbRows, boolean isRtf, boolean isAnalysis) throws NamingException, Exception {
 		
-		Integer id = new Integer(sessionId);
+		Integer id = Integer.valueOf(sessionId);
 		
 		List<Map<String, Object>> dataCollections = 
 				this.getWebServiceDataCollectionGroup3Service().getViewDataCollectionBySessionIdHavingImages(this.getProposalId(proposal), id);
@@ -612,7 +642,7 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		Integer nbRowsMax = dataCollections.size();
 				
 		if (nbRows != null && !nbRows.isEmpty()) {
-			nbRowsMax = new Integer(nbRows);
+			nbRowsMax = Integer.valueOf(nbRows);
 		}
 		 
 		ExiPdfRtfExporter pdf = new ExiPdfRtfExporter(this.getProposalId(proposal), proposal, id , dataCollections, energyScans, xrfSpectrums, nbRowsMax);
@@ -624,6 +654,28 @@ public class DataCollectionRestWebService extends MXRestWebService {
 		else
 			baosToExport = pdf.exportDataCollectionReport(isRtf);
 		
+		return baosToExport;
+	}
+
+	private ByteArrayOutputStream getCsv(String sessionId, String proposal) throws NamingException, Exception {
+
+		Integer id = Integer.valueOf(sessionId);
+		Session3VO slv = new Session3VO();
+		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
+		Session3Service sessionService = (Session3Service) ejb3ServiceLocator.getLocalService(Session3Service.class);
+		Proposal3Service proposalService = (Proposal3Service) ejb3ServiceLocator.getLocalService(Proposal3Service.class);
+		DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
+				.getLocalService(DataCollection3Service.class);
+
+
+		Proposal3VO pv = proposalService.findByPk(this.getProposalId(proposal));
+
+		slv = sessionService.findByPk(id, false, false, false);
+		List<DataCollection3VO>  dataCollectionList = dataCollectionService.findFiltered(null, null, null, id, null, null);
+		ExiCsvExporter csv = new ExiCsvExporter(pv.getProposalId(), pv.getCode(), slv.getSessionId(), dataCollectionList);
+
+		ByteArrayOutputStream baosToExport = csv.exportDataCollectionReport();
+
 		return baosToExport;
 	}
 	

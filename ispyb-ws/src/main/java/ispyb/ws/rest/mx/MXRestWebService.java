@@ -61,8 +61,8 @@ public class MXRestWebService extends RestWebService{
 		List<List<AutoProcessingData>> lists = new ArrayList<List<AutoProcessingData>>();
 		for (Integer id : ids) {
 			AutoProcIntegration3VO autoProcIntegration3VO = this.getAutoProcIntegration3Service().findByPk(id);
-			List<AutoProcProgramAttachment3VO> noanomCorrectAttachmentList = this.getAutoProcProgramAttachment3Service().findNoanomCorrect(autoProcIntegration3VO.getAutoProcProgramVOId());
-			for (AutoProcProgramAttachment3VO autoProcProgramAttachment3VO : noanomCorrectAttachmentList) {
+			List<AutoProcProgramAttachment3VO> aimlessAttachmentList = this.getAutoProcProgramAttachment3Service().findAimless(autoProcIntegration3VO.getAutoProcProgramVOId());
+			for (AutoProcProgramAttachment3VO autoProcProgramAttachment3VO : aimlessAttachmentList) {
 				List<AutoProcessingData> data = AutoProcProgramaAttachmentFileReader.getAutoProcessingDataFromAttachemt(autoProcProgramAttachment3VO);
 				lists.add(data);
 			}

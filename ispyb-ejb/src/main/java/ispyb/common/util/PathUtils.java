@@ -67,7 +67,7 @@ public class PathUtils {
 
 		String imageDir = getImageDirPath(dataCollectionVO);
 		if (Constants.SITE_IS_MAXIV()) {
-			imageDir = imageDir.replace("/data/visitors/","/mxn/groups/ispybstorage/visitors/");
+			imageDir = imageDir.replace("/data/visitors/","/data/staff/ispybstorage/visitors/");
 		}
 		String fullDNAPath = imageDir + Constants.IMG_DNA_URL_SUFIX;
 		if (isWindows) {
