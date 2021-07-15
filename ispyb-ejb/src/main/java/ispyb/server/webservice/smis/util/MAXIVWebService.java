@@ -36,13 +36,18 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import generated.ws.smis.BeamlineScientistsVO;
 import generated.ws.smis.Exception_Exception;
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.FinderException_Exception;
 import generated.ws.smis.InnerScientistVO;
+import generated.ws.smis.ProposalInfoLightVO;
 import generated.ws.smis.ProposalParticipantInfoLightVO;
 import generated.ws.smis.SMISWebService;
 import generated.ws.smis.SampleSheetInfoLightVO;
+import generated.ws.smis.Training;
+import generated.ws.smis.UserDataAccessLightVO;
+import generated.ws.smis.UserLightVO;
 import ispyb.common.util.Constants;
 import ispyb.server.smis.UpdateFromSMIS;
 
@@ -794,6 +799,76 @@ public class MAXIVWebService implements SMISWebService {
 			httpclient = HttpClients.createDefault();
 		}
 		return httpclient;
+	}
+
+	@Override
+	public ProposalParticipantInfoLightVO findLatestProposalParticipantByScientistPk(Long arg0)
+			throws Exception_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProposalInfoLightVO findProposalInfoLightByProposalPk(Long arg0) throws Exception_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SampleSheetInfoLightVO> findSamplesheetInfoLightForProposalPk(Long arg0, boolean arg1)
+			throws Exception_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SampleSheetInfoLightVO> findSamplesheetInfoLightForSessionPk(Long arg0) throws Exception_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExpSessionInfoLightVO> findSessionsInfoLightInRange(Calendar arg0, Calendar arg1)
+			throws FinderException_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserLightVO findUserByScientistPk(Long arg0) throws Exception_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserDataAccessLightVO> getAcls() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserDataAccessLightVO> getAclsWithAllDelays(double arg0, double arg1, double arg2, double arg3) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserDataAccessLightVO> getAclsWithEndDelay(double arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<BeamlineScientistsVO> getScientistsWithDataAccessForAllBeamlines() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isTrainingValidForDate(String arg0, Training arg1, Calendar arg2) throws Exception_Exception {
+		// TODO Auto-generated method stub
+		// added for MAXIV (but not used) because this method should be overridden.
+		return false;
 	}
 
 }

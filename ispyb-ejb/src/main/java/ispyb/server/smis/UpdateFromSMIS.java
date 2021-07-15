@@ -320,7 +320,7 @@ public class UpdateFromSMIS {
 			}
 
 			mainProposers_ = sws.findMainProposersForProposal(pk);
-			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk);
+			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk, true /* only with OpMode(checked by Safety) */);
 			labContacts_ = sws.findParticipantsForProposal(pk);
 			
 			updateThisProposalFromLists(smisSessions_,mainProposers_,smisSamples_,labContacts_,pk);	
