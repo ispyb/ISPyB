@@ -72,6 +72,8 @@ public class Structure3VO implements java.io.Serializable {
 	
 	protected Integer proposalId;
 	
+	protected String uniprotId;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDate", length = 0)
 	public Date getCreationDate() {
@@ -202,12 +204,22 @@ public class Structure3VO implements java.io.Serializable {
 		this.groupName = groupName;
 	}
 
+	@Column(name = "proposalId")
 	public Integer getProposalId() {
 		return proposalId;
 	}
 
 	public void setProposalId(Integer proposalId) {
 		this.proposalId = proposalId;
+	}
+
+	@Column(name = "uniprotId")
+	public String getUniprotId() {
+		return uniprotId;
+	}
+
+	public void setUniprotId(String uniprotId) {
+		this.uniprotId = uniprotId;
 	}
 
 }
