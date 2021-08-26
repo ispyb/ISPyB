@@ -49,6 +49,10 @@ public class StructureRestWebService extends MXRestWebService {
 				sb.append(structure3vo.getType());
 				sb.append(",");
 				sb.append(structure3vo.getFilePath());
+				sb.append(",");
+				sb.append(structure3vo.getMultiplicity());
+				sb.append(",");
+				sb.append(structure3vo.getUniprotId());
 				sb.append("\n");
 			}
 			return this.sendResponse(sb.toString());
