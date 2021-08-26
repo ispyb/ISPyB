@@ -470,6 +470,8 @@ public class ToolsForBLSampleWebService {
 				sb.append(structure3vo.getFilePath());
 				sb.append(",");
 				sb.append(structure3vo.getMultiplicity());
+				sb.append(",");
+				sb.append(structure3vo.getUniprotId());
 				sb.append("\n");
 			}
 			return sb.toString();
