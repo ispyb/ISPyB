@@ -34,7 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -52,7 +52,7 @@ import ispyb.server.common.util.ISPyBRuntimeException;
 
 @Stateless
 public class AbInitioModelling3ServiceBean implements AbInitioModelling3Service, AbInitioModelling3ServiceLocal {
-	private final static Logger LOG = Logger.getLogger("AbInitioModelling3ServiceBean");
+	private final static Logger LOG = LogManager.getLogger("AbInitioModelling3ServiceBean");
 	
 	
 	@PersistenceContext(unitName = "ispyb_db")

@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -42,7 +42,7 @@ import ispyb.server.common.vos.admin.AdminActivity3VO;
 @Stateless
 public class AdminActivity3ServiceBean implements AdminActivity3Service, AdminActivity3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(AdminActivity3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AdminActivity3ServiceBean.class);
 
 	// Generic HQL request to find instances of AdminActivity3 by pk
 	// TODO choose between left/inner join

@@ -44,7 +44,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Scripts to update the ispyb database and to generate some statistics (exported in xls or csv files). It is also used ot populate the
@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
  */
 public class UpdateDataBase {
 
-	private final static Logger LOG = Logger.getLogger(UpdateDataBase.class);
+	private final static Logger LOG = LogManager.getLogger(UpdateDataBase.class);
 
 	/**
 	 * update the DataCollection table with the detectorId

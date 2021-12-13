@@ -31,7 +31,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -46,7 +46,7 @@ import org.hibernate.criterion.Restrictions;
 public class ScreeningOutputLattice3ServiceBean implements ScreeningOutputLattice3Service,
 		ScreeningOutputLattice3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(ScreeningOutputLattice3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(ScreeningOutputLattice3ServiceBean.class);
 
 	// Generic HQL request to find instances of ScreeningOutputLattice3 by pk
 	// TODO choose between left/inner join

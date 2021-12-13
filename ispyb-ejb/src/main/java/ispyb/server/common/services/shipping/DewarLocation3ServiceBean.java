@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 
 import ispyb.server.common.exceptions.AccessDeniedException;
@@ -39,7 +39,7 @@ import ispyb.server.common.vos.shipping.DewarLocation3VO;
 @Stateless
 public class DewarLocation3ServiceBean implements DewarLocation3Service, DewarLocation3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DewarLocation3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DewarLocation3ServiceBean.class);
 
 	// Generic HQL request to find instances of DewarLocation3 by pk
 	// TODO choose between left/inner join

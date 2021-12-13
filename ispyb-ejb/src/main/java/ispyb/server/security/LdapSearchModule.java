@@ -27,7 +27,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * 
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  */
 public class LdapSearchModule {
 
-	private final Logger LOG = Logger.getLogger(LdapSearchModule.class);
+	private final Logger LOG = LogManager.getLogger(LdapSearchModule.class);
 
 	public LdapSearchModule() {
 

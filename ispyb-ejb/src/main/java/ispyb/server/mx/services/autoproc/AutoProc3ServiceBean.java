@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 
@@ -39,7 +39,7 @@ import ispyb.server.mx.vos.autoproc.AutoProc3VO;
 @Stateless
 public class AutoProc3ServiceBean implements AutoProc3Service, AutoProc3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(AutoProc3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AutoProc3ServiceBean.class);
 	
 	// Generic HQL request to find instances of AutoProc3 by pk
 	// TODO choose between left/inner join

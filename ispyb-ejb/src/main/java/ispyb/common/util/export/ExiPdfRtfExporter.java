@@ -35,7 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.util.collection.ReverseListIterator;
 
 import com.lowagie.text.BadElementException;
@@ -75,7 +75,7 @@ import ispyb.server.mx.vos.collections.Session3VO;
  */
 public class ExiPdfRtfExporter {
 
-	private final static Logger LOG = Logger.getLogger(ExiPdfRtfExporter.class);
+	private final static Logger LOG = LogManager.getLogger(ExiPdfRtfExporter.class);
 
 	// constants color
 	public final static Color GREEN_COLOR = new Color(17, 197, 3);

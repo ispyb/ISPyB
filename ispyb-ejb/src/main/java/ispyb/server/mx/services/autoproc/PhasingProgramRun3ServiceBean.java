@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 
@@ -39,7 +39,7 @@ import ispyb.server.mx.vos.autoproc.PhasingProgramRun3VO;
 @Stateless
 public class PhasingProgramRun3ServiceBean implements PhasingProgramRun3Service, PhasingProgramRun3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(PhasingProgramRun3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(PhasingProgramRun3ServiceBean.class);
 
 	// Generic HQL request to find instances of PhasingProgram3 by pk
 	// TODO choose between left/inner join

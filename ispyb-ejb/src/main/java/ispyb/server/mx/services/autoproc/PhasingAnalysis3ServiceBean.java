@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 
@@ -33,21 +33,18 @@ import ispyb.server.mx.vos.autoproc.PhasingAnalysis3VO;
 
 /**
  * <p>
- *  This session bean handles ISPyB PhasingAnalysis3.
+ * This session bean handles ISPyB PhasingAnalysis3.
  * </p>
  */
 @Stateless
-public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
-		PhasingAnalysis3ServiceLocal {
+public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service, PhasingAnalysis3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(PhasingAnalysis3ServiceBean.class);
-	
+	private final static Logger LOG = LogManager.getLogger(PhasingAnalysis3ServiceBean.class);
+
 	// Generic HQL request to find instances of PhasingAnalysis3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK() {
-		return "from PhasingAnalysis3VO vo "
-				+ "where vo.phasingAnalysisId = :phasingAnalysisId";
+		return "from PhasingAnalysis3VO vo " + "where vo.phasingAnalysisId = :phasingAnalysisId";
 	}
 
 	// Generic HQL request to find all instances of PhasingAnalysis3
@@ -64,11 +61,12 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 
 	/**
 	 * Create new PhasingAnalysis3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
 	public PhasingAnalysis3VO create(final PhasingAnalysis3VO vo) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		this.checkAndCompleteData(vo, true);
@@ -78,6 +76,7 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 
 	/**
 	 * Update the PhasingAnalysis3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
@@ -91,17 +90,19 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 
 	/**
 	 * Remove the PhasingAnalysis3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		PhasingAnalysis3VO vo = findByPk(pk);		
+		PhasingAnalysis3VO vo = findByPk(pk);
 		delete(vo);
 	}
 
 	/**
 	 * Remove the PhasingAnalysis3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final PhasingAnalysis3VO vo) throws Exception {
@@ -111,8 +112,10 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the PhasingAnalysis3 value object
@@ -122,9 +125,8 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		try {
-			return (PhasingAnalysis3VO) entityManager
-					.createQuery(FIND_BY_PK())
-					.setParameter("phasingAnalysisId", pk).getSingleResult();
+			return (PhasingAnalysis3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("phasingAnalysisId", pk)
+					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -132,36 +134,42 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 
 	/**
 	 * Find all PhasingAnalysis3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PhasingAnalysis3VO> findAll()throws Exception {
+	public List<PhasingAnalysis3VO> findAll() throws Exception {
 
 		List<PhasingAnalysis3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
 		return foundEntities;
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove PhasingAnalysis3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove PhasingAnalysis3
+	 * entities. If not set rollback only and throw AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
 	}
 
 	/* Private methods ------------------------------------------------------ */
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * 
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
 	 * @exception VOValidateException if data is not correct
 	 */
-	private void checkAndCompleteData(PhasingAnalysis3VO vo, boolean create)
-			throws Exception {
+	private void checkAndCompleteData(PhasingAnalysis3VO vo, boolean create) throws Exception {
 
 		if (create) {
 			if (vo.getPhasingAnalysisId() != null) {
@@ -170,13 +178,12 @@ public class PhasingAnalysis3ServiceBean implements PhasingAnalysis3Service,
 			}
 		} else {
 			if (vo.getPhasingAnalysisId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
+				throw new IllegalArgumentException("Primary key is not set for update!");
 			}
 		}
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
-	
+
 }

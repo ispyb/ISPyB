@@ -37,7 +37,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -50,7 +50,7 @@ import org.hibernate.annotations.FetchMode;
 @SqlResultSetMapping(name = "personNativeQuery", entities = { @EntityResult(entityClass = Person3VO.class) })
 public class Person3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(Person3VO.class);
+	private final static Logger LOG = LogManager.getLogger(Person3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

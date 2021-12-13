@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.AcroFields;
@@ -42,7 +42,7 @@ public class PDFFormFiller extends PdfWriter {
 	 * Constants *
 	 *************/
 
-	private static final Logger LOG = Logger.getLogger(PDFFormFiller.class);
+	private static final Logger LOG = LogManager.getLogger(PDFFormFiller.class);
 
 	// Default values for setting radio buttons and checkboxes in the forms.
 	// Note that those values are the default ones set by Adobe Designer when

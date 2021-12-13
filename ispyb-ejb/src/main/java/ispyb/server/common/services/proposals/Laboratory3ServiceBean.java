@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -42,7 +42,7 @@ import ispyb.server.common.vos.proposals.Laboratory3VO;
 @Stateless
 public class Laboratory3ServiceBean implements Laboratory3Service, Laboratory3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Laboratory3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Laboratory3ServiceBean.class);
 
 	private static String SELECT_LABORATORY = "SELECT l.laboratoryId, l.laboratoryUUID, l.name, l.address, "
 			+ "l.city, l.country, l.url, l.organization, l.laboratoryExtPk  ";

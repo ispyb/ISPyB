@@ -49,7 +49,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,7 +57,7 @@ import com.google.gson.GsonBuilder;
 @Path("/")
 public  class ParentWebService {
 	protected long now;
-	private final static Logger log = Logger.getLogger(ParentWebService.class);
+	private final static Logger log = LogManager.getLogger(ParentWebService.class);
 		
 	protected Response sendImage(String filePath) {
 		if (filePath != null) {

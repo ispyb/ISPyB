@@ -33,7 +33,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.GsonBuilder;
 
@@ -61,7 +61,7 @@ import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
 @Stateless
 public class Robot3ServiceBean implements Robot3Service, Robot3ServiceLocal {
 
-	private final static Logger log = Logger.getLogger(Robot3ServiceBean.class);
+	private final static Logger log = LogManager.getLogger(Robot3ServiceBean.class);
 
 	/** The specimen3 service local. */
 	@EJB

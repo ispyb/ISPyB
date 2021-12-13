@@ -43,7 +43,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -57,7 +57,7 @@ import org.hibernate.criterion.Restrictions;
 @Stateless
 public class DataCollection3ServiceBean implements DataCollection3Service, DataCollection3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DataCollection3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DataCollection3ServiceBean.class);
 
 	// Generic HQL request to find instances of DataCollection3 by pk
 	private static final String FIND_BY_PK(boolean fetchImage, boolean fetchAutoProcIntegration) {

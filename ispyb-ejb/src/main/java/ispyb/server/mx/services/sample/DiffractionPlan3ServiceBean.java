@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
@@ -40,7 +40,7 @@ import ispyb.server.mx.vos.sample.DiffractionPlan3VO;
 @Stateless
 public class DiffractionPlan3ServiceBean implements DiffractionPlan3Service, DiffractionPlan3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DiffractionPlan3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DiffractionPlan3ServiceBean.class);
 
 	// Generic HQL request to find instances of DiffractionPlan3 by pk
 	// TODO choose between left/inner join

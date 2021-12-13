@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -41,7 +41,7 @@ import ispyb.server.common.vos.admin.AdminVar3VO;
 @Stateless
 public class AdminVar3ServiceBean implements AdminVar3Service, AdminVar3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(AdminVar3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AdminVar3ServiceBean.class);
 
 	// Generic HQL request to find instances of AdminVar3 by pk
 	private static final String FIND_BY_PK() {

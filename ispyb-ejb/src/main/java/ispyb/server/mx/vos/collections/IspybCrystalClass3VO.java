@@ -28,7 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * IspybCrystalClass3 value object mapping table IspybCrystalClass
@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 @Table(name = "IspybCrystalClass")
 public class IspybCrystalClass3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(IspybCrystalClass3VO.class);
+	private final static Logger LOG = LogManager.getLogger(IspybCrystalClass3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

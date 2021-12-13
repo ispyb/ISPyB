@@ -32,7 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.vos.ISPyBValueObject;
 
@@ -41,7 +41,7 @@ import ispyb.server.common.vos.ISPyBValueObject;
 @Table(name = "PhasingStep")
 public class PhasingStepVO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(PhasingStepVO.class);
+	private final static Logger LOG = LogManager.getLogger(PhasingStepVO.class);
 
 	private static final long serialVersionUID = 1234567901234567890L;
 	

@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -17,7 +17,7 @@ import org.hibernate.criterion.Restrictions;
 @Stateless
 public class SchemaStatusServiceBean implements SchemaStatusService, SchemaStatusServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(SchemaStatusServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(SchemaStatusServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

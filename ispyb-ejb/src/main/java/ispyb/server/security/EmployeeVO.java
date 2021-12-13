@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class EmployeeVO implements Serializable {
 	/**
@@ -30,7 +30,7 @@ public class EmployeeVO implements Serializable {
     */
 	private static final long serialVersionUID = -6489532899167593439L;
 
-	private final static Logger LOG = Logger.getLogger(EmployeeVO.class);
+	private final static Logger LOG = LogManager.getLogger(EmployeeVO.class);
 
 	private final String roomNumber;
 

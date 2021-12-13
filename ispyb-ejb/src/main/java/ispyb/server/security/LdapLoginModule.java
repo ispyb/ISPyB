@@ -52,7 +52,7 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import javax.security.auth.login.LoginException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
@@ -104,7 +104,7 @@ public class LdapLoginModule extends UsernamePasswordLoginModule {
 
 	private static final String LDAP_FACTORY_SOCKET = "socketFactory";
 	
-	private final Logger LOG = Logger.getLogger(LdapLoginModule.class);
+	private final Logger LOG = LogManager.getLogger(LdapLoginModule.class);
 
 	public LdapLoginModule() {
 

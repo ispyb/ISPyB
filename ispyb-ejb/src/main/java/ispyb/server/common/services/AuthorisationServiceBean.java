@@ -26,7 +26,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.common.util.Constants;
 import ispyb.server.common.exceptions.AccessDeniedException;
@@ -48,7 +48,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 @Stateless
 public class AuthorisationServiceBean implements AuthorisationService, AuthorisationServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(AuthorisationServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AuthorisationServiceBean.class);
 
 	@Resource
 	private SessionContext context;

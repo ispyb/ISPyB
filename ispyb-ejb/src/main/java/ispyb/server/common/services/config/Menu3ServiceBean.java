@@ -29,7 +29,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -47,7 +47,7 @@ import ispyb.server.common.vos.config.Menu3VO;
 public class Menu3ServiceBean implements Menu3Service,
 		Menu3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Menu3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Menu3ServiceBean.class);
 	
 
 	// Generic HQL request to find instances of Menu3 by pk

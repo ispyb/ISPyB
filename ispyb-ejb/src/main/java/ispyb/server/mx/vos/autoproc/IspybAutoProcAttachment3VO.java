@@ -27,7 +27,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * IspybAutoProcAttachment3 value object mapping table IspybAutoProcAttachment
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 @Table(name = "IspybAutoProcAttachment")
 public class IspybAutoProcAttachment3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(IspybAutoProcAttachment3VO.class);
+	private final static Logger LOG = LogManager.getLogger(IspybAutoProcAttachment3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

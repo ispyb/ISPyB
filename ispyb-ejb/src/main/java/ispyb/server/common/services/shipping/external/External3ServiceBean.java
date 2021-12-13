@@ -31,7 +31,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -65,7 +65,7 @@ public class External3ServiceBean implements External3Service, External3ServiceL
 
 	
 	 
-	 private final static Logger LOG = Logger.getLogger(External3ServiceBean.class);
+	 private final static Logger LOG = LogManager.getLogger(External3ServiceBean.class);
 
 	 @PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

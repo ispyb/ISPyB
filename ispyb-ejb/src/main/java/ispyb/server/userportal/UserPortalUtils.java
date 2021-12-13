@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,7 +38,7 @@ import ispyb.server.smis.UpdateFromSMIS;
 
 public class UserPortalUtils {
 	
-	private static final Logger LOG = Logger.getLogger(UserPortalUtils.class);
+	private static final Logger LOG = LogManager.getLogger(UserPortalUtils.class);
 
 	
 	private static String jsonSamples = Constants.getProperty("userportal.json.samples");

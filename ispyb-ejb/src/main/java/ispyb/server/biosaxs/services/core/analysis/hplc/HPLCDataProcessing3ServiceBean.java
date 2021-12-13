@@ -39,14 +39,14 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 
 
 @Stateless
 public class HPLCDataProcessing3ServiceBean implements HPLCDataProcessing3Service, HPLCDataProcessing3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger("Analysis3ServiceBean");
+	private final static Logger LOG = LogManager.getLogger("Analysis3ServiceBean");
 	
 	/** The experiment3 service local. */
 	

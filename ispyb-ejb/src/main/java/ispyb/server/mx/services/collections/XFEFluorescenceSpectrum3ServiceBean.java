@@ -33,7 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -41,27 +41,25 @@ import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
- *  This session bean handles ISPyB XFEFluorescenceSpectrum3.
+ * This session bean handles ISPyB XFEFluorescenceSpectrum3.
  * </p>
  */
 @Stateless
-public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpectrum3Service,
-		XFEFluorescenceSpectrum3ServiceLocal {
+public class XFEFluorescenceSpectrum3ServiceBean
+		implements XFEFluorescenceSpectrum3Service, XFEFluorescenceSpectrum3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(XFEFluorescenceSpectrum3ServiceBean.class);
-
+	private final static Logger LOG = LogManager.getLogger(XFEFluorescenceSpectrum3ServiceBean.class);
 
 	// Generic HQL request to find instances of XFEFluorescenceSpectrum3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK() {
-		return "from XFEFluorescenceSpectrum3VO vo "  + "where vo.xfeFluorescenceSpectrumId = :pk";
+		return "from XFEFluorescenceSpectrum3VO vo " + "where vo.xfeFluorescenceSpectrumId = :pk";
 	}
 
 	// Generic HQL request to find all instances of XFEFluorescenceSpectrum3
 	// TODO choose between left/inner join
 	private static final String FIND_ALL() {
-		return "from XFEFluorescenceSpectrum3VO vo " ;
+		return "from XFEFluorescenceSpectrum3VO vo ";
 	}
 
 	@PersistenceContext(unitName = "ispyb_db")
@@ -75,11 +73,12 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 
 	/**
 	 * Create new XFEFluorescenceSpectrum3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
 	public XFEFluorescenceSpectrum3VO create(final XFEFluorescenceSpectrum3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		this.checkAndCompleteData(vo, true);
@@ -89,6 +88,7 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 
 	/**
 	 * Update the XFEFluorescenceSpectrum3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
@@ -102,67 +102,73 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 
 	/**
 	 * Remove the XFEFluorescenceSpectrum3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		XFEFluorescenceSpectrum3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the XFEFluorescenceSpectrum3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final XFEFluorescenceSpectrum3VO vo) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the XFEFluorescenceSpectrum3 value object
 	 */
 	public XFEFluorescenceSpectrum3VO findByPk(final Integer pk) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
-		try{
-			return (XFEFluorescenceSpectrum3VO) entityManager.createQuery(FIND_BY_PK())
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
+		try {
+			return (XFEFluorescenceSpectrum3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
 
-
 	// TODO remove following method if not adequate
 	/**
 	 * Find all XFEFluorescenceSpectrum3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<XFEFluorescenceSpectrum3VO> findAll()
-			throws Exception {
+	public List<XFEFluorescenceSpectrum3VO> findAll() throws Exception {
 
 		List<XFEFluorescenceSpectrum3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
 		return foundEntities;
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove XFEFluorescenceSpectrum3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove
+	 * XFEFluorescenceSpectrum3 entities. If not set rollback only and throw
+	 * AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
-		
+
 		// TODO add an authorization service bean for ISPyB
 //		AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator
 //				.getInstance().getService(
@@ -170,15 +176,15 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 //				autService.checkUserRightToChangeAdminData();
 
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-	public List<XFEFluorescenceSpectrum3VO> findFiltered(final Integer sessionId, final Integer sampleId, final Integer proposalId) throws Exception{
 
-		Session session = (Session)entityManager.getDelegate();
+	@SuppressWarnings("unchecked")
+	public List<XFEFluorescenceSpectrum3VO> findFiltered(final Integer sessionId, final Integer sampleId,
+			final Integer proposalId) throws Exception {
+
+		Session session = (Session) entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(XFEFluorescenceSpectrum3VO.class);
-		
+
 		Criteria subCritSess = crit.createCriteria("sessionVO");
 
 		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // DISTINCT RESULTS !
@@ -186,12 +192,12 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 		if (sessionId != null) {
 			subCritSess.add(Restrictions.eq("sessionId", sessionId));
 		}
-		
+
 		if (proposalId != null) {
 			Criteria subCritProposal = subCritSess.createCriteria("proposalVO");
 			subCritProposal.add(Restrictions.eq("proposalId", proposalId));
 		}
-		
+
 		if (sampleId != null) {
 			Criteria subCritSample = crit.createCriteria("blSampleVO");
 			subCritSample.add(Restrictions.eq("blSampleId", sampleId));
@@ -203,19 +209,15 @@ public class XFEFluorescenceSpectrum3ServiceBean implements XFEFluorescenceSpect
 		return foundEntities;
 	}
 
-
 	/* Private methods ------------------------------------------------------ */
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
 	 */
 	private void checkAndCompleteData(XFEFluorescenceSpectrum3VO vo, boolean create) throws Exception {
 

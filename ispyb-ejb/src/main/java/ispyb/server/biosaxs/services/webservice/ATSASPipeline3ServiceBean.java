@@ -77,7 +77,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -85,7 +85,7 @@ import com.google.gson.reflect.TypeToken;
 
 @Stateless
 public class ATSASPipeline3ServiceBean implements ATSASPipeline3Service, DesySampleChangerConnectorServiceLocal {
-	private final static Logger LOG = Logger.getLogger("ATSASPipeline3ServiceBean");
+	private final static Logger LOG = LogManager.getLogger("ATSASPipeline3ServiceBean");
 
 	/** The entity manager. */
 	@PersistenceContext(unitName = "ispyb_db")

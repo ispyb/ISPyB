@@ -31,7 +31,7 @@ import javax.net.ssl.SSLContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,7 +53,7 @@ import ispyb.server.smis.UpdateFromSMIS;
 
 public class MAXIVWebService implements SMISWebService {
 
-	private static final Logger LOG = Logger.getLogger(UpdateFromSMIS.class);
+	private static final Logger LOG = LogManager.getLogger(UpdateFromSMIS.class);
 	
 	private String serverUrl = "";
 	

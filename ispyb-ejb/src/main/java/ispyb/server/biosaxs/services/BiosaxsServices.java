@@ -56,7 +56,7 @@ import java.util.Map;
 
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,7 +65,7 @@ public class BiosaxsServices {
 
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 
-	private final static Logger LOG = Logger.getLogger("BiosaxsWebServiceActions");
+	private final static Logger LOG = LogManager.getLogger("BiosaxsWebServiceActions");
 
 	private Proposal3Service proposalService;
 

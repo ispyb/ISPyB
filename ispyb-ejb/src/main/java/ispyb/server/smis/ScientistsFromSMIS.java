@@ -21,7 +21,7 @@ package ispyb.server.smis;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 
@@ -37,7 +37,7 @@ import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 public class ScientistsFromSMIS {
 
-	private static final Logger LOG = Logger.getLogger(ScientistsFromSMIS.class);
+	private static final Logger LOG = LogManager.getLogger(ScientistsFromSMIS.class);
 
 	public static String sayHello() {
 		return "Hello";

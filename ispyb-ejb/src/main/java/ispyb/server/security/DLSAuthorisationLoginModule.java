@@ -55,13 +55,13 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 
 public class DLSAuthorisationLoginModule implements LoginModule {
 
-	private final Logger LOG = Logger.getLogger(DLSAuthorisationLoginModule.class);
+	private final Logger LOG = LogManager.getLogger(DLSAuthorisationLoginModule.class);
 
 	// initialize(..) parameters
 	protected Subject subject;

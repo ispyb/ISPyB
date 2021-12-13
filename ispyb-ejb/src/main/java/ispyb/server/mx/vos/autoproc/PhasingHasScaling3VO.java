@@ -34,7 +34,7 @@ import javax.persistence.Table;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * PhasingHasScaling3 value object mapping table Phasing_has_Scaling
@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
 @SqlResultSetMapping(name = "phasingHasScalingNativeQuery", entities = { @EntityResult(entityClass = PhasingHasScaling3VO.class) })
 public class PhasingHasScaling3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(PhasingHasScaling3VO.class);
+	private final static Logger LOG = LogManager.getLogger(PhasingHasScaling3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

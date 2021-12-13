@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
@@ -57,7 +57,7 @@ public class PdfExporterSample {
 
 	DecimalFormat df1 = new DecimalFormat("#####0.0");
 
-	private final static Logger LOG = Logger.getLogger(PdfExporterSample.class);
+	private final static Logger LOG = LogManager.getLogger(PdfExporterSample.class);
 
 	/**
 	 * 

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class FramesReaderFactory extends AbstractReaderFactory {
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-	private final static Logger log = Logger.getLogger(FramesReaderFactory.class);
+	private final static Logger log = LogManager.getLogger(FramesReaderFactory.class);
 	
 	@Override
 	public List<HashMap<String, Object>> getData(List<Integer> idList) throws Exception {

@@ -29,7 +29,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -46,7 +46,7 @@ import ispyb.server.common.vos.config.MenuGroup3VO;
 public class MenuGroup3ServiceBean implements MenuGroup3Service,
 		MenuGroup3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(MenuGroup3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(MenuGroup3ServiceBean.class);
 	
 	// Generic HQL request to find instances of MenuGroup3 by pk
 	// TODO choose between left/inner join

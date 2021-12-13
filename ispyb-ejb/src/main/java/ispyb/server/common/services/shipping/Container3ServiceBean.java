@@ -29,7 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -54,7 +54,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
 @Stateless
 public class Container3ServiceBean implements Container3Service, Container3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Container3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Container3ServiceBean.class);
 	
 	// Generic HQL request to find instances of Container3 by pk
 	// TODO choose between left/inner join

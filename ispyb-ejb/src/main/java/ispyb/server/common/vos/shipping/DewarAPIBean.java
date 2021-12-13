@@ -20,7 +20,7 @@ package ispyb.server.common.vos.shipping;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ public class DewarAPIBean extends Dewar3VO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final static Logger LOG = Logger.getLogger(DewarAPIBean.class);
+	private final static Logger LOG = LogManager.getLogger(DewarAPIBean.class);
 
 	private String parcelName;
 

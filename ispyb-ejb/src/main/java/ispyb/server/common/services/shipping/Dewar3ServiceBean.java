@@ -29,7 +29,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -49,7 +49,7 @@ import ispyb.server.common.vos.shipping.Dewar3VO;
 @Stateless
 public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Dewar3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Dewar3ServiceBean.class);
 
 	public static final String NOT_AT_STORES = "!STORES%";
 

@@ -28,7 +28,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -48,7 +48,7 @@ import ispyb.server.common.vos.proposals.LabContact3VO;
 @Stateless
 public class LabContact3ServiceBean implements LabContact3Service, LabContact3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(LabContact3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(LabContact3ServiceBean.class);
 
 	private final static String HAS_SHIPPING = "SELECT COUNT(*) FROM Shipping "
 			+ "WHERE sendingLabContactId = :labContactId OR returnLabContactId = :labContactId";

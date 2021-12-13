@@ -23,12 +23,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.resteasy.annotations.GZIP;
 
 @Path("/")
 public class SessionRestWebService extends RestWebService {
-	private final static Logger logger = Logger.getLogger(SessionRestWebService.class);
+	private final static Logger logger = LogManager.getLogger(SessionRestWebService.class);
 
 	@RolesAllowed({ "User", "Manager", "Industrial", "Localcontact" })
 	@POST

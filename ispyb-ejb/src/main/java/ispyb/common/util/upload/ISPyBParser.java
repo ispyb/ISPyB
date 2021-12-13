@@ -37,7 +37,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -63,7 +63,7 @@ import ispyb.server.mx.vos.sample.Protein3VO;
  * @author IMB
  */
 public class ISPyBParser extends XLSParser {
-	private final Logger LOG = Logger.getLogger(ISPyBParser.class);
+	private final Logger LOG = LogManager.getLogger(ISPyBParser.class);
 
 	/**
 	 * Creates a new instance of eHTPXXLSParser and initialises the JAXB Object Factory

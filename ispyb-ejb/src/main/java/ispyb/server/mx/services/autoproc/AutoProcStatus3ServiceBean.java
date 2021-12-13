@@ -25,27 +25,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.mx.vos.autoproc.AutoProcStatus3VO;
 
 /**
  * <p>
- *  This session bean handles ISPyB AutoProcStatus3.
+ * This session bean handles ISPyB AutoProcStatus3.
  * </p>
  */
 @Stateless
-public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
-		AutoProcStatus3ServiceLocal {
+public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service, AutoProcStatus3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(AutoProcStatus3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AutoProcStatus3ServiceBean.class);
 
 	// Generic HQL request to find instances of AutoProcStatus3 by pk
 	private static final String FIND_BY_PK() {
-		return "from AutoProcStatus3VO vo "
-				+ "where vo.autoProcStatusId = :pk";
+		return "from AutoProcStatus3VO vo " + "where vo.autoProcStatusId = :pk";
 	}
 
 	// Generic HQL request to find all instances of AutoProcStatus3
@@ -61,6 +58,7 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 
 	/**
 	 * Create new AutoProcStatus3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -75,6 +73,7 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 
 	/**
 	 * Update the AutoProcStatus3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
@@ -88,18 +87,20 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 
 	/**
 	 * Remove the AutoProcStatus3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
 		AutoProcStatus3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the AutoProcStatus3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final AutoProcStatus3VO vo) throws Exception {
@@ -110,7 +111,9 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
 	 * @param pk the primary key
 	 * @return the AutoProcStatus3 value object
 	 */
@@ -118,9 +121,9 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
-		try{
+		try {
 			return (AutoProcStatus3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -136,25 +139,30 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove AutoProcStatus3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove AutoProcStatus3
+	 * entities. If not set rollback only and throw AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
 	}
-	
+
 	/* Private methods ------------------------------------------------------ */
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * 
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
 	 * @exception VOValidateException if data is not correct
 	 */
-	private void checkAndCompleteData(AutoProcStatus3VO vo, boolean create)
-			throws Exception {
+	private void checkAndCompleteData(AutoProcStatus3VO vo, boolean create) throws Exception {
 
 		if (create) {
 			if (vo.getAutoProcStatusId() != null) {
@@ -163,13 +171,12 @@ public class AutoProcStatus3ServiceBean implements AutoProcStatus3Service,
 			}
 		} else {
 			if (vo.getAutoProcStatusId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
+				throw new IllegalArgumentException("Primary key is not set for update!");
 			}
 		}
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
-	
+
 }

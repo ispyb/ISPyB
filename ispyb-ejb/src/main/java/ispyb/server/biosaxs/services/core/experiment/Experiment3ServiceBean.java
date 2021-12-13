@@ -36,7 +36,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
@@ -59,7 +59,7 @@ import ispyb.server.mx.services.ws.rest.WsServiceBean;
 @Stateless
 public class Experiment3ServiceBean  extends WsServiceBean implements Experiment3Service, Experiment3ServiceLocal {
 
-	private final static Logger log = Logger.getLogger(Experiment3ServiceBean.class);
+	private final static Logger log = LogManager.getLogger(Experiment3ServiceBean.class);
 
 	
 	/**

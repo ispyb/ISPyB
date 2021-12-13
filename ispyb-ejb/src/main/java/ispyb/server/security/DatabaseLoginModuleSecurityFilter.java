@@ -64,7 +64,7 @@ import java.util.Map;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.securityfilter.realm.SimpleSecurityRealmBase;
 
 import synchrotron.soleil.sunset.crypto.aes.AES;
@@ -84,7 +84,7 @@ import synchrotron.soleil.sunset.crypto.aes.AES;
  */
 public class DatabaseLoginModuleSecurityFilter extends SimpleSecurityRealmBase {
 	
-	private final Logger LOG = Logger.getLogger(DatabaseLoginModuleSecurityFilter.class);
+	private final Logger LOG = LogManager.getLogger(DatabaseLoginModuleSecurityFilter.class);
 	
 	/**
 	 * debug

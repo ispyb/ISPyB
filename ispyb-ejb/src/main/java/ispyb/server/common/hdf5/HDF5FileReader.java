@@ -31,7 +31,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ncsa.hdf.object.FileFormat;
 import ncsa.hdf.object.Group;
@@ -45,7 +45,7 @@ import ncsa.hdf.object.h5.H5File;
 
 public class HDF5FileReader {
 
-	private final static Logger LOGGER = Logger.getLogger(HDF5FileReader.class);
+	private final static Logger LOGGER = LogManager.getLogger(HDF5FileReader.class);
 	private final String filepath;
 
 	public HDF5FileReader(String HDF5FilePath) {

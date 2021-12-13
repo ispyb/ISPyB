@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -43,7 +43,7 @@ import ispyb.server.mx.vos.autoproc.Phasing3VO;
 @Stateless
 public class Phasing3ServiceBean implements Phasing3Service,Phasing3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Phasing3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Phasing3ServiceBean.class);
 	
 	// Generic HQL request to find instances of Phasing3 by pk
 	// TODO choose between left/inner join

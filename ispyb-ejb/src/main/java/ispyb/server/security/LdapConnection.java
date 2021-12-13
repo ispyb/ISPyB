@@ -39,11 +39,11 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class LdapConnection {
 
-	private final static Logger LOG = Logger.getLogger(LdapConnection.class);
+	private final static Logger LOG = LogManager.getLogger(LdapConnection.class);
 
 	private static final String LDAP_Employee_Identifier = Constants.LDAP_Employee_Identifier;
 

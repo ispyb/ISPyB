@@ -47,7 +47,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import com.google.gson.Gson;
 
@@ -56,7 +56,7 @@ import com.google.gson.Gson;
 @Stateless
 public class PrimaryDataProcessing3ServiceBean implements PrimaryDataProcessing3Service, PrimaryDataProcessing3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger("PrimaryDataProcessing3ServiceBean");
+	private final static Logger LOG = LogManager.getLogger("PrimaryDataProcessing3ServiceBean");
 
 	private static long now = 0;
 	

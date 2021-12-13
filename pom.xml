@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ispyb</groupId>
@@ -40,20 +41,22 @@
 
 	<repositories>
 		<repository>
-			<id>JBoss Repository</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>java.net</id>
 			<url>https://maven.java.net/content/repositories/public/</url>
 		</repository>
+		<repository>
+			<id>JBoss Repository</id>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
 	</repositories>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.15.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -176,29 +179,32 @@
 				</property>
 			</activation>
 		</profile>
-	    <profile>
-     <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
-     <!-- Use this profile for any OpenShift specific customization your app will need. -->
-     <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
-     <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-     <id>openshift</id>
-     <build>
-        <finalName>SampleApp</finalName>
-        <plugins>
-          <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <outputDirectory>target</outputDirectory>
-              		  <warName>ROOT</warName>
-                </configuration>
-            </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+		<profile>
+			<!-- When built in OpenShift the 'openshift' profile will be used when 
+				invoking mvn. -->
+			<!-- Use this profile for any OpenShift specific customization your app 
+				will need. -->
+			<!-- By default that is to put the resulting archive into the 'deployments' 
+				folder. -->
+			<!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
+			<id>openshift</id>
+			<build>
+				<finalName>SampleApp</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+							<outputDirectory>target</outputDirectory>
+							<warName>ROOT</warName>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -222,7 +228,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation processors -->
+			<!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation 
+				processors -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.compiler.plugin}</version>

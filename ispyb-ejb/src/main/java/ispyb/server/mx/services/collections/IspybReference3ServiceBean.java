@@ -18,40 +18,34 @@
  ****************************************************************************************************/
 package ispyb.server.mx.services.collections;
 
-import ispyb.server.common.util.ejb.EJBAccessCallback;
-import ispyb.server.common.util.ejb.EJBAccessTemplate;
-
-import ispyb.server.mx.vos.collections.IspybReference3VO;
-
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import ispyb.server.mx.vos.collections.IspybReference3VO;
 
 /**
  * <p>
- *  This session bean handles ISPyB IspybReference3.
+ * This session bean handles ISPyB IspybReference3.
  * </p>
  */
 @Stateless
-public class IspybReference3ServiceBean implements IspybReference3Service,
-		IspybReference3ServiceLocal {
+public class IspybReference3ServiceBean implements IspybReference3Service, IspybReference3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(IspybReference3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(IspybReference3ServiceBean.class);
 
 	// Generic HQL request to find instances of IspybReference3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK() {
-		return "from IspybReference3VO vo "
-				+ "where vo.referenceId = :pk";
+		return "from IspybReference3VO vo " + "where vo.referenceId = :pk";
 	}
 
 	// Generic HQL request to find all instances of IspybReference3
@@ -71,6 +65,7 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 
 	/**
 	 * Create new IspybReference3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -85,11 +80,12 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 
 	/**
 	 * Update the IspybReference3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
 	public IspybReference3VO update(final IspybReference3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		this.checkAndCompleteData(vo, false);
@@ -98,83 +94,89 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 
 	/**
 	 * Remove the IspybReference3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		IspybReference3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the IspybReference3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final IspybReference3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the IspybReference3 value object
 	 */
 	public IspybReference3VO findByPk(final Integer pk) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		try {
-			return (IspybReference3VO) entityManager
-					.createQuery(FIND_BY_PK())
-					.setParameter("pk", pk).getSingleResult();
+			return (IspybReference3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Find all IspybReference3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<IspybReference3VO> findAll()
-			throws Exception {
-		
-		List<IspybReference3VO> foundEntities = (List<IspybReference3VO>) entityManager.createQuery(
-				FIND_ALL()).getResultList();	
+	public List<IspybReference3VO> findAll() throws Exception {
+
+		List<IspybReference3VO> foundEntities = (List<IspybReference3VO>) entityManager.createQuery(FIND_ALL())
+				.getResultList();
 		return foundEntities;
 	}
 
-
 	/**
-	 * Check if user has access rights to create, change and remove IspybReference3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove IspybReference3
+	 * entities. If not set rollback only and throw AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
-		
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
+
 	}
 
 	/* Private methods ------------------------------------------------------ */
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
-	 * @param vo the data to check
-	 * @param create should be true if the value object is just being created in the DB, this avoids some checks like testing the primary key
+	 * 
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
 	 * @exception VOValidateException if data is not correct
 	 */
-	private void checkAndCompleteData(IspybReference3VO vo, boolean create)
-			throws Exception {
+	private void checkAndCompleteData(IspybReference3VO vo, boolean create) throws Exception {
 
 		if (create) {
 			if (vo.getReferenceId() != null) {
@@ -183,13 +185,12 @@ public class IspybReference3ServiceBean implements IspybReference3Service,
 			}
 		} else {
 			if (vo.getReferenceId() == null) {
-				throw new IllegalArgumentException(
-						"Primary key is not set for update!");
+				throw new IllegalArgumentException("Primary key is not set for update!");
 			}
 		}
 		// check value object
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
-	
+
 }

@@ -34,7 +34,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -142,7 +142,7 @@ public class UploadShipmentUtils {
 	
 	private static String loopType = "Nylon";
 	
-	private static final Logger LOG = Logger.getLogger(UploadShipmentUtils.class);
+	private static final Logger LOG = LogManager.getLogger(UploadShipmentUtils.class);
 
 
 	/**

@@ -32,7 +32,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Utils for connection and statements in database
@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 public class DatabaseUtils {
 	private static DataSource ds = null;
 
-	private static final Logger LOG = Logger.getLogger(DatabaseUtils.class);
+	private static final Logger LOG = LogManager.getLogger(DatabaseUtils.class);
 
 	/**
 	 * close the connection for the specified resultSet, the specified statement and the specified connection

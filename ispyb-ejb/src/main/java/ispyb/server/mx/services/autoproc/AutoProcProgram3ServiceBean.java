@@ -38,19 +38,17 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
- *  This session bean handles ISPyB AutoProcProgram3.
+ * This session bean handles ISPyB AutoProcProgram3.
  * </p>
  */
 @Stateless
-public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
-		AutoProcProgram3ServiceLocal {
+public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service, AutoProcProgram3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(AutoProcProgram3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(AutoProcProgram3ServiceBean.class);
 
 	// Generic HQL request to find instances of AutoProcProgram3 by pk
 	// TODO choose between left/inner join
@@ -65,23 +63,18 @@ public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
 		return "from AutoProcProgram3VO vo " + (fetchAttachment ? "left join fetch vo.attachmentVOs " : "");
 	}
 
-	private static final String FIND_COLLECT_API = 
-			"SELECT c.dataCollectionId "
+	private static final String FIND_COLLECT_API = "SELECT c.dataCollectionId "
 			+ "FROM DataCollection c, AutoProcIntegration api "
-			+ " WHERE c.dataCollectionId = api.dataCollectionId AND  "
-			+ "api.autoProcProgramId = :autoProcProgramId " 
+			+ " WHERE c.dataCollectionId = api.dataCollectionId AND  " + "api.autoProcProgramId = :autoProcProgramId "
 			+ " ORDER BY c.dataCollectionId ASC ";
-	
-	private static final String FIND_COLLECT_AP = 
-			"SELECT c.dataCollectionId "
+
+	private static final String FIND_COLLECT_AP = "SELECT c.dataCollectionId "
 			+ "FROM DataCollection c, AutoProcIntegration api, AutoProcScaling_has_Int apshi, AutoProcScaling aps, AutoProc ap "
 			+ " WHERE c.dataCollectionId = api.dataCollectionId AND  "
 			+ "api.autoProcIntegrationId =  apshi.autoProcIntegrationId AND "
-			+ "apshi.autoProcScalingId =  aps.autoProcScalingId AND "
-			+ "aps.autoProcId =  ap.autoProcId AND "
-			+ "ap.autoProcProgramId = :autoProcProgramId " 
-			+ " ORDER BY c.dataCollectionId ASC ";
-	
+			+ "apshi.autoProcScalingId =  aps.autoProcScalingId AND " + "aps.autoProcId =  ap.autoProcId AND "
+			+ "ap.autoProcProgramId = :autoProcProgramId " + " ORDER BY c.dataCollectionId ASC ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -90,6 +83,7 @@ public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
 
 	/**
 	 * Create new AutoProcProgram3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -103,11 +97,12 @@ public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
 
 	/**
 	 * Update the AutoProcProgram3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
 	public AutoProcProgram3VO update(final AutoProcProgram3VO vo) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		this.checkAndCompleteData(vo, false);
 		return entityManager.merge(vo);
@@ -115,129 +110,138 @@ public class AutoProcProgram3ServiceBean implements AutoProcProgram3Service,
 
 	/**
 	 * Remove the AutoProcProgram3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
-		AutoProcProgram3VO vo = findByPk(pk, false);			
+		AutoProcProgram3VO vo = findByPk(pk, false);
 		delete(vo);
 	}
 
 	/**
 	 * Remove the AutoProcProgram3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final AutoProcProgram3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the AutoProcProgram3 value object
 	 */
-	public AutoProcProgram3VO findByPk(final Integer pk, final boolean withAttachment
-			) throws Exception {
-	
+	public AutoProcProgram3VO findByPk(final Integer pk, final boolean withAttachment) throws Exception {
+
 		checkCreateChangeRemoveAccess();
-		try{
-			return (AutoProcProgram3VO) entityManager.createQuery(FIND_BY_PK(withAttachment))
-					.setParameter("pk", pk).getSingleResult();
-			}catch(NoResultException e){
-				return null;
-			}
+		try {
+			return (AutoProcProgram3VO) entityManager.createQuery(FIND_BY_PK(withAttachment)).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	// TODO remove following method if not adequate
 	/**
 	 * Find all AutoProcProgram3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<AutoProcProgram3VO> findAll(final boolean withAttachment)
-			throws Exception {
-	
+	public List<AutoProcProgram3VO> findAll(final boolean withAttachment) throws Exception {
+
 		List<AutoProcProgram3VO> foundEntities = entityManager.createQuery(FIND_ALL(withAttachment)).getResultList();
 		return foundEntities;
 	}
-	
+
 	/**
-	 * Check if user has access rights to create, change and remove AutoProcProgram3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove AutoProcProgram3
+	 * entities. If not set rollback only and throw AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
 	}
 
 	/**
 	 * Find all dataCollection linked to this autoProcProgramId
+	 * 
 	 * @param autoProcProgramId
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public List<DataCollection3VO> findCollects(final Integer autoProcProgramId) throws Exception{
-		try{
-			Query query1 = entityManager.createNativeQuery(FIND_COLLECT_AP).setParameter("autoProcProgramId", autoProcProgramId);
+	public List<DataCollection3VO> findCollects(final Integer autoProcProgramId) throws Exception {
+		try {
+			Query query1 = entityManager.createNativeQuery(FIND_COLLECT_AP).setParameter("autoProcProgramId",
+					autoProcProgramId);
 			List resultList1 = query1.getResultList();
-			
-			Query query2 = entityManager.createNativeQuery(FIND_COLLECT_API).setParameter("autoProcProgramId", autoProcProgramId);
+
+			Query query2 = entityManager.createNativeQuery(FIND_COLLECT_API).setParameter("autoProcProgramId",
+					autoProcProgramId);
 			List resultList2 = query2.getResultList();
-			
+
 			List results = new ArrayList();
-			if (resultList1 != null){
+			if (resultList1 != null) {
 				results.addAll(resultList1);
 			}
-			if (resultList2 != null){
+			if (resultList2 != null) {
 				results.addAll(resultList2);
 			}
-			
-			List foundEntities =  results;
-			
+
+			List foundEntities = results;
+
 			List<DataCollection3VO> listVOs = null;
-			
-			if (foundEntities != null ){
+
+			if (foundEntities != null) {
 				int nb = foundEntities.size();
-				if (nb > 0){
+				if (nb > 0) {
 					listVOs = new ArrayList<DataCollection3VO>();
 				}
 				Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
-				DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator.getLocalService(DataCollection3Service.class);
+				DataCollection3Service dataCollectionService = (DataCollection3Service) ejb3ServiceLocator
+						.getLocalService(DataCollection3Service.class);
 				for (int i = 0; i < nb; i++) {
 					Integer dataCollectionId = (Integer) foundEntities.get(i);
-					if (dataCollectionId != null){
+					if (dataCollectionId != null) {
 						DataCollection3VO vo = dataCollectionService.findByPk(dataCollectionId, false, false);
 						listVOs.add(vo);
 					}
 				}
-			
-			}return listVOs;
-		}catch(Exception e){
+
+			}
+			return listVOs;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	/* Private methods ------------------------------------------------------ */
 
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
 	 */
 	private void checkAndCompleteData(AutoProcProgram3VO vo, boolean create) throws Exception {
 

@@ -33,7 +33,7 @@ import java.util.Arrays;
 import javax.ejb.FinderException;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import generated.ws.smis.ExpSessionInfoLightVO;
 import generated.ws.smis.InnerScientistVO;
@@ -72,7 +72,7 @@ import ispyb.server.webservice.smis.util.SMISWebServiceGenerator;
 
 public class UpdateFromSMIS {
 
-	private static final Logger LOG = Logger.getLogger(UpdateFromSMIS.class);
+	private static final Logger LOG = LogManager.getLogger(UpdateFromSMIS.class);
 
 	private static final Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 

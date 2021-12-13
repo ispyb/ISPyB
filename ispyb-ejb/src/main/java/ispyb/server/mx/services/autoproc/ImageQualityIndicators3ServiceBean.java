@@ -28,7 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.common.exceptions.AccessDeniedException;
 import ispyb.server.common.util.ejb.EJBAccessCallback;
@@ -39,16 +39,15 @@ import ispyb.server.mx.vos.autoproc.ImageQualityIndicatorsWS3VO;
 
 /**
  * <p>
- *  This session bean handles ISPyB ImageQualityIndicators3.
+ * This session bean handles ISPyB ImageQualityIndicators3.
  * </p>
  */
 @Stateless
-public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicators3Service,
-		ImageQualityIndicators3ServiceLocal {
+public class ImageQualityIndicators3ServiceBean
+		implements ImageQualityIndicators3Service, ImageQualityIndicators3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(ImageQualityIndicators3ServiceBean.class);
-	
+	private final static Logger LOG = LogManager.getLogger(ImageQualityIndicators3ServiceBean.class);
+
 	// Generic HQL request to find instances of ImageQualityIndicators3 by pk
 	// TODO choose between left/inner join
 	private static final String FIND_BY_PK() {
@@ -58,7 +57,7 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	// Generic HQL request to find all instances of ImageQualityIndicators3
 	// TODO choose between left/inner join
 	private static final String FIND_ALL() {
-		return "from ImageQualityIndicators3VO vo " ;
+		return "from ImageQualityIndicators3VO vo ";
 	}
 
 	private static String FIND_BY_DATACOLLECTION_ID = "select * " + " FROM ImageQualityIndicators q, Image i "
@@ -68,7 +67,7 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
-	
+
 	@Resource
 	private SessionContext context;
 
@@ -77,6 +76,7 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 	/**
 	 * Create new ImageQualityIndicators3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -91,6 +91,7 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 	/**
 	 * Update the ImageQualityIndicators3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
@@ -104,18 +105,20 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 	/**
 	 * Remove the ImageQualityIndicators3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 
 		checkCreateChangeRemoveAccess();
 		ImageQualityIndicators3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the ImageQualityIndicators3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final ImageQualityIndicators3VO vo) throws Exception {
@@ -126,54 +129,61 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the ImageQualityIndicators3 value object
 	 */
 	public ImageQualityIndicators3VO findByPk(final Integer pk) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
-		try{
-			return (ImageQualityIndicators3VO) entityManager.createQuery(FIND_BY_PK())
-					.setParameter("pk", pk).getSingleResult();
-			}catch(NoResultException e){
-				return null;
-			}
+		try {
+			return (ImageQualityIndicators3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	// TODO remove following method if not adequate
 	/**
 	 * Find all ImageQualityIndicators3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ImageQualityIndicators3VO> findAll()
-			throws Exception {
+	public List<ImageQualityIndicators3VO> findAll() throws Exception {
 
 		List<ImageQualityIndicators3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
 		return foundEntities;
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove ImageQualityIndicators3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove
+	 * ImageQualityIndicators3 entities. If not set rollback only and throw
+	 * AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
 
-		//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-		//autService.checkUserRightToChangeAdminData();
+		// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+		// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+		// // TODO change method to the one checking the needed access rights
+		// autService.checkUserRightToChangeAdminData();
 	}
-	
+
 	/**
 	 * 
 	 * @param dataCollectionId
 	 * @return
 	 * @throws Exception
 	 */
-	
+
 	public List<ImageQualityIndicators3VO> findByDataCollectionIdDAO(Integer dataCollectionId) {
 		String query = FIND_BY_DATACOLLECTION_ID;
 		List<ImageQualityIndicators3VO> listVOs = this.entityManager
@@ -183,8 +193,8 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 			return null;
 		return listVOs;
 	}
-	
-	public ImageQualityIndicatorsWS3VO[] findForWSByDataCollectionId(final Integer dataCollectionId) throws Exception{
+
+	public ImageQualityIndicatorsWS3VO[] findForWSByDataCollectionId(final Integer dataCollectionId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		EJBAccessCallback callBack = new EJBAccessCallback() {
 
@@ -199,9 +209,10 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 
 		return ret;
 	}
-	
-	private ImageQualityIndicatorsWS3VO[] getWSImageQualityIndicatorsVOs(List<ImageQualityIndicators3VO> entities) throws CloneNotSupportedException {
-		if(entities == null)
+
+	private ImageQualityIndicatorsWS3VO[] getWSImageQualityIndicatorsVOs(List<ImageQualityIndicators3VO> entities)
+			throws CloneNotSupportedException {
+		if (entities == null)
 			return null;
 		List<ImageQualityIndicatorsWS3VO> results = new ArrayList<ImageQualityIndicatorsWS3VO>(entities.size());
 		for (ImageQualityIndicators3VO vo : entities) {
@@ -211,12 +222,13 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 		ImageQualityIndicatorsWS3VO[] tmpResults = new ImageQualityIndicatorsWS3VO[results.size()];
 		return (ImageQualityIndicatorsWS3VO[]) results.toArray(tmpResults);
 	}
-	
-	private ImageQualityIndicatorsWS3VO getWSImageQualityIndicatorsVO(ImageQualityIndicators3VO vo) throws CloneNotSupportedException {
+
+	private ImageQualityIndicatorsWS3VO getWSImageQualityIndicatorsVO(ImageQualityIndicators3VO vo)
+			throws CloneNotSupportedException {
 		ImageQualityIndicators3VO otherVO = getLightImageQualityIndicators3VO(vo);
 		Integer imageId = null;
 		Integer autoProcProgramId = null;
-		imageId =otherVO.getImageVOId();
+		imageId = otherVO.getImageVOId();
 		autoProcProgramId = otherVO.getAutoProcProgramVOId();
 		otherVO.setImageVO(null);
 		otherVO.setAutoProcProgramVO(null);
@@ -225,7 +237,7 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 		wsImageQualityIndicators.setAutoProcProgramId(autoProcProgramId);
 		return wsImageQualityIndicators;
 	}
-	
+
 	/**
 	 * Get all lights entities
 	 * 
@@ -233,12 +245,13 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @return
 	 * @throws CloneNotSupportedException
 	 */
-	private ImageQualityIndicators3VO getLightImageQualityIndicators3VO(ImageQualityIndicators3VO vo) throws CloneNotSupportedException {
+	private ImageQualityIndicators3VO getLightImageQualityIndicators3VO(ImageQualityIndicators3VO vo)
+			throws CloneNotSupportedException {
 		ImageQualityIndicators3VO otherVO = (ImageQualityIndicators3VO) vo.clone();
-		//otherVO.set(null);
+		// otherVO.set(null);
 		return otherVO;
 	}
-	
+
 	/**
 	 * 
 	 * @param imageId
@@ -246,19 +259,19 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ImageQualityIndicators3VO> findByImageId(final Integer imageId) throws Exception{
-		
+	public List<ImageQualityIndicators3VO> findByImageId(final Integer imageId) throws Exception {
+
 		String query = FIND_BY_IMAGE_ID;
 		List<ImageQualityIndicators3VO> listVOs = this.entityManager
 				.createNativeQuery(query, "imageQualityIndicatorsNativeQuery").setParameter("imageId", imageId)
 				.getResultList();
 		if (listVOs == null || listVOs.isEmpty())
 			listVOs = null;
-		
+
 		List<ImageQualityIndicators3VO> foundEntities = listVOs;
 		return foundEntities;
 	}
-	
+
 	/**
 	 * 
 	 * @param dataCollectionId
@@ -266,8 +279,8 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ImageQualityIndicators3VO> findByDataCollectionId(final Integer dataCollectionId) throws Exception{
-		
+	public List<ImageQualityIndicators3VO> findByDataCollectionId(final Integer dataCollectionId) throws Exception {
+
 		List<ImageQualityIndicators3VO> foundEntities = findByDataCollectionIdDAO(dataCollectionId);
 		return foundEntities;
 	}
@@ -277,13 +290,10 @@ public class ImageQualityIndicators3ServiceBean implements ImageQualityIndicator
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
 	 */
 	private void checkAndCompleteData(ImageQualityIndicators3VO vo, boolean create) throws Exception {
 

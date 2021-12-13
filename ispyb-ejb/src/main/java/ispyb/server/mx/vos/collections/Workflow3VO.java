@@ -31,7 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Workflow3 value object mapping table Workflow the resultFilePath contains the
@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 @Table(name = "Workflow")
 public class Workflow3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(Workflow3VO.class);
+	private final static Logger LOG = LogManager.getLogger(Workflow3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and
 	// enter it here

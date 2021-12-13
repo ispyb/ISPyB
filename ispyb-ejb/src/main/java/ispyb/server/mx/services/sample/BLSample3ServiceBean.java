@@ -32,7 +32,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -66,7 +66,7 @@ import ispyb.server.mx.vos.sample.SampleInfo;
 @Stateless
 public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(BLSample3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(BLSample3ServiceBean.class);
 
 	// Generic HQL request to find instances of BLSample3 by pk
 	private static final String FIND_BY_PK(boolean fetchEnergyScan, boolean fetchSubSamples, boolean fetchSampleImages) {

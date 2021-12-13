@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -43,7 +43,7 @@ import ispyb.server.common.vos.shipping.DewarTransportHistory3VO;
 public class DewarTransportHistory3ServiceBean implements DewarTransportHistory3Service,
 		DewarTransportHistory3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DewarTransportHistory3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DewarTransportHistory3ServiceBean.class);
 	// Generic HQL request to find instances of DewarTransportHistory3 by pk
 	private static final String FIND_BY_PK(boolean fetchLink1, boolean fetchLink2) {
 		return "from DewarTransportHistory3VO vo " + (fetchLink1 ? "<inner|left> join fetch vo.link1 " : "")

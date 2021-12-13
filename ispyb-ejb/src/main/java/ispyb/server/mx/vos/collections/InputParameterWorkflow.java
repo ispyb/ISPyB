@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * WorkflowDehydration3 value object mapping table WorkflowDehydration

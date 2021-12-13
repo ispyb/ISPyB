@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import ispyb.common.util.StringUtils;
 import ispyb.server.common.vos.ISPyBValueObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * PhasingStatistics3 value object mapping table PhasingStatistics
@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 @Table(name = "PhasingStatistics")
 public class PhasingStatistics3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(PhasingStatistics3VO.class);
+	private final static Logger LOG = LogManager.getLogger(PhasingStatistics3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

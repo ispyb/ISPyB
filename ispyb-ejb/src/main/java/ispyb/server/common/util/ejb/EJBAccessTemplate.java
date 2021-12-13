@@ -27,7 +27,7 @@ import javax.ejb.SessionContext;
 import javax.naming.NamingException;
 
 import java.nio.file.AccessDeniedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>

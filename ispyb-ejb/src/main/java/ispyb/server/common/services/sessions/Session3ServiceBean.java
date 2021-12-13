@@ -48,7 +48,7 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -71,7 +71,7 @@ import ispyb.server.mx.vos.collections.SessionWS3VO;
 @TransactionTimeout(3600)
 public class Session3ServiceBean implements Session3Service, Session3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Session3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Session3ServiceBean.class);
 	
 	// Generic HQL request to find instances of Session3 by pk
 	private static final String FIND_BY_PK(boolean fetchDataCollectionGroup, boolean fetchEnergyScan, boolean fetchXFESpectrum) {

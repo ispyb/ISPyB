@@ -33,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 
 
@@ -53,7 +53,7 @@ public class BiosaxsZipper {
 
 	private final PrimaryDataProcessing3Service primaryDataProcessing3Service;
 
-	private final static Logger LOG = Logger.getLogger("BiosaxsZipper");
+	private final static Logger LOG = LogManager.getLogger("BiosaxsZipper");
 
 	public BiosaxsZipper(Analysis3Service analysis3Service, AbInitioModelling3Service abInitioModelling3Service, PrimaryDataProcessing3Service primaryDataProcessing3Service) {
 		this.analysis3Service = analysis3Service;

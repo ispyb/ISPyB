@@ -31,12 +31,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 @Stateless
 public class MeasurementToDataCollection3ServiceBean implements MeasurementToDataCollection3Service, MeasurementToDatacollection3ServiceLocal {
 
-	private final static Logger log = Logger.getLogger(MeasurementToDataCollection3ServiceBean.class);
+	private final static Logger log = LogManager.getLogger(MeasurementToDataCollection3ServiceBean.class);
 	
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

@@ -31,7 +31,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class ScreeningRankSet3ServiceBean implements ScreeningRankSet3Service, ScreeningRankSet3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(ScreeningRankSet3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(ScreeningRankSet3ServiceBean.class);
 
 	// Generic HQL request to find instances of ScreeningRankSet3 by pk
 	// TODO choose between left/inner join

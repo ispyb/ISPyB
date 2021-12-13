@@ -14,7 +14,7 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.security.SimpleGroup;
 
 /**
@@ -58,7 +58,7 @@ public class DatabaseLoginModule implements LoginModule {
 		
 	protected transient SimpleGroup userRoles = new SimpleGroup("Roles");
 	
-	private final Logger LOG = Logger.getLogger(DatabaseLoginModule.class);
+	private final Logger LOG = LogManager.getLogger(DatabaseLoginModule.class);
 	
 	public DatabaseLoginModule() {
 		super();

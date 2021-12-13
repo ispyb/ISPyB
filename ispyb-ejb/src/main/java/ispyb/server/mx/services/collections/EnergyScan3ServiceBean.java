@@ -33,7 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -41,16 +41,13 @@ import org.hibernate.criterion.Restrictions;
 
 /**
  * <p>
- *  This session bean handles ISPyB EnergyScan3.
+ * This session bean handles ISPyB EnergyScan3.
  * </p>
  */
 @Stateless
-public class EnergyScan3ServiceBean implements EnergyScan3Service,
-		EnergyScan3ServiceLocal {
+public class EnergyScan3ServiceBean implements EnergyScan3Service, EnergyScan3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(EnergyScan3ServiceBean.class);
-
+	private final static Logger LOG = LogManager.getLogger(EnergyScan3ServiceBean.class);
 
 	// Generic HQL request to find instances of EnergyScan3 by pk
 	// TODO choose between left/inner join
@@ -75,6 +72,7 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 
 	/**
 	 * Create new EnergyScan3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -89,6 +87,7 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 
 	/**
 	 * Update the EnergyScan3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
@@ -102,18 +101,20 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 
 	/**
 	 * Remove the EnergyScan3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		EnergyScan3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the EnergyScan3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final EnergyScan3VO vo) throws Exception {
@@ -124,27 +125,29 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the EnergyScan3 value object
 	 */
 	public EnergyScan3VO findByPk(final Integer pk) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
-		try{
+		try {
 			return (EnergyScan3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
 
-
 	// TODO remove following method if not adequate
 	/**
 	 * Find all EnergyScan3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
@@ -155,9 +158,10 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 		return foundEntities;
 	}
 
-
 	/**
-	 * Check if user has access rights to create, change and remove EnergyScan3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove EnergyScan3
+	 * entities. If not set rollback only and throw AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
@@ -169,11 +173,9 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 
 	}
 
-	
-	
 	@SuppressWarnings("unchecked")
-	public List<EnergyScan3VO> findFiltered(final Integer sessionId , final Integer sampleId) throws Exception{
-	
+	public List<EnergyScan3VO> findFiltered(final Integer sessionId, final Integer sampleId) throws Exception {
+
 		Session session = (Session) this.entityManager.getDelegate();
 
 		Criteria crit = session.createCriteria(EnergyScan3VO.class);
@@ -184,7 +186,7 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 			Criteria subCritSess = crit.createCriteria("sessionVO");
 			subCritSess.add(Restrictions.eq("sessionId", sessionId));
 		}
-		
+
 		if (sampleId != null) {
 			Criteria subCritSample = crit.createCriteria("blSampleVO");
 			subCritSample.add(Restrictions.eq("blSampleId", sampleId));
@@ -201,13 +203,10 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
 	 */
 	private void checkAndCompleteData(EnergyScan3VO vo, boolean create) throws Exception {
 
@@ -225,5 +224,5 @@ public class EnergyScan3ServiceBean implements EnergyScan3Service,
 		vo.checkValues(create);
 		// TODO check primary keys for existence in DB
 	}
-	
+
 }

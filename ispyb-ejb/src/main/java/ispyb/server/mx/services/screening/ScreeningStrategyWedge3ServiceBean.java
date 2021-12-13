@@ -30,7 +30,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 public class ScreeningStrategyWedge3ServiceBean implements ScreeningStrategyWedge3Service,
 		ScreeningStrategyWedge3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(ScreeningStrategyWedge3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(ScreeningStrategyWedge3ServiceBean.class);
 
 	// Generic HQL request to find instances of ScreeningStrategyWedge3 by pk
 	// TODO choose between left/inner join

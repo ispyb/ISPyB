@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -47,7 +47,7 @@ import ispyb.server.mx.vos.collections.DataCollectionGroupWS3VO;
 @Stateless
 public class DataCollectionGroup3ServiceBean implements DataCollectionGroup3Service, DataCollectionGroup3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DataCollectionGroup3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DataCollectionGroup3ServiceBean.class);
 	
 	// Generic HQL request to find instances of DataCollectionGroup3 by pk
 	private static final String FIND_BY_PK(boolean fetchDataCollection, boolean fetchScreening) {

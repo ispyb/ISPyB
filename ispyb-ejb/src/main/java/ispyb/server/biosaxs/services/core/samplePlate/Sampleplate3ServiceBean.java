@@ -30,7 +30,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Home object for domain model class Sampleplate3VO.
@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class Sampleplate3ServiceBean implements Sampleplate3Service, Sampleplate3ServiceLocal {
 
-	private final static Logger log = Logger.getLogger(Sampleplate3ServiceBean.class);
+	private final static Logger log = LogManager.getLogger(Sampleplate3ServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;

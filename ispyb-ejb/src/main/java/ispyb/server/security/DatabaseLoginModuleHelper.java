@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.SimplePrincipal;
 
@@ -27,7 +27,7 @@ import org.jboss.security.SimplePrincipal;
  */
 public class DatabaseLoginModuleHelper {
 
-	private static final Logger LOG = Logger.getLogger(DatabaseLoginModuleHelper.class);
+	private static final Logger LOG = LogManager.getLogger(DatabaseLoginModuleHelper.class);
 	
 	private static StringBuffer fullName;
 	

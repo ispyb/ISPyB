@@ -44,7 +44,7 @@ import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DewarAPIServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DewarAPIServiceBean.class);
 
 	/**
 	 * 

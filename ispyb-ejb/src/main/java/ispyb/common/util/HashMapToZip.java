@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class HashMapToZip {
 	
-	private final static Logger LOG = Logger.getLogger("HashMapToZip");
+	private final static Logger LOG = LogManager.getLogger("HashMapToZip");
 	
 	/**
 	 * 

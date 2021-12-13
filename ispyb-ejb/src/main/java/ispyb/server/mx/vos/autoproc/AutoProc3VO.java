@@ -33,7 +33,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * AutoProc3 value object mapping table AutoProc
@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 @SqlResultSetMapping(name = "autoProcNativeQuery", entities = { @EntityResult(entityClass = AutoProc3VO.class) })
 public class AutoProc3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(AutoProc3VO.class);
+	private final static Logger LOG = LogManager.getLogger(AutoProc3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

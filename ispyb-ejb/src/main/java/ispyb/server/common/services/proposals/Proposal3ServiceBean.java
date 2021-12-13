@@ -34,7 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -103,7 +103,7 @@ public class Proposal3ServiceBean implements Proposal3Service, Proposal3ServiceL
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
-	private final static Logger LOG = Logger.getLogger(Proposal3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Proposal3ServiceBean.class);
 	
 	@EJB
 	private AuthorisationServiceLocal autService;

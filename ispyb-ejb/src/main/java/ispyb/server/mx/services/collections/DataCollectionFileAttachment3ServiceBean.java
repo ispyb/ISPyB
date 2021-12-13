@@ -26,7 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionFileAttachment3VO;
@@ -41,7 +41,7 @@ import ispyb.server.mx.vos.collections.DataCollectionFileAttachment3VO;
 @Stateless
 public class DataCollectionFileAttachment3ServiceBean implements DataCollectionFileAttachment3Service, DataCollectionFileAttachment3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(DataCollectionFileAttachment3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(DataCollectionFileAttachment3ServiceBean.class);
 	
 
 	// Generic HQL request to find instances of DataCollectionFileAttachment3 by pk

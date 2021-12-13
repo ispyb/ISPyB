@@ -35,7 +35,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class BeamLineSetup3ServiceBean implements BeamLineSetup3Service, BeamLineSetup3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(BeamLineSetup3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(BeamLineSetup3ServiceBean.class);
 	
 	// Generic HQL request to find instances of BeamLineSetup by pk
 	// TODO choose between left/inner join

@@ -34,7 +34,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.annotations.OrderBy;
 
 /**
@@ -45,7 +45,7 @@ import org.hibernate.annotations.OrderBy;
 @Table(name = "ScreeningStrategy")
 public class ScreeningStrategy3VO extends ISPyBValueObject implements Cloneable {
 
-	private final static Logger LOG = Logger.getLogger(ScreeningStrategy3VO.class);
+	private final static Logger LOG = LogManager.getLogger(ScreeningStrategy3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

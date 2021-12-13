@@ -44,7 +44,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.SQLQuery;
@@ -64,7 +64,7 @@ import com.google.gson.GsonBuilder;
 @Stateless
 public class Shipping3ServiceBean implements Shipping3Service, Shipping3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Shipping3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Shipping3ServiceBean.class);
 
 	// Generic HQL request to find instances of Shipping3 by pk
 	// TODO choose between left/inner join

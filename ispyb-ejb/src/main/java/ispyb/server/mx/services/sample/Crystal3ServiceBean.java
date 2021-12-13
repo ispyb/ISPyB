@@ -29,7 +29,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import ispyb.server.mx.vos.sample.Crystal3VO;
 
@@ -43,7 +43,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.axis.utils.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -64,7 +64,7 @@ import ispyb.server.mx.services.sample.Crystal3ServiceLocal;
 @Stateless
 public class Crystal3ServiceBean implements Crystal3Service, Crystal3ServiceLocal {
 
-	private final static Logger LOG = Logger.getLogger(Crystal3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(Crystal3ServiceBean.class);
 
 	// Generic HQL request to find instances of Crystal3 by pk
 	// TODO choose between left/inner join

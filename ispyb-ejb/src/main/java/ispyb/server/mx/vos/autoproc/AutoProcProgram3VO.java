@@ -34,7 +34,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * AutoProcProgram3 value object mapping table AutoProcProgram
@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 @Table(name = "AutoProcProgram")
 public class AutoProcProgram3VO extends ISPyBValueObject {
 
-	private final static Logger LOG = Logger.getLogger(AutoProcProgram3VO.class);
+	private final static Logger LOG = LogManager.getLogger(AutoProcProgram3VO.class);
 
 	// generate the serialVersionUID using the 'serialver' tool of java and enter it here
 	// this prevents later invalid class version exceptions when the value object evolves

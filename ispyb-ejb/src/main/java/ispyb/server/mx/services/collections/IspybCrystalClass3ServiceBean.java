@@ -33,19 +33,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * <p>
- *  This session bean handles ISPyB IspybCrystalClass3.
+ * This session bean handles ISPyB IspybCrystalClass3.
  * </p>
  */
 @Stateless
-public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
-		IspybCrystalClass3ServiceLocal {
+public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service, IspybCrystalClass3ServiceLocal {
 
-	private final static Logger LOG = Logger
-			.getLogger(IspybCrystalClass3ServiceBean.class);
+	private final static Logger LOG = LogManager.getLogger(IspybCrystalClass3ServiceBean.class);
 
 	// Generic HQL request to find instances of IspybCrystalClass3 by pk
 	// TODO choose between left/inner join
@@ -56,7 +54,7 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	// Generic HQL request to find all instances of IspybCrystalClass3
 	// TODO choose between left/inner join
 	private static final String FIND_ALL() {
-		return "from IspybCrystalClass3VO vo " ;
+		return "from IspybCrystalClass3VO vo ";
 	}
 
 	@PersistenceContext(unitName = "ispyb_db")
@@ -70,6 +68,7 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 
 	/**
 	 * Create new IspybCrystalClass3.
+	 * 
 	 * @param vo the entity to persist.
 	 * @return the persisted entity.
 	 */
@@ -84,11 +83,12 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 
 	/**
 	 * Update the IspybCrystalClass3 data.
+	 * 
 	 * @param vo the entity data to update.
 	 * @return the updated entity.
 	 */
 	public IspybCrystalClass3VO update(final IspybCrystalClass3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		this.checkAndCompleteData(vo, false);
@@ -97,42 +97,46 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 
 	/**
 	 * Remove the IspybCrystalClass3 from its pk
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
-		
+
 		checkCreateChangeRemoveAccess();
 		IspybCrystalClass3VO vo = findByPk(pk);
-		// TODO Edit this business code				
+		// TODO Edit this business code
 		delete(vo);
 	}
 
 	/**
 	 * Remove the IspybCrystalClass3
+	 * 
 	 * @param vo the entity to remove.
 	 */
 	public void delete(final IspybCrystalClass3VO vo) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
 		entityManager.remove(vo);
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
-	 * @param pk the primary key
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
+	 * 
+	 * @param pk        the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the IspybCrystalClass3 value object
 	 */
 	public IspybCrystalClass3VO findByPk(final Integer pk) throws Exception {
-	
+
 		checkCreateChangeRemoveAccess();
 		// TODO Edit this business code
-		try{
-			return (IspybCrystalClass3VO) entityManager.createQuery(FIND_BY_PK())
-				.setParameter("pk", pk).getSingleResult();
-		}catch(NoResultException e){
+		try {
+			return (IspybCrystalClass3VO) entityManager.createQuery(FIND_BY_PK()).setParameter("pk", pk)
+					.getSingleResult();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -140,19 +144,22 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	// TODO remove following method if not adequate
 	/**
 	 * Find all IspybCrystalClass3s and set linked value objects if necessary
+	 * 
 	 * @param withLink1
 	 * @param withLink2
 	 */
 	@SuppressWarnings("unchecked")
-	public List<IspybCrystalClass3VO> findAll()
-			throws Exception {
-		
+	public List<IspybCrystalClass3VO> findAll() throws Exception {
+
 		List<IspybCrystalClass3VO> foundEntities = entityManager.createQuery(FIND_ALL()).getResultList();
 		return foundEntities;
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove IspybCrystalClass3 entities. If not set rollback only and throw AccessDeniedException
+	 * Check if user has access rights to create, change and remove
+	 * IspybCrystalClass3 entities. If not set rollback only and throw
+	 * AccessDeniedException
+	 * 
 	 * @throws AccessDeniedException
 	 */
 	private void checkCreateChangeRemoveAccess() throws Exception {
@@ -160,8 +167,10 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 		template.execute(new EJBAccessCallback() {
 
 			public Object doInEJBAccess(Object parent) throws Exception {
-				//AuthorizationServiceLocal autService = (AuthorizationServiceLocal) ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);			// TODO change method to the one checking the needed access rights
-				//autService.checkUserRightToChangeAdminData();
+				// AuthorizationServiceLocal autService = (AuthorizationServiceLocal)
+				// ServiceLocator.getInstance().getService(AuthorizationServiceLocalHome.class);
+				// // TODO change method to the one checking the needed access rights
+				// autService.checkUserRightToChangeAdminData();
 				return null;
 			}
 
@@ -173,13 +182,10 @@ public class IspybCrystalClass3ServiceBean implements IspybCrystalClass3Service,
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
-	 * @param vo
-	 *            the data to check
-	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
-	 * @exception VOValidateException
-	 *                if data is not correct
+	 * @param vo     the data to check
+	 * @param create should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like testing the primary key
+	 * @exception VOValidateException if data is not correct
 	 */
 	private void checkAndCompleteData(IspybCrystalClass3VO vo, boolean create) throws Exception {
 
