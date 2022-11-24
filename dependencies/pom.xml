@@ -43,7 +43,7 @@
 							<artifactId>ispyb-userportal-gen</artifactId>
 							<version>1.8</version>
 							<packaging>jar</packaging>
-							<file>${basedir}/../dependencies/ispyb-userportal-gen-1.8.jar</file>
+							<file>${basedir}/../dependencies/ispyb-WSclient-gen-all-1.8.jar</file>
 						</configuration>
 					</execution>
 					<execution>
