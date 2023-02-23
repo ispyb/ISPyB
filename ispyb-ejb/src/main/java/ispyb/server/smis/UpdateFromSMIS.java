@@ -170,8 +170,9 @@ public class UpdateFromSMIS {
 					} else {
 						LOG.debug("proposal with pk = "+ pk.toString() + " is an old one, not updated ");
 					}
-				} else
+				} else {
 					updateThisProposalFromSMISPk(pk);
+				}
 
 			}
 		}
@@ -323,7 +324,11 @@ public class UpdateFromSMIS {
 			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk, true /* only with OpMode(checked by Safety) */);
 			labContacts_ = sws.findParticipantsForProposal(pk);
 			
-			updateThisProposalFromLists(smisSessions_,mainProposers_,smisSamples_,labContacts_,pk);	
+			try {
+				updateThisProposalFromLists(smisSessions_, mainProposers_, smisSamples_, labContacts_, pk);
+			}catch (Exception e) {
+				LOG.error("Error while updating the proposal pk="+pk, e);
+			}
 		}
 
 		else {
@@ -1330,7 +1335,7 @@ public class UpdateFromSMIS {
 			persv.setFaxNumber(faxNumber);
 			persv.setSiteId(siteId);
 			persv.setLogin(login);
-			
+
 			persv = person.merge(persv);
 			persId = persv.getPersonId();
 
