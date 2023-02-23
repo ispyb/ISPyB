@@ -69,7 +69,7 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 			+ "WHERE p.personId = pro.personId AND pro.proposalCode like :code AND pro.proposalNumber = :number ";
 	
 	private static String FIND_BY_LOGIN = SELECT_PERSON + " FROM Person p "
-			+ "WHERE p.login = :login ";
+			+ "WHERE p.login = :login ORDER BY p.personId DESC";
 	
 	private static String FIND_BY_PROTEIN = SELECT_PERSON + " FROM Person p, Protein prot "
 			+ "WHERE p.personId = prot.personId AND prot.proposalId = :proposalId AND prot.acronym = :acronym ";
@@ -238,8 +238,11 @@ public class Person3ServiceBean implements Person3Service, Person3ServiceLocal {
 	public Person3VO findByLogin(String login) {
 		String query = FIND_BY_LOGIN;
 		try {
-			return (Person3VO) this.entityManager.createNativeQuery(query, "personNativeQuery")
-				.setParameter("login", login).getSingleResult();
+			List<Person3VO> listVOs =  this.entityManager.createNativeQuery(query, "personNativeQuery")
+				.setParameter("login", login).getResultList();
+			if (listVOs == null || listVOs.isEmpty())
+				return null;
+			return (Person3VO) listVOs.toArray()[0];
 		} catch (NoResultException e) {
 			return null;
 		}
