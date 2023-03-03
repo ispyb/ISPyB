@@ -62,7 +62,7 @@ public class MAXIVWebService implements SMISWebService {
 			this.serverUrl = Constants.getProperty("userportal.url");
 		}
 	}
-	
+
 	public List<Long> findNewMXProposalPKs_OLD (String startDateStr, String endDateStr) {
 		List<Long> pks = new ArrayList<Long>();
 
@@ -264,7 +264,12 @@ public class MAXIVWebService implements SMISWebService {
 		
 		return participants;
 	}
-	
+
+	@Override
+	public String createUserName(Long aLong) {
+		return null;
+	}
+
 	public List<ExpSessionInfoLightVO> findRecentSessionsInfoLightForProposalPkAndDays(Long propId, Integer days){
 		List<ExpSessionInfoLightVO> sessions = new ArrayList<ExpSessionInfoLightVO>();
 		init();
@@ -828,6 +833,11 @@ public class MAXIVWebService implements SMISWebService {
 	}
 
 	@Override
+	public List<UserDataAccessLightVO> getAclsForSession(String s, Integer integer, String s1, Calendar calendar) {
+		return null;
+	}
+
+	@Override
 	public List<ExpSessionInfoLightVO> findSessionsInfoLightInRange(Calendar arg0, Calendar arg1)
 			throws FinderException_Exception {
 		// TODO Auto-generated method stub
@@ -849,6 +859,11 @@ public class MAXIVWebService implements SMISWebService {
 	@Override
 	public List<UserDataAccessLightVO> getAclsWithAllDelays(double arg0, double arg1, double arg2, double arg3) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserDataAccessLightVO> getAclsForProposal(String s, Integer integer) {
 		return null;
 	}
 

@@ -180,7 +180,7 @@
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-userportal-gen</artifactId>
-			<version>1.8</version>
+			<version>1.9</version>
 		</dependency>
 		
 		<dependency>
@@ -323,8 +323,8 @@
 			
 			<ispyb.authorisation.active>true</ispyb.authorisation.active>
 			
-			<userportal.webservices.url>https://smis.esrf.fr/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url> 
-  			
+			<userportal.webservices.url>https://smis.esrf.fr/SMISServer-ejb3/SMISWebService/SMISWebServiceBean?wsdl</userportal.webservices.url>
+
 
   			 <ispyb.userportal.link>SMIS</ispyb.userportal.link>  
   			 <ispyb.upload.folder.json>/data/pyarch/pdb/json/</ispyb.upload.folder.json>

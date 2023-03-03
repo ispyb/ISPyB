@@ -228,16 +228,23 @@ public class CrystalRestWebService extends MXRestWebService {
 				
 		try {
 			if (form.getInputStream() != null){
-				String filePath = this.copyFileToDisk(proposal, form);
-				logger.info("saveStructure. Copying to disk. filepath=" + filePath);
+				String filePath = null;
+				if (! form.getFileName().equals("") ) {
+					filePath = this.copyFileToDisk(proposal, form);
+					logger.info("saveStructure. Copying to disk. filepath=" + filePath);
+				}
 				Crystal3VO crystal = this.getCrystal3Service().findByPk(crystalId, true);
 				if (crystal != null){
 					Structure3VO structure = new Structure3VO();
 					structure.setCrystalId(crystalId);
 					structure.setType(form.getType());
 					structure.setGroupName(form.getGroupName());
-					structure.setFilePath(filePath);
-					structure.setName(new File(filePath).getName());					
+					if (filePath != null) {
+						structure.setFilePath(filePath);
+						structure.setName(new File(filePath).getName());
+					}
+					structure.setMultiplicity(form.getMultiplicity());
+					structure.setUniprotId(form.getUniprotId());
 					this.getExperiment3Service().saveStructure(structure);
 				}
 				else{
