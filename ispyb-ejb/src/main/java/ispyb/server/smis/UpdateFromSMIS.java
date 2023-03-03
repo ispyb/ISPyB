@@ -170,8 +170,9 @@ public class UpdateFromSMIS {
 					} else {
 						LOG.debug("proposal with pk = "+ pk.toString() + " is an old one, not updated ");
 					}
-				} else
+				} else {
 					updateThisProposalFromSMISPk(pk);
+				}
 
 			}
 		}
@@ -323,7 +324,11 @@ public class UpdateFromSMIS {
 			smisSamples_ = sws.findSamplesheetInfoLightForProposalPk(pk, true /* only with OpMode(checked by Safety) */);
 			labContacts_ = sws.findParticipantsForProposal(pk);
 			
-			updateThisProposalFromLists(smisSessions_,mainProposers_,smisSamples_,labContacts_,pk);	
+			try {
+				updateThisProposalFromLists(smisSessions_, mainProposers_, smisSamples_, labContacts_, pk);
+			}catch (Exception e) {
+				LOG.error("Error while updating the proposal pk="+pk, e);
+			}
 		}
 
 		else {
@@ -548,12 +553,12 @@ public class UpdateFromSMIS {
 				String siteId = null;
 				Person3VO currentPerson = null;
 				// try first to use siteID: better for unicity, but only for people having a siteId, later use personUUID
-				if (labContacts[i].getSiteId() != null) {
-					siteId = labContacts[i].getSiteId().toString();
+				if (labContacts[i].getScientistSiteId() != null) {
+					siteId = labContacts[i].getScientistSiteId().toString();
 					currentPerson = person.findBySiteId(siteId);
 				} else {
 					if (Constants.SITE_IS_ESRF()) {
-						currentPerson = person.findByLogin(labContacts[i].getUserName());
+						currentPerson = person.findByLogin(labContacts[i].getScientistUserName());
 					} else {
 						currentPerson = person.findByLogin(labContacts[i].getBllogin());
 					}
@@ -663,7 +668,7 @@ public class UpdateFromSMIS {
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-			LOG.debug("Bllogin : " + mainProp.getBllogin() + " - username = " + mainProp.getUserName());
+			LOG.debug("Bllogin : " + mainProp.getBllogin() + " - username = " + mainProp.getScientistUserName());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 			
@@ -692,10 +697,10 @@ public class UpdateFromSMIS {
 				String givenName = mainProp.getScientistFirstName();
 				String siteId = null;
 				String email = mainProp.getScientistEmail();
-				String username = mainProp.getUserName();
+				String username = mainProp.getScientistUserName();
 				
 				if (Constants.SITE_IS_ESRF() ) {					
-					siteId = (mainProp.getSiteId() != null) ? mainProp.getSiteId().toString() : null;					
+					siteId = (mainProp.getScientistSiteId() != null) ? mainProp.getScientistSiteId().toString() : null;
 					
 					//TODO clean this method later when the username will be mandatory and filled for everybody
 					
@@ -743,7 +748,7 @@ public class UpdateFromSMIS {
 						newPerson.setGivenName(mainProp.getScientistFirstName());
 						newPerson.setFamilyName(mainProp.getScientistName());
 						newPerson.setLogin(mainProp.getBllogin());
-						newPerson.setSiteId(mainProp.getSiteId() != null ? mainProp.getSiteId().toString() : null);
+						newPerson.setSiteId(mainProp.getScientistSiteId() != null ? mainProp.getScientistSiteId().toString() : null);
 						newPerson.setLaboratoryVO(currentPerson.getLaboratoryVO());
 
 						newPerson = person.merge(newPerson);
@@ -1259,10 +1264,10 @@ public class UpdateFromSMIS {
 		String title = mainProp.getScientistTitle();
 		String faxNumber = mainProp.getScientistFax();
 		String siteId = null;
-		if (Constants.SITE_IS_ESRF() && mainProp.getSiteId()!= null) {
-				siteId = mainProp.getSiteId().toString();
+		if (Constants.SITE_IS_ESRF() && mainProp.getScientistSiteId()!= null) {
+				siteId = mainProp.getScientistSiteId().toString();
 		}
-		String login = (Constants.SITE_IS_ESRF() ) ? mainProp.getUserName() : mainProp.getBllogin();
+		String login = (Constants.SITE_IS_ESRF() ) ? mainProp.getScientistUserName() : mainProp.getBllogin();
 
 		// labo
 		Integer labId;
@@ -1330,7 +1335,7 @@ public class UpdateFromSMIS {
 			persv.setFaxNumber(faxNumber);
 			persv.setSiteId(siteId);
 			persv.setLogin(login);
-			
+
 			persv = person.merge(persv);
 			persId = persv.getPersonId();
 
