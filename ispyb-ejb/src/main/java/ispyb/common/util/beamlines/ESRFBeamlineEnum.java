@@ -28,6 +28,9 @@ import java.util.List;
  * 
  */
 public enum ESRFBeamlineEnum {
+	BM07("BM07", "bm07", new String[] { "BM07" },
+			"<font style='color:#6888A8;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2323</font></font>",
+			null, false, false, false), 
 	ID14_1("ID14-1", "id14eh1", new String[] { "ID14 1" },
 			"<font style='color:#6888A8;font-size:90%'>+3347688<font style='color:#0000FF;font-weight:bold;'>2323</font></font>",
 			null, false, false, false), 
