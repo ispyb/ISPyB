@@ -144,6 +144,20 @@
 							<file>${basedir}/../dependencies/securityfilter.jar</file>
 						</configuration>
 					</execution>
+					<execution>
+						<id>install-commons-fileupload</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>tomcat</groupId>
+							<artifactId>commons-fileupload</artifactId>
+							<version>1.0-5.5.23</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/../dependencies/commons-fileupload-1.0-5.5.23.jar</file>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>

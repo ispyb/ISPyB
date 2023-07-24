@@ -94,7 +94,7 @@ public class UpdateFromSMISWebService extends ParentWebService{
 			if (adminVar != null)
 				nbDays = new Integer(adminVar.getValue());
 			
-			cal.roll(Calendar.DATE, -nbDays);			
+			cal.add(Calendar.DATE, -nbDays);
 			Date startDate = cal.getTime();
 
 			SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
