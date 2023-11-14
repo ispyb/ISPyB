@@ -70,6 +70,11 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
 			"fileName like '%_noanom_aimless%' ";
 
+	private static final String FIND_AUTOPROC_AIMLESS = "SELECT * " +
+			"FROM AutoProcProgramAttachment  " +
+			"WHERE  autoProcProgramId = :autoProcProgramId AND " +
+			"fileName like '%_aimless%' ";
+
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
 
@@ -198,6 +203,25 @@ public class AutoProcProgramAttachment3ServiceBean implements AutoProcProgramAtt
 	public List<AutoProcProgramAttachment3VO> findNoanomCorrect(final Integer autoProcProgramId) throws Exception {
 
 		String query = FIND_AUTOPROC_NOANOM_AIMLESS ;
+		try{
+
+			List<AutoProcProgramAttachment3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcProgramAttachmentNativeQuery")
+					.setParameter("autoProcProgramId", autoProcProgramId).getResultList();
+			return listVOs;
+		}catch(Exception e){
+			return null;
+		}
+	}
+
+	/**
+	 * find anom correct files attachments
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<AutoProcProgramAttachment3VO> findAimless(final Integer autoProcProgramId) throws Exception {
+
+		String query = FIND_AUTOPROC_AIMLESS ;
 		try{
 
 			List<AutoProcProgramAttachment3VO> listVOs = this.entityManager.createNativeQuery(query, "autoProcProgramAttachmentNativeQuery")

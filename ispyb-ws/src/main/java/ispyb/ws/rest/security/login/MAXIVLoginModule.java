@@ -38,8 +38,11 @@ public class MAXIVLoginModule {
         env.put("java.naming.security.authentication", "simple");
         //env.put("java.naming.provider.url", "url");
         String userDN = principalDNPrefix + username;
-        env.setProperty("java.naming.security.principal", userDN);
+        String userDomain = username +"@maxlab.lu.se";
+        //env.setProperty("java.naming.security.principal", userDN);
+        env.put("java.naming.security.principal", userDomain);
         env.put("java.naming.security.credentials", password);
+
 
         return env;
     }
