@@ -102,7 +102,6 @@ public class Dewar3ServiceBean implements Dewar3Service, Dewar3ServiceLocal {
 		this.checkAndCompleteData(vo, true);
 		this.entityManager.persist(vo);
 
-		LOG.info("create Dewar");
 		// generate and add the bar code to the vo
 		if (Constants.SITE_IS_ESRF()) {
 			vo.initBarcode();
