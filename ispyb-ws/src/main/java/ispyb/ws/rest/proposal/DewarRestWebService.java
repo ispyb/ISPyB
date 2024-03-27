@@ -492,7 +492,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_sendingLaboratoryName",
 				sendingLaboratory.getName());
 		fieldNamesAndValues.put("TF_sendingLaboratoryAddress",
-				StringUtils.breakString(sendingLaboratory.getAddress(), 30));
+				sendingLaboratory.getAddress() + " "  + sendingLaboratory.getCity());
 
 		fieldNamesAndValues.put(
 				"TF_returnLabContactName",
@@ -514,7 +514,7 @@ public class DewarRestWebService extends RestWebService {
 		fieldNamesAndValues.put("TF_returnLaboratoryName",
 				returnLaboratory.getName());
 		fieldNamesAndValues.put("TF_returnLaboratoryAddress",
-				StringUtils.breakString(returnLaboratory.getAddress(), 30));
+				returnLaboratory.getAddress() + " "  + returnLaboratory.getCity());
 
 		// default courier company (only if exists)
 		String defaultCourrierCompany = "unknown";

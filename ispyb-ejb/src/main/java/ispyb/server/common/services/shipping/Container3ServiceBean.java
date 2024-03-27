@@ -411,7 +411,9 @@ public class Container3ServiceBean implements Container3Service, Container3Servi
 						/** Creating dewar **/
 						LOG.info(String.format("Creating dewar with code=%s. code=%s type=%s id=%s", newDewar.getCode(), newDewar.getCode(), newDewar.getType(), newDewar.getDewarId()));
 						newDewar = this.entityManager.merge(newDewar);
-						LOG.info(String.format("Created dewar with code=%s. code=%s type=%s id=%s", newDewar.getCode(), newDewar.getCode(), newDewar.getType(), newDewar.getDewarId()));
+						newDewar.initBarcode();
+						this.entityManager.merge(newDewar);
+						LOG.info(String.format("Created dewar with code=%s. code=%s type=%s id=%s barcode=%s", newDewar.getCode(), newDewar.getCode(), newDewar.getType(), newDewar.getDewarId(), newDewar.getBarCode()));
 						
 						
 						/** Creating containers for the new dewar **/

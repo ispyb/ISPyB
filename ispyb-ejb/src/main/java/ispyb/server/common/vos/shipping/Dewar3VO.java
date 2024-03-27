@@ -19,6 +19,7 @@
 
 package ispyb.server.common.vos.shipping;
 
+import ispyb.common.util.Constants;
 import ispyb.server.common.vos.ISPyBValueObject;
 import ispyb.server.mx.vos.collections.Session3VO;
 
@@ -384,6 +385,16 @@ public class Dewar3VO extends ISPyBValueObject implements Cloneable {
 
 	public void setSessionVO(Session3VO sessionVO) {
 		this.sessionVO = sessionVO;
+	}
+
+	public void initBarcode(){
+		if (Constants.SITE_IS_ESRF() && dewarId != null) {
+			String barCode = "ESRF";
+			if (getDewarId() < 1000000)
+				barCode = barCode + "0";
+			barCode = barCode + getDewarId().toString();
+			setBarCode(barCode);
+		}
 	}
 
 }
