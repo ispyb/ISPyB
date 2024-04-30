@@ -119,7 +119,7 @@ public final class Constants {
 	/*
 	 * Ispyb values
 	 */
-	public static final String ISPYB_URL = "http://ispyb.esrf.fr/";
+	public static final String ISPYB_URL = "https://exi.esrf.fr/";
 
 	public static final String ISPYB_URL_HELP = "ISPYB from outside the firewall";
 
