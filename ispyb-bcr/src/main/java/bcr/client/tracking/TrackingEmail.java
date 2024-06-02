@@ -136,7 +136,7 @@ public class TrackingEmail {
 
 
 				// Email subject
-				String emailSubject = "ESRF - Parcel received - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
+				String emailSubject = "ESRF - Samples received - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
 						+ parcelName;
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
@@ -145,10 +145,10 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has been received by the ESRF on " + formatedDateTime + " and will be dispatched to beamline <B>"
-						+ beamLineName + "</B>." + "<BR>" + "<BR>You can check its location at anytime via <A title='"
-						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "ISPyB" + "</A>." + "<BR>"
-						+ "<BR>Don't hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
+						+ "has been received by the ESRF on " + formatedDateTime + " and will be dispatched to the <B>" + beamLineName + "</B>. beamline "
+						+  "<BR>" + "<BR>You can check its location at anytime via <A title='"
+						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or  <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
+						+ "<BR>Please do not hesitate to contact your local contact for any questions related to your samples or <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> or transport and customs issues."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
@@ -225,13 +225,11 @@ public class TrackingEmail {
 					emailTo = sendingLabContactEmail;
 					emailCc = emailMxInd;
 					emailReply = emailMxInd;
-					emailSignature = "The MXpress team";
 				} else {
 					// Other proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = "";
 					emailReply = emailStores;
-					emailSignature = "The ESRF stores";
 				}
 				
 				// Email addresses on testing
@@ -241,9 +239,9 @@ public class TrackingEmail {
 					emailCc = "";
 				}
 
-
+				emailSignature = "The " + location + " team ";
 				// Email subject
-				String emailSubject = "ESRF - Parcel dispatched to beamline - " + proposalName + " / " + startDateStr + " / "
+				String emailSubject = "ESRF - Samples at beamline - " + proposalName + " / " + startDateStr + " / "
 						+ shippingName + " / " + parcelName;
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
@@ -252,10 +250,10 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has been dispatched to beamline <B>" + location + "</B>." + "<BR>"
+						+ "has been dispatched to <B>" + location + " </B> beamline.<BR>"
 						+ "<BR>You can check its location at anytime via <A title='" + Constants.ISPYB_URL_HELP + "' href='"
-						+ Constants.ISPYB_URL + "'>" + "ISPyB" + "</A>." + "<BR>"
-						+ "<BR>Don't hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
+						+ Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
+						+ "<BR>For any question regarding your samples or your session do not hesitate to contact your local contact."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
@@ -389,19 +387,31 @@ public class TrackingEmail {
 
 
 				// Email subject
-				String emailSubject = "ESRF - Parcel ready to be picked up - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
+				String emailSubject = "ESRF  – Samples on hold at stores: return documents needed or awaiting pick up by your transporter - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
 						+ parcelName;
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
 				String formatedDateTime = dateFormat.format(dateTime);
 
+				String additionalInfo ="<UL>" +
+						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto" + emailStores + "'>"+emailStores+"+</A> " +
+						".</LI>" +
+						"<LI> If you use another courier company, please organise the pick up and <B>make sure the transporter/forwarder comes with all the required information to identify the parcel/dewar(s) efficiently:</B>" +
+						"<UL><LI><B>Consignee company name</B></LI>" +
+						"<LI><B>Parcel/dewar(s) name or ESRF Barcode</B></LI>" +
+						"</UL>" +
+						".</LI>" +
+						"</UL>";
+				String starInfo = "<B><sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.</B>"
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has been sent back to the stores on " + formatedDateTime + " and is ready to be picked up by your courier company." + "<BR>" 
+						+ "is on hold at the stores since " + formatedDateTime + "." + "<BR>"
+						+ "<BR>" + additionalInfo + "<BR>"
+						+ "<BR>" +starInfo + "<BR>"
 						+ "<BR>You can check its location at anytime via <A title='"
-						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "ISPyB" + "</A>." + "<BR>"
-						+ "<BR>Don't hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
+						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
+						+ "<BR>Please do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
@@ -511,7 +521,7 @@ public class TrackingEmail {
 				}
 
 				// Format message
-				String emailSubject = "ESRF - Parcel sent - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
+				String emailSubject = "ESRF - Samples sent back to you - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
 						+ parcelName;
 
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -524,8 +534,8 @@ public class TrackingEmail {
 						+ trackingLink + "</B>) " + "on " + formatedDateTime + "."
 						+ "<BR>"
 						// + courierLink
-						+ "<BR>Don't hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> "
-						+ "if you encounter problems with its transport." + "<BR><BR>Best regards" + "<BR><BR>" + emailSignature
+						+ "<BR>For transport and customs issues do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> "
+						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature
 						+ "</FONT>";
 
 				// Send email

@@ -110,7 +110,7 @@ public class SendMailUtils {
 			boolean isHtml) throws MessagingException {
 		
 		if (replyTo == null)
-			replyTo = "dewar-stores@esrf.fr";
+			replyTo = "sampletransport@esrf.fr";
 				
 				
 		if (from == null)
