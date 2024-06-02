@@ -129,6 +129,8 @@ public final class Constants {
 	public static final String RETURN_LOCATION = "STORES-OUT";
 
 	public static final String PROPOSAL_CODE_FX = "FX";
+	public static final String PROPOSAL_CODE_IX = "IX";
+	public static final String PROPOSAL_CODE_OA = "OA";
 
 	/*
 	 * Misc

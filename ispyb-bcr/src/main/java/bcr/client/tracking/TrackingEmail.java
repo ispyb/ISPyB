@@ -32,6 +32,10 @@ public class TrackingEmail {
 	public TrackingEmail() {
 	}
 
+
+	public static boolean isIndustrial(String proposalCode) {
+		return proposalCode.equals(Constants.PROPOSAL_CODE_FX) || proposalCode.equals(Constants.PROPOSAL_CODE_IX) || proposalCode.equals(Constants.PROPOSAL_CODE_OA);
+	}
 	/**
 	 * @param cc
 	 * @param dewarBarCode
@@ -109,7 +113,7 @@ public class TrackingEmail {
 				}
 
 				// Customize email depending on proposal type
-				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
+				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = emailMxInd;
@@ -220,7 +224,7 @@ public class TrackingEmail {
 
 
 				// Customize email depending on proposal type
-				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
+				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = emailMxInd;
@@ -359,7 +363,7 @@ public class TrackingEmail {
 				}
 
 				// Customize email depending on proposal type
-				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
+				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = emailMxInd;
@@ -482,7 +486,7 @@ public class TrackingEmail {
 					startDateStr = "unknown";
 
 				// Customize email depending on proposal type
-				if (proposalCode.equals(Constants.PROPOSAL_CODE_FX)) {
+				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = returnLabContactEmail;
 					emailCc = emailMxInd;
