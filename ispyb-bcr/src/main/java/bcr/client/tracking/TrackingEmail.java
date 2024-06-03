@@ -37,7 +37,9 @@ public class TrackingEmail {
 		return proposalCode.equals(Constants.PROPOSAL_CODE_FX) || proposalCode.equals(Constants.PROPOSAL_CODE_IX) || proposalCode.equals(Constants.PROPOSAL_CODE_OA);
 	}
 	/**
-	 * @param cc
+	 * @param inTest
+	 * @param emailStores
+	 * @param emailMxInd
 	 * @param dewarBarCode
 	 * @param dateTime
 	 * @param location
@@ -46,7 +48,7 @@ public class TrackingEmail {
 	public static boolean sendArrivalEmailToLabContact(boolean inTest, String emailStores, String emailMxInd, String dewarBarCode,
 			Timestamp dateTime, String location) throws Exception {
 
-		LOG.debug("Dewar Tracking / sendArrivalEmailToLabContact for dewar barcode "+dewarBarCode);
+		LOG.debug("Dewar Tracking / sendArrivalEmailToLabContact for dewar barcode " + dewarBarCode);
 
 		try {
 			// Get dewar info
@@ -120,7 +122,7 @@ public class TrackingEmail {
 					if (emailLocalContact != null && !emailLocalContact.equals(""))
 						emailCc += "," + emailLocalContact;
 					emailReply = emailMxInd;
-					emailSignature = "The MXpress team";
+					emailSignature = "The SB group";
 				} else {
 					// Other proposals
 					emailTo = sendingLabContactEmail;
@@ -370,7 +372,7 @@ public class TrackingEmail {
 					if (emailLocalContact != null && !emailLocalContact.equals(""))
 						emailCc += "," + emailLocalContact;
 					emailReply = emailMxInd;
-					emailSignature = "The MXpress team";
+					emailSignature = "The SB group";
 				} else {
 					// Other proposals
 					emailTo = sendingLabContactEmail;
@@ -397,8 +399,8 @@ public class TrackingEmail {
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
 				String formatedDateTime = dateFormat.format(dateTime);
 
-				String additionalInfo ="<UL>" +
-						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto" + emailStores + "'>"+emailStores+"+</A> " +
+				String additionalInfo = "<UL>" +
+						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto" + emailStores + "'>" + emailStores + "+</A> " +
 						".</LI>" +
 						"<LI> If you use another courier company, please organise the pick up and <B>make sure the transporter/forwarder comes with all the required information to identify the parcel/dewar(s) efficiently:</B>" +
 						"<UL><LI><B>Consignee company name</B></LI>" +
@@ -406,13 +408,13 @@ public class TrackingEmail {
 						"</UL>" +
 						".</LI>" +
 						"</UL>";
-				String starInfo = "<B><sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.</B>"
+				String starInfo = "<B><sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.</B>";
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
 						+ "is on hold at the stores since " + formatedDateTime + "." + "<BR>"
 						+ "<BR>" + additionalInfo + "<BR>"
-						+ "<BR>" +starInfo + "<BR>"
+						+ "<BR>" + starInfo + "<BR>"
 						+ "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
 						+ "<BR>Please do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
