@@ -151,10 +151,10 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has been received by the ESRF on " + formatedDateTime + " and will be dispatched to the <B>" + beamLineName + "</B>. beamline "
+						+ "has been received by the ESRF on " + formatedDateTime + " and will be dispatched to the <B>" + beamLineName + "</B> beamline."
 						+  "<BR>" + "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or  <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
-						+ "<BR>Please do not hesitate to contact your local contact for any questions related to your samples or <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> or transport and customs issues."
+						+ "<BR>Please do not hesitate to contact your local contact for any questions related to your samples or <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> for transport and customs issues."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
