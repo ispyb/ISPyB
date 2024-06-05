@@ -34,7 +34,7 @@ public class TrackingEmail {
 
 
 	public static boolean isIndustrial(String proposalCode) {
-		return proposalCode.equals(Constants.PROPOSAL_CODE_FX) || proposalCode.equals(Constants.PROPOSAL_CODE_IX) || proposalCode.equals(Constants.PROPOSAL_CODE_OA);
+		return proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_FX) || proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_IX) || proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_OA);
 	}
 	/**
 	 * @param inTest
@@ -256,7 +256,7 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has been dispatched to <B>" + location + " </B> beamline.<BR>"
+						+ "has been dispatched to the <B>" + location + " </B> beamline.<BR>"
 						+ "<BR>You can check its location at anytime via <A title='" + Constants.ISPYB_URL_HELP + "' href='"
 						+ Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
 						+ "<BR>For any question regarding your samples or your session do not hesitate to contact your local contact."
@@ -400,21 +400,21 @@ public class TrackingEmail {
 				String formatedDateTime = dateFormat.format(dateTime);
 
 				String additionalInfo = "<UL>" +
-						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto" + emailStores + "'>" + emailStores + "+</A> " +
+						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto:" + emailStores + "'>" + emailStores + "</A> " +
 						".</LI>" +
 						"<LI> If you use another courier company, please organise the pick up and <B>make sure the transporter/forwarder comes with all the required information to identify the parcel/dewar(s) efficiently:</B>" +
 						"<UL><LI><B>Consignee company name</B></LI>" +
 						"<LI><B>Parcel/dewar(s) name or ESRF Barcode</B></LI>" +
 						"</UL>" +
-						".</LI>" +
+						"</LI>" +
 						"</UL>";
 				String starInfo = "<B><sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.</B>";
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "is on hold at the stores since " + formatedDateTime + "." + "<BR>"
+						+ "is <B>on hold</B> at the stores since " + formatedDateTime + "." + "<BR>"
 						+ "<BR>" + additionalInfo + "<BR>"
-						+ "<BR>" + starInfo + "<BR>"
+						+ starInfo + "<BR>"
 						+ "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
 						+ "<BR>Please do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
@@ -540,7 +540,7 @@ public class TrackingEmail {
 						+ trackingLink + "</B>) " + "on " + formatedDateTime + "."
 						+ "<BR>"
 						// + courierLink
-						+ "<BR>For transport and customs issues do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> "
+						+ "<BR>For transport and customs issues do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature
 						+ "</FONT>";
 
