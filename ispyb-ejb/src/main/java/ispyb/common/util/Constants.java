@@ -35,6 +35,13 @@ public final class Constants {
 		SOLEIL, EMBL, ESRF, MAXIV, ALBA, GENERIC
 	}
 
+
+
+	public static final String ISPYB_URL = "https://py-ispyb.esrf.fr/";
+	public static final String EXI_URL = "http://exi.esrf.fr/";
+
+	public static final String ISPYB_URL_HELP = "ISPYB from outside the firewall";
+
 	/*
 	 * role values
 	 */
@@ -316,6 +323,7 @@ public final class Constants {
 	public static final String PROPOSAL_CODE_IN = "in";
 
 	public static final String PROPOSAL_CODE_IX = "ix";
+	public static final String PROPOSAL_CODE_OA = "OA";
 
 	public static final String PROPOSAL_CODE_MXIHR = "mxi";
 

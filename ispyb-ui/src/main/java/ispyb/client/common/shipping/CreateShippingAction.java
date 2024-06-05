@@ -1104,7 +1104,7 @@ public class CreateShippingAction extends org.apache.struts.actions.DispatchActi
 
 			SendMailUtils.sendMail(ispybMailAddress, storesMailAddress, "", "", subject, body);
 		} catch (MessagingException e) {
-			LOG.error("Error during the sending of mail report: " + e.getMessage());
+			LOG.error("Error during the sending of mail report: " + e.getMessage(), e);
 		}
 	}
 

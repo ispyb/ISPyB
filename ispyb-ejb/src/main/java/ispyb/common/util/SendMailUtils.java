@@ -47,7 +47,59 @@ import javax.mail.internet.MimeMultipart;
 
 public class SendMailUtils {
 	
-	private final static String MAIL_SERVER = Constants.getProperty("mail.smtp.host");	
+	private final static String MAIL_SERVER = Constants.getProperty("mail.smtp.host");
+
+	final static public void sendMail(String from, String to, String cc, String bcc, String replyTo, String subject, String body,
+									  boolean isHtml) throws MessagingException {
+
+		if (replyTo == null)
+			replyTo = "sampletransport@esrf.fr";
+
+
+		if (from == null)
+			from = "ispyb@esrf.fr";
+
+		if (subject == null)
+			subject = "Automatic e-mail from ISPyB application";
+
+		if (body == null)
+			body = "EMPTY MESSAGE";
+
+		Properties props = null;
+		Session session = null;
+		Message emailMessage = null;
+		props = System.getProperties();
+		props.put("mail.smtp.host", 	 "smtp.esrf.fr");
+
+		session = Session.getDefaultInstance(props, null);
+		session.setDebug(false);
+
+		emailMessage = new MimeMessage(session);
+		emailMessage.setFrom(new InternetAddress(from));
+		emailMessage.setSubject(subject);
+		emailMessage.setHeader("X-Mailer", "MIS Software");
+		emailMessage.setSentDate(new java.util.Date());
+
+		// Set the "to" recipients
+
+		emailMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+
+		emailMessage.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc, false));
+
+		emailMessage.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(bcc, false));
+
+		emailMessage.setReplyTo(InternetAddress.parse(replyTo, false));
+
+		// Actually send the e-mail
+		if (isHtml) {
+			emailMessage.setContent(body, "text/html");
+		} else {
+			emailMessage.setText(body);
+		}
+		Transport.send(emailMessage);
+
+	}
+
 
 	/**
 	 * Send an e-mail using the mail.jar API. The byteArrayOutputStream will be written to a temp file 
