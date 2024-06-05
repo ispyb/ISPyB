@@ -53,16 +53,14 @@ public class LogonAction extends Action {
 			String userRole = "";
 			;
 
-			LOG.info("Force store");
-			userRole = "Store";
 			if (request.isUserInRole("Store")) {
 				userRole = "Store";
 			} else {
 				// Wrong role : disconnect
-				/*session.removeAttribute(Constants.PERSON_LOGIN);
+				session.removeAttribute(Constants.PERSON_LOGIN);
 				session.removeAttribute(Constants.CURRENT_ROLE);
 				session.invalidate();
-				return (mapping.findForward("roleError"));*/
+				return (mapping.findForward("roleError"));
 
 			}
 

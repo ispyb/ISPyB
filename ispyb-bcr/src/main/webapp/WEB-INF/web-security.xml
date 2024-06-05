@@ -37,7 +37,6 @@
 		<!--Roles definition here!-->
 		<security-role>
 			<role-name>Store</role-name>
-			<role-name>Manager</role-name>
 		</security-role>
 		
 		
