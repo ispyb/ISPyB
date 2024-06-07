@@ -171,7 +171,6 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 	 */
 	public DewarAPIBean fetchDewar(String dewarBarCode) {
 		
-		LOG.info("fetchDewar dewarBarCode=" + dewarBarCode);
 		DewarAPIBean dewarAPI = new DewarAPIBean();
 
 		try {
