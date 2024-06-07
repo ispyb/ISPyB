@@ -171,6 +171,7 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 	 */
 	public DewarAPIBean fetchDewar(String dewarBarCode) {
 		
+		LOG.info("fetchDewar dewarBarCode=" + dewarBarCode);
 		DewarAPIBean dewarAPI = new DewarAPIBean();
 
 		try {
@@ -182,7 +183,7 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 
 			int dewarId;
 			int shippingId;
-			int sessionId;
+			Integer sessionId = null;
 			int proposalId;
 //			String parcelName;
 //			String shippingName;
@@ -239,25 +240,21 @@ public class DewarAPIServiceBean implements DewarAPIService, DewarAPIServiceLoca
 			
 			try {
 				Dewar3VO dewar = dewarService.findByPk(dewarId, false, false);
-				
-				if (dewar.getSessionVO().getSessionId() != null ) {
+				if (dewar.getSessionVO() != null && dewar.getSessionVO().getSessionId() != null ) {
 					sessionId = dewar.getSessionVO().getSessionId();
 					
 				} else if (dewar.getShippingVO().getFirstExp().getSessionId() != null) {
 					sessionId = dewar.getShippingVO().getFirstExp().getSessionId();
 					
-				} else {
-					sessionId = dewar.getSessionVO().getSessionId();
 				}
-								
 				Session3VO session = sessionService.findByPk(sessionId, false, false, false);
-				
+
 				dewarAPI.setBeamLineName(session.getBeamlineName());
 				dewarAPI.setLocalContact(session.getBeamlineOperator());
 				dewarAPI.setStartDate(session.getStartDate());
 				
 			} catch (Exception e) {
-				LOG.debug("Dewar Tracking (fetchDewar): cannot find session info for barcode '" + dewarBarCode + "'");
+				LOG.error("Dewar Tracking (fetchDewar): cannot find session info for barcode '" + dewarBarCode + "'", e);
 				// e.printStackTrace();
 				// return false ;
 				dewarAPI.setBeamLineName("'location not specified in your shipment'");

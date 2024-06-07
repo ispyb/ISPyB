@@ -36,6 +36,44 @@ public class TrackingEmail {
 	public static boolean isIndustrial(String proposalCode) {
 		return proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_FX) || proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_IX) || proposalCode.equalsIgnoreCase(Constants.PROPOSAL_CODE_OA);
 	}
+
+	public static String getLocalContactEmail(String localContact) {
+		// Get localContact email
+		String emailLocalContact = "";
+		if (localContact != null && !localContact.equals("")) {
+
+			// Get first letter of firstName + *
+			String firstNameLetter = "*";
+			if (localContact.substring(localContact.length() - 2, localContact.length() - 1).equals(" "))
+				firstNameLetter = localContact.substring(localContact.length() - 1, localContact.length()) + "*";
+
+			String lastName = localContact;
+			if (firstNameLetter.length() == 2) {
+				// Get lastName without first letter of firstName in case there was a firstname letter
+				lastName = localContact.substring(0, localContact.length() - 2);
+				if (lastName.endsWith(" "))
+					lastName = lastName.substring(0, lastName.length() - 1);
+			}
+			// TODO fix discrepancies between ldap and smis accounts
+			// particular case of Sean MC SWEENEY
+			if (lastName.equals("MCSWEENEY"))
+				lastName = "MC SWEENEY";
+			if (lastName.equals("MONACO"))
+				lastName = "MALBET MONACO";
+			if (lastName.equals("MCCARTHY"))
+				lastName = "MC CARTHY";
+
+			// Get local contact email
+			String email = LdapConnection.getLocalContactEmail(lastName, firstNameLetter);
+			if (email != null && !email.equals(""))
+				emailLocalContact = email;
+			LOG.debug("LocalContact email: " + lastName + "/" + firstNameLetter + " = " + emailLocalContact);
+		} else {
+			LOG.debug("Local contact is empty (email will not be sent to Local contact).");
+		}
+		return emailLocalContact;
+	}
+
 	/**
 	 * @param inTest
 	 * @param emailStores
@@ -81,38 +119,7 @@ public class TrackingEmail {
 					startDateStr = "unknown";
 
 				// Get localContact email
-				String emailLocalContact = "";
-				if (localContact != null && !localContact.equals("")) {
-
-					// Get first letter of firstName + *
-					String firstNameLetter = "*";
-					if (localContact.substring(localContact.length() - 2, localContact.length() - 1).equals(" "))
-						firstNameLetter = localContact.substring(localContact.length() - 1, localContact.length()) + "*";
-
-					String lastName = localContact;
-					if (firstNameLetter.length() == 2) {
-						// Get lastName without first letter of firstName in case there was a firstname letter
-						lastName = localContact.substring(0, localContact.length() - 2);
-						if (lastName.endsWith(" "))
-							lastName = lastName.substring(0, lastName.length() - 1);
-					}
-					// TODO fix discrepancies between ldap and smis accounts
-					// particular case of Sean MC SWEENEY
-					if (lastName.equals("MCSWEENEY"))
-						lastName = "MC SWEENEY";
-					if (lastName.equals("MONACO"))
-						lastName = "MALBET MONACO";
-					if (lastName.equals("MCCARTHY"))
-						lastName = "MC CARTHY";
-
-					// Get local contact email
-					String email = LdapConnection.getLocalContactEmail(lastName, firstNameLetter);
-					if (email != null && !email.equals(""))
-						emailLocalContact = email;
-					LOG.debug("LocalContact email: " + lastName + "/" + firstNameLetter + " = " + emailLocalContact);
-				} else {
-					LOG.debug("Local contact is empty (email will not be sent to Local contact).");
-				}
+				String emailLocalContact = getLocalContactEmail(localContact);
 
 				// Customize email depending on proposal type
 				if (TrackingEmail.isIndustrial(proposalCode)) {
@@ -147,6 +154,7 @@ public class TrackingEmail {
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
 				String formatedDateTime = dateFormat.format(dateTime);
+				String replyInfo = TrackingEmail.isIndustrial(proposalCode)? " (or simply use \"reply all\")" : "";
 
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
@@ -154,7 +162,7 @@ public class TrackingEmail {
 						+ "has been received by the ESRF on " + formatedDateTime + " and will be dispatched to the <B>" + beamLineName + "</B> beamline."
 						+  "<BR>" + "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or  <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
-						+ "<BR>Please do not hesitate to contact your local contact for any questions related to your samples or <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> for transport and customs issues."
+						+ "<BR>Please do not hesitate to contact your local contact for any questions related to your samples or <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A> for transport and customs issues"+replyInfo+"."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
@@ -224,17 +232,23 @@ public class TrackingEmail {
 				if (startDateStr == null)
 					startDateStr = "unknown";
 
-
+				String emailLocalContact = getLocalContactEmail(localContact);
 				// Customize email depending on proposal type
 				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = emailMxInd;
+					if (emailLocalContact != null && !emailLocalContact.equals("")) {
+						emailCc += "," + emailLocalContact;
+					}
 					emailReply = emailMxInd;
 				} else {
 					// Other proposals
 					emailTo = sendingLabContactEmail;
 					emailCc = "";
+					if (emailLocalContact != null && !emailLocalContact.equals("")) {
+						emailCc = emailLocalContact;
+					}
 					emailReply = emailStores;
 				}
 				
@@ -288,7 +302,7 @@ public class TrackingEmail {
 	}
 
 	/**
-	 * @param cc
+	 * @param inTest
 	 * @param dewarBarCode
 	 * @param dateTime
 	 * @param location
@@ -331,38 +345,7 @@ public class TrackingEmail {
 					startDateStr = "unknown";
 
 				// Get localContact email
-				String emailLocalContact = "";
-				if (localContact != null && !localContact.equals("")) {
-
-					// Get first letter of firstName + *
-					String firstNameLetter = "*";
-					if (localContact.substring(localContact.length() - 2, localContact.length() - 1).equals(" "))
-						firstNameLetter = localContact.substring(localContact.length() - 1, localContact.length()) + "*";
-
-					String lastName = localContact;
-					if (firstNameLetter.length() == 2) {
-						// Get lastName without first letter of firstName in case there was a firstname letter
-						lastName = localContact.substring(0, localContact.length() - 2);
-						if (lastName.endsWith(" "))
-							lastName = lastName.substring(0, lastName.length() - 1);
-					}
-					// TODO fix discrepancies between ldap and smis accounts
-					// particular case of Sean MC SWEENEY
-					if (lastName.equals("MCSWEENEY"))
-						lastName = "MC SWEENEY";
-					if (lastName.equals("MONACO"))
-						lastName = "MALBET MONACO";
-					if (lastName.equals("MCCARTHY"))
-						lastName = "MC CARTHY";
-
-					// Get local contact email
-					String email = LdapConnection.getLocalContactEmail(lastName, firstNameLetter);
-					if (email != null && !email.equals(""))
-						emailLocalContact = email;
-					LOG.debug("LocalContact email: " + lastName + "/" + firstNameLetter + " = " + emailLocalContact);
-				} else {
-					LOG.debug("Local contact is empty (email will not be sent to Local contact).");
-				}
+				String emailLocalContact = getLocalContactEmail(localContact);
 
 				// Customize email depending on proposal type
 				if (TrackingEmail.isIndustrial(proposalCode)) {
@@ -402,13 +385,14 @@ public class TrackingEmail {
 				String additionalInfo = "<UL>" +
 						"<LI>If you use an integrator company (FedEx/DHL/UPS/TNT): please email the <B>forwarder/transporter shipping labels<sup>*</sup> </B>to <A HREF='mailto:" + emailStores + "'>" + emailStores + "</A> " +
 						".</LI>" +
-						"<LI> If you use another courier company, please organise the pick up and <B>make sure the transporter/forwarder comes with all the required information to identify the parcel/dewar(s) efficiently:</B>" +
+						"<LI> If you use another courier company, please organise the pick up and make sure the transporter/forwarder comes with <B>all the required information</B> to identify the parcel/dewar(s) efficiently:" +
 						"<UL><LI><B>Consignee company name</B></LI>" +
 						"<LI><B>Parcel/dewar(s) name or ESRF Barcode</B></LI>" +
 						"</UL>" +
 						"</LI>" +
 						"</UL>";
-				String starInfo = "<B><sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.</B>";
+				String starInfo = "<sup>*</sup>Please note that the transporter/forwarder return documents are not the ISPyB labels.";
+				String replyInfo = TrackingEmail.isIndustrial(proposalCode) ? ", or simply \"reply All\"" : "";
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
@@ -417,7 +401,7 @@ public class TrackingEmail {
 						+ starInfo + "<BR>"
 						+ "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
-						+ "<BR>Please do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
+						+ "<BR>Please do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>"+replyInfo+"."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature + "</FONT>";
 
 				// Send email
@@ -483,21 +467,27 @@ public class TrackingEmail {
 				String proposalCode = dewarAPI.getProposalCode();
 				String proposalName = dewarAPI.getProposalCode() + dewarAPI.getProposalNumber();
 				Date startDate = dewarAPI.getStartDate();
+				String localContact = dewarAPI.getLocalContact();
 				String startDateStr = Formatter.formatDate(startDate);
 				if (startDateStr == null)
 					startDateStr = "unknown";
 
+				String emailLocalContact = getLocalContactEmail(localContact);
 				// Customize email depending on proposal type
 				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = returnLabContactEmail;
 					emailCc = emailMxInd;
+					if (emailLocalContact != null && !emailLocalContact.equals(""))
+						emailCc += "," + emailLocalContact;
 					emailReply = emailStores;
 					emailSignature = "The ESRF stores";
 				} else {
 					// Other proposals
 					emailTo = returnLabContactEmail;
 					emailCc = "";
+					if (emailLocalContact != null && !emailLocalContact.equals(""))
+						emailCc = emailLocalContact;
 					emailReply = emailStores;
 					emailSignature = "The ESRF stores";
 				}
