@@ -305,10 +305,10 @@
   			<ispyb.bcm>mxcube</ispyb.bcm>
   			
   			<mail.smtp.host>smtp.esrf.fr</mail.smtp.host>
-  			<mail.admin>solange.delageniere@esrf.fr</mail.admin>
-  			<mail.dev>solange.delageniere@esrf.fr</mail.dev>
+  			<mail.admin>marjolaine.bodin@esrf.fr</mail.admin>
+  			<mail.dev>marjolaine.bodin@esrf.fr</mail.dev>
   			<mail.ispyb>ispyb@esrf.fr</mail.ispyb>
-  			<mail.stores>dewar-stores@esrf.fr</mail.stores>
+  			<mail.stores>sampletransport@esrf.fr</mail.stores>
 
 			<dewar.label.template>ParcelLabelsTemplate.pdf</dewar.label.template>
   			

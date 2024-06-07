@@ -119,7 +119,8 @@ public final class Constants {
 	/*
 	 * Ispyb values
 	 */
-	public static final String ISPYB_URL = "http://ispyb.esrf.fr/";
+	public static final String ISPYB_URL = "https://py-ispyb.esrf.fr/";
+	public static final String EXI_URL = "http://exi.esrf.fr/";
 
 	public static final String ISPYB_URL_HELP = "ISPYB from outside the firewall";
 
@@ -128,6 +129,8 @@ public final class Constants {
 	public static final String RETURN_LOCATION = "STORES-OUT";
 
 	public static final String PROPOSAL_CODE_FX = "FX";
+	public static final String PROPOSAL_CODE_IX = "IX";
+	public static final String PROPOSAL_CODE_OA = "OA";
 
 	/*
 	 * Misc
