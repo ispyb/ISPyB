@@ -376,7 +376,7 @@ public class TrackingEmail {
 
 
 				// Email subject
-				String emailSubject = "ESRF  – Samples on hold at stores: return documents needed or awaiting pick up by your transporter - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
+				String emailSubject = "ESRF - Samples on hold at stores: return documents needed or awaiting pick up by your transporter - " + proposalName + " / " + startDateStr + " / " + shippingName + " / "
 						+ parcelName;
 				// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' K:mm a '(GMT'Z')'");
