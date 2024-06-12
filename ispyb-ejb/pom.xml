@@ -499,7 +499,7 @@
 
 			<ispyb.root.folder>/data/ispyb/pyarch</ispyb.root.folder>
 			<ispyb.uploaded.root.folder>/data/ispyb/pyarch/pdb/</ispyb.uploaded.root.folder>
-			<ispyb.upload.folder.pdf>/mxn/groups/ispybstorage/pdf/</ispyb.upload.folder.pdf>
+			<ispyb.upload.folder.pdf>/data/staff/ispybstorage/pdf/</ispyb.upload.folder.pdf>
 
 			<ispyb.server.name.prod>w-v-ispyb-0.maxiv.lu.se</ispyb.server.name.prod>
 			<ispyb.server.name.prod.alias>ispyb.maxiv.lu.se</ispyb.server.name.prod.alias>

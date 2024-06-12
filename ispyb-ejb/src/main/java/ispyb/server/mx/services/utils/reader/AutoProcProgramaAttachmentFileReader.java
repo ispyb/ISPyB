@@ -22,7 +22,7 @@ public class AutoProcProgramaAttachmentFileReader {
 	public static HashMap<String, Object> readAttachment(AutoProcProgramAttachment3VO attachment) throws Exception {
 		boolean xscaleFile = false;
 		boolean truncateLog = false;
-		boolean noanomAimlessLog = false;
+		boolean aimlessLog = false;
 		ArrayList<Double> fastdp_cc2 = new ArrayList<Double>();
 		ArrayList<Double> fastdp_completeness = new ArrayList<Double>();
 		ArrayList<Double> fastdp_rfactor = new ArrayList<Double>();
@@ -35,11 +35,11 @@ public class AutoProcProgramaAttachmentFileReader {
 			String fileName = attachment.getFileName();
 			xscaleFile = (fileName != null && fileName.toLowerCase().endsWith("xscale.lp"));
 			truncateLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("truncate"));
-			noanomAimlessLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("aimless"));
+			aimlessLog = (fileName != null && fileName.toLowerCase().endsWith(".log") && fileName.toLowerCase().contains("aimless"));
 
 //			System.out.println(xscaleFile);
 //			System.out.println(truncateLog);
-			if (xscaleFile || truncateLog || noanomAimlessLog) {
+			if (xscaleFile || truncateLog || aimlessLog) {
 				// parse the file
 				String sourceFileName = PathUtils.FitPathToOS(attachment.getFilePath() + "/" + fileName);
 				BufferedReader inFile = null;
@@ -154,7 +154,7 @@ public class AutoProcProgramaAttachmentFileReader {
 								startToRead = false;
 							}
 
-						} else if (noanomAimlessLog) {
+						} else if (aimlessLog) {
 							if (line.contains("Analysis against resolution, XDSdataset")){
 								startToReadFastDPRfactor = true;
 								startToReadFastDPCompleteness = false;
@@ -179,9 +179,8 @@ public class AutoProcProgramaAttachmentFileReader {
 								if (!line.contains("$$") && !line.isEmpty() && !line.contains("I/sigma") && !line.contains("I/sigma")
 										&& !line.contains("Filtered") && !line.contains("Mean") && !line.contains("Rmerge")
 										&& !line.contains("Average") && !line.contains("Fractional")
-										&& !line.contains("$GRAPHS:Completeness v Resolution")
+										&& !line.contains("$GRAPHS")
 										&& !line.contains(":Multiplicity v Resolution")
-										&& !line.contains("$GRAPHS: CC(1/2) v resolution")
 										&& !line.contains("RMS anomalous correlation ratio")
 										&& !line.contains("Analysis against resolution, XDSdataset")
 										&& !line.contains("Completeness & multiplicity v. resolution, XDSdataset")
@@ -235,7 +234,7 @@ public class AutoProcProgramaAttachmentFileReader {
 					}
 					inFile.close();
 
-					if (noanomAimlessLog) {
+					if (aimlessLog) {
 						try {
 							int imax = 21;
 							for (int i = 0; i < imax; i++) {
@@ -280,7 +279,7 @@ public class AutoProcProgramaAttachmentFileReader {
 		o.put("xscaleFile", xscaleFile);
 		o.put("truncateLog", truncateLog);
 		o.put("autoProcessingData", listAutoProcessingData);
-		o.put("noanomAimlessLog", noanomAimlessLog);
+		o.put("noanomAimlessLog", aimlessLog);
 		return o;
 	}
 }

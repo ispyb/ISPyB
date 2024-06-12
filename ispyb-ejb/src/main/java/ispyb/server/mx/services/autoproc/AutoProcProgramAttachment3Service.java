@@ -85,4 +85,10 @@ public interface AutoProcProgramAttachment3Service {
 	 */
 	public List<AutoProcProgramAttachment3VO> findNoanomCorrect(final Integer autoProcProgramId) throws Exception;
 
+	/**
+	 * find aimless files attachments
+	 * @return
+	 * @throws Exception
+	 */
+	public List<AutoProcProgramAttachment3VO> findAimless(final Integer autoProcProgramId) throws Exception;
 }
