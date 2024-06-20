@@ -124,7 +124,7 @@ public class SendMailUtils {
 
 		Properties props = null;
 		Session session = null;
-		Message emailMessage = null;
+		MimeMessage emailMessage = null;
 		props = System.getProperties();
 		props.put("mail.smtp.host", 	ESRF_MAIL_SERVER);
 
@@ -133,7 +133,7 @@ public class SendMailUtils {
 
 		emailMessage = new MimeMessage(session);
 		emailMessage.setFrom(new InternetAddress(from));
-		emailMessage.setSubject(subject);
+		emailMessage.setSubject(subject, "UTF-8");
 		emailMessage.setHeader("X-Mailer", "MIS Software");
 		emailMessage.setSentDate(new java.util.Date());
 
