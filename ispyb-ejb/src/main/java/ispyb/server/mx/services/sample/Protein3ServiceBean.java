@@ -297,6 +297,9 @@ public class Protein3ServiceBean extends WsServiceBean implements Protein3Servic
 	public List<Map<String, Object>>  getStatsByProposal(int proposalId) {
 		String mySQLQuery = getViewTableQuery() + " where proposalId = :proposalId";		
 		Session session = (Session) this.entityManager.getDelegate();
+		LOG.debug("Update the group_concat max length");
+		SQLQuery updateGroupConcat = session.createSQLQuery("SET SESSION group_concat_max_len = 1000000");
+		updateGroupConcat.executeUpdate();
 		SQLQuery query = session.createSQLQuery(mySQLQuery);
 		query.setParameter("proposalId", proposalId);		
 		query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
