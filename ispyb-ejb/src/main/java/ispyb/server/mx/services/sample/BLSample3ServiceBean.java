@@ -69,33 +69,44 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	private final static Logger LOG = Logger.getLogger(BLSample3ServiceBean.class);
 
 	// Generic HQL request to find instances of BLSample3 by pk
-	private static final String FIND_BY_PK(boolean fetchEnergyScan, boolean fetchSubSamples, boolean fetchSampleImages) {
+	private static final String FIND_BY_PK(boolean fetchEnergyScan, boolean fetchSubSamples,
+			boolean fetchSampleImages) {
 		return "from BLSample3VO vo " + (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
-		+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "")
-		+ (fetchSampleImages ? "left join fetch vo.blsampleImageVOs " : "")
+				+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "")
+				+ (fetchSampleImages ? "left join fetch vo.blsampleImageVOs " : "")
 				+ "where vo.blSampleId = :pk";
 	}
 
 	// Generic HQL request to find all instances of BLSample3
 	private static final String FIND_ALL(boolean fetchEnergyScan, boolean fetchSubSamples) {
 		return "from BLSample3VO vo " + (fetchEnergyScan ? "left join fetch vo.energyScanVOs " : "")
-		+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "");
+				+ (fetchSubSamples ? "left join fetch vo.blSubSampleVOs " : "");
 	}
-	
+
 	private static final String SELECT_SAMPLE_INFO = " SELECT BLSample.blSampleId, BLSample.name, BLSample.code,  "
 			+ "BLSample.holderLength, BLSample.location, BLSample.SMILES, BLSample.diffractionPlanId as BLSampleDiffractionPlanId, Protein.acronym, "
 			+ "Crystal.crystalId, Crystal.spaceGroup, Crystal.cell_a, Crystal.cell_b, Crystal.cell_c, "
 			+ "Crystal.cell_alpha, Crystal.cell_beta, Crystal.cell_gamma, "
 			+ "Crystal.diffractionPlanId as CrystalDiffractionPlanId, "
-			+ "Container.sampleChangerLocation, Container.code as containerCode "
-			+ "FROM BLSample, Crystal, Protein,Container "
+			+ "Container.sampleChangerLocation, Container.code as containerCode, "
+			+ "Container.dewarId as dewarId, "
+			+ "Container.comments as containerComments, "
+			+ "Dewar.code as dewarCode, "
+			+ "Shipping.shippingName as shippingName, "
+			+ "Shipping.comments as shippingComments, "
+			+ "Container.capacity as containerCapacity, "
+			+ "Container.containerType as containerType, "
+			+ "Shipping.shippingId as shippingId "
+			+ "FROM BLSample, Crystal, Protein,Container, Dewar, Shipping "
 			+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
 			+ "Crystal.proteinId=Protein.proteinId AND "
-			+ "BLSample.containerId=Container.containerId ";
+			+ "BLSample.containerId=Container.containerId AND "
+			+ "Dewar.dewarId=Container.dewarId AND "
+			+ "Dewar.shippingId=Shipping.shippingId ";
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
-	
+
 	@Resource
 	private SessionContext context;
 
@@ -106,7 +117,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * Create new BLSample3.
 	 * 
 	 * @param vo
-	 *            the entity to persist.
+	 *           the entity to persist.
 	 * @return the persisted entity.
 	 */
 	public BLSample3VO create(final BLSample3VO vo) throws Exception {
@@ -121,7 +132,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * Update the BLSample3 data.
 	 * 
 	 * @param vo
-	 *            the entity data to update.
+	 *           the entity data to update.
 	 * @return the updated entity.
 	 */
 	public BLSample3VO update(final BLSample3VO vo) throws Exception {
@@ -135,7 +146,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * Remove the BLSample3 from its pk
 	 * 
 	 * @param vo
-	 *            the entity to remove.
+	 *           the entity to remove.
 	 */
 	public void deleteByPk(final Integer pk) throws Exception {
 
@@ -148,7 +159,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * Remove the BLSample3
 	 * 
 	 * @param vo
-	 *            the entity to remove.
+	 *           the entity to remove.
 	 */
 	public void delete(final BLSample3VO vo) throws Exception {
 
@@ -157,19 +168,22 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	/**
-	 * Finds a Scientist entity by its primary key and set linked value objects if necessary
+	 * Finds a Scientist entity by its primary key and set linked value objects if
+	 * necessary
 	 * 
 	 * @param pk
-	 *            the primary key
+	 *                  the primary key
 	 * @param withLink1
 	 * @param withLink2
 	 * @return the BLSample3 value object
 	 */
-	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception {
-	
+	public BLSample3VO findByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples,
+			final boolean withSampleImages) throws Exception {
+
 		checkCreateChangeRemoveAccess();
 		try {
-			return (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages)).setParameter("pk", pk)
+			return (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages))
+					.setParameter("pk", pk)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -184,15 +198,15 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 */
 	@SuppressWarnings("unchecked")
 	public List<BLSample3VO> findAll(final boolean withEnergyScan, final boolean withSubSamples) throws Exception {
-	
-		List<BLSample3VO> foundEntities = entityManager.createQuery(FIND_ALL(withEnergyScan, withSubSamples)).getResultList();
+
+		List<BLSample3VO> foundEntities = entityManager.createQuery(FIND_ALL(withEnergyScan, withSubSamples))
+				.getResultList();
 		return foundEntities;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<BLSample3VO> findByShippingDewarContainer(final Integer shippingId, final List<Integer> dewarIds,
 			final Integer containerId, final String dmCode, Integer sortView) throws Exception {
-
 
 		Session session = (Session) this.entityManager.getDelegate();
 		Criteria criteria = session.createCriteria(BLSample3VO.class);
@@ -228,7 +242,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				criteria.addOrder(new CastDecimalOrder("location", true));
 			} else {
 				Criteria proteinCriteria = session.createCriteria("crystalVO").createCriteria("proteinVO");
-				//criteria.addOrder(Order.asc("name"));
+				// criteria.addOrder(Order.asc("name"));
 				proteinCriteria.addOrder(Order.asc("acronym"));
 			}
 			List<BLSample3VO> foundEntities = criteria.list();
@@ -254,18 +268,19 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 
 		return ret;
 	}
-	
+
 	public List<BLSample3VO> findByShippingId(final Integer shippingId, final Integer sortView) throws Exception {
 		return this.findByShippingDewarContainer(shippingId, null, null, null, sortView);
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	public List<BLSample3VO> findByShippingIdOrder(final Integer shippingId, final Integer sortView) throws Exception{
+	public List<BLSample3VO> findByShippingIdOrder(final Integer shippingId, final Integer sortView) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
 				Session session = (Session) entityManager.getDelegate();
-				List foundIds = session.createCriteria(BLSample3VO.class).createCriteria("containerVO").createCriteria("dewarVO")
+				List foundIds = session.createCriteria(BLSample3VO.class).createCriteria("containerVO")
+						.createCriteria("dewarVO")
 						.createCriteria("shippingVO").add(Restrictions.eq("shippingId", shippingId)).list();
 				return foundIds;
 			}
@@ -292,11 +307,11 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	public List<BLSample3VO> findByDewarId(final Integer dewarId, final Integer sortView) throws Exception {
-		List<Integer> dewarIds = Collections.singletonList(dewarId); 
+		List<Integer> dewarIds = Collections.singletonList(dewarId);
 		return this.findByShippingDewarContainer(null, dewarIds, null, null, sortView);
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BLSample3VO> findByContainerId(final Integer containerId) throws Exception {
@@ -305,13 +320,14 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				.add(Restrictions.eq("containerId", containerId)).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();
 	}
-	
+
 	public List<BLSample3VO> findByCodeAndShippingId(final String dmCode, final Integer shippingId) throws Exception {
 		return this.findByShippingDewarContainer(shippingId, null, null, dmCode, null);
 	}
 
 	/**
-	 * find the sample info (Tuple of BLSample, Container, Crystal, Protein, DiffractionPlan) for a given blsampleId
+	 * find the sample info (Tuple of BLSample, Container, Crystal, Protein,
+	 * DiffractionPlan) for a given blsampleId
 	 * 
 	 * @param proposalId
 	 * @param beamlineLocation
@@ -342,17 +358,17 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		wsSample = getWSBLSampleVO(blSample);
 
 		// crystal
-		if (blSample != null){
+		if (blSample != null) {
 			Integer crystalId = blSample.getCrystalVOId();
 			crystal = crystalService.findByPk(crystalId, false);
 		}
 		// protein
-		if (crystal != null){
+		if (crystal != null) {
 			Integer proteinId = crystal.getProteinVOId();
 			protein = proteinService.findByPk(proteinId, false);
 		}
 		// Integer diffractionPlanId = (Integer) o[3];
-		if (blSample != null){
+		if (blSample != null) {
 			Integer containerId = blSample.getContainerVOId();
 			container = containerService.findByPk(containerId, false);
 		}
@@ -368,7 +384,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	/**
-	 * find all sample info (Tuple of BLSample, Container, Crystal, Protein, DiffractionPlan) for a specified proposal
+	 * find all sample info (Tuple of BLSample, Container, Crystal, Protein,
+	 * DiffractionPlan) for a specified proposal
 	 * and a specified beamlineLocation and a given status(blSample or container)
 	 * 
 	 * @param proposalId
@@ -384,22 +401,23 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		List orders = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
 				Query q = entityManager
-						.createNativeQuery("SELECT BLSample.blSampleId, Crystal.crystalId, Protein.proteinId,  Container.containerId "
-								+ "FROM BLSample, Crystal, Protein,Container "
-								+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
-								+ "Crystal.proteinId=Protein.proteinId AND "
-								+ "BLSample.containerId=Container.containerId AND "
-								+ "Protein.proposalId = "
-								+ proposalId
-								+ " AND "
-								+ "(Container.containerStatus LIKE '"
-								+ status
-								+ "' OR BLSample.blSampleStatus LIKE '"
-								+ status
-								+ "') AND "
-								+ "(Container.beamlineLocation like '"
-								+ beamlineLocation
-								+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
+						.createNativeQuery(
+								"SELECT BLSample.blSampleId, Crystal.crystalId, Protein.proteinId,  Container.containerId "
+										+ "FROM BLSample, Crystal, Protein,Container "
+										+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
+										+ "Crystal.proteinId=Protein.proteinId AND "
+										+ "BLSample.containerId=Container.containerId AND "
+										+ "Protein.proposalId = "
+										+ proposalId
+										+ " AND "
+										+ "(Container.containerStatus LIKE '"
+										+ status
+										+ "' OR BLSample.blSampleStatus LIKE '"
+										+ status
+										+ "') AND "
+										+ "(Container.beamlineLocation like '"
+										+ beamlineLocation
+										+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
 				List orders = q.getResultList();
 				return orders;
 			}
@@ -456,7 +474,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		return getWSBLSampleInfoVOs(listVOs);
 
 	}
-	
+
 	/**
 	 * find all sample info (Tuple of SampleInfo) for a specified proposal
 	 * and a specified beamlineLocation and a given status(blSample or container)
@@ -469,37 +487,39 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalFormId, final String beamlineLocation,
+	public SampleInfo[] findForWSSampleInfoLight(final Integer proposalId, final Integer crystalFormId,
+			final String beamlineLocation,
 			final String status) throws Exception {
-		
+
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
 		List orders = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
-				List listInfo= new ArrayList<>();
-				if (beamlineLocation == null && status == null && crystalFormId == null){
-					List o = entityManager.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId).getResultList();
+				List listInfo = new ArrayList<>();
+				if (beamlineLocation == null && status == null && crystalFormId == null) {
+					List o = entityManager
+							.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId)
+							.getResultList();
 					listInfo = o;
-				}
-				else if (crystalFormId != null){
+				} else if (crystalFormId != null) {
 					Query q = entityManager
-							.createNativeQuery(SELECT_SAMPLE_INFO + " AND Crystal.crystalId = " + crystalFormId );
+							.createNativeQuery(SELECT_SAMPLE_INFO + " AND Crystal.crystalId = " + crystalFormId);
 					List o = q.getResultList();
 					listInfo = o;
 				}
-		
+
 				else {
 					Query q = entityManager
-					.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
+							.createNativeQuery(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
+									+ " AND " + "(Container.containerStatus LIKE '" + status
+									+ "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
+									+ "(Container.beamlineLocation like '" + beamlineLocation
+									+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
+
+					System.out.println(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
 							+ " AND " + "(Container.containerStatus LIKE '" + status
 							+ "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
 							+ "(Container.beamlineLocation like '" + beamlineLocation
 							+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
-
-                                        System.out.println(SELECT_SAMPLE_INFO + " AND Protein.proposalId = " + proposalId
-                                                        + " AND " + "(Container.containerStatus LIKE '" + status
-                                                        + "' OR BLSample.blSampleStatus LIKE '" + status + "') AND "
-                                                        + "(Container.beamlineLocation like '" + beamlineLocation
-                                                        + "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
 					List o = q.getResultList();
 					listInfo = o;
 				}
@@ -509,16 +529,17 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 
 		List<SampleInfo> listVOs = null;
 		int nb = orders.size();
+
 		if (nb > 0)
 			listVOs = new ArrayList<SampleInfo>();
 
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		DiffractionPlan3Service diffractionPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
-		.getLocalService(DiffractionPlan3Service.class);
+				.getLocalService(DiffractionPlan3Service.class);
 
 		for (int i = 0; i < nb; i++) {
 			Object[] o = (Object[]) orders.get(i);
-			int j=0;
+			int j = 0;
 			Integer blSampleId = (Integer) o[j++];
 			String sampleName = (String) o[j++];
 			String sampleCode = (String) o[j++];
@@ -538,10 +559,21 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			Integer crystalDiffractionPlanId = (Integer) o[j++];
 			String containerSCLocation = (String) o[j++];
 			String containerCode = (String) o[j++];
+
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
-			
+
 			String blSampleImage = getSampleImagepath(blSampleId);
-			
+
+			Integer dewarId = (Integer) o[j++];
+			String containerComments = (String) o[j++];
+			String dewarCode = (String) o[j++];
+			String shippingName = (String) o[j++];
+			String shippingComments = (String) o[j++];
+
+			Integer containerCapacity = (Integer) o[j++];
+			String containerType = (String) o[j++];
+			Integer shippingId = (Integer) o[j++];
+
 			if (sampleDiffractionPlanId != null) {
 				diffractionPlan = diffractionPlanService.findByPk(sampleDiffractionPlanId, false, false);
 			} else if (crystalDiffractionPlanId != null)
@@ -550,9 +582,11 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String experimentType = diffractionPlan.getExperimentKind();
 			DiffractionPlanWS3VO diffPlanws = new DiffractionPlanWS3VO(diffractionPlan);
 			SampleInfo sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
-					 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
-					 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-					 experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage) ;
+					holderLength, sampleLocation, smiles, proteinAcronym, crystalId,
+					crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
+					experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage, dewarId,
+					containerComments, dewarCode, shippingName, shippingComments, containerCapacity, containerType,
+					shippingId);
 			listVOs.add(sampleInfo);
 		}
 		if (listVOs == null)
@@ -562,7 +596,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	/**
-	 * find only sample info for a specified proposal and a specified beamlineLocation and a given status(blSample or
+	 * find only sample info for a specified proposal and a specified
+	 * beamlineLocation and a given status(blSample or
 	 * container)
 	 * 
 	 * @param proposalId
@@ -578,22 +613,23 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		List listIds = (List) template.execute(new EJBAccessCallback() {
 			public Object doInEJBAccess(Object parent) throws Exception {
 				Query q = entityManager
-						.createNativeQuery("SELECT BLSample.blSampleId, Crystal.crystalId, Protein.proteinId,  Container.containerId "
-								+ "FROM BLSample, Crystal, Protein,Container "
-								+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
-								+ "Crystal.proteinId=Protein.proteinId AND "
-								+ "BLSample.containerId=Container.containerId AND "
-								+ "Protein.proposalId = "
-								+ proposalId
-								+ " AND "
-								+ "(Container.containerStatus LIKE '"
-								+ status
-								+ "' OR BLSample.blSampleStatus LIKE '"
-								+ status
-								+ "') AND "
-								+ "(Container.beamlineLocation like '"
-								+ beamlineLocation
-								+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
+						.createNativeQuery(
+								"SELECT BLSample.blSampleId, Crystal.crystalId, Protein.proteinId,  Container.containerId "
+										+ "FROM BLSample, Crystal, Protein,Container "
+										+ "WHERE BLSample.crystalId=Crystal.crystalId AND "
+										+ "Crystal.proteinId=Protein.proteinId AND "
+										+ "BLSample.containerId=Container.containerId AND "
+										+ "Protein.proposalId = "
+										+ proposalId
+										+ " AND "
+										+ "(Container.containerStatus LIKE '"
+										+ status
+										+ "' OR BLSample.blSampleStatus LIKE '"
+										+ status
+										+ "') AND "
+										+ "(Container.beamlineLocation like '"
+										+ beamlineLocation
+										+ "' OR (Container.beamlineLocation IS NULL OR Container.beamlineLocation like ''))");
 				List orders = q.getResultList();
 				return orders;
 			}
@@ -621,7 +657,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	/**
-	 * Check if user has access rights to create, change and remove BLSample3 entities. If not set rollback only and
+	 * Check if user has access rights to create, change and remove BLSample3
+	 * entities. If not set rollback only and
 	 * throw AccessDeniedException
 	 * 
 	 * @throws AccessDeniedException
@@ -651,7 +688,8 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	}
 
 	/**
-	 * find all sample info (Tuple of BLSample, Container, Crytsal, Protein, DiffractionPlan) for a specified proposal
+	 * find all sample info (Tuple of BLSample, Container, Crytsal, Protein,
+	 * DiffractionPlan) for a specified proposal
 	 * and a specified beamlineLocation and a given status(blSample or container)
 	 * 
 	 * @param proposalId
@@ -711,7 +749,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 */
 	private BLSample3VO getLightBLSampleVO(BLSample3VO vo) throws CloneNotSupportedException {
 		BLSample3VO otherVO = (BLSample3VO) vo.clone();
-		//otherVO.setEnergyScanVOs(null);
+		// otherVO.setEnergyScanVOs(null);
 		return otherVO;
 	}
 
@@ -727,7 +765,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		otherVO.getContainer().setSampleVOs(null);
 		otherVO.getCrystal().setSampleVOs(null);
 		otherVO.getProtein().setCrystalVOs(null);
-		//otherVO.getBlSample().setEnergyScanVOs(null);
+		// otherVO.getBlSample().setEnergyScanVOs(null);
 		otherVO.getDiffractionPlan().setExperimentKindVOs(null);
 		return otherVO;
 	}
@@ -741,11 +779,13 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 	 * @return
 	 * @throws Exception
 	 */
-	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples, final boolean withSampleImages) throws Exception {
-	
+	public BLSampleWS3VO findForWSByPk(final Integer pk, final boolean withEnergyScan, final boolean withSubSamples,
+			final boolean withSampleImages) throws Exception {
+
 		checkCreateChangeRemoveAccess();
 		try {
-			BLSample3VO found = (BLSample3VO) entityManager.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages)).setParameter("pk", pk)
+			BLSample3VO found = (BLSample3VO) entityManager
+					.createQuery(FIND_BY_PK(withEnergyScan, withSubSamples, withSampleImages)).setParameter("pk", pk)
 					.getSingleResult();
 			BLSampleWS3VO sampleLight = getWSBLSampleVO(found);
 			return sampleLight;
@@ -895,10 +935,10 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 				criteria.addOrder(Order.asc("name"));
 			}
 		}
-			
+
 		return criteria.list();
 	}
-	
+
 	public List<BLSample3VO> findByCrystalNameCode(final Integer crystalId, final String name, final String code)
 			throws Exception {
 
@@ -947,20 +987,23 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		return this.findFiltered(null, proteinId, null, null, null, null, null, null, null, null);
 	}
 
-	public List<BLSample3VO> findByProposalIdAndIsInSampleChanger(final Integer proposalId, final Byte isInSampleChanger)
+	public List<BLSample3VO> findByProposalIdAndIsInSampleChanger(final Integer proposalId,
+			final Byte isInSampleChanger)
 			throws Exception {
 		return this.findFiltered(proposalId, null, null, null, null, null, null, isInSampleChanger, null, null);
 	}
 
-	public List<BLSample3VO> findByAcronymAndProposalId(final String name, final Integer proposalId, final String sortType)
+	public List<BLSample3VO> findByAcronymAndProposalId(final String name, final Integer proposalId,
+			final String sortType)
 			throws Exception {
 		LOG.info("Name: " + name + " proposalId: " + proposalId);
 		return this.findFiltered(proposalId, null, null, null, name, null, null, null, null, sortType);
 	}
 
-	public List<BLSample3VO> findByNameAndProteinId(final String name, final Integer proteinId, final Integer shippingId)
+	public List<BLSample3VO> findByNameAndProteinId(final String name, final Integer proteinId,
+			final Integer shippingId)
 			throws Exception {
-		
+
 		return this.findFiltered(null, proteinId, null, null, name, null, null, null, shippingId, null);
 
 	}
@@ -978,7 +1021,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 		}
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public SampleInfo findForWSSampleInfo(final Integer sampleId) throws Exception {
 		EJBAccessTemplate template = new EJBAccessTemplate(LOG, context, this);
@@ -995,11 +1038,11 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 
 		Ejb3ServiceLocator ejb3ServiceLocator = Ejb3ServiceLocator.getInstance();
 		DiffractionPlan3Service diffractionPlanService = (DiffractionPlan3Service) ejb3ServiceLocator
-		.getLocalService(DiffractionPlan3Service.class);
+				.getLocalService(DiffractionPlan3Service.class);
 
-		if (orders != null && orders.size() > 0){
+		if (orders != null && orders.size() > 0) {
 			Object[] o = (Object[]) orders.get(0);
-			int j=0;
+			int j = 0;
 			Integer blSampleId = (Integer) o[j++];
 			String sampleName = (String) o[j++];
 			String sampleCode = (String) o[j++];
@@ -1021,7 +1064,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String containerCode = (String) o[j++];
 			DiffractionPlan3VO diffractionPlan = new DiffractionPlan3VO();
 			String blSampleImage = getSampleImagepath(blSampleId);
-			
+
 			if (sampleDiffractionPlanId != null) {
 				diffractionPlan = diffractionPlanService.findByPk(sampleDiffractionPlanId, false, false);
 			} else if (crystalDiffractionPlanId != null)
@@ -1030,39 +1073,38 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 			String experimentType = diffractionPlan.getExperimentKind();
 			DiffractionPlanWS3VO diffPlanws = new DiffractionPlanWS3VO(diffractionPlan);
 			sampleInfo = new SampleInfo(blSampleId, sampleName, sampleCode,
-						 holderLength,  sampleLocation,  smiles, proteinAcronym, crystalId,
-						 crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
-						 experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage) ;
+					holderLength, sampleLocation, smiles, proteinAcronym, crystalId,
+					crystalSpaceGroup, cellA, cellB, cellC, cellAlpha, cellBeta, cellGamma, minimalResolution,
+					experimentType, containerSCLocation, containerCode, diffPlanws, blSampleImage);
 		}
-		return sampleInfo ;
+		return sampleInfo;
 	}
-	
 
 	/* Private methods ------------------------------------------------------ */
 
 	private String getSampleImagepath(Integer blSampleId) throws Exception {
-		
-		// we suppose that only 1 image is created for now for 1 BLSample 
+
+		// we suppose that only 1 image is created for now for 1 BLSample
 		Set<BLSampleImage3VO> blsampleImageVOs = this.findByPk(blSampleId, false, false, true).getBlsampleImageVOs();
-		if (blsampleImageVOs != null && !blsampleImageVOs.isEmpty()) {	 
-			BLSampleImage3VO vo = (BLSampleImage3VO) blsampleImageVOs.toArray()[0];	
+		if (blsampleImageVOs != null && !blsampleImageVOs.isEmpty()) {
+			BLSampleImage3VO vo = (BLSampleImage3VO) blsampleImageVOs.toArray()[0];
 			return vo.getImageFullPath();
 		} else {
 			return null;
 		}
 	}
-	
-	
+
 	/**
 	 * Checks the data for integrity. E.g. if references and categories exist.
 	 * 
 	 * @param vo
-	 *            the data to check
+	 *               the data to check
 	 * @param create
-	 *            should be true if the value object is just being created in the DB, this avoids some checks like
-	 *            testing the primary key
+	 *               should be true if the value object is just being created in the
+	 *               DB, this avoids some checks like
+	 *               testing the primary key
 	 * @exception VOValidateException
-	 *                if data is not correct
+	 *                                if data is not correct
 	 */
 	private void checkAndCompleteData(BLSample3VO vo, boolean create) throws Exception {
 

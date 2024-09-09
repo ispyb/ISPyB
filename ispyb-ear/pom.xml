@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.28</version>
+		<version>5.30.9</version>
 	</parent>
 	<artifactId>ispyb-ear</artifactId>
 	<packaging>ear</packaging>
@@ -15,21 +16,21 @@
 			<type>ejb</type>
 			<version>${project.version}</version>
 		</dependency>
-		  
+
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ui</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-  		<dependency>
+		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ws</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
-		
-	
+
+
 	</dependencies>
 	<build>
 		<finalName>ispyb</finalName>
@@ -60,19 +61,19 @@
 							<artifactId>ispyb-ejb3</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
-											  
-				 		<webModule>
+
+						<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ws</artifactId>
 							<contextRoot>/ispyb/ispyb-ws</contextRoot>
 						</webModule>
-						 
+
 						<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ui</artifactId>
 							<contextRoot>/ispyb</contextRoot>
 						</webModule>
-						
+
 					</modules>
 					<fileNameMapping>no-version</fileNameMapping>
 				</configuration>
@@ -89,7 +90,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>ispyb.site-SOLEIL</id>
@@ -99,7 +100,8 @@
 					<value>SOLEIL</value>
 				</property>
 			</activation>
-			<!-- Add dependencies and MANIFEST to declare in Class-Path the .jar needed by securityfilter to solve classloading issue -->
+			<!-- Add dependencies and MANIFEST to declare in Class-Path the .jar needed by
+			securityfilter to solve classloading issue -->
 			<dependencies>
 				<dependency>
 					<groupId>commons-digester</groupId>
@@ -107,9 +109,9 @@
 					<version>1.7</version>
 				</dependency>
 				<dependency>
-				  <groupId>oro</groupId>
-				  <artifactId>oro</artifactId>
-				  <version>2.0.8</version>
+					<groupId>oro</groupId>
+					<artifactId>oro</artifactId>
+					<version>2.0.8</version>
 				</dependency>
 				<dependency>
 					<groupId>commons-beanutils</groupId>
@@ -122,7 +124,7 @@
 					<version>1.0</version>
 				</dependency>
 			</dependencies>
-	        <build>
+			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -135,8 +137,8 @@
 						</configuration>
 					</plugin>
 				</plugins>
-	        </build>
+			</build>
 		</profile>
 	</profiles>
-	
+
 </project>

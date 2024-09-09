@@ -1,16 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.28</version>
+		<version>5.30.9</version>
 	</parent>
 	<artifactId>ispyb-bcr-ear</artifactId>
 	<packaging>ear</packaging>
-	
+
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
@@ -25,21 +26,21 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.4</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
-		<finalName>bcr</finalName>		
+		<finalName>bcr</finalName>
 		<resources>
-    		<resource>
-      		<directory>src/main/resources</directory>
-    		</resource>
-  		</resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<!-- Ear plugin -->
 			<plugin>
@@ -56,15 +57,15 @@
 						have any modules (EJB-JARs and WARs) use them -->
 					<defaultLibBundleDir>lib</defaultLibBundleDir>
 
-					<modules>	
-					<!--  						--> 						
+					<modules>
+						<!--  						-->
 						<ejbModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-ejb3</artifactId>
 							<bundleDir>/</bundleDir>
 						</ejbModule>
-		
-						 						 
+
+
 						<webModule>
 							<groupId>ispyb</groupId>
 							<artifactId>ispyb-bcr</artifactId>
