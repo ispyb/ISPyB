@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	 <parent>
+	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.28</version>
+		<version>5.29</version>
 	</parent>
-	
+
 	<artifactId>ispyb-ui</artifactId>
 	<packaging>war</packaging>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jboss.home.dev>${jboss.home}</jboss.home.dev>
@@ -349,7 +350,8 @@
 									message="user.home: ${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
 								<echo message="user.home: ${xdoclet.client.path}" />
 								<echo message="java src:  ${basedir}/src/main/java}" />
-								<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask"
+								<taskdef name="webdoclet"
+									classname="xdoclet.modules.web.WebDocletTask"
 									classpathref="xdoclet.client.path" />
 
 								<webdoclet destdir="${webinf.dir}"
@@ -361,7 +363,8 @@
 									</fileset>
 
 									<deploymentdescriptor servletspec="2.3"
-										validatexml="true" destdir="${webinf.dir}" distributable="false" />
+										validatexml="true" destdir="${webinf.dir}"
+										distributable="false" />
 
 									<strutsconfigxml version="1.2" destdir="${webinf.dir}" />
 									<strutsvalidationxml destdir="${webinf.dir}" />
@@ -383,7 +386,7 @@
 
 	<!-- profiles to separate environment properties -->
 	<profiles>
-	
+
 		<profile>
 			<id>ispyb.env-production</id>
 			<activation>
@@ -398,7 +401,7 @@
 				<js.alternative.path.enabled>false</js.alternative.path.enabled>
 			</properties>
 		</profile>
-		
+
 		<profile>
 			<id>ispyb.env-development</id>
 			<activation>
@@ -409,7 +412,7 @@
 			</activation>
 			<properties>
 				<js.minimized>false</js.minimized>
-				<js.alternative.path.enabled>true</js.alternative.path.enabled>				
+				<js.alternative.path.enabled>true</js.alternative.path.enabled>
 			</properties>
 		</profile>
 
@@ -423,12 +426,12 @@
 					<value>ESRF</value>
 				</property>
 			</activation>
-			
+
 			<properties>
 				<js.alternative.path>http://172.26.4.24:8082</js.alternative.path>
-				<data.path>/work/ademaria/data/pyarch/</data.path>				
+				<data.path>/work/ademaria/data/pyarch/</data.path>
 			</properties>
-			
+
 
 		</profile>
 

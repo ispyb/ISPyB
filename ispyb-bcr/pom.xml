@@ -1,35 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
-		
+
 	<parent>
 		<groupId>ispyb</groupId>
 		<artifactId>ispyb-parent</artifactId>
-		<version>5.28</version>
+		<version>5.29</version>
 
 	</parent>
 	<artifactId>ispyb-bcr</artifactId>
 	<packaging>war</packaging>
-  
-    <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jboss.home.dev>${jboss.home}</jboss.home.dev> 
-	<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>	
-	<common.lib.dir>${basedir}/lib</common.lib.dir>
-	<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
-	<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
-	
-  </properties>
-  
-  <dependencies>
-	
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jboss.home.dev>${jboss.home}</jboss.home.dev>
+		<xdoclet.home>${basedir}/lib/lib-xdoclet</xdoclet.home>
+		<common.lib.dir>${basedir}/lib</common.lib.dir>
+		<webinf.dir>${basedir}/src/main/webapp/WEB-INF</webinf.dir>
+		<jboss.modules.base>${jboss.home.dev}/modules/system/layers/base</jboss.modules.base>
+
+	</properties>
+
+	<dependencies>
+
 		<dependency>
 			<groupId>struts</groupId>
 			<artifactId>struts</artifactId>
 			<version>1.2.7</version>
 		</dependency>
-  
+
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>ispyb-ejb3</artifactId>
@@ -37,14 +38,14 @@
 			<scope>provided</scope>
 		</dependency>
 
-<!--		
+		<!--		
 		<dependency>
 			<groupId>ispyb</groupId>
 			<artifactId>dewarAPI</artifactId>
 			<version>1.0</version>
 		</dependency>	
 		-->
-				
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -220,7 +221,7 @@
 			<artifactId>jaxb-xjc</artifactId>
 			<version>2.2.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
@@ -246,10 +247,10 @@
 		</dependency>
 
 
-  </dependencies>
-  
-  	<build>
-  	
+	</dependencies>
+
+	<build>
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -274,9 +275,9 @@
 				<configuration>
 					<skip>false</skip>
 				</configuration>
-			</plugin>			
-			
-<!-- to generate struts xml config files --> 
+			</plugin>
+
+			<!-- to generate struts xml config files -->
 
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -293,11 +294,13 @@
 									<fileset dir="${common.lib.dir}">
 										<include name="*.jar" />
 									</fileset>
- 									<pathelement location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" /> 
+									<pathelement
+										location="${jboss.modules.base}/javax/servlet/api/main/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" />
 								</path>
 								<echo message="user.home: ${xdoclet.client.path}" />
 								<echo message="java src:  ${basedir}/src/main/java}" />
-								<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask"
+								<taskdef name="webdoclet"
+									classname="xdoclet.modules.web.WebDocletTask"
 									classpathref="xdoclet.client.path" />
 
 								<webdoclet destdir="${webinf.dir}"
@@ -308,7 +311,8 @@
 									</fileset>
 
 									<deploymentdescriptor servletspec="2.3"
-										validatexml="true" destdir="${webinf.dir}" distributable="false" />
+										validatexml="true" destdir="${webinf.dir}"
+										distributable="false" />
 
 									<strutsconfigxml version="1.2" destdir="${webinf.dir}" />
 									<strutsvalidationxml destdir="${webinf.dir}" />
@@ -325,6 +329,6 @@
 				</executions>
 			</plugin>
 
-</plugins>
+		</plugins>
 	</build>
 </project>
