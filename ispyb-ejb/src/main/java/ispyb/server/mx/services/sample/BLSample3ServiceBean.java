@@ -529,7 +529,7 @@ public class BLSample3ServiceBean implements BLSample3Service, BLSample3ServiceL
 
 		List<SampleInfo> listVOs = null;
 		int nb = orders.size();
-		System.out.println(orders.size());
+
 		if (nb > 0)
 			listVOs = new ArrayList<SampleInfo>();
 
