@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ispyb</groupId>
 	<artifactId>ispyb-parent</artifactId>
-	<version>5.29</version>
+	<version>5.30.9</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>ispyb-ejb</module>
