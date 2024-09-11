@@ -972,21 +972,23 @@ public class UpdateFromSMIS {
 			// SV
 			Person3VO persv = new Person3VO();
 
-			if (person.findByFamilyAndGivenName(value.getUserName(), null).isEmpty()) {
-				persv.setFamilyName(value.getUserName());
-				persv.setEmailAddress(value.getUserEmail());
-				persv.setPhoneNumber(value.getUserPhone());
-				persv = person.merge(persv);
-				LOG.debug("getting SMIS WS person created");
-			} else {
-				persv = person.findByFamilyAndGivenName(value.getUserName(), null).get(0);
-				persv.setPhoneNumber(value.getUserPhone());
-				persv = person.merge(persv);
-				LOG.debug("getting SMIS WS person already exists personId = " + persv.getPersonId()
-						+ " | for proposalId = " + proplv.getProposalId());
+			if (value.getUserName() != null && !value.getUserName().trim().isEmpty()) {
+				if (person.findByFamilyAndGivenName(value.getUserName(), null).isEmpty()) {
+					persv.setFamilyName(value.getUserName());
+					persv.setEmailAddress(value.getUserEmail());
+					persv.setPhoneNumber(value.getUserPhone());
+					persv = person.merge(persv);
+					LOG.debug("getting SMIS WS person created");
+				} else {
+					persv = person.findByFamilyAndGivenName(value.getUserName(), null).get(0);
+					persv.setPhoneNumber(value.getUserPhone());
+					persv = person.merge(persv);
+					LOG.debug("getting SMIS WS person already exists personId = " + persv.getPersonId()
+							+ " | for proposalId = " + proplv.getProposalId());
+				}
+				plv.setPersonId(persv.getPersonId());
 			}
 
-			plv.setPersonId(persv.getPersonId());
 			String desc = value.getDescription();
 
 			if (desc.length() > 254)
