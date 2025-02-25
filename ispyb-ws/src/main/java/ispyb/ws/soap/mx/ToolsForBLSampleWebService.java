@@ -454,6 +454,7 @@ public class ToolsForBLSampleWebService {
 			return convertStructuresToCSV(structures);
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 		return null;
 	}
@@ -477,6 +478,7 @@ public class ToolsForBLSampleWebService {
 			return convertStructuresToCSV(structures);
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 		return null;
 	}
