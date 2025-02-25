@@ -32,6 +32,9 @@ import javax.ejb.Remote;
 public interface Structure3Service {
 	
 	public abstract List<Structure3VO> getStructuresByDataCollectionId(Integer dataCollectionId) throws Exception;
+
+	public abstract List<Structure3VO> getProteinStructuresByDataCollectionId(Integer dataCollectionId) throws Exception;
+	
 	
 	public abstract List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception;
 
