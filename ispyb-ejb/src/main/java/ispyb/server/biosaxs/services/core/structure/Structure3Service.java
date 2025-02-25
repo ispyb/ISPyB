@@ -35,9 +35,7 @@ public interface Structure3Service {
 
 	public abstract List<Structure3VO> getProteinStructuresByDataCollectionId(Integer dataCollectionId) throws Exception;
 	
-	
 	public abstract List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception;
-
 	
 	public List<Structure3VO> getStructuresByCrystalId(Integer crystalId) throws Exception;
 

@@ -21,6 +21,7 @@ package ispyb.server.biosaxs.services.core.structure;
 
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;
 import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
+import ispyb.server.mx.services.sample.BLSample3ServiceBean;
 import ispyb.server.mx.services.sample.BLSample3ServiceLocal;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
@@ -39,8 +40,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.log4j.Logger;
+
 @Stateless
 public class Structure3ServiceBean implements Structure3Service, Structure3ServiceLocal {
+	private final static Logger LOG = Logger.getLogger(Structure3ServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -70,7 +74,7 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception {
+	public List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception {		
 		String query = "SELECT structure3VO FROM Structure3VO structure3VO where structure3VO.proposalId = :proposalId" ;
 		Query EJBQuery = this.entityManager.createQuery(query).setParameter("proposalId", proposalId);
 		return (List<Structure3VO>) EJBQuery.getResultList();	
@@ -117,6 +121,7 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 
 	@Override
 	public List<Structure3VO> getProteinStructuresByDataCollectionId(Integer dataCollectionId) throws Exception {
+		LOG.info("getProteinStructuresByDataCollectionId. dataCollectionId=" + dataCollectionId);
 		List<Structure3VO> structures = new ArrayList<Structure3VO>();
 
 		Crystal3VO crystal = this.getCrystalByDataCollectionId(dataCollectionId);

@@ -473,6 +473,7 @@ public class ToolsForBLSampleWebService {
 		try {
 			Structure3Service structure3service = (Structure3Service) ejb3ServiceLocator.getLocalService(Structure3Service.class);
 			List<Structure3VO> structures = structure3service.getProteinStructuresByDataCollectionId(dataCollectionId);
+			LOG.debug("getProteinStructuresByDataCollectionId. dataCollectionId=" + dataCollectionId + " structures=" + structures.size());
 			return convertStructuresToCSV(structures);
 		} catch (Exception e) {
 			e.printStackTrace();
