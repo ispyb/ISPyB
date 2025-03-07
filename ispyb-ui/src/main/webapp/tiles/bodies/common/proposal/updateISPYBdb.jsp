@@ -76,6 +76,7 @@ Contributors : S. Delageniere, R. Leal, L. Launer, K. Levik, S. Veyrier, P. Bren
                                <layout:option value="SC"/>
                                <layout:option value="TC"/>
                                <layout:option value="A07-1"/>
+                               <layout:option value="AC2-1"/>
                 	</layout:select>
 					<layout:text key="Proposal number" 	property="proposalNumberSt" 	styleClass="FIELD" mode="E,E,E"/>
 
