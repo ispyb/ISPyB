@@ -408,6 +408,11 @@ public class MAXIVWebService implements SMISWebService {
 		return null;
 	}
 
+	@Override
+	public List<ExpSessionInfoLightVO> findSessionsByUserNameAndDates(String s, Calendar calendar, Calendar calendar1) throws FinderException_Exception {
+		return null;
+	}
+
 	public List<ExpSessionInfoLightVO> findSessionsInfoLightForProposalPk(Long arg0) throws FinderException_Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -851,6 +856,11 @@ public class MAXIVWebService implements SMISWebService {
 	}
 
 	@Override
+	public List<BeamlineScientistsVO> getStaffAndResponsiblesForAllBeamlines() {
+		return null;
+	}
+
+	@Override
 	public List<UserDataAccessLightVO> getAcls() {
 		// TODO Auto-generated method stub
 		return null;
@@ -886,4 +896,10 @@ public class MAXIVWebService implements SMISWebService {
 		return false;
 	}
 
+	@Override
+	public List<ExpSessionInfoLightVO> findSessionsInfoLightInRangeIncludingInhouse(Calendar arg0, Calendar arg1)
+			throws FinderException_Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
