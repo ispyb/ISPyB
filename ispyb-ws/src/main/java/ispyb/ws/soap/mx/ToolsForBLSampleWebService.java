@@ -454,9 +454,35 @@ public class ToolsForBLSampleWebService {
 			return convertStructuresToCSV(structures);
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 		return null;
 	}
+
+	/**
+	 * returns the pdb filePath for all crystals linked to a protein associated to a given dataCollectionId
+	 * 
+	 * @param code
+	 * @param number
+	 * @return
+	 * @throws Exception
+	 */
+	@WebMethod
+	@WebResult(name = "structures")
+	public String getProteinStructuresByDataCollectionId(
+	@WebParam(name = "dataCollectionId")Integer dataCollectionId) throws Exception {
+		try {
+			Structure3Service structure3service = (Structure3Service) ejb3ServiceLocator.getLocalService(Structure3Service.class);
+			List<Structure3VO> structures = structure3service.getProteinStructuresByDataCollectionId(dataCollectionId);
+			LOG.debug("getProteinStructuresByDataCollectionId. dataCollectionId=" + dataCollectionId + " structures=" + structures.size());
+			return convertStructuresToCSV(structures);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+		}
+		return null;
+	}
+
 	
 	private String convertStructuresToCSV(List<Structure3VO> structures) {
 

@@ -20,13 +20,17 @@
 package ispyb.server.biosaxs.services.core.structure;
 
 import ispyb.server.biosaxs.vos.assembly.Structure3VO;
+import ispyb.server.biosaxs.vos.datacollection.SaxsDataCollection3VO;
+import ispyb.server.mx.services.sample.BLSample3ServiceBean;
 import ispyb.server.mx.services.sample.BLSample3ServiceLocal;
 import ispyb.server.mx.vos.collections.DataCollection3VO;
 import ispyb.server.mx.vos.collections.DataCollectionGroup3VO;
 import ispyb.server.mx.vos.collections.Session3VO;
 import ispyb.server.mx.vos.sample.BLSample3VO;
 import ispyb.server.mx.vos.sample.Crystal3VO;
+import ispyb.server.mx.vos.sample.Protein3VO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -34,9 +38,13 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import org.apache.log4j.Logger;
 
 @Stateless
 public class Structure3ServiceBean implements Structure3Service, Structure3ServiceLocal {
+	private final static Logger LOG = Logger.getLogger(Structure3ServiceBean.class);
 
 	@PersistenceContext(unitName = "ispyb_db")
 	private EntityManager entityManager;
@@ -66,14 +74,13 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception {
+	public List<Structure3VO> getStructuresByProposalId(Integer proposalId) throws Exception {		
 		String query = "SELECT structure3VO FROM Structure3VO structure3VO where structure3VO.proposalId = :proposalId" ;
 		Query EJBQuery = this.entityManager.createQuery(query).setParameter("proposalId", proposalId);
 		return (List<Structure3VO>) EJBQuery.getResultList();	
 	}
 	
-	@Override
-	public List<Structure3VO> getStructuresByDataCollectionId(Integer dataCollectionId) throws Exception {
+	private Crystal3VO getCrystalByDataCollectionId(Integer dataCollectionId) throws Exception {
 		DataCollection3VO dataCollection = entityManager.find(DataCollection3VO.class, dataCollectionId);
 		if (dataCollection != null){
 			DataCollectionGroup3VO dataCollectionGroup = entityManager.find(DataCollectionGroup3VO.class, dataCollection.getDataCollectionGroupVOId());
@@ -82,10 +89,9 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 				if (blSample != null){
 					Crystal3VO crystal = entityManager.find(Crystal3VO.class, blSample.getCrystalVOId());
 					if (crystal != null){
-						return this.getStructuresByCrystalId(crystal.getCrystalId());
+						return crystal;
 					}
-				}
-				
+				}				
 			}
 		}
 		else{
@@ -93,6 +99,49 @@ public class Structure3ServiceBean implements Structure3Service, Structure3Servi
 		}
 		return null;
 	}
+
+	@Override
+	public List<Structure3VO> getStructuresByDataCollectionId(Integer dataCollectionId) throws Exception {
+		Crystal3VO crystal = this.getCrystalByDataCollectionId(dataCollectionId);
+		if (crystal != null){
+			return this.getStructuresByCrystalId(crystal.getCrystalId());
+		}				
+		throw new Exception("Not crystal found with dataCollectionId=" + dataCollectionId);
+	}
+
+	private List<Crystal3VO> getCrystalListByProteinId(Integer proteinId){
+		Protein3VO protein = entityManager.find(Protein3VO.class, proteinId);
+		StringBuilder ejbQLQuery = new StringBuilder();
+		ejbQLQuery.append("SELECT DISTINCT(crystal) FROM Crystal3VO  crystal ");
+		ejbQLQuery.append(" LEFT JOIN FETCH crystal.proteinVO protein ");
+		ejbQLQuery.append(" WHERE protein.proteinId = :proteinId");
+		TypedQuery<Crystal3VO> query = entityManager.createQuery(ejbQLQuery.toString(), Crystal3VO.class).setParameter("proteinId", protein.getProteinId());
+		return query.getResultList();
+	} 
+
+	@Override
+	public List<Structure3VO> getProteinStructuresByDataCollectionId(Integer dataCollectionId) throws Exception {
+		LOG.info("getProteinStructuresByDataCollectionId. dataCollectionId=" + dataCollectionId);
+		List<Structure3VO> structures = new ArrayList<Structure3VO>();
+
+		Crystal3VO crystal = this.getCrystalByDataCollectionId(dataCollectionId);
+		if (crystal != null){
+			Protein3VO protein = entityManager.find(Protein3VO.class, crystal.getProteinVOId());
+			/* Get all crystals by protein */
+			if (protein != null){
+				List<Crystal3VO> crystals = this.getCrystalListByProteinId(protein.getProteinId());
+				for (Crystal3VO crystal3vo : crystals) {
+					structures.addAll(this.getStructuresByCrystalId(crystal3vo.getCrystalId()));
+				}
+			}
+		}				
+		else{
+			throw new Exception("Not crystal found with dataCollectionId=" + dataCollectionId);
+		}
+		return structures;
+		
+	}
+
 	
 	@Override
 	public List<Structure3VO> getLigandsByDataCollectionId(Integer dataCollectionId) throws Exception {
