@@ -460,10 +460,8 @@ public class TrackingEmail {
 
 				// Get dewar values
 				String parcelName = dewarAPI.getParcelName();
-				String sendingLabContactEmail = dewarAPI.getSendingLabContactEmail();
 				String returnLabContactEmail = dewarAPI.getReturnLabContactEmail();
 				String shippingName = dewarAPI.getShippingName();
-				String proposalTitle = dewarAPI.getProposalTitle();
 				String proposalCode = dewarAPI.getProposalCode();
 				String proposalName = dewarAPI.getProposalCode() + dewarAPI.getProposalNumber();
 				Date startDate = dewarAPI.getStartDate();
@@ -526,13 +524,14 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has left the ESRF and has been sent to your lab by <B>" + courierName + "</B> " + "(Tracking Number: <B>"
+						+ "has left the ESRF and has been sent to the return address you defined, by <B>" + courierName + "</B> " + "(Tracking Number: <B>"
 						+ trackingLink + "</B>) " + "on " + formatedDateTime + "."
-						+ "<BR>"
-						// + courierLink
+						+ "<BR>You can check its location at anytime via <A title='"
+						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
 						+ "<BR>For transport and customs issues do not hesitate to contact us at <A HREF='mailto:" + emailReply + "'>" + emailReply + "</A>."
 						+ "<BR><BR>Best regards" + "<BR><BR>" + emailSignature
 						+ "</FONT>";
+						
 
 				// Send email
 				try {
