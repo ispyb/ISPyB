@@ -524,7 +524,7 @@ public class TrackingEmail {
 				String emailBody = "<FONT face='Courier New' size=2>" + "Dear User,<BR><BR>" + "Your parcel <B>" + parcelName
 						+ "</B> " + "(" + "Proposal: <B>" + proposalName + "</B>, " + "Session date: <B>" + startDateStr + "</B>, "
 						+ "Shipment: <B>" + shippingName + "</B>, " + "Barcode: <B>" + dewarBarCode + "</B>" + ") "
-						+ "has left the ESRF and has been sent to the return address you defined, by <B>" + courierName + "</B> " + "(Tracking Number: <B>"
+						+ "has left the ESRF and has been sent to your address, by <B>" + courierName + "</B> " + "(Tracking Number: <B>"
 						+ trackingLink + "</B>) " + "on " + formatedDateTime + "."
 						+ "<BR>You can check its location at anytime via <A title='"
 						+ Constants.ISPYB_URL_HELP + "' href='" + Constants.ISPYB_URL + "'>" + "py-ISPyB" + "</A> or <A href='" + Constants.EXI_URL + "'>EXI</A>." + "<BR>"
