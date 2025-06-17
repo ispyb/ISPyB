@@ -81,11 +81,11 @@ public final class Constants {
 	/*
 	 * Tracking url values
 	 */
-	public static final String TRACKING_URL_FEDEX = "http://www.fedex.com/Tracking?ascend_header=1&clienttype=dotcomreg&cntry_code=gb&language=english";
+	public static final String TRACKING_URL_FEDEX = "https://www.fedex.com/fedextrack/";
 
 	public static final String TRACKING_URL_TNT = "http://www.tnt.com/webtracker/tracking.do?requestType=GEN&searchType=CON&navigation=1&respLang=en&respCountry=GB&genericSiteIdent=";
 
-	public static final String TRACKING_URL_DHL = "http://www.dhl.com/publish/g0/en/eshipping/track.high.html?pageToInclude=RESULTS&type=fasttrack";
+	public static final String TRACKING_URL_DHL = "https://www.dhl.com/us-en/home/tracking.html?submit=1";
 
 	public static final String TRACKING_URL_UPS = "http://wwwapps.ups.com/WebTracking/track";
 
@@ -107,10 +107,10 @@ public final class Constants {
 	public static final int COURIER_LIST_COURIER_URL_PARAM = 3; // Tracking number parameter in courier url
 
 	public static final String[][] COURIER_LIST = {
-			{ SHIPPING_DELIVERY_AGENT_NAME_FEDEX, "FEDEX", TRACKING_URL_FEDEX, "&tracknumbers" },
+			{ SHIPPING_DELIVERY_AGENT_NAME_FEDEX, "FEDEX", TRACKING_URL_FEDEX, "?trknbr" },
 			{ SHIPPING_DELIVERY_AGENT_NAME_TNT, "TNT", TRACKING_URL_TNT, "&cons" },
 			{ SHIPPING_DELIVERY_AGENT_NAME_CIBLEX, "CIBLEX", "", "" },
-			{ SHIPPING_DELIVERY_AGENT_NAME_DHL, "DHL", TRACKING_URL_DHL, "&AWB" },
+			{ SHIPPING_DELIVERY_AGENT_NAME_DHL, "DHL", TRACKING_URL_DHL, "&tracking-id" },
 			{ SHIPPING_DELIVERY_AGENT_NAME_FASTRANS, "FASTRANS", "", "" }, { SHIPPING_DELIVERY_AGENT_NAME_TAT, "TAT", "", "" },
 			{ SHIPPING_DELIVERY_AGENT_NAME_UPS, "UPS", TRACKING_URL_UPS, "?trackNums" },
 			{ SHIPPING_DELIVERY_AGENT_NAME_CHRONOPOST, "CHRONOPOST", TRACKING_URL_CHRONOPOST, "" },
