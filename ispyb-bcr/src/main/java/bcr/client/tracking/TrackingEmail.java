@@ -351,7 +351,7 @@ public class TrackingEmail {
 				if (TrackingEmail.isIndustrial(proposalCode)) {
 					// FX proposals
 					emailTo = sendingLabContactEmail;
-					emailCc = emailMxInd;
+					emailCc = emailMxInd + "," + emailStores;
 					if (emailLocalContact != null && !emailLocalContact.equals(""))
 						emailCc += "," + emailLocalContact;
 					emailReply = emailStores;
@@ -359,7 +359,7 @@ public class TrackingEmail {
 				} else {
 					// Other proposals
 					emailTo = sendingLabContactEmail;
-					emailCc = "";
+					emailCc = emailStores;
 					if (emailLocalContact != null && !emailLocalContact.equals(""))
 						emailCc = emailLocalContact;
 					emailReply = emailStores;
