@@ -560,7 +560,7 @@ public class UpdateFromSMIS {
 					if (Constants.SITE_IS_ESRF()) {
 						currentPerson = person.findByLogin(labContacts[i].getScientistUserName());
 					} else {
-						currentPerson = person.findByLogin(labContacts[i].getBllogin());
+						currentPerson = person.findByLogin(labContacts[i].getScientistUserName());
 					}
 				}
 									
@@ -668,7 +668,7 @@ public class UpdateFromSMIS {
 			String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 
 			LOG.debug("Proposal found : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-			LOG.debug("Bllogin : " + mainProp.getBllogin() + " - username = " + mainProp.getScientistUserName());
+			LOG.debug(" username = " + mainProp.getScientistUserName());
 
 			List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 			
@@ -733,8 +733,8 @@ public class UpdateFromSMIS {
 				}
 
 				if (Constants.getSite().equals(SITE.EMBL)) {
-					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
-						currentPerson.setLogin(mainProp.getBllogin());
+					if (!StringUtils.matchString(mainProp.getScientistUserName(), currentPerson.getLogin())) {
+						currentPerson.setLogin(mainProp.getScientistUserName());
 						currentPerson = person.merge(currentPerson);
 						LOG.debug("Update person with bllogin");
 					}
@@ -742,12 +742,12 @@ public class UpdateFromSMIS {
 
 				if (Constants.getSite().equals(SITE.ALBA)) {
 					// Create a new person record for the experiment if existing login doesn't match
-					if (!StringUtils.matchString(mainProp.getBllogin(), currentPerson.getLogin())) {
+					if (!StringUtils.matchString(mainProp.getScientistUserName(), currentPerson.getLogin())) {
 						Person3VO newPerson = new Person3VO();
 						newPerson.setEmailAddress(mainProp.getScientistEmail());
 						newPerson.setGivenName(mainProp.getScientistFirstName());
 						newPerson.setFamilyName(mainProp.getScientistName());
-						newPerson.setLogin(mainProp.getBllogin());
+						newPerson.setLogin(mainProp.getScientistUserName());
 						newPerson.setSiteId(mainProp.getScientistSiteId() != null ? mainProp.getScientistSiteId().toString() : null);
 						newPerson.setLaboratoryVO(currentPerson.getLaboratoryVO());
 
@@ -908,7 +908,7 @@ public class UpdateFromSMIS {
 	        String proposalCode = StringUtils.getProposalCode(uoCode, proposalNumber);
 	        
 	        LOG.debug("Proposal found for participant : " + proposalCode + proposalNumber + " uoCode = " + uoCode);
-	        LOG.debug("Bllogin : " + participant.getBllogin());
+	        LOG.debug("Bllogin : " + participant.getScientistUserName());
 	        
 	        List<Proposal3VO> listProposals = proposal.findByCodeAndNumber(proposalCode, proposalNumber, false, false, false);
 	        
@@ -917,10 +917,10 @@ public class UpdateFromSMIS {
 	          LOG.debug("proposal already exists");
 	          Proposal3VO proposalVO = (Proposal3VO)listProposals.get(0);
 	          
-	          Person3VO personEnt = person.findByLogin(participant.getBllogin());
+	          Person3VO personEnt = person.findByLogin(participant.getScientistUserName());
 	          if (personEnt == null) {
 	            personEnt = new Person3VO();
-	            personEnt.setLogin(participant.getBllogin());
+	            personEnt.setLogin(participant.getScientistUserName());
 	          }
 	          
 	          personEnt.setGivenName(participant.getScientistFirstName());
@@ -1269,7 +1269,7 @@ public class UpdateFromSMIS {
 		if (Constants.SITE_IS_ESRF() && mainProp.getScientistSiteId()!= null) {
 				siteId = mainProp.getScientistSiteId().toString();
 		}
-		String login = (Constants.SITE_IS_ESRF() ) ? mainProp.getScientistUserName() : mainProp.getBllogin();
+		String login = (Constants.SITE_IS_ESRF() ) ? mainProp.getScientistUserName() : mainProp.getScientistUserName();
 
 		// labo
 		Integer labId;
