@@ -157,7 +157,7 @@ public class MAXIVWebService implements SMISWebService {
 			try{
 				participant.setCategoryCode("MX");
 				participant.setCategoryCounter(propId.intValue());
-				participant.setBllogin((String)jsonParticipant.get("username"));
+				participant.setScientistUserName((String)jsonParticipant.get("username"));
 				
 				Integer labId = (Integer)jsonParticipant.get("institute");
 				JSONObject jsonLab = getLabForId(labId);
@@ -225,7 +225,7 @@ public class MAXIVWebService implements SMISWebService {
                 try {
                     participant.setCategoryCode("MX");
                     participant.setCategoryCounter(propId.intValue());
-                    participant.setBllogin((String) jsonParticipant.get("username"));
+                    participant.setScientistUserName((String) jsonParticipant.get("username"));
 
                     Integer labId = (Integer) jsonParticipant.get("institute");
                     JSONObject jsonLab = getLabForId(labId);
